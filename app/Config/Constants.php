@@ -1,5 +1,8 @@
 <?php
 
+// Include any core Bonfire constants
+include ROOTPATH .'bonfire/Config/Constants.php';
+
 /*
  | --------------------------------------------------------------------
  | App Namespace

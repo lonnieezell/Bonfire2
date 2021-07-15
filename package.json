@@ -1,0 +1,32 @@
+{
+  "name": "Bonfire21",
+  "version": "1.0.0",
+  "description": "Just getting started. More details at [Patreon](https://www.patreon.com/lonnieezell)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lonnieezell/Bonfire2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lonnieezell/Bonfire2/issues"
+  },
+  "homepage": "https://github.com/lonnieezell/Bonfire2#readme",
+  "devDependencies": {
+    "laravel-mix": "^6.0.25",
+    "resolve-url-loader": "^4.0.0",
+    "sass": "^1.35.2",
+    "sass-loader": "^12.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.0.2"
+  }
+}

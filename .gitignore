@@ -125,3 +125,5 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+# Node Modules
+node_modules/

@@ -6,6 +6,15 @@ use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
+    /**
+     * --------------------------------------------------------------------------
+     * Base Site URL
+     * --------------------------------------------------------------------------
+     *
+     * The name that should be displayed for the site.
+     */
+    public $siteName = 'Bonfire';
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * Base Site URL
