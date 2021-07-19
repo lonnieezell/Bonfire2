@@ -89,6 +89,9 @@ class ConfigModelTest extends TestCase
         $config->configTable = 'foo';
         Factories::injectMock('config', 'config', $config);
 
+        // It only saves config files that have been cached
+        config('Config');
+
         $result = $model->persist();
 
         // Depending on your current environment, it may have
@@ -120,7 +123,7 @@ class ConfigModelTest extends TestCase
         $this->seeInDatabase($table, [
             'class' => get_class($config),
             'key' => 'configTable',
-            'value' => 1,
+            'value' => ':true',
         ]);
         $this->seeInDatabase($table, [
             'class' => get_class($config),
@@ -156,5 +159,55 @@ class ConfigModelTest extends TestCase
             'key' => 'configTable',
             'value' => 'bar'
         ]);
+    }
+
+    public function testHydrateConfig()
+    {
+        $table = config('Config')->configTable;
+        $model = new ConfigModel();
+        $config = new \Config\Config();
+
+        $this->hasInDatabase($table, [
+            'class' => get_class($config),
+            'key' => 'configTable',
+            'value' => 'foo',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        $this->hasInDatabase($table, [
+            'class' => get_class($config),
+            'key' => 'persistConfig',
+            'value' => ':true',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $config = $model->hydrateConfig($config);
+
+        $this->assertEquals('foo', $config->configTable);
+        $this->assertEquals(true, $config->persistConfig);
+    }
+
+    public function testHydrateConfigWithSerializedData()
+    {
+        $table = config('Config')->configTable;
+        $model = new ConfigModel();
+        $config = new \Config\Config();
+
+        $data = [
+            'foo' => 'bar'
+        ];
+
+        $this->hasInDatabase($table, [
+            'class' => get_class($config),
+            'key' => 'configTable',
+            'value' => serialize($data),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $config = $model->hydrateConfig($config);
+
+        $this->assertEquals($data, $config->configTable);
     }
 }

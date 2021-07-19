@@ -30,9 +30,6 @@ class Config extends BaseConfig
      * retrieved when using the `config()` helper function, if
      * $this->persistConfig == true.
      *
-     * Example:
-     *      config('App')->save('key', 'value);
-     *
      * @var string
      */
     public $configTable = 'ci_config';
