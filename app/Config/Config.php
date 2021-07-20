@@ -2,10 +2,12 @@
 
 namespace Config;
 
-use CodeIgniter\Config\BaseConfig;
+use Bonfire\Traits\Factory;
 
-class Config extends BaseConfig
+class Config
 {
+    use Factory;
+
     /**
      * --------------------------------------------------------------------------
      * Persist Config Values?

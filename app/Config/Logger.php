@@ -2,10 +2,13 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class Logger extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * Error Logging Threshold

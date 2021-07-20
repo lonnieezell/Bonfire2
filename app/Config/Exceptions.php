@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 /**
@@ -9,6 +10,8 @@ use CodeIgniter\Config\BaseConfig;
  */
 class Exceptions extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * LOG EXCEPTIONS?

@@ -2,10 +2,13 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class Pager extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * Templates

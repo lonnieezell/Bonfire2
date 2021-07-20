@@ -2,10 +2,13 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class Honeypot extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * Makes Honeypot visible or not to human
 	 *

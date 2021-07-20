@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 use Kint\Renderer\Renderer;
 
@@ -17,6 +18,8 @@ use Kint\Renderer\Renderer;
  */
 class Kint extends BaseConfig
 {
+    use HydrateConfig;
+
 	/*
 	|--------------------------------------------------------------------------
 	| Global Settings

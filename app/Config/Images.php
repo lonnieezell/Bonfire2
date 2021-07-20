@@ -2,12 +2,15 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Images\Handlers\GDHandler;
 use CodeIgniter\Images\Handlers\ImageMagickHandler;
 
 class Images extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * Default handler used if no other handler is specified.
 	 *

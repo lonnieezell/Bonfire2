@@ -2,11 +2,14 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 use DateTimeInterface;
 
 class Cookie extends BaseConfig
 {
+    use HydrateConfig;
+
 	/**
 	 * --------------------------------------------------------------------------
 	 * Cookie Prefix

@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 /**
@@ -15,6 +16,8 @@ use CodeIgniter\Config\BaseConfig;
  */
 class ContentSecurityPolicy extends BaseConfig
 {
+    use HydrateConfig;
+
 	//-------------------------------------------------------------------------
 	// Broadbrush CSP management
 	//-------------------------------------------------------------------------

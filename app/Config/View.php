@@ -2,10 +2,13 @@
 
 namespace Config;
 
+use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\View as BaseView;
 
 class View extends BaseView
 {
+    use HydrateConfig;
+
 	/**
 	 * When false, the view method will clear the data between each
 	 * call. This keeps your data safe and ensures there is no accidental

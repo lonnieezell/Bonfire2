@@ -2,10 +2,10 @@
 
 namespace Bonfire\Models;
 
+use Bonfire\Traits\Factory;
 use CodeIgniter\Model;
 use CodeIgniter\Test\ReflectionHelper;
-use ReflectionClass;
-use ReflectionProperty;
+use Config\Config;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Config\BaseConfig;
 
@@ -20,6 +20,7 @@ use CodeIgniter\Config\BaseConfig;
 class ConfigModel extends Model
 {
     use ReflectionHelper;
+    use Factory;
 
     protected $table = 'ci_config';
     protected $allowedFields = ['class', 'key', 'value'];
@@ -54,7 +55,7 @@ class ConfigModel extends Model
     {
         parent::__construct(...$params);
 
-        $this->table = config('Config')->configTable;
+        $this->table = Config::instance()->configTable;
     }
 
     /**
@@ -117,8 +118,6 @@ class ConfigModel extends Model
      * When called, will examine all config files it can find
      * and check each public property, saving any that have
      * changed from the default value to the database.
-     *
-     * @todo Translate true/false values to ':true', ':false' so they can be converted back correctly
      */
     public function persist()
     {
@@ -180,8 +179,13 @@ class ConfigModel extends Model
             return;
         }
 
+        $dontPersistClasses = [
+            Factories::class,
+            \CodeIgniter\Config\Factory::class,
+        ];
+
         foreach($configInstances['config'] as $config) {
-            if (! $config instanceof BaseConfig) {
+            if (! $config instanceof BaseConfig || in_array(get_class($config), $dontPersistClasses)) {
                 continue;
             }
 
