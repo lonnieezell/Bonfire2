@@ -98,7 +98,7 @@ class ComponentRenderer
      */
     private function renderPairedTags(string $output): string
     {
-        $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/x';
+        $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/uiUsm';
 
         /*
 		    $matches[0] = full tags matched and all of its content
@@ -164,7 +164,6 @@ class ComponentRenderer
      * @param array  $data
      *
      * @return string|null
-     * @todo refactor to allow merging template and calling attributes  (i.e. class)
      */
     private function renderView(string $view, array $data): string
     {
