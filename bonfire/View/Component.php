@@ -64,11 +64,24 @@ class Component
      */
     public function render(): string
     {
+        return $this->renderView($this->view, []);
+    }
+
+    /**
+     * Renders the view when no corresponding class has been found.
+     *
+     * @param string $view
+     * @param array  $data
+     *
+     * @return string|null
+     */
+    protected function renderView(string $view, array $data): string
+    {
         return (function (string $view, $data) {
             extract($data);
             ob_start();
             eval('?>' . file_get_contents($view));
             return ob_get_clean() ?: '';
-        })($this->view, $this->data);
+        })($view, $data);
     }
 }

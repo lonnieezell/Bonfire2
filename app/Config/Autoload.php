@@ -43,6 +43,7 @@ class Autoload extends AutoloadConfig
 		APP_NAMESPACE => APPPATH, // For custom app namespace
 		'Config'      => APPPATH . 'Config',
 		'Bonfire'     => ROOTPATH .'bonfire',
+		'Bonfire\Email' => ROOTPATH .'bonfire/Modules/Email',
 	];
 
 	/**

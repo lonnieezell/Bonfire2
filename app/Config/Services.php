@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Bonfire;
 use CodeIgniter\Config\BaseService;
 use Bonfire\View\View;
 use Config\Services as AppServices;
@@ -45,4 +46,38 @@ class Services extends BaseService
 
 		return new View($config, $viewPath, AppServices::locator(), CI_DEBUG, AppServices::logger());
 	}
+
+    /**
+     * Core utility class for Bonfire's system.
+     *
+     * @param bool $getShared
+     *
+     * @return Bonfire|mixed
+     */
+    public static function bonfire(bool $getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('bonfire');
+        }
+
+        return new Bonfire();
+    }
+
+    /**
+     * Returns the system menu manager
+     *
+     * @param bool $getShared
+     *
+     * @return Bonfire\Libraries\Menus\Manager|mixed
+     */
+    public static function menus(bool $getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('menus');
+        }
+
+        return new \Bonfire\Libraries\Menus\Manager();
+    }
 }

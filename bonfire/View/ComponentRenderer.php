@@ -203,6 +203,10 @@ class ComponentRenderer
         }
         $className = service('locator')->getClassname($filePath);
 
+        if (! class_exists($className)) {
+            include_once $filePath;
+        }
+
         return (new $className())->withView($view);
     }
 
