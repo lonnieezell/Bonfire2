@@ -2,13 +2,10 @@
 
 namespace Config;
 
-use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    use HydrateConfig;
-
 	/**
 	 * @var string
 	 */

@@ -2,13 +2,10 @@
 
 namespace Config;
 
-use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
-    use HydrateConfig;
-
     /**
      * --------------------------------------------------------------------------
      * Base Site URL

@@ -2,13 +2,10 @@
 
 namespace Config;
 
-use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 
 class Migrations extends BaseConfig
 {
-    use HydrateConfig;
-
 	/**
 	 * --------------------------------------------------------------------------
 	 * Enable/Disable Migrations

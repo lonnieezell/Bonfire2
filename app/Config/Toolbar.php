@@ -2,7 +2,6 @@
 
 namespace Config;
 
-use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Debug\Toolbar\Collectors\Database;
 use CodeIgniter\Debug\Toolbar\Collectors\Events;
@@ -24,8 +23,6 @@ use CodeIgniter\Debug\Toolbar\Collectors\Views;
  */
 class Toolbar extends BaseConfig
 {
-    use HydrateConfig;
-
 	/**
 	 * --------------------------------------------------------------------------
 	 * Toolbar Collectors

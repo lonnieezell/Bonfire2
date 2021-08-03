@@ -3,8 +3,9 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use Config\Database;
 
-class CreateConfigTable extends Migration
+class CreateSettingsTable extends Migration
 {
     public function up()
     {
@@ -16,11 +17,11 @@ class CreateConfigTable extends Migration
            'created_at' => ['type' => 'datetime', 'null' => false],
            'updated_at' => ['type' => 'datetime', 'null' => false],
        ]);
-        $this->forge->createTable(config('Config')->configTable);
+        $this->forge->createTable(config('Settings')->database['table'], true);
     }
 
     public function down()
     {
-        $this->forge->dropTable(config('Config')->configTable);
+        $this->forge->dropTable(config('Settings')->database['table']);
     }
 }

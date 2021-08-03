@@ -80,4 +80,21 @@ class Services extends BaseService
 
         return new \Bonfire\Libraries\Menus\Manager();
     }
+
+    /**
+     * Returns the Settings manager class.
+     *
+     * @param bool $getShared
+     *
+     * @return \Bonfire\Settings\Settings
+     */
+    public static function settings(bool $getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('settings');
+        }
+
+        return new \Bonfire\Settings\Settings();
+    }
 }

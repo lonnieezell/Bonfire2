@@ -2,7 +2,6 @@
 
 namespace Config;
 
-use Bonfire\Traits\HydrateConfig;
 use CodeIgniter\Cache\Handlers\DummyHandler;
 use CodeIgniter\Cache\Handlers\FileHandler;
 use CodeIgniter\Cache\Handlers\MemcachedHandler;
@@ -13,8 +12,6 @@ use CodeIgniter\Config\BaseConfig;
 
 class Cache extends BaseConfig
 {
-    use HydrateConfig;
-
 	/**
 	 * --------------------------------------------------------------------------
 	 * Primary Handler
