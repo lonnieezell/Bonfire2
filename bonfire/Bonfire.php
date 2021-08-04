@@ -97,7 +97,7 @@ class Bonfire
                 }
 
                 $name = trim($row, '/');
-                $modules["Bonfire\\{$name}"] = ROOTPATH . "bonfire/Modules/{$name}";
+                $modules["Bonfire\\Modules\\{$name}"] = ROOTPATH . "bonfire/Modules/{$name}";
             }
 
             cache()->save('bf-modules-search', $modules);

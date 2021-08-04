@@ -99,7 +99,7 @@ class ComponentRenderer
     private function renderPairedTags(string $output): string
     {
         $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/uiUsm';
-
+        ini_set("pcre.backtrack_limit", "-1");
         /*
 		    $matches[0] = full tags matched and all of its content
 			$matches[name] = tag name (minus the `x-`)
@@ -115,7 +115,7 @@ class ComponentRenderer
             return $component instanceof Component
                 ? $component->withView($view)->withData($attributes)->render()
                 : $this->renderView($view, $attributes);
-        }, $output);
+        }, $output) ?? preg_last_error();
 	}
 
     /**
@@ -227,6 +227,7 @@ class ComponentRenderer
            return $filePath;
         }
 
+        throw new \RuntimeException('View not found for component: '. $name);
         // @todo look in all normal namespaces
     }
 

@@ -39,7 +39,7 @@ if (! function_exists('setting')) {
      * @param string|null $class
      * @param string|null $field
      */
-    function setting(?string $class, ?string $field)
+    function setting(string $class=null, string $field=null)
     {
         $setting = service('settings');
 

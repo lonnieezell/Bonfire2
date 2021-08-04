@@ -6,6 +6,7 @@
 	<title><?= config('App')->siteName ?? 'bonfire' ?></title>
 
     <link href="/assets/css/admin.css" rel="stylesheet">
+    <?= $this->renderSection('styles') ?>
 </head>
 <body>
 
@@ -31,18 +32,13 @@
 		    <x-sidebar />
         </nav>
 
-		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-			<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-				<?= $this->renderSection('main') ?>
-			</div>
+		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <?= $this->renderSection('main') ?>
 		</main>
 	</div>
 </div>
 
 
-<script src="/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="dashboard.js"></script>
-
-
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<?= $this->renderSection('scripts') ?>
 </body></html>

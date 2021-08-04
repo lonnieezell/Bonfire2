@@ -1,6 +1,6 @@
 <?php
 
-namespace Bonfire\Email;
+namespace Bonfire\Modules\Email;
 
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
@@ -22,6 +22,7 @@ class Module extends BaseModule
         $item = new MenuItem([
             'title' => 'Email',
             'namedRoute' => 'email-settings',
+            'fontAwesomeIcon' => 'fas fa-envelope',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }
