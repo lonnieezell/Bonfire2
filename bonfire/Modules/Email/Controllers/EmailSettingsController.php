@@ -70,6 +70,8 @@ class EmailSettingsController extends BaseController
         setting()->set('Config\Email', 'SMTPTimeout', $this->request->getPost('SMTPTimeout'));
         setting()->set('Config\Email', 'SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
 
-        return redirect()->back()->with('message', 'The settings have been saved.');
+        alert('success', 'The settings have been saved.');
+
+        return redirect()->back();
 	}
 }

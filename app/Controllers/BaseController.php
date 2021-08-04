@@ -41,6 +41,15 @@ class BaseController extends Controller
 	 */
 	protected $helpers = [];
 
+    public function __construct()
+    {
+        // Load Bonfire-specific helpers here
+        // so that devs can still add their own
+        // helpers to their controllers and
+        // not overwrite ours.
+        $this->helpers[] = 'alerts';
+	}
+
 	/**
 	 * Constructor.
 	 *

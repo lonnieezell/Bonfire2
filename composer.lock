@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9d2bd099423e1089da15d4a9f6cb564",
+    "content-hash": "8625c2ab7a1cac88676991d38d8d222c",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -311,6 +311,63 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "tatter/alerts",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tattersoftware/codeigniter4-alerts.git",
+                "reference": "32c611580b69697c3c271478f73df30079e45b8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/32c611580b69697c3c271478f73df30079e45b8a",
+                "reference": "32c611580b69697c3c271478f73df30079e45b8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "codeigniter4/codeigniter4": "dev-develop",
+                "tatter/tools": "^1.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tatter\\Alerts\\": "src"
+                },
+                "exclude-from-classmap": [
+                    "**/Database/Migrations/**"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthew Gatner",
+                    "email": "mgatner@tattersoftware.com",
+                    "homepage": "https://tattersoftware.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Lightweight user alerts for CodeIgniter 4",
+            "homepage": "https://github.com/tattersoftware/codeigniter4-alerts",
+            "keywords": [
+                "alerts",
+                "codeigniter",
+                "codeigniter4",
+                "dialogs",
+                "messages"
+            ],
+            "support": {
+                "issues": "https://github.com/tattersoftware/codeigniter4-alerts/issues",
+                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v2.1.0"
+            },
+            "time": "2021-01-28T21:54:49+00:00"
         }
     ],
     "packages-dev": [

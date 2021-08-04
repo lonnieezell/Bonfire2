@@ -17131,3 +17131,7 @@ label.form-label {
 .btn-primary {
   color: #fff;
 }
+
+#alerts-wrapper {
+  top: 30px !important;
+}
