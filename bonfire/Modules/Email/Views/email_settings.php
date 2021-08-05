@@ -91,7 +91,7 @@
                             <!-- Port -->
                             <div class="form-group col-12 col-sm-3">
                                 <label for="SMTPPort" class="form-label">Port</label>
-                                <select name="SMTPPort"" class="form-select">
+                                <select name="SMTPPort" class="form-select">
                                     <option value="25" @click="open = false" <?php if (old('SMTPPort', setting('Email', 'SMTPPort')) === '25') : ?> selected <?php endif?>>25</option>
                                     <option value="587" @click="open = false" <?php if (old('SMTPPort', setting('Email', 'SMTPPort')) === '587') : ?> selected <?php endif?>>587</option>
                                     <option value="465" @click="open = false" <?php if (old('SMTPPort', setting('Email', 'SMTPPort')) === '465') : ?> selected <?php endif?>>465</option>
@@ -138,7 +138,7 @@
                             <!-- Crypto -->
                             <div class="form-group col-12 col-sm-6">
                                 <label for="SMTPCrypto" class="form-label">Encryption</label>
-                                <select name="SMTPCrypto"" class="form-select">
+                                <select name="SMTPCrypto" class="form-select">
                                     <option value="tls" <?php if (old('SMTPCrypto', setting('Email', 'SMTPCrypto')) === 'tls') : ?> selected <?php endif?>>TLS</option>
                                     <option value="ssl" <?php if (old('SMTPCrypto', setting('Email', 'SMTPCrypto')) === 'ssl') : ?> selected <?php endif?>>SSL</option>
                                 </select>
@@ -152,7 +152,7 @@
                             <!-- Timeout -->
                             <div class="form-group col-12 col-sm-3">
                                 <label for="SMTPTimeout" class="form-label">Timeout (in seconds)</label>
-                                <input type="number" name="SMTPUser" class="form-control" value="<?= old('SMTPTimeout', setting('Email', 'SMTPTimeout')) ?>">
+                                <input type="number" name="SMTPTimeout" class="form-control" value="<?= old('SMTPTimeout', setting('Email', 'SMTPTimeout')) ?>">
                                 <?php if(has_error('SMTPTimeout')) : ?>
                                     <p class="text-danger"><?= error('SMTPTimeout') ?></p>
                                 <?php endif ?>
@@ -161,7 +161,7 @@
                             <!-- Timeout -->
                             <div class="form-group col-12 col-sm-3">
                                 <label for="SMTPKeepAlive" class="form-label">Persistant Connection?</label>
-                                <select name="SMTPKeepAlive"" class="form-select">
+                                <select name="SMTPKeepAlive" class="form-select">
                                     <option value="0" <?php if (old('SMTPKeepAlive', ! setting('Email', 'SMTPKeepAlive'))) : ?> selected <?php endif?>>No</option>
                                     <option value="1" <?php if (old('SMTPKeepAlive', setting('Email', 'SMTPKeepAlive'))) : ?> selected <?php endif?>>Yes</option>
                                 </select>
