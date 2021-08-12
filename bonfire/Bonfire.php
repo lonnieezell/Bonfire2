@@ -92,11 +92,11 @@ class Bonfire
             $map = directory_map(ROOTPATH . 'bonfire/Modules', 1);
 
             foreach ($map as $row) {
-                if (substr($row, -1) !== '/') {
+                if (substr($row, -1) !== DIRECTORY_SEPARATOR) {
                     continue;
                 }
 
-                $name = trim($row, '/');
+                $name = trim($row, DIRECTORY_SEPARATOR);
                 $modules["Bonfire\\Modules\\{$name}"] = ROOTPATH . "bonfire/Modules/{$name}";
             }
 
