@@ -120,6 +120,10 @@ class MenuCollection extends MenuItem
 	protected function sortItems()
 	{
 		usort($this->items, function($a, $b) {
+		    if ($a->weight === $b->weight) {
+		        return $a->title <=> $b->title;
+            }
+
 			return $a->weight <=> $b->weight;
 		});
 	}
