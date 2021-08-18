@@ -8,7 +8,8 @@
 		"php": "^7.3||^8.0",
 		"codeigniter4/framework": "^4",
 		"tatter/alerts": "^2.1",
-		"lonnieezell/codigniter-shield": "dev-develop"
+		"lonnieezell/codigniter-shield": "dev-develop",
+		"codeigniter4/settings": "dev-develop"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",

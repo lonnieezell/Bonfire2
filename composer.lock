@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "156c07589b18589d77af3a0765b59ddb",
+    "content-hash": "f452d2a4bb75b69b34419693313fb515",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -62,6 +62,67 @@
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
             "time": "2021-06-05T23:58:18+00:00"
+        },
+        {
+            "name": "codeigniter4/settings",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeigniter4/settings.git",
+                "reference": "5d758e5e0a3f9dda9f66303d82ccfbb82e979577"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeigniter4/settings/zipball/5d758e5e0a3f9dda9f66303d82ccfbb82e979577",
+                "reference": "5d758e5e0a3f9dda9f66303d82ccfbb82e979577",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "codeigniter4/codeigniter4": "dev-develop",
+                "fakerphp/faker": "^1.9",
+                "mockery/mockery": "^1.0",
+                "nexusphp/tachycardia": "^1.0",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.0",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sparks\\Settings\\": "src"
+                },
+                "exclude-from-classmap": [
+                    "**/Database/Migrations/**"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lonnie Ezell",
+                    "email": "lonnieje@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Settings library for CodeIgniter 4",
+            "homepage": "https://github.com/codeigniter4/settings",
+            "keywords": [
+                "Settings",
+                "codeigniter",
+                "codeigniter4"
+            ],
+            "support": {
+                "issues": "https://github.com/codeigniter4/settings/issues",
+                "source": "https://github.com/codeigniter4/settings/tree/develop"
+            },
+            "time": "2021-08-16T05:07:59+00:00"
         },
         {
             "name": "kint-php/kint",
@@ -2772,7 +2833,8 @@
     "aliases": [],
     "minimum-stability": "beta",
     "stability-flags": {
-        "lonnieezell/codigniter-shield": 20
+        "lonnieezell/codigniter-shield": 20,
+        "codeigniter4/settings": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
