@@ -6,6 +6,9 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
+use Sparks\Shield\Filters\ChainAuth;
+use Sparks\Shield\Filters\SessionAuth;
+use Sparks\Shield\Filters\TokenAuth;
 
 class Filters extends BaseConfig
 {
@@ -19,6 +22,9 @@ class Filters extends BaseConfig
 		'csrf'     => CSRF::class,
 		'toolbar'  => DebugToolbar::class,
 		'honeypot' => Honeypot::class,
+        'session'  => SessionAuth::class,
+        'tokens'   => TokenAuth::class,
+        'chain'    => ChainAuth::class,
 	];
 
 	/**
@@ -58,5 +64,9 @@ class Filters extends BaseConfig
 	 *
 	 * @var array
 	 */
-	public $filters = [];
+	public $filters = [
+	    'session' => [
+	        'before' => [ADMIN_AREA.'*']
+        ]
+    ];
 }

@@ -24,7 +24,7 @@ trait Themeable
      */
     protected $renderer;
 
-    protected function render(string $view, array $data=null, array $options=null)
+    protected function render(string $view, array $data=[], array $options=null)
     {
         $renderer = $this->getRenderer();
 

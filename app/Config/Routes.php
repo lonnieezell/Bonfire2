@@ -30,6 +30,11 @@ $routes->setAutoRoute(false);
  * --------------------------------------------------------------------
  */
 
+// Auth routes
+$routes->get('register', '\App\Controllers\Auth\RegisterController::registerView');
+$routes->get('login', '\App\Controllers\Auth\LoginController::loginView');
+service('auth')->routes($routes, ['except' => ['login', 'register']]);
+
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');

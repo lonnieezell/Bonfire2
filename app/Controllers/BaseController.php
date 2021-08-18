@@ -41,15 +41,6 @@ class BaseController extends Controller
 	 */
 	protected $helpers = [];
 
-    public function __construct()
-    {
-        // Load Bonfire-specific helpers here
-        // so that devs can still add their own
-        // helpers to their controllers and
-        // not overwrite ours.
-        $this->helpers[] = 'alerts';
-	}
-
 	/**
 	 * Constructor.
 	 *
@@ -59,12 +50,9 @@ class BaseController extends Controller
 	 */
 	public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
 	{
+        $this->helpers = array_merge($this->helpers, ['alerts', 'auth']);
+
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-
-		//--------------------------------------------------------------------
-		// Preload any models, libraries, etc, here.
-		//--------------------------------------------------------------------
-		// E.g.: $this->session = \Config\Services::session();
 	}
 }
