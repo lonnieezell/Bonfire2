@@ -25,7 +25,7 @@ class EmailSettingsController extends BaseController
 
 		return $this->render($this->viewPrefix .'email_settings', [
             'config' => config('Email'),
-            'activeTab' => $tabs[setting('Email', 'protocol') ?? 'smtp'],
+            'activeTab' => $tabs[setting('Email.protocol') ?? 'smtp'],
         ]);
 	}
 
@@ -58,17 +58,17 @@ class EmailSettingsController extends BaseController
             ? $this->request->getPost('SMTPPortOther')
             : $this->request->getPost('SMTPPort');
 
-        setting()->set('Config\Email', 'fromName', $this->request->getPost('fromName'));
-        setting()->set('Config\Email', 'fromEmail', $this->request->getPost('fromEmail'));
-        setting()->set('Config\Email', 'protocol', $this->request->getPost('protocol'));
-        setting()->set('Config\Email', 'mailPath', $this->request->getPost('mailPath'));
-        setting()->set('Config\Email', 'SMTPHost', $this->request->getPost('SMTPHost'));
-        setting()->set('Config\Email', 'SMTPPort', $port);
-        setting()->set('Config\Email', 'SMTPUser', $this->request->getPost('SMTPUser'));
-        setting()->set('Config\Email', 'SMTPPass', $this->request->getPost('SMTPPass'));
-        setting()->set('Config\Email', 'SMTPCrypto', $this->request->getPost('SMTPCrypto'));
-        setting()->set('Config\Email', 'SMTPTimeout', $this->request->getPost('SMTPTimeout'));
-        setting()->set('Config\Email', 'SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
+        setting()->set('Email.fromName', $this->request->getPost('fromName'));
+        setting()->set('Email.fromEmail', $this->request->getPost('fromEmail'));
+        setting()->set('Email.protocol', $this->request->getPost('protocol'));
+        setting()->set('Email.mailPath', $this->request->getPost('mailPath'));
+        setting()->set('Email.SMTPHost', $this->request->getPost('SMTPHost'));
+        setting()->set('Email.SMTPPort', $port);
+        setting()->set('Email.SMTPUser', $this->request->getPost('SMTPUser'));
+        setting()->set('Email.SMTPPass', $this->request->getPost('SMTPPass'));
+        setting()->set('Email.SMTPCrypto', $this->request->getPost('SMTPCrypto'));
+        setting()->set('Email.SMTPTimeout', $this->request->getPost('SMTPTimeout'));
+        setting()->set('Email.SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
 
         alert('success', 'The settings have been saved.');
 
