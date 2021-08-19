@@ -2,7 +2,7 @@
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="/<?= ADMIN_AREA ?>"><i class="fas fa-home"></i> Dashboard</a>
+            <a class="nav-link <?= url_is('/'.ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>"><i class="fas fa-home"></i> Dashboard</a>
         </li>
     </ul>
 
@@ -15,7 +15,7 @@
             <ul class="nav flex-column mb-2">
             <?php foreach($collection->items() as $item) : ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $item->url ?>">
+                    <a class="nav-link <?= url_is($item->url) ? 'active' : '' ?>" href="<?= $item->url ?>">
                         <?= $item->icon ?>
                         <?= $item->title ?>
                     </a>
