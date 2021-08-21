@@ -3,6 +3,7 @@
 namespace Bonfire\Modules\Users\Controllers;
 
 use App\Controllers\BaseController;
+use CodeIgniter\Debug\Timer;
 
 class UserSettingsController extends BaseController
 {

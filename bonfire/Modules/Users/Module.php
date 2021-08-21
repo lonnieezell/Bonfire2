@@ -25,6 +25,14 @@ class Module extends BaseModule
             'fontAwesomeIcon' => 'fas fa-user',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+
+        // Content Menu for sidebar
+        $item = new MenuItem([
+            'title' => 'Users',
+            'namedRoute' => 'user-list',
+            'fontAwesomeIcon' => 'fas fa-users'
+        ]);
+        $sidebar->menu('sidebar')->collection('content')->addItem($item);
     }
 }
 

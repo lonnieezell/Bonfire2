@@ -7,6 +7,7 @@ class ComponentRenderer
     public function __construct()
     {
         helper('inflector');
+        ini_set("pcre.backtrack_limit", "-1");
     }
 
     /**
@@ -99,7 +100,6 @@ class ComponentRenderer
     private function renderPairedTags(string $output): string
     {
         $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/uiUsm';
-        ini_set("pcre.backtrack_limit", "-1");
         /*
 		    $matches[0] = full tags matched and all of its content
 			$matches[name] = tag name (minus the `x-`)

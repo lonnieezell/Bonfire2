@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lonnieezell/codigniter-shield.git",
-                "reference": "adfecbd081dd52e81f7f5e8dca19123fbc107a7b"
+                "reference": "440b46b550a98149d54d0debee1f4d6c697d964c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lonnieezell/codigniter-shield/zipball/adfecbd081dd52e81f7f5e8dca19123fbc107a7b",
-                "reference": "adfecbd081dd52e81f7f5e8dca19123fbc107a7b",
+                "url": "https://api.github.com/repos/lonnieezell/codigniter-shield/zipball/440b46b550a98149d54d0debee1f4d6c697d964c",
+                "reference": "440b46b550a98149d54d0debee1f4d6c697d964c",
                 "shasum": ""
             },
             "require": {
@@ -396,7 +396,7 @@
                 "source": "https://github.com/lonnieezell/codigniter-shield/tree/develop",
                 "issues": "https://github.com/lonnieezell/codigniter-shield/issues"
             },
-            "time": "2021-08-11T04:16:07+00:00"
+            "time": "2021-08-19T05:20:19+00:00"
         },
         {
             "name": "psr/log",
