@@ -44,16 +44,6 @@ class Assets extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
-     * Cache Time To Live
-     * --------------------------------------------------------------------------
-     *
-     * The amount of time, in seconds, that we should tell a browser
-     * to cache the asset file for.
-     */
-    public $ttl = 1*YEAR;
-
-    /**
-     * --------------------------------------------------------------------------
      * Asset Locations
      * --------------------------------------------------------------------------
      *
@@ -64,5 +54,6 @@ class Assets extends BaseConfig
         'app' => ROOTPATH.'themes/app',
         'admin' => ROOTPATH.'themes/admin',
         'auth' => ROOTPATH.'themes/auth',
+        'other' => ROOTPATH.'vendor',
     ];
 }
