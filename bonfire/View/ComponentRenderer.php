@@ -26,8 +26,12 @@ class ComponentRenderer
 		}
 
 		// Try to locate any custom tags, with names like: x-sidebar, x-btn, etc.
+        service('timer')->start('self-closing');
 		$output = $this->renderSelfClosingTags($output);
+        service('timer')->stop('self-closing');
+        service('timer')->start('paired-tags');
 		$output = $this->renderPairedTags($output);
+        service('timer')->stop('paired-tags');
 
 		return $output;
 	}
@@ -98,8 +102,9 @@ class ComponentRenderer
      */
     private function renderPairedTags(string $output): string
     {
-        $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/uiUsm';
-        ini_set("pcre.backtrack_limit", "-1");
+//        ini_set("pcre.backtrack_limit", "-1");
+        $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*?)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*?)<\/\s*x-\1\s*>/uiUsm';
+
         /*
 		    $matches[0] = full tags matched and all of its content
 			$matches[name] = tag name (minus the `x-`)
