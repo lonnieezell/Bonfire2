@@ -2,9 +2,9 @@
 
 namespace Bonfire\Modules\Email\Controllers;
 
-use App\Controllers\BaseController;
+use App\Controllers\AdminController;
 
-class EmailSettingsController extends BaseController
+class EmailSettingsController extends AdminController
 {
     protected $theme = 'Admin';
 

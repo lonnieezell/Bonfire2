@@ -2,9 +2,9 @@
 
 namespace Bonfire\Modules\Users\Controllers;
 
-use App\Controllers\BaseController;
+use App\Controllers\AdminController;
 
-class UserController extends BaseController
+class UserController extends AdminController
 {
     protected $theme = 'Admin';
 

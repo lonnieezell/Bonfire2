@@ -2,7 +2,7 @@
 
 namespace Bonfire\Controllers;
 
-use App\Controllers\BaseController;
+use App\Controllers\AdminController;
 
 /**
  * Class Dashboard
@@ -11,7 +11,7 @@ use App\Controllers\BaseController;
  *
  * @package App\Controllers\Bonfire
  */
-class Dashboard extends BaseController
+class Dashboard extends AdminController
 {
     /**
      * The theme to use.
