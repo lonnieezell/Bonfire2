@@ -1,0 +1,3 @@
+<div class="col-auto" x-show="filtered" x-transition.duration.240ms>
+    <?= $slot ?>
+</div>
