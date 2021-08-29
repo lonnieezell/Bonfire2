@@ -17,9 +17,15 @@ class UserController extends AdminController
      */
 	public function list()
 	{
-	    $userModel = model('UserModel');
+	    $userModel = model('UserFilter');
 
-		return $this->render($this->viewPrefix .'list', [
+        $userModel->filter($this->request->getPost('filters'));
+
+	    $view = $this->request->getMethod() == 'post'
+            ? $this->viewPrefix .'_table'
+            : $this->viewPrefix .'list';
+
+		return $this->render($view, [
 		    'headers' => [
 		        'email' => 'Email',
                 'name' => 'Name',

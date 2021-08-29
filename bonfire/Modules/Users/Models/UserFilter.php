@@ -66,9 +66,15 @@ class UserFilter extends UserModel
      *
      * @return UserFilter
      */
-    public function filter(array $params=[]): UserFilter
+    public function filter(array $params=null): UserFilter
     {
-        dd($params);
+        if(isset($params['roles']) && count($params['roles'])) {
+
+        }
+
+        if(isset($params['active']) && count($params['active'])) {
+            $this->whereIn('users.active', $params['active']);
+        }
 
         return $this;
     }

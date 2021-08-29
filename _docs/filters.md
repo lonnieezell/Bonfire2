@@ -83,3 +83,77 @@ public function filter(array $params)
 
 ## Displaying Filters in the Admin
 
+There are 4 parts that are needed to get a working, filterable list of resources in the admin area. 
+
+### The Route
+
+The main route for your resource list page must support both GET and POST methods. 
+
+```php
+$routes->match(['get', 'post'], 'users', 'UserController::list', ['as' => 'user-list']);
+```
+
+The controller should then choose between sending either a full HTML page for a GET request, or just
+sending back the table for POST requests. You might do it something like: 
+
+```php
+public function list()
+{
+    $userModel = model('UserFilter');
+    
+    // Performs the actual filtering of the results.
+    $userModel->filter($this->request->getPost('filters'));
+
+    $view = $this->request->getMethod() == 'post'
+        ? $this->viewPrefix .'_table'
+        : $this->viewPrefix .'list';
+
+    return $this->render($view, [
+        'headers' => [
+            'email' => 'Email',
+            'name' => 'Name',
+            'groups' => 'Groups',
+            'last_login' => 'Last Login'
+        ],
+        'showSelectAll' => true,
+        'users' => $userModel->paginate(setting('App.perPage')),
+        'pager' => $userModel->pager,
+    ]);
+}
+```
+
+### The View
+
+Within your view there are 3 things to do. 
+
+First, ensure that the table with your resource list is wrapped in a div that uses some [Alpine.js](https://alpinejs.dev/) 
+to attach a `filtered` status of `false` to the div. This creates a variable that determines whether the filters list 
+is shown or not. 
+
+Second, insert the `x-filter-link` component into the top of that div. This provides the link that will show/hide the
+list of filters. This component toggles the `filtered` value above between `true` and `false`.
+
+Finally, call the `renderList` view cell which inserts the HTML for the list of options, all wrapped in a form
+that calls your controller method via AJAX and updates the list of items without a page refresh, using some 
+[htmx](https://htmx.org/) magic. When calling this, you must supply the ID of the div that surrounds the table of 
+results as the `target`.
+
+Here's how this is used for the list of users within Bonfire.
+
+```html
+<div x-data="{filtered: false}">
+    <x-filter-link />
+
+    <div class="row">
+        <!-- List Users -->
+        <div class="col" id="user-list">
+            <?= $this->include('Bonfire\Modules\Users\Views\_table') ?>
+        </div>
+
+        <!-- Filters -->
+        <div class="col-auto" x-show="filtered" x-transition.duration.240ms>
+            <?= view_cell('Bonfire\Libraries\Cells\Filters::renderList', 'model=UserFilter target=#user-list') ?>
+        </div>
+    </div>
+</div>
+```

@@ -179,30 +179,7 @@ label.form-label {
 .filters li {
     font-size: 1rem;
 }
-.filters li a {
+.filters li .form-check-label {
     color: var(--black);
-    text-decoration: none;
     font-weight: 300;
-    padding-left: 1.2rem;
-    display: block;
-    width: 100%;
-    cursor: pointer;
-}
-.filters li a:hover,
-.filters li a:active,
-.filters li a.active {
-    font-weight: 500;
-    padding-left: 0.26rem;
-}
-.filters li a:hover:before,
-.filters li a:active:before,
-.filters li a.active:before {
-    content: '+';
-}
-.filters li a.active:hover {
-    font-weight: 300;
-    padding-left: 1.2rem;
-}
-.filters li a.active:hover:before {
-    content: none;
 }

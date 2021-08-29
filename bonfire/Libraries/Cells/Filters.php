@@ -18,6 +18,7 @@ class Filters
 
         return view($view, [
             'filters' => $model->getFilters(),
+            'target' => $params['target'] ?? null,
         ]);
     }
 }
