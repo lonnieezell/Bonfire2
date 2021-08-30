@@ -52,6 +52,8 @@ class UserFilter extends UserModel
      *  - first name
      *  - last name
      *
+     * @todo Implement user search
+     *
      * @param string|null $term
      */
     public function search(string $term=null): UserFilter
@@ -66,7 +68,7 @@ class UserFilter extends UserModel
      *
      * @return UserFilter
      */
-    public function filter(array $params=null): UserFilter
+    public function filter(array $params=null)
     {
         if(isset($params['roles']) && count($params['roles'])) {
 
@@ -88,6 +90,7 @@ class UserFilter extends UserModel
      */
     public function getStatusFilters(): array
     {
+        // @todo work with real statuses
         return ['banned' => 'Banned'];
     }
 
@@ -98,6 +101,7 @@ class UserFilter extends UserModel
      */
     public function getRoleFilters(): array
     {
+        // @todo return actual groups/roles
         return ['superadmin' => 'SuperAdmin', 'mod' => 'Moderator', 'user' => 'User'];
     }
 }
