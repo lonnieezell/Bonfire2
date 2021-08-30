@@ -1,7 +1,9 @@
 :root {
     --body-bg: #F1F5F9;
+    --black: #222222;
     --blue: #2470dc;
     --grey: #727272;
+    --light-grey: #d2d2d2;
     --white: #fefefe;
 }
 /*
@@ -134,6 +136,13 @@ label.form-label {
 .btn-primary {
     color: var(--white);
 }
+.btn-3-dots:after {
+    content: '\2026';
+    border: none !important;
+    font-size: 36px;
+    margin-top: -10px;
+    line-height: 0;
+}
 
 /*
  * --------------------------------------------------------------------------
@@ -143,4 +152,34 @@ label.form-label {
 
 #alerts-wrapper {
     top: 30px !important;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * RESOURCE FILTERS
+ * --------------------------------------------------------------------------
+ */
+.filters {
+    padding: 1rem 1rem 1.5rem 1rem;
+}
+.filters h2 {
+    font-size: 0.86rem;
+    font-weight: lighter;
+    text-transform: uppercase;
+}
+.filters ul {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--light-grey);
+    margin-bottom: 1.38rem;
+    min-width: 11rem;
+}
+.filters ul:last-child {
+    border-bottom: none;
+}
+.filters li {
+    font-size: 1rem;
+}
+.filters li .form-check-label {
+    color: var(--black);
+    font-weight: 300;
 }

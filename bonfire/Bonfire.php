@@ -69,11 +69,13 @@ class Bonfire
     {
         $menus =  service('menus');
 
+
         // Sidebar menu
         $menus->createMenu('sidebar');
         $menus->menu('sidebar')
-            ->createCollection('settings', 'Settings')
-            ->setFontAwesomeIcon('fas fa-cog');
+            ->createCollection('content', 'Content');
+        $menus->menu('sidebar')
+            ->createCollection('settings', 'Settings');
 
         // Top "icon" menu for notifications, account, etc.
         $menus->createMenu('iconbar');

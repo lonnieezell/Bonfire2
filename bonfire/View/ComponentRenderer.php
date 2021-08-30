@@ -7,6 +7,7 @@ class ComponentRenderer
     public function __construct()
     {
         helper('inflector');
+        ini_set("pcre.backtrack_limit", "-1");
     }
 
     /**
