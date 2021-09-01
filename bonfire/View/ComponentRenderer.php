@@ -233,6 +233,13 @@ class ComponentRenderer
             return $filePath;
         }
 
+        // check in app path
+        $filePath = APPPATH . 'Views/Components/' . $name . '.php';
+
+        if (is_file($filePath)) {
+            return $filePath;
+        }
+
         throw new \RuntimeException('View not found for component: '. $name);
         // @todo look in all normal namespaces
     }
