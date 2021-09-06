@@ -197,6 +197,22 @@ fieldset {
 #alerts-wrapper .alert-danger {
     border-bottom: 3px solid var(--danger);
 }
+#alerts-wrapper .alert-success {
+    border-bottom: 3px solid var(--success);
+}
+
+.text-info {
+    color: var(--info);
+}
+.text-danger {
+    color: var(--danger);
+}
+.text-warning {
+    color: var(--warning);
+}
+.text-success {
+    color: var(--success);
+}
 
 /*
  * --------------------------------------------------------------------------
