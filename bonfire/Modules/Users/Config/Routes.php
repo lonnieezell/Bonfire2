@@ -9,7 +9,9 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Users\Controllers']
     // Manage Users
     $routes->match(['get', 'post'], 'users', 'UserController::list', ['as' => 'user-list']);
     $routes->get('users/new', 'UserController::create', ['as' => 'user-new']);
-    $routes->get('users/(:num)', 'UserController::edit', ['as' => 'user-edit']);
-    $routes->get('users/(:num)/delete', 'UserController::delete', ['as' => 'user-delete']);
-    $routes->post('users/save', 'UserController::save', ['as' => 'user-save']);
+    $routes->get('users/(:num)', 'UserController::edit/$1', ['as' => 'user-edit']);
+    $routes->get('users/(:num)/delete', 'UserController::delete/$1', ['as' => 'user-delete']);
+    $routes->post('users/(:num)/save', 'UserController::save/$1', ['as' => 'user-save']);
+    $routes->post('users/save', 'UserController::save');
+    $routes->get('users/(:num)/security', 'UserController::security/$1');
 });

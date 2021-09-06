@@ -239,24 +239,23 @@
         },
         {
             "name": "laminas/laminas-escaper",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-escaper.git",
-                "reference": "2d6dce99668b413610e9544183fa10392437f542"
+                "reference": "891ad70986729e20ed2e86355fcf93c9dc238a5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-escaper/zipball/2d6dce99668b413610e9544183fa10392437f542",
-                "reference": "2d6dce99668b413610e9544183fa10392437f542",
+                "url": "https://api.github.com/repos/laminas/laminas-escaper/zipball/891ad70986729e20ed2e86355fcf93c9dc238a5f",
+                "reference": "891ad70986729e20ed2e86355fcf93c9dc238a5f",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-zendframework-bridge": "^1.0",
-                "php": "^7.3 || ~8.0.0"
+                "php": "^7.3 || ~8.0.0 || ~8.1.0"
             },
-            "replace": {
-                "zendframework/zend-escaper": "^2.6.1"
+            "conflict": {
+                "zendframework/zend-escaper": "*"
             },
             "require-dev": {
                 "laminas/laminas-coding-standard": "~2.3.0",
@@ -298,93 +297,35 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-06-26T14:26:08+00:00"
-        },
-        {
-            "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "13af2502d9bb6f7d33be2de4b51fb68c6cdb476e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/13af2502d9bb6f7d33be2de4b51fb68c6cdb476e",
-                "reference": "13af2502d9bb6f7d33be2de4b51fb68c6cdb476e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
-                "psalm/plugin-phpunit": "^0.15.1",
-                "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^4.6"
-            },
-            "type": "library",
-            "extra": {
-                "laminas": {
-                    "module": "Laminas\\ZendFrameworkBridge"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/autoload.php"
-                ],
-                "psr-4": {
-                    "Laminas\\ZendFrameworkBridge\\": "src//"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
-            "keywords": [
-                "ZendFramework",
-                "autoloading",
-                "laminas",
-                "zf"
-            ],
-            "support": {
-                "forum": "https://discourse.laminas.dev/",
-                "issues": "https://github.com/laminas/laminas-zendframework-bridge/issues",
-                "rss": "https://github.com/laminas/laminas-zendframework-bridge/releases.atom",
-                "source": "https://github.com/laminas/laminas-zendframework-bridge"
-            },
-            "funding": [
-                {
-                    "url": "https://funding.communitybridge.org/projects/laminas-project",
-                    "type": "community_bridge"
-                }
-            ],
-            "time": "2021-06-24T12:49:22+00:00"
+            "time": "2021-09-02T17:10:53+00:00"
         },
         {
             "name": "lonnieezell/codigniter-shield",
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/lonnieezell/codigniter-shield.git",
-                "reference": "440b46b550a98149d54d0debee1f4d6c697d964c"
+                "url": "https://github.com/lonnieezell/codeigniter-shield.git",
+                "reference": "baebb7e3a3ac79d7748e08bc3b538b201f2b568b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lonnieezell/codigniter-shield/zipball/440b46b550a98149d54d0debee1f4d6c697d964c",
-                "reference": "440b46b550a98149d54d0debee1f4d6c697d964c",
+                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/baebb7e3a3ac79d7748e08bc3b538b201f2b568b",
+                "reference": "baebb7e3a3ac79d7748e08bc3b538b201f2b568b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3"
             },
+            "provide": {
+                "codeigniter4/authentication-implementation": "1.0"
+            },
             "require-dev": {
                 "codeigniter4/codeigniter4": "dev-develop",
                 "codeigniter4/codeigniter4-standard": "^1.0",
+                "codeigniter4/settings": "dev-develop",
                 "fakerphp/faker": "^1.9",
                 "mockery/mockery": "^1.0",
-                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan": "^0.12.98",
                 "phpunit/phpunit": "^8.0 || ^9.0",
                 "squizlabs/php_codesniffer": "^3.3"
             },
@@ -432,10 +373,10 @@
                 "codeigniter4"
             ],
             "support": {
-                "source": "https://github.com/lonnieezell/codigniter-shield/tree/develop",
-                "issues": "https://github.com/lonnieezell/codigniter-shield/issues"
+                "source": "https://github.com/lonnieezell/codeigniter-shield/tree/develop",
+                "issues": "https://github.com/lonnieezell/codeigniter-shield/issues"
             },
-            "time": "2021-08-19T05:20:19+00:00"
+            "time": "2021-09-06T04:35:41+00:00"
         },
         {
             "name": "psr/log",
@@ -489,16 +430,16 @@
         },
         {
             "name": "tatter/alerts",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tattersoftware/codeigniter4-alerts.git",
-                "reference": "32c611580b69697c3c271478f73df30079e45b8a"
+                "reference": "f01d8295ee491e700554d462009644d10a5a9d93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/32c611580b69697c3c271478f73df30079e45b8a",
-                "reference": "32c611580b69697c3c271478f73df30079e45b8a",
+                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/f01d8295ee491e700554d462009644d10a5a9d93",
+                "reference": "f01d8295ee491e700554d462009644d10a5a9d93",
                 "shasum": ""
             },
             "require": {
@@ -506,7 +447,7 @@
             },
             "require-dev": {
                 "codeigniter4/codeigniter4": "dev-develop",
-                "tatter/tools": "^1.4"
+                "tatter/tools": "^1.11"
             },
             "type": "library",
             "autoload": {
@@ -540,9 +481,19 @@
             ],
             "support": {
                 "issues": "https://github.com/tattersoftware/codeigniter4-alerts/issues",
-                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v2.1.0"
+                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v2.1.1"
             },
-            "time": "2021-01-28T21:54:49+00:00"
+            "funding": [
+                {
+                    "url": "https://paypal.me/tatter",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tattersoftware",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-08-31T19:57:33+00:00"
         }
     ],
     "packages-dev": [
@@ -1501,16 +1452,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.8",
+            "version": "9.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "191768ccd5c85513b4068bdbe99bb6390c7d54fb"
+                "reference": "ea8c2dfb1065eb35a79b3681eee6e6fb0a6f273b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/191768ccd5c85513b4068bdbe99bb6390c7d54fb",
-                "reference": "191768ccd5c85513b4068bdbe99bb6390c7d54fb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea8c2dfb1065eb35a79b3681eee6e6fb0a6f273b",
+                "reference": "ea8c2dfb1065eb35a79b3681eee6e6fb0a6f273b",
                 "shasum": ""
             },
             "require": {
@@ -1588,7 +1539,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.8"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.9"
             },
             "funding": [
                 {
@@ -1600,7 +1551,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-31T15:17:34+00:00"
+            "time": "2021-08-31T06:47:40+00:00"
         },
         {
             "name": "psr/container",
@@ -2503,6 +2454,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {

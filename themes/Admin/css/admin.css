@@ -119,12 +119,33 @@ body {
 
 input.form-control,
 select.form-select {
-    padding: 0.75rem 1.25rem !important;
+    padding: 0.5rem 1.25rem !important;
 }
 
 label.form-label {
     font-weight: bolder !important;
     margin-top: 0.5rem;
+}
+
+fieldset {
+    border-bottom: solid 1px var(--light-grey);
+    padding-bottom: 2rem;
+    margin-bottom: 1rem;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * TABS
+ * --------------------------------------------------------------------------
+ */
+.nav-item .nav-link,
+.nav-item .nav-link {
+    font-size: 20px;
+    color: var(--grey);
+    padding: 0.75rem 1rem;
+}
+.nav-item .nav-link.active {
+    color: var(--black)
 }
 
 /*

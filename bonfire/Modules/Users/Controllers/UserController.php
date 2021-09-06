@@ -3,6 +3,9 @@
 namespace Bonfire\Modules\Users\Controllers;
 
 use App\Controllers\AdminController;
+use App\Entities\User;
+use App\Models\UserModel;
+use CodeIgniter\Database\Exceptions\DataException;
 
 class UserController extends AdminController
 {
@@ -28,7 +31,7 @@ class UserController extends AdminController
 		return $this->render($view, [
 		    'headers' => [
 		        'email' => 'Email',
-                'name' => 'Name',
+                'username' => 'Username',
                 'groups' => 'Groups',
                 'last_login' => 'Last Login'
             ],
@@ -45,4 +48,69 @@ class UserController extends AdminController
     {
         return $this->render($this->viewPrefix .'form');
 	}
+
+    /**
+     * Display the Edit form for a single user.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     */
+    public function edit(int $userId)
+    {
+        $users = new UserModel();
+
+        $user = $users->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', 'Unable to find that user.');
+        }
+
+        $groups = setting('AuthGroups.groups');
+        asort($groups);
+
+        return $this->render($this->viewPrefix .'form', [
+            'user' => $user,
+            'groups' => $groups,
+        ]);
+    }
+
+    /**
+     * Creates or saves the basic user details.
+     *
+     * @param int|null $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @throws \ReflectionException
+     */
+    public function save(int $userId = null)
+    {
+        $users = new UserModel();
+        $user = $userId !== null
+            ? $users->find($userId)
+            : new User();
+
+        if ($user === null) {
+            return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        // Save basic details
+        $user->fill($this->request->getPost());
+
+        try {
+            if (! $users->save($user)) {
+                log_message($users->errors());
+
+                return redirect()->back()->withInput()->with('error', lang('Bonfire.unknownSaveError', ['user']));
+            }
+        } catch(DataException $e) {
+            // Just log the message for now since it's
+            // likely saying the user's data is all the same
+            log_message('debug', 'SAVING USER: '. $e->getMessage());
+        }
+
+        // Save the user's groups
+        $user->syncGroups($this->request->getPost('groups'));
+
+        return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['user']));
+    }
 }
