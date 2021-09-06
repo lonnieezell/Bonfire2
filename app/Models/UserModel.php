@@ -13,6 +13,9 @@ use Sparks\Shield\Models\UserModel as ShieldUsers;
 class UserModel extends ShieldUsers
 {
     protected $returnType = User::class;
+    protected $allowedFields = [
+        'username', 'first_name', 'last_name', 'avatar', 'status', 'status_message', 'active'
+    ];
 
     protected $validation = [
         'email' => 'required|valid_email|is_unique[users,email,id,{id}]',
