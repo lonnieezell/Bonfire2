@@ -1,10 +1,16 @@
 :root {
+    --primary: #0275d8;
     --body-bg: #F1F5F9;
     --black: #222222;
     --blue: #2470dc;
     --grey: #727272;
     --light-grey: #d2d2d2;
-    --white: #fefefe;
+    --white: #f7f7f7;
+    --success: #5cb85c;
+    --info: #5bc0de;
+    --warning: #f0ad4e;
+    --danger: #d9534f;
+    --dark: #292b2c;
 }
 /*
  * --------------------------------------------------------------------------
@@ -173,6 +179,23 @@ fieldset {
 
 #alerts-wrapper {
     top: 30px !important;
+    right: 1% !important;
+    left: auto !important;
+    min-width: 20rem !important;
+}
+#alerts-wrapper .alert {
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    opacity: 0.8;
+}
+#alerts-wrapper .alert-info {
+    border-bottom: 3px solid var(--info);
+}
+#alerts-wrapper .alert-warning {
+    border-bottom: 3px solid var(--warning);
+}
+#alerts-wrapper .alert-danger {
+    border-bottom: 3px solid var(--danger);
 }
 
 /*
