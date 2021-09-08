@@ -57,8 +57,8 @@ class UserSettingsController extends BaseController
 
         // Actions
         $actions = setting('Auth.actions');
-        $actions['login'] = $this->request->getPost('email2FA');
-        $actions['register'] = $this->request->getPost('emailActivation');
+        $actions['login'] = (bool)$this->request->getPost('email2FA');
+        $actions['register'] = (bool)$this->request->getPost('emailActivation');
         setting('Auth.actions', $actions);
 
         // Remember Me
@@ -67,7 +67,7 @@ class UserSettingsController extends BaseController
         $sessionConfig['rememberLength'] = $this->request->getPost('rememberLength');
         setting('Auth.sessionConfig', $sessionConfig);
 
-        alert('success', 'The settings have been saved.');
+        alert('success', lang('Bonfire.resourcesSaved', ['settings']));
 
         return redirect()->back();
 	}

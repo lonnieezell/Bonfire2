@@ -7,7 +7,7 @@ use Bonfire\Modules\Users\Models\UserFilter;
 use Bonfire\Traits\Filterable;
 use CodeIgniter\Model;
 use CodeIgniter\Test\DatabaseTestTrait;
-use Sparks\Shield\Entities\User;
+use App\Entities\User;
 use Tests\Support\TestCase;
 
 class FilterableTest extends TestCase
@@ -58,8 +58,6 @@ class FilterableTest extends TestCase
                 ]
             ];
         };
-
-        $users = new UserModel();
 
         $user1 = fake(UserModel::class, ['status' => 'banned', 'active' => 0]);
         $user2 = fake(UserModel::class, ['status' => 'paused', 'active' => 1]);
