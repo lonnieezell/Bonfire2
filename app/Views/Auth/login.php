@@ -22,6 +22,15 @@
                     <input type="password" class="form-control" name="password" autocomplete="off" placeholder="<?= lang('Auth.password') ?>" required />
                 </div>
 
+                <?php if($allowRemember) : ?>
+                    <div class="form-check my-4">
+                        <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember">
+                        <label class="form-check-label" for="remember">
+                            <?= lang('Auth.rememberMe') ?>
+                        </label>
+                    </div>
+                <?php endif ?>
+
                 <div class="d-grid col-8 mx-auto m-3">
                     <button type="submit" class="btn btn-primary btn-block"><?= lang('Auth.login') ?></button>
                 </div>

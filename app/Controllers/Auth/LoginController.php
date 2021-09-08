@@ -15,7 +15,9 @@ class LoginController extends ShieldLogin
      */
     public function loginView()
     {
-        return $this->render(config('Auth')->views['login']);
+        return $this->render(config('Auth')->views['login'], [
+            'allowRemember' => setting('Auth.sessionConfig')['allowRemembering'],
+        ]);
     }
 
     /**
