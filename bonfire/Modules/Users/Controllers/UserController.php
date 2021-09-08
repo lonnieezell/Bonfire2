@@ -6,6 +6,7 @@ use App\Controllers\AdminController;
 use App\Entities\User;
 use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DataException;
+use Sparks\Shield\Models\LoginModel;
 
 class UserController extends AdminController
 {
@@ -62,7 +63,7 @@ class UserController extends AdminController
 
         $user = $users->find($userId);
         if ($user === null) {
-            return redirect()->back()->with('error', 'Unable to find that user.');
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
         $groups = setting('AuthGroups.groups');
@@ -112,5 +113,30 @@ class UserController extends AdminController
         $user->syncGroups($this->request->getPost('groups'));
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['user']));
+    }
+
+    /**
+     * Displays basic security info, like previous login info,
+     * and ability to force a password reset, ban, etc.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     */
+    public function security(int $userId)
+    {
+        $users = model(UserModel::class);
+        $user = $users->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        $loginModel = model(LoginModel::class);
+        $logins = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
+
+        return $this->render($this->viewPrefix .'security', [
+            'user' => $user,
+            'logins' => $logins,
+        ]);
     }
 }

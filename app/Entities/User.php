@@ -45,7 +45,7 @@ class User extends ShieldUser
         $url = ADMIN_AREA ."/users/{$this->id}";
 
         if(! empty($postfix)) {
-            $url .= "{$postfix}";
+            $url .= "/{$postfix}";
         }
 
         return trim(site_url($url));
