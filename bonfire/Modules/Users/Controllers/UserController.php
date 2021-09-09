@@ -7,6 +7,7 @@ use App\Entities\User;
 use App\Models\UserModel;
 use CodeIgniter\Database\Exceptions\DataException;
 use Sparks\Shield\Models\LoginModel;
+use Sparks\Shield\Models\UserIdentityModel;
 
 class UserController extends AdminController
 {
@@ -47,7 +48,12 @@ class UserController extends AdminController
      */
     public function create()
     {
-        return $this->render($this->viewPrefix .'form');
+        $groups = setting('AuthGroups.groups');
+        asort($groups);
+
+        return $this->render($this->viewPrefix .'form', [
+            'groups' => $groups,
+        ]);
 	}
 
     /**
@@ -109,10 +115,36 @@ class UserController extends AdminController
             log_message('debug', 'SAVING USER: '. $e->getMessage());
         }
 
+        // We need an ID to on the entity to save groups.
+        if ($user->id === null) {
+            $user->id = $users->getInsertID();
+        }
+
+        // Save the new user's email/password
+        $password = $this->request->getPost('password');
+        $identity = $user->getEmailIdentity();
+        if ($identity === null) {
+            helper('text');
+            $user->createEmailIdentity([
+                'email' => $this->request->getPost('email'),
+                'password' => ! empty($password) ? $password : random_string(12),
+            ]);
+        }
+        // Update existing user's email identity
+        else {
+            $identity->secret = $this->request->getPost('email');
+            if ($password !== null) {
+                $identity->secret2 = service('passwords')->hash($password);
+            }
+            if ($identity->hasChanged()) {
+                model(UserIdentityModel::class)->save($identity);
+            }
+        }
+
         // Save the user's groups
         $user->syncGroups($this->request->getPost('groups'));
 
-        return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['user']));
+        return redirect()->to($user->adminLink())->with('message', lang('Bonfire.resourceSaved', ['user']));
     }
 
     /**

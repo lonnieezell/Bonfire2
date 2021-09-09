@@ -28,6 +28,14 @@ body {
     vertical-align: text-bottom;
 }
 
+.page-head a.back {
+    color: var(--grey);
+    text-decoration: none;
+}
+.page-head a.back:hover {
+    text-decoration: underline;
+}
+
 /*
  * Sidebar
  */

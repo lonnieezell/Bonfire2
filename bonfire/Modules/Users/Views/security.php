@@ -2,6 +2,7 @@
 
 <?php $this->section('main') ?>
 <x-page-head>
+    <a href="/<?= ADMIN_AREA ?>/users" class="back">&larr; Users</a>
     <h2>Edit User</h2>
 </x-page-head>
 
@@ -17,6 +18,7 @@
                 <tr>
                     <th>Date</th>
                     <th>IP Address</th>
+                    <th>User Agent</th>
                     <th>Success?</th>
                 </tr>
             </thead>
@@ -26,6 +28,7 @@
                     <tr>
                         <td><?= $login->date->format('M j, Y h:ia T') ?? '' ?></td>
                         <td><?= $login->ip_address ?? '' ?></td>
+                        <td><?= $login->user_agent ?? '' ?></td>
                         <td>
                             <?php if($login->success) : ?>
                                 <span class="badge rounded-pill bg-success">Success</span>
@@ -37,7 +40,7 @@
                 <?php endforeach ?>
             </tbody>
             <?php else : ?>
-                <div class="alert alert-info">No recent login attempts.</div>
+                <div class="alert alert-secondary">No recent login attempts.</div>
             <?php endif ?>
         </table>
     </fieldset>
@@ -67,7 +70,7 @@
                 <?php endforeach ?>
             </tbody>
             <?php else : ?>
-                <div class="alert alert-info">No recent password reset attempts.</div>
+                <div class="alert alert-secondary">No recent password reset attempts.</div>
             <?php endif ?>
         </table>
     </fieldset>

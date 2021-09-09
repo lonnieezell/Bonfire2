@@ -2,7 +2,8 @@
 
 <?php $this->section('main') ?>
     <x-page-head>
-            <h2><?= isset($user) ? 'Edit User' : 'New User' ?></h2>
+        <a href="/<?= ADMIN_AREA ?>/users" class="back">&larr; Users</a>
+        <h2><?= isset($user) ? 'Edit User' : 'New User' ?></h2>
     </x-page-head>
 
     <?php if(isset($user) && $user->deleted_at !== null) : ?>
@@ -12,14 +13,14 @@
         </div>
     <?php endif ?>
 
-    <?= view('Bonfire\Modules\Users\Views\_tabs', ['tab' => 'details', 'user' => $user]) ?>
+    <?= view('Bonfire\Modules\Users\Views\_tabs', ['tab' => 'details', 'user' => $user ?? null]) ?>
 
     <x-admin-box>
 
     <?php if(isset($user) && $user !== null) : ?>
         <form action="<?= $user->adminLink('/save') ?>" method="post">
     <?php else : ?>
-        <form action="<?= ADMIN_AREA .'/users' ?>" method="post">
+        <form action="<?= (new \App\Entities\User())->adminLink('/save') ?>" method="post">
     <?php endif ?>
             <?= csrf_field() ?>
 
@@ -31,7 +32,7 @@
                         <!-- Avatar preview and edit links -->
                         <div style="width: 120px; height: 120px" class="border border-3 rounded-circle overflow-hidden">
                             <?php if(isset($user) && $user->avatarLink() !== '') : ?>
-                                <img src="<?= $user->avatarLink(120) ?>" alt="<?= $user->name() ?>">
+                                <img src="<?= $user->avatarLink(120) ?>" alt="<?= esc($user->name(), 'attr') ?>">
                             <?php endif ?>
                         </div>
                     </div>
@@ -93,7 +94,7 @@
                     <div class="form-group col-12 col-sm-6">
                         <select name="groups[]" multiple="multiple" class="form-control">
                         <?php foreach($groups as $group => $info) : ?>
-                            <option value="<?= $group ?>" <?php if($user->inGroup($group)) : ?> selected <?php endif ?>>
+                            <option value="<?= $group ?>" <?php if(isset($user) && $user->inGroup($group)) : ?> selected <?php endif ?>>
                                 <?= $info['title'] ?? $group ?>
                             </option>
                         <?php endforeach ?>
