@@ -50,4 +50,22 @@ class User extends ShieldUser
 
         return trim(site_url($url));
     }
+
+    /**
+     * Returns a list of the groups the user is involved in.
+     *
+     * @return string
+     */
+    public function groupsList(): string
+    {
+        $config = setting('AuthGroups.groups');
+        $groups = $this->getGroups();
+
+        $out = [];
+        foreach($groups as $group) {
+            $out[] = $config[$group]['title'];
+        }
+
+        return implode(', ', $out);
+    }
 }

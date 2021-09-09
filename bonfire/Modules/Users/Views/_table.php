@@ -9,7 +9,7 @@
                 </td>
                 <td><a href="<?= $user->adminLink() ?>"><?= esc($user->email) ?></a></td>
                 <td><a href="<?= $user->adminLink() ?>"><?= esc($user->username) ?></a></td>
-                <td></td>
+                <td><?= $user->groupsList() ?></td>
                 <td><?= $user->lastLogin() !== null ? $user->lastLogin()->date->humanize() : '' ?></td>
                 <td class="d-flex justify-content-end">
                     <!-- Action Menu -->
