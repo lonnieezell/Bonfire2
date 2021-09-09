@@ -65,6 +65,10 @@ class UserController extends AdminController
      */
     public function edit(int $userId)
     {
+        if (! auth()->user()->can('users.edit')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $users = new UserModel();
 
         $user = $users->find($userId);
@@ -91,6 +95,10 @@ class UserController extends AdminController
      */
     public function save(int $userId = null)
     {
+        if (! auth()->user()->can('users.edit')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $users = new UserModel();
         $user = $userId !== null
             ? $users->find($userId)
@@ -170,5 +178,33 @@ class UserController extends AdminController
             'user' => $user,
             'logins' => $logins,
         ]);
+    }
+
+    /**
+     * Delete the specified user.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
+    public function delete(int $userId)
+    {
+        if (! auth()->user()->can('users.delete')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        $users = model(UserModel::class);
+        $user = $users->find($userId);
+
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        if (! $users->delete($user->id)) {
+            log_message('error', $users->error());
+            return redirect()->back()->with('error', lang('Bonfire.unknownError'));
+        }
+
+        return redirect()->back()->with('message', lang('Bonfire.resourceDeleted', ['user']));
     }
 }
