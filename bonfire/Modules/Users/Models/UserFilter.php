@@ -70,8 +70,11 @@ class UserFilter extends UserModel
      */
     public function filter(array $params=null)
     {
-        if(isset($params['roles']) && count($params['roles'])) {
+        $this->select('users.*');
 
+        if(isset($params['role']) && count($params['role'])) {
+            $this->join('auth_groups_users agu', 'agu.user_id = users.id')
+                ->whereIn('agu.group', $params['role']);
         }
 
         if(isset($params['active']) && count($params['active'])) {
@@ -101,7 +104,15 @@ class UserFilter extends UserModel
      */
     public function getRoleFilters(): array
     {
-        // @todo return actual groups/roles
-        return ['superadmin' => 'SuperAdmin', 'mod' => 'Moderator', 'user' => 'User'];
+        $groups = setting('AuthGroups.groups');
+
+        $use = [];
+        foreach($groups as $alias => $info) {
+            $use[$alias] = $info['title'];
+        }
+
+        asort($use);
+
+        return $use;
     }
 }

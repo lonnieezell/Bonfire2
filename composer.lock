@@ -306,29 +306,32 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lonnieezell/codeigniter-shield.git",
-                "reference": "578629d2bd12e829da44ca8e093ef9f7899a7928"
+                "reference": "60106c48e3f42b22cf226845b6a9ef2574a9574e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/578629d2bd12e829da44ca8e093ef9f7899a7928",
-                "reference": "578629d2bd12e829da44ca8e093ef9f7899a7928",
+                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/60106c48e3f42b22cf226845b6a9ef2574a9574e",
+                "reference": "60106c48e3f42b22cf226845b6a9ef2574a9574e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.3"
+                "php": "^7.3 || ^8.0"
             },
             "provide": {
                 "codeigniter4/authentication-implementation": "1.0"
             },
             "require-dev": {
+                "codeigniter/coding-standard": "^1.1",
                 "codeigniter4/codeigniter4": "dev-develop",
-                "codeigniter4/codeigniter4-standard": "^1.0",
                 "codeigniter4/settings": "dev-develop",
                 "fakerphp/faker": "^1.9",
+                "friendsofphp/php-cs-fixer": "^3.0",
                 "mockery/mockery": "^1.0",
+                "nexusphp/cs-config": "^3.1",
+                "nexusphp/tachycardia": "^1.0",
+                "php-coveralls/php-coveralls": "^2.4",
                 "phpstan/phpstan": "^0.12.98",
-                "phpunit/phpunit": "^8.0 || ^9.0",
-                "squizlabs/php_codesniffer": "^3.3"
+                "phpunit/phpunit": "^9.3"
             },
             "default-branch": true,
             "type": "library",
@@ -349,8 +352,14 @@
                 "analyze": [
                     "phpstan analyze"
                 ],
+                "inspect": [
+                    "deptrac analyze --cache-file=build/deptrac.cache"
+                ],
+                "mutate": [
+                    "infection --threads=2 --skip-initial-tests --coverage=build/phpunit"
+                ],
                 "style": [
-                    "phpcbf --standard=./vendor/codeigniter4/codeigniter4-standard/CodeIgniter4 tests/ src/"
+                    "php-cs-fixer fix --verbose --ansi"
                 ],
                 "test": [
                     "phpunit"
@@ -377,7 +386,7 @@
                 "source": "https://github.com/lonnieezell/codeigniter-shield/tree/develop",
                 "issues": "https://github.com/lonnieezell/codeigniter-shield/issues"
             },
-            "time": "2021-09-09T03:20:20+00:00"
+            "time": "2021-09-16T05:31:32+00:00"
         },
         {
             "name": "psr/log",
@@ -1068,33 +1077,33 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.13.0",
+            "version": "1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea"
+                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/be1996ed8adc35c3fd795488a653f4b518be70ea",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
+                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.2",
-                "php": "^7.2 || ~8.0, <8.1",
+                "php": "^7.2 || ~8.0, <8.2",
                 "phpdocumentor/reflection-docblock": "^5.2",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "sebastian/recursion-context": "^3.0 || ^4.0"
             },
             "require-dev": {
-                "phpspec/phpspec": "^6.0",
+                "phpspec/phpspec": "^6.0 || ^7.0",
                 "phpunit/phpunit": "^8.0 || ^9.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -1129,9 +1138,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.13.0"
+                "source": "https://github.com/phpspec/prophecy/tree/1.14.0"
             },
-            "time": "2021-03-17T13:42:18+00:00"
+            "time": "2021-09-10T09:02:12+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2460,7 +2469,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
