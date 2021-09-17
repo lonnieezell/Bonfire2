@@ -104,6 +104,7 @@ class UserFilter extends UserModel
      */
     public function getRoleFilters(): array
     {
+        helper('setting');
         $groups = setting('AuthGroups.groups');
 
         $use = [];
