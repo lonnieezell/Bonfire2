@@ -35,7 +35,7 @@ class UserController extends AdminController
 		        'email' => 'Email',
                 'username' => 'Username',
                 'groups' => 'Groups',
-                'last_login' => 'Last Login'
+                'last_active' => 'Last Active'
             ],
 		    'showSelectAll' => true,
 		    'users' => $userModel->paginate(setting('App.perPage')),
