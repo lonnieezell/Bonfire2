@@ -24,7 +24,7 @@ class User extends ShieldUser
             ]);
         }
 
-        return $this->avatar;
+        return base_url('/uploads/avatars/'. $this->avatar);
     }
 
     /**

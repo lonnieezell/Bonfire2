@@ -18,9 +18,9 @@
     <x-admin-box>
 
     <?php if(isset($user) && $user !== null) : ?>
-        <form action="<?= $user->adminLink('/save') ?>" method="post">
+        <form action="<?= $user->adminLink('/save') ?>" method="post" enctype="multipart/form-data">
     <?php else : ?>
-        <form action="<?= (new \App\Entities\User())->adminLink('/save') ?>" method="post">
+        <form action="<?= (new \App\Entities\User())->adminLink('/save') ?>" method="post" enctype="multipart/form-data">
     <?php endif ?>
             <?= csrf_field() ?>
 
@@ -28,12 +28,19 @@
                 <legend>Basic Info</legend>
 
                 <div class="row">
-                    <div class="col-12 col-sm-2 d-flex justify-content-center align-items-top pt-3">
+                    <div class="col-12 col-sm-3 d-flex align-items-top pt-3">
                         <!-- Avatar preview and edit links -->
-                        <div style="width: 120px; height: 120px" class="border border-3 rounded-circle overflow-hidden">
-                            <?php if(isset($user) && $user->avatarLink() !== '') : ?>
-                                <img src="<?= $user->avatarLink(120) ?>" alt="<?= esc($user->name(), 'attr') ?>">
-                            <?php endif ?>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-center">
+                                <div style="width: 140px; height: 140px" class="border border-3 rounded-circle overflow-hidden">
+                                    <?php if(isset($user) && $user->avatarLink() !== '') : ?>
+                                        <img src="<?= $user->avatarLink(140) ?>" width="100%" height="100%" alt="<?= esc($user->name(), 'attr') ?>">
+                                    <?php endif ?>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <input type="file" class="form-control btn-upload" name="avatar" accept="image/*" />
+                            </div>
                         </div>
                     </div>
                     <div class="col">

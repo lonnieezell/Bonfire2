@@ -108,9 +108,10 @@ class UserController extends AdminController
             return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        // Save basic details
+        // Fill in basic details
         $user->fill($this->request->getPost());
 
+        // Try saving basic details
         try {
             if (! $users->save($user)) {
                 log_message($users->errors());
@@ -126,6 +127,16 @@ class UserController extends AdminController
         // We need an ID to on the entity to save groups.
         if ($user->id === null) {
             $user->id = $users->getInsertID();
+        }
+
+        // Check for an avatar to upload
+        if ($file = $this->request->getFile('avatar')) {
+            if($file->isValid()) {
+                $filename = $user->id .'_avatar.'. $file->getExtension();
+                if($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
+                    $user->avatar = $filename;
+                }
+            }
         }
 
         // Save the new user's email/password

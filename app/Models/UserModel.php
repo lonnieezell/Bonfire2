@@ -14,6 +14,11 @@ class UserModel extends ShieldUsers
 {
     protected $returnType = User::class;
 
+    protected $allowedFields = [
+        'username', 'status', 'status_message', 'active', 'last_active', 'deleted_at',
+        'avatar',
+    ];
+
     protected $validation = [
         'email' => 'required|valid_email|is_unique[users,email,id,{id}]',
         'username' => 'required|string|is_unique[users,username,id,{id}]',
