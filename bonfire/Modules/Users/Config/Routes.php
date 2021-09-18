@@ -15,4 +15,5 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Users\Controllers']
     $routes->post('users/save', 'UserController::save');
     $routes->get('users/(:num)/security', 'UserController::security/$1');
     $routes->get('users/(:num)/permissions', 'UserController::permissions/$1');
+    $routes->post('users/(:num)/permissions', 'UserController::savePermissions/$1');
 });

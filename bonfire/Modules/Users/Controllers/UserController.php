@@ -234,4 +234,24 @@ class UserController extends AdminController
             'permissions' => $permissions,
         ]);
     }
+
+    /**
+     * Updates the permissions for a single user.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
+    public function savePermissions(int $userId)
+    {
+        $users = model(UserModel::class);
+        $user = $users->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        $user->syncPermissions($this->request->getPost('permissions') ?? []);
+
+        return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
+    }
 }

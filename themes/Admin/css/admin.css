@@ -153,6 +153,9 @@ fieldset {
     padding-bottom: 2rem;
     margin-bottom: 1rem;
 }
+input[type="checkbox"]:indeterminate {
+    opacity: 0.3;
+}
 
 /*
  * --------------------------------------------------------------------------
