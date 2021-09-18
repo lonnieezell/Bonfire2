@@ -156,31 +156,6 @@ class UserController extends AdminController
     }
 
     /**
-     * Displays basic security info, like previous login info,
-     * and ability to force a password reset, ban, etc.
-     *
-     * @param int $userId
-     *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
-     */
-    public function security(int $userId)
-    {
-        $users = model(UserModel::class);
-        $user = $users->find($userId);
-        if ($user === null) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
-        }
-
-        $loginModel = model(LoginModel::class);
-        $logins = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
-
-        return $this->render($this->viewPrefix .'security', [
-            'user' => $user,
-            'logins' => $logins,
-        ]);
-    }
-
-    /**
      * Delete the specified user.
      *
      * @param int $userId
@@ -206,5 +181,57 @@ class UserController extends AdminController
         }
 
         return redirect()->back()->with('message', lang('Bonfire.resourceDeleted', ['user']));
+    }
+
+    /**
+     * Displays basic security info, like previous login info,
+     * and ability to force a password reset, ban, etc.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     */
+    public function security(int $userId)
+    {
+        $users = model(UserModel::class);
+        $user = $users->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        $loginModel = model(LoginModel::class);
+        $logins = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
+
+        return $this->render($this->viewPrefix .'security', [
+            'user' => $user,
+            'logins' => $logins,
+        ]);
+    }
+
+    /**
+     * Displays basic security info, like previous login info,
+     * and ability to force a password reset, ban, etc.
+     *
+     * @param int $userId
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|string|void
+     */
+    public function permissions(int $userId)
+    {
+        $users = model(UserModel::class);
+        $user = $users->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        $permissions = setting('AuthGroups.permissions');
+        if(is_array($permissions)) {
+            ksort($permissions);
+        }
+
+        return $this->render($this->viewPrefix .'permissions', [
+            'user' => $user,
+            'permissions' => $permissions,
+        ]);
     }
 }

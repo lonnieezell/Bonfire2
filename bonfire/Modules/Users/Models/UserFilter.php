@@ -4,6 +4,7 @@ namespace Bonfire\Modules\Users\Models;
 
 use App\Models\UserModel;
 use Bonfire\Traits\Filterable;
+use CodeIgniter\I18n\Time;
 
 class UserFilter extends UserModel
 {
@@ -23,10 +24,6 @@ class UserFilter extends UserModel
         'active' => [
             'title' => 'Active?',
             'options' => [0 => 'Inactive', 1 => 'Active']
-        ],
-        'status' => [
-            'title' => 'Status',
-            'options' => 'getStatusFilters'
         ],
         'last_active' => [
             'title' => 'Last Active',
@@ -81,20 +78,13 @@ class UserFilter extends UserModel
             $this->whereIn('users.active', $params['active']);
         }
 
-        return $this;
-    }
+        if(isset($params['last_active']) && count($params['last_active'])) {
+            // We only use the largest value
+            $days = max($params['last_active']);
+            $this->where('last_active >=', Time::now()->subDays($days)->toDateTimeString());
+        }
 
-    /**
-     * Returns the available status' to filter by.
-     * This is determined by grabbing unique values
-     * from the database.
-     *
-     * @return array
-     */
-    public function getStatusFilters(): array
-    {
-        // @todo work with real statuses
-        return ['banned' => 'Banned'];
+        return $this;
     }
 
     /**
