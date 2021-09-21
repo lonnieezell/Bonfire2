@@ -306,15 +306,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lonnieezell/codeigniter-shield.git",
-                "reference": "12c01de74c41bcaa0801bcfc5d74cc08f95c5e4a"
+                "reference": "b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/12c01de74c41bcaa0801bcfc5d74cc08f95c5e4a",
-                "reference": "12c01de74c41bcaa0801bcfc5d74cc08f95c5e4a",
+                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa",
+                "reference": "b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa",
                 "shasum": ""
             },
             "require": {
+                "codeigniter4/settings": "dev-develop",
                 "php": "^7.3 || ^8.0"
             },
             "provide": {
@@ -323,7 +324,6 @@
             "require-dev": {
                 "codeigniter/coding-standard": "^1.1",
                 "codeigniter4/codeigniter4": "dev-develop",
-                "codeigniter4/settings": "dev-develop",
                 "fakerphp/faker": "^1.9",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "mockery/mockery": "^1.0",
@@ -386,7 +386,7 @@
                 "source": "https://github.com/lonnieezell/codeigniter-shield/tree/develop",
                 "issues": "https://github.com/lonnieezell/codeigniter-shield/issues"
             },
-            "time": "2021-09-18T04:38:36+00:00"
+            "time": "2021-09-21T04:39:41+00:00"
         },
         {
             "name": "psr/log",
@@ -752,16 +752,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.12.0",
+            "version": "v4.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "6608f01670c3cc5079e18c1dab1104e002579143"
+                "reference": "50953a2691a922aa1769461637869a0a2faa3f53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/6608f01670c3cc5079e18c1dab1104e002579143",
-                "reference": "6608f01670c3cc5079e18c1dab1104e002579143",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/50953a2691a922aa1769461637869a0a2faa3f53",
+                "reference": "50953a2691a922aa1769461637869a0a2faa3f53",
                 "shasum": ""
             },
             "require": {
@@ -802,9 +802,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.12.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.13.0"
             },
-            "time": "2021-07-21T10:44:31+00:00"
+            "time": "2021-09-20T12:20:58+00:00"
         },
         {
             "name": "phar-io/manifest",

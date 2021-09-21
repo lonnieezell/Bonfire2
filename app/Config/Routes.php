@@ -33,6 +33,9 @@ $routes->setAutoRoute(false);
 // Auth routes
 $routes->get('register', '\App\Controllers\Auth\RegisterController::registerView');
 $routes->get('login', '\App\Controllers\Auth\LoginController::loginView');
+$routes->get('login/magic-link', '\App\Controllers\Auth\MagicLinkController::loginView', ['as' => 'magic-link']);
+$routes->post('login/magic-link', '\App\Controllers\Auth\MagicLinkController::loginAction');
+$routes->get('login/verify-magic-link', '\App\Controllers\Auth\MagicLinkController::verify', ['as' => 'verify-magic-link']);
 service('auth')->routes($routes, ['except' => ['login', 'register']]);
 
 // We get a performance increase by specifying the default

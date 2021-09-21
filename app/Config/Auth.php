@@ -25,6 +25,9 @@ class Auth extends ShieldAuth
         'action_email_2fa_email'      => '\Sparks\Shield\Views\email_2fa_email',
         'action_email_activate_email' => '\Sparks\Shield\Views\email_activate_email',
         'action_email_activate_show'  => '\Sparks\Shield\Views\email_activate_show',
+        'magic-link-login'            => '\App\Views\Auth\magic_link_form',
+        'magic-link-message'          => '\App\Views\Auth\magic_link_message',
+        'magic-link-email'            => '\App\Views\Auth\magic_link_email',
     ];
 
     /**
@@ -96,11 +99,40 @@ class Auth extends ShieldAuth
 
     /**
      * --------------------------------------------------------------------
+     * Record Last Active Date
+     * --------------------------------------------------------------------
+     * If true, will always update the `last_active` datetime for the
+     * logged in user on every page request.
+     */
+    public $recordActiveDate = true;
+
+    /**
+     * --------------------------------------------------------------------
      * Allow Registration
      * --------------------------------------------------------------------
      * Determines whether users can register for the site.
      */
     public $allowRegistration = true;
+
+    /**
+     * --------------------------------------------------------------------
+     * Allow Magic Link Logins
+     * --------------------------------------------------------------------
+     * If true, will allow the use of "magic links" sent via the email
+     * as a way to log a user in without the need for a password.
+     * By default, this is used in place of a password reset flow, but
+     * could be modified as the only method of login once an account
+     * has been set up.
+     */
+    public $allowMagicLinkLogins = true;
+
+    /**
+     * --------------------------------------------------------------------
+     * Magic Link Lifetime
+     * --------------------------------------------------------------------
+     * Specifies the amount of time, in seconds, that a magic link is valid.
+     */
+    public $magicLinkLifetime = 1 * HOUR;
 
     /**
      * --------------------------------------------------------------------
