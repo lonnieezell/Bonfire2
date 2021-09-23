@@ -306,12 +306,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lonnieezell/codeigniter-shield.git",
-                "reference": "b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa"
+                "reference": "c0368951c544e5dd5776c837ad4f1a093884fb9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa",
-                "reference": "b4aeeff86c06b16a0dc25f1cd277b6f9c850cfaa",
+                "url": "https://api.github.com/repos/lonnieezell/codeigniter-shield/zipball/c0368951c544e5dd5776c837ad4f1a093884fb9b",
+                "reference": "c0368951c544e5dd5776c837ad4f1a093884fb9b",
                 "shasum": ""
             },
             "require": {
@@ -386,7 +386,7 @@
                 "source": "https://github.com/lonnieezell/codeigniter-shield/tree/develop",
                 "issues": "https://github.com/lonnieezell/codeigniter-shield/issues"
             },
-            "time": "2021-09-21T04:39:41+00:00"
+            "time": "2021-09-22T03:25:04+00:00"
         },
         {
             "name": "psr/log",
