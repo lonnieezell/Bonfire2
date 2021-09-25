@@ -6,37 +6,39 @@
     <h2>Edit Groups &amp; Permissions</h2>
 </x-page-head>
 
+<?= view('Bonfire\Modules\Groups\Views\_tabs', ['tab' => 'permissions', 'group' => $group->alias]) ?>
+
 <x-admin-box>
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
         <fieldset>
-            <legend><?= $group['title'] ?></legend>
+            <legend><?= esc($group->title) ?></legend>
 
             <p>Select the permissions this group should have access to.</p>
 
             <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>Role</th>
-                        <th>Description</th>
-                        <th class="text-center"># Users</th>
-                    </tr>
+                <tr>
+                    <th style="width: 3rem"></th>
+                    <th>Permission</th>
+                    <th>Description</th>
+                </tr>
                 </thead>
                 <tbody>
-                <?php if(isset($groups) && count($groups)) : ?>
-                    <?php foreach($groups as $alias => $group) : ?>
-                        <tr>
-                            <td>
-                                <a href="/<?= ADMIN_AREA ?>/settings/groups/<?= $alias ?>">
-                                    <?= esc($group['title']) ?>
-                                </a>
-                            </td>
-                            <td><?= esc($group['description']) ?></td>
-                            <td class="text-center"><?= esc(number_format($group['user_count'])) ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                <?php endif ?>
+                <?php foreach($permissions as $permission => $description) : ?>
+                    <tr>
+                        <td>
+                            <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $permission ?>"
+                                <?php if($group->can($permission)) : ?>
+                                    checked
+                                <?php endif ?>
+                            >
+                        </td>
+                        <td><?= $permission ?></td>
+                        <td><?= $description ?></td>
+                    </tr>
+                <?php endforeach ?>
                 </tbody>
             </table>
 

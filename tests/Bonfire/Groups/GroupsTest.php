@@ -3,6 +3,7 @@
 namespace Tests\Bonfire\Groups;
 
 use App\Entities\User;
+use Sparks\Shield\Authorization\Groups;
 use Tests\Support\TestCase;
 
 class GroupsTest extends TestCase
@@ -47,5 +48,42 @@ class GroupsTest extends TestCase
        $result->assertSessionHas('message', lang('Bonfire.resourceSaved', ['group']));
        $groups = setting('AuthGroups.groups');
        $this->assertEquals(['title' => 'Brave Soul', 'description' => 'Tries broken things'], $groups['beta']);
+    }
+
+    public function testCanSeeGroupPermissions()
+    {
+        $admin = $this->createUser();
+        $admin->addGroup('superadmin');
+        $result = $this->actingAs($admin)
+                       ->get('/admin/settings/groups/admin/permissions');
+
+        // Page title
+        $result->assertSee('admin.access');
+    }
+
+    public function testCanSaveGroupPermissions()
+    {
+        $groups = new Groups();
+        $group = $groups->info('admin');
+
+        $this->assertTrue($group->can('beta.access'));
+
+        $admin = $this->createUser();
+        $admin->addGroup('superadmin');
+        $result = $this->actingAs($admin)
+                       ->post('/admin/settings/groups/admin/permissions', [
+                           'permissions' => [
+                               'admin.access',
+                               'users.edit'
+                           ]
+                       ]);
+
+        // Page title
+        $result->assertRedirect();
+
+        // Refresh the group
+        $group = $groups->info('admin');
+
+        $this->assertFalse($group->can('beta.access'));
     }
 }

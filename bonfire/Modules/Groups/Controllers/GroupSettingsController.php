@@ -3,6 +3,7 @@
 namespace Bonfire\Modules\Groups\Controllers;
 
 use App\Controllers\AdminController;
+use Sparks\Shield\Authorization\Groups;
 
 class GroupSettingsController extends AdminController
 {
@@ -93,5 +94,53 @@ class GroupSettingsController extends AdminController
         setting('AuthGroups.groups', $groupConfig);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['group']));
+    }
+
+    /**
+     * Displays a list of all Permissions for a single group
+     *
+     * @return string
+     */
+    public function permissions(string $groupName)
+    {
+        if (! auth()->user()->can('groups.edit')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        $groups = new Groups();
+        $group = $groups->info($groupName);
+        if ($group === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
+        }
+
+        $permissions = setting('AuthGroups.permissions');
+        if(is_array($permissions)) {
+            ksort($permissions);
+        }
+
+        return $this->render($this->viewPrefix .'permissions', [
+            'group' => $group,
+            'permissions' => $permissions,
+        ]);
+    }
+
+    /**
+     * Updates the permissions for a single group.
+     *
+     * @param string $group
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
+    public function savePermissions(string $group)
+    {
+        $groups = new Groups();
+        $group = $groups->info($group);
+        if ($group === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
+        }
+
+        $group->setPermissions($this->request->getPost('permissions') ?? []);
+
+        return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
 }
