@@ -1,6 +1,6 @@
 <?php
 
-namespace Bonfire\Email\Config;
+namespace Bonfire\Groups\Config;
 
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Groups\Controllers'], function($routes) {
     // Group Settings

@@ -14,12 +14,12 @@ class RegisterController extends ShieldRegister
     public function registerView()
     {
         // Check if registration is allowed
-        if (! $this->config->allowRegistration)
+        if (! setting('Auth.allowRegistration'))
         {
             return redirect()->back()->withInput()->with('error', lang('Auth.registerDisabled'));
         }
 
-        return $this->render(config('Auth')->views['register']);
+        return $this->render(setting('Auth.views')['register']);
     }
 
     /**
@@ -30,7 +30,7 @@ class RegisterController extends ShieldRegister
      */
     protected function getRedirectURL()
     {
-        $url = config('Auth')->redirects['register'];
+        $url = setting('Auth.redirects')['register'];
 
         return strpos($url, 'http') === 0
             ? $url
