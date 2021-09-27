@@ -261,3 +261,22 @@ input[type="checkbox"]:indeterminate {
     color: var(--black);
     font-weight: 300;
 }
+
+/*
+ * --------------------------------------------------------------------------
+ * USER AVATARS
+ * --------------------------------------------------------------------------
+ */
+.avatar {
+    width: 52px;
+    height: 52px;
+    background-color: #999;
+    border-radius: 50%;
+    font-family: sans-serif;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

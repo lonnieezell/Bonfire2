@@ -16,7 +16,7 @@ class UserModel extends ShieldUsers
 
     protected $allowedFields = [
         'username', 'status', 'status_message', 'active', 'last_active', 'deleted_at',
-        'avatar',
+        'avatar', 'first_name', 'last_name',
     ];
 
     protected $validation = [

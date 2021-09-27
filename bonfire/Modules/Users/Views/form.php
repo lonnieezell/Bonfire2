@@ -32,11 +32,7 @@
                         <!-- Avatar preview and edit links -->
                         <div class="row">
                             <div class="col-12 d-flex justify-content-center">
-                                <div style="width: 140px; height: 140px" class="border border-3 rounded-circle overflow-hidden">
-                                    <?php if(isset($user) && $user->avatarLink() !== '') : ?>
-                                        <img src="<?= $user->avatarLink(140) ?>" width="100%" height="100%" alt="<?= esc($user->name(), 'attr') ?>">
-                                    <?php endif ?>
-                                </div>
+                                <?= $user->renderAvatar(140) ?? (new \App\Entities\User())->renderAvatar(140) ?>
                             </div>
                             <div class="col-12 mt-4">
                                 <input type="file" class="form-control btn-upload" name="avatar" accept="image/*" />

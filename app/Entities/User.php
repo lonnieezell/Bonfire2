@@ -7,6 +7,39 @@ use Sparks\Shield\Entities\User as ShieldUser;
 class User extends ShieldUser
 {
     /**
+     * Renders out the user's avatar at the specified size (in pixels)
+     *
+     * @param int $size
+     *
+     * @return string
+     */
+    public function renderAvatar(int $size=52)
+    {
+        // Determine the color for the user based on their
+        // email address since we know we'll always have that
+        $idString = ! empty($this->first_name)
+            ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
+            : $this->username[0] ?? $this->email[0];
+        $idString = strtoupper($idString);
+
+        $idValue = str_split($idString);
+        array_walk($idValue, function(&$char) {
+            $char = ord($char);
+        });
+        $idValue = implode('', $idValue);
+
+        $colors = setting('Users.avatarPalette');
+
+        return view('\Bonfire\Views\_avatar', [
+            'user' => $this,
+            'size' => $size,
+            'fontSize' => 20 * ($size / 52),
+            'idString' => $idString,
+            'background' => $colors[$idValue % count($colors)],
+        ]);
+    }
+
+    /**
      * Generates a link to the user Avatar
      *
      * @param int|null $size
@@ -16,15 +49,23 @@ class User extends ShieldUser
     public function avatarLink(int $size=null): string
     {
         if (empty($this->avatar)) {
+
             // Default from Gravatar
-            $hash = md5(strtolower(trim($this->email)));
-            return "https://www.gravatar.com/avatar/{$hash}?". http_build_query([
-                's' => ($size ?? 60),
-                'd' => 'retro',
-            ]);
+            if (setting('Users.useGravatar')) {
+                $hash = md5(strtolower(trim($this->email)));
+
+                return "https://www.gravatar.com/avatar/{$hash}?" . http_build_query([
+                    's' => ($size ?? 60),
+                    'd' => setting(
+                        'Users.gravatarDefault'
+                    ),
+                ]);
+            }
         }
 
-        return base_url('/uploads/avatars/'. $this->avatar);
+        return ! empty($this->avatar)
+            ? base_url('/uploads/avatars/'. $this->avatar)
+            : '';
     }
 
     /**

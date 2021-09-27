@@ -67,6 +67,10 @@ class UserSettingsController extends BaseController
         $sessionConfig['rememberLength'] = $this->request->getPost('rememberLength');
         setting('Auth.sessionConfig', $sessionConfig);
 
+        // Avatars
+        setting('Users.useGravatar', $this->request->getPost('useGravatar') == 1);
+        setting('Users.gravatarDefault', $this->request->getPost('gravatarDefault'));
+
         alert('success', lang('Bonfire.resourcesSaved', ['settings']));
 
         return redirect()->back();

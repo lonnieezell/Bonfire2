@@ -210,6 +210,54 @@
                 </div>
             </fieldset>
 
+
+
+            <fieldset x-data="{use-gravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? true : false ?>}">
+                <legend>Avatars</legend>
+
+                <!-- Use Gravatar -->
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="useGravatar"
+                                   value="1" id="use-gravatar"
+                                   @change="use-gravatar = ! use-gravatar"
+                                <?php if(old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
+                            >
+                            <label class="form-check-label" for="use-gravatar">
+                                Use Gravatar for avatars
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col px-5">
+                        <p class="text-muted small">Will use <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
+                            to provide portable use avatars. This would be used if a user has not uploaded an avatar locally.</p>
+                    </div>
+                </div>
+
+                <!-- Gravatar Default -->
+                <div class="row" x-show="use-gravatar">
+                    <div class="col-12 col-sm-4">
+                        <label for="gravatarDefault" class="form-label">Gravatar default style</label>
+                        <select name="gravatarDefault" class="form-control">
+                            <option value="">Select default style....</option>
+                            <option value="mp" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'mp' ? 'selected' : '' ?>>mystery person</option>
+                            <option value="identicon" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'identicon' ? 'selected' : '' ?>>identicon</option>
+                            <option value="monsterid"  <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'monsterid' ? 'selected' : '' ?>>monsterid</option>
+                            <option value="wavatar" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'wavatar' ? 'selected' : '' ?>>wavatar</option>
+                            <option value="retro" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'retro' ? 'selected' : '' ?>>retro</option>
+                            <option value="robohash" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'robohash' ? 'selected' : '' ?>>robohash</option>
+                            <option value="blank" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'blank' ? 'selected' : '' ?>>blank</option>
+                        </select>
+                    </div>
+                    <div class="col px-5 pt-2">
+                        <p class="text-muted small">
+                            Visit <a href="http://en.gravatar.com/site/implement/images/" target="_blank">gravatar.com</a> for image examples.
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
+
             <br><hr>
 
             <div class="text-end px-5 py-3">
