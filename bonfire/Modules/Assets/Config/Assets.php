@@ -52,8 +52,8 @@ class Assets extends BaseConfig
      */
     public $folders = [
         'app' => ROOTPATH.'themes/app',
-        'admin' => ROOTPATH.'themes/admin',
-        'auth' => ROOTPATH.'themes/auth',
+        'admin' => ROOTPATH.'themes/Admin',
+        'auth' => ROOTPATH.'themes/Auth',
         'other' => ROOTPATH.'vendor',
     ];
 }
