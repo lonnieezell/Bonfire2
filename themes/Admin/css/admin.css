@@ -76,9 +76,11 @@ a:hover {
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
-.sidebar .nav-link {
+.sidebar .nav-item .nav-link {
     font-weight: 500;
+    font-size: 1rem;
     color: #333;
+    padding: 0.2rem 1rem;
 }
 
 .sidebar .nav-link .feather {
@@ -88,6 +90,11 @@ a:hover {
 
 .sidebar .nav-link.active {
     color: var(--blue);
+    border-right: 6px solid var(--blue);
+    background-color: #fff;
+}
+.sidebar .nav-link:hover {
+    border-right: 6px solid var(--grey);
 }
 
 .sidebar .nav-link:hover .feather,
