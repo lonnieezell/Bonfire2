@@ -23,4 +23,5 @@
             </a>
         <?php endif ?>
     </li>
+    <?= service('resourceTabs')->renderTabsFor('user') ?>
 </ul>

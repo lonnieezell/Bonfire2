@@ -15,7 +15,7 @@
             <ul class="nav flex-column mb-2">
             <?php foreach($collection->items() as $item) : ?>
                 <li class="nav-item">
-                    <a class="nav-link <?= url_is($item->url) ? 'active' : '' ?>" href="<?= $item->url ?>">
+                    <a class="nav-link <?= url_is($item->url.'*') ? 'active' : '' ?>" href="<?= $item->url ?>">
                         <?= $item->icon ?>
                         <?= $item->title ?>
                     </a>

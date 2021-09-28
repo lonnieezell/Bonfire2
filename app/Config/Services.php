@@ -80,4 +80,22 @@ class Services extends BaseService
 
         return new \Bonfire\Libraries\Menus\Manager();
     }
+
+    /**
+     * Returns the Resource Tab manager that integrates
+     * extra tabs into resources like Users, User Groups, etc.
+     *
+     * @param bool $getShared
+     *
+     * @return \Bonfire\Resources\ResourceTabs|mixed
+     */
+    public static function resourceTabs(bool $getShared = true)
+    {
+        if ($getShared)
+        {
+            return static::getSharedInstance('resourceTabs');
+        }
+
+        return new \Bonfire\Resources\ResourceTabs();
+    }
 }
