@@ -276,7 +276,7 @@ input[type="checkbox"]:indeterminate {
     color: #fff;
     font-weight: bold;
     font-size: 16px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 }
