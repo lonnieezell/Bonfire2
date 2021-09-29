@@ -34,11 +34,6 @@ class Module extends BaseModule
             'fontAwesomeIcon' => 'fas fa-users'
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
-
-        service('resourceTabs')->addTabFor('user', new ResourceTab([
-                'title' => 'Google',
-                'url' => 'https://google.com',
-            ]));
     }
 }
 
