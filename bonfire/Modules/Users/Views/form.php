@@ -32,7 +32,7 @@
                         <!-- Avatar preview and edit links -->
                         <div class="row">
                             <div class="col-12 d-flex justify-content-center">
-                                <?= $user->renderAvatar(140) ?? (new \App\Entities\User())->renderAvatar(140) ?>
+                                <?= isset($user) ? $user->renderAvatar(140) : (new \App\Entities\User())->renderAvatar(140,true) ?>
                             </div>
                             <div class="col-12 mt-4">
                                 <input type="file" class="form-control btn-upload" name="avatar" accept="image/*" />

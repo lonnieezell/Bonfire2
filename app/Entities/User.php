@@ -13,14 +13,20 @@ class User extends ShieldUser
      *
      * @return string
      */
-    public function renderAvatar(int $size=52)
+    public function renderAvatar(int $size=52, $random = false)
     {
+        // Generate random string for avatar placeholder
+        if($random){
+         helper('text');
+         $idString = random_string('alnum', 16);
+        }else{
         // Determine the color for the user based on their
         // email address since we know we'll always have that
         $idString = ! empty($this->first_name)
             ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
             : $this->username[0] ?? $this->email[0];
         $idString = strtoupper($idString);
+      }
 
         $idValue = str_split($idString);
         array_walk($idValue, function(&$char) {
