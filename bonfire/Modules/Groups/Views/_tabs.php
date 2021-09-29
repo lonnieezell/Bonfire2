@@ -12,5 +12,6 @@
                 Permissions
             </a>
         </li>
+        <?= service('resourceTabs')->renderTabsFor('group') ?>
     <?php endif ?>
 </ul>
