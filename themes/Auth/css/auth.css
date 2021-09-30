@@ -1,0 +1,80 @@
+:root {
+    --primary: #0275d8;
+    --body-bg: #F1F5F9;
+    --black: #222222;
+    --blue: #2470dc;
+    --grey: #727272;
+    --light-grey: #d2d2d2;
+    --white: #f7f7f7;
+    --success: #5cb85c;
+    --info: #5bc0de;
+    --warning: #f0ad4e;
+    --danger: #d9534f;
+    --dark: #292b2c;
+}
+/*
+ * --------------------------------------------------------------------------
+ * LAYOUT
+ * --------------------------------------------------------------------------
+ */
+body {
+    font-size: 1rem;
+    background: var(--body-bg);
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * PASSWORDS
+ * --------------------------------------------------------------------------
+ */
+div#pass-meter {
+    margin-top: -15px !important;
+    margin-bottom: 3px;
+}
+div#pass-meter .segment {
+    display: inline-block;
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    height: 8px;
+    width: 24%;
+    margin-right: 0.2%;
+}
+div#pass-meter .segment:last-child {
+    margin-right: 0;
+}
+div#pass-meter.good .segment {
+    background-color: var(--success);
+    border-color: var(--success);
+}
+div#pass-meter.warn .segment {
+    background-color: var(--warning);
+    border-color: var(--warning);
+}
+div#pass-meter.bad .segment {
+    background-color: var(--danger);
+    border-color: var(--danger);
+}
+div#pass-meter.str-1 .segment:nth-child(2),
+div#pass-meter.str-1 .segment:nth-child(3),
+div#pass-meter.str-1 .segment:nth-child(4) {
+    background-color: var(--white);
+    border-color: var(--light-grey);
+}
+div#pass-meter.str-2 .segment:nth-child(3),
+div#pass-meter.str-2 .segment:nth-child(4) {
+    background-color: var(--white);
+    border-color: var(--light-grey);
+}
+div#pass-meter.str-3 .segment:nth-child(4) {
+    background-color: var(--white);
+    border-color: var(--light-grey);
+}
+
+#pass-suggestions {
+    text-align: center;
+    color: var(--grey);
+    font-size: 0.8rem;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    min-height: 2.5rem;
+}

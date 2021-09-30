@@ -31,8 +31,8 @@
                     </div>
                 <?php endif ?>
 
-                <div class="d-grid col-8 mx-auto m-3">
-                    <button type="submit" class="btn btn-primary btn-block"><?= lang('Auth.login') ?></button>
+                <div class="d-grid col-12 mx-auto m-3">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg"><?= lang('Auth.login') ?></button>
                 </div>
 
                 <?php if (setting('Auth.allowMagicLinkLogins')) : ?>
