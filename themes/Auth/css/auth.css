@@ -28,16 +28,15 @@ body {
  * --------------------------------------------------------------------------
  */
 div#pass-meter {
-    margin-top: -15px !important;
-    margin-bottom: 3px;
+    display: flex;
+    flex-direction: column-reverse;
 }
 div#pass-meter .segment {
-    display: inline-block;
+    display: block;
     background: var(--white);
     border: 1px solid var(--light-grey);
-    height: 8px;
-    width: 24%;
-    margin-right: 0.2%;
+    height: 9px;
+    width: 30px;
 }
 div#pass-meter .segment:last-child {
     margin-right: 0;
@@ -45,10 +44,12 @@ div#pass-meter .segment:last-child {
 div#pass-meter.good .segment {
     background-color: var(--success);
     border-color: var(--success);
+    border-bottom: 1px solid var(--white);
 }
 div#pass-meter.warn .segment {
     background-color: var(--warning);
     border-color: var(--warning);
+    border-bottom: 1px solid var(--white);
 }
 div#pass-meter.bad .segment {
     background-color: var(--danger);

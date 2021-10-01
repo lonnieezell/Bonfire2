@@ -24,19 +24,23 @@
 
                 <div id="pass-suggestions"></div>
 
-                <div id="pass-meter">
-                    <div class="segment segment-1"></div>
-                    <div class="segment segment-2"></div>
-                    <div class="segment segment-3"></div>
-                    <div class="segment segment-4"></div>
-                </div>
-
-                <!-- Password -->
-                <div class="mb-2">
-                    <input type="password" class="form-control" name="password" id="password" autocomplete="password"
-                           placeholder="<?= lang('Auth.password') ?>"
-                           onkeyup="checkStrength()" required
-                    />
+                <div class="row mb-2">
+                    <!-- Password -->
+                    <div class="col">
+                        <input type="password" class="form-control" name="password" id="password" autocomplete="password"
+                               placeholder="<?= lang('Auth.password') ?>"
+                               onkeyup="checkStrength()" required
+                        />
+                    </div>
+                    <!-- Password Meter -->
+                    <div class="col-auto" style="margin-left: 0">
+                        <div id="pass-meter">
+                            <div class="segment segment-4"></div>
+                            <div class="segment segment-3"></div>
+                            <div class="segment segment-2"></div>
+                            <div class="segment segment-1"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Password (Again) -->
@@ -86,8 +90,6 @@
         meter.classList.add(state);
         meter.classList.add(score);
         suggestBox.innerText = info.feedback.suggestions.join(' ');
-
-        console.log(info, state);
     }
 </script>
 <script src="/zxcvbn.js"></script>
