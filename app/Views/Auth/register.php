@@ -44,8 +44,15 @@
                 </div>
 
                 <!-- Password (Again) -->
-                <div class="mb-5">
-                    <input type="password" class="form-control" name="pass_confirm" autocomplete="pass_confirm" placeholder="<?= lang('Auth.passwordConfirm') ?>" required />
+                <div class="row mb-5">
+                    <div class="col">
+                        <input type="password" class="form-control" name="pass_confirm" id="pass_confirm" autocomplete="pass_confirm"
+                               placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="checkPasswordMatch()" />
+                    </div>
+                    <div class="col-auto pass-match-wrap">
+                        <div class="pass-match" id="pass-match" style="display:none"><span>&check;</span></div>
+                        <div class="pass-not-match" id="pass-not-match" style="display:none"><span>&times;</span></div>
+                    </div>
                 </div>
 
                 <div class="d-grid col-23 mx-auto m-3">
@@ -90,6 +97,24 @@
         meter.classList.add(state);
         meter.classList.add(score);
         suggestBox.innerText = info.feedback.suggestions.join(' ');
+    }
+
+    function checkPasswordMatch() {
+        let origPass = document.getElementById('password').value;
+        let thisPass = document.getElementById('pass_confirm').value;
+
+        console.log(origPass, thisPass);
+
+        if(thisPass == null) {
+            document.getElementById('pass-match').style.display = 'none';
+            document.getElementById('pass-not-match').style.display = 'none';
+        } else if (thisPass === origPass) {
+            document.getElementById('pass-match').style.display = 'inline-block';
+            document.getElementById('pass-not-match').style.display = 'none';
+        } else {
+            document.getElementById('pass-match').style.display = 'none';
+            document.getElementById('pass-not-match').style.display = 'inline-block';
+        }
     }
 </script>
 <script src="/zxcvbn.js"></script>

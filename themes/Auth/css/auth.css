@@ -79,3 +79,20 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     margin-bottom: 10px;
     min-height: 2.5rem;
 }
+.pass-match-wrap {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 53px;
+}
+.pass-match,
+.pass-not-match {
+    display: inline-block;
+    margin: auto;
+    font-size: 20px;
+    color: var(--success);
+}
+.pass-not-match {
+    color: var(--danger);
+}
+
