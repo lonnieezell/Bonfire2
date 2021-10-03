@@ -21,6 +21,13 @@ class MenuCollection extends MenuItem
 	 */
 	protected $name;
 
+    /**
+     * If true, should be presented as a collapsible menu.
+     *
+     * @var bool
+     */
+    protected $collapsible = false;
+
 	/**
 	 * Sets the name this collection can be referenced by.
 	 *
@@ -42,6 +49,26 @@ class MenuCollection extends MenuItem
 	{
 		return $this->name;
 	}
+
+    /**
+     * @param bool $collapse
+     *
+     * @return $this
+     */
+    public function setCollapsible(bool $collapse = true): MenuCollection
+    {
+        $this->collapsible = $collapse;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCollapsible(): bool
+    {
+        return $this->collapsible;
+    }
 
 	/**
 	 * Adds a single item to the menu.

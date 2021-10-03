@@ -8,20 +8,37 @@
 
     <?php if(isset($menu)) : ?>
         <?php foreach($menu->collections() as $collection) : ?>
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span><?= $collection->title ?></span>
-            </h6>
 
-            <ul class="nav flex-column mb-2">
-            <?php foreach($collection->items() as $item) : ?>
-                <li class="nav-item">
-                    <a class="nav-link <?= url_is($item->url.'*') ? 'active' : '' ?>" href="<?= $item->url ?>">
-                        <?= $item->icon ?>
-                        <?= $item->title ?>
-                    </a>
-                </li>
-            <?php endforeach ?>
+        <div x-data="{expanded: <?= ! $collection->isCollapsible() ? 'true' : 'false' ?>}">
+            <?php if($collection->isCollapsible()) : ?>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted collapsible"
+                    @click="expanded = ! expanded">
+                    <span><?= $collection->title ?></span>
+                    <span>&plus;</span>
+                </h6>
+
+                <div class="px-3">
+            <?php else : ?>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span><?= $collection->title ?></span>
+                </h6>
+            <?php endif ?>
+
+            <ul class="nav flex-column mb-2" x-show="expanded">
+                <?php foreach($collection->items() as $item) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?= url_is($item->url.'*') ? 'active' : '' ?>" href="<?= $item->url ?>">
+                            <?= $item->icon ?>
+                            <?= $item->title ?>
+                        </a>
+                    </li>
+                <?php endforeach ?>
             </ul>
+
+            <?php if($collection->isCollapsible()) : ?>
+                </div>
+            <?php endif ?>
+        </div>
         <?php endforeach ?>
     <?php endif ?>
 </div>

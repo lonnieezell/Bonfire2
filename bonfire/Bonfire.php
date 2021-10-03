@@ -69,13 +69,16 @@ class Bonfire
     {
         $menus =  service('menus');
 
-
         // Sidebar menu
         $menus->createMenu('sidebar');
         $menus->menu('sidebar')
             ->createCollection('content', 'Content');
         $menus->menu('sidebar')
-            ->createCollection('settings', 'Settings');
+            ->createCollection('settings', 'Settings')
+            ->setCollapsible();
+        $menus->menu('sidebar')
+            ->createCollection('tools', 'Tools')
+            ->setCollapsible();
 
         // Top "icon" menu for notifications, account, etc.
         $menus->createMenu('iconbar');

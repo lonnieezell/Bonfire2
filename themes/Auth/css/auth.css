@@ -96,3 +96,8 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     color: var(--danger);
 }
 
+
+.collapsible .signal {
+    position: absolute;
+    right: 5px;
+}
