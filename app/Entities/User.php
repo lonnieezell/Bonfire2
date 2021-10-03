@@ -14,12 +14,14 @@ class User extends ShieldUser
      * @return string
      */
     public function renderAvatar(int $size=52)
-    {
+    {   
         // Determine the color for the user based on their
         // email address since we know we'll always have that
+        // Use default hash if the avatar is used as a placeholder
         $idString = ! empty($this->first_name)
-            ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
-            : $this->username[0] ?? $this->email[0];
+        ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
+        : $this->username[0] ?? $this->email[0] ?? 'default-avatar-hash';
+        
         $idString = strtoupper($idString);
 
         $idValue = str_split($idString);
