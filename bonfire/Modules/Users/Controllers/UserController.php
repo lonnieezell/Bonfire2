@@ -111,6 +111,16 @@ class UserController extends AdminController
         // Fill in basic details
         $user->fill($this->request->getPost());
 
+        // Check for an avatar to upload
+        if ($file = $this->request->getFile('avatar')) {
+            if($file->isValid()) {
+                $filename = $user->id .'_avatar.'. $file->getExtension();
+                if($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
+                    $user->avatar = $filename;
+                }
+            }
+        }
+
         // Try saving basic details
         try {
             if (! $users->save($user)) {
@@ -127,16 +137,6 @@ class UserController extends AdminController
         // We need an ID to on the entity to save groups.
         if ($user->id === null) {
             $user->id = $users->getInsertID();
-        }
-
-        // Check for an avatar to upload
-        if ($file = $this->request->getFile('avatar')) {
-            if($file->isValid()) {
-                $filename = $user->id .'_avatar.'. $file->getExtension();
-                if($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
-                    $user->avatar = $filename;
-                }
-            }
         }
 
         // Save the new user's email/password
