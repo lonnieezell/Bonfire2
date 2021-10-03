@@ -47,6 +47,7 @@ class Autoload extends AutoloadConfig
 		'Bonfire\Users' => ROOTPATH .'bonfire/Modules/Users',
         'Bonfire\Groups' => ROOTPATH .'bonfire/Modules/Groups',
 		'Bonfire\Assets' => ROOTPATH .'bonfire/Modules/Assets',
+		'Bonfire\Tools' => ROOTPATH .'bonfire/Modules/Tools',
         'Themes' => ROOTPATH .'themes',
 	];
 
