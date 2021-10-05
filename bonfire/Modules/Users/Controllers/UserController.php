@@ -134,7 +134,7 @@ class UserController extends AdminController
             if($file->isValid()) {
                 $filename = $user->id .'_avatar.'. $file->getExtension();
                 if($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
-                    $user->avatar = $filename;
+                    $users->update($user->id , ['avatar' => $filename]);
                 }
             }
         }
