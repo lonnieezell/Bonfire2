@@ -52,6 +52,7 @@ class AuthGroups extends ShieldGroups
         'admin.settings'      => 'Can access the main site settings',
         'groups.edit'         => 'Can edit existing user groups',
         'users.manage-admins' => 'Can manage other admins',
+        'users.view'          => 'Can view user details',
         'users.create'        => 'Can create new non-admin users',
         'users.edit'          => 'Can edit existing non-admin users',
         'users.delete'        => 'Can delete existing non-admin users',

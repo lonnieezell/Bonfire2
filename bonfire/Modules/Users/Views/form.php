@@ -24,6 +24,10 @@
     <?php endif ?>
             <?= csrf_field() ?>
 
+            <?php if(isset($user) && $user !== null) : ?>
+                <input type="hidden" name="id" value="<?= $user->id ?>">
+            <?php endif ?>
+
             <fieldset>
                 <legend>Basic Info</legend>
 
@@ -106,6 +110,11 @@
                 </div>
 
             </fieldset>
+
+            <!-- User Meta Fields -->
+            <div class="row">
+                <?= view_cell('\Bonfire\Modules\Users\Libraries\UserCells::metaFormFields') ?>
+            </div>
 
             <div class="text-end py-3">
                 <input type="submit" value="Save User" class="btn btn-primary btn-lg">

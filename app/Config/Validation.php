@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Modules\Users\Libraries\UserRules;
 use CodeIgniter\Validation\CreditCardRules;
 use CodeIgniter\Validation\FileRules;
 use CodeIgniter\Validation\FormatRules;
@@ -25,7 +26,8 @@ class Validation
 		FormatRules::class,
 		FileRules::class,
 		CreditCardRules::class,
-        PasswordRules::class
+        PasswordRules::class,
+        UserRules::class,
 	];
 
 	/**
@@ -42,4 +44,11 @@ class Validation
 	//--------------------------------------------------------------------
 	// Rules
 	//--------------------------------------------------------------------
+
+    public $users = [
+        'email' => 'required|valid_email|unique_email[{id}]',
+        'username' => 'required|string|is_unique[users.username,id,{id}]',
+        'first_name' => 'permit_empty|string|min_length[3]',
+        'last_name' => 'permit_empty|string|min_length[3]',
+    ];
 }

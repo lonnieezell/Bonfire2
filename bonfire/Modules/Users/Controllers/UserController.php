@@ -108,6 +108,15 @@ class UserController extends AdminController
             return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
+        // Perform validation here so we can merge the
+        // basic model validation rules with the meta info rules.
+        $rules = config('Validation')->users;
+        $rules = array_merge($rules, $user->validationRules('meta'));
+
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         // Fill in basic details
         $user->fill($this->request->getPost());
 
@@ -162,6 +171,9 @@ class UserController extends AdminController
 
         // Save the user's groups
         $user->syncGroups($this->request->getPost('groups'));
+
+        // Save the user's meta fields
+        $user->syncMeta($this->request->getPost('meta'));
 
         return redirect()->to($user->adminLink())->with('message', lang('Bonfire.resourceSaved', ['user']));
     }

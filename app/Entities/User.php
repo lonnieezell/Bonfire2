@@ -2,10 +2,13 @@
 
 namespace App\Entities;
 
+use Bonfire\Traits\HasMeta;
 use Sparks\Shield\Entities\User as ShieldUser;
 
 class User extends ShieldUser
 {
+    use HasMeta;
+
     /**
      * Renders out the user's avatar at the specified size (in pixels)
      *
@@ -14,14 +17,14 @@ class User extends ShieldUser
      * @return string
      */
     public function renderAvatar(int $size=52)
-    {   
+    {
         // Determine the color for the user based on their
         // email address since we know we'll always have that
         // Use default hash if the avatar is used as a placeholder
         $idString = ! empty($this->first_name)
         ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
         : $this->username[0] ?? $this->email[0] ?? 'default-avatar-hash';
-        
+
         $idString = strtoupper($idString);
 
         $idValue = str_split($idString);
@@ -110,5 +113,17 @@ class User extends ShieldUser
         }
 
         return implode(', ', $out);
+    }
+
+    /**
+     * Returns the validation rules for all User meta fields, if any.
+     *
+     * @param string|null $prefix
+     *
+     * @return array
+     */
+    public function validationRules(string $prefix=null): array
+    {
+        return $this->metaValidationRules('Users', $prefix);
     }
 }

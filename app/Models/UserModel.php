@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\User;
+use Faker\Generator;
 use Sparks\Shield\Models\UserModel as ShieldUsers;
 
 /**
@@ -19,10 +20,13 @@ class UserModel extends ShieldUsers
         'avatar', 'first_name', 'last_name',
     ];
 
-    protected $validation = [
-        'email' => 'required|valid_email|is_unique[users,email,id,{id}]',
-        'username' => 'required|string|is_unique[users,username,id,{id}]',
-        'first_name' => 'permit_empty|string|min[3]',
-        'last_name' => 'permit_empty|string|min[3]',
-    ];
+    public function fake(Generator &$faker)
+    {
+        return [
+            'username' => $faker->userName,
+            'first_name' => $faker->firstName,
+            'last_name' => $faker->lastName,
+            'active'   => true,
+        ];
+    }
 }
