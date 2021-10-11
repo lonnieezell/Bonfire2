@@ -37,10 +37,19 @@ class TestCase extends CIUnitTestCase
      */
     protected function createUser(array $params=null)
     {
+        $email = isset($params['email'])
+            ? $params['email']
+            : $this->faker->email;
+        $password = isset($params['password'])
+            ? $params['password']
+            : 'secret123';
+
+        unset($params['email'], $params['password']);
+
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([
-            'email' => $this->faker->email,
-            'password' => 'secret123'
+            'email' => $email,
+            'password' => $password
         ]);
 
         return $user;

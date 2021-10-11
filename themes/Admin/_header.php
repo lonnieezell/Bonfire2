@@ -8,9 +8,14 @@
     </button>
 
     <!-- Search Form -->
-    <input class="form-control form-control bg-light w-100" type="text" placeholder="Search" aria-label="Search">
+    <form action="<?= route_to('search') ?>" method="post" class="w-100">
+        <?= csrf_field() ?>
 
-    <!-- User Meni -->
+        <input class="form-control form-control bg-light w-100" type="text" name="search_term" placeholder="Search" aria-label="Search"
+            value="<?= old('search_term', $searchTerm ?? '') ?>">
+    </form>
+
+    <!-- User Menu -->
     <div class="dropdown text-end mx-4">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 <!--            <img src="https://github.com/mdo.png" alt="mdo" class="rounded-circle" width="32" height="32">-->
