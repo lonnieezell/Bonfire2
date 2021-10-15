@@ -1,6 +1,9 @@
 :root {
     --primary: #0275d8;
     --body-bg: #F1F5F9;
+    --sidebar-bg: #252535;
+    --sidebar-bg-active: #181920;
+    --sidebar-text: #adadc5;
     --black: #222222;
     --blue: #2470dc;
     --grey: #727272;
@@ -10,7 +13,6 @@
     --info: #5bc0de;
     --warning: #f0ad4e;
     --danger: #d9534f;
-    --dark: #292b2c;
 }
 /*
  * --------------------------------------------------------------------------
@@ -44,27 +46,26 @@ a:hover {
 }
 
 /*
+ * Main
+ */
+.main {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+/*
  * Sidebar
  */
 
 .sidebar {
-    position: fixed;
-    top: 0;
-    /* rtl:raw:
-    right: 0;
-    */
-    bottom: 0;
-    /* rtl:remove */
-    left: 0;
-    z-index: 100; /* Behind the navbar */
-    padding: 0 0 48px 0; /* Height of navbar */
+    padding: 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-}
-
-@media (max-width: 767.98px) {
-    .sidebar {
-        top: 5rem;
-    }
+    min-width: 200px;
+    background-color: var(--sidebar-bg);
 }
 
 .sidebar-sticky {
@@ -78,9 +79,9 @@ a:hover {
 
 .sidebar .nav-item .nav-link {
     font-weight: 500;
-    font-size: 1rem;
-    color: #333;
-    padding: 0.2rem 1rem;
+    font-size: 15px;
+    color: var(--sidebar-text);
+    padding: 4px 15px;
 }
 
 .sidebar .nav-link .feather {
@@ -88,10 +89,10 @@ a:hover {
     color: var(--grey);
 }
 
-.sidebar .nav-link.active {
-    color: var(--blue);
+.sidebar .nav-item .nav-link.active {
+    color: var(--white);
     border-right: 6px solid var(--blue);
-    background-color: #fff;
+    background-color: var(--sidebar-bg-active);
 }
 .sidebar .nav-link:hover {
     border-right: 6px solid var(--grey);
@@ -103,8 +104,11 @@ a:hover {
 }
 
 .sidebar-heading {
-    font-size: .75rem;
+    font-size: 75%;
+    font-weight: 500;
     text-transform: uppercase;
+    opacity: 0.5;
+    color: var(--sidebar-text);
 }
 
 /*
@@ -176,7 +180,7 @@ input[type="checkbox"]:indeterminate {
     padding: 0.75rem 1rem;
 }
 .nav-item .nav-link.active {
-    color: var(--black)
+    color: var(--white);
 }
 
 /*

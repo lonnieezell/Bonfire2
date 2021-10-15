@@ -1,4 +1,8 @@
-<div class="position-sticky pt-3 mt-5">
+<a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="/<?= ADMIN_AREA ?>">
+    <?= config('App')->siteName ?? 'bonfire' ?>
+</a>
+<div class="pt-3">
+
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
@@ -11,7 +15,7 @@
 
         <div x-data="{expanded: <?= ! $collection->isCollapsible() ? 'true' : 'false' ?>}">
             <?php if($collection->isCollapsible()) : ?>
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted collapsible"
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 collapsible"
                     @click="expanded = ! expanded">
                     <span><?= $collection->title ?></span>
                     <span>&plus;</span>
@@ -19,7 +23,7 @@
 
                 <div class="px-3">
             <?php else : ?>
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
                     <span><?= $collection->title ?></span>
                 </h6>
             <?php endif ?>

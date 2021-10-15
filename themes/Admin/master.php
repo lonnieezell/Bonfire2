@@ -15,16 +15,18 @@
 
 <?= service('alerts')->display(); ?>
 
-<?= $this->include('_header') ?>
-
-<div class="container-fluid">
-	<div class="row">
-        <nav id="sidebars" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+<div class="main">
+	<div class="h-100 d-flex align-items-stretch">
+        <nav id="sidebars" class="sidebar">
 		    <x-sidebar />
         </nav>
 
-		<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <?= $this->renderSection('main') ?>
+		<main class="ms-sm-auto flex-grow-1">
+            <?= $this->include('_header') ?>
+
+            <div class="px-md-4">
+                <?= $this->renderSection('main') ?>
+            </div>
 		</main>
 	</div>
 </div>
