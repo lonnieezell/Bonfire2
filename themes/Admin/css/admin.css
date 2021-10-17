@@ -1,18 +1,18 @@
 :root {
-    --primary: #0275d8;
-    --body-bg: #F1F5F9;
-    --sidebar-bg: #252535;
-    --sidebar-bg-active: #181920;
-    --sidebar-text: #adadc5;
-    --black: #222222;
-    --blue: #2470dc;
-    --grey: #727272;
-    --light-grey: #d2d2d2;
-    --white: #f7f7f7;
-    --success: #5cb85c;
-    --info: #5bc0de;
-    --warning: #f0ad4e;
-    --danger: #d9534f;
+    --bs-primary: #0275d8;
+    --bf-body-bg: #F1F5F9;
+    --bf-sidebar-bg: #252535;
+    --bf-sidebar-bg-active: #181920;
+    --bf-sidebar-text: #adadc5;
+    --bf-black: #222222;
+    --bf-blue: #2470dc;
+    --bf-grey: #727272;
+    --bf-light-grey: #d2d2d2;
+    --bf-white: #f7f7f7;
+    --bs-success: #5cb85c;
+    --bs-info: #5bc0de;
+    --bs-warning: #f0ad4e;
+    --bs-danger: #d9534f;
 }
 /*
  * --------------------------------------------------------------------------
@@ -21,7 +21,7 @@
  */
 body {
     font-size: 1rem;
-    background: var(--body-bg);
+    background: var(--bf-body-bg);
 }
 
 .feather {
@@ -31,7 +31,7 @@ body {
 }
 
 .page-head a.back {
-    color: var(--grey);
+    color: var(--bf-grey);
     text-decoration: none;
 }
 .page-head a.back:hover {
@@ -65,7 +65,7 @@ a:hover {
     padding: 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
     min-width: 200px;
-    background-color: var(--sidebar-bg);
+    background-color: var(--bf-sidebar-bg);
 }
 
 .sidebar-sticky {
@@ -80,22 +80,22 @@ a:hover {
 .sidebar .nav-item .nav-link {
     font-weight: 500;
     font-size: 15px;
-    color: var(--sidebar-text);
+    color: var(--bf-sidebar-text);
     padding: 4px 15px;
 }
 
 .sidebar .nav-link .feather {
     margin-right: 4px;
-    color: var(--grey);
+    color: var(--bf-grey);
 }
 
 .sidebar .nav-item .nav-link.active {
-    color: var(--white);
-    border-right: 6px solid var(--blue);
-    background-color: var(--sidebar-bg-active);
+    color: var(--bf-white);
+    border-right: 6px solid var(--bf-blue);
+    background-color: var(--bf-sidebar-bg-active);
 }
 .sidebar .nav-link:hover {
-    border-right: 6px solid var(--grey);
+    border-right: 6px solid var(--bf-grey);
 }
 
 .sidebar .nav-link:hover .feather,
@@ -108,7 +108,7 @@ a:hover {
     font-weight: 500;
     text-transform: uppercase;
     opacity: 0.5;
-    color: var(--sidebar-text);
+    color: var(--bf-sidebar-text);
 }
 
 /*
@@ -160,7 +160,7 @@ label.form-label {
 }
 
 fieldset {
-    border-bottom: solid 1px var(--light-grey);
+    border-bottom: solid 1px var(--bf-light-grey);
     padding-bottom: 2rem;
     margin-bottom: 1rem;
 }
@@ -173,14 +173,21 @@ input[type="checkbox"]:indeterminate {
  * TABS
  * --------------------------------------------------------------------------
  */
-.nav-item .nav-link,
-.nav-item .nav-link {
+.nav-tabs .nav-item .nav-link,
+.nav-tabs .nav-item .nav-link {
     font-size: 20px;
-    color: var(--grey);
+    color: var(--bf-grey);
     padding: 0.75rem 1rem;
 }
-.nav-item .nav-link.active {
-    color: var(--white);
+.nav-tabs .nav-item .nav-link:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+.nav-tabs .nav-item .nav-link.active {
+    background: #fff !important;
+    color: var(--bf-black) !important;
+}
+.nav-tabs .nav-item .nav-link.active:hover {
+    text-decoration: none !important;
 }
 
 /*
@@ -190,7 +197,7 @@ input[type="checkbox"]:indeterminate {
  */
 
 .btn-primary {
-    color: var(--white);
+    color: var(--bf-white);
 }
 .btn-3-dots:after {
     content: '\2026';
@@ -213,8 +220,8 @@ input[type="checkbox"]:indeterminate {
     min-width: 20rem !important;
 }
 #alerts-wrapper .alert {
-    background: var(--white);
-    border: 1px solid var(--light-grey);
+    background: var(--bf-white);
+    border: 1px solid var(--bf-light-grey);
     opacity: 0.8;
 }
 #alerts-wrapper .alert-info {
@@ -227,7 +234,7 @@ input[type="checkbox"]:indeterminate {
     border-bottom: 3px solid var(--danger);
 }
 #alerts-wrapper .alert-success {
-    border-bottom: 3px solid var(--success);
+    border-bottom: 3px solid var(--bf-success);
 }
 
 .text-info {
@@ -240,7 +247,7 @@ input[type="checkbox"]:indeterminate {
     color: var(--warning);
 }
 .text-success {
-    color: var(--success);
+    color: var(--bf-success);
 }
 
 /*
@@ -258,7 +265,7 @@ input[type="checkbox"]:indeterminate {
 }
 .filters ul {
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--light-grey);
+    border-bottom: 1px solid var(--bf-light-grey);
     margin-bottom: 1.38rem;
     min-width: 11rem;
 }
@@ -269,7 +276,7 @@ input[type="checkbox"]:indeterminate {
     font-size: 1rem;
 }
 .filters li .form-check-label {
-    color: var(--black);
+    color: var(--bf-black);
     font-weight: 300;
 }
 

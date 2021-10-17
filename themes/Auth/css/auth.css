@@ -1,12 +1,12 @@
 :root {
-    --primary: #0275d8;
-    --body-bg: #F1F5F9;
-    --black: #222222;
-    --blue: #2470dc;
-    --grey: #727272;
-    --light-grey: #d2d2d2;
-    --white: #f7f7f7;
-    --success: #5cb85c;
+    --bf-primary: #0275d8;
+    --bf-body-bg: #F1F5F9;
+    --bf-black: #222222;
+    --bf-blue: #2470dc;
+    --bf-grey: #727272;
+    --bf-light-grey: #d2d2d2;
+    --bf-white: #f7f7f7;
+    --bf-success: #5cb85c;
     --info: #5bc0de;
     --warning: #f0ad4e;
     --danger: #d9534f;
@@ -19,9 +19,8 @@
  */
 body {
     font-size: 1rem;
-    background: var(--body-bg);
+    background: var(--bf-body-bg);
 }
-
 /*
  * --------------------------------------------------------------------------
  * PASSWORDS
@@ -33,8 +32,8 @@ div#pass-meter {
 }
 div#pass-meter .segment {
     display: block;
-    background: var(--white);
-    border: 1px solid var(--light-grey);
+    background: var(--bf-white);
+    border: 1px solid var(--bf-light-grey);
     height: 9px;
     width: 30px;
 }
@@ -42,14 +41,14 @@ div#pass-meter .segment:last-child {
     margin-right: 0;
 }
 div#pass-meter.good .segment {
-    background-color: var(--success);
-    border-color: var(--success);
-    border-bottom: 1px solid var(--white);
+    background-color: var(--bf-success);
+    border-color: var(--bf-success);
+    border-bottom: 1px solid var(--bf-white);
 }
 div#pass-meter.warn .segment {
     background-color: var(--warning);
     border-color: var(--warning);
-    border-bottom: 1px solid var(--white);
+    border-bottom: 1px solid var(--bf-white);
 }
 div#pass-meter.bad .segment {
     background-color: var(--danger);
@@ -58,22 +57,22 @@ div#pass-meter.bad .segment {
 div#pass-meter.str-1 .segment:nth-child(2),
 div#pass-meter.str-1 .segment:nth-child(3),
 div#pass-meter.str-1 .segment:nth-child(4) {
-    background-color: var(--white);
-    border-color: var(--light-grey);
+    background-color: var(--bf-white);
+    border-color: var(--bf-light-grey);
 }
 div#pass-meter.str-2 .segment:nth-child(3),
 div#pass-meter.str-2 .segment:nth-child(4) {
-    background-color: var(--white);
-    border-color: var(--light-grey);
+    background-color: var(--bf-white);
+    border-color: var(--bf-light-grey);
 }
 div#pass-meter.str-3 .segment:nth-child(4) {
-    background-color: var(--white);
-    border-color: var(--light-grey);
+    background-color: var(--bf-white);
+    border-color: var(--bf-light-grey);
 }
 
 #pass-suggestions {
     text-align: center;
-    color: var(--grey);
+    color: var(--bf-grey);
     font-size: 0.8rem;
     margin-top: -15px;
     margin-bottom: 10px;
@@ -90,7 +89,7 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     display: inline-block;
     margin: auto;
     font-size: 20px;
-    color: var(--success);
+    color: var(--bf-success);
 }
 .pass-not-match {
     color: var(--danger);
