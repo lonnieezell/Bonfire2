@@ -28,11 +28,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach($permissions as $permission => $description) : ?>
+                <?php foreach ($permissions as $permission => $description) : ?>
                     <tr>
                         <td>
                             <input class="form-check-input <?= $user->can($permission) ? 'in-group' : '' ?>" type="checkbox" name="permissions[]" value="<?= $permission ?>"
-                                <?php if($user->hasPermission($permission)) : ?>
+                                <?php if ($user->hasPermission($permission)) : ?>
                                     checked
                                 <?php endif ?>
                             >

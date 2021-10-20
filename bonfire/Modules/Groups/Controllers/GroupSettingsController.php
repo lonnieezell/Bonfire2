@@ -22,7 +22,7 @@ class GroupSettingsController extends AdminController
         asort($groups);
 
         // Find the number of users in this group
-        foreach($groups as $alias => &$group) {
+        foreach ($groups as $alias => &$group) {
             $group['user_count'] = db_connect()
                 ->table('auth_groups_users')
                 ->where('group', $alias)
@@ -114,7 +114,7 @@ class GroupSettingsController extends AdminController
         }
 
         $permissions = setting('AuthGroups.permissions');
-        if(is_array($permissions)) {
+        if (is_array($permissions)) {
             ksort($permissions);
         }
 

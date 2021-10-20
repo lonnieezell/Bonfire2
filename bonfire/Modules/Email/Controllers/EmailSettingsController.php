@@ -15,19 +15,19 @@ class EmailSettingsController extends AdminController
      *
      * @return string
      */
-	public function index()
-	{
-	    $tabs = [
+    public function index()
+    {
+        $tabs = [
             'mail' => 1,
             'sendmail' => 2,
             'smtp' => 3
         ];
 
-		return $this->render($this->viewPrefix .'email_settings', [
+        return $this->render($this->viewPrefix .'email_settings', [
             'config' => config('Email'),
             'activeTab' => $tabs[setting('Email.protocol') ?? 'smtp'],
         ]);
-	}
+    }
 
     /**
      * Saves the email settings to the config file, where it
@@ -73,5 +73,5 @@ class EmailSettingsController extends AdminController
         alert('success', 'The settings have been saved.');
 
         return redirect()->back();
-	}
+    }
 }

@@ -39,7 +39,7 @@ class ResourceTab
     public function __construct(array $params=null)
     {
         if (is_array($params)) {
-            foreach($params as $key => $value) {
+            foreach ($params as $key => $value) {
                 if (property_exists($this, $key)) {
                     $this->$key = $value;
                 }
@@ -62,7 +62,7 @@ class ResourceTab
 
         $url = $this->url;
 
-        if(strpos($this->url, '(id)') !== false) {
+        if (strpos($this->url, '(id)') !== false) {
             $url = $this->fillPlaceholder($url);
         }
 
@@ -102,7 +102,7 @@ class ResourceTab
      */
     public function __get(string $key)
     {
-        if($key === 'url') {
+        if ($key === 'url') {
             return $this->getUrl();
         }
 

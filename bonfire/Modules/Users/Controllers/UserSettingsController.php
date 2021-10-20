@@ -16,26 +16,26 @@ class UserSettingsController extends BaseController
      *
      * @return string
      */
-	public function index()
-	{
-	    $rememberOptions = [
-	        '1 hour' => 1*HOUR,
-	        '4 hours' => 4*HOUR,
-	        '8 hours' => 8*HOUR,
-	        '25 hours' => 24*HOUR,
-	        '1 week' => 1*WEEK,
-	        '2 weeks' => 2*WEEK,
-	        '3 weeks' => 3*WEEK,
-	        '1 month' => 1*MONTH,
-	        '2 months' => 2*MONTH,
-	        '6 months' => 6*MONTH,
-	        '1 year' => 12*MONTH,
+    public function index()
+    {
+        $rememberOptions = [
+            '1 hour' => 1*HOUR,
+            '4 hours' => 4*HOUR,
+            '8 hours' => 8*HOUR,
+            '25 hours' => 24*HOUR,
+            '1 week' => 1*WEEK,
+            '2 weeks' => 2*WEEK,
+            '3 weeks' => 3*WEEK,
+            '1 month' => 1*MONTH,
+            '2 months' => 2*MONTH,
+            '6 months' => 6*MONTH,
+            '1 year' => 12*MONTH,
         ];
 
-		return $this->render($this->viewPrefix .'user_settings', [
-		    'rememberOptions' => $rememberOptions,
+        return $this->render($this->viewPrefix .'user_settings', [
+            'rememberOptions' => $rememberOptions,
         ]);
-	}
+    }
 
     /**
      * Saves the email settings to the config file, where it
@@ -74,5 +74,5 @@ class UserSettingsController extends BaseController
         alert('success', lang('Bonfire.resourcesSaved', ['settings']));
 
         return redirect()->back();
-	}
+    }
 }

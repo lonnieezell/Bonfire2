@@ -6,9 +6,9 @@ use CodeIgniter\Database\Migration;
 
 class AdditionalUserFields extends Migration
 {
-	public function up()
-	{
-		$this->forge->addColumn('users', [
+    public function up()
+    {
+        $this->forge->addColumn('users', [
             'first_name' => [
                 'type' => 'varchar',
                 'constraint' => 255,
@@ -28,10 +28,10 @@ class AdditionalUserFields extends Migration
                 'after' => 'last_name'
             ],
         ]);
-	}
+    }
 
-	public function down()
-	{
-		$this->forge->dropColumn('users', ['first_name', 'last_name', 'avatar']);
-	}
+    public function down()
+    {
+        $this->forge->dropColumn('users', ['first_name', 'last_name', 'avatar']);
+    }
 }

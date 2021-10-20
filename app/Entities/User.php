@@ -28,7 +28,7 @@ class User extends ShieldUser
         $idString = strtoupper($idString);
 
         $idValue = str_split($idString);
-        array_walk($idValue, function(&$char) {
+        array_walk($idValue, function (&$char) {
             $char = ord($char);
         });
         $idValue = implode('', $idValue);
@@ -90,7 +90,7 @@ class User extends ShieldUser
     {
         $url = ADMIN_AREA ."/users/{$this->id}";
 
-        if(! empty($postfix)) {
+        if (! empty($postfix)) {
             $url .= "/{$postfix}";
         }
 
@@ -108,7 +108,7 @@ class User extends ShieldUser
         $groups = $this->getGroups();
 
         $out = [];
-        foreach($groups as $group) {
+        foreach ($groups as $group) {
             $out[] = $config[$group]['title'];
         }
 

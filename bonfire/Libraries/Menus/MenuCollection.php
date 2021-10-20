@@ -1,4 +1,6 @@
-<?php namespace Bonfire\Libraries\Menus;
+<?php
+
+namespace Bonfire\Libraries\Menus;
 
 /**
  * Represents a collection of menu items.
@@ -9,17 +11,17 @@
  */
 class MenuCollection extends MenuItem
 {
-	/**
-	 * @var array
-	 */
-	protected $items = [];
+    /**
+     * @var array
+     */
+    protected $items = [];
 
-	/**
-	 * The name this collection is discovered by.
-	 *
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * The name this collection is discovered by.
+     *
+     * @var string
+     */
+    protected $name;
 
     /**
      * If true, should be presented as a collapsible menu.
@@ -28,27 +30,27 @@ class MenuCollection extends MenuItem
      */
     protected $collapsible = false;
 
-	/**
-	 * Sets the name this collection can be referenced by.
-	 *
-	 * @param string $name
-	 *
-	 * @return $this
-	 */
-	public function setName(string $name)
-	{
-		$this->name = $name;
+    /**
+     * Sets the name this collection can be referenced by.
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function name()
-	{
-		return $this->name;
-	}
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
 
     /**
      * @param bool $collapse
@@ -70,95 +72,93 @@ class MenuCollection extends MenuItem
         return $this->collapsible;
     }
 
-	/**
-	 * Adds a single item to the menu.
-	 *
-	 * @param MenuItem $item
-	 *
-	 * @return $this
-	 */
-	public function addItem(MenuItem $item)
-	{
-		$this->items[]  = $item;
+    /**
+     * Adds a single item to the menu.
+     *
+     * @param MenuItem $item
+     *
+     * @return $this
+     */
+    public function addItem(MenuItem $item)
+    {
+        $this->items[]  = $item;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Add multiple items at once.
-	 *
-	 * @param array $items
-	 *
-	 * @return $this
-	 */
-	public function addItems(array $items)
-	{
-		$this->items = array_merge($this->items, $items);
+    /**
+     * Add multiple items at once.
+     *
+     * @param array $items
+     *
+     * @return $this
+     */
+    public function addItems(array $items)
+    {
+        $this->items = array_merge($this->items, $items);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $title
-	 */
-	public function removeItem(string $title)
-	{
-		for ($i = 0; $i < count($this->items); $i++)
-		{
-			if ($this->items[$i]->title() === $title)
-			{
-				unset($this->items[$i]);
-				break;
-			}
-		}
-	}
+    /**
+     * @param string $title
+     */
+    public function removeItem(string $title)
+    {
+        for ($i = 0; $i < count($this->items); $i++) {
+            if ($this->items[$i]->title() === $title) {
+                unset($this->items[$i]);
+                break;
+            }
+        }
+    }
 
-	/**
-	 * Removes all of the items from this collection.
-	 *
-	 * @return $this
-	 */
-	public function removeAllItems()
-	{
-		$this->items = [];
+    /**
+     * Removes all of the items from this collection.
+     *
+     * @return $this
+     */
+    public function removeAllItems()
+    {
+        $this->items = [];
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Returns all items in the Collection,
-	 * sorted by weight, where larger weights
-	 * make them fall to the bottom.
-	 *
-	 * @return array
-	 */
-	public function items()
-	{
-		$this->sortItems();
+    /**
+     * Returns all items in the Collection,
+     * sorted by weight, where larger weights
+     * make them fall to the bottom.
+     *
+     * @return array
+     */
+    public function items()
+    {
+        $this->sortItems();
 
-		return $this->items;
-	}
+        return $this->items;
+    }
 
-	/**
-	 * Sorts the items by the weight,
-	 * ensuring that bigger weights
-	 * drop to the bottom.
-	 */
-	protected function sortItems()
-	{
-		usort($this->items, function($a, $b) {
-		    if ($a->weight === $b->weight) {
-		        return $a->title <=> $b->title;
+    /**
+     * Sorts the items by the weight,
+     * ensuring that bigger weights
+     * drop to the bottom.
+     */
+    protected function sortItems()
+    {
+        usort($this->items, function ($a, $b) {
+            if ($a->weight === $b->weight) {
+                return $a->title <=> $b->title;
             }
 
-			return $a->weight <=> $b->weight;
-		});
-	}
+            return $a->weight <=> $b->weight;
+        });
+    }
 
     public function __get(string $key)
     {
         if (method_exists($this, $key)) {
             return $this->{$key}();
         }
-	}
+    }
 }

@@ -44,7 +44,7 @@ class AssetController extends Controller
             : $origFilename;
 
         $folder = config('Assets')->folders[array_shift($segments)];
-        $path = $folder .'/'. implode('/',$segments) .'/'. $filename;
+        $path = $folder .'/'. implode('/', $segments) .'/'. $filename;
 
         if (! is_file($path)) {
             $this->response->setStatusCode(404);

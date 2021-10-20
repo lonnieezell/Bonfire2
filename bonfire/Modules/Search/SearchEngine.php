@@ -24,7 +24,7 @@ class SearchEngine
         }
 
         $results = [];
-        foreach($providers as $provider) {
+        foreach ($providers as $provider) {
             $name = $provider->resourceName();
 
             $results[$name] = [
@@ -50,7 +50,7 @@ class SearchEngine
         }
 
         $providers = [];
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $class = $locator->findQualifiedNameFromPath($file);
 
             if (empty($class)) {

@@ -69,16 +69,16 @@ class UserFilter extends UserModel
     {
         $this->select('users.*');
 
-        if(isset($params['role']) && count($params['role'])) {
+        if (isset($params['role']) && count($params['role'])) {
             $this->join('auth_groups_users agu', 'agu.user_id = users.id')
                 ->whereIn('agu.group', $params['role']);
         }
 
-        if(isset($params['active']) && count($params['active'])) {
+        if (isset($params['active']) && count($params['active'])) {
             $this->whereIn('users.active', $params['active']);
         }
 
-        if(isset($params['last_active']) && count($params['last_active'])) {
+        if (isset($params['last_active']) && count($params['last_active'])) {
             // We only use the largest value
             $days = max($params['last_active']);
             $this->where('last_active >=', Time::now()->subDays($days)->toDateTimeString());
@@ -98,7 +98,7 @@ class UserFilter extends UserModel
         $groups = setting('AuthGroups.groups');
 
         $use = [];
-        foreach($groups as $alias => $info) {
+        foreach ($groups as $alias => $info) {
             $use[$alias] = $info['title'];
         }
 

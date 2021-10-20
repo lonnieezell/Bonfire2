@@ -2,7 +2,7 @@
     <?= $this->include('_table_head') ?>
     <tbody>
     <?php if (isset($users) && count($users)) : ?>
-        <?php foreach($users as $user) : ?>
+        <?php foreach ($users as $user) : ?>
             <tr>
                 <td>
                     <input type="checkbox" name="selects[]" class="form-check">

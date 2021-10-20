@@ -18,7 +18,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="allowRegistration"
                                    value="1" id="allow-registration"
-                                <?php if(old('allowRegistration', setting('Auth.allowRegistration'))) : ?> checked <?php endif ?>
+                                <?php if (old('allowRegistration', setting('Auth.allowRegistration'))) : ?> checked <?php endif ?>
                             >
                             <label class="form-check-label" for="allow-registration">
                                 Allow users to register themselves on the site
@@ -35,7 +35,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="emailActivation"
                                    value='Shield\Authentication\Actions\EmailActivate' id="email-activation"
-                                <?php if(old('emailActivation', setting('Auth.actions')['register']) == 'Shield\Authentication\Actions\EmailActivate') : ?>
+                                <?php if (old('emailActivation', setting('Auth.actions')['register']) == 'Shield\Authentication\Actions\EmailActivate') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -60,7 +60,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="allowRemember"
                                    value="1" id="allow-remember"
-                                <?php if(old('allowRemember', setting('Auth.sessionConfig')['allowRemembering'])) : ?> checked <?php endif ?>
+                                <?php if (old('allowRemember', setting('Auth.sessionConfig')['allowRemembering'])) : ?> checked <?php endif ?>
                                    x-on:click="remember = ! remember"
                             >
                             <label class="form-check-label" for="allow-registration">
@@ -77,8 +77,8 @@
                         <label for="rememberLength" class="form-label">Remember Users for how long?</label>
                         <select name="rememberLength" class="form-select">
                             <option value="0">How long to remember...</option>
-                            <?php if(isset($rememberOptions) && count($rememberOptions)) : ?>
-                                <?php foreach($rememberOptions as $title => $seconds) : ?>
+                            <?php if (isset($rememberOptions) && count($rememberOptions)) : ?>
+                                <?php foreach ($rememberOptions as $title => $seconds) : ?>
                                     <option value="<?= $seconds ?>"
                                         <?php if (old('rememberDuration', setting('Auth.sessionConfig')['rememberLength']) == $seconds) : ?> selected <?php endif?>
                                     >
@@ -95,7 +95,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="email2FA"
                                    value="Shield\Authentication\Actions\Email2FA" id="email-activation"
-                                <?php if(old('email2FA', setting('Auth.actions')['login']) == 'Shield\Authentication\Actions\Email2FA') : ?>
+                                <?php if (old('email2FA', setting('Auth.actions')['login']) == 'Shield\Authentication\Actions\Email2FA') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -120,7 +120,7 @@
                         <label for="minimumPasswordLength" class="form-label">Minimum Password Length</label>
                         <input type="number" name="minimumPasswordLength" class="form-control" min="8" step="1"
                                value="<?= old('minimumPasswordLength', setting('Auth.minimumPasswordLength')) ?>">
-                        <?php if(has_error('minimumPasswordLength')) : ?>
+                        <?php if (has_error('minimumPasswordLength')) : ?>
                             <p class="text-danger"><?= error('minimumPasswordLength') ?></p>
                         <?php endif ?>
                     </div>
@@ -142,8 +142,10 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\CompositionValidator"
-                                <?php if(in_array('Sparks\Shield\Authentication\Passwords\CompositionValidator',
-                                    old('validators', setting('Auth.passwordValidators')))) : ?>
+                                <?php if (in_array(
+    'Sparks\Shield\Authentication\Passwords\CompositionValidator',
+    old('validators', setting('Auth.passwordValidators'))
+)) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -156,8 +158,10 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\NothingPersonalValidator"
-                                <?php if(in_array('Sparks\Shield\Authentication\Passwords\NothingPersonalValidator',
-                                    old('validators', setting('Auth.passwordValidators')))) : ?>
+                                <?php if (in_array(
+                                        'Sparks\Shield\Authentication\Passwords\NothingPersonalValidator',
+                                        old('validators', setting('Auth.passwordValidators'))
+                                    )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -170,8 +174,10 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\DictionaryValidator"
-                                <?php if(in_array('Sparks\Shield\Authentication\Passwords\DictionaryValidator',
-                                    old('validators', setting('Auth.passwordValidators')))) : ?>
+                                <?php if (in_array(
+                                        'Sparks\Shield\Authentication\Passwords\DictionaryValidator',
+                                        old('validators', setting('Auth.passwordValidators'))
+                                    )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -184,8 +190,10 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\PwnedValidator"
-                                <?php if(in_array('Sparks\Shield\Authentication\Passwords\PwnedValidator',
-                                    old('validators', setting('Auth.passwordValidators')))) : ?>
+                                <?php if (in_array(
+                                        'Sparks\Shield\Authentication\Passwords\PwnedValidator',
+                                        old('validators', setting('Auth.passwordValidators'))
+                                    )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -222,7 +230,7 @@
                             <input class="form-check-input" type="checkbox" name="useGravatar"
                                    value="1" id="use-gravatar"
                                    @change="use-gravatar = ! use-gravatar"
-                                <?php if(old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
+                                <?php if (old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
                             >
                             <label class="form-check-label" for="use-gravatar">
                                 Use Gravatar for avatars

@@ -7,6 +7,6 @@ use CodeIgniter\Events\Events;
 /*
  * Pre Controller events
  */
-Events::on('post_controller_constructor', function() {
+Events::on('post_controller_constructor', function () {
     service('bonfire')->boot();
 });

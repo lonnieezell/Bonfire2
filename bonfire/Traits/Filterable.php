@@ -18,7 +18,7 @@ trait Filterable
         $filters = $this->filters;
 
         // Replace an options with computed values
-        array_walk($filters, function(&$item, $key) {
+        array_walk($filters, function (&$item, $key) {
             if (! is_string($item['options'])) {
                 return;
             }
@@ -52,7 +52,7 @@ trait Filterable
     public function filter(array $params=null)
     {
         if (is_array($params)) {
-            foreach($params as $key => $values) {
+            foreach ($params as $key => $values) {
                 if (! is_array($values)) {
                     $values = [$values];
                 }

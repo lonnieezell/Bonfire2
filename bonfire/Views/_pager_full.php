@@ -8,7 +8,7 @@ use CodeIgniter\Pager\PagerRenderer;
 $pager->setSurroundCount(2);
 ?>
 
-<?php if($pager->getPageCount() > 1) : ?>
+<?php if ($pager->getPageCount() > 1) : ?>
 <nav aria-label="<?= lang('Pager.pageNavigation') ?>" class="d-flex justify-content-center">
     <ul class="pagination">
         <?php if ($pager->hasPrevious()) : ?>

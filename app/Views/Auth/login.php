@@ -22,7 +22,7 @@
                     <input type="password" class="form-control" name="password" autocomplete="off" placeholder="<?= lang('Auth.password') ?>" required />
                 </div>
 
-                <?php if($allowRemember) : ?>
+                <?php if ($allowRemember) : ?>
                     <div class="form-check my-4">
                         <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember">
                         <label class="form-check-label" for="remember">
@@ -39,7 +39,7 @@
                     <p class="text-center"><?= lang('Auth.forgotPassword') ?> <a href="<?= route_to('magic-link') ?>"><?= lang('Auth.useMagicLink') ?></a></p>
                 <?php endif ?>
 
-                <?php if(setting('Auth.allowRegistration')) : ?>
+                <?php if (setting('Auth.allowRegistration')) : ?>
                     <p class="text-center"><?= lang('Auth.needAccount') ?> <a href="<?= route_to('register') ?>"><?= lang('Auth.register') ?></a></p>
                 <?php endif ?>
 

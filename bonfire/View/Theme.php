@@ -56,7 +56,7 @@ class Theme
             static::$themeInfo = self::available();
         }
 
-        foreach(static::$themeInfo as $info) {
+        foreach (static::$themeInfo as $info) {
             if ($info['name'] === $theme) {
                 return $info['path'];
             }
@@ -88,14 +88,14 @@ class Theme
         $themes = [];
         helper('filesystem');
 
-        foreach(config('Themes')->collections as $collection) {
+        foreach (config('Themes')->collections as $collection) {
             $info = get_dir_file_info($collection, true);
 
             if (! count($info)) {
                 continue;
             }
 
-            foreach($info as $name => $row) {
+            foreach ($info as $name => $row) {
                 $themes[] = [
                     'name' => $name,
                     'path' => $row['relative_path'].$name .'/',

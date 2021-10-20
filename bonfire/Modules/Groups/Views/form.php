@@ -26,7 +26,7 @@
                         <label for="title" class="form-label">Title</label>
                         <input type="text" name="title" class="form-control" autocomplete="title"
                                value="<?= old('title', $group['title'] ?? '') ?>">
-                        <?php if(has_error('title')) : ?>
+                        <?php if (has_error('title')) : ?>
                             <p class="text-danger"><?= error('title') ?></p>
                         <?php endif ?>
                     </div>
@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label for="description" class="form-label">Description</label>
                         <textarea name="description" rows="3" class="form-control"><?= old('description', $group['description'] ?? '') ?></textarea>
-                        <?php if(has_error('description')) : ?>
+                        <?php if (has_error('description')) : ?>
                             <p class="text-danger"><?= error('description') ?></p>
                         <?php endif ?>
                     </div>

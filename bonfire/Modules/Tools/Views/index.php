@@ -65,7 +65,7 @@
                         <tr>
                             <td>.env</td>
                             <td>
-                                <?php if(is_file(ROOTPATH .'.env')) : ?>
+                                <?php if (is_file(ROOTPATH .'.env')) : ?>
                                     <span class="text-success">present</span>
                                 <?php else : ?>
                                     <span class="text-danger">missing</span>
@@ -75,18 +75,18 @@
                         <tr>
                             <td>/writeable</td>
                             <td>
-                                <?php if(is_really_writable(WRITEPATH)) : ?>
+                                <?php if (is_really_writable(WRITEPATH)) : ?>
                                     <span class="text-success">writeable</span>
                                 <?php else : ?>
                                     <span class="text-danger">not writeable</span>
                                 <?php endif ?>
                             </td>
                         </tr>
-                    <?php foreach(directory_map(WRITEPATH, 2) as $folder =>  $info) : ?>
+                    <?php foreach (directory_map(WRITEPATH, 2) as $folder =>  $info) : ?>
                         <tr>
                             <td>-- <?= trim($folder, ' /') ?></td>
                             <td>
-                                <?php if(is_really_writable(WRITEPATH .$folder)) : ?>
+                                <?php if (is_really_writable(WRITEPATH .$folder)) : ?>
                                     <span class="text-success">writeable</span>
                                 <?php else : ?>
                                     <span class="text-danger">not writeable</span>

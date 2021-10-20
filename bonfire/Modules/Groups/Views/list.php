@@ -22,8 +22,8 @@
                 </tr>
             </thead>
             <tbody>
-            <?php if(isset($groups) && count($groups)) : ?>
-                <?php foreach($groups as $alias => $group) : ?>
+            <?php if (isset($groups) && count($groups)) : ?>
+                <?php foreach ($groups as $alias => $group) : ?>
                     <tr>
                         <td>
                             <a href="/<?= ADMIN_AREA ?>/settings/groups/<?= $alias ?>">

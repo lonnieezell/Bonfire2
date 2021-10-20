@@ -109,7 +109,7 @@ class Bonfire
         }
 
         // save instances of our module configs
-        foreach($modules as $namespace => $dir) {
+        foreach ($modules as $namespace => $dir) {
             if (! is_file($dir .'/Module.php')) {
                 continue;
             };

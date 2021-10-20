@@ -19,11 +19,11 @@ class Dashboard extends AdminController
      */
     protected $theme = 'Admin';
 
-	/**
-	 * Displays the site's initial page.
-	 */
-	public function index()
-	{
-	    echo $this->render('Bonfire\Assets\Views\dashboard', []);
-	}
+    /**
+     * Displays the site's initial page.
+     */
+    public function index()
+    {
+        echo $this->render('Bonfire\Assets\Views\dashboard', []);
+    }
 }

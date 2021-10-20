@@ -20,22 +20,22 @@ class ComponentRenderer
      *
      * @return string
      */
-	public function render(?string $output): string
-	{
-		if (empty($output)) {
-			return $output;
-		}
+    public function render(?string $output): string
+    {
+        if (empty($output)) {
+            return $output;
+        }
 
-		// Try to locate any custom tags, with names like: x-sidebar, x-btn, etc.
+        // Try to locate any custom tags, with names like: x-sidebar, x-btn, etc.
         service('timer')->start('self-closing');
-		$output = $this->renderSelfClosingTags($output);
+        $output = $this->renderSelfClosingTags($output);
         service('timer')->stop('self-closing');
         service('timer')->start('paired-tags');
-		$output = $this->renderPairedTags($output);
+        $output = $this->renderPairedTags($output);
         service('timer')->stop('paired-tags');
 
-		return $output;
-	}
+        return $output;
+    }
 
     /**
      * Finds and renders and self-closing tags, i.e. <x-foo />
@@ -44,10 +44,10 @@ class ComponentRenderer
      *
      * @return string
      */
-	private function renderSelfClosingTags(string $output): string
-	{
-		// Pattern borrowed from Laravel's ComponentTagCompiler
-		$pattern = "/
+    private function renderSelfClosingTags(string $output): string
+    {
+        // Pattern borrowed from Laravel's ComponentTagCompiler
+        $pattern = "/
             <
                 \s*
                 x[-\:](?<name>[\w\-\:\.]*)
@@ -80,12 +80,12 @@ class ComponentRenderer
             \/>
         /x";
 
-		/*
-		    $matches[0] = full tags matched
-			$matches[name] = tag name (minus the 'x-')
-			$matches[attributes] = array of attribute string (class="foo")
-		 */
-        return preg_replace_callback($pattern, function($match) {
+        /*
+            $matches[0] = full tags matched
+            $matches[name] = tag name (minus the 'x-')
+            $matches[attributes] = array of attribute string (class="foo")
+         */
+        return preg_replace_callback($pattern, function ($match) {
             $view = $this->locateView($match['name']);
             $attributes = $this->parseAttributes($match['attributes']);
             $component = $this->factory($match['name'], $view);
@@ -94,7 +94,7 @@ class ComponentRenderer
                 ? $component->withView($view)->render()
                 : $this->renderView($view, $attributes);
         }, $output);
-	}
+    }
 
     /**
      * @param string $output
@@ -107,12 +107,12 @@ class ComponentRenderer
         $pattern = '/<\s*x[-\:](?<name>[\w\-\:\.]*?)(?<attributes>[\s\S\=\'\"]*)[^>]?>(?<slot>.*)<\/\s*x-\1\s*>/uiUsm';
 
         /*
-		    $matches[0] = full tags matched and all of its content
-			$matches[name] = tag name (minus the `x-`)
-			$matches[attributes] = string of tag attributes (class="foo")
+            $matches[0] = full tags matched and all of its content
+            $matches[name] = tag name (minus the `x-`)
+            $matches[attributes] = string of tag attributes (class="foo")
             $matches[slot] = the content inside the tags
-		 */
-        return preg_replace_callback($pattern, function($match) {
+         */
+        return preg_replace_callback($pattern, function ($match) {
             $view = $this->locateView($match['name']);
             $attributes = $this->parseAttributes($match['attributes']);
             $attributes['slot'] = $match['slot'];
@@ -122,7 +122,7 @@ class ComponentRenderer
                 ? $component->withView($view)->withData($attributes)->render()
                 : $this->renderView($view, $attributes);
         }, $output) ?? preg_last_error();
-	}
+    }
 
     /**
      * Parses a string to grab any key/value pairs, HTML attributes.
@@ -156,12 +156,12 @@ class ComponentRenderer
 
         $attributes = [];
 
-        foreach($matches as $match) {
+        foreach ($matches as $match) {
             $attributes[$match['attribute']] = $this->stripQuotes($match['value']);
         }
 
         return $attributes;
-	}
+    }
 
     /**
      * Renders the view when no corresponding class has been found.
@@ -179,7 +179,7 @@ class ComponentRenderer
             eval('?>' . file_get_contents($view));
             return ob_get_clean() ?: '';
         })($view, $data);
-	}
+    }
 
     /**
      * Attempts to locate the view and/or class that
@@ -194,7 +194,7 @@ class ComponentRenderer
      *
      * @return Component|null
      */
-	private function factory(string $name, string $view): ?Component
+    private function factory(string $name, string $view): ?Component
     {
         // Locate the class in the same folder as the view
         $class = pascalize($name).'Component.php';
@@ -230,7 +230,7 @@ class ComponentRenderer
         $filePath = $path .'Components/'. $name .'.php';
 
         if (is_file($filePath)) {
-           return $filePath;
+            return $filePath;
         }
 
         throw new \RuntimeException('View not found for component: '. $name);

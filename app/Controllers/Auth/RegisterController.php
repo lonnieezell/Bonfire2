@@ -14,8 +14,7 @@ class RegisterController extends ShieldRegister
     public function registerView()
     {
         // Check if registration is allowed
-        if (! setting('Auth.allowRegistration'))
-        {
+        if (! setting('Auth.allowRegistration')) {
             return redirect()->back()->withInput()->with('error', lang('Auth.registerDisabled'));
         }
 

@@ -23,29 +23,28 @@ use Config\View as ViewConfig;
  */
 class Services extends BaseService
 {
-	/**
-	 * The Renderer class is the class that actually displays a file to the user.
-	 * The default View class within CodeIgniter is intentionally simple, but this
-	 * service could easily be replaced by a template engine if the user needed to.
-	 *
-	 * @param string|null     $viewPath
-	 * @param ViewConfig|null $config
-	 * @param boolean         $getShared
-	 *
-	 * @return View
-	 */
-	public static function renderer(string $viewPath = null, ViewConfig $config = null, bool $getShared = true)
-	{
-		if ($getShared)
-		{
-			return static::getSharedInstance('renderer', $viewPath, $config);
-		}
+    /**
+     * The Renderer class is the class that actually displays a file to the user.
+     * The default View class within CodeIgniter is intentionally simple, but this
+     * service could easily be replaced by a template engine if the user needed to.
+     *
+     * @param string|null     $viewPath
+     * @param ViewConfig|null $config
+     * @param boolean         $getShared
+     *
+     * @return View
+     */
+    public static function renderer(string $viewPath = null, ViewConfig $config = null, bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('renderer', $viewPath, $config);
+        }
 
-		$viewPath = $viewPath ?: config('Paths')->viewDirectory;
-		$config   = $config ?? config('View');
+        $viewPath = $viewPath ?: config('Paths')->viewDirectory;
+        $config   = $config ?? config('View');
 
-		return new View($config, $viewPath, AppServices::locator(), CI_DEBUG, AppServices::logger());
-	}
+        return new View($config, $viewPath, AppServices::locator(), CI_DEBUG, AppServices::logger());
+    }
 
     /**
      * Core utility class for Bonfire's system.
@@ -56,8 +55,7 @@ class Services extends BaseService
      */
     public static function bonfire(bool $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return static::getSharedInstance('bonfire');
         }
 
@@ -73,8 +71,7 @@ class Services extends BaseService
      */
     public static function menus(bool $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return static::getSharedInstance('menus');
         }
 
@@ -91,8 +88,7 @@ class Services extends BaseService
      */
     public static function resourceTabs(bool $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return static::getSharedInstance('resourceTabs');
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-if(! defined('asset_link')) {
+if (! defined('asset_link')) {
     /**
      * Generates the URL to serve an asset to the client
      *
@@ -25,8 +25,7 @@ if(! defined('asset_link')) {
     }
 }
 
-if (! defined('asset'))
-{
+if (! defined('asset')) {
     /**
      * @param string $location
      *
@@ -62,9 +61,9 @@ if (! defined('asset'))
             $tempSegments = $segments;
             array_shift($tempSegments);
             $path = rtrim($config->folders[current($segments)], ' /') . '/' . implode(
-                    '/',
-                    $tempSegments
-                ) . '/' . $filename;
+                '/',
+                $tempSegments
+            ) . '/' . $filename;
 
             $fingerprint = filemtime($path);
 

@@ -159,15 +159,15 @@ trait HasMeta
         $key = strtolower($key);
 
         // Delete stuff
-       $result = model(MetaModel::class)
+        $result = model(MetaModel::class)
            ->where('class', get_class($this))
            ->where('resource_id', $this->id)
            ->where('key', $key)
            ->delete();
 
-       if ($result) {
-           unset($this->meta[$key]);
-       }
+        if ($result) {
+            unset($this->meta[$key]);
+        }
 
         return $result;
     }
@@ -190,11 +190,11 @@ trait HasMeta
         $deletes = [];
 
         foreach (setting('Users.metaFields') as $group => $fields) {
-            if(! is_array($fields) || !count($fields)) {
+            if (! is_array($fields) || !count($fields)) {
                 continue;
             }
 
-            foreach($fields as $field => $info) {
+            foreach ($fields as $field => $info) {
                 $field = strtolower($field);
                 $existing = array_key_exists($field, $this->meta);
 
@@ -221,7 +221,7 @@ trait HasMeta
                 }
 
                 // Update existing one
-                if($existing) {
+                if ($existing) {
                     $updates[] = [
                         'id'    => $this->meta[$field]->id,
                         'key'   => $field,
@@ -266,12 +266,12 @@ trait HasMeta
             return $rules;
         }
 
-        foreach($metaInfo as $group => $rows) {
+        foreach ($metaInfo as $group => $rows) {
             if (! count($rows)) {
                 continue;
             }
 
-            foreach($rows as $name => $row) {
+            foreach ($rows as $name => $row) {
                 $name = strtolower($name);
                 if (! empty($prefix)) {
                     $name = "{$prefix}.{$name}";

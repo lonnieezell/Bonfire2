@@ -36,4 +36,3 @@ class Module extends BaseModule
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
     }
 }
-

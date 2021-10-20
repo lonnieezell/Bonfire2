@@ -22,15 +22,15 @@
                     <th>Success?</th>
                 </tr>
             </thead>
-            <?php if(isset($logins) && count($logins)) : ?>
+            <?php if (isset($logins) && count($logins)) : ?>
             <tbody>
-                <?php foreach($logins as $login) : ?>
+                <?php foreach ($logins as $login) : ?>
                     <tr>
                         <td><?= $login->date->format('M j, Y h:ia T') ?? '' ?></td>
                         <td><?= $login->ip_address ?? '' ?></td>
                         <td><?= $login->user_agent ?? '' ?></td>
                         <td>
-                            <?php if($login->success) : ?>
+                            <?php if ($login->success) : ?>
                                 <span class="badge rounded-pill bg-success">Success</span>
                             <?php else : ?>
                                 <span class="badge rounded-pill bg-secondary">Failed</span>
@@ -58,9 +58,9 @@
                     <th>Token</th>
                 </tr>
             </thead>
-            <?php if(isset($resetAttempts) && count($resetAttempts)) : ?>
+            <?php if (isset($resetAttempts) && count($resetAttempts)) : ?>
             <tbody>
-                <?php foreach($resetAttempts as $attempt) : ?>
+                <?php foreach ($resetAttempts as $attempt) : ?>
                     <tr>
                         <td><?= $attempt->created_at->format('M j, Y h:ia T') ?? '' ?></td>
                         <td><?= $attempt->ip_address ?? '' ?></td>

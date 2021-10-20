@@ -2,7 +2,7 @@
 
 namespace Bonfire\Groups\Config;
 
-$routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Groups\Controllers'], function($routes) {
+$routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Groups\Controllers'], function ($routes) {
     // Group Settings
     $routes->get('settings/groups', 'GroupSettingsController::list', ['as' => 'user-group-settings']);
     $routes->post('settings/groups', 'GroupSettingsController::save');

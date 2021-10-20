@@ -1,5 +1,5 @@
 <section class="filters">
-    <?php if(isset($filters) && count($filters)): ?>
+    <?php if (isset($filters) && count($filters)): ?>
     <form action="<?= current_url() ?>" method="post"
           hx-post="<?= current_url() ?>"
           hx-trigger="change delay:400ms from:.filter-check"
@@ -7,7 +7,7 @@
     >
         <?= csrf_field() ?>
 
-        <?php foreach($filters as $key => $filter): ?>
+        <?php foreach ($filters as $key => $filter): ?>
             <h2><?= $filter['title'] ?></h2>
 
             <ul class="list-unstyled">

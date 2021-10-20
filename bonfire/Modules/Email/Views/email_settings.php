@@ -20,7 +20,7 @@
                     <div class="form-group col">
                         <label class="form-label" for="fromName">Name</label>
                         <input type="text" class="form-control" name="fromName" value="<?= old('fromName', setting('Email.fromName')) ?>">
-                        <?php if(has_error('fromName')) : ?>
+                        <?php if (has_error('fromName')) : ?>
                             <p class="text-danger"><?= error('fromName') ?></p>
                         <?php endif ?>
                     </div>
@@ -32,7 +32,7 @@
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input type="text" class="form-control" name="fromEmail" value="<?= old('fromEmail', setting('Email.fromEmail')) ?>" />
                         </div>
-                        <?php if(has_error('fromEmail')) : ?>
+                        <?php if (has_error('fromEmail')) : ?>
                             <p class="text-danger"><?= error('fromEmail') ?></p>
                         <?php endif ?>
                     </div>
@@ -70,7 +70,7 @@
                             <div class="form-group col-12 col-sm-6 col-md-4">
                                 <label for="mailPath" class="form-label">Path the the <b>sendmail</b> executable.</label>
                                 <input type="text" name="mailPath" class="form-control" value="<?= old('mailPath', setting('Email.mailPath')) ?>">
-                                <?php if(has_error('mailPath')) : ?>
+                                <?php if (has_error('mailPath')) : ?>
                                     <p class="text-danger"><?= error('mailPath') ?></p>
                                 <?php endif ?>
                             </div>
@@ -84,7 +84,7 @@
                             <div class="form-group col-12 col-sm-6">
                                 <label for="SMTPHost" class="form-label">Host</label>
                                 <input type="text" name="SMTPHost" class="form-control" value="<?= old('SMTPHost', setting('Email.SMTPHost')) ?>">
-                                <?php if(has_error('SMTPHost')) : ?>
+                                <?php if (has_error('SMTPHost')) : ?>
                                     <p class="text-danger"><?= error('SMTPHost') ?></p>
                                 <?php endif ?>
                             </div>
@@ -98,7 +98,7 @@
                                     <option value="2525" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '2525') : ?> selected <?php endif?>>2525</option>
                                     <option value="other" @click="open = ! open" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 'other') : ?> selected <?php endif?>>other</option>
                                 </select>
-                                <?php if(has_error('SMTPPort')) : ?>
+                                <?php if (has_error('SMTPPort')) : ?>
                                     <p class="text-danger"><?= error('SMTPPort') ?></p>
                                 <?php endif ?>
                             </div>
@@ -106,7 +106,7 @@
                             <div class="form-group col-12 col-sm-3" x-show="open">
                                 <label for="SMTPPortOther" class="form-label">Other</label>
                                 <input type="text" name="SMTPHostOther" class="form-control" value="<?= old('SMTPHostOther') ?>">
-                                <?php if(has_error('SMTPPortOther')) : ?>
+                                <?php if (has_error('SMTPPortOther')) : ?>
                                     <p class="text-danger"><?= error('SMTPPortOther') ?></p>
                                 <?php endif ?>
                             </div>
@@ -117,7 +117,7 @@
                             <div class="form-group col-12 col-sm-6">
                                 <label for="SMTPUser" class="form-label">Username</label>
                                 <input type="text" name="SMTPUser" class="form-control" value="<?= old('SMTPUser', setting('Email.SMTPUser')) ?>">
-                                <?php if(has_error('SMTPUser')) : ?>
+                                <?php if (has_error('SMTPUser')) : ?>
                                     <p class="text-danger"><?= error('SMTPUser') ?></p>
                                 <?php endif ?>
                             </div>
@@ -128,7 +128,7 @@
                             <div class="form-group col-12 col-sm-6">
                                 <label for="SMTPPass" class="form-label">Password</label>
                                 <input type="password" name="SMTPPass" class="form-control" value="<?= old('SMTPPass', setting('Email.SMTPPass')) ?>">
-                                <?php if(has_error('SMTPPass')) : ?>
+                                <?php if (has_error('SMTPPass')) : ?>
                                     <p class="text-danger"><?= error('SMTPPass') ?></p>
                                 <?php endif ?>
                             </div>
@@ -142,7 +142,7 @@
                                     <option value="tls" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'tls') : ?> selected <?php endif?>>TLS</option>
                                     <option value="ssl" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'ssl') : ?> selected <?php endif?>>SSL</option>
                                 </select>
-                                <?php if(has_error('SMTPCrypto')) : ?>
+                                <?php if (has_error('SMTPCrypto')) : ?>
                                     <p class="text-danger"><?= error('SMTPCrypto') ?></p>
                                 <?php endif ?>
                             </div>
@@ -153,7 +153,7 @@
                             <div class="form-group col-12 col-sm-3">
                                 <label for="SMTPTimeout" class="form-label">Timeout (in seconds)</label>
                                 <input type="number" name="SMTPTimeout" class="form-control" value="<?= old('SMTPTimeout', setting('Email.SMTPTimeout')) ?>">
-                                <?php if(has_error('SMTPTimeout')) : ?>
+                                <?php if (has_error('SMTPTimeout')) : ?>
                                     <p class="text-danger"><?= error('SMTPTimeout') ?></p>
                                 <?php endif ?>
                             </div>
@@ -165,7 +165,7 @@
                                     <option value="0" <?php if (old('SMTPKeepAlive', ! setting('Email.SMTPKeepAlive'))) : ?> selected <?php endif?>>No</option>
                                     <option value="1" <?php if (old('SMTPKeepAlive', setting('Email.SMTPKeepAlive'))) : ?> selected <?php endif?>>Yes</option>
                                 </select>
-                                <?php if(has_error('SMTPKeepAlive')) : ?>
+                                <?php if (has_error('SMTPKeepAlive')) : ?>
                                     <p class="text-danger"><?= error('SMTPKeepAlive') ?></p>
                                 <?php endif ?>
                             </div>

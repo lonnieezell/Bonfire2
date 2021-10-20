@@ -20,28 +20,28 @@ class UserController extends AdminController
      *
      * @return string
      */
-	public function list()
-	{
-	    $userModel = model('UserFilter');
+    public function list()
+    {
+        $userModel = model('UserFilter');
 
         $userModel->filter($this->request->getPost('filters'));
 
-	    $view = $this->request->getMethod() == 'post'
+        $view = $this->request->getMethod() == 'post'
             ? $this->viewPrefix .'_table'
             : $this->viewPrefix .'list';
 
-		return $this->render($view, [
-		    'headers' => [
-		        'email' => 'Email',
+        return $this->render($view, [
+            'headers' => [
+                'email' => 'Email',
                 'username' => 'Username',
                 'groups' => 'Groups',
                 'last_active' => 'Last Active'
             ],
-		    'showSelectAll' => true,
-		    'users' => $userModel->paginate(setting('App.perPage')),
+            'showSelectAll' => true,
+            'users' => $userModel->paginate(setting('App.perPage')),
             'pager' => $userModel->pager,
         ]);
-	}
+    }
 
     /**
      * Display the "new user" form.
@@ -54,7 +54,7 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix .'form', [
             'groups' => $groups,
         ]);
-	}
+    }
 
     /**
      * Display the Edit form for a single user.
@@ -127,7 +127,7 @@ class UserController extends AdminController
 
                 return redirect()->back()->withInput()->with('error', lang('Bonfire.unknownSaveError', ['user']));
             }
-        } catch(DataException $e) {
+        } catch (DataException $e) {
             // Just log the message for now since it's
             // likely saying the user's data is all the same
             log_message('debug', 'SAVING USER: '. $e->getMessage());
@@ -140,10 +140,10 @@ class UserController extends AdminController
 
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
-            if($file->isValid()) {
+            if ($file->isValid()) {
                 $filename = $user->id .'_avatar.'. $file->getExtension();
-                if($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
-                    $users->update($user->id , ['avatar' => $filename]);
+                if ($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
+                    $users->update($user->id, ['avatar' => $filename]);
                 }
             }
         }
@@ -248,7 +248,7 @@ class UserController extends AdminController
         }
 
         $permissions = setting('AuthGroups.permissions');
-        if(is_array($permissions)) {
+        if (is_array($permissions)) {
             ksort($permissions);
         }
 
