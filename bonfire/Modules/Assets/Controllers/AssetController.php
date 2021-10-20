@@ -14,8 +14,8 @@ use CodeIgniter\Controller;
  * is searched for.
  *
  * Example:
- * - A CSS file is stored in /themes/admin/css.
- * - The folder is specified as 'admin' => ROOTPATH.'themes/admin'
+ * - A CSS file is stored in /themes/Admin/css.
+ * - The folder is specified as 'admin' => ROOTPATH.'themes/Admin'
  * - You can link to the CSS file with 'asset('admin/css/theme.css')'
  */
 class AssetController extends Controller
