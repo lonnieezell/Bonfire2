@@ -1,0 +1,20 @@
+{
+	"source": {
+		"directories": [
+			"bonfire",
+			"app",
+		],
+		"excludes": [
+			"Config",
+			"Database/Migrations",
+			"Views"
+		]
+	},
+	"logs": {
+		"text": "build/infection.log"
+	},
+	"mutators": {
+		"@default": false
+	},
+	"bootstrap": "vendor/codeigniter4/codeigniter4/system/Test/bootstrap.php"
+}
