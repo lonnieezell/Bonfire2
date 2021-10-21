@@ -2,7 +2,7 @@
 	"source": {
 		"directories": [
 			"bonfire",
-			"app",
+			"app"
 		],
 		"excludes": [
 			"Config",
@@ -16,5 +16,5 @@
 	"mutators": {
 		"@default": false
 	},
-	"bootstrap": "vendor/codeigniter4/codeigniter4/system/Test/bootstrap.php"
+	"bootstrap": "vendor/codeigniter4/framework/system/Test/bootstrap.php"
 }

@@ -57,7 +57,7 @@
 			"@inspect",
 			"@style"
 		],
-		"deduplicate": "phpcpd app/ src/",
+		"deduplicate": "phpcpd app/ bonfire/",
 		"inspect": "deptrac analyze --cache-file=build/deptrac.cache",
 		"mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
 		"style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
