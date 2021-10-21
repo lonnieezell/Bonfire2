@@ -23,6 +23,13 @@ class Module extends BaseModule
             'title' => 'System Info',
             'namedRoute' => 'sys-info',
         ]);
+
+        $itemLogs = new MenuItem([
+            'title' => 'Logs',
+            'namedRoute' => 'sys-logs',
+            'fontAwesomeIcon' => 'fas fa-clipboard-list'
+        ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
+        $sidebar->menu('sidebar')->collection('tools')->addItem($itemLogs);
     }
 }
