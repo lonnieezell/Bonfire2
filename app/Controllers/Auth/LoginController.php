@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Auth;
 
+use App\Entities\User;
 use Sparks\Shield\Controllers\LoginController as ShieldLogin;
 
 class LoginController extends ShieldLogin
@@ -24,7 +25,7 @@ class LoginController extends ShieldLogin
      * Returns the URL that a user should be redirected
      * to after a successful login.
      *
-     * @param $user
+     * @param mixed $user
      *
      * @return string
      */

@@ -3,6 +3,7 @@
 namespace Bonfire\Modules\Groups\Controllers;
 
 use App\Controllers\AdminController;
+use CodeIgniter\HTTP\RedirectResponse;
 use Sparks\Shield\Authorization\Groups;
 
 class GroupSettingsController extends AdminController
@@ -99,7 +100,7 @@ class GroupSettingsController extends AdminController
     /**
      * Displays a list of all Permissions for a single group
      *
-     * @return string
+     * @return string|RedirectResponse
      */
     public function permissions(string $groupName)
     {

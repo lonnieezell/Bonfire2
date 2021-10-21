@@ -73,7 +73,7 @@ class Component
      * @param string $view
      * @param array  $data
      *
-     * @return string|null
+     * @return string
      */
     protected function renderView(string $view, array $data): string
     {

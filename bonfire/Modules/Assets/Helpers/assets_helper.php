@@ -13,6 +13,7 @@ if (! defined('asset_link')) {
     {
         $url = asset($location, $type);
 
+        $tag = '';
         switch ($type) {
             case 'css':
                 $tag = "<link href='{$url}' rel='stylesheet' />";
@@ -46,6 +47,7 @@ if (! defined('asset')) {
         }
 
         // VERSION cache-busting
+        $fingerprint = '';
         if ($config->bustingType === 'version') {
             switch (ENVIRONMENT) {
                 case 'testing':

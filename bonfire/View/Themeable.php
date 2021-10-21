@@ -44,7 +44,7 @@ trait Themeable
      */
     protected function getRenderer()
     {
-        if ($this->renderer instanceof View) {
+        if ($this->renderer !== null) {
             return $this->renderer;
         }
 

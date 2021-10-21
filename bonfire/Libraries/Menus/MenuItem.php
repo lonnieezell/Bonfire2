@@ -6,6 +6,14 @@ namespace Bonfire\Libraries\Menus;
  * Represents an individual item in a menu.
  *
  * @package Bonfire\Menus
+ *
+ * @property string $title
+ * @property string $icon
+ * @property string $url
+ * @property string $altText
+ * @property string $faIcon
+ * @property string $iconUrl
+ * @property int $weight
  */
 class MenuItem
 {

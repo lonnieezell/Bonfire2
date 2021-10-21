@@ -2,6 +2,7 @@
 
 namespace Tests\Support;
 
+use App\Entities\User;
 use App\Models\UserModel;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
@@ -29,7 +30,7 @@ class TestCase extends CIUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->faker = Factory::create();
+        $this->faker = Factory::create();   /* @phpstan-ignore-line */
     }
 
     /**
@@ -46,6 +47,9 @@ class TestCase extends CIUnitTestCase
 
         unset($params['email'], $params['password']);
 
+        /**
+         * @var User
+         */
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([
             'email' => $email,

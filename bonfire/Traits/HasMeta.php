@@ -103,7 +103,7 @@ trait HasMeta
      * Saves the meta information for this entity.
      *
      * @param string $key
-     * @param        $value
+     * @param mixed $value
      *
      * @return mixed
      */

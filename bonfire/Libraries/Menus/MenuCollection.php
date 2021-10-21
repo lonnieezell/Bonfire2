@@ -8,6 +8,9 @@ namespace Bonfire\Libraries\Menus;
  * or the header for accordion-style menus.
  *
  * @package Bonfire\Menus
+ *
+ * @property string $name
+ * @property string $title
  */
 class MenuCollection extends MenuItem
 {
