@@ -21,7 +21,7 @@
 		    <x-sidebar />
         </nav>
 
-		<main class="ms-sm-auto flex-grow-1">
+		<main class="ms-sm-auto flex-grow-1" style="overflow: auto">
             <?= $this->include('_header') ?>
 
             <div class="px-md-4">
