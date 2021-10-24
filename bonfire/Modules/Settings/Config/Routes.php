@@ -4,4 +4,6 @@ $routes->group(ADMIN_AREA.'/settings', ['namespace' => '\Bonfire\Modules\Setting
 
     $routes->get('general', 'GeneralSettingsController::general', ['as' => 'general-settings']);
     $routes->post('general', 'GeneralSettingsController::saveGeneral');
+
+    $routes->get('timezones', 'GeneralSettingsController::getTimezones');
 });

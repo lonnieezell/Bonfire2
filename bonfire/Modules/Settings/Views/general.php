@@ -44,6 +44,44 @@
 
         </fieldset>
 
+        <fieldset>
+            <legend>Date and Time Settings</legend>
+
+            <!-- Timezone -->
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <label for="timezone" class="form-label">Timezone</label>
+                    <div class="row">
+                        <div class="col-7 form-group">
+                            <select name="timezoneArea" class="form-control"
+                                    hx-get="/<?= ADMIN_AREA ?>/settings/timezones"
+                                    hx-target="#timezone"
+                                    hx-include="[name='timezoneArea']"
+                            >
+                                <option>Select timezone...</option>
+                                <?php foreach($timezones as $timezone) : ?>
+                                    <option value="<?= $timezone ?>" <?php if($currentTZArea === $timezone) : ?> selected <?php endif ?>>
+                                        <?= $timezone ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+
+                        <div class="col-5 form-group">
+                            <select name="timezone" id="timezone" class="form-control">
+                                <?php if (isset($timezoneOptions) && ! empty($timezoneOptions)) : ?>
+                                    <?= $timezoneOptions ?>
+                                <?php else : ?>
+                                    <option value="0">No timezones</option>
+                                <?php endif ?>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
         <br><hr>
 
         <div class="text-end px-5 py-3">
