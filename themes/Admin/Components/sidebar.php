@@ -1,5 +1,5 @@
 <a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="/<?= ADMIN_AREA ?>">
-    <?= config('App')->siteName ?? 'bonfire' ?>
+    <?= setting('App.siteName') ?? 'bonfire' ?>
 </a>
 <div class="pt-3">
 

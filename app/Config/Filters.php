@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Filters\OnlineCheck;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -25,6 +26,7 @@ class Filters extends BaseConfig
         'session'  => SessionAuth::class,
         'tokens'   => TokenAuth::class,
         'chain'    => ChainAuth::class,
+        'online'  => OnlineCheck::class,
     ];
 
     /**
@@ -35,8 +37,7 @@ class Filters extends BaseConfig
      */
     public $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
+            'online' => ['except' => 'site-offline'],
         ],
         'after'  => [
             'toolbar',
@@ -67,6 +68,6 @@ class Filters extends BaseConfig
     public $filters = [
         'session' => [
             'before' => [ADMIN_AREA.'*']
-        ]
+        ],
     ];
 }

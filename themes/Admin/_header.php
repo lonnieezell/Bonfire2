@@ -14,7 +14,6 @@
     <!-- User Menu -->
     <div class="dropdown text-end mx-4">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-<!--            <img src="https://github.com/mdo.png" alt="mdo" class="rounded-circle" width="32" height="32">-->
             <?= auth()->user()->renderAvatar(32) ?>
         </a>
         <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">

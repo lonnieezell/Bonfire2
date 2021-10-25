@@ -25,6 +25,9 @@ class LoginTest extends TestCase
 
     public function testLoginSuccess()
     {
+        /**
+         * @var User
+         */
         $user = fake(UserModel::class);
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
 
@@ -71,6 +74,9 @@ class LoginTest extends TestCase
             'register' => null
         ]);
 
+        /**
+         * @var User
+         */
         $user = fake(UserModel::class);
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
 

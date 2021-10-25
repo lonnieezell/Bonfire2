@@ -5,6 +5,10 @@ namespace Bonfire\Resources;
 /**
  * Represents a single tab that should be displayed for a resource.
  * A resource is a User, a User Group, etc.
+ *
+ * @property string $title
+ * @property string $url
+ * @property string $permission
  */
 class ResourceTab
 {
@@ -77,7 +81,7 @@ class ResourceTab
      *
      * @param string $url
      *
-     * @return array|string|string[]
+     * @return string
      */
     private function fillPlaceholder(string $url)
     {
@@ -115,7 +119,7 @@ class ResourceTab
      * Magic setting
      *
      * @param string $key
-     * @param        $value
+     * @param mixed $value
      */
     public function __set(string $key, $value)
     {

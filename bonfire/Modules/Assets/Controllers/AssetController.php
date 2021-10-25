@@ -24,12 +24,17 @@ class AssetController extends Controller
      * Locates and returns the file to the browser
      * with the correct mime-type.
      *
-     * @param ...$segments
+     * @param array $segments
      */
     public function serve(...$segments)
     {
-        // De-bust the filename
-        $filename = $origFilename = array_pop($segments);
+        /**
+         * De-bust the filename
+         *
+         * @var string
+         */
+        $filename = array_pop($segments);
+        $origFilename = $filename;
         $filename = explode('.', $filename);
 
         // Must be at least a name and extension

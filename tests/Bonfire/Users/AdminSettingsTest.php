@@ -42,13 +42,15 @@ class AdminSettingsTest extends TestCase
                 'minimumPasswordLength' => 10,
                 'validators' => [
                     'Sparks\Shield\Authentication\Passwords\CompositionValidator'
-                ]
+                ],
+                'defaultGroup' => 'developer',
             ]);
 
         $result->assertRedirect();
 
         $this->assertTrue(setting('Auth.allowRegistration'));
         $this->assertEquals(10, setting('Auth.minimumPasswordLength'));
+        $this->assertEquals('developer', setting('AuthGroups.defaultGroup'));
         $this->assertEquals(['Sparks\Shield\Authentication\Passwords\CompositionValidator'], setting('Auth.passwordValidators'));
         $this->assertEquals(['login' => true, 'register' => true], setting('Auth.actions'));
     }

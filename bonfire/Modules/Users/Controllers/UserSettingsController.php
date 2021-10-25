@@ -34,6 +34,8 @@ class UserSettingsController extends BaseController
 
         return $this->render($this->viewPrefix .'user_settings', [
             'rememberOptions' => $rememberOptions,
+            'defaultGroup' => setting('AuthGroups.defaultGroup'),
+            'groups' => setting('AuthGroups.groups'),
         ]);
     }
 
@@ -45,6 +47,7 @@ class UserSettingsController extends BaseController
     {
         $rules = [
             'minimumPasswordLength' => 'required|integer|greater_than[6]',
+            'defaultGroup' => 'required|string',
         ];
 
         if (! $this->validate($rules)) {
@@ -54,6 +57,7 @@ class UserSettingsController extends BaseController
         setting('Auth.allowRegistration', $this->request->getPost('allowRegistration') == 1);
         setting('Auth.minimumPasswordLength', (int)$this->request->getPost('minimumPasswordLength'));
         setting('Auth.passwordValidators', $this->request->getPost('validators'));
+        setting('AuthGroups.defaultGroup', $this->request->getPost('defaultGroup'));
 
         // Actions
         $actions = setting('Auth.actions');

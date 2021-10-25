@@ -169,7 +169,7 @@ class ComponentRenderer
      * @param string $view
      * @param array  $data
      *
-     * @return string|null
+     * @return string
      */
     private function renderView(string $view, array $data): string
     {

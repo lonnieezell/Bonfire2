@@ -40,7 +40,7 @@ class RegisterTest extends TestCase
         // Should not be able to access the register page
         $response = $this->get(route_to('register'));
 
-        $response->assertRedirect(route_to('login'));
+        $response->assertRedirect();
         $response->assertSessionHas('error', lang('Auth.registerDisabled'));
     }
 

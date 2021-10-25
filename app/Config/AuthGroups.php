@@ -8,6 +8,14 @@ class AuthGroups extends ShieldGroups
 {
     /**
      * --------------------------------------------------------------------
+     * Default Group
+     * --------------------------------------------------------------------
+     * The group that a newly registered user is added to.
+     */
+    public $defaultGroup = 'user';
+
+    /**
+     * --------------------------------------------------------------------
      * Groups
      * --------------------------------------------------------------------
      * The available authentication systems, listed
@@ -57,6 +65,7 @@ class AuthGroups extends ShieldGroups
         'users.edit'          => 'Can edit existing non-admin users',
         'users.delete'        => 'Can delete existing non-admin users',
         'beta.access'         => 'Can access beta-level features',
+        'site.viewOffline'    => 'Can the site even when in "offline" mode',
     ];
 
     /**
@@ -85,6 +94,7 @@ class AuthGroups extends ShieldGroups
             'users.create',
             'users.edit',
             'beta.access',
+            'site.viewOffline',
         ],
         'user' => [],
         'beta' => [

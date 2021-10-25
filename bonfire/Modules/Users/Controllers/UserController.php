@@ -100,16 +100,24 @@ class UserController extends AdminController
         }
 
         $users = new UserModel();
+        /**
+         * @var User
+         */
         $user = $userId !== null
             ? $users->find($userId)
             : new User();
 
+        /** @phpstan-ignore-next-line */
         if ($user === null) {
             return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        // Perform validation here so we can merge the
-        // basic model validation rules with the meta info rules.
+        /**
+         * Perform validation here so we can merge the
+         * basic model validation rules with the meta info rules.
+         *
+         * @var array
+         */
         $rules = config('Validation')->users;
         $rules = array_merge($rules, $user->validationRules('meta'));
 
@@ -123,7 +131,7 @@ class UserController extends AdminController
         // Try saving basic details
         try {
             if (! $users->save($user)) {
-                log_message($users->errors());
+                log_message('error', 'User errors', $users->errors());
 
                 return redirect()->back()->withInput()->with('error', lang('Bonfire.unknownSaveError', ['user']));
             }
@@ -155,7 +163,7 @@ class UserController extends AdminController
             helper('text');
             $user->createEmailIdentity([
                 'email' => $this->request->getPost('email'),
-                'password' => ! empty($password) ? $password : random_string(12),
+                'password' => ! empty($password) ? $password : random_string('alnum', 12),
             ]);
         }
         // Update existing user's email identity
