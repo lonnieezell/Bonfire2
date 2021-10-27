@@ -46,6 +46,8 @@ class GeneralSettingsController extends AdminController
             'timezones' => $timezoneAreas,
             'currentTZArea' => $currentTZArea,
             'timezoneOptions' => $this->getTimezones($currentTZArea),
+            'dateFormat' => setting('App.dateFormat') ?: 'M j, Y',
+            'timeFormat' => setting('App.timeFormat') ?: 'g:i A',
         ]);
     }
 
@@ -59,6 +61,8 @@ class GeneralSettingsController extends AdminController
         $rules = [
             'siteName' => 'required|string',
             'timezone' => 'required|string',
+            'dateFormat' => 'required|string',
+            'timeFormat' => 'required|string',
         ];
 
         if (! $this->validate($rules)) {
@@ -68,6 +72,9 @@ class GeneralSettingsController extends AdminController
         setting('App.siteName', $this->request->getPost('siteName', FILTER_SANITIZE_STRING));
         setting('App.siteOnline', $this->request->getPost('siteOnline') === '1');
         setting('App.appTimezone', $this->request->getPost('timezone'));
+
+        setting('App.dateFormat', $this->request->getPost('dateFormat'));
+        setting('App.timeFormat', $this->request->getPost('timeFormat'));
 
         return redirect()->to(ADMIN_AREA .'/settings/general')->with('message', lang('Bonfire.resourcesSaved', ['settings']));
     }

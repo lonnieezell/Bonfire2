@@ -26,7 +26,7 @@
             <tbody>
                 <?php foreach ($logins as $login) : ?>
                     <tr>
-                        <td><?= $login->date->format('M j, Y h:ia T') ?? '' ?></td>
+                        <td><?= app_date($login->date, true, true) ?></td>
                         <td><?= $login->ip_address ?? '' ?></td>
                         <td><?= $login->user_agent ?? '' ?></td>
                         <td>

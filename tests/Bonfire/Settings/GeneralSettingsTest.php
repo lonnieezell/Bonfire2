@@ -40,7 +40,10 @@ class GeneralSettingsTest extends TestCase
         $response = $this->actingAs($this->user)
             ->post('/admin/settings/general', [
                 'siteName' => 'My Great Site',
-                'siteOnline' => '1'
+                'siteOnline' => '1',
+                'timezone' => 'America/Los_Angeles',
+                'dateFormat' => 'm/d/Y',
+                'timeFormat' => 'g:i A',
             ]);
 
         $response->assertRedirect();

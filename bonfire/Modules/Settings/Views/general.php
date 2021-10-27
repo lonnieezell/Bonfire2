@@ -80,6 +80,77 @@
 
                 </div>
             </div>
+
+            <!-- Date Format -->
+            <div class="row mt-4">
+                <div class="col-12 col-sm-4">
+                    <label for="timezone" class="form-label">Date &amp; Time Format</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="m/d/Y"
+                            <?php if(old('dateFormat', $dateFormat) === 'm/d/Y') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            mm/dd/yyyy
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="d/m/Y"
+                            <?php if(old('dateFormat', $dateFormat) === 'd/m/Y') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            dd/mm/yyyy
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="d-m-Y"
+                            <?php if(old('dateFormat', $dateFormat) === 'd-m-Y') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            dd-mm-yyyy
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="Y-m-d"
+                            <?php if(old('dateFormat', $dateFormat) === 'Y-m-d') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            yyyy-mm-dd
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="M j, Y"
+                            <?php if(old('dateFormat', $dateFormat) === 'M j, Y') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            mmm dd, yyyy
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Time Format -->
+                <div class="row mt-4">
+                    <div class="col-12 col-sm-4">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="timeFormat" value="g:i A"
+                                <?php if(old('timeFormat', $timeFormat) === 'g:i A') : ?> checked <?php endif ?>>
+                            <label class="form-check-label" for="timeFormat">
+                                12 hour with AM/PM
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="timeFormat" value="H:i"
+                                <?php if(old('timeFormat', $timeFormat) === 'H:i') : ?> checked <?php endif ?>>
+                            <label class="form-check-label" for="timeFormat">
+                                24 hour
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </fieldset>
 
         <br><hr>

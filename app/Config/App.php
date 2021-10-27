@@ -139,6 +139,20 @@ class App extends BaseConfig
     public $appTimezone = 'America/Chicago';
 
     /**
+     * The date format to use with app_date()
+     *
+     * @var string
+     */
+    public $dateFormat = 'm/j/Y';
+
+    /**
+     * The time format to use with app_date()
+     *
+     * @var string
+     */
+    public $timeFormat = 'g:i A';
+
+    /**
      * --------------------------------------------------------------------------
      * Default Character Set
      * --------------------------------------------------------------------------
