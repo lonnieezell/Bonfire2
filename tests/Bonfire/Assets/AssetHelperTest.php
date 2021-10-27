@@ -55,6 +55,6 @@ class AssetHelperTest extends TestCase
         // In testing environment, would be the current timestamp
         // so just test the pattern to ensure that works.
         preg_match('|assets/admin/css/admin.([\d]+).css|i', $link, $matches);
-        $this->assertEquals(filemtime(ROOTPATH.'themes/admin/css/admin.css'), $matches[1]);
+        $this->assertEquals(filemtime(ROOTPATH.'themes/Admin/css/admin.css'), $matches[1]);
     }
 }
