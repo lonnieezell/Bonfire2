@@ -62,13 +62,6 @@ jobs:
           TACHYCARDIA_MONITOR_GA: enabled
 
       - if: matrix.php-versions == '8.0'
-        name: Mutate with Infection
-        run: |
-          sudo phive --no-progress install --global --trust-gpg-keys C5095986493B4AA0 infection
-          git fetch --depth=1 origin $GITHUB_BASE_REF
-          infection --threads=2 --skip-initial-tests --coverage=build/phpunit --git-diff-base=origin/$GITHUB_BASE_REF --git-diff-filter=AM --logger-github --ignore-msi-with-no-mutations
-
-      - if: matrix.php-versions == '8.0'
         name: Run Coveralls
         continue-on-error: true
         run: |
