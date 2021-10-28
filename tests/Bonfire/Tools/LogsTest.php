@@ -28,7 +28,7 @@ class LogsTest extends TestCase
 
     public function testeViewLogFile()
     {
-        $response = $this->get(ADMIN_AREA . 'tools/view-log/' . $this->logFileName);
+        $response = $this->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
 
         $response->assertOK();
         $response->assertSee('Logs : ' . date('F j, Y'));
