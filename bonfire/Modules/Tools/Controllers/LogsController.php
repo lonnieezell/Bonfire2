@@ -50,7 +50,7 @@ class LogsController extends AdminController
      *
      * @param string $file The full name of the file to view (including extension).
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|string
      */
     public function view(string $file = '')
     {
@@ -65,12 +65,12 @@ class LogsController extends AdminController
 
         $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
-        return $this->render($this->viewPrefix . 'view', [
-            'log_file'        => $file,
-            'canDelete'       => 1,
-            'log_content'     => $result['logs'],
-            'pager'           => $result['pager'],
-            'log_file_pretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
+        return $this->render($this->viewPrefix . 'view_log', [
+            'logFile' => $file,
+            'canDelete' => 1,
+            'logContent' => $result['logs'],
+            'pager' => $result['pager'],
+            'logFilePretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
         ]);
     }
 
