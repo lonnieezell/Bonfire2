@@ -2,9 +2,8 @@
 
 namespace Tests\Bonfire\Logs;
 
-use CodeIgniter\Config\Factories;
-use Tests\Support\TestCase;
 use Bonfire\Modules\Tools\Libraries\Logs;
+use Tests\Support\TestCase;
 
 class LogsTest extends TestCase
 {
@@ -14,58 +13,53 @@ class LogsTest extends TestCase
     protected $logFileName;
 
     /**
-     * @var string 
+     * @var string
      */
-  protected $logsPath = WRITEPATH . 'logs/';
+    protected $logsPath = WRITEPATH . 'logs/';
 
-  public function setUp(): void
-  {
-      parent::setUp();
+    public function setUp(): void
+    {
+        parent::setUp();
 
-      log_message('error', 'Log error test');
+        log_message('error', 'Log error test');
 
-      $this->logFileName = 'log-'.date('Y-m-d').'.log';
+        $this->logFileName = 'log-' . date('Y-m-d') . '.log';
+    }
 
-  }
+    public function testeViewLogFile()
+    {
+        $response = $this->get(ADMIN_AREA . 'tools/view-log/' . $this->logFileName);
 
-  public function testeViewLogFile(){
+        $response->assertOK();
+        $response->assertSee('Logs : ' . date('F j, Y'));
+    }
 
-    $response = $this->get(ADMIN_AREA.'tools/view-log/'.$this->logFileName);
+    public function testeListLogsFiles()
+    {
+        $logs = get_filenames($this->logsPath . $this->logFileName);
 
-    $response->assertOK();
-    $response->assertSee('Logs : '.date('F j, Y'));
+        unset($logs[0]);
 
-  }
-  public function testeListLogsFiles(){
+        $this->assertIsArray($logs);
+        $this->assertEmpty($logs);
+    }
 
-    $logs = get_filenames($this->logsPath.$this->logFileName);
+    public function testeListFileLogs()
+    {
+        $logHandler = new Logs();
 
-    unset($logs[0]);
+        $logs = $logHandler->processFileLogs($this->logsPath . $this->logFileName);
 
-    $this->assertIsArray($logs);
-    $this->assertEmpty($logs);
-
-  }
-
-  public function testeListFileLogs(){
-
-    $logHandler = new Logs();
-
-    $logs = $logHandler->processFileLogs($this->logsPath.$this->logFileName);
-
-    $this->assertIsArray($logs);
-
-  }
+        $this->assertIsArray($logs);
+    }
 
     public function testDeleteLog()
     {
         $this->assertTrue(@unlink($this->logsPath . $this->logFileName));
-
     }
 
     public function testDeleteAllLogs()
     {
-
         log_message('error', 'Log error test1');
         log_message('error', 'Log error test2');
 
@@ -74,7 +68,6 @@ class LogsTest extends TestCase
         $this->assertTrue(delete_files($this->logsPath));
 
         @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
-
     }
 
 

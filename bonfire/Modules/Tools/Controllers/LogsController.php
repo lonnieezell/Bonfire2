@@ -3,8 +3,8 @@
 namespace Bonfire\Tools\Controllers;
 
 use App\Controllers\AdminController;
-use CodeIgniter\CodeIgniter;
 use Bonfire\Modules\Tools\Libraries\Logs;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class LogsController extends AdminController
 {
@@ -37,10 +37,10 @@ class LogsController extends AdminController
 
         unset($logs[0]);
 
-        $result = $this->logsHandler->paginateLogs($logs,$this->logsLimit);
+        $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
-        return $this->render($this->viewPrefix .'logs', [
-            'logs' => $result['logs'],
+        return $this->render($this->viewPrefix . 'logs', [
+            'logs'  => $result['logs'],
             'pager' => $result['pager'],
         ]);
     }
@@ -50,71 +50,73 @@ class LogsController extends AdminController
      *
      * @param string $file The full name of the file to view (including extension).
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function view(string $file = '')
     {
         helper('security');
         $file = sanitize_filename($file);
 
-        if (empty($file) or !file_exists($this->logsPath.$file)) {
+        if (empty($file) or ! file_exists($this->logsPath . $file)) {
             return redirect()->to(ADMIN_AREA . 'tools/logs')->with('danger', lang('Logs.empty'));
         }
 
-        $logs = $this->logsHandler->processFileLogs($this->logsPath.$file);
+        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file);
 
-        $result = $this->logsHandler->paginateLogs($logs,$this->logsLimit);
+        $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
-        return $this->render($this->viewPrefix .'view', [
-            'log_file' => $file,
-            'canDelete' => 1,
-            'log_content' => $result['logs'],
-            'pager' => $result['pager'],
+        return $this->render($this->viewPrefix . 'view', [
+            'log_file'        => $file,
+            'canDelete'       => 1,
+            'log_content'     => $result['logs'],
+            'pager'           => $result['pager'],
             'log_file_pretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
         ]);
-
     }
 
     /**
      * Delete the specified log file or all.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete()
     {
         $delete = $this->request->getPost('delete');
         $deleteAll = $this->request->getPost('delete_all');
 
-      if (empty($delete) && empty($deleteAll)) {
-        return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Bonfire.resourcesNotFound', ['logs']));
-      }
-
-      if(! empty($delete)) {
-          helper('security');
-
-          $checked = $_POST['checked'];
-          $numChecked = count($checked);
-
-          if (is_array($checked) && $numChecked) {
-              foreach ($checked as $file) {
-                  @unlink($this->logsPath . sanitize_filename($file));
-              }
-
-            return redirect()->to(ADMIN_AREA.'tools/logs')->with('message', lang('Logs.delete_success'));
-          }
+        if (empty($delete) && empty($deleteAll)) {
+            return redirect()->to(ADMIN_AREA . 'tools/logs')->with(
+                'error',
+                lang('Bonfire.resourcesNotFound', ['logs'])
+            );
         }
 
-      if (! empty($deleteAll)) {
-          if (delete_files($this->logsPath)) {
-              // Restore the index.html file.
-              @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
-              return redirect()->to(ADMIN_AREA.'tools/logs')->with('message', lang('Logs.delete_all_success'));
+        if (! empty($delete)) {
+            helper('security');
 
-          } else {
-              return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Logs.delete_error'));
-          }
-      }
+            $checked = $_POST['checked'];
+            $numChecked = count($checked);
 
-      return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Bonfire.unknownAction'));
+            if (is_array($checked) && $numChecked) {
+                foreach ($checked as $file) {
+                    @unlink($this->logsPath . sanitize_filename($file));
+                }
+
+                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('message', lang('Logs.delete_success'));
+            }
+        }
+
+        if (! empty($deleteAll)) {
+            if (delete_files($this->logsPath)) {
+                // Restore the index.html file.
+                @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
+
+                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('message', lang('Logs.delete_all_success'));
+            } else {
+                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('error', lang('Logs.delete_error'));
+            }
+        }
+
+        return redirect()->to(ADMIN_AREA . 'tools/logs')->with('error', lang('Bonfire.unknownAction'));
     }
 }
