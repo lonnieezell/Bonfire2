@@ -80,40 +80,41 @@ class LogsController extends AdminController
      *
      * @return \CodeIgniter\HTTP\RedirectResponse
      */
-    public function delete(){
+    public function delete()
+    {
+        $delete = $this->request->getPost('delete');
+        $deleteAll = $this->request->getPost('delete_all');
 
-      if (isset($_POST['delete'])) {
+      if (empty($delete) && empty($deleteAll)) {
+        return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Bonfire.resourcesNotFound', ['logs']));
+      }
 
+      if(! empty($delete)) {
           helper('security');
 
           $checked = $_POST['checked'];
           $numChecked = count($checked);
 
           if (is_array($checked) && $numChecked) {
-
               foreach ($checked as $file) {
                   @unlink($this->logsPath . sanitize_filename($file));
               }
 
             return redirect()->to(ADMIN_AREA.'tools/logs')->with('message', lang('Logs.delete_success'));
-
           }
+        }
 
-        } elseif (isset($_POST['delete_all'])) {
-
+      if (! empty($deleteAll)) {
           if (delete_files($this->logsPath)) {
-
               // Restore the index.html file.
               @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
               return redirect()->to(ADMIN_AREA.'tools/logs')->with('message', lang('Logs.delete_all_success'));
-
 
           } else {
               return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Logs.delete_error'));
           }
       }
 
+      return redirect()->to(ADMIN_AREA.'tools/logs')->with('error', lang('Bonfire.unknownAction'));
     }
-
-
 }

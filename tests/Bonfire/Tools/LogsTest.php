@@ -8,7 +8,14 @@ use Bonfire\Modules\Tools\Libraries\Logs;
 
 class LogsTest extends TestCase
 {
+    /**
+     * @var string
+     */
+    protected $logFileName;
 
+    /**
+     * @var string 
+     */
   protected $logsPath = WRITEPATH . 'logs/';
 
   public function setUp(): void

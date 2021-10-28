@@ -13,4 +13,5 @@ return [
     'edit' => 'Edit',
 
     'notAuthorized' => 'You do not have the correct permissions.',
+    'unknownAction' => 'Did not recognize the action you requested.',
 ];
