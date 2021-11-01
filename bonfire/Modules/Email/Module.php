@@ -24,6 +24,14 @@ class Module extends BaseModule
             'namedRoute' => 'email-settings',
             'fontAwesomeIcon' => 'fas fa-envelope',
         ]);
+
+        $itemQueue = new MenuItem([
+            'title' => 'Email queue',
+            'namedRoute' => 'email-queue',
+            'fontAwesomeIcon' => 'fas fa-envelope',
+        ]);
+
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+        $sidebar->menu('sidebar')->collection('content')->addItem($itemQueue);
     }
 }

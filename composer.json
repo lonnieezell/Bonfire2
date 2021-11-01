@@ -10,7 +10,8 @@
 		"tatter/alerts": "^2.1",
 		"lonnieezell/codigniter-shield": "dev-develop",
 		"codeigniter4/settings": "dev-develop",
-		"components/font-awesome": "^5.15"
+		"components/font-awesome": "^5.15",
+		"kgrruz/codeigniter4-email-queue": "dev-develop"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",
