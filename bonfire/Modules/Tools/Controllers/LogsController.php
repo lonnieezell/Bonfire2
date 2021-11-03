@@ -58,7 +58,7 @@ class LogsController extends AdminController
         $file = sanitize_filename($file);
 
         if (empty($file) or ! file_exists($this->logsPath . $file)) {
-            return redirect()->to(ADMIN_AREA . 'tools/logs')->with('danger', lang('Logs.empty'));
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Logs.empty'));
         }
 
         $logs = $this->logsHandler->processFileLogs($this->logsPath . $file);
@@ -85,7 +85,7 @@ class LogsController extends AdminController
         $deleteAll = $this->request->getPost('delete_all');
 
         if (empty($delete) && empty($deleteAll)) {
-            return redirect()->to(ADMIN_AREA . 'tools/logs')->with(
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with(
                 'error',
                 lang('Bonfire.resourcesNotFound', ['logs'])
             );
@@ -102,7 +102,7 @@ class LogsController extends AdminController
                     @unlink($this->logsPath . sanitize_filename($file));
                 }
 
-                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('message', lang('Logs.delete_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Logs.delete_success'));
             }
         }
 
@@ -111,12 +111,12 @@ class LogsController extends AdminController
                 // Restore the index.html file.
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
 
-                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('message', lang('Logs.delete_all_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Logs.delete_all_success'));
             } else {
-                return redirect()->to(ADMIN_AREA . 'tools/logs')->with('error', lang('Logs.delete_error'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Logs.delete_error'));
             }
         }
 
-        return redirect()->to(ADMIN_AREA . 'tools/logs')->with('error', lang('Bonfire.unknownAction'));
+        return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Bonfire.unknownAction'));
     }
 }
