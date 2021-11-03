@@ -4,7 +4,7 @@ $this->extend('master') ?>
 <?php
 $this->section('main') ?>
 <x-page-head>
-    <a href="/<?= ADMIN_AREA ?>tools/logs" class="back">&larr; Logs</a>
+    <a href="/<?= ADMIN_AREA ?>/tools/logs" class="back">&larr; Logs</a>
     <h2>Logs : <?php
         echo $logFilePretty; ?></h2>
     <h2>
@@ -62,7 +62,7 @@ $this->section('main') ?>
 
     <?php if ($canDelete) : ?>
 
-        <form action="<?= site_url(ADMIN_AREA . 'tools/delete-log'); ?>" class='form-horizontal' method="post">
+        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log'); ?>" class='form-horizontal' method="post">
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>

@@ -9,7 +9,7 @@
 
       <?php if (count($logs)) { ?>
 
-        <form action="<?= site_url(ADMIN_AREA . 'tools/delete-log'); ?>" method="post">
+        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log'); ?>" method="post">
             <?= csrf_field() ?>
 
         <div class="table-responsive">
@@ -35,11 +35,11 @@
                           <input type="checkbox" value="<?= esc($log); ?>" name="checked[]" />
                       </td>
                       <td class='date'>
-                          <a href='<?php echo site_url(ADMIN_AREA."tools/view-log/{$log}"); ?>'>
+                          <a href='<?php echo site_url(ADMIN_AREA."/tools/view-log/{$log}"); ?>'>
                               <?php echo date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $log)))); ?>
                           </a>
                       </td>
-                      <td><?php echo esc($log); ?></td>
+                      <td><?= esc($log); ?></td>
                   </tr>
                       <?php
                   endforeach;
