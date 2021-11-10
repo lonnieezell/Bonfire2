@@ -38,6 +38,7 @@ class Assets extends BaseConfig
      * server load.
      */
     public $versions = [
+        'img' => '1.0',
         'css' => '1.0',
         'js' => '1.0',
     ];
@@ -55,5 +56,6 @@ class Assets extends BaseConfig
         'admin' => ROOTPATH.'themes/Admin',
         'auth' => ROOTPATH.'themes/Auth',
         'other' => ROOTPATH.'vendor',
+        'logo' => WRITEPATH.'uploads/logo',
     ];
 }

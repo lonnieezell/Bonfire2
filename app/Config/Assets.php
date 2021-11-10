@@ -55,5 +55,6 @@ class Assets extends OriginalAssets
         'admin' => ROOTPATH.'themes/Admin',
         'auth' => ROOTPATH.'themes/Auth',
         'other' => ROOTPATH.'vendor',
+        'logo' => WRITEPATH.'uploads/logo',
     ];
 }

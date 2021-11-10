@@ -16,6 +16,7 @@
 <?= service('alerts')->display(); ?>
 <header class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow-sm">
     <a class="px-3 d-block fs-3 text-light text-decoration-none col-md-3 col-lg-2 me-0" href="/<?= ADMIN_AREA ?>">
+				<img class="img-fluid" src="<?= (setting('App.siteLogo'))? asset('logo/thumb_'. setting('App.siteLogo'),'img'):base_url('/uploads/logo/thumb_default.png'); ?>" />
         <?= config('App')->siteName ?? 'bonfire' ?>
         <span class="fs-6 text-white-50"><?= BONFIRE_VERSION ?></span>
     </a>

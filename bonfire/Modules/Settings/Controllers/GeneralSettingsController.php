@@ -76,6 +76,33 @@ class GeneralSettingsController extends AdminController
         setting('App.dateFormat', $this->request->getPost('dateFormat'));
         setting('App.timeFormat', $this->request->getPost('timeFormat'));
 
+        // Check for an logo to upload
+        if ($file = $this->request->getFile('siteLogo')) {
+
+            if ($file->isValid()) {
+
+                $filename = 'custom.'. $file->getExtension();
+                $logo_path = WRITEPATH .'uploads/logo';
+
+                if ($file->move($logo_path, $filename, true)) {
+
+                          service('image')
+                          ->withFile($logo_path .'/'.$filename)
+                          ->fit(300, 300, 'center')
+                          ->save($logo_path .'/med_'.$filename);
+
+                          service('image')
+                          ->withFile($logo_path .'/'.$filename)
+                          ->fit(60, 60, 'center')
+                          ->save($logo_path .'/thumb_'.$filename);
+
+                    setting('App.siteLogo', $filename);
+                }
+            }else{
+              return redirect()->back()->with('error', lang('Bonfire.resourcesSaved', ['settings']). ' '. $file->getErrorString());
+            }
+        }
+
         return redirect()->to(ADMIN_AREA .'/settings/general')->with('message', lang('Bonfire.resourcesSaved', ['settings']));
     }
 

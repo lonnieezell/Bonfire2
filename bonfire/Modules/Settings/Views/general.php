@@ -6,7 +6,7 @@
 </x-page-head>
 
 <x-admin-box>
-    <form action="/admin/settings/general" method="post">
+    <form action="/admin/settings/general" method="post" enctype="multipart/form-data">
         <?= csrf_field() ?>
 
         <fieldset>
@@ -22,6 +22,19 @@
                 </div>
                 <div class="col px-5">
                     <p class="text-muted small">Appears in admin, and is available throughout the site.</p>
+                </div>
+            </div>
+
+            <!-- Site Logo -->
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="form-check">
+                        <label class="form-label" for="siteLogo">Site Logo</label>
+                        <input type="file"  class="form-control" name="siteLogo" value="<?= esc(old('siteLogo', setting('App.siteLogo')), 'attr') ?>" />
+                    </div>
+                </div>
+                <div class="col px-5">
+                    <p class="text-muted small">Image logo appears in admin, and is available throughout the site.</p>
                 </div>
             </div>
 
