@@ -66,6 +66,8 @@ class AuthGroups extends ShieldGroups
         'users.delete'        => 'Can delete existing non-admin users',
         'beta.access'         => 'Can access beta-level features',
         'site.viewOffline'    => 'Can the site even when in "offline" mode',
+        'guides.bonfire'      => 'Can view the Bonfire Development Guides',
+        'guides.application'  => 'Can view the application guides.',
     ];
 
     /**
@@ -80,6 +82,7 @@ class AuthGroups extends ShieldGroups
             'groups.*',
             'users.*',
             'beta.*',
+            'guides.*',
         ],
         'admin' => [
             'admin.access',
@@ -87,6 +90,7 @@ class AuthGroups extends ShieldGroups
             'users.edit',
             'users.delete',
             'beta.access',
+            'guides.application',
         ],
         'developer' => [
             'admin.access',
@@ -95,6 +99,7 @@ class AuthGroups extends ShieldGroups
             'users.edit',
             'beta.access',
             'site.viewOffline',
+            'guides.*'
         ],
         'user' => [],
         'beta' => [
