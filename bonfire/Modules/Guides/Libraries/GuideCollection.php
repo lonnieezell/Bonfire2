@@ -152,9 +152,9 @@ class GuideCollection
         }
 
         return view('\Bonfire\Modules\Guides\Views\_page_links', [
-            'previousTitle' => self::formatPage($previous),
+            'previousTitle' => $previous !== null ? self::formatPage($previous) : null,
             'previousLink' => ! empty($previous) ? site_url(ADMIN_AREA .'/guides/'. $this->alias .'/'. $previous) : null,
-            'nextTitle' => self::formatpage($next),
+            'nextTitle' => $next !== null ? self::formatpage($next) : null,
             'nextLink' => ! empty($next) ? site_url(ADMIN_AREA .'/guides/'. $this->alias .'/'. $next) : null,
         ]);
     }
