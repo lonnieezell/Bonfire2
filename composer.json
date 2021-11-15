@@ -9,7 +9,6 @@
 		"codeigniter4/framework": "^4",
 		"tatter/alerts": "^2.1",
 		"lonnieezell/codigniter-shield": "dev-develop",
-		"codeigniter4/settings": "dev-develop",
 		"components/font-awesome": "^5.15",
 		"league/commonmark": "^2.0",
 		"spatie/commonmark-highlighter": "^3.0"
@@ -42,7 +41,6 @@
 			"Bonfire\\": "bonfire"
 		}
 	},
-	"minimum-stability": "beta",
 	"repositories": [
 		{
 			"type": "vcs",
