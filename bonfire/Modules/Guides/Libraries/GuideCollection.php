@@ -77,6 +77,9 @@ class GuideCollection
 
         $pages = $this->readDir(ROOTPATH .$this->settings['path']);
 
+        // Ensure guide numbers are sorted correctly
+        asort($pages);
+
         return view('\Bonfire\Modules\Guides\Views\_toc', [
             'pages' => $pages,
             'alias' => $this->alias,
@@ -92,6 +95,9 @@ class GuideCollection
      */
     public static function formatPage(string $page)
     {
+        // Strip any preceeding numbers that are used for ordering
+        $page = preg_replace('|^[0-9].|', '', $page);
+
         return ucfirst(
             str_replace('.md', '',
                     str_replace(['-', '_'], ' ', $page)
