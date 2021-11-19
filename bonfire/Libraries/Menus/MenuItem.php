@@ -18,38 +18,38 @@ namespace Bonfire\Libraries\Menus;
 class MenuItem
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $url;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $altText;
 
     /**
      * FontAwesome 5 icon name
      *
-     * @var string
+     * @var string|null
      */
     protected $faIcon;
 
     /**
      * URL to icon, if an image.
      *
-     * @var string
+     * @var string|null
      */
     protected $iconUrl;
 
     /**
      * The 'weight' used for sorting.
      *
-     * @var int
+     * @var int|null
      */
     protected $weight;
 

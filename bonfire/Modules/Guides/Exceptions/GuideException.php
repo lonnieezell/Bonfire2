@@ -2,7 +2,7 @@
 
 namespace Bonfire\Guides\Exceptions;
 
-class GuideException extends \Exception
+final class GuideException extends \Exception
 {
     public static function forCollectionNotFound()
     {

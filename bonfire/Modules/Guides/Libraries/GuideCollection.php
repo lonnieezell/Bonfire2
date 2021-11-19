@@ -129,7 +129,7 @@ class GuideCollection
         $markdown = new MarkdownConverter($env);
         $out = $markdown->convertToHtml($out);
 
-        return $out ?? '';
+        return $out;
     }
 
     /**
