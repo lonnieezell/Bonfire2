@@ -63,7 +63,7 @@
                 <table class="table table-striped">
                     <tbody>
                         <tr>
-                            <td>.env</td>
+                            <td colspan="3"><i class="far fa-file"></i> .env</td>
                             <td>
                                 <?php if (is_file(ROOTPATH .'.env')) : ?>
                                     <span class="text-success">present</span>
@@ -73,7 +73,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>/writeable</td>
+                            <td colspan="3"><i class="far fa-folder"></i> /writeable</td>
                             <td>
                                 <?php if (is_really_writable(WRITEPATH)) : ?>
                                     <span class="text-success">writeable</span>
@@ -82,9 +82,25 @@
                                 <?php endif ?>
                             </td>
                         </tr>
-                    <?php foreach (directory_map(WRITEPATH, 2) as $folder =>  $info) : ?>
+                    <?php foreach (get_dir_file_info(WRITEPATH, true) as $folder =>  $info) : ?>
                         <tr>
-                            <td>-- <?= trim($folder, ' /') ?></td>
+                            <?php if (is_dir(WRITEPATH . $folder)) : ?>
+                                <td colspan="3">
+                                    <i class="fas fa-minus"></i>
+                                    <i class="far fa-folder"></i>
+                                    <?= trim($folder, ' /') ?>
+                                </td>
+                            <?php else : ?>
+                                <td>
+                                    <i class="fas fa-minus"></i>
+                                    <i class="far fa-file"></i>
+                                    <?= trim($folder, ' /') ?></td>
+                                <td>
+                                    <?php echo lang('Bonfire.lastModified') ?>: <?php echo strftime('%c', $info['date']) ?></td>
+                                <td>
+                                    <?php echo lang('Bonfire.fileSize') ?>: <?php echo number_to_size($info['size']) ?>
+                                </td>
+                            <?php endif ?>
                             <td>
                                 <?php if (is_really_writable(WRITEPATH .$folder)) : ?>
                                     <span class="text-success">writeable</span>
