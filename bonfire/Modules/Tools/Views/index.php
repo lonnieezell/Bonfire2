@@ -96,9 +96,9 @@
                                     <i class="far fa-file"></i>
                                     <?= trim($folder, ' /') ?></td>
                                 <td>
-                                    <?php echo lang('Bonfire.nested.fileSystem.lastModified') ?>: <?php echo strftime('%c', $info['date']) ?></td>
+                                    <?php echo lang('Bonfire.lastModified') ?>: <?php echo strftime('%c', $info['date']) ?></td>
                                 <td>
-                                    <?php echo lang('Bonfire.nested.fileSystem.fileSize') ?>: <?php echo number_to_size($info['size']) ?>
+                                    <?php echo lang('Bonfire.fileSize') ?>: <?php echo number_to_size($info['size']) ?>
                                 </td>
                             <?php endif ?>
                             <td>
