@@ -20,7 +20,7 @@
 		"codeigniter/coding-standard": "^1.1",
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
-		"phpstan/phpstan": "^0.12"
+		"phpstan/phpstan": "^1.1"
 	},
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"
