@@ -14,6 +14,7 @@ return [
 
     'notAuthorized' => 'You do not have the correct permissions.',
     'unknownAction' => 'Did not recognize the action you requested.',
+    'magicLinkInfo' => 'We will send an email with a link to click to sign you in.',
 
     'lastModified' => 'Last Modified',
     'fileSize' => 'File Size',

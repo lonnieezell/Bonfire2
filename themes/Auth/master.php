@@ -14,10 +14,9 @@
 <body>
 
 <?= service('alerts')->display(); ?>
-<header class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow-sm">
-    <a class="px-3 d-block fs-3 text-light text-decoration-none col-md-3 col-lg-2 me-0" href="/<?= ADMIN_AREA ?>">
-        <?= config('App')->siteName ?? 'bonfire' ?>
-        <span class="fs-6 text-white-50"><?= BONFIRE_VERSION ?></span>
+<header class="navbar navbar-light bg-none flex-md-nowrap p-0 shadow-sm">
+    <a class="px-3 d-block fs-3 text-dark text-decoration-none col-md-3 col-lg-2 me-0" href="/<?= ADMIN_AREA ?>">
+        <?= setting('App.siteName') ?? 'Bonfire' ?>
     </a>
 </header>
 

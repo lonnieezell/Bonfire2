@@ -31,7 +31,7 @@
                     </div>
                 <?php endif ?>
 
-                <div class="d-grid col-12 mx-auto m-3">
+                <div class="d-grid col-12 mx-auto m-5">
                     <button type="submit" class="btn btn-primary btn-block btn-lg"><?= lang('Auth.login') ?></button>
                 </div>
 
