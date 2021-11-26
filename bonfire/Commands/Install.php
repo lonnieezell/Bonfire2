@@ -113,7 +113,7 @@ class Install extends BaseCommand
         $user = CLI::prompt('Database username:', 'root');
         $pass = CLI::prompt('Database password:', 'root');
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite']);
-        $prefix = CLI::prompt('Database prefix:');
+        $prefix = CLI::prompt('Table prefix:');
 
         $this->updateEnvFile("# database.default.hostname = localhost", "database.default.hostname = {$host}");
         $this->updateEnvFile("# database.default.database = ci4", "database.default.database = {$name}");
