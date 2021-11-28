@@ -73,14 +73,11 @@ class RecycleController extends AdminController
         $model = model($currentResource['model']);
 
         // Is there custom handling?
-        if (method_exists($model, 'recyclerRestore')) {
-            $result = $model->recyclerRestore($resourceId);
-        }
-        else {
-            $result = $model->where('id', $resourceId)
+        $result = method_exists($model, 'recyclerRestore')
+            ? $model->recyclerRestore($resourceId)
+            : $model->where('id', $resourceId)
                 ->set(['deleted_at' => null])
                 ->update();
-        }
 
         if (! $result) {
             return redirect()->back()->with('error', $model->errors());
@@ -109,12 +106,9 @@ class RecycleController extends AdminController
         $model = model($currentResource['model']);
 
         // Is there custom handling?
-        if (method_exists($model, 'recyclerPurge')) {
-            $result = $model->recyclerRestore($resourceId);
-        }
-        else {
-            $result = $model->delete($resourceId, true);
-        }
+        $result = method_exists($model, 'recyclerPurge')
+            ? $model->recyclerPurge($resourceId)
+            : $model->delete($resourceId, true);
 
         if (! $result) {
             return redirect()->back()->with('error', $model->errors());
