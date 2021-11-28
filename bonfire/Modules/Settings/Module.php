@@ -22,7 +22,7 @@ class Module extends BaseModule
         $item = new MenuItem([
             'title' => 'General',
             'namedRoute' => 'general-settings',
-            'fontAwesomeIcon' => 'fas fa-gear',
+            'fontAwesomeIcon' => 'fas fa-cog',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }
