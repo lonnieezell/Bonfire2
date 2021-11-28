@@ -27,7 +27,7 @@ window.addEventListener('load', (event) => {
 
     //On change, redirect to selected resource
     selectElement.addEventListener('change', (event) => {
-        location.href = "https://framework.iotservices.it/admin/recycler/?r=" + event.target.value ;
+        location.href = "?r=" + event.target.value ;
     });
 
 
