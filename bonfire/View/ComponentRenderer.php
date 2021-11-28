@@ -233,11 +233,14 @@ class ComponentRenderer
             return $filePath;
         }
 
-        // check in app path
-        $filePath = APPPATH . 'Views/Components/' . $name . '.php';
+        // fallback: check in components' default lookup paths from config
+        $componentsLookupPaths = config('Bonfire')->componentsLookupPaths;
+        foreach ($componentsLookupPaths as $componentPath) {
+            $filePath = $componentPath . $name . '.php';
 
-        if (is_file($filePath)) {
-            return $filePath;
+            if (is_file($filePath)) {
+                return $filePath;
+            }
         }
 
         throw new \RuntimeException('View not found for component: '. $name);
