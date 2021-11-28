@@ -1,14 +1,14 @@
 <?php
 
-namespace Bonfire\Modules\Settings;
+namespace Bonfire\Modules\Recycler;
 
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
 
 /**
- * Email Module setup
+ * Docs Module setup
  *
- * @package Bonfire\Email
+ * @package Bonfire\Docs
  */
 class Module extends BaseModule
 {
@@ -20,10 +20,10 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item = new MenuItem([
-            'title' => 'General',
-            'namedRoute' => 'general-settings',
-            'fontAwesomeIcon' => 'fas fa-cog',
+            'title' => 'Recycler',
+            'namedRoute' => 'recycler',
+            'fontAwesomeIcon' => 'fas fa-recycle',
         ]);
-        $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+        $sidebar->menu('sidebar')->collection('tools')->addItem($item);
     }
 }
