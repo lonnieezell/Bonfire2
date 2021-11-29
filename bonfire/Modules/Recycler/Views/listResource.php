@@ -1,6 +1,7 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
+
 <x-page-head>
     <div class="row">
         <div class="col">
@@ -8,9 +9,9 @@
         </div>
         <?php if(count($resources) > 1) : ?>
             <div class="col-auto">
-                <select name="resource" class="form-select">
+                <select name="r" class="form-select" hx-get="?" hx-target="#resource">
                 <?php foreach($resources as $alias => $details) : ?>
-                    <option value="<?= $alias ?>"><?= $details['label'] ?></option>
+                    <option value="<?= strtolower($alias) ?>" <?= ( strtolower($currentAlias)===strtolower($alias)) ?  'selected' : ''?>><?= $details['label'] ?></option>
                 <?php endforeach ?>
                 </select>
             </div>
@@ -20,7 +21,7 @@
 
 <x-admin-box>
 
-    <fieldset>
+    <fieldset id="resource">
         <legend><?= $currentResource['label'] ?></legend>
 
         <?php if (isset($items) && count($items)) : ?>
