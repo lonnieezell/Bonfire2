@@ -9,9 +9,9 @@
         </div>
         <?php if(count($resources) > 1) : ?>
             <div class="col-auto">
-                <select name="r" class="form-select" hx-get="?" hx-target="#resource" hx-boost="true">
+                <select name="r" class="form-select" hx-get="?" hx-target="#resource">
                 <?php foreach($resources as $alias => $details) : ?>
-                    <option value="<?= strtolower($alias) ?>" <?= ( isset($_GET) && isset($_GET['r']) && $_GET['r']===strtolower($alias)) ?  'selected' : ''?>><?= $details['label'] ?></option>
+                    <option value="<?= strtolower($alias) ?>" <?= ( strtolower($currentAlias)===strtolower($alias)) ?  'selected' : ''?>><?= $details['label'] ?></option>
                 <?php endforeach ?>
                 </select>
             </div>
