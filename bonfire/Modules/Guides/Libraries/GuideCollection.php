@@ -147,9 +147,21 @@ class GuideCollection
         $currentPage = current_url();
         $currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
 
+		$count_sub_folders = count(
+			array_filter(
+				$pages ,
+				function($k) {
+					//If the key is a string, it is a subfolder
+					if(!is_numeric($k)) {
+						return $k;
+					}
+				},
+				ARRAY_FILTER_USE_KEY)
+		);
+
         $previous = null;
         $next = null;
-        for($i=0; $i < count($pages) -1; $i++) {
+        for($i=0; $i < count($pages) - $count_sub_folders; $i++) {
             if ($pages[$i] == $currentPage) {
                 $previous = $pages[$i-1] ?? null;
                 $next = $pages[$i+1] ?? null;

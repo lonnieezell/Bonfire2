@@ -12,6 +12,8 @@ class GuidesController extends AdminController
 
     protected $viewPrefix = 'Bonfire\Modules\Guides\Views\\';
 
+	protected $helpers = ['toc'];
+
     /**
      * Displays the available collections of documentation
      * that the current user has access to.
@@ -75,7 +77,7 @@ class GuidesController extends AdminController
 		$is_file = count( $folders ) === 1 ;
 		if(!$is_file) {
 			$alias = "";
-			for($x = 1; $x < count($folders); $x++ ){
+			for($x = 1; $x < count($folders) ; $x++ ){
 				$alias .= $folders[$x] . "/";
 			}
 			$pageAlias = $alias . $pageAlias;
