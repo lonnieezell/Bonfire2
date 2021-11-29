@@ -54,7 +54,6 @@ class Assets extends OriginalAssets
         'app' => ROOTPATH.'themes/app',
         'admin' => ROOTPATH.'themes/Admin',
         'auth' => ROOTPATH.'themes/Auth',
-		'modules' => ROOTPATH.'bonfire/Modules',
         'other' => ROOTPATH.'vendor',
     ];
 }
