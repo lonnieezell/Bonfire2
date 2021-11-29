@@ -149,7 +149,7 @@ class GuideCollection
 
 		$previous = null;
 		$next = null;
-		for($i=0; $i < count($pages) -1; $i++) {
+		for($i=0; $i < count($pages)-1; $i++) {
 			if ($pages[$i] == $currentPage) {
 				$previous = $pages[$i-1] ?? null;
 				$next = $pages[$i+1] ?? null;
