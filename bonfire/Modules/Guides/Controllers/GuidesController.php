@@ -67,6 +67,20 @@ class GuidesController extends AdminController
      */
     public function viewSingle(string $collectionAlias, string $pageAlias)
     {
+		/** check if $collectionAlias contain "-"
+		 * if true split to retrieve the subfolder
+		 * if false, not contain subfolders
+		 */
+		$folders = explode("-", $collectionAlias);
+		$is_file = count( $folders ) === 1 ;
+		if(!$is_file) {
+			$alias = "";
+			for($x = 1; $x < count($folders); $x++ ){
+				$alias .= $folders[$x] . "/";
+			}
+			$pageAlias = $alias . $pageAlias;
+		}
+
         try {
             $collection = $this->loadCollection($collectionAlias);
             $page = $collection->loadPage($pageAlias);
@@ -89,10 +103,15 @@ class GuidesController extends AdminController
      */
     protected function loadCollection(string $alias)
     {
+		//If route contain "-"
+		$alias = explode("-", $alias)[0];
+
         $settings = config('Guides')->collections;
+
         if (! isset($settings[$alias])) {
             throw GuideException::forCollectionNotFound();
         }
+
         $settings = $settings[$alias];
 
         $user = auth()->user();
