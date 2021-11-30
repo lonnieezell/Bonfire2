@@ -95,15 +95,17 @@ class GuideCollection
      */
     public static function formatPage(string $page)
     {
-        // Strip any preceeding numbers that are used for ordering
-        $page = preg_replace('|^[0-9].|', '', $page);
+		// Strip any preceeding numbers that are used for ordering
+		$page = preg_replace('|^[0-9].|', '', $page);
 
-        return ucfirst(
-            str_replace('.md', '',
-                    str_replace(['-', '_'], ' ', $page)
-            )
-        );
-    }
+		return ltrim (
+			ucfirst(
+				str_replace('.md', '',
+					str_replace(['-', '_'], ' ', $page)
+				)
+			)
+			, "/");
+	}
 
     /**
      * Reads and converts a single page.
@@ -132,75 +134,167 @@ class GuideCollection
         return $out;
     }
 
-    /**
-     * Displays the "pagination" links for the current page
-     *
-     * @return string
-     */
-    public function pageLinks()
-    {
-        helper('filesystem');
+	/**
+	 * Displays the "pagination" links for the current page
+	 *
+	 * @return string
+	 */
+	public function pageLinks()
+	{
+		helper('filesystem');
 
-        $pages = $this->readDir(ROOTPATH .$this->settings['path']);
+		$pages = $this->readDir(ROOTPATH .$this->settings['path']);
 
-        $offset = strlen('guides/'. $this->alias) +1;
-        $currentPage = current_url();
-        $currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
+		$offset = strlen('guides/'. $this->alias) +1;
+		$currentPage = current_url();
+		$currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
 
-		$count_sub_folders = count(
-			array_filter(
-				$pages ,
-				function($k) {
-					//If the key is a string, it is a subfolder
-					if(!is_numeric($k)) {
-						return $k;
+		$previous = $this->nextPrevGenerator($currentPage, $pages, -1);
+		$next = $this->nextPrevGenerator($currentPage, $pages, +1);
+
+		return view('\Bonfire\Modules\Guides\Views\_page_links', [
+			'previousTitle' => $previous !== null ? self::formatPage($previous) : null,
+			'previousLink' => ! empty($previous) ? site_url(ADMIN_AREA .'/guides/'. $this->alias . $previous) : null,
+			'nextTitle' => $next !== null ? self::formatpage($next) : null,
+			'nextLink' => ! empty($next) ? site_url(ADMIN_AREA .'/guides/'. $this->alias . $next) : null,
+		]);
+	}
+
+	/**
+	 * Calculate the next and previous links
+	 *
+	 *  currentPage	-> Current Page
+	 *  pages		-> Pages list from folder
+	 *  $pos		-> next = +1 / previous = -1
+	 *
+	 * @param string $currentPage
+	 * @param array $pages
+	 * @param int $pos
+	 * @return string|null
+	 */
+	private function nextPrevGenerator(string $currentPage, array $pages, int $pos): ?string
+	{
+		$result = null;
+
+		//sort the pages
+		$sortPages = $pages;
+		sort($sortPages);
+
+		$testCurrentPage = explode("/", $currentPage)[array_key_last(explode("/", $currentPage))];
+
+		//I loop through the sorted pages
+		for($i=0; $i < count($sortPages); $i++) {
+
+			//If I find the current page
+			if ($sortPages[$i] === $testCurrentPage) {
+
+				//I calculate the position
+				$nextPrevPos = $i+$pos;
+				if(!isset($sortPages[$nextPrevPos])) {
+					//If it is the first or last file, it returns a null link
+					$result = null;
+					break;
+				}else {
+					//If it's not an array, it's not a folder
+					if (! is_array($sortPages[$nextPrevPos])) {
+						$result = $sortPages[$nextPrevPos] ? '/' . $sortPages[$nextPrevPos] : null;
+
+						break;
+					}else{
+						foreach ($pages as $folder => $content)
+						{
+							if(is_string($folder)) {
+								if($sortPages[$nextPrevPos] === $pages[$folder] ) {
+									$result = "-" . rtrim($folder, "/") . $this->nextPrevGenerator($folder . $sortPages[$nextPrevPos][0], $sortPages[$nextPrevPos], 0);
+									break;
+								}else{
+									$result = "Merda";
+								}
+							}
+						}
 					}
-				},
-				ARRAY_FILTER_USE_KEY)
-		);
+					break;
+				}
 
-        $previous = null;
-        $next = null;
-        for($i=0; $i < count($pages) - $count_sub_folders; $i++) {
-            if ($pages[$i] == $currentPage) {
-                $previous = $pages[$i-1] ?? null;
-                $next = $pages[$i+1] ?? null;
-                break;
-            }
-        }
+			}else{
 
-        return view('\Bonfire\Modules\Guides\Views\_page_links', [
-            'previousTitle' => $previous !== null ? self::formatPage($previous) : null,
-            'previousLink' => ! empty($previous) ? site_url(ADMIN_AREA .'/guides/'. $this->alias .'/'. $previous) : null,
-            'nextTitle' => $next !== null ? self::formatpage($next) : null,
-            'nextLink' => ! empty($next) ? site_url(ADMIN_AREA .'/guides/'. $this->alias .'/'. $next) : null,
-        ]);
-    }
+				//I calculate the position
+				$nextPrevPos = $i+$pos;
+				if(! isset($sortPages[$nextPrevPos]) ) {
+					foreach ($pages as $folder => $content)
+					{
+						if(is_string($folder)) {
+							if($folder === explode("/" , $currentPage)[0] . "/" ) {
+								if($this->nextPrevGenerator($currentPage, $pages[$folder], $pos)) {
+									$result = "-" . rtrim($folder, "/") . $this->nextPrevGenerator($currentPage, $pages[$folder], $pos);
+								}
+							}else{
 
-    /**
-     * Recursive function to read all of the files
-     * in the given path.
-     *
-     * @param string $path
-     * @param array  $pages
-     *
-     * @return array|mixed
-     */
-    private function readDir(string $path, $pages=[])
-    {
-        $files = directory_map($path, 2);
+								foreach ($pages as $current_sub_folder => $sub_content)
+								{
+									if(is_string($current_sub_folder)) {
+										if(isset(explode("/", $currentPage)[1])) {
+											$currentFolder    = explode("/", $currentPage)[0] ;
+											$currentPage      = explode("/", $currentPage)[1] ;
+											$sortCurrentSubPages =  $pages[$currentFolder . "/"];
+											sort($sortCurrentSubPages);
+											$result = "-" . $currentFolder . $this->nextPrevGenerator( $currentPage, $sortCurrentSubPages, $pos);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+				}else{
+					foreach ($pages as $current_sub_folder => $sub_content)
+					{
+						if(is_string($current_sub_folder)) {
+							if(isset(explode("/", $currentPage)[1])) {
+								$currentFolder    = explode("/", $currentPage)[0] ;
+								$currentPage      = explode("/", $currentPage)[1] ;
+								$sortCurrentSubPages =  $pages[$currentFolder . "/"];
+								sort($sortCurrentSubPages);
+								$result = "-" . $currentFolder . $this->nextPrevGenerator( $currentPage, $sortCurrentSubPages, $pos);
+								break;
+							}
+						}
+					}
+				}
+			}
 
-        foreach ($files as $folder => $file) {
-            // Handle folders of pages
-            if(is_array($file)) {
-                $pages[$folder] = $this->readDir($path .'/'. $folder);
-                continue;
-            }
+		}
 
-            // Handle single page
-            $pages[] = $file;
-        }
+		return $result;
 
-        return $pages;
-    }
+	}
+
+	/**
+	 * Recursive function to read all of the files
+	 * in the given path.
+	 *
+	 * @param string $path
+	 * @param array  $pages
+	 *
+	 * @return array|mixed
+	 */
+	private function readDir(string $path, $pages=[])
+	{
+
+		$files = directory_map($path, 2);
+
+		foreach ($files as $folder => $file) {
+			// Handle folders of pages
+			if(is_array($file)) {
+				$pages[$folder] = $this->readDir(rtrim($path, "/") .'/'. $folder);
+				continue;
+			}
+
+			// Handle single page
+			$pages[] = $file;
+		}
+
+		return $pages;
+	}
+
 }
