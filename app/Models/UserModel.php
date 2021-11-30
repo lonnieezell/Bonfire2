@@ -20,6 +20,24 @@ class UserModel extends ShieldUsers
         'avatar', 'first_name', 'last_name',
     ];
 
+    /**
+     * Performs additional setup when finding objects
+     * for the recycler. This might pull in additional
+     * fields.
+     */
+    public function setupRecycler()
+    {
+        return $this->select("users.*, 
+            (SELECT secret 
+                from auth_identities 
+                where user_id = users.id
+                    and type = 'email_password'
+                order by last_used_at desc 
+                limit 1
+            ) as email
+       ");
+    }
+
     public function fake(Generator &$faker)
     {
         return [

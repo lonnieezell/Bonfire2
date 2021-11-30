@@ -149,11 +149,6 @@ a:hover {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-input.form-control,
-select.form-select {
-    padding: 0.5rem 1.25rem !important;
-}
-
 label.form-label {
     font-weight: bolder !important;
     margin-top: 0.5rem;

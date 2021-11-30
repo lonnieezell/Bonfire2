@@ -7,13 +7,15 @@
 <div class="container d-flex justify-content-center p-5">
     <div class="card col-5 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title mb-5"><?= lang('Auth.useMagicLink') ?></h5>
+            <h5 class="card-title mb-4"><?= lang('Auth.useMagicLink') ?></h5>
 
             <form action="<?= route_to('magic-link') ?>" method="post">
                 <?= csrf_field() ?>
 
+                <p class="text-muted mb-4"><?= lang('Bonfire.magicLinkInfo') ?></p>
+
                 <!-- Email -->
-                <div class="mb-2">
+                <div class="mb-5">
                     <input type="email" class="form-control" name="email" autocomplete="email" placeholder="<?= lang('Auth.email') ?>"
                            value="<?= old('email', auth()->user()->email ?? null) ?>" required />
                 </div>

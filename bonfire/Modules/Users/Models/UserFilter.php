@@ -43,22 +43,6 @@ class UserFilter extends UserModel
     ];
 
     /**
-     * Performs a search on the following fields:
-     *  - username
-     *  - email
-     *  - first name
-     *  - last name
-     *
-     * @todo Implement user search
-     *
-     * @param string|null $term
-     */
-    public function search(string $term=null): UserFilter
-    {
-        return $this;
-    }
-
-    /**
      * Provides filtering functionality.
      *
      * @param array $params

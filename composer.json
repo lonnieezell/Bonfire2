@@ -5,12 +5,13 @@
 	"homepage": "https://codeigniter.com",
 	"license": "MIT",
 	"require": {
-		"php": "^7.3||^8.0",
+		"php": "^7.4||^8.0",
 		"codeigniter4/framework": "^4",
 		"tatter/alerts": "^2.1",
 		"lonnieezell/codigniter-shield": "dev-develop",
-		"codeigniter4/settings": "dev-develop",
-		"components/font-awesome": "^5.15"
+		"components/font-awesome": "^5.15",
+		"league/commonmark": "^2.0",
+		"spatie/commonmark-highlighter": "^3.0"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",
@@ -19,7 +20,7 @@
 		"codeigniter/coding-standard": "^1.1",
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
-		"phpstan/phpstan": "^0.12"
+		"phpstan/phpstan": "^1.1"
 	},
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"
@@ -40,7 +41,6 @@
 			"Bonfire\\": "bonfire"
 		}
 	},
-	"minimum-stability": "beta",
 	"repositories": [
 		{
 			"type": "vcs",

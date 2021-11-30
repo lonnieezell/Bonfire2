@@ -22,6 +22,7 @@ class SystemInfoController extends AdminController
         $db = db_connect();
 
         helper('filesystem');
+        helper('number');
 
         return $this->render($this->viewPrefix .'index', [
             'ciVersion' => CodeIgniter::CI_VERSION,

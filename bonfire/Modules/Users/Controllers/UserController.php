@@ -5,6 +5,7 @@ namespace Bonfire\Modules\Users\Controllers;
 use App\Controllers\AdminController;
 use App\Entities\User;
 use App\Models\UserModel;
+use Bonfire\Modules\Users\Models\UserFilter;
 use CodeIgniter\Database\Exceptions\DataException;
 use Sparks\Shield\Models\LoginModel;
 use Sparks\Shield\Models\UserIdentityModel;
@@ -22,7 +23,8 @@ class UserController extends AdminController
      */
     public function list()
     {
-        $userModel = model('UserFilter');
+        /** @var UserFilter $userModel */
+        $userModel = model(UserFilter::class);
 
         $userModel->filter($this->request->getPost('filters'));
 
@@ -178,10 +180,10 @@ class UserController extends AdminController
         }
 
         // Save the user's groups
-        $user->syncGroups($this->request->getPost('groups'));
+        $user->syncGroups($this->request->getPost('groups') ?? []);
 
         // Save the user's meta fields
-        $user->syncMeta($this->request->getPost('meta'));
+        $user->syncMeta($this->request->getPost('meta') ?? []);
 
         return redirect()->to($user->adminLink())->with('message', lang('Bonfire.resourceSaved', ['user']));
     }
@@ -200,6 +202,7 @@ class UserController extends AdminController
         }
 
         $users = model(UserModel::class);
+        /** @var null|User $user **/
         $user = $users->find($userId);
 
         if ($user === null) {
@@ -225,11 +228,13 @@ class UserController extends AdminController
     public function security(int $userId)
     {
         $users = model(UserModel::class);
+        /** @var null|User $user **/
         $user = $users->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
+        /** @var LoginModel $loginModel **/
         $loginModel = model(LoginModel::class);
         $logins = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
 
@@ -276,6 +281,7 @@ class UserController extends AdminController
     public function savePermissions(int $userId)
     {
         $users = model(UserModel::class);
+        /** @var null|User $user */
         $user = $users->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));

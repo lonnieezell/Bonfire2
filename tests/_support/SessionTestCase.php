@@ -21,8 +21,6 @@ class SessionTestCase extends CIUnitTestCase
 
 	/**
 	 * Pre-loads the mock session driver into $this->session.
-	 *
-	 * @var string
 	 */
 	protected function mockSession()
 	{
