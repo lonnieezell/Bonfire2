@@ -12,17 +12,9 @@
 
     <?php if (is_array($page) && count($page)) : ?>
         </ul>
-        <h3><?= esc(ucwords(trim(GuideCollection::formatPage($folder), ' /'))) ?></h3>
 
-        <ul class="list-unstyled px-4">
-        <?php foreach($page as $row) : ?>
-            <li>
-                <a href="/<?= ADMIN_AREA ?>/guides/<?= $alias ?>/<?= $folder ?>/<?= trim($row, ' /') ?>">
-                    <?= esc(GuideCollection::formatPage($row)) ?>
-                </a>
-            </li>
-        <?php endforeach ?>
-        </ul>
+        <?= load_recursive_guide($alias, $page, $folder) ?>
+
     <?php endif ?>
 <?php endforeach ?>
 </ul>
