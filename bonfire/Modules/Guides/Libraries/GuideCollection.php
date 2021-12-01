@@ -95,8 +95,8 @@ class GuideCollection
      */
     public static function formatPage(string $page)
     {
-		// Strip any preceeding numbers that are used for ordering
-		$page = preg_replace('|^[0-9].|', '', $page);
+        // Strip any preceeding numbers that are used for ordering
+        $page = preg_replace('|^[0-9].|', '', $page);
 
 		return ltrim (
 			ucfirst(
@@ -134,20 +134,20 @@ class GuideCollection
         return $out;
     }
 
-	/**
-	 * Displays the "pagination" links for the current page
-	 *
-	 * @return string
-	 */
-	public function pageLinks()
-	{
-		helper('filesystem');
+    /**
+     * Displays the "pagination" links for the current page
+     *
+     * @return string
+     */
+    public function pageLinks()
+    {
+        helper('filesystem');
 
-		$pages = $this->readDir(ROOTPATH .$this->settings['path']);
+        $pages = $this->readDir(ROOTPATH .$this->settings['path']);
 
-		$offset = strlen('guides/'. $this->alias) +1;
-		$currentPage = current_url();
-		$currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
+        $offset = strlen('guides/'. $this->alias) +1;
+        $currentPage = current_url();
+        $currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
 
 		$previous = $this->nextPrevGenerator($currentPage, $pages, -1);
 		$next = $this->nextPrevGenerator($currentPage, $pages, +1);
@@ -270,19 +270,18 @@ class GuideCollection
 
 	}
 
-	/**
-	 * Recursive function to read all of the files
-	 * in the given path.
-	 *
-	 * @param string $path
-	 * @param array  $pages
-	 *
-	 * @return array|mixed
-	 */
-	private function readDir(string $path, $pages=[])
-	{
-
-		$files = directory_map($path, 2);
+    /**
+     * Recursive function to read all of the files
+     * in the given path.
+     *
+     * @param string $path
+     * @param array  $pages
+     *
+     * @return array|mixed
+     */
+    private function readDir(string $path, $pages=[])
+    {
+        $files = directory_map($path, 2);
 
 		foreach ($files as $folder => $file) {
 			// Handle folders of pages
@@ -291,11 +290,10 @@ class GuideCollection
 				continue;
 			}
 
-			// Handle single page
-			$pages[] = $file;
-		}
+            // Handle single page
+            $pages[] = $file;
+        }
 
-		return $pages;
-	}
-
+        return $pages;
+    }
 }
