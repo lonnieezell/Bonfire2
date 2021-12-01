@@ -234,7 +234,7 @@ class ComponentRenderer
         }
 
         // fallback: check in components' default lookup paths from config
-        $componentsLookupPaths = config('Bonfire')->componentsLookupPaths;
+        $componentsLookupPaths = config('Themes')->componentsLookupPaths;
         foreach ($componentsLookupPaths as $componentPath) {
             $filePath = $componentPath . $name . '.php';
 
