@@ -149,8 +149,8 @@ class GuideCollection
         $currentPage = current_url();
         $currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
 
-		$previous = $this->nextPrevGenerator($currentPage, $pages, -1);
-		$next = $this->nextPrevGenerator($currentPage, $pages, +1);
+		$previous = $this->nextPrevGenerator($currentPage, -1);
+		$next = $this->nextPrevGenerator($currentPage, +1);
 
 		return view('\Bonfire\Modules\Guides\Views\_page_links', [
 			'previousTitle' => $previous !== null ? self::formatPage($previous) : null,
@@ -164,110 +164,72 @@ class GuideCollection
 	 * Calculate the next and previous links
 	 *
 	 *  currentPage	-> Current Page
-	 *  pages		-> Pages list from folder
 	 *  $pos		-> next = +1 / previous = -1
 	 *
 	 * @param string $currentPage
-	 * @param array $pages
 	 * @param int $pos
 	 * @return string|null
 	 */
-	private function nextPrevGenerator(string $currentPage, array $pages, int $pos): ?string
+	private function nextPrevGenerator(string $currentPage, int $pos): ?string
 	{
-		$result = null;
 
-		//sort the pages
-		$sortPages = $pages;
-		sort($sortPages);
+		$rootPath = ROOTPATH .$this->settings['path'] . DIRECTORY_SEPARATOR;
 
-		$testCurrentPage = explode("/", $currentPage)[array_key_last(explode("/", $currentPage))];
+		$page = $rootPath . $currentPage;
+		$files =  $this->find_all_files(ROOTPATH .$this->settings['path']);
 
-		//I loop through the sorted pages
-		for($i=0; $i < count($sortPages); $i++) {
+		$currentIdx = array_search($page, $files);
 
-			//If I find the current page
-			if ($sortPages[$i] === $testCurrentPage) {
+		$Idx = $currentIdx + $pos;
+		if (isset($files[$Idx])) {
+			$posFile = $files[$Idx];
+			$pathFile =  pathinfo($posFile,PATHINFO_DIRNAME);
 
-				//I calculate the position
-				$nextPrevPos = $i+$pos;
-				if(!isset($sortPages[$nextPrevPos])) {
-					//If it is the first or last file, it returns a null link
-					$result = null;
-					break;
-				}else {
-					//If it's not an array, it's not a folder
-					if (! is_array($sortPages[$nextPrevPos])) {
-						$result = $sortPages[$nextPrevPos] ? '/' . $sortPages[$nextPrevPos] : null;
-
-						break;
-					}else{
-						foreach ($pages as $folder => $content)
-						{
-							if(is_string($folder)) {
-								if($sortPages[$nextPrevPos] === $pages[$folder] ) {
-									$result = "-" . rtrim($folder, "/") . $this->nextPrevGenerator($folder . $sortPages[$nextPrevPos][0], $sortPages[$nextPrevPos], 0);
-									break;
-								}else{
-									//TODO:
-									//$result = null;
-								}
-							}
-						}
-					}
-					break;
-				}
-
+			if($pathFile !== rtrim($rootPath, "/")){
+				$urlPath = "-" . str_replace("/","-",str_replace($rootPath, '', $pathFile));
 			}else{
+				$urlPath="";
+			}
+			$file = pathinfo($posFile,PATHINFO_FILENAME) . "." . pathinfo($posFile,PATHINFO_EXTENSION);
 
-				//I calculate the position
-				$nextPrevPos = $i+$pos;
-				if(! isset($sortPages[$nextPrevPos]) ) {
-					foreach ($pages as $folder => $content)
-					{
-						if(is_string($folder)) {
-							if($folder === explode("/" , $currentPage)[0] . "/" ) {
-								if($this->nextPrevGenerator($currentPage, $pages[$folder], $pos)) {
-									$result = "-" . rtrim($folder, "/") . $this->nextPrevGenerator($currentPage, $pages[$folder], $pos);
-								}
-							}else{
+			return $urlPath."/".$file;
 
-								foreach ($pages as $current_sub_folder => $sub_content)
-								{
-									if(is_string($current_sub_folder)) {
-										if(isset(explode("/", $currentPage)[1])) {
-											$currentFolder    = explode("/", $currentPage)[0] ;
-											$currentPage      = explode("/", $currentPage)[1] ;
-											$sortCurrentSubPages =  $pages[$currentFolder . "/"];
-											sort($sortCurrentSubPages);
-											$result = "-" . $currentFolder . $this->nextPrevGenerator( $currentPage, $sortCurrentSubPages, $pos);
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-				}else{
-					foreach ($pages as $current_sub_folder => $sub_content)
-					{
-						if(is_string($current_sub_folder)) {
-							if(isset(explode("/", $currentPage)[1])) {
-								$currentFolder    = explode("/", $currentPage)[0] ;
-								$currentPage      = explode("/", $currentPage)[1] ;
-								$sortCurrentSubPages =  $pages[$currentFolder . "/"];
-								sort($sortCurrentSubPages);
-								$result = "-" . $currentFolder . $this->nextPrevGenerator( $currentPage, $sortCurrentSubPages, $pos);
-								break;
-							}
-						}
-					}
+		} else {
+			if($pos > 0){
+				//echo "No next file";
+				return null;
+			}else{
+				//echo "No previous file";
+				return null;
+			}
+		}
+
+	}
+
+	/**
+	 * Recursive function to retrieve a list of files
+	 * in the given path.
+	 *
+	 * @param string $path
+	 * @return array
+	 */
+	function find_all_files(string $path): array
+	{
+		$result=[];
+		if(is_dir($path)) {
+			$root = scandir($path);
+			foreach($root as $value)
+			{
+				if($value === '.' || $value === '..') {continue;}
+				if(is_file("$path/$value")) {$result[]="$path/$value";continue;}
+				foreach($this->find_all_files("$path/$value") as $value)
+				{
+					$result[]=$value;
 				}
 			}
-
 		}
 
 		return $result;
-
 	}
 
     /**
