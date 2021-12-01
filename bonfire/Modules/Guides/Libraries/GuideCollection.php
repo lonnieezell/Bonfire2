@@ -227,6 +227,7 @@ class GuideCollection
 					$result[]=$value;
 				}
 			}
+			sort($result);
 		}
 
 		return $result;
