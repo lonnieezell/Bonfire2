@@ -208,7 +208,8 @@ class GuideCollection
 									$result = "-" . rtrim($folder, "/") . $this->nextPrevGenerator($folder . $sortPages[$nextPrevPos][0], $sortPages[$nextPrevPos], 0);
 									break;
 								}else{
-									$result = "Merda";
+									//TODO:
+									//$result = null;
 								}
 							}
 						}
