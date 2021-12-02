@@ -143,8 +143,6 @@ class GuideCollection
     {
         helper('filesystem');
 
-        $pages = $this->readDir(ROOTPATH .$this->settings['path']);
-
         $offset = strlen('guides/'. $this->alias) +1;
         $currentPage = current_url();
         $currentPage = substr($currentPage, strpos($currentPage, 'guides/'. $this->alias) + $offset);
