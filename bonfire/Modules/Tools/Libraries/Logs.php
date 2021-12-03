@@ -24,12 +24,12 @@ class Logs
       'ALL'      => 'muted',
   ];
 
-  const MAX_LOG_SIZE = 52428800; //50MB
-  const MAX_STRING_LENGTH = 300; //300 chars
+    public const MAX_LOG_SIZE = 52428800; //50MB
+    public const MAX_STRING_LENGTH = 300; //300 chars
 
-  const LOG_LINE_START_PATTERN = "/((INFO)|(ERROR)|(CRITICAL)|(DEBUG)|(ALL))[\s\-\d:\.\/]+(-->)/";
-  const LOG_DATE_PATTERN = ["/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))\s\-\s/", "/\s(-->)/"];
-  const LOG_LEVEL_PATTERN = "/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))/";
+    public const LOG_LINE_START_PATTERN = "/((INFO)|(ERROR)|(CRITICAL)|(DEBUG)|(ALL))[\s\-\d:\.\/]+(-->)/";
+    public const LOG_DATE_PATTERN = ["/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))\s\-\s/", "/\s(-->)/"];
+    public const LOG_LEVEL_PATTERN = "/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))/";
 
 /*
 * This function will process the logs. Extract the log level, icon class and other information
@@ -75,12 +75,12 @@ public function processFileLogs($file) {
 
            array_push($superLog, $data);
 
-       } else if(!empty($superLog)) {
+       } elseif (! empty($superLog)) {
            //this log line is a continuation of previous logline
            //so let's add them as extra
            $prevLog = $superLog[count($superLog) - 1];
            $extra = (array_key_exists("extra", $prevLog)) ? $prevLog["extra"] : "";
-           $prevLog["extra"] = $extra . "<br>" . $log;
+           $prevLog["extra"] = $extra . "\n" . $log;
            $superLog[count($superLog) - 1] = $prevLog;
        }
    }

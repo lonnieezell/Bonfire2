@@ -25,28 +25,29 @@ $this->section('main') ?>
             <tbody>
             <?php
             foreach ($logContent as $key => $log): ?>
-
                 <tr <?php if (array_key_exists("extra", $log)) : ?> style="cursor:pointer"
                     data-bs-toggle="collapse" data-bs-target="#stack<?= $key ?>" aria-controls="stack<?= $key ?>" aria-expanded="false"
                     <?php endif ?>
                 >
                     <td class="text-<?= $log['class']; ?>">
                         <span class="<?= $log['icon']; ?>" aria-hidden="true"></span>
-                        &nbsp;<?= $log['level']; ?>
+                        &nbsp;<?= $log['level'] ?>
                     </td>
-                    <td class="date"><?= app_date($log['date'], true); ?></td>
+                    <td class="date"><?= app_date($log['date'], true) ?></td>
                     <td class="text">
-                        <?= esc($log['content']); ?><?php
-                        echo (array_key_exists("extra", $log)) ? '...' : ''; ?>
+                        <?= esc($log['content']) ?>
+                        <?= (array_key_exists("extra", $log)) ? '...' : ''; ?>
                     </td>
                 </tr>
 
                 <?php
                 if (array_key_exists("extra", $log)): ?>
 
-                    <tr class="collapse bg-light" id="stack<?= $key; ?>">
+                    <tr class="collapse bg-light" id="stack<?= $key ?>">
                         <td colspan="3">
-                            <pre class="text-wrap"><?= esc($log['extra']); ?></pre>
+                            <pre class="text-wrap">
+                                <?= nl2br(trim(esc($log['extra']), " \n")) ?>
+                            </pre>
                         </td>
                     </tr>
                 <?php
