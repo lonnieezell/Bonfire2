@@ -17,7 +17,7 @@ trait Themeable
      * The folder the theme is stored in (within /themes)
      * @var string
      */
-    protected $theme = 'app';
+    protected $theme = 'App';
 
     /**
      * @var View
