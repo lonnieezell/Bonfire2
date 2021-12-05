@@ -8,7 +8,7 @@ interface Widgets
 	/**
 	 * Adds a new item
 	 *
-	 * @param  $item
+	 * @param Item $item
 	 *
 	 * @return self
 	 */
