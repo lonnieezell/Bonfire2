@@ -60,8 +60,6 @@ class StatsItem implements Item
 	 * bg-white
 	 * bg-gray
 	 * bg-gray-dark
-	 *
-	 * @var string|null
 	 */
 	protected $bgColor;
 
@@ -142,7 +140,8 @@ class StatsItem implements Item
 	 * bg-gray
 	 * bg-gray-dark
 	 *
-	 * @param string|null $bgColor
+	 * @param string $bgColor
+	 * @return StatsItem
 	 */
 	public function setBgColor(string $bgColor = 'bg-blue'): StatsItem
 	{
