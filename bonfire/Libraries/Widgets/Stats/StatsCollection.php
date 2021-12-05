@@ -2,8 +2,6 @@
 
 namespace Bonfire\Libraries\Widgets\Stats;
 
-use Bonfire\Libraries\Menus\MenuCollection;
-
 /**
  * Represents a collection of stats items.
  *

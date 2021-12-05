@@ -156,14 +156,4 @@ class StatsItem implements Item
 		return $this->bgColor;
 	}
 
-
-
-
-
-
-
-
-
-
-
 }
