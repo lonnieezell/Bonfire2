@@ -40,6 +40,27 @@ class StatsItem implements Item
 	protected $url;
 
 	/**
+	 * The assignable background color on the statistics widget
+	 *
+	 * Possible values are:
+	 * bg-blue
+	 * bg-red
+	 * bg-orange
+	 * bg-light
+	 * bg-dark
+	 * bg-inverse
+	 * bg-indigo
+	 * bg-purple
+	 * bg-pink
+	 * bg-yellow
+	 * bg-green
+	 * bg-teal
+	 * bg-lime
+	 * bg-cyan
+	 * bg-white
+	 * bg-gray
+	 * bg-gray-dark
+	 *
 	 * @var string|null
 	 */
 	protected $bgColor;
@@ -90,7 +111,7 @@ class StatsItem implements Item
 	/**
 	 * @param string $url
 	 */
-	public function setUrl(string $url): StatsItem
+	public function setUrl(string $url = '#'): StatsItem
 	{
 		$this->url = strpos($url, '://') !== false
 			? $url
@@ -100,9 +121,30 @@ class StatsItem implements Item
 	}
 
 	/**
+	 * The assignable background color on the statistics widget
+	 *
+	 * Possible values are:
+	 * bg-blue
+	 * bg-red
+	 * bg-orange
+	 * bg-light
+	 * bg-dark
+	 * bg-inverse
+	 * bg-indigo
+	 * bg-purple
+	 * bg-pink
+	 * bg-yellow
+	 * bg-green
+	 * bg-teal
+	 * bg-lime
+	 * bg-cyan
+	 * bg-white
+	 * bg-gray
+	 * bg-gray-dark
+	 *
 	 * @param string|null $bgColor
 	 */
-	public function setBgColor(?string $bgColor): StatsItem
+	public function setBgColor(string $bgColor = 'bg-blue'): StatsItem
 	{
 		$this->bgColor = $bgColor;
 
