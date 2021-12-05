@@ -1,0 +1,52 @@
+<?php
+
+namespace Bonfire\Libraries\Widgets\Stats;
+
+use Bonfire\Libraries\Widgets\Interfaces\Item;
+use Bonfire\Libraries\Widgets\Interfaces\Widgets;
+
+class Stats implements Widgets
+{
+	/**
+	 * @var array
+	 */
+	protected $items = [];
+
+	public function items()
+	{
+		return $this->items;
+	}
+
+	public function addItem(Item $item): Stats
+	{
+		$this->items[] = $item;
+
+		return $this;
+	}
+
+	public function createCollection(string $name ): StatsCollection
+	{
+		$collection = new StatsCollection();
+		$collection->setName($name);
+
+		$this->items[] = $collection;
+
+		return $collection;
+	}
+
+	/**
+	 * Locates a collection by name.
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	public function collection(string $name)
+	{
+		foreach ($this->items as $item) {
+			if ($item instanceof StatsCollection && $item->name() === $name) {
+				return $item;
+			}
+		}
+	}
+}

@@ -2,6 +2,7 @@
 
 namespace Bonfire;
 
+use Bonfire\Libraries\Widgets\Stats\Stats;
 use CodeIgniter\Config\Factories;
 
 /**
@@ -42,6 +43,7 @@ class Bonfire
 
         if ($this->inAdmin) {
             $this->setupMenus();
+			$this->setupWidgets();
         }
 
         $this->discoverCoreModules();
@@ -83,6 +85,23 @@ class Bonfire
         // Top "icon" menu for notifications, account, etc.
         $menus->createMenu('iconbar');
     }
+
+	/**
+	 * Creates any admin-required widgets so they're
+	 * available to use by any modules.
+	 */
+	private function setupWidgets()
+	{
+		$widgets =  service('widgets');
+
+		$widgets->createWidget(Stats::class, "stats");
+		$widgets->widget("stats")
+			->createCollection("users");
+		$widgets->widget("stats")
+			->createCollection("groups");
+		$widgets->widget("stats")
+			->createCollection("other");
+	}
 
     /**
      * Adds any directories within bonfire/Modules
