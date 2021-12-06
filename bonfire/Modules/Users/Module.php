@@ -47,6 +47,6 @@ class Module extends BaseModule
 			'url' => ADMIN_AREA . '/users',
 			'faIcon' => 'fa fa-user',
 		]);
-		$widgets->widget("stats")->collection('users')->addItem($statsItem);
+		$widgets->widget("stats")->collection('stats')->addItem($statsItem);
     }
 }

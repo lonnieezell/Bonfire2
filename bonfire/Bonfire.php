@@ -96,11 +96,7 @@ class Bonfire
 
 		$widgets->createWidget(Stats::class, "stats");
 		$widgets->widget("stats")
-			->createCollection("users");
-		$widgets->widget("stats")
-			->createCollection("groups");
-		$widgets->widget("stats")
-			->createCollection("other");
+			->createCollection("stats");
 	}
 
     /**

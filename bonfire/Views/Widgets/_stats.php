@@ -1,4 +1,3 @@
-<?= asset_link( 'admin/css/widgets.css', 'css'); ?>
 <div class="row">
     <?php foreach ($stats  as $elem) : ?>
         <?php foreach ($elem->items() as $widget) : ?>

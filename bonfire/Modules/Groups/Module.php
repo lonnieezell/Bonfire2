@@ -37,6 +37,6 @@ class Module extends BaseModule
 			'url' => ADMIN_AREA . '/settings/groups',
 			'faIcon' => 'fa fa-users',
 		]);
-		$widgets->widget("stats")->collection('groups')->addItem($statsItem);
+		$widgets->widget("stats")->collection('stats')->addItem($statsItem);
 	}
 }
