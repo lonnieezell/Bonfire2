@@ -49,4 +49,21 @@ class Stats implements Widgets
 			}
 		}
 	}
+
+
+	public function collect(string $name, array $items)
+	{
+		$collection = $this->collection($name);
+
+		if ($collection === null) {
+			$collection = new StatsCollection();
+			$collection->setName($name)->setTitle(ucfirst($name));
+
+			$this->items[] = $collection;
+		}
+
+		$collection->addItems($items);
+
+		return $collection;
+	}
 }
