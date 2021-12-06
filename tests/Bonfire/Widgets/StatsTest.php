@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Menus;
+namespace Tests\Bonfire\Widgets;
 
 use Bonfire\Libraries\Widgets\Stats\Stats;
 use Bonfire\Libraries\Widgets\Stats\StatsCollection;
