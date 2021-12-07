@@ -18,41 +18,42 @@ Adding a new widget is done by Module.php for your module, similar to adding a m
 		$widgets->widget("stats")->collection('stats')->addItem($statsItem);
 ```
 
-### bgColor
+**bgColor**
 
 bgColor represents the background color of the widget.
 The available options are:
+```css
+bg-blue
+bg-red
+bg-orange
+bg-light
+bg-dark
+bg-inverse
+bg-indigo
+bg-purple
+bg-pink
+bg-yellow
+bg-green
+bg-teal
+bg-lime
+bg-cyan
+bg-white
+bg-gray
+bg-gray-dark
+```
 
-- bg-blue
-- bg-red
-- bg-orange
-- bg-light
-- bg-dark
-- bg-inverse
-- bg-indigo
-- bg-purple
-- bg-pink
-- bg-yellow
-- bg-green
-- bg-teal
-- bg-lime
-- bg-cyan
-- bg-white
-- bg-gray
-- bg-gray-dark
-
-### title
+**title**
 
 The title of the widget displayed at the top left
 
-### value
+**value**
 
 The value of the widget displayed under the title: typically the total number of records
 
-### url
+**url**
 
 The address that displays the list of objects on your module. It will be associated with the word "view detail"
 
-### faIcon
+**faIcon**
 
 The FontAwesome icon
