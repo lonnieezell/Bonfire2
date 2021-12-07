@@ -1,8 +1,9 @@
-<a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="/<?= ADMIN_AREA ?>">
-    <?= setting('App.siteName') ?? 'bonfire' ?>
+<a class="px-3 d-block fs-4 d-inline-block text-light text-truncate text-decoration-none me-0" style="max-width:200px" href="/<?= ADMIN_AREA ?>">
+  <img class="img-fluid rounded" src="<?= (setting('App.siteLogo'))? asset('logo/thumb_'. setting('App.siteLogo'),'img'):base_url('/uploads/logo/thumb_default.png'); ?>" />
+
+   <?= setting('App.siteName') ?? 'bonfire' ?>
 </a>
 <div class="pt-3">
-
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
