@@ -6,6 +6,7 @@
 	"license": "MIT",
 	"require": {
 		"php": "^7.4||^8.0",
+		"ext-json": "*",
 		"codeigniter4/framework": "^4",
 		"tatter/alerts": "^2.1",
 		"lonnieezell/codigniter-shield": "dev-develop",
@@ -21,7 +22,7 @@
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
 		"phpstan/phpstan": "^1.1"
-	},
+    },
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"
 	},
