@@ -223,9 +223,15 @@ div {
 }
 
 /** Icon animation */
+.col-3 .widget-stats-icon i {
+    transition: all .5s ease-in-out; /* vendorless fallback */
+    -o-transition: all .5s ease-in-out; /* opera */
+    -ms-transition: all .5s ease-in-out; /* IE 10 */
+    -moz-transition: all .5s ease-in-out; /* Firefox */
+    -webkit-transition: all .5s ease-in-out; /*safari and chrome */
+}
 .col-3:hover .widget-stats-icon i {
     transform: scale(1.3);
-    transition: all .8s ease-in-out;
 }
 
 .widget-stats-info h4 {
