@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Filters\OnlineCheck;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
@@ -27,6 +28,7 @@ class Filters extends BaseConfig
         'tokens'   => TokenAuth::class,
         'chain'    => ChainAuth::class,
         'online'  => OnlineCheck::class,
+        'consent' => ConsentFilter::class,
     ];
 
     /**
@@ -41,6 +43,7 @@ class Filters extends BaseConfig
         ],
         'after'  => [
             'toolbar',
+            'consent' => ['except' => ADMIN_AREA.'*'],
             // 'honeypot',
         ],
     ];

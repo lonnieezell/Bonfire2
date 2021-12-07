@@ -52,6 +52,7 @@ class Autoload extends AutoloadConfig
         'Bonfire\Settings' => ROOTPATH .'bonfire/Modules/Settings',
         'Bonfire\Guides' => ROOTPATH .'bonfire/Modules/Guides',
         'Bonfire\Recycler' => ROOTPATH .'bonfire/Modules/Recycler',
+        'Bonfire\Consent' => ROOTPATH .'bonfire/Modules/Consent',
         'Themes' => ROOTPATH .'themes',
     ];
 
