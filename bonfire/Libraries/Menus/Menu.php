@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Libraries\Menus;
 
 class Menu
@@ -25,8 +34,6 @@ class Menu
     /**
      * Adds a new item
      *
-     * @param MenuItem $item
-     *
      * @return $this
      */
     public function addItem(MenuItem $item)
@@ -40,11 +47,6 @@ class Menu
      * Creates a new collection with default values for
      * everything except the `name` and `title`, which are
      * required parameters.
-     *
-     * @param string $name
-     * @param string $title
-     *
-     * @return MenuCollection
      */
     public function createCollection(string $name, string $title): MenuCollection
     {
@@ -60,9 +62,6 @@ class Menu
     /**
      * Creates a new collection, if one with $name doesn't exist,
      * and adds the items to the collection.
-     *
-     * @param string $name
-     * @param array  $items
      *
      * @return MenuCollection|mixed
      */
@@ -85,8 +84,6 @@ class Menu
     /**
      * Locates a collection by name.
      *
-     * @param string $name
-     *
      * @return mixed
      */
     public function collection(string $name)
@@ -100,8 +97,6 @@ class Menu
 
     /**
      * Returns an array of all collections stored, if any.
-     *
-     * @return array
      */
     public function collections(): array
     {

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Modules\Users\Models;
 
 use App\Models\UserModel;
@@ -18,28 +27,28 @@ class UserFilter extends UserModel
      */
     protected $filters = [
         'role' => [
-            'title' => 'User Role',
-            'options' => 'getRoleFilters'
+            'title'   => 'User Role',
+            'options' => 'getRoleFilters',
         ],
         'active' => [
-            'title' => 'Active?',
-            'options' => [0 => 'Inactive', 1 => 'Active']
+            'title'   => 'Active?',
+            'options' => [0 => 'Inactive', 1 => 'Active'],
         ],
         'last_active' => [
-            'title' => 'Last Active',
+            'title'   => 'Last Active',
             'options' => [
-                1 => '1 day',
-                2 => '2 days',
-                3 => '3 days',
-                7 => '1 week',
-                14 => '2 weeks',
-                30 => '1 month',
-                90 => '3 months',
+                1   => '1 day',
+                2   => '2 days',
+                3   => '3 days',
+                7   => '1 week',
+                14  => '2 weeks',
+                30  => '1 month',
+                90  => '3 months',
                 180 => '6 months',
                 365 => '1 year',
-                366 => '> 1 year'
-            ]
-        ]
+                366 => '> 1 year',
+            ],
+        ],
     ];
 
     /**
@@ -49,7 +58,7 @@ class UserFilter extends UserModel
      *
      * @return UserFilter
      */
-    public function filter(array $params=null)
+    public function filter(?array $params = null)
     {
         $this->select('users.*');
 
@@ -73,8 +82,6 @@ class UserFilter extends UserModel
 
     /**
      * Returns a list of all roles in the system.
-     *
-     * @return array
      */
     public function getRoleFilters(): array
     {
@@ -82,6 +89,7 @@ class UserFilter extends UserModel
         $groups = setting('AuthGroups.groups');
 
         $use = [];
+
         foreach ($groups as $alias => $info) {
             $use[$alias] = $info['title'];
         }

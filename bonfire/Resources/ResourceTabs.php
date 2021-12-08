@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Resources;
 
 /**
@@ -16,11 +25,6 @@ class ResourceTabs
 
     /**
      * Adds a new Resource Tab to the given resource.
-     *
-     * @param string      $resource
-     * @param ResourceTab $tab
-     *
-     * @return ResourceTabs
      */
     public function addTabFor(string $resource, ResourceTab $tab): ResourceTabs
     {
@@ -37,10 +41,6 @@ class ResourceTabs
 
     /**
      * Renders the extra tabs for a single resource.
-     *
-     * @param string $resource
-     *
-     * @return string
      */
     public function renderTabsFor(string $resource): string
     {
