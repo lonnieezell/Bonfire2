@@ -25,7 +25,7 @@ class Consent extends BaseConfig
      *
      * If false, then those cookies won't be set.
      */
-    public bool $requireConsent = false;
+    public bool $requireConsent = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -70,9 +70,7 @@ class Consent extends BaseConfig
      *
      * The initial message displayed to the visitor in the consent form.
      */
-    public string $consentMessage = 'This site uses cookies to distinguish you from other users.
-        We may also use cookies to enhance your experience or provide more targeted advertising.
-        For more information, please see our {policy_url}';
+    public string $consentMessage = 'This site uses cookies to distinguish you from other users. We may also use cookies to enhance your experience or provide more targeted advertising. For more information, please see our {policy_url}';
 
     /**
      * --------------------------------------------------------------------------
