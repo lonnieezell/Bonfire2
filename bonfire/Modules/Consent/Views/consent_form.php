@@ -21,11 +21,11 @@
     <div id="consents" class="show-custom">
         <table>
             <tbody>
-            <?php foreach($consents as $alias => $consent) : ?>
+            <?php foreach ($consents as $alias => $consent) : ?>
                 <tr>
                     <td>
                         <input type="checkbox" name="<?= esc($alias, 'attr') ?>" class="consent-check"
-                            <?php if($alias === 'required') : ?> checked disabled <?php endif ?>
+                            <?php if ($alias === 'required') : ?> checked disabled <?php endif ?>
                         >
                     </td>
                     <td>

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Recycler\Controllers;
 
 use App\Controllers\AdminController;
@@ -7,14 +16,13 @@ use CodeIgniter\HTTP\RedirectResponse;
 
 class RecycleController extends AdminController
 {
-    protected $theme = 'Admin';
-
+    protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Modules\Recycler\Views\\';
 
     /**
      * Displays the deleted items for a single resource.
      *
-     * @return string|RedirectResponse
+     * @return RedirectResponse|string
      */
     public function viewResource()
     {
@@ -43,23 +51,21 @@ class RecycleController extends AdminController
             ->orderBy('deleted_at', 'desc')
             ->paginate(setting('App.perPage'));
 
-        return $this->render($this->viewPrefix .'listResource', [
-            'resources' => $resources,
-            'currentResource'=> $currentResource,
-            'currentAlias' => $resourceType,
-            'items' => $items,
-            'pager' => $model->pager,
+        return $this->render($this->viewPrefix . 'listResource', [
+            'resources'       => $resources,
+            'currentResource' => $currentResource,
+            'currentAlias'    => $resourceType,
+            'items'           => $items,
+            'pager'           => $model->pager,
         ]);
     }
 
     /**
      * Restores a single record.
      *
-     * @param string $resourceType
-     * @param int    $resourceId
+     * @throws \ReflectionException
      *
      * @return RedirectResponse
-     * @throws \ReflectionException
      */
     public function restore(string $resourceType, int $resourceId)
     {
@@ -70,7 +76,7 @@ class RecycleController extends AdminController
         }
 
         $currentResource = $resources[$resourceType];
-        $model = model($currentResource['model']);
+        $model           = model($currentResource['model']);
 
         // Is there custom handling?
         $result = method_exists($model, 'recyclerRestore')
@@ -89,9 +95,6 @@ class RecycleController extends AdminController
     /**
      * Purges a single record.
      *
-     * @param string $resourceType
-     * @param int    $resourceId
-     *
      * @return RedirectResponse
      */
     public function purge(string $resourceType, int $resourceId)
@@ -103,7 +106,7 @@ class RecycleController extends AdminController
         }
 
         $currentResource = $resources[$resourceType];
-        $model = model($currentResource['model']);
+        $model           = model($currentResource['model']);
 
         // Is there custom handling?
         $result = method_exists($model, 'recyclerPurge')

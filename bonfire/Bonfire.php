@@ -1,27 +1,34 @@
 <?php
 
-namespace Bonfire;
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
 
-use CodeIgniter\Config\Factories;
+namespace Bonfire;
 
 /**
  * Class Bonfire
  *
  * Provides basic utility functions used throughout the
  * lifecycle of a request in the admin area.
- *
- * @package Bonfire
  */
 class Bonfire
 {
     /**
      * Holds cached instances of all Module classes
+     *
      * @var array
      */
     private $moduleConfigs = [];
 
     /**
      * Are we currently in the admin area?
+     *
      * @var bool
      */
     public $inAdmin = false;
@@ -67,7 +74,7 @@ class Bonfire
      */
     private function setupMenus()
     {
-        $menus =  service('menus');
+        $menus = service('menus');
 
         // Sidebar menu
         $menus->createMenu('sidebar');
@@ -101,7 +108,7 @@ class Bonfire
                     continue;
                 }
 
-                $name = trim($row, DIRECTORY_SEPARATOR);
+                $name                                 = trim($row, DIRECTORY_SEPARATOR);
                 $modules["Bonfire\\Modules\\{$name}"] = ROOTPATH . "bonfire/Modules/{$name}";
             }
 
@@ -110,12 +117,12 @@ class Bonfire
 
         // save instances of our module configs
         foreach ($modules as $namespace => $dir) {
-            if (! is_file($dir .'/Module.php')) {
+            if (! is_file($dir . '/Module.php')) {
                 continue;
-            };
+            }
 
-            include_once $dir .'/Module.php';
-            $className = $namespace.'\Module';
+            include_once $dir . '/Module.php';
+            $className                       = $namespace . '\Module';
             $this->moduleConfigs[$namespace] = new $className();
         }
     }
