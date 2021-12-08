@@ -8,7 +8,7 @@
 
     <x-admin-box>
         <?php if (isset($collections) && count($collections)) : ?>
-            <?php foreach($collections as $alias => $info) : ?>
+            <?php foreach ($collections as $alias => $info) : ?>
                 <h2 class="mb-4">
                     <a href="/<?= ADMIN_AREA ?>/guides/<?= $alias ?>">
                         <?= $info['title'] ?>
