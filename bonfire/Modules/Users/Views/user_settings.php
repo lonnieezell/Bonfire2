@@ -186,8 +186,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\NothingPersonalValidator"
                                 <?php if (in_array(
     'Sparks\Shield\Authentication\Passwords\NothingPersonalValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
+    old('validators', setting('Auth.passwordValidators')), true
 )) : ?>
                                     checked
                                 <?php endif ?>
@@ -202,10 +201,9 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\DictionaryValidator"
                                 <?php if (in_array(
-    'Sparks\Shield\Authentication\Passwords\DictionaryValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                        'Sparks\Shield\Authentication\Passwords\DictionaryValidator',
+                                        old('validators', setting('Auth.passwordValidators')), true
+                                    )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -220,8 +218,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\PwnedValidator"
                                 <?php if (in_array(
                                         'Sparks\Shield\Authentication\Passwords\PwnedValidator',
-                                        old('validators', setting('Auth.passwordValidators')),
-                                        true
+                                        old('validators', setting('Auth.passwordValidators')), true
                                     )) : ?>
                                     checked
                                 <?php endif ?>

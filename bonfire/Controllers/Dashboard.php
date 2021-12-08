@@ -17,6 +17,8 @@ use App\Controllers\AdminController;
  * Class Dashboard
  *
  * The primary entry-point to the Bonfire admin area.
+ *
+ * @package App\Controllers\Bonfire
  */
 class Dashboard extends AdminController
 {
@@ -32,6 +34,7 @@ class Dashboard extends AdminController
      */
     public function index()
     {
-        echo $this->render('Bonfire\Assets\Views\dashboard', []);
+		$widgets = service('widgets');
+        echo $this->render('Bonfire\Assets\Views\dashboard', ['widgets' => $widgets]);
     }
 }

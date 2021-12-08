@@ -11,8 +11,10 @@
 
 namespace Bonfire\Modules\Users;
 
+use App\Models\UserModel;
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
+use Bonfire\Libraries\Widgets\Stats\StatsItem;
 
 /**
  * User Module setup
@@ -40,5 +42,17 @@ class Module extends BaseModule
             'fontAwesomeIcon' => 'fas fa-users',
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
+
+		// Settings widgets stats on dashboard
+		$widgets = service('widgets');
+		$users = new UserModel();
+		$statsItem = new StatsItem([
+			'bgColor' => 'bg-blue',
+			'title' => 'Users',
+			'value' => $users->countAll(),
+			'url' => ADMIN_AREA . '/users',
+			'faIcon' => 'fa fa-user',
+		]);
+		$widgets->widget("stats")->collection('stats')->addItem($statsItem);
     }
 }
