@@ -94,4 +94,20 @@ class Services extends BaseService
 
         return new \Bonfire\Resources\ResourceTabs();
     }
+
+	/**
+	 * Returns the system widgets stats manager
+	 *
+	 * @param bool $getShared
+	 *
+	 * @return Bonfire\Libraries\Widgets\Manager|mixed
+	 */
+	public static function widgets(bool $getShared = true)
+	{
+		if ($getShared) {
+			return static::getSharedInstance('widgets');
+		}
+
+		return new \Bonfire\Libraries\Widgets\Manager();
+	}
 }
