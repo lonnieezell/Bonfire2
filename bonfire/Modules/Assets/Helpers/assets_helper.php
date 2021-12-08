@@ -35,6 +35,7 @@ if (! defined('asset_link')) {
 }
 
 if (! defined('asset')) {
+
     function asset(string $location, string $type): string
     {
         $config   = config('Assets');

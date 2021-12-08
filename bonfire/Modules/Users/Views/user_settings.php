@@ -170,8 +170,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\CompositionValidator"
                                 <?php if (in_array(
     'Sparks\Shield\Authentication\Passwords\CompositionValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
+    old('validators', setting('Auth.passwordValidators')), true
 )) : ?>
                                     checked
                                 <?php endif ?>

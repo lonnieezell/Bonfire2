@@ -11,8 +11,6 @@
 
 namespace Bonfire;
 
-use Bonfire\Libraries\Widgets\Stats\Stats;
-
 /**
  * Class Bonfire
  *
@@ -51,7 +49,6 @@ class Bonfire
 
         if ($this->inAdmin) {
             $this->setupMenus();
-            $this->setupWidgets();
         }
 
         $this->discoverCoreModules();
@@ -92,19 +89,6 @@ class Bonfire
 
         // Top "icon" menu for notifications, account, etc.
         $menus->createMenu('iconbar');
-    }
-
-    /**
-     * Creates any admin-required widgets so they're
-     * available to use by any modules.
-     */
-    private function setupWidgets()
-    {
-        $widgets = service('widgets');
-
-        $widgets->createWidget(Stats::class, 'stats');
-        $widgets->widget('stats')
-            ->createCollection('stats');
     }
 
     /**
