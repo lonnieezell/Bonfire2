@@ -5,7 +5,8 @@ $this->extend('master') ?>
 $this->section('main') ?>
 <x-page-head>
     <a href="/<?= ADMIN_AREA ?>/tools/logs" class="back">&larr; Logs</a>
-    <h2>Logs : <?= $logFilePretty; ?></h2>
+    <h2>Logs : <?php
+        echo $logFilePretty; ?></h2>
     <h2>
         <Logs
     </h2>
@@ -24,7 +25,7 @@ $this->section('main') ?>
             <tbody>
             <?php
             foreach ($logContent as $key => $log): ?>
-                <tr <?php if (array_key_exists('extra', $log)) : ?> style="cursor:pointer"
+                <tr <?php if (array_key_exists("extra", $log)) : ?> style="cursor:pointer"
                     data-bs-toggle="collapse" data-bs-target="#stack<?= $key ?>" aria-controls="stack<?= $key ?>" aria-expanded="false"
                     <?php endif ?>
                 >
@@ -35,12 +36,12 @@ $this->section('main') ?>
                     <td class="date"><?= app_date($log['date'], true) ?></td>
                     <td class="text">
                         <?= esc($log['content']) ?>
-                        <?= (array_key_exists('extra', $log)) ? '...' : ''; ?>
+                        <?= (array_key_exists("extra", $log)) ? '...' : ''; ?>
                     </td>
                 </tr>
 
                 <?php
-                if (array_key_exists('extra', $log)): ?>
+                if (array_key_exists("extra", $log)): ?>
 
                     <tr class="collapse bg-light" id="stack<?= $key ?>">
                         <td colspan="3">
@@ -66,7 +67,8 @@ $this->section('main') ?>
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
-            <input type="submit" name="delete" class="btn btn-danger btn-sm" value="<?= lang('Logs.delete_file'); ?>" onclick="return confirm('<?= lang('Logs.delete_confirm') ?>')"/>
+            <input type="submit" name="delete" class="btn btn-danger btn-sm" value="<?php
+            echo lang('Logs.delete_file'); ?>" onclick="return confirm('<?= lang('Logs.delete_confirm') ?>')"/>
 
         </form>
 

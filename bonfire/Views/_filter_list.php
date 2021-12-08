@@ -14,8 +14,8 @@
             <?php foreach ($filter['options'] as $value => $name): ?>
                 <li class="form-check">
                     <input class="form-check-input filter-check" type="checkbox" name="filters[<?= $key ?>][<?= $value ?>]"
-                           value="<?= $value ?>" id="<?= $key . ':' . $value ?>>">
-                    <label class="form-check-label" for="<?= $key . ':' . $value ?>">
+                           value="<?= $value ?>" id="<?= $key .':'. $value ?>>">
+                    <label class="form-check-label" for="<?= $key .':'. $value ?>">
                         <?= $name ?>
                     </label>
                 </li>
