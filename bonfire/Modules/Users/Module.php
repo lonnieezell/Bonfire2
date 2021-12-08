@@ -1,21 +1,15 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Modules\Users;
 
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
+use Bonfire\Resources\ResourceTab;
 
 /**
  * User Module setup
+ *
+ * @package Bonfire\User
  */
 class Module extends BaseModule
 {
@@ -26,18 +20,18 @@ class Module extends BaseModule
     {
         // Settings menu for sidebar
         $sidebar = service('menus');
-        $item    = new MenuItem([
-            'title'           => 'Users',
-            'namedRoute'      => 'user-settings',
+        $item = new MenuItem([
+            'title' => 'Users',
+            'namedRoute' => 'user-settings',
             'fontAwesomeIcon' => 'fas fa-user',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
 
         // Content Menu for sidebar
         $item = new MenuItem([
-            'title'           => 'Users',
-            'namedRoute'      => 'user-list',
-            'fontAwesomeIcon' => 'fas fa-users',
+            'title' => 'Users',
+            'namedRoute' => 'user-list',
+            'fontAwesomeIcon' => 'fas fa-users'
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
     }

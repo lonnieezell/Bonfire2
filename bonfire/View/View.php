@@ -1,20 +1,12 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\View;
 
 use CodeIgniter\Debug\Toolbar\Collectors\Views;
 use CodeIgniter\View\Exceptions\ViewException;
 use CodeIgniter\View\View as CIView;
 use Config\Toolbar;
+use Bonfire\View\ComponentRenderer;
 
 class View extends CIView
 {
@@ -40,15 +32,17 @@ class View extends CIView
      *  - cache      Number of seconds to cache for
      *  - cache_name Name to use for cache
      *
-     * @param string     $view     File name of the view source
-     * @param array|null $options  Reserved for 3rd-party uses since
-     *                             it might be needed to pass additional info
-     *                             to other template engines.
-     * @param bool|null  $saveData If true, saves data for subsequent calls,
-     *                             if false, cleans the data after displaying,
-     *                             if null, uses the config setting.
+     * @param string       $view     File name of the view source
+     * @param array|null   $options  Reserved for 3rd-party uses since
+     *                               it might be needed to pass additional info
+     *                               to other template engines.
+     * @param boolean|null $saveData If true, saves data for subsequent calls,
+     *                               if false, cleans the data after displaying,
+     *                               if null, uses the config setting.
+     *
+     * @return string
      */
-    public function render(string $view, ?array $options = null, ?bool $saveData = null): string
+    public function render(string $view, array $options = null, bool $saveData = null): string
     {
         $this->renderVars['start'] = microtime(true);
 
@@ -100,7 +94,6 @@ class View extends CIView
             extract($this->tempData);
             ob_start();
             include $this->renderVars['file'];
-
             return ob_get_clean() ?: '';
         })();
 
@@ -110,7 +103,7 @@ class View extends CIView
         // When using layouts, the data has already been stored
         // in $this->sections, and no other valid output
         // is allowed in $output so we'll overwrite it.
-        if (null !== $this->layout && $this->sectionStack === []) {
+        if (! is_null($this->layout) && $this->sectionStack === []) {
             $layoutView   = $this->layout;
             $this->layout = null;
             // Save current vars

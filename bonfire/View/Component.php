@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\View;
 
 /**
@@ -17,12 +8,13 @@ namespace Bonfire\View;
  * Provides the basic functionality used when rendering a
  * view component. This includes everything needed to render
  * a component that does not have a class associated with it.
+ *
+ * @package Bonfire\View
  */
 class Component
 {
     /**
      * All collected attributes for the tag
-     *
      * @var string
      */
     protected $attributes;
@@ -41,6 +33,8 @@ class Component
 
     /**
      * Stores the view name.
+     *
+     * @param string $view
      */
     public function withView(string $view): Component
     {
@@ -51,6 +45,8 @@ class Component
 
     /**
      * Set the data that should be passed along to the view.
+     *
+     * @param array $data
      *
      * @return $this
      */
@@ -63,6 +59,8 @@ class Component
 
     /**
      * Returns the processed component view.
+     *
+     * @return string
      */
     public function render(): string
     {
@@ -71,6 +69,11 @@ class Component
 
     /**
      * Renders the view when no corresponding class has been found.
+     *
+     * @param string $view
+     * @param array  $data
+     *
+     * @return string
      */
     protected function renderView(string $view, array $data): string
     {
@@ -78,7 +81,6 @@ class Component
             extract($data);
             ob_start();
             eval('?>' . file_get_contents($view));
-
             return ob_get_clean() ?: '';
         })($view, $data);
     }

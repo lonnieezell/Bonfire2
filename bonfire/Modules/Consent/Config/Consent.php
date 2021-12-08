@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Consent\Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -48,8 +39,7 @@ class Consent extends BaseConfig
      * build system, etc.
      */
     public string $consentForm = 'Bonfire\Modules\Consent\Views\consent_form';
-
-    public string $consentFormStyles  = 'Bonfire\Modules\Consent\Views\consent_styles';
+    public string $consentFormStyles = 'Bonfire\Modules\Consent\Views\consent_styles';
     public string $consentFormScripts = 'Bonfire\Modules\Consent\Views\consent_scripts';
 
     /**
@@ -70,7 +60,7 @@ class Consent extends BaseConfig
      *
      * The initial message displayed to the visitor in the consent form.
      */
-    public string $consentMessage = 'This site uses cookies to distinguish you from other users.
+    public string $consentMessage = 'This site uses cookies to distinguish you from other users. 
         We may also use cookies to enhance your experience or provide more targeted advertising.
         For more information, please see our {policy_url}';
 
@@ -89,15 +79,15 @@ class Consent extends BaseConfig
         ],
         'performance' => [
             'name' => 'Performance',
-            'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are,
+            'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are, 
                 and which pages are popular. This helps to improve the website for everyone. If you reject these
-                we will be unable to use your visits to make site improvements.',
+                we will be unable to use your visits to make site improvements.'
         ],
         'targeting' => [
             'name' => 'Targeting',
             'desc' => 'These are usually placed by third-party advertising networks, which may use information about
                 your visits to develop a profile of your interests. This information may be shared with other networks
-                or sites to deliver more relevant advertising across multiple sites.',
-        ],
+                or sites to deliver more relevant advertising across multiple sites.'
+        ]
     ];
 }

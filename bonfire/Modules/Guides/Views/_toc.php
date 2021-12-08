@@ -1,10 +1,8 @@
-<?php use Bonfire\Modules\Guides\Libraries\GuideCollection;
-
-?>
+<?php use Bonfire\Modules\Guides\Libraries\GuideCollection; ?>
 
 <ul class="list-unstyled px-4">
-<?php foreach ($pages as $folder => $page) : ?>
-    <?php if (is_string($page) && $page !== 'index.md') : ?>
+<?php foreach($pages as $folder => $page) : ?>
+    <?php if(is_string($page) && $page !== 'index.md') : ?>
     <li>
         <a href="/<?= ADMIN_AREA ?>/guides/<?= $alias ?>/<?= $page ?>">
             <?= esc(GuideCollection::formatPage($page)) ?>

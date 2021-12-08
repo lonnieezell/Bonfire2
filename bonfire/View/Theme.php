@@ -1,20 +1,13 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\View;
 
 /**
  * Class Theme
  *
  * Provides utility commands to work with themes.
+ *
+ * @package Bonfire\View
  */
 class Theme
 {
@@ -30,13 +23,14 @@ class Theme
 
     /**
      * Holds theme info retrieved
-     *
      * @var array
      */
     protected static $themeInfo;
 
     /**
      * Sets the active theme.
+     *
+     * @param string $theme
      */
     public static function setTheme(string $theme)
     {
@@ -46,8 +40,12 @@ class Theme
     /**
      * Returns the path to the specified theme folder.
      * If no theme is provided, will use the current theme.
+     *
+     * @param string|null $theme
+     *
+     * @return string
      */
-    public static function path(?string $theme = null): string
+    public static function path(string $theme=null): string
     {
         if (empty($theme)) {
             $theme = static::current();
@@ -82,6 +80,8 @@ class Theme
     /**
      * Returns an array of all available themes
      * and the paths to their directories.
+     *
+     * @return array
      */
     public static function available(): array
     {
@@ -97,9 +97,9 @@ class Theme
 
             foreach ($info as $name => $row) {
                 $themes[] = [
-                    'name'          => $name,
-                    'path'          => $row['relative_path'] . $name . '/',
-                    'hasComponents' => is_dir($row['relative_path'] . $name . '/Components'),
+                    'name' => $name,
+                    'path' => $row['relative_path'].$name .'/',
+                    'hasComponents' => is_dir($row['relative_path'].$name.'/Components'),
                 ];
             }
         }

@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\View;
 
 class ComponentRenderer
@@ -16,7 +7,7 @@ class ComponentRenderer
     public function __construct()
     {
         helper('inflector');
-        ini_set('pcre.backtrack_limit', '-1');
+        ini_set("pcre.backtrack_limit", "-1");
     }
 
     /**
@@ -24,6 +15,10 @@ class ComponentRenderer
      * returning the modified string.
      *
      * Called by the View class' render method.
+     *
+     * @param string|null $output
+     *
+     * @return string
      */
     public function render(?string $output): string
     {
@@ -44,41 +39,45 @@ class ComponentRenderer
 
     /**
      * Finds and renders and self-closing tags, i.e. <x-foo />
+     *
+     * @param string $output
+     *
+     * @return string
      */
     private function renderSelfClosingTags(string $output): string
     {
         // Pattern borrowed from Laravel's ComponentTagCompiler
         $pattern = "/
             <
-                \\s*
-                x[-\\:](?<name>[\\w\\-\\:\\.]*)
-                \\s*
+                \s*
+                x[-\:](?<name>[\w\-\:\.]*)
+                \s*
                 (?<attributes>
                     (?:
-                        \\s+
+                        \s+
                         (?:
                             (?:
-                                \\{\\{\\s*\\\$attributes(?:[^}]+?)?\\s*\\}\\}
+                                \{\{\s*\\\$attributes(?:[^}]+?)?\s*\}\}
                             )
                             |
                             (?:
-                                [\\w\\-:.@]+
+                                [\w\-:.@]+
                                 (
                                     =
                                     (?:
                                         \\\"[^\\\"]*\\\"
                                         |
-                                        \\'[^\\']*\\'
+                                        \'[^\']*\'
                                         |
-                                        [^\\'\\\"=<>]+
+                                        [^\'\\\"=<>]+
                                     )
                                 )?
                             )
                         )
                     )*
-                    \\s*
+                    \s*
                 )
-            \\/>
+            \/>
         /x";
 
         /*
@@ -97,6 +96,11 @@ class ComponentRenderer
         }, $output);
     }
 
+    /**
+     * @param string $output
+     *
+     * @return string
+     */
     private function renderPairedTags(string $output): string
     {
 //        ini_set("pcre.backtrack_limit", "-1");
@@ -122,6 +126,10 @@ class ComponentRenderer
 
     /**
      * Parses a string to grab any key/value pairs, HTML attributes.
+     *
+     * @param string $attributeString
+     *
+     * @return array
      */
     private function parseAttributes(string $attributeString): array
     {
@@ -157,6 +165,11 @@ class ComponentRenderer
 
     /**
      * Renders the view when no corresponding class has been found.
+     *
+     * @param string $view
+     * @param array  $data
+     *
+     * @return string
      */
     private function renderView(string $view, array $data): string
     {
@@ -164,7 +177,6 @@ class ComponentRenderer
             extract($data);
             ob_start();
             eval('?>' . file_get_contents($view));
-
             return ob_get_clean() ?: '';
         })($view, $data);
     }
@@ -177,12 +189,16 @@ class ComponentRenderer
      *
      * If a class is used, the name is expected to be
      * <viewName>Component.php
+     *
+     * @param string $name
+     *
+     * @return Component|null
      */
     private function factory(string $name, string $view): ?Component
     {
         // Locate the class in the same folder as the view
-        $class    = pascalize($name) . 'Component.php';
-        $filePath = str_replace($name . '.php', $class, $view);
+        $class = pascalize($name).'Component.php';
+        $filePath = str_replace($name.'.php', $class, $view);
 
         if (empty($filePath)) {
             return null;
@@ -204,17 +220,18 @@ class ComponentRenderer
      * Locate the view file used to render the component.
      * The file's name must match the name of the component,
      * minus the 'x-'.
+     *
+     * @param string $name
      */
     private function locateView(string $name): string
     {
         // First search within the current theme
-        $path     = Theme::path();
-        $filePath = $path . 'Components/' . $name . '.php';
+        $path = Theme::path();
+        $filePath = $path .'Components/'. $name .'.php';
 
         if (is_file($filePath)) {
             return $filePath;
         }
-
 
         // fallback: check in components' default lookup paths from config
         $componentsLookupPaths = config('Themes')->componentsLookupPaths;
@@ -232,9 +249,13 @@ class ComponentRenderer
 
     /**
      * Removes surrounding quotes from a string.
+     *
+     * @param string $string
+     *
+     * @return string
      */
     private function stripQuotes(string $string): string
     {
-        return trim($string, "\\'\"");
+        return trim($string, "\'\"");
     }
 }

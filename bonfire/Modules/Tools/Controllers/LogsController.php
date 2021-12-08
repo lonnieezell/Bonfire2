@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Tools\Controllers;
 
 use App\Controllers\AdminController;
@@ -17,16 +8,20 @@ use CodeIgniter\HTTP\RedirectResponse;
 
 class LogsController extends AdminController
 {
-    protected $theme      = 'Admin';
+    protected $theme = 'Admin';
+
     protected $viewPrefix = 'Bonfire\Modules\Tools\Views\\';
-    protected $logsPath   = WRITEPATH . 'logs/';
+
+    protected $logsPath = WRITEPATH . 'logs/';
+
     protected $logsLimit;
+
     protected $logsHandler;
 
     public function __construct()
     {
         helper('filesystem');
-        $this->logsLimit   = service('settings')->get('Logs.paginationLimit');
+        $this->logsLimit = service('settings')->get('Logs.paginationLimit');
         $this->logsHandler = new Logs();
     }
 
@@ -62,7 +57,7 @@ class LogsController extends AdminController
         helper('security');
         $file = sanitize_filename($file);
 
-        if (empty($file) || ! file_exists($this->logsPath . $file)) {
+        if (empty($file) or ! file_exists($this->logsPath . $file)) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Logs.empty'));
         }
 
@@ -71,10 +66,10 @@ class LogsController extends AdminController
         $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
         return $this->render($this->viewPrefix . 'view_log', [
-            'logFile'       => $file,
-            'canDelete'     => 1,
-            'logContent'    => $result['logs'],
-            'pager'         => $result['pager'],
+            'logFile' => $file,
+            'canDelete' => 1,
+            'logContent' => $result['logs'],
+            'pager' => $result['pager'],
             'logFilePretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
         ]);
     }
@@ -86,7 +81,7 @@ class LogsController extends AdminController
      */
     public function delete()
     {
-        $delete    = $this->request->getPost('delete');
+        $delete = $this->request->getPost('delete');
         $deleteAll = $this->request->getPost('delete_all');
 
         if (empty($delete) && empty($deleteAll)) {
@@ -99,7 +94,7 @@ class LogsController extends AdminController
         if (! empty($delete)) {
             helper('security');
 
-            $checked    = $_POST['checked'];
+            $checked = $_POST['checked'];
             $numChecked = count($checked);
 
             if (is_array($checked) && $numChecked) {
@@ -117,9 +112,9 @@ class LogsController extends AdminController
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
 
                 return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Logs.delete_all_success'));
+            } else {
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Logs.delete_error'));
             }
-
-            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Logs.delete_error'));
         }
 
         return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Bonfire.unknownAction'));

@@ -35,7 +35,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="emailActivation"
                                    value='Shield\Authentication\Actions\EmailActivate' id="email-activation"
-                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'Shield\Authentication\Actions\EmailActivate') : ?>
+                                <?php if (old('emailActivation', setting('Auth.actions')['register']) == 'Shield\Authentication\Actions\EmailActivate') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -49,14 +49,14 @@
                     </div>
                 </div>
 
-                <?php if (isset($groups) && count($groups)) : ?>
+                <?php if(isset($groups) && count($groups)) : ?>
                 <!-- Default Group -->
                 <div class="row">
                     <div class="col-12 col-sm-4">
 
                         <label class="form-label">Default User Group:</label>
 
-                        <?php foreach ($groups as $group => $info) : ?>
+                        <?php foreach($groups as $group => $info) : ?>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="defaultGroup"
                                    value="<?= $group ?>"
@@ -106,7 +106,7 @@
                             <?php if (isset($rememberOptions) && count($rememberOptions)) : ?>
                                 <?php foreach ($rememberOptions as $title => $seconds) : ?>
                                     <option value="<?= $seconds ?>"
-                                        <?php if (old('rememberDuration', setting('Auth.sessionConfig')['rememberLength']) === $seconds) : ?> selected <?php endif?>
+                                        <?php if (old('rememberDuration', setting('Auth.sessionConfig')['rememberLength']) == $seconds) : ?> selected <?php endif?>
                                     >
                                         <?= $title ?>
                                     </option>
@@ -121,7 +121,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="email2FA"
                                    value="Shield\Authentication\Actions\Email2FA" id="email-activation"
-                                <?php if (old('email2FA', setting('Auth.actions')['login']) === 'Shield\Authentication\Actions\Email2FA') : ?>
+                                <?php if (old('email2FA', setting('Auth.actions')['login']) == 'Shield\Authentication\Actions\Email2FA') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -170,7 +170,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\CompositionValidator"
                                 <?php if (in_array(
     'Sparks\Shield\Authentication\Passwords\CompositionValidator',
-    old('validators', setting('Auth.passwordValidators')), true
+    old('validators', setting('Auth.passwordValidators'))
 )) : ?>
                                     checked
                                 <?php endif ?>
@@ -185,9 +185,9 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="Sparks\Shield\Authentication\Passwords\NothingPersonalValidator"
                                 <?php if (in_array(
-    'Sparks\Shield\Authentication\Passwords\NothingPersonalValidator',
-    old('validators', setting('Auth.passwordValidators')), true
-)) : ?>
+                                        'Sparks\Shield\Authentication\Passwords\NothingPersonalValidator',
+                                        old('validators', setting('Auth.passwordValidators'))
+                                    )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -202,7 +202,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\DictionaryValidator"
                                 <?php if (in_array(
                                         'Sparks\Shield\Authentication\Passwords\DictionaryValidator',
-                                        old('validators', setting('Auth.passwordValidators')), true
+                                        old('validators', setting('Auth.passwordValidators'))
                                     )) : ?>
                                     checked
                                 <?php endif ?>
@@ -218,7 +218,7 @@
                                    value="Sparks\Shield\Authentication\Passwords\PwnedValidator"
                                 <?php if (in_array(
                                         'Sparks\Shield\Authentication\Passwords\PwnedValidator',
-                                        old('validators', setting('Auth.passwordValidators')), true
+                                        old('validators', setting('Auth.passwordValidators'))
                                     )) : ?>
                                     checked
                                 <?php endif ?>
@@ -275,13 +275,13 @@
                         <label for="gravatarDefault" class="form-label">Gravatar default style</label>
                         <select name="gravatarDefault" class="form-control">
                             <option value="">Select default style....</option>
-                            <option value="mp" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'mp' ? 'selected' : '' ?>>mystery person</option>
-                            <option value="identicon" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'identicon' ? 'selected' : '' ?>>identicon</option>
-                            <option value="monsterid"  <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'monsterid' ? 'selected' : '' ?>>monsterid</option>
-                            <option value="wavatar" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'wavatar' ? 'selected' : '' ?>>wavatar</option>
-                            <option value="retro" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'retro' ? 'selected' : '' ?>>retro</option>
-                            <option value="robohash" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'robohash' ? 'selected' : '' ?>>robohash</option>
-                            <option value="blank" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'blank' ? 'selected' : '' ?>>blank</option>
+                            <option value="mp" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'mp' ? 'selected' : '' ?>>mystery person</option>
+                            <option value="identicon" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'identicon' ? 'selected' : '' ?>>identicon</option>
+                            <option value="monsterid"  <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'monsterid' ? 'selected' : '' ?>>monsterid</option>
+                            <option value="wavatar" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'wavatar' ? 'selected' : '' ?>>wavatar</option>
+                            <option value="retro" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'retro' ? 'selected' : '' ?>>retro</option>
+                            <option value="robohash" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'robohash' ? 'selected' : '' ?>>robohash</option>
+                            <option value="blank" <?= old('gravatarDefault', setting('Users.gravatarDefault')) == 'blank' ? 'selected' : '' ?>>blank</option>
                         </select>
                     </div>
                     <div class="col px-5 pt-2">

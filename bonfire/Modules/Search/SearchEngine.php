@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Search;
 
 /**
@@ -20,25 +11,26 @@ class SearchEngine
     /**
      * Gets a set number of results from
      * each of the registered search providers.
+     *
+     * @param array|null $post
      */
-    public function overview(?array $post = null)
+    public function overview(array $post=null)
     {
         $providers = $this->locateProviders();
-        $term      = isset($post['search_term']) ? trim($post['search_term']) : null;
+        $term = isset($post['search_term']) ? trim($post['search_term']) : null;
 
         if (empty($term)) {
             return;
         }
 
         $results = [];
-
         foreach ($providers as $provider) {
             $name = $provider->resourceName();
 
             $results[$name] = [
                 'provider' => $provider,
-                'url'      => $provider->resourceUrl(),
-                'results'  => $provider->search($term, 10, $post),
+                'url' => $provider->resourceUrl(),
+                'results' => $provider->search($term, 10, $post)
             ];
         }
 
@@ -51,14 +43,13 @@ class SearchEngine
     private function locateProviders(): array
     {
         $locator = service('locator');
-        $files   = $locator->search('SearchProvider');
+        $files = $locator->search('SearchProvider');
 
         if (empty($files)) {
             return [];
         }
 
         $providers = [];
-
         foreach ($files as $file) {
             $class = $locator->findQualifiedNameFromPath($file);
 

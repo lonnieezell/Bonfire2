@@ -1,23 +1,14 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Resources;
 
 /**
  * Represents a single tab that should be displayed for a resource.
  * A resource is a User, a User Group, etc.
  *
- * @property string $permission
  * @property string $title
  * @property string $url
+ * @property string $permission
  */
 class ResourceTab
 {
@@ -46,13 +37,15 @@ class ResourceTab
      * Constructor.
      *
      * Use $params to fill the values on creation.
+     *
+     * @param array|null $params
      */
-    public function __construct(?array $params = null)
+    public function __construct(array $params=null)
     {
         if (is_array($params)) {
             foreach ($params as $key => $value) {
                 if (property_exists($this, $key)) {
-                    $this->{$key} = $value;
+                    $this->$key = $value;
                 }
             }
         }
@@ -62,6 +55,8 @@ class ResourceTab
      * Ensures the link is a site link, within the
      * admin area, that handles id replacement for
      * the current resource.
+     *
+     * @return string
      */
     public function getUrl(): string
     {
@@ -75,7 +70,7 @@ class ResourceTab
             $url = $this->fillPlaceholder($url);
         }
 
-        $url = ADMIN_AREA . '/' . $url;
+        $url = ADMIN_AREA .'/'. $url;
 
         return site_url($url);
     }
@@ -83,6 +78,8 @@ class ResourceTab
     /**
      * Attempts to fill the placeholder with the
      * resource ID from the current URL.
+     *
+     * @param string $url
      *
      * @return string
      */
@@ -93,7 +90,7 @@ class ResourceTab
         $path = trim(substr($path, 0, strpos($path, '(id)')), ' /');
 
         // Parse out the current resource ID - $matches[1] should contain it
-        preg_match("|{$path}\\/([0-9]+)|i", current_url(), $matches);
+        preg_match("|{$path}\/([0-9]+)|i", current_url(), $matches);
 
         if (isset($matches[1]) && ! empty($matches[1])) {
             return str_replace('(id)', $matches[1], $url);
@@ -104,6 +101,8 @@ class ResourceTab
 
     /**
      * Magic getter
+     *
+     * @param string $key
      */
     public function __get(string $key)
     {
@@ -112,19 +111,20 @@ class ResourceTab
         }
 
         if (property_exists($this, $key)) {
-            return $this->{$key};
+            return $this->$key;
         }
     }
 
     /**
      * Magic setting
      *
+     * @param string $key
      * @param mixed $value
      */
     public function __set(string $key, $value)
     {
         if (property_exists($this, $key)) {
-            $this->{$key} = $value;
+            $this->$key = $value;
         }
     }
 }

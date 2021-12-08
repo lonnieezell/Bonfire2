@@ -1,14 +1,12 @@
 <?php
 
-namespace Bonfire\Modules\Settings;
+namespace Bonfire\Consent;
 
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
 
 /**
- * Email Module setup
- *
- * @package Bonfire\Email
+ * Consent Module setup
  */
 class Module extends BaseModule
 {
@@ -19,10 +17,10 @@ class Module extends BaseModule
     {
         // Settings menu for sidebar
         $sidebar = service('menus');
-        $item = new MenuItem([
-            'title' => 'General',
-            'namedRoute' => 'general-settings',
-            'fontAwesomeIcon' => 'fas fa-cog',
+        $item    = new MenuItem([
+            'title'           => 'Email',
+            'namedRoute'      => 'email-settings',
+            'fontAwesomeIcon' => 'fas fa-envelope',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }

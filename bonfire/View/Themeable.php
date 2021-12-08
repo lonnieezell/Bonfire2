@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\View;
 
 use CodeIgniter\View\View;
@@ -17,12 +8,13 @@ use CodeIgniter\View\View;
  * Trait Themeable
  *
  * Provides simple theme functionality to controllers.
+ *
+ * @package Bonfire\View
  */
 trait Themeable
 {
     /**
      * The folder the theme is stored in (within /themes)
-     *
      * @var string
      */
     protected $theme = 'App';
@@ -32,7 +24,7 @@ trait Themeable
      */
     protected $renderer;
 
-    protected function render(string $view, array $data = [], ?array $options = null)
+    protected function render(string $view, array $data=[], array $options=null)
     {
         $renderer = $this->getRenderer();
 
@@ -48,7 +40,7 @@ trait Themeable
      * the controller has a chance to dynamically update the
      * theme being used.
      *
-     * @return mixed|View|null
+     * @return View|mixed|null
      */
     protected function getRenderer()
     {

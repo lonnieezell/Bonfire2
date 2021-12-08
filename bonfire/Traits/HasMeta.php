@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Traits;
 
 use Bonfire\Models\MetaModel;
@@ -26,22 +17,22 @@ trait HasMeta
 {
     /**
      * Cache for meta info
-     *
      * @var array
      */
     private $meta = [];
 
     /**
      * Have we already hyrdated out meta info?
-     *
      * @var bool
      */
     private $metaHydrated = false;
 
     /**
      * Grabs the meta data for this entity.
+     *
+     * @param bool $refresh
      */
-    protected function hydrateMeta(bool $refresh = false)
+    protected function hydrateMeta(bool $refresh=false)
     {
         if ($this->metaHydrated && ! $refresh) {
             return;
@@ -52,7 +43,7 @@ trait HasMeta
         }
 
         $meta = model(MetaModel::class)
-            ->where('class', static::class)
+            ->where('class', get_class($this))
             ->where('resource_id', $this->id)
             ->findAll();
 
@@ -66,6 +57,8 @@ trait HasMeta
 
     /**
      * Returns the value of the request $key
+     *
+     * @param string $key
      *
      * @return mixed|null
      */
@@ -95,6 +88,8 @@ trait HasMeta
     /**
      * Does the user have this meta information?
      *
+     * @param string $key
+     *
      * @return bool
      */
     public function hasMeta(string $key)
@@ -107,6 +102,7 @@ trait HasMeta
     /**
      * Saves the meta information for this entity.
      *
+     * @param string $key
      * @param mixed $value
      *
      * @return mixed
@@ -114,13 +110,13 @@ trait HasMeta
     public function saveMeta(string $key, $value)
     {
         $this->hydrateMeta();
-        $key   = strtolower($key);
+        $key = strtolower($key);
         $model = model(MetaModel::class);
 
         // Update?
         if (array_key_exists($key, $this->meta)) {
             $result = $model
-                ->where('class', static::class)
+                ->where('class', get_class($this))
                 ->where('resource_id', $this->id)
                 ->where('key', $key)
                 ->update(['value' => $value]);
@@ -129,18 +125,18 @@ trait HasMeta
         // Insert
         else {
             $result = $model
-                ->where('class', static::class)
+                ->where('class', get_class($this))
                 ->where('resource_id', $this->id)
                 ->insert([
-                    'class'       => static::class,
+                    'class' => get_class($this),
                     'resource_id' => $this->id,
-                    'key'         => $key,
-                    'value'       => $value,
+                    'key' => $key,
+                    'value' => $value
                 ]);
         }
 
         $this->meta[$key] = $model
-            ->where('class', static::class)
+            ->where('class', get_class($this))
             ->where('resource_id', $this->id)
             ->where('key', $key)
             ->first();
@@ -152,6 +148,8 @@ trait HasMeta
      * Deletes a single meta value from this entity
      * and from the database.
      *
+     * @param string $key
+     *
      * @return mixed
      */
     public function deleteMeta(string $key)
@@ -162,10 +160,10 @@ trait HasMeta
 
         // Delete stuff
         $result = model(MetaModel::class)
-            ->where('class', static::class)
-            ->where('resource_id', $this->id)
-            ->where('key', $key)
-            ->delete();
+           ->where('class', get_class($this))
+           ->where('resource_id', $this->id)
+           ->where('key', $key)
+           ->delete();
 
         if ($result) {
             unset($this->meta[$key]);
@@ -179,6 +177,8 @@ trait HasMeta
      * to date with what is given in $post. If a key
      * doesn't exist, it's deleted, otherwise it is
      * either inserted or updated.
+     *
+     * @param array $post
      */
     public function syncMeta(array $post)
     {
@@ -190,12 +190,12 @@ trait HasMeta
         $deletes = [];
 
         foreach (setting('Users.metaFields') as $group => $fields) {
-            if (! is_array($fields) || ! count($fields)) {
+            if (! is_array($fields) || !count($fields)) {
                 continue;
             }
 
             foreach ($fields as $field => $info) {
-                $field    = strtolower($field);
+                $field = strtolower($field);
                 $existing = array_key_exists($field, $this->meta);
 
                 // Not existing and no value?
@@ -207,18 +207,16 @@ trait HasMeta
                 if (! $existing && ! empty($post[$field])) {
                     $inserts[] = [
                         'resource_id' => $this->id,
-                        'key'         => $field,
-                        'value'       => $post[$field],
-                        'class'       => static::class,
+                        'key' => $field,
+                        'value' => $post[$field],
+                        'class' => get_class($this),
                     ];
-
                     continue;
                 }
 
                 // Existing one with no value now
                 if ($existing && array_key_exists($field, $post) && empty($post[$field])) {
                     $deletes[] = $this->meta[$field]->id;
-
                     continue;
                 }
 
@@ -253,9 +251,12 @@ trait HasMeta
      * Returns all the validation rules set
      * for the given entity
      *
-     * @param string|null $prefix // Specifies the form array name, if any
+     * @param string      $configClass
+     * @param string|null $prefix       // Specifies the form array name, if any
+     *
+     * @return array
      */
-    public function metaValidationRules(string $configClass, ?string $prefix = null): array
+    public function metaValidationRules(string $configClass, string $prefix=null): array
     {
         $rules = [];
         helper('setting');

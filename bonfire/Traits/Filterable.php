@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Traits;
 
 /**
@@ -39,6 +30,8 @@ trait Filterable
     }
 
     /**
+     * @param array $filters
+     *
      * @return $this
      */
     public function setFilters(array $filters)
@@ -53,8 +46,10 @@ trait Filterable
      * params passed in, assuming that they are columns in
      * the database and values. All searches are done as
      * whereIn.
+     *
+     * @param array|null $params
      */
-    public function filter(?array $params = null)
+    public function filter(array $params=null)
     {
         if (is_array($params)) {
             foreach ($params as $key => $values) {

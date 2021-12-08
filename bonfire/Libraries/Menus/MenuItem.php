@@ -1,26 +1,19 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Libraries\Menus;
 
 /**
  * Represents an individual item in a menu.
  *
+ * @package Bonfire\Menus
+ *
+ * @property string $title
+ * @property string $icon
+ * @property string $url
  * @property string $altText
  * @property string $faIcon
- * @property string $icon
  * @property string $iconUrl
- * @property string $title
- * @property string $url
- * @property int    $weight
+ * @property int $weight
  */
 class MenuItem
 {
@@ -60,14 +53,14 @@ class MenuItem
      */
     protected $weight;
 
-    public function __construct(?array $data = null)
+    public function __construct(array $data=null)
     {
         if (! is_array($data)) {
             return;
         }
 
         foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
+            $method = 'set'.ucfirst($key);
             if (method_exists($this, $method)) {
                 $this->{$method}($value);
             }
@@ -75,6 +68,8 @@ class MenuItem
     }
 
     /**
+     * @param string $title
+     *
      * @return $this
      */
     public function setTitle(string $title)
@@ -85,13 +80,15 @@ class MenuItem
     }
 
     /**
+     * @param string $url
+     *
      * @return $this
      */
     public function setUrl(string $url)
     {
         $this->url = strpos($url, '://') !== false
             ? $url
-            : '/' . ltrim($url, '/ ');
+            : '/'. ltrim($url, '/ ');
 
         return $this;
     }
@@ -99,6 +96,8 @@ class MenuItem
     /**
      * Sets the URL via reverse routing, so can
      * use named routes to set the URL by.
+     *
+     * @param string $name
      *
      * @return $this
      */
@@ -110,6 +109,8 @@ class MenuItem
     }
 
     /**
+     * @param string $text
+     *
      * @return $this
      */
     public function setAltText(string $text)
@@ -125,6 +126,8 @@ class MenuItem
      * - fa-pencil
      * - fal fa-alarm-clock
      *
+     * @param string $icon
+     *
      * @return $this
      */
     public function setFontAwesomeIcon(string $icon)
@@ -136,6 +139,8 @@ class MenuItem
 
     /**
      * Sets the URL to the icon, if it's an image.
+     *
+     * @param string $url
      *
      * @return $this
      */
@@ -150,6 +155,8 @@ class MenuItem
      * Sets the "weight" of the menu item.
      * The large the value, the later in the menu
      * it will appear.
+     *
+     * @param int $weight
      *
      * @return $this
      */
@@ -187,13 +194,16 @@ class MenuItem
     /**
      * Returns the full icon tag: either a <i> tag for FontAwesome
      * icons, or an <img> tag for images.
+     *
+     * @param string $class
+     *
+     * @return string
      */
     public function icon(string $class = ''): string
     {
         if (! empty($this->faIcon)) {
             return $this->buildFontAwesomeIconTag($class);
-        }
-        if (! empty($this->iconUrl)) {
+        } elseif (! empty($this->iconUrl)) {
             return $this->buildImageIconTag($class);
         }
 
@@ -210,6 +220,10 @@ class MenuItem
 
     /**
      * Returns the full FontAwesome tag.
+     *
+     * @param string $class
+     *
+     * @return string
      */
     protected function buildFontAwesomeIconTag(string $class): string
     {
@@ -223,6 +237,8 @@ class MenuItem
     /**
      * Returns a full img tag for our icon.
      *
+     * @param string $class
+     *
      * @return string
      */
     protected function buildImageIconTag(string $class)
@@ -233,7 +249,7 @@ class MenuItem
 
         $iconUrl = strpos($this->iconUrl, '://') !== false
             ? $this->iconUrl
-            : '/' . ltrim($this->iconUrl, '/ ');
+            : '/'. ltrim($this->iconUrl, '/ ');
 
         return "<img href=\"{$iconUrl}\" alt=\"{$this->title}\" {$class}/>";
     }

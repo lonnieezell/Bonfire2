@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Modules\Tools;
 
 use Bonfire\Config\BaseModule;
@@ -16,6 +7,8 @@ use Bonfire\Libraries\Menus\MenuItem;
 
 /**
  * Email Module setup
+ *
+ * @package Bonfire\Tools
  */
 class Module extends BaseModule
 {
@@ -26,15 +19,15 @@ class Module extends BaseModule
     {
         // Settings menu for sidebar
         $sidebar = service('menus');
-        $item    = new MenuItem([
-            'title'      => 'System Info',
+        $item = new MenuItem([
+            'title' => 'System Info',
             'namedRoute' => 'sys-info',
         ]);
 
         $itemLogs = new MenuItem([
-            'title'           => 'Logs',
-            'namedRoute'      => 'sys-logs',
-            'fontAwesomeIcon' => 'fas fa-clipboard-list',
+            'title' => 'Logs',
+            'namedRoute' => 'sys-logs',
+            'fontAwesomeIcon' => 'fas fa-clipboard-list'
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
         $sidebar->menu('sidebar')->collection('tools')->addItem($itemLogs);

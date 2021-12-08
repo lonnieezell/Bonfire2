@@ -1,20 +1,13 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Libraries\Menus;
 
 /**
  * Class Manager
  *
  * The main class used to work with menus in the system.
+ *
+ * @package Bonfire\Libraries\Menus
  */
 class Manager
 {
@@ -28,6 +21,8 @@ class Manager
     /**
      * Creates a new menu in the system.
      *
+     * @param string $name
+     *
      * @return $this
      */
     public function createMenu(string $name)
@@ -39,6 +34,8 @@ class Manager
 
     /**
      * Returns the specified menu instance
+     *
+     * @param string $name
      *
      * @return mixed
      */

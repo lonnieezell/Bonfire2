@@ -26,7 +26,7 @@
                   <?php
                   foreach ($logs as $log) :
                       // Skip the index.html file.
-                      if ($log === 'index.html') {
+                      if ($log == 'index.html') {
                           continue;
                       }
                       ?>
@@ -35,8 +35,8 @@
                           <input type="checkbox" value="<?= esc($log); ?>" name="checked[]" />
                       </td>
                       <td class='date'>
-                          <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/{$log}"); ?>'>
-                              <?= date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $log)))); ?>
+                          <a href='<?php echo site_url(ADMIN_AREA."/tools/view-log/{$log}"); ?>'>
+                              <?php echo date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $log)))); ?>
                           </a>
                       </td>
                       <td><?= esc($log); ?></td>
@@ -49,9 +49,9 @@
         </div>
 <?= $pager->links() ?>
 
-                      <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-danger" value="<?= lang('Logs.delete_selected'); ?>" onclick="return confirm('<?= lang('Logs.delete_selected_confirm'); ?>')" />
+                      <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-danger" value="<?php echo lang('Logs.delete_selected'); ?>" onclick="return confirm('<?= lang('Logs.delete_selected_confirm'); ?>')" />
 
-                      <input type="submit" value='<?= lang('Logs.delete_all'); ?>' name="delete_all" class="btn btn-sm btn-danger" onclick="return confirm('<?= lang('Logs.delete_all_confirm'); ?>')" />
+                      <input type="submit" value='<?php echo lang('Logs.delete_all'); ?>' name="delete_all" class="btn btn-sm btn-danger" onclick="return confirm('<?= lang('Logs.delete_all_confirm'); ?>')" />
 
     </form>
           <?php } else { ?>

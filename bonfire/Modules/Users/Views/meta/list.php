@@ -16,9 +16,9 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                         <input type="text" name="meta[<?= strtolower($field) ?>]" class="form-control" autocomplete="<?= strtolower($field) ?>"
-                               value="<?= old('meta[' . strtolower($field) . ']', $user->meta(strtolower($field)) ?? '') ?>">
-                        <?php if (has_error('meta.' . $field)) : ?>
-                            <p class="text-danger"><?= error('meta.' . $field) ?></p>
+                               value="<?= old('meta['.strtolower($field).']', $user->meta(strtolower($field)) ?? '') ?>">
+                        <?php if (has_error('meta.'. $field)) : ?>
+                            <p class="text-danger"><?= error('meta.'. $field) ?></p>
                         <?php endif ?>
                     </div>
                 <?php endif ?>

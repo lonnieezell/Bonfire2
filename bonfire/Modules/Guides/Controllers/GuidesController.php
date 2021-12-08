@@ -1,14 +1,5 @@
 <?php
 
-/**
- * This file is part of CodeIgniter 4 framework.
- *
- * (c) CodeIgniter Foundation <admin@codeigniter.com>
- *
- * For the full copyright and license information, please view
- * the LICENSE file that was distributed with this source code.
- */
-
 namespace Bonfire\Guides\Controllers;
 
 use App\Controllers\AdminController;
@@ -17,9 +8,11 @@ use Bonfire\Modules\Guides\Libraries\GuideCollection;
 
 class GuidesController extends AdminController
 {
-    protected $theme      = 'Admin';
+    protected $theme = 'Admin';
+
     protected $viewPrefix = 'Bonfire\Modules\Guides\Views\\';
-    protected $helpers    = ['toc'];
+
+	protected $helpers = ['toc'];
 
     /**
      * Displays the available collections of documentation
@@ -33,8 +26,7 @@ class GuidesController extends AdminController
         $user = auth()->user();
 
         $collections = [];
-
-        foreach (setting('Guides.collections') as $alias => $info) {
+        foreach(setting('Guides.collections') as $alias => $info) {
             if (isset($info['permission']) && ! $user->can($info['permission'])) {
                 continue;
             }
@@ -46,56 +38,60 @@ class GuidesController extends AdminController
             return redirect()->route('view-guide', [key($collections)]);
         }
 
-        return $this->render($this->viewPrefix . 'list', [
+        return $this->render($this->viewPrefix .'list', [
             'collections' => $collections,
         ]);
     }
 
     /**
      * Displays the TOC for a single collection of guides.
+     *
+     * @param string $alias
      */
     public function viewCollection(string $alias)
     {
         try {
             $collection = $this->loadCollection($alias);
 
-            return $this->render($this->viewPrefix . 'index', [
+            return $this->render($this->viewPrefix .'index', [
                 'collection' => $collection,
             ]);
-        } catch (GuideException $e) {
+        } catch(GuideException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     /**
      * Displays a single page of a TOC.
+     *
+     * @param string $collectionAlias
+     * @param string $pageAlias
      */
     public function viewSingle(string $collectionAlias, string $pageAlias)
     {
-        /** check if $collectionAlias contain "-"
-         * if true split to retrieve the subfolder
-         * if false, not contain subfolders
-         */
-        $folders = explode('-', $collectionAlias);
-        $is_file = count($folders) === 1;
-        if (! $is_file) {
-            $alias = '';
-
-            for ($x = 1; $x < count($folders); $x++) {
-                $alias .= $folders[$x] . '/';
-            }
-            $pageAlias = $alias . $pageAlias;
-        }
+		/** check if $collectionAlias contain "-"
+		 * if true split to retrieve the subfolder
+		 * if false, not contain subfolders
+		 */
+		$folders = explode("-", $collectionAlias);
+		$is_file = count( $folders ) === 1 ;
+		if(!$is_file) {
+			$alias = "";
+			for($x = 1; $x < count($folders) ; $x++ ){
+				$alias .= $folders[$x] . "/";
+			}
+			$pageAlias = $alias . $pageAlias;
+		}
 
         try {
             $collection = $this->loadCollection($collectionAlias);
-            $page       = $collection->loadPage($pageAlias);
+            $page = $collection->loadPage($pageAlias);
 
-            return $this->render($this->viewPrefix . 'single', [
+            return $this->render($this->viewPrefix .'single', [
                 'collection' => $collection,
-                'page'       => $page,
+                'page' => $page,
             ]);
-        } catch (GuideException $e) {
+        } catch(GuideException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -103,12 +99,14 @@ class GuidesController extends AdminController
     /**
      * Loads and validates the given collection.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|GuideCollection
+     * @param string $alias
+     *
+     * @return GuideCollection|\CodeIgniter\HTTP\RedirectResponse
      */
     protected function loadCollection(string $alias)
     {
-        //If route contain "-"
-        $alias = explode('-', $alias)[0];
+		//If route contain "-"
+		$alias = explode("-", $alias)[0];
 
         $settings = config('Guides')->collections;
 
