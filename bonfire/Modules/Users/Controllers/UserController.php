@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of CodeIgniter 4 framework.
+ *
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Modules\Users\Controllers;
 
 use App\Controllers\AdminController;
@@ -12,8 +21,7 @@ use Sparks\Shield\Models\UserIdentityModel;
 
 class UserController extends AdminController
 {
-    protected $theme = 'Admin';
-
+    protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Modules\Users\Views\\';
 
     /**
@@ -28,20 +36,20 @@ class UserController extends AdminController
 
         $userModel->filter($this->request->getPost('filters'));
 
-        $view = $this->request->getMethod() == 'post'
-            ? $this->viewPrefix .'_table'
-            : $this->viewPrefix .'list';
+        $view = $this->request->getMethod() === 'post'
+            ? $this->viewPrefix . '_table'
+            : $this->viewPrefix . 'list';
 
         return $this->render($view, [
             'headers' => [
-                'email' => 'Email',
-                'username' => 'Username',
-                'groups' => 'Groups',
-                'last_active' => 'Last Active'
+                'email'       => 'Email',
+                'username'    => 'Username',
+                'groups'      => 'Groups',
+                'last_active' => 'Last Active',
             ],
             'showSelectAll' => true,
-            'users' => $userModel->paginate(setting('App.perPage')),
-            'pager' => $userModel->pager,
+            'users'         => $userModel->paginate(setting('App.perPage')),
+            'pager'         => $userModel->pager,
         ]);
     }
 
@@ -53,15 +61,13 @@ class UserController extends AdminController
         $groups = setting('AuthGroups.groups');
         asort($groups);
 
-        return $this->render($this->viewPrefix .'form', [
+        return $this->render($this->viewPrefix . 'form', [
             'groups' => $groups,
         ]);
     }
 
     /**
      * Display the Edit form for a single user.
-     *
-     * @param int $userId
      *
      * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
@@ -81,8 +87,8 @@ class UserController extends AdminController
         $groups = setting('AuthGroups.groups');
         asort($groups);
 
-        return $this->render($this->viewPrefix .'form', [
-            'user' => $user,
+        return $this->render($this->viewPrefix . 'form', [
+            'user'   => $user,
             'groups' => $groups,
         ]);
     }
@@ -90,12 +96,11 @@ class UserController extends AdminController
     /**
      * Creates or saves the basic user details.
      *
-     * @param int|null $userId
+     * @throws \ReflectionException
      *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
-     * @throws \ReflectionException
      */
-    public function save(int $userId = null)
+    public function save(?int $userId = null)
     {
         if (! auth()->user()->can('users.edit')) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
@@ -140,7 +145,7 @@ class UserController extends AdminController
         } catch (DataException $e) {
             // Just log the message for now since it's
             // likely saying the user's data is all the same
-            log_message('debug', 'SAVING USER: '. $e->getMessage());
+            log_message('debug', 'SAVING USER: ' . $e->getMessage());
         }
 
         // We need an ID to on the entity to save groups.
@@ -151,8 +156,8 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
-                $filename = $user->id .'_avatar.'. $file->getExtension();
-                if ($file->move(ROOTPATH .'public/uploads/avatars', $filename, true)) {
+                $filename = $user->id . '_avatar.' . $file->getExtension();
+                if ($file->move(ROOTPATH . 'public/uploads/avatars', $filename, true)) {
                     $users->update($user->id, ['avatar' => $filename]);
                 }
             }
@@ -164,7 +169,7 @@ class UserController extends AdminController
         if ($identity === null) {
             helper('text');
             $user->createEmailIdentity([
-                'email' => $this->request->getPost('email'),
+                'email'    => $this->request->getPost('email'),
                 'password' => ! empty($password) ? $password : random_string('alnum', 12),
             ]);
         }
@@ -191,8 +196,6 @@ class UserController extends AdminController
     /**
      * Delete the specified user.
      *
-     * @param int $userId
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function delete(int $userId)
@@ -202,7 +205,7 @@ class UserController extends AdminController
         }
 
         $users = model(UserModel::class);
-        /** @var null|User $user **/
+        /** @var User|null $user */
         $user = $users->find($userId);
 
         if ($user === null) {
@@ -211,6 +214,7 @@ class UserController extends AdminController
 
         if (! $users->delete($user->id)) {
             log_message('error', $users->error());
+
             return redirect()->back()->with('error', lang('Bonfire.unknownError'));
         }
 
@@ -221,25 +225,23 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @param int $userId
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
      */
     public function security(int $userId)
     {
         $users = model(UserModel::class);
-        /** @var null|User $user **/
+        /** @var User|null $user */
         $user = $users->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        /** @var LoginModel $loginModel **/
+        /** @var LoginModel $loginModel */
         $loginModel = model(LoginModel::class);
-        $logins = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
+        $logins     = $loginModel->where('email', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
 
-        return $this->render($this->viewPrefix .'security', [
-            'user' => $user,
+        return $this->render($this->viewPrefix . 'security', [
+            'user'   => $user,
             'logins' => $logins,
         ]);
     }
@@ -248,14 +250,12 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @param int $userId
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|string|void
      */
     public function permissions(int $userId)
     {
         $users = model(UserModel::class);
-        $user = $users->find($userId);
+        $user  = $users->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
@@ -265,8 +265,8 @@ class UserController extends AdminController
             ksort($permissions);
         }
 
-        return $this->render($this->viewPrefix .'permissions', [
-            'user' => $user,
+        return $this->render($this->viewPrefix . 'permissions', [
+            'user'        => $user,
             'permissions' => $permissions,
         ]);
     }
@@ -274,14 +274,12 @@ class UserController extends AdminController
     /**
      * Updates the permissions for a single user.
      *
-     * @param int $userId
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function savePermissions(int $userId)
     {
         $users = model(UserModel::class);
-        /** @var null|User $user */
+        /** @var User|null $user */
         $user = $users->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));

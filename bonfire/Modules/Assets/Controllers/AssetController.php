@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of CodeIgniter 4 framework.
+ *
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Assets\Controllers;
 
 use CodeIgniter\Controller;
@@ -33,26 +42,28 @@ class AssetController extends Controller
          *
          * @var string
          */
-        $filename = array_pop($segments);
+        $filename     = array_pop($segments);
         $origFilename = $filename;
-        $filename = explode('.', $filename);
+        $filename     = explode('.', $filename);
 
         // Must be at least a name and extension
         if (count($filename) < 2) {
             $this->response->setStatusCode(404);
+
             return;
         }
 
         // If we have a fingerprint...
         $filename = count($filename) === 3
-            ? $filename[0] .'.'. $filename[2]
+            ? $filename[0] . '.' . $filename[2]
             : $origFilename;
 
         $folder = config('Assets')->folders[array_shift($segments)];
-        $path = $folder .'/'. implode('/', $segments) .'/'. $filename;
+        $path   = $folder . '/' . implode('/', $segments) . '/' . $filename;
 
         if (! is_file($path)) {
             $this->response->setStatusCode(404);
+
             return;
         }
 

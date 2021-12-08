@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of CodeIgniter 4 framework.
+ *
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 if (! function_exists('has_consent')) {
     /**
      * Has the visitor given consent to
@@ -8,10 +17,6 @@ if (! function_exists('has_consent')) {
      * The consent has been stored in the `bf_consent`
      * cookie which stores a 0/1 value for each
      * defined consent.
-     *
-     * @param string $group
-     *
-     * @return bool
      */
     function has_consent(string $group): bool
     {
@@ -38,7 +43,7 @@ if (! function_exists('has_consent')) {
         }
 
         // They must have given permission at one time...
-        if (! isset($permissions['consent']) || $permissions['consent'] == 0) {
+        if (! isset($permissions['consent']) || $permissions['consent'] === 0) {
             return false;
         }
 

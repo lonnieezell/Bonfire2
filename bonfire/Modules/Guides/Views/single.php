@@ -12,7 +12,7 @@
 <?= $this->section('main') ?>
 
     <x-page-head>
-        <a href="<?= site_url(ADMIN_AREA .'/guides') ?>" class="back">← All Guides</a>
+        <a href="<?= site_url(ADMIN_AREA . '/guides') ?>" class="back">← All Guides</a>
         <h2>
             <a href="<?= $collection->link() ?>">
                 <?= esc($collection->title()) ?>

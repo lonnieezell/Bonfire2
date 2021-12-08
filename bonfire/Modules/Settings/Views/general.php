@@ -59,8 +59,8 @@
                                     hx-include="[name='timezoneArea']"
                             >
                                 <option>Select timezone...</option>
-                                <?php foreach($timezones as $timezone) : ?>
-                                    <option value="<?= $timezone ?>" <?php if($currentTZArea === $timezone) : ?> selected <?php endif ?>>
+                                <?php foreach ($timezones as $timezone) : ?>
+                                    <option value="<?= $timezone ?>" <?php if ($currentTZArea === $timezone) : ?> selected <?php endif ?>>
                                         <?= $timezone ?>
                                     </option>
                                 <?php endforeach ?>
@@ -88,7 +88,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="dateFormat" value="m/d/Y"
-                            <?php if(old('dateFormat', $dateFormat) === 'm/d/Y') : ?> checked <?php endif ?>>
+                            <?php if (old('dateFormat', $dateFormat) === 'm/d/Y') : ?> checked <?php endif ?>>
                         <label class="form-check-label" for="dateFormat">
                             mm/dd/yyyy
                         </label>
@@ -96,7 +96,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="dateFormat" value="d/m/Y"
-                            <?php if(old('dateFormat', $dateFormat) === 'd/m/Y') : ?> checked <?php endif ?>>
+                            <?php if (old('dateFormat', $dateFormat) === 'd/m/Y') : ?> checked <?php endif ?>>
                         <label class="form-check-label" for="dateFormat">
                             dd/mm/yyyy
                         </label>
@@ -104,7 +104,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="dateFormat" value="d-m-Y"
-                            <?php if(old('dateFormat', $dateFormat) === 'd-m-Y') : ?> checked <?php endif ?>>
+                            <?php if (old('dateFormat', $dateFormat) === 'd-m-Y') : ?> checked <?php endif ?>>
                         <label class="form-check-label" for="dateFormat">
                             dd-mm-yyyy
                         </label>
@@ -112,7 +112,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="dateFormat" value="Y-m-d"
-                            <?php if(old('dateFormat', $dateFormat) === 'Y-m-d') : ?> checked <?php endif ?>>
+                            <?php if (old('dateFormat', $dateFormat) === 'Y-m-d') : ?> checked <?php endif ?>>
                         <label class="form-check-label" for="dateFormat">
                             yyyy-mm-dd
                         </label>
@@ -120,7 +120,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="dateFormat" value="M j, Y"
-                            <?php if(old('dateFormat', $dateFormat) === 'M j, Y') : ?> checked <?php endif ?>>
+                            <?php if (old('dateFormat', $dateFormat) === 'M j, Y') : ?> checked <?php endif ?>>
                         <label class="form-check-label" for="dateFormat">
                             mmm dd, yyyy
                         </label>
@@ -133,7 +133,7 @@
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="timeFormat" value="g:i A"
-                                <?php if(old('timeFormat', $timeFormat) === 'g:i A') : ?> checked <?php endif ?>>
+                                <?php if (old('timeFormat', $timeFormat) === 'g:i A') : ?> checked <?php endif ?>>
                             <label class="form-check-label" for="timeFormat">
                                 12 hour with AM/PM
                             </label>
@@ -141,7 +141,7 @@
 
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="timeFormat" value="H:i"
-                                <?php if(old('timeFormat', $timeFormat) === 'H:i') : ?> checked <?php endif ?>>
+                                <?php if (old('timeFormat', $timeFormat) === 'H:i') : ?> checked <?php endif ?>>
                             <label class="form-check-label" for="timeFormat">
                                 24 hour
                             </label>
