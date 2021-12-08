@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Libraries\Widgets\Stats;
 
 use Bonfire\Libraries\Widgets\Interfaces\Item;
@@ -7,194 +16,162 @@ use Bonfire\Libraries\Widgets\Interfaces\Item;
 /**
  * Represents an individual widget stats.
  *
- * @package Bonfire\Libraries\Widgets\Stats
- *
- * @property string $title
- * @property string $value
- * @property string $faIcon
- * @property string $url
  * @property string $bgColor
+ * @property string $faIcon
+ * @property string $title
+ * @property string $url
+ * @property string $value
  */
 class StatsItem implements Item
 {
-	/**
-	 * @var string|null
-	 */
-	protected $title;
+    /**
+     * @var string|null
+     */
+    protected $title;
 
-	/**
-	 * @var string|null
-	 */
-	protected $value;
+    /**
+     * @var string|null
+     */
+    protected $value;
 
-	/**
-	 * FontAwesome 5 icon name
-	 *
-	 * @var string|null
-	 */
-	protected $faIcon;
+    /**
+     * FontAwesome 5 icon name
+     *
+     * @var string|null
+     */
+    protected $faIcon;
 
-	/**
-	 * @var string|null
-	 */
-	protected $url;
+    /**
+     * @var string|null
+     */
+    protected $url;
 
-	/**
-	 * The assignable background color on the statistics widget
-	 *
-	 * Possible values are:
-	 * bg-blue
-	 * bg-red
-	 * bg-orange
-	 * bg-light
-	 * bg-dark
-	 * bg-inverse
-	 * bg-indigo
-	 * bg-purple
-	 * bg-pink
-	 * bg-yellow
-	 * bg-green
-	 * bg-teal
-	 * bg-lime
-	 * bg-cyan
-	 * bg-white
-	 * bg-gray
-	 * bg-gray-dark
-	 */
-	protected $bgColor;
+    /**
+     * The assignable background color on the statistics widget
+     *
+     * Possible values are:
+     * bg-blue
+     * bg-red
+     * bg-orange
+     * bg-light
+     * bg-dark
+     * bg-inverse
+     * bg-indigo
+     * bg-purple
+     * bg-pink
+     * bg-yellow
+     * bg-green
+     * bg-teal
+     * bg-lime
+     * bg-cyan
+     * bg-white
+     * bg-gray
+     * bg-gray-dark
+     */
+    protected $bgColor;
 
-	public function __construct(array $data=null)
-	{
-		if (! is_array($data)) {
-			return;
-		}
-		foreach ($data as $key => $value) {
-			$method = 'set'.ucfirst($key);
-			if (method_exists($this, $method)) {
-				$this->{$method}($value);
-			}
-		}
-	}
+    public function __construct(?array $data = null)
+    {
+        if (! is_array($data)) {
+            return;
+        }
 
-	/**
-	 * @param string|null $title
-	 */
-	public function setTitle(?string $title): StatsItem
-	{
-		$this->title = $title;
+        foreach ($data as $key => $value) {
+            $method = 'set' . ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->{$method}($value);
+            }
+        }
+    }
 
-		return $this;
-	}
+    public function setTitle(?string $title): StatsItem
+    {
+        $this->title = $title;
 
-	/**
-	 * @param string|null $value
-	 */
-	public function setValue(?string $value): StatsItem
-	{
-		$this->value = $value;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function setValue(?string $value): StatsItem
+    {
+        $this->value = $value;
 
-	/**
-	 * @param string|null $faIcon
-	 */
-	public function setFaIcon(?string $faIcon): StatsItem
-	{
-		$this->faIcon = $faIcon;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function setFaIcon(?string $faIcon): StatsItem
+    {
+        $this->faIcon = $faIcon;
 
-	/**
-	 * @param string $url
-	 */
-	public function setUrl(string $url = '#'): StatsItem
-	{
-		$this->url = strpos($url, '://') !== false
-			? $url
-			: '/' . ltrim($url, '/ ') ;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function setUrl(string $url = '#'): StatsItem
+    {
+        $this->url = strpos($url, '://') !== false
+            ? $url
+            : '/' . ltrim($url, '/ ');
 
-	/**
-	 * The assignable background color on the statistics widget
-	 *
-	 * Possible values are:
-	 * bg-blue
-	 * bg-red
-	 * bg-orange
-	 * bg-light
-	 * bg-dark
-	 * bg-inverse
-	 * bg-indigo
-	 * bg-purple
-	 * bg-pink
-	 * bg-yellow
-	 * bg-green
-	 * bg-teal
-	 * bg-lime
-	 * bg-cyan
-	 * bg-white
-	 * bg-gray
-	 * bg-gray-dark
-	 *
-	 * @param string $bgColor
-	 * @return StatsItem
-	 */
-	public function setBgColor(string $bgColor = 'bg-blue'): StatsItem
-	{
-		$this->bgColor = $bgColor;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * The assignable background color on the statistics widget
+     *
+     * Possible values are:
+     * bg-blue
+     * bg-red
+     * bg-orange
+     * bg-light
+     * bg-dark
+     * bg-inverse
+     * bg-indigo
+     * bg-purple
+     * bg-pink
+     * bg-yellow
+     * bg-green
+     * bg-teal
+     * bg-lime
+     * bg-cyan
+     * bg-white
+     * bg-gray
+     * bg-gray-dark
+     */
+    public function setBgColor(string $bgColor = 'bg-blue'): StatsItem
+    {
+        $this->bgColor = $bgColor;
 
-	public function __get(string $key)
-	{
-		if (method_exists($this, $key)) {
-			return $this->{$key}();
-		}
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function title(): ?string
-	{
-		return strtoupper($this->title);
-	}
+    public function __get(string $key)
+    {
+        if (method_exists($this, $key)) {
+            return $this->{$key}();
+        }
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function value(): ?string
-	{
-		return $this->value;
-	}
+    public function title(): ?string
+    {
+        return strtoupper($this->title);
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function faIcon(): ?string
-	{
-		return $this->faIcon;
-	}
+    public function value(): ?string
+    {
+        return $this->value;
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function url(): ?string
-	{
-		return $this->url;
-	}
+    public function faIcon(): ?string
+    {
+        return $this->faIcon;
+    }
 
-	/**
-	 * @return string|null
-	 */
-	public function bgColor(): ?string
-	{
-		return $this->bgColor;
-	}
+    public function url(): ?string
+    {
+        return $this->url;
+    }
 
+    public function bgColor(): ?string
+    {
+        return $this->bgColor;
+    }
 }

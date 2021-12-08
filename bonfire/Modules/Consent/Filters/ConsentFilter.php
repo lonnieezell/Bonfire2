@@ -26,7 +26,6 @@ class ConsentFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-
     }
 
     /**

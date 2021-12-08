@@ -26,7 +26,6 @@ class BaseModule
      */
     public function initAdmin()
     {
-
     }
 
     /**
@@ -36,6 +35,5 @@ class BaseModule
      */
     public function initFront()
     {
-
     }
 }

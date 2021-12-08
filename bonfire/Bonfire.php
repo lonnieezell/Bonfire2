@@ -51,7 +51,7 @@ class Bonfire
 
         if ($this->inAdmin) {
             $this->setupMenus();
-			$this->setupWidgets();
+            $this->setupWidgets();
         }
 
         $this->discoverCoreModules();
@@ -94,18 +94,18 @@ class Bonfire
         $menus->createMenu('iconbar');
     }
 
-	/**
-	 * Creates any admin-required widgets so they're
-	 * available to use by any modules.
-	 */
-	private function setupWidgets()
-	{
-		$widgets =  service('widgets');
+    /**
+     * Creates any admin-required widgets so they're
+     * available to use by any modules.
+     */
+    private function setupWidgets()
+    {
+        $widgets = service('widgets');
 
-		$widgets->createWidget(Stats::class, "stats");
-		$widgets->widget("stats")
-			->createCollection("stats");
-	}
+        $widgets->createWidget(Stats::class, 'stats');
+        $widgets->widget('stats')
+            ->createCollection('stats');
+    }
 
     /**
      * Adds any directories within bonfire/Modules

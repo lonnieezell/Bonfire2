@@ -34,16 +34,16 @@ class Module extends BaseModule
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
 
-		// Settings widgets stats on dashboard
-		$widgets = service('widgets');
-		$groups = setting('AuthGroups.groups');
-		$statsItem = new StatsItem([
-			'bgColor' => 'bg-teal',
-			'title' => 'User Groups',
-			'value' => count($groups),
-			'url' => ADMIN_AREA . '/settings/groups',
-			'faIcon' => 'fa fa-users',
-		]);
-		$widgets->widget("stats")->collection('stats')->addItem($statsItem);
-	}
+        // Settings widgets stats on dashboard
+        $widgets   = service('widgets');
+        $groups    = setting('AuthGroups.groups');
+        $statsItem = new StatsItem([
+            'bgColor' => 'bg-teal',
+            'title'   => 'User Groups',
+            'value'   => count($groups),
+            'url'     => ADMIN_AREA . '/settings/groups',
+            'faIcon'  => 'fa fa-users',
+        ]);
+        $widgets->widget('stats')->collection('stats')->addItem($statsItem);
+    }
 }
