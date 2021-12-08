@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Assets\Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -39,7 +48,7 @@ class Assets extends BaseConfig
      */
     public $versions = [
         'css' => '1.0',
-        'js' => '1.0',
+        'js'  => '1.0',
     ];
 
     /**
@@ -51,9 +60,9 @@ class Assets extends BaseConfig
      * This should make up the first segment of an asset URL.
      */
     public $folders = [
-        'app' => ROOTPATH.'themes/app',
-        'admin' => ROOTPATH.'themes/Admin',
-        'auth' => ROOTPATH.'themes/Auth',
-        'other' => ROOTPATH.'vendor',
+        'app'   => ROOTPATH . 'themes/app',
+        'admin' => ROOTPATH . 'themes/Admin',
+        'auth'  => ROOTPATH . 'themes/Auth',
+        'other' => ROOTPATH . 'vendor',
     ];
 }

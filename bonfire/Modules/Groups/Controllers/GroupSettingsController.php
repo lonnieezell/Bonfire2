@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Modules\Groups\Controllers;
 
 use App\Controllers\AdminController;
@@ -8,8 +17,7 @@ use Sparks\Shield\Authorization\Groups;
 
 class GroupSettingsController extends AdminController
 {
-    protected $theme = 'Admin';
-
+    protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Modules\Groups\Views\\';
 
     /**
@@ -30,15 +38,13 @@ class GroupSettingsController extends AdminController
                 ->countAllResults(true);
         }
 
-        return $this->render($this->viewPrefix .'list', [
+        return $this->render($this->viewPrefix . 'list', [
             'groups' => $groups,
         ]);
     }
 
     /**
      * Allows the user to choose the permissions for a group.
-     *
-     * @param string $alias
      *
      * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
@@ -50,16 +56,14 @@ class GroupSettingsController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
         }
 
-        return $this->render($this->viewPrefix .'form', [
-            'group' => $group,
+        return $this->render($this->viewPrefix . 'form', [
+            'group'      => $group,
             'groupAlias' => $alias,
         ]);
     }
 
     /**
      * Save the group settings
-     *
-     * @param string $alias
      *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
      */
@@ -77,7 +81,7 @@ class GroupSettingsController extends AdminController
 
         // Validate
         $rules = [
-            'title' => 'required|string',
+            'title'       => 'required|string',
             'description' => 'permit_empty|string',
         ];
 
@@ -86,9 +90,9 @@ class GroupSettingsController extends AdminController
         }
 
         // Save the settings
-        $groupConfig = setting('AuthGroups.groups');
+        $groupConfig         = setting('AuthGroups.groups');
         $groupConfig[$alias] = [
-            'title' => $this->request->getPost('title'),
+            'title'       => $this->request->getPost('title'),
             'description' => $this->request->getPost('description'),
         ];
 
@@ -100,7 +104,7 @@ class GroupSettingsController extends AdminController
     /**
      * Displays a list of all Permissions for a single group
      *
-     * @return string|RedirectResponse
+     * @return RedirectResponse|string
      */
     public function permissions(string $groupName)
     {
@@ -109,7 +113,7 @@ class GroupSettingsController extends AdminController
         }
 
         $groups = new Groups();
-        $group = $groups->info($groupName);
+        $group  = $groups->info($groupName);
         if ($group === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
         }
@@ -119,8 +123,8 @@ class GroupSettingsController extends AdminController
             ksort($permissions);
         }
 
-        return $this->render($this->viewPrefix .'permissions', [
-            'group' => $group,
+        return $this->render($this->viewPrefix . 'permissions', [
+            'group'       => $group,
             'permissions' => $permissions,
         ]);
     }
@@ -128,14 +132,12 @@ class GroupSettingsController extends AdminController
     /**
      * Updates the permissions for a single group.
      *
-     * @param string $group
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function savePermissions(string $group)
     {
         $groups = new Groups();
-        $group = $groups->info($group);
+        $group  = $groups->info($group);
         if ($group === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
         }

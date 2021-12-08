@@ -1,13 +1,20 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Libraries\Menus;
 
 /**
  * Represents a collection of menu items.
  * This is used to store the dropdown button for dropdown menus,
  * or the header for accordion-style menus.
- *
- * @package Bonfire\Menus
  *
  * @property string $name
  * @property string $title
@@ -36,8 +43,6 @@ class MenuCollection extends MenuItem
     /**
      * Sets the name this collection can be referenced by.
      *
-     * @param string $name
-     *
      * @return $this
      */
     public function setName(string $name)
@@ -56,8 +61,6 @@ class MenuCollection extends MenuItem
     }
 
     /**
-     * @param bool $collapse
-     *
      * @return $this
      */
     public function setCollapsible(bool $collapse = true): MenuCollection
@@ -67,9 +70,6 @@ class MenuCollection extends MenuItem
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isCollapsible(): bool
     {
         return $this->collapsible;
@@ -78,21 +78,17 @@ class MenuCollection extends MenuItem
     /**
      * Adds a single item to the menu.
      *
-     * @param MenuItem $item
-     *
      * @return $this
      */
     public function addItem(MenuItem $item)
     {
-        $this->items[]  = $item;
+        $this->items[] = $item;
 
         return $this;
     }
 
     /**
      * Add multiple items at once.
-     *
-     * @param array $items
      *
      * @return $this
      */
@@ -103,9 +99,6 @@ class MenuCollection extends MenuItem
         return $this;
     }
 
-    /**
-     * @param string $title
-     */
     public function removeItem(string $title)
     {
         for ($i = 0; $i < count($this->items); $i++) {
@@ -149,7 +142,7 @@ class MenuCollection extends MenuItem
      */
     protected function sortItems()
     {
-        usort($this->items, function ($a, $b) {
+        usort($this->items, static function ($a, $b) {
             if ($a->weight === $b->weight) {
                 return $a->title <=> $b->title;
             }

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Bonfire\Recycler\Config;
 
 use App\Models\UserModel;
@@ -29,11 +38,11 @@ class Recycler extends BaseConfig
      */
     public $resources = [
         'users' => [
-            'label' => 'Users',
-            'model' => UserModel::class,
+            'label'   => 'Users',
+            'model'   => UserModel::class,
             'columns' => [
-                'username', 'first_name', 'last_name', 'email'
-            ]
+                'username', 'first_name', 'last_name', 'email',
+            ],
         ],
     ];
 }

@@ -2,7 +2,7 @@
 
 <?php $this->section('styles') ?>
 
-<?= asset_link( 'admin/css/widgets.css', 'css'); ?>
+<?= asset_link('admin/css/widgets.css', 'css'); ?>
 
 <?php $this->endSection() ?>
 
