@@ -9,7 +9,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Consent;
+namespace Bonfire\Modules\Consent;
 
 use Bonfire\Config\BaseModule;
 use Bonfire\Libraries\Menus\MenuItem;
@@ -27,9 +27,9 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Email',
-            'namedRoute'      => 'email-settings',
-            'fontAwesomeIcon' => 'fas fa-envelope',
+            'title'           => 'Consent',
+            'namedRoute'      => 'consent-settings',
+            'fontAwesomeIcon' => 'fas fa-handshake',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }
