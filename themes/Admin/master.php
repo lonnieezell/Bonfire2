@@ -15,10 +15,12 @@
 
 <?= service('alerts')->display(); ?>
 
-<div class="main">
+<div class="main" x-data="{open: false}">
 	<div class="h-100 d-flex align-items-stretch">
-        <nav id="sidebars" class="sidebar">
-		    <x-sidebar />
+        <nav id="sidebars" class="sidebar d-none d-sm-block" x-bind:class="{ 'd-none': !open }">
+            <div class="sidebar-inner">
+                <x-sidebar />
+            </div>
         </nav>
 
 		<main class="ms-sm-auto flex-grow-1" style="overflow: auto">

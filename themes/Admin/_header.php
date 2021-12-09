@@ -1,10 +1,12 @@
-<header class="navbar navbar-light flex-md-nowrap p-0 shadow-sm">
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+<header class="navbar navbar-light flex-md-nowrap p-0 shadow-sm d-flex">
+    <button class="navbar-toggler d-sm-none collapsed mx-2 border-none" type="button"
+        @click="open = ! open"
+    >
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Search Form -->
-    <form action="<?= route_to('search') ?>" method="post" class="w-100">
+    <form action="<?= route_to('search') ?>" method="post" class="flex-grow-1">
         <?= csrf_field() ?>
 
         <input class="form-control form-control bg-light w-100" type="text" name="search_term" placeholder="Search" aria-label="Search"

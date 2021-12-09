@@ -62,10 +62,19 @@ a:hover {
  */
 
 .sidebar {
+    width: 220px;
+    top: 0;
+    left: 0;
+    bottom: 0;
     padding: 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    min-width: 200px;
     background-color: var(--bf-sidebar-bg);
+    transition: all 0.3s;
+}
+.sidebar-inner {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 }
 
 .sidebar-sticky {
@@ -124,7 +133,6 @@ a:hover {
 
 .navbar .navbar-toggler {
     top: .25rem;
-    right: 1rem;
 }
 
 .navbar .form-control {
