@@ -49,8 +49,16 @@ Currently, only one dataset can be added to the chart. The required parameters a
 
 It is possible to indicate a fourth parameter to choose the counting mode; the possible values are:
 
-- count : [ *selectCount($field)* is executed ]
-- avg : [ *selectAvg($field)*  is executed ]
-- max : [ *selectMax($field)*  is executed ]
-- min : [ *selectMin($field)*  is executed ]
-- sum : [ *selectCount($field)*  is executed ]
+```php
+- count
+- avg
+- max
+- min
+- sum
+```
+
+- if indicate **count** then **selectCount($field)** is executed
+- if indicate **avg** then **selectAvg($field)**  is executed
+- if indicate **max** then **selectMax($field)**  is executed
+- if indicate **min** then **selectMin($field)**  is executed
+- if indicate **sum** then **selectCount($field)**  is executed
