@@ -51,11 +51,20 @@ class ChartsItem implements Item
         'rgb(201, 203, 207)',
     ];
 
-    protected int $borderWidth = 1;
+	/**
+	 * @var int
+	 */
+	protected int $borderWidth = 1;
 
-    protected float $tension = 0.1;
+	/**
+	 * @var float
+	 */
+	protected float $tension = 0.1;
 
-    protected int $overOffset = 20;
+	/**
+	 * @var int
+	 */
+	protected int $overOffset = 20;
 
     /**
      * @var array|string[]
@@ -98,7 +107,10 @@ class ChartsItem implements Item
      */
     protected $chartName;
 
-    public function __construct(?array $data = null)
+	/**
+	 * @param array|null $data
+	 */
+	public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
             return;
@@ -113,7 +125,10 @@ class ChartsItem implements Item
         $this->setChartName('');
     }
 
-    public function title(): ?string
+	/**
+	 * @return string|null
+	 */
+	public function title(): ?string
     {
         return $this->title;
     }
@@ -128,7 +143,10 @@ class ChartsItem implements Item
         return $this;
     }
 
-    public function type(): ?string
+	/**
+	 * @return string|null
+	 */
+	public function type(): ?string
     {
         return $this->type;
     }
@@ -143,7 +161,10 @@ class ChartsItem implements Item
         return $this;
     }
 
-    public function cssClass(): ?string
+	/**
+	 * @return string|null
+	 */
+	public function cssClass(): ?string
     {
         return $this->cssClass;
     }
@@ -158,7 +179,10 @@ class ChartsItem implements Item
         return $this;
     }
 
-    public function data(): ?array
+	/**
+	 * @return array|null
+	 */
+	public function data(): ?array
     {
         return $this->data;
     }
@@ -173,7 +197,10 @@ class ChartsItem implements Item
         return $this;
     }
 
-    public function label(): ?array
+	/**
+	 * @return array|null
+	 */
+	public function label(): ?array
     {
         return $this->label;
     }
@@ -188,22 +215,31 @@ class ChartsItem implements Item
         return $this;
     }
 
-    public function chartName(): ?string
+	/**
+	 * @return string|null
+	 */
+	public function chartName(): ?string
     {
         return $this->chartName;
     }
 
-    /**
-     * @return $this
-     */
-    public function setChartName(string $chartName = ''): ChartsItem
+
+	/**
+	 * @param string $chartName
+	 * @return $this
+	 */
+	public function setChartName(string $chartName = ''): ChartsItem
     {
-        $this->chartName .= $chartName . '_' . str_replace('.', '_', microtime(true));
+		$time = str_replace('.', '_', (string)microtime(true) );
+        $this->chartName .= $chartName . '_' . $time;
 
         return $this;
     }
 
-    public function getScript(): string
+	/**
+	 * @return string
+	 */
+	public function getScript(): string
     {
         return '
 		const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
