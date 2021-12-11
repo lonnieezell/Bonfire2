@@ -14,11 +14,25 @@ Currently includes the following features:
 - A Settings library that allows you to save config file values to the database and access them whether they're in the db or just in the files. 
 - Resource Filter system to make filtering lists of User, Post, etc, simple to implement and with a comfortable, consistent UI.
 - A powerful, very customizable, user authentication/authorization system, [Shield](https://github.com/lonnieezell/codigniter-shield).
+- Global search feature that modules can easily integrate into
+- A Recycle Bin to handle restoring/purghing soft deleted models that modules can easily integrate into
+- A simple documenation system that allows you to provide guides for your clients, or your development teams. 
 - and more to come... 
 
 ## Server Requirements
 
 This currently has the same requirements as CodeIgniter 4.
+
+## Installation
+
+Installation is a simple 2-step process:
+
+```php
+> php composer create-project lonnieezell/Bonfire2 app
+> php spark bf:install
+```
+
+Find more details in the [docs folder](_docs).
 
 ## Third Party Software Used
 
