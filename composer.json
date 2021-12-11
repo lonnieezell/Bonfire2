@@ -1,8 +1,7 @@
 {
-	"name": "codeigniter4/appstarter",
+	"name": "lonnieezell/bonfire",
 	"type": "project",
-	"description": "CodeIgniter4 starter app",
-	"homepage": "https://codeigniter.com",
+	"description": "A project skeleton/admin area for CodeIgniter 4 projects",
 	"license": "MIT",
 	"require": {
 		"php": "^7.4||^8.0",
@@ -22,7 +21,7 @@
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
 		"phpstan/phpstan": "^1.1"
-    },
+	},
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"
 	},
@@ -66,7 +65,6 @@
 	},
 	"support": {
 		"forum": "http://forum.codeigniter.com/",
-		"source": "https://github.com/lonnieezell/Bonfire2",
-		"slack": "https://codeigniterchat.slack.com"
+		"source": "https://github.com/lonnieezell/Bonfire2"
 	}
 }
