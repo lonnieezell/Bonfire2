@@ -13,8 +13,9 @@ namespace Bonfire\Libraries\Widgets\Interfaces;
 
 interface Widgets
 {
-    /**
-     * Adds a new item
-     */
-    public function addItem(Item $item): self;
+    public function createCollection(string $name);
+
+    public function collection(string $name);
+
+    public function collect(string $name, array $items);
 }

@@ -9,16 +9,16 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Libraries\Widgets\Stats;
+namespace Bonfire\Libraries\Widgets\Charts;
 
 use Bonfire\Libraries\Widgets\BaseWidget;
 use Bonfire\Libraries\Widgets\Interfaces\Widgets;
 
-class Stats extends BaseWidget implements Widgets
+class Charts extends BaseWidget implements Widgets
 {
-    public function createCollection(string $name): StatsCollection
+    public function createCollection(string $name): ChartsCollection
     {
-        $collection = new StatsCollection();
+        $collection = new ChartsCollection();
         $collection->setName($name);
 
         $this->items[] = $collection;
@@ -34,7 +34,7 @@ class Stats extends BaseWidget implements Widgets
     public function collection(string $name)
     {
         foreach ($this->items as $item) {
-            if ($item instanceof StatsCollection && $item->name() === $name) {
+            if ($item instanceof ChartsCollection && $item->name() === $name) {
                 return $item;
             }
         }
@@ -45,7 +45,7 @@ class Stats extends BaseWidget implements Widgets
         $collection = $this->collection($name);
 
         if ($collection === null) {
-            $collection = new StatsCollection();
+            $collection = new ChartsCollection();
             $collection->setName($name)->setTitle(ucfirst($name));
 
             $this->items[] = $collection;

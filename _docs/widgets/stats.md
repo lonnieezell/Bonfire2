@@ -23,23 +23,23 @@ Adding a new widget is done by Module.php for your module, similar to adding a m
 bgColor represents the background color of the widget.
 The available options are:
 ```css
-bg-blue
-bg-red
-bg-orange
-bg-light
-bg-dark
-bg-inverse
-bg-indigo
-bg-purple
-bg-pink
-bg-yellow
-bg-green
-bg-teal
-bg-lime
-bg-cyan
-bg-white
-bg-gray
-bg-gray-dark
+- bg-blue
+- bg-red
+- bg-orange
+- bg-light
+- bg-dark
+- bg-inverse
+- bg-indigo
+- bg-purple
+- bg-pink
+- bg-yellow
+- bg-green
+- bg-teal
+- bg-lime
+- bg-cyan
+- bg-white
+- bg-gray
+- bg-gray-dark
 ```
 
 **title**

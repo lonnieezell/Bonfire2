@@ -138,10 +138,22 @@
         width: 100%;
         padding: 5px;
     }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 5px;
+    }
 }
 
 @media (min-width: 400px) {
     .col-3 {
+        flex: 0 0 auto;
+        width: 94%;
+        padding: 5px;
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+    .col-6 {
         flex: 0 0 auto;
         width: 94%;
         padding: 5px;
@@ -158,12 +170,23 @@
         margin-left: 0%;
         margin-right: 0%;
     }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 5px;
+        margin-left: 0%;
+        margin-right: 0%;
+    }
 }
 
 @media (min-width: 1200px) {
     .col-3 {
         flex: 0 0 auto;
         width: 25%;
+    }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 50%;
     }
 }
 
@@ -244,4 +267,14 @@ div {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 0;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * WIDGET CHARTS
+ * --------------------------------------------------------------------------
+ */
+.chart-border {
+    border: 1px solid #ccc;
+    padding: 3%;
 }

@@ -9,20 +9,17 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Libraries\Widgets\Stats;
+namespace Bonfire\Libraries\Widgets\Charts;
 
 /**
- * Represents a collection of stats items.
+ * Represents a collection of Charts items.
  *
  * @property string $name
  * @property string $title
  */
-class StatsCollection extends StatsItem
+class ChartsCollection extends ChartsItem
 {
-    /**
-     * @var array
-     */
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * The name this collection is discovered by.
@@ -31,10 +28,7 @@ class StatsCollection extends StatsItem
      */
     protected $name;
 
-    /**
-     * @return $this
-     */
-    public function setName(string $name): StatsCollection
+    public function setName(string $name): ChartsCollection
     {
         $this->name = $name;
 
@@ -51,7 +45,7 @@ class StatsCollection extends StatsItem
      *
      * @return $this
      */
-    public function addItem(StatsItem $item): StatsCollection
+    public function addItem(ChartsItem $item): ChartsCollection
     {
         $this->items[] = $item;
 
@@ -63,16 +57,13 @@ class StatsCollection extends StatsItem
      *
      * @return $this
      */
-    public function addItems(array $items): StatsCollection
+    public function addItems(array $items): ChartsCollection
     {
         $this->items = array_merge($this->items, $items);
 
         return $this;
     }
 
-    /**
-     * @return void
-     */
     public function removeItem(string $title)
     {
         for ($i = 0; $i < count($this->items); $i++) {
@@ -88,7 +79,7 @@ class StatsCollection extends StatsItem
      *
      * @return $this
      */
-    public function removeAllItems(): StatsCollection
+    public function removeAllItems(): ChartsCollection
     {
         $this->items = [];
 
@@ -115,7 +106,7 @@ class StatsCollection extends StatsItem
     protected function sortItems()
     {
         usort($this->items, static function ($a, $b) {
-            if ($a->weight === $b->weight) {
+            if ($a->title === $b->title) {
                 return $a->title <=> $b->title;
             }
 
@@ -123,9 +114,6 @@ class StatsCollection extends StatsItem
         });
     }
 
-    /**
-     * @return void
-     */
     public function __get(string $key)
     {
         if (method_exists($this, $key)) {
