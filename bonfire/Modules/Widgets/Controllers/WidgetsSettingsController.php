@@ -46,6 +46,9 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Saves the Chart Line settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
      * @return void
      */
     private function saveLineSettings()
@@ -73,6 +76,9 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Saves the Chart Bar settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
      * @return void
      */
     private function saveBarSettings()
@@ -82,6 +88,9 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Saves the Chart Doughnut settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
      * @return void
      */
     private function saveDoughnutSettings()
@@ -91,6 +100,9 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Saves the Chart Pie settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
      * @return void
      */
     private function savePieSettings()
@@ -100,6 +112,9 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Saves the Chart Pola Area settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
      * @return void
      */
     private function savePolarAreaSettings()
@@ -109,7 +124,7 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
-     * Reset the widget settings to their default values
+     * Reset all the widget settings to their default values
      */
     public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
     {
