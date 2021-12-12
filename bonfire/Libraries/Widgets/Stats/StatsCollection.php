@@ -41,10 +41,7 @@ class StatsCollection extends StatsItem
         return $this;
     }
 
-	/**
-	 * @return string
-	 */
-	public function name(): string
+    public function name(): string
     {
         return $this->name;
     }
@@ -126,7 +123,7 @@ class StatsCollection extends StatsItem
         });
     }
 
-	public function __get(string $key)
+    public function __get(string $key)
     {
         if (method_exists($this, $key)) {
             return $this->{$key}();
