@@ -8,7 +8,7 @@ use Tests\Support\TestCase;
 
 class StatsCollectionTest extends TestCase
 {
-	public function testExtendsMenuItem()
+	public function testExtendsStatsItem()
 	{
 		$item = new StatsCollection([
 			'bgColor' => 'bg-blue',
