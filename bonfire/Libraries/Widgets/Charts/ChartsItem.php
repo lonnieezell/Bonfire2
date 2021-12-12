@@ -250,19 +250,7 @@ class ChartsItem implements Item
 		const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
 		const Chart_' . $this->chartName() . " = new Chart(
 			document.getElementById('" . $this->chartName() . "'),
-			drawChart(
-				data_" . $this->chartName() . ',
-				labels_' . $this->chartName() . ",
-				'" . $this->title() . "',
-				'" . $this->type() . "',
-				" . $line_tension . ',
-				' . $backgroundColor . ',
-				' . $borderColor . ',
-				' . $borderWidth . ',
-				' . $enableAnimation . ',
-				' . $showTitle . ',
-				' . $showSubTitle . '
-			)
+			drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', ' . $backgroundColor . ', ' . $borderColor . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ')
 		);';
     }
 
