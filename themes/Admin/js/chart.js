@@ -35,14 +35,52 @@ const SUPPORTED_TYPES = [
     'polarArea'
 ]
 
+const SUPPORTED_POINT_STYLES = [
+    'circle',
+    'cross',
+    'crossRot',
+    'dash',
+    'line',
+    'rect',
+    'rectRounded',
+    'rectRot',
+    'star',
+    'triangle'
+]
+
+const DEFAULT_ENABLE_ANIMATION = false;
+const DEFAULT_SHOW_TITLE = false;
+const DEFAULT_SHOW_SUBTITLE = false;
+
 /*********************
  *     Functions
  *********************/
-function drawChart(data, labels = null, title = '', type = 'line', backgroundColor = null, borderColor = null) {
+function drawChart(
+    data,
+    labels = null,
+    title = '',
+    type = 'line',
+    tension = null,
+    backgroundColor = null,
+    borderColor = null,
+    borderWidth = null,
+    enableAnimation = null,
+    showTitle = null,
+    showSubTitle = null
+) {
+    console.log(tension);
+    //Enable Elements
+    (enableAnimation === null) ? enableAnimation = Boolean(DEFAULT_ENABLE_ANIMATION) : enableAnimation = Boolean(enableAnimation);
+    (showTitle === null) ? showTitle = Boolean(DEFAULT_SHOW_TITLE) : showTitle = Boolean(showTitle);
+    (showSubTitle === null) ? showSubTitle = Boolean(DEFAULT_SHOW_SUBTITLE) : showSubTitle = Boolean(showSubTitle);
+
+    (tension === null) ? tension = DEFAULT_TENSION : tension = tension;
 
     //Assign default colors
     (backgroundColor === null) ? backgroundColor = DEFAULT_BACKGROUND_COLOR : backgroundColor = backgroundColor;
     (borderColor === null) ? borderColor = DEFAULT_BORDER_COLOR : borderColor = borderColor;
+    (borderWidth === null) ? borderWidth = DEFAULT_BORDER_WIDTH : borderWidth = borderWidth;
+
 
     if(!Array.isArray(data)) {
         //TODO: if is url, get data
@@ -58,31 +96,28 @@ function drawChart(data, labels = null, title = '', type = 'line', backgroundCol
                     data: data,
                     backgroundColor: backgroundColor,
                     borderColor: borderColor,
-                    borderWidth: DEFAULT_BORDER_WIDTH,
-                    tension: DEFAULT_TENSION,
+                    borderWidth: borderWidth,
+                    tension: tension,
                     hoverOffset: DEFAULT_OVER_OFFSET,
                 }]
             },
             options: {
+                animation: enableAnimation,
                 plugins: {
                     title: {
-                        display: true,
+                        display: showTitle,
                         text: title
                     },
                     subtitle: {
-                        display: false,
+                        display: showSubTitle,
                         text: ''
                     },
                     legend: {
                         display: true,
-                        labels: {
-                            color: 'rgb(0, 0, 0)'
-                        }
                     }
                 }
             }
         };
-
         return config;
 
     } else {

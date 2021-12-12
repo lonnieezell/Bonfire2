@@ -204,13 +204,66 @@ class ChartsItem implements Item
 
     public function getScript(): string
     {
+        $line_tension    = 'null';
+        $backgroundColor = 'null';
+        $borderColor     = 'null';
+        $borderWidth     = 'null';
+        $enableAnimation = 'null';
+        $showTitle       = 'null';
+        $showSubTitle    = 'null';
+
+        switch ($this->type()) {
+            case 'line':
+                $line_tension    = setting()->get('LineChart.' . $this->type() . '_tension') ?: 'null';
+                $borderColor     = setting()->get('LineChart.' . $this->type() . '_borderColor') ? "'" . setting()->get('LineChart.' . $this->type() . '_borderColor') . "'" : 'null';
+                $backgroundColor = $borderColor;
+                $borderWidth     = setting()->get('LineChart.' . $this->type() . '_borderWidth') ?: 'null';
+                $enableAnimation = setting()->get('LineChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
+                $showTitle       = setting()->get('LineChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                $showSubTitle    = setting()->get('LineChart.' . $this->type() . '_showSubTitle') ? 'true' : 'null';
+                break;
+
+            case 'bar':
+                $enableAnimation = setting()->get('BarChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
+                $showTitle       = setting()->get('BarChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                break;
+
+            case 'doughnut':
+                $enableAnimation = setting()->get('DoughnutChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
+                $showTitle       = setting()->get('DoughnutChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                break;
+
+            case 'pie':
+                $enableAnimation = setting()->get('PieChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
+                $showTitle       = setting()->get('PieChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                break;
+
+            case 'polarArea':
+                $enableAnimation = setting()->get('PolarAreaChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
+                $showTitle       = setting()->get('PolarAreaChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                break;
+
+        }
+
         return '
 		const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
 		const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
 		const Chart_' . $this->chartName() . " = new Chart(
 			document.getElementById('" . $this->chartName() . "'),
-			drawChart(data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "')
-		);";
+			drawChart(
+				data_" . $this->chartName() . ',
+				labels_' . $this->chartName() . ",
+				'" . $this->title() . "',
+				'" . $this->type() . "',
+				" . $line_tension . ',
+				' . $backgroundColor . ',
+				' . $borderColor . ',
+				' . $borderWidth . ',
+				' . $enableAnimation . ',
+				' . $showTitle . ',
+				' . $showSubTitle . '
+			)
+		);';
     }
 
     /**
