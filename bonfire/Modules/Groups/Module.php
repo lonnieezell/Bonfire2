@@ -40,7 +40,7 @@ class Module extends BaseModule
         $groups    = setting('AuthGroups.groups');
         $statsItem = new StatsItem([
             'bgColor' => 'bg-teal',
-            'title'   => 'User classification by group',
+            'title'   => 'User Groups',
             'value'   => count($groups),
             'url'     => ADMIN_AREA . '/settings/groups',
             'faIcon'  => 'fa fa-users',
