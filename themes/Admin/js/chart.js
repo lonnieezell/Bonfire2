@@ -73,7 +73,7 @@ function drawChart(
     showLegend = null,
     legendPosition = null
 ) {
-    console.log(tension);
+
     //Enable Elements
     (enableAnimation === null) ? enableAnimation = Boolean(DEFAULT_ENABLE_ANIMATION) : enableAnimation = Boolean(enableAnimation);
     (showTitle === null) ? showTitle = Boolean(DEFAULT_SHOW_TITLE) : showTitle = Boolean(showTitle);
