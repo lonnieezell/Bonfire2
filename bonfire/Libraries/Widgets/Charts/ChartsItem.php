@@ -284,7 +284,8 @@ class ChartsItem implements Item
 
             case 'min':
                 $groupsData = $groupsData->selectMin($countField);
-            // no break
+                break;
+
             case 'sum':
                 $groupsData = $groupsData->selectSum($countField);
                 break;
