@@ -77,13 +77,12 @@ Each type of widget has its own specific settings.
 
 ***Line Chart***
 
-You can choose to view:
-- The title
-- The legend
-
-Animations can be enabled.
-
-You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.
+You can choose to:
+- Display the title
+- View the legend
+- Choose the location of the legend
+- Enable animation
+- You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.
 
 Advanced settings:
 
@@ -94,40 +93,40 @@ Advanced settings:
 
 ***Bar Chart***
 
-You can choose to view:
-- The title
-- The legend
-
-Animations can be enabled.
+You can choose to:
+- Display the title
+- View the legend
+- Choose the location of the legend
+- Enable animation
 
 ---
 
 ***Doughnut Chart***
 
-You can choose to view:
-- The title
-- The legend
-
-Animations can be enabled.
+You can choose to:
+- Display the title
+- View the legend
+- Choose the location of the legend
+- Enable animation
 
 ---
 
 ***Pie Chart***
 
-You can choose to view:
-- The title
-- The legend
-
-Animations can be enabled.
+You can choose to:
+- Display the title
+- View the legend
+- Choose the location of the legend
+- Enable animation
 
 ---
 
 ***Polar Chart***
 
-You can choose to view:
-- The title
-- The legend
-
-Animations can be enabled.
+You can choose to:
+- Display the title
+- View the legend
+- Choose the location of the legend
+- Enable animation
 
 ---

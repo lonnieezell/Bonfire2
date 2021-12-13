@@ -51,7 +51,9 @@ const SUPPORTED_POINT_STYLES = [
 const DEFAULT_ENABLE_ANIMATION = false;
 const DEFAULT_SHOW_TITLE = false;
 const DEFAULT_SHOW_SUBTITLE = false;
+
 const DEFAULT_SHOW_LEGEND = false;
+const DEFAULT_LEGEND_POSITION = 'top';
 
 /*********************
  *     Functions
@@ -68,7 +70,8 @@ function drawChart(
     enableAnimation = null,
     showTitle = null,
     showSubTitle = null,
-    showLegend = null
+    showLegend = null,
+    legendPosition = null
 ) {
     console.log(tension);
     //Enable Elements
@@ -83,6 +86,8 @@ function drawChart(
     (backgroundColor === null) ? backgroundColor = DEFAULT_BACKGROUND_COLOR : backgroundColor = backgroundColor;
     (borderColor === null) ? borderColor = DEFAULT_BORDER_COLOR : borderColor = borderColor;
     (borderWidth === null) ? borderWidth = DEFAULT_BORDER_WIDTH : borderWidth = borderWidth;
+
+    (legendPosition === null) ? legendPosition = DEFAULT_LEGEND_POSITION : legendPosition = legendPosition;
 
 
     if(!Array.isArray(data)) {
@@ -117,6 +122,7 @@ function drawChart(
                     },
                     legend: {
                         display: showLegend,
+                        position: legendPosition,
                     }
                 }
             }

@@ -31,6 +31,18 @@
                 <label class="form-check-label" for="line_showLegend">Show Legend?</label>
             </div>
 
+            <div class="form-group col-12 col-sm-6 col-md-3">
+                <label class="form-label" for="line_legendPosition">Legend Position</label>
+                <select name="line_legendPosition" id="line_legendPosition" class="form-select">
+                    <option value="top" <?php if (old('line_legendPosition', setting('LineChart.line_legendPosition')) === 'top') : ?> selected <?php endif?>>top</option>
+                    <option value="left" <?php if (old('line_legendPosition', setting('LineChart.line_legendPosition')) === 'left') : ?> selected <?php endif?>>left</option>
+                    <option value="bottom"  <?php if (old('line_legendPosition', setting('LineChart.line_legendPosition')) === 'bottom') : ?> selected <?php endif?>>bottom</option>
+                    <option value="right"  <?php if (old('line_legendPosition', setting('LineChart.line_legendPosition')) === 'right') : ?> selected <?php endif?>>right</option>
+                </select>
+            </div>
+            <br/>
+
+
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="line_enableAnimation" role="switch" id="line_enableAnimation"
 					<?php if (setting('LineChart.line_enableAnimation')) : ?> checked <?php endif ?>
@@ -101,6 +113,18 @@
                 <label class="form-check-label" for="bar_showLegend">Show Legend?</label>
             </div>
 
+            <div class="form-group col-12 col-sm-6 col-md-3">
+                <label class="form-label" for="bar_legendPosition">Legend Position</label>
+                <select name="bar_legendPosition" id="bar_legendPosition" class="form-select">
+                    <option value="top" <?php if (old('bar_legendPosition', setting('BarChart.bar_legendPosition')) === 'top') : ?> selected <?php endif?>>top</option>
+                    <option value="left" <?php if (old('bar_legendPosition', setting('BarChart.bar_legendPosition')) === 'left') : ?> selected <?php endif?>>left</option>
+                    <option value="bottom"  <?php if (old('bar_legendPosition', setting('BarChart.bar_legendPosition')) === 'bottom') : ?> selected <?php endif?>>bottom</option>
+                    <option value="right"  <?php if (old('bar_legendPosition', setting('BarChart.bar_legendPosition')) === 'right') : ?> selected <?php endif?>>right</option>
+                </select>
+            </div>
+            <br/>
+
+
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="bar_enableAnimation" role="switch" id="bar_enableAnimation"
 					<?php if (setting('BarChart.bar_enableAnimation')) : ?> checked <?php endif ?>
@@ -130,6 +154,16 @@
                 >
                 <label class="form-check-label" for="doughnut_showLegend">Show Legend?</label>
             </div>
+            <div class="form-group col-12 col-sm-6 col-md-3">
+                <label class="form-label" for="doughnut_legendPosition">Legend Position</label>
+                <select name="doughnut_legendPosition" id="doughnut_legendPosition" class="form-select">
+                    <option value="top" <?php if (old('doughnut_legendPosition', setting('DoughnutChart.doughnut_legendPosition')) === 'top') : ?> selected <?php endif?>>top</option>
+                    <option value="left" <?php if (old('doughnut_legendPosition', setting('DoughnutChart.doughnut_legendPosition')) === 'left') : ?> selected <?php endif?>>left</option>
+                    <option value="bottom"  <?php if (old('doughnut_legendPosition', setting('DoughnutChart.doughnut_legendPosition')) === 'bottom') : ?> selected <?php endif?>>bottom</option>
+                    <option value="right"  <?php if (old('doughnut_legendPosition', setting('DoughnutChart.doughnut_legendPosition')) === 'right') : ?> selected <?php endif?>>right</option>
+                </select>
+            </div>
+            <br/>
 
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="doughnut_enableAnimation" role="switch" id="doughnut_enableAnimation"
@@ -158,6 +192,16 @@
                 >
                 <label class="form-check-label" for="pie_showLegend">Show Legend?</label>
             </div>
+            <div class="form-group col-12 col-sm-6 col-md-3">
+                <label class="form-label" for="pie_legendPosition">Legend Position</label>
+                <select name="pie_legendPosition" id="pie_legendPosition" class="form-select">
+                    <option value="top" <?php if (old('pie_legendPosition', setting('PieChart.pie_legendPosition')) === 'top') : ?> selected <?php endif?>>top</option>
+                    <option value="left" <?php if (old('pie_legendPosition', setting('PieChart.pie_legendPosition')) === 'left') : ?> selected <?php endif?>>left</option>
+                    <option value="bottom"  <?php if (old('pie_legendPosition', setting('PieChart.pie_legendPosition')) === 'bottom') : ?> selected <?php endif?>>bottom</option>
+                    <option value="right"  <?php if (old('pie_legendPosition', setting('PieChart.pie_legendPosition')) === 'right') : ?> selected <?php endif?>>right</option>
+                </select>
+            </div>
+            <br/>
 
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="pie_enableAnimation" role="switch" id="pie_enableAnimation"
@@ -186,6 +230,16 @@
                 >
                 <label class="form-check-label" for="polarArea_showLegend">Show Legend?</label>
             </div>
+            <div class="form-group col-12 col-sm-6 col-md-3">
+                <label class="form-label" for="polarArea_legendPosition">Legend Position</label>
+                <select name="polarArea_legendPosition" id="polarArea_legendPosition" class="form-select">
+                    <option value="top" <?php if (old('polarArea_legendPosition', setting('PolarAreaChart.polarArea_legendPosition')) === 'top') : ?> selected <?php endif?>>top</option>
+                    <option value="left" <?php if (old('polarArea_legendPosition', setting('PolarAreaChart.polarArea_legendPosition')) === 'left') : ?> selected <?php endif?>>left</option>
+                    <option value="bottom"  <?php if (old('polarArea_legendPosition', setting('PolarAreaChart.polarArea_legendPosition')) === 'bottom') : ?> selected <?php endif?>>bottom</option>
+                    <option value="right"  <?php if (old('polarArea_legendPosition', setting('PolarAreaChart.polarArea_legendPosition')) === 'right') : ?> selected <?php endif?>>right</option>
+                </select>
+            </div>
+            <br/>
 
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="polarArea_enableAnimation" role="switch" id="polarArea_enableAnimation"
