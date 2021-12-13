@@ -61,7 +61,7 @@ It is possible to indicate a fourth parameter to choose the counting mode; the p
 - if indicate **avg** then **selectAvg($field)**  is executed
 - if indicate **max** then **selectMax($field)**  is executed
 - if indicate **min** then **selectMin($field)**  is executed
-- if indicate **sum** then **selectCount($field)**  is executed
+- if indicate **sum** then **selectSum($field)**  is executed
 
 ---
 
@@ -77,7 +77,9 @@ Each type of widget has its own specific settings.
 
 ***Line Chart***
 
-You can choose to:
+You can set the default values in the *Bonfire\Modules\Widgets\Config\LineChart* Class
+
+In the administration settings area, you can choose to:
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -93,7 +95,9 @@ Advanced settings:
 
 ***Bar Chart***
 
-You can choose to:
+You can set the default values in the *Bonfire\Modules\Widgets\Config\BarChart* Class
+
+In the administration settings area, you can choose to:
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -103,7 +107,9 @@ You can choose to:
 
 ***Doughnut Chart***
 
-You can choose to:
+You can set the default values in the *Bonfire\Modules\Widgets\Config\DoughnutChart* Class
+
+In the administration settings area, you can choose to:
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -113,7 +119,9 @@ You can choose to:
 
 ***Pie Chart***
 
-You can choose to:
+You can set the default values in the *Bonfire\Modules\Widgets\Config\PieChart* Class
+
+In the administration settings area, you can choose to:
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -121,9 +129,11 @@ You can choose to:
 
 ---
 
-***Polar Chart***
+***Polar Area Chart***
 
-You can choose to:
+You can set the default values in the *Bonfire\Modules\Widgets\Config\PolarAreaChart* Class
+
+In the administration settings area, you can choose to:
 - Display the title
 - View the legend
 - Choose the location of the legend
