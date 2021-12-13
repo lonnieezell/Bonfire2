@@ -43,9 +43,9 @@ Examples options are:
 
 Currently, only one dataset can be added to the chart. The required parameters are:
 
- - Name of the table
- - Grouping field
- - Field to count
+- Name of the table
+- Grouping field
+- Field to count
 
 It is possible to indicate a fourth parameter to choose the counting mode; the possible values are:
 
@@ -62,3 +62,72 @@ It is possible to indicate a fourth parameter to choose the counting mode; the p
 - if indicate **max** then **selectMax($field)**  is executed
 - if indicate **min** then **selectMin($field)**  is executed
 - if indicate **sum** then **selectCount($field)**  is executed
+
+---
+
+## Configuration
+
+All settings are available in the administration settings area.
+
+Each type of widget has its own specific settings.
+
+---
+
+### Charts ###
+
+***Line Chart***
+
+You can choose to view:
+- The title
+- The legend
+
+Animations can be enabled.
+
+You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.
+
+Advanced settings:
+
+- You can set Line color
+- You can set Line width
+
+---
+
+***Bar Chart***
+
+You can choose to view:
+- The title
+- The legend
+
+Animations can be enabled.
+
+---
+
+***Doughnut Chart***
+
+You can choose to view:
+- The title
+- The legend
+
+Animations can be enabled.
+
+---
+
+***Pie Chart***
+
+You can choose to view:
+- The title
+- The legend
+
+Animations can be enabled.
+
+---
+
+***Polar Chart***
+
+You can choose to view:
+- The title
+- The legend
+
+Animations can be enabled.
+
+---
