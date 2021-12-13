@@ -13,35 +13,28 @@ namespace Bonfire\Modules\Widgets\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class LineChart extends BaseConfig
+class PolarAreaChart extends BaseConfig
 {
-    /**
-     * --------------------------------------------------------------------------
-     * Bezier curve tension of the line. Set to 0 to draw straightlines. This option is ignored if monotone cubic interpolation is used.
-     * --------------------------------------------------------------------------
-     */
-    public float $line_tension = 0.1;
-
     /**
      * --------------------------------------------------------------------------
      * Enable the chart animation
      * --------------------------------------------------------------------------
      */
-    public bool $line_enableAnimation = true;
+    public bool $polarArea_enableAnimation = true;
 
     /**
      * --------------------------------------------------------------------------
      * Show the chart title
      * --------------------------------------------------------------------------
      */
-    public bool $line_showTitle = true;
+    public bool $polarArea_showTitle = true;
 
     /**
      * --------------------------------------------------------------------------
      * Show the chart legend
      * --------------------------------------------------------------------------
      */
-    public bool $line_showLegend = true;
+    public bool $polarArea_showLegend = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -54,5 +47,5 @@ class LineChart extends BaseConfig
      * right
      * --------------------------------------------------------------------------
      */
-    public string $line_legendPosition = 'bottom';
+    public string $polarArea_legendPosition = 'bottom';
 }
