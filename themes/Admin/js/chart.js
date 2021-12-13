@@ -51,6 +51,7 @@ const SUPPORTED_POINT_STYLES = [
 const DEFAULT_ENABLE_ANIMATION = false;
 const DEFAULT_SHOW_TITLE = false;
 const DEFAULT_SHOW_SUBTITLE = false;
+const DEFAULT_SHOW_LEGEND = false;
 
 /*********************
  *     Functions
@@ -66,13 +67,15 @@ function drawChart(
     borderWidth = null,
     enableAnimation = null,
     showTitle = null,
-    showSubTitle = null
+    showSubTitle = null,
+    showLegend = null
 ) {
     console.log(tension);
     //Enable Elements
     (enableAnimation === null) ? enableAnimation = Boolean(DEFAULT_ENABLE_ANIMATION) : enableAnimation = Boolean(enableAnimation);
     (showTitle === null) ? showTitle = Boolean(DEFAULT_SHOW_TITLE) : showTitle = Boolean(showTitle);
     (showSubTitle === null) ? showSubTitle = Boolean(DEFAULT_SHOW_SUBTITLE) : showSubTitle = Boolean(showSubTitle);
+    (showLegend === null) ? showLegend = Boolean(DEFAULT_SHOW_LEGEND) : showLegend = Boolean(showLegend);
 
     (tension === null) ? tension = DEFAULT_TENSION : tension = tension;
 
@@ -113,7 +116,7 @@ function drawChart(
                         text: ''
                     },
                     legend: {
-                        display: true,
+                        display: showLegend,
                     }
                 }
             }

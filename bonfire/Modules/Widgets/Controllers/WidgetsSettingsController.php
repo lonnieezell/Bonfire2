@@ -55,6 +55,7 @@ class WidgetsSettingsController extends AdminController
     {
         setting('LineChart.line_showTitle', $this->request->getPost('line_showTitle') ?? false);
         setting('LineChart.line_showSubTitle', $this->request->getPost('line_showSubTitle') ?? false);
+        setting('LineChart.line_showLegend', $this->request->getPost('line_showLegend') ?? false);
         setting('LineChart.line_enableAnimation', $this->request->getPost('line_enableAnimation') ?? false);
         setting('LineChart.line_usePermission', $this->request->getPost('line_usePermission') ?? false);
         setting('LineChart.line_tension', $this->request->getPost('line_tension'));
@@ -84,6 +85,7 @@ class WidgetsSettingsController extends AdminController
     private function saveBarSettings()
     {
         setting('BarChart.bar_showTitle', $this->request->getPost('bar_showTitle') ?? false);
+        setting('BarChart.bar_showLegend', $this->request->getPost('bar_showLegend') ?? false);
         setting('BarChart.bar_enableAnimation', $this->request->getPost('bar_enableAnimation') ?? false);
     }
 
@@ -96,6 +98,7 @@ class WidgetsSettingsController extends AdminController
     private function saveDoughnutSettings()
     {
         setting('DoughnutChart.doughnut_showTitle', $this->request->getPost('doughnut_showTitle') ?? false);
+        setting('DoughnutChart.doughnut_showLegend', $this->request->getPost('doughnut_showLegend') ?? false);
         setting('DoughnutChart.doughnut_enableAnimation', $this->request->getPost('doughnut_enableAnimation') ?? false);
     }
 
@@ -108,6 +111,7 @@ class WidgetsSettingsController extends AdminController
     private function savePieSettings()
     {
         setting('PieChart.pie_showTitle', $this->request->getPost('pie_showTitle') ?? false);
+        setting('PieChart.pie_showLegend', $this->request->getPost('pie_showLegend') ?? false);
         setting('PieChart.pie_enableAnimation', $this->request->getPost('pie_enableAnimation') ?? false);
     }
 
@@ -120,6 +124,7 @@ class WidgetsSettingsController extends AdminController
     private function savePolarAreaSettings()
     {
         setting('PolarAreaChart.polarArea_showTitle', $this->request->getPost('polarArea_showTitle') ?? false);
+        setting('PolarAreaChart.polarArea_showLegend', $this->request->getPost('polarArea_showLegend') ?? false);
         setting('PolarAreaChart.polarArea_enableAnimation', $this->request->getPost('polarArea_enableAnimation') ?? false);
     }
 
@@ -130,6 +135,7 @@ class WidgetsSettingsController extends AdminController
     {
         setting()->forget('LineChart.line_showTitle');
         setting()->forget('LineChart.line_showSubTitle');
+        setting()->forget('LineChart.line_showLegend');
         setting()->forget('LineChart.line_enableAnimation');
         setting()->forget('LineChart.line_usePermission');
         setting()->forget('LineChart.line_tension');
@@ -141,15 +147,19 @@ class WidgetsSettingsController extends AdminController
         setting()->forget('LineChart.line_pointBorderWidth');
 
         setting()->forget('BarChart.bar_showTitle');
+        setting()->forget('BarChart.bar_showLegend');
         setting()->forget('BarChart.bar_enableAnimation');
 
         setting()->forget('DoughnutChart.doughnut_showTitle');
+        setting()->forget('DoughnutChart.doughnut_showLegend');
         setting()->forget('DoughnutChart.doughnut_enableAnimation');
 
         setting()->forget('PieChart.pie_showTitle');
+        setting()->forget('PieChart.pie_showLegend');
         setting()->forget('PieChart.pie_enableAnimation');
 
         setting()->forget('PolarAreaChart.polarArea_showTitle');
+        setting()->forget('PolarAreaChart.polarArea_showLegend');
         setting()->forget('PolarAreaChart.polarArea_enableAnimation');
 
         alert('success', 'The settings have been reset.');

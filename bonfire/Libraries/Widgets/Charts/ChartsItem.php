@@ -211,6 +211,7 @@ class ChartsItem implements Item
         $enableAnimation = 'null';
         $showTitle       = 'null';
         $showSubTitle    = 'null';
+        $showLegend      = 'null';
 
         switch ($this->type()) {
             case 'line':
@@ -221,26 +222,31 @@ class ChartsItem implements Item
                 $enableAnimation = setting()->get('LineChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
                 $showTitle       = setting()->get('LineChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
                 $showSubTitle    = setting()->get('LineChart.' . $this->type() . '_showSubTitle') ? 'true' : 'null';
+                $showLegend      = setting()->get('LineChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 break;
 
             case 'bar':
                 $enableAnimation = setting()->get('BarChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
                 $showTitle       = setting()->get('BarChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                $showLegend      = setting()->get('BarChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 break;
 
             case 'doughnut':
                 $enableAnimation = setting()->get('DoughnutChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
                 $showTitle       = setting()->get('DoughnutChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                $showLegend      = setting()->get('DoughnutChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 break;
 
             case 'pie':
                 $enableAnimation = setting()->get('PieChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
                 $showTitle       = setting()->get('PieChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                $showLegend      = setting()->get('PieChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 break;
 
             case 'polarArea':
                 $enableAnimation = setting()->get('PolarAreaChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
                 $showTitle       = setting()->get('PolarAreaChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
+                $showLegend      = setting()->get('PolarAreaChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 break;
 
         }
@@ -250,7 +256,7 @@ class ChartsItem implements Item
 		const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
 		const Chart_' . $this->chartName() . " = new Chart(
 			document.getElementById('" . $this->chartName() . "'),
-			drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', ' . $backgroundColor . ', ' . $borderColor . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ')
+			drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', ' . $backgroundColor . ', ' . $borderColor . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ')
 		);';
     }
 
@@ -278,7 +284,7 @@ class ChartsItem implements Item
 
             case 'min':
                 $groupsData = $groupsData->selectMin($countField);
-                // no break
+            // no break
             case 'sum':
                 $groupsData = $groupsData->selectSum($countField);
                 break;
