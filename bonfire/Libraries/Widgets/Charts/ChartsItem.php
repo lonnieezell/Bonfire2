@@ -232,6 +232,8 @@ class ChartsItem implements Item
                 $showTitle       = setting()->get('BarChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
                 $showLegend      = setting()->get('BarChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 $legendPosition  = setting()->get('BarChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('BarChart.' . $this->type() . '_legendPosition') . "'" : 'null';
+                $backgroundColor = setting()->get('BarChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('BarChart.' . $this->type() . '_colorScheme') . "'" : 'null';
+                $borderColor     = strtolower(rtrim($backgroundColor, 's'));
                 break;
 
             case 'doughnut':
@@ -239,6 +241,8 @@ class ChartsItem implements Item
                 $showTitle       = setting()->get('DoughnutChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
                 $showLegend      = setting()->get('DoughnutChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 $legendPosition  = setting()->get('DoughnutChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('DoughnutChart.' . $this->type() . '_legendPosition') . "'" : 'null';
+                $backgroundColor = setting()->get('DoughnutChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('DoughnutChart.' . $this->type() . '_colorScheme') . "'" : 'null';
+                $borderColor     = $backgroundColor;
                 break;
 
             case 'pie':
@@ -246,6 +250,8 @@ class ChartsItem implements Item
                 $showTitle       = setting()->get('PieChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
                 $showLegend      = setting()->get('PieChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 $legendPosition  = setting()->get('PieChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('PieChart.' . $this->type() . '_legendPosition') . "'" : 'null';
+                $backgroundColor = setting()->get('PieChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('PieChart.' . $this->type() . '_colorScheme') . "'" : 'null';
+                $borderColor     = $backgroundColor;
                 break;
 
             case 'polarArea':
@@ -253,17 +259,29 @@ class ChartsItem implements Item
                 $showTitle       = setting()->get('PolarAreaChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
                 $showLegend      = setting()->get('PolarAreaChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
                 $legendPosition  = setting()->get('PolarAreaChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('PolarAreaChart.' . $this->type() . '_legendPosition') . "'" : 'null';
+                $backgroundColor = setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') . "'" : 'null';
+                $borderColor     = $backgroundColor;
                 break;
 
         }
 
+        if (str_replace("'", '', $backgroundColor) !== 'null') {
+            $backgroundColor = 'const backgroundColor_' . $this->chartName() . ' = d3.scheme' . str_replace("'", '', $backgroundColor) . '[9];';
+            $borderColor     = 'const borderColor_' . $this->chartName() . ' = ' . $borderColor . ';';
+        } else {
+            $backgroundColor = 'const backgroundColor_' . $this->chartName() . ' = ' . str_replace("'", '', $backgroundColor) . ';';
+            $borderColor     = 'const borderColor_' . $this->chartName() . ' = null;';
+        }
+
         return '
-		const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
-		const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
-		const Chart_' . $this->chartName() . " = new Chart(
-			document.getElementById('" . $this->chartName() . "'),
-			drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', ' . $backgroundColor . ', ' . $borderColor . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
-		);';
+			const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
+			const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
+			' . $backgroundColor . '
+			' . $borderColor . '
+			const Chart_' . $this->chartName() . " = new Chart(
+				document.getElementById('" . $this->chartName() . "'),
+				drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
+			);';
     }
 
     /**

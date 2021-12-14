@@ -8,15 +8,17 @@
 
 
 <?php $this->section('main') ?>
-	<h1>Home sweet home</h1>
+<h1>Home sweet home</h1>
 
-    <?= view('Bonfire\Views\Widgets\_stats', ['stats' => $widgets->widget('stats')->items()]) ?>
-    <?= view('Bonfire\Views\Widgets\_charts', ['charts' => $widgets->widget('charts')->items()]) ?>
-
+<?= view('Bonfire\Views\Widgets\_stats', ['stats' => $widgets->widget('stats')->items()]) ?>
+<?= view('Bonfire\Views\Widgets\_charts', ['charts' => $widgets->widget('charts')->items()]) ?>
 <?php $this->endSection() ?>
 
 
 <?= $this->section('scripts') ?>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <?= asset_link('admin/js/chart.js', 'js'); ?>
 

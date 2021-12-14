@@ -48,4 +48,20 @@ class PolarAreaChart extends BaseConfig
      * --------------------------------------------------------------------------
      */
     public string $polarArea_legendPosition = 'bottom';
+
+    /**
+     * --------------------------------------------------------------------------
+     * Set the default color scheme to fill the chart
+     *
+     * possible value are:
+     * null
+     * Blues
+     * Greens
+     * Greys
+     * Oranges
+     * Purples
+     * Reds
+     * --------------------------------------------------------------------------
+     */
+    public string $polarArea_colorScheme = 'null';
 }

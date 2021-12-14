@@ -46,6 +46,19 @@ class WidgetsSettingsController extends AdminController
     }
 
     /**
+     * Return the image with preview scheme colors.
+     */
+    public function getColorSchemePreview(): string
+    {
+        if (file_exists(ROOTPATH . 'themes/Admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png')) {
+            //return '<img src="/assets/admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png" style="height:40px !important; width:-webkit-fill-available; ';
+            return '<img src="/assets/admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png" style="height:40px !important; width:300px; ';
+        }
+
+        return '';
+    }
+
+    /**
      * Saves the Chart Line settings to the config file, where it
      * is automatically saved by our dynamic configuration system.
      *
@@ -89,6 +102,7 @@ class WidgetsSettingsController extends AdminController
         setting('BarChart.bar_showLegend', $this->request->getPost('bar_showLegend') ?? false);
         setting('BarChart.bar_legendPosition', $this->request->getPost('bar_legendPosition') ?? false);
         setting('BarChart.bar_enableAnimation', $this->request->getPost('bar_enableAnimation') ?? false);
+        setting('BarChart.bar_colorScheme', $this->request->getPost('bar_colorScheme') ?? 'null');
     }
 
     /**
@@ -103,6 +117,7 @@ class WidgetsSettingsController extends AdminController
         setting('DoughnutChart.doughnut_showLegend', $this->request->getPost('doughnut_showLegend') ?? false);
         setting('DoughnutChart.doughnut_legendPosition', $this->request->getPost('doughnut_legendPosition') ?? false);
         setting('DoughnutChart.doughnut_enableAnimation', $this->request->getPost('doughnut_enableAnimation') ?? false);
+        setting('DoughnutChart.doughnut_colorScheme', $this->request->getPost('doughnut_colorScheme') ?? 'null');
     }
 
     /**
@@ -117,6 +132,7 @@ class WidgetsSettingsController extends AdminController
         setting('PieChart.pie_showLegend', $this->request->getPost('pie_showLegend') ?? false);
         setting('PieChart.pie_legendPosition', $this->request->getPost('pie_legendPosition') ?? false);
         setting('PieChart.pie_enableAnimation', $this->request->getPost('pie_enableAnimation') ?? false);
+        setting('PieChart.pie_colorScheme', $this->request->getPost('pie_colorScheme') ?? 'null');
     }
 
     /**
@@ -131,6 +147,7 @@ class WidgetsSettingsController extends AdminController
         setting('PolarAreaChart.polarArea_showLegend', $this->request->getPost('polarArea_showLegend') ?? false);
         setting('PolarAreaChart.polarArea_legendPosition', $this->request->getPost('polarArea_legendPosition') ?? false);
         setting('PolarAreaChart.polarArea_enableAnimation', $this->request->getPost('polarArea_enableAnimation') ?? false);
+        setting('PolarAreaChart.polarArea_colorScheme', $this->request->getPost('polarArea_colorScheme') ?? 'null');
     }
 
     /**
@@ -156,21 +173,25 @@ class WidgetsSettingsController extends AdminController
         setting()->forget('BarChart.bar_showLegend');
         setting()->forget('BarChart.bar_legendPosition');
         setting()->forget('BarChart.bar_enableAnimation');
+        setting()->forget('BarChart.bar_colorScheme');
 
         setting()->forget('DoughnutChart.doughnut_showTitle');
         setting()->forget('DoughnutChart.doughnut_showLegend');
         setting()->forget('DoughnutChart.doughnut_legendPosition');
         setting()->forget('DoughnutChart.doughnut_enableAnimation');
+        setting()->forget('DoughnutChart.doughnut_colorScheme');
 
         setting()->forget('PieChart.pie_showTitle');
         setting()->forget('PieChart.pie_showLegend');
         setting()->forget('PieChart.pie_legendPosition');
         setting()->forget('PieChart.pie_enableAnimation');
+        setting()->forget('PieChart.pie_colorScheme');
 
         setting()->forget('PolarAreaChart.polarArea_showTitle');
         setting()->forget('PolarAreaChart.polarArea_showLegend');
         setting()->forget('PolarAreaChart.polarArea_legendPosition');
         setting()->forget('PolarAreaChart.polarArea_enableAnimation');
+        setting()->forget('PolarAreaChart.polarArea_colorScheme');
 
         alert('success', 'The settings have been reset.');
 

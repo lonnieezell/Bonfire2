@@ -102,6 +102,7 @@ In the administration settings area, you can choose to:
 - View the legend
 - Choose the location of the legend
 - Enable animation
+- Set the default color scheme to fill the chart
 
 ---
 
@@ -114,6 +115,7 @@ In the administration settings area, you can choose to:
 - View the legend
 - Choose the location of the legend
 - Enable animation
+- Set the default color scheme to fill the chart
 
 ---
 
@@ -126,6 +128,7 @@ In the administration settings area, you can choose to:
 - View the legend
 - Choose the location of the legend
 - Enable animation
+- Set the default color scheme to fill the chart
 
 ---
 
@@ -138,5 +141,6 @@ In the administration settings area, you can choose to:
 - View the legend
 - Choose the location of the legend
 - Enable animation
+- Set the default color scheme to fill the chart
 
 ---

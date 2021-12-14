@@ -15,4 +15,6 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Widgets\Controllers'], stat
     $routes->get('settings/widgets', 'WidgetsSettingsController::index', ['as' => 'widgets-settings']);
     $routes->post('settings/widgets', 'WidgetsSettingsController::save');
     $routes->post('settings/widgetsReset', 'WidgetsSettingsController::resetSettings');
+
+    $routes->post('settings/widgets/schemePreview', 'WidgetsSettingsController::getColorSchemePreview');
 });

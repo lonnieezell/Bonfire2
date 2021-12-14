@@ -48,4 +48,20 @@ class BarChart extends BaseConfig
      * --------------------------------------------------------------------------
      */
     public string $bar_legendPosition = 'bottom';
+
+    /**
+     * --------------------------------------------------------------------------
+     * Set the default color scheme to fill the chart
+     *
+     * possible value are:
+     * null
+     * Blues
+     * Greens
+     * Greys
+     * Oranges
+     * Purples
+     * Reds
+     * --------------------------------------------------------------------------
+     */
+    public string $bar_colorScheme = 'null';
 }
