@@ -4,15 +4,15 @@
 
 
 <x-page-head>
-	<x-module-title><i class="far fa-object-group"></i> Widgets</x-module-title>
-	<h2>Settings</h2>
+    <x-module-title><i class="far fa-object-group"></i> Widgets</x-module-title>
+    <h2>Settings</h2>
 </x-page-head>
 
 <?= view('Bonfire\Modules\Widgets\Views\_tabs', ['tab' => $tab]) ?>
 
 <x-admin-box>
 
-	<form action="/admin/settings/widgets" method="post">
+    <form action="/admin/settings/widgets" method="post">
 		<?= csrf_field() ?>
         <input type="hidden" id="widget" name="widget" value="<?=$tab?>">
 
@@ -57,8 +57,8 @@
 
             <div class="form-group col-12 col-sm-6 col-md-3">
                 <label class="form-label" for="bar_colorScheme">Assign a predefined color scheme to fill the chart</label>
-                <!--select name="bar_colorScheme" id="bar_colorScheme" class="form-select" hx-post="widgets/schemePreview" hx-target="#bar_colorScheme_preview"-->
-                <select name="bar_colorScheme" id="bar_colorScheme" class="form-select">
+
+                <select name="bar_colorScheme" id="bar_colorScheme" class="form-select" hx-post="schemePreview" hx-target="#bar_colorScheme_preview">
                     <option value="null" <?php if (old('bar_colorScheme', setting('BarChart.bar_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('bar_colorScheme', setting('BarChart.bar_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
                     <option value="Greens" <?php if (old('bar_colorScheme', setting('BarChart.bar_colorScheme')) === 'Greens') : ?> selected <?php endif?>>Greens</option>
@@ -77,10 +77,10 @@
 
         </fieldset>
 
-		<div class="text-end px-5 py-3">
-			<input type="submit" value="Save Settings" class="btn btn-primary btn-lg">
-		</div>
-	</form>
+        <div class="text-end px-5 py-3">
+            <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">
+        </div>
+    </form>
 
 
 </x-admin-box>

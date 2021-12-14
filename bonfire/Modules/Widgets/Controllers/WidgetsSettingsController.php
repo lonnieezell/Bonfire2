@@ -72,7 +72,7 @@ class WidgetsSettingsController extends AdminController
 
         alert('success', 'The settings have been saved.');
 
-        return redirect()->back();
+        return redirect()->to($this->request->getUserAgent()->getReferrer());
     }
 
     /**
@@ -80,9 +80,23 @@ class WidgetsSettingsController extends AdminController
      */
     public function getColorSchemePreview(): string
     {
-        if (file_exists(ROOTPATH . 'themes/Admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png')) {
-            //return '<img src="/assets/admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png" style="height:40px !important; width:-webkit-fill-available; ';
-            return '<img src="/assets/admin/img/color_scheme/' . $this->request->getVar('bar_colorScheme') . '.png" style="height:40px !important; width:300px; ';
+        $req = 'null';
+
+        if ($this->request->getVar('bar_colorScheme')) {
+            $req = $this->request->getVar('bar_colorScheme');
+        }
+        if ($this->request->getVar('doughnut_colorScheme')) {
+            $req = $this->request->getVar('doughnut_colorScheme');
+        }
+        if ($this->request->getVar('pie_colorScheme')) {
+            $req = $this->request->getVar('pie_colorScheme');
+        }
+        if ($this->request->getVar('polarArea_colorScheme')) {
+            $req = $this->request->getVar('polarArea_colorScheme');
+        }
+
+        if ($req !== 'null') {
+            return '<img src="/assets/admin/img/color_scheme/' . $req . '.png" style="height:40px !important; width:300px; ';
         }
 
         return '';

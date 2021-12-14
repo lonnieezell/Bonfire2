@@ -55,7 +55,7 @@
 
             <div class="form-group col-12 col-sm-6 col-md-3">
                 <label class="form-label" for="polarArea_colorScheme">Assign a predefined color scheme to fill the chart</label>
-                <select name="polarArea_colorScheme" id="polarArea_colorScheme" class="form-select">
+                <select name="polarArea_colorScheme" id="polarArea_colorScheme" class="form-select" hx-post="schemePreview" hx-target="#polarArea_colorScheme_preview">
                     <option value="null" <?php if (old('polarArea_colorScheme', setting('PolarAreaChart.polarArea_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('polarArea_colorScheme', setting('PolarAreaChart.polarArea_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
                     <option value="Greens" <?php if (old('polarArea_colorScheme', setting('PolarAreaChart.polarArea_colorScheme')) === 'Greens') : ?> selected <?php endif?>>Greens</option>

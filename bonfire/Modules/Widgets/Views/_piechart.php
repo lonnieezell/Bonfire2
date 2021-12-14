@@ -55,7 +55,7 @@
 
             <div class="form-group col-12 col-sm-6 col-md-3">
                 <label class="form-label" for="pie_colorScheme">Assign a predefined color scheme to fill the chart</label>
-                <select name="pie_colorScheme" id="pie_colorScheme" class="form-select">
+                <select name="pie_colorScheme" id="pie_colorScheme" class="form-select" hx-post="schemePreview" hx-target="#pie_colorScheme_preview">
                     <option value="null" <?php if (old('pie_colorScheme', setting('PieChart.pie_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('pie_colorScheme', setting('PieChart.pie_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
                     <option value="Greens" <?php if (old('pie_colorScheme', setting('PieChart.pie_colorScheme')) === 'Greens') : ?> selected <?php endif?>>Greens</option>
