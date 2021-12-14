@@ -133,7 +133,7 @@
             </div>
 
             <div class="form-group col-12 col-sm-6 col-md-3">
-                <label class="form-label" for="bar_colorScheme">Assign Default Color Scheme</label>
+                <label class="form-label" for="bar_colorScheme">Assign a predefined color scheme to fill the chart</label>
                 <!--select name="bar_colorScheme" id="bar_colorScheme" class="form-select" hx-post="widgets/schemePreview" hx-target="#bar_colorScheme_preview"-->
                 <select name="bar_colorScheme" id="bar_colorScheme" class="form-select">
                     <option value="null" <?php if (old('bar_colorScheme', setting('BarChart.bar_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
@@ -192,7 +192,7 @@
             </div>
 
             <div class="form-group col-12 col-sm-6 col-md-3">
-                <label class="form-label" for="doughnut_colorScheme">Assign Default Color Scheme</label>
+                <label class="form-label" for="doughnut_colorScheme">Assign a predefined color scheme to fill the chart</label>
                 <select name="doughnut_colorScheme" id="doughnut_colorScheme" class="form-select">
                     <option value="null" <?php if (old('doughnut_colorScheme', setting('DoughnutChart.doughnut_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('doughnut_colorScheme', setting('DoughnutChart.doughnut_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
@@ -249,7 +249,7 @@
             </div>
 
             <div class="form-group col-12 col-sm-6 col-md-3">
-                <label class="form-label" for="pie_colorScheme">Assign Default Color Scheme</label>
+                <label class="form-label" for="pie_colorScheme">Assign a predefined color scheme to fill the chart</label>
                 <select name="pie_colorScheme" id="pie_colorScheme" class="form-select">
                     <option value="null" <?php if (old('pie_colorScheme', setting('PieChart.pie_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('pie_colorScheme', setting('PieChart.pie_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
@@ -306,7 +306,7 @@
             </div>
 
             <div class="form-group col-12 col-sm-6 col-md-3">
-                <label class="form-label" for="polarArea_colorScheme">Assign Default Color Scheme</label>
+                <label class="form-label" for="polarArea_colorScheme">Assign a predefined color scheme to fill the chart</label>
                 <select name="polarArea_colorScheme" id="polarArea_colorScheme" class="form-select">
                     <option value="null" <?php if (old('polarArea_colorScheme', setting('PolarAreaChart.polarArea_colorScheme')) === 'null') : ?> selected <?php endif?>>Default</option>
                     <option value="Blues" <?php if (old('polarArea_colorScheme', setting('PolarAreaChart.polarArea_colorScheme')) === 'Blues') : ?> selected <?php endif?>>Blues</option>
