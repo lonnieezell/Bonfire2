@@ -57,3 +57,14 @@ The address that displays the list of objects on your module. It will be associa
 **faIcon**
 
 The FontAwesome icon
+
+
+
+## Configuration
+
+All settings are available in the `Bonfire\Modules\Widgets\Config\Stats` class, or in the admin settings area.
+
+In the administration settings area, you can choose to:
+- Display the "View Detail" link
+
+---

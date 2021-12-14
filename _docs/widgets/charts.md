@@ -77,7 +77,7 @@ Each type of widget has its own specific settings.
 
 ***Line Chart***
 
-You can set the default values in the *Bonfire\Modules\Widgets\Config\LineChart* Class
+You can set the default values in the `Bonfire\Modules\Widgets\Config\LineChart` Class
 
 In the administration settings area, you can choose to:
 - Display the title
@@ -95,7 +95,7 @@ Advanced settings:
 
 ***Bar Chart***
 
-You can set the default values in the *Bonfire\Modules\Widgets\Config\BarChart* Class
+You can set the default values in the `Bonfire\Modules\Widgets\Config\BarChart` Class
 
 In the administration settings area, you can choose to:
 - Display the title
@@ -108,7 +108,7 @@ In the administration settings area, you can choose to:
 
 ***Doughnut Chart***
 
-You can set the default values in the *Bonfire\Modules\Widgets\Config\DoughnutChart* Class
+You can set the default values in the `Bonfire\Modules\Widgets\Config\DoughnutChart` Class
 
 In the administration settings area, you can choose to:
 - Display the title
@@ -121,7 +121,7 @@ In the administration settings area, you can choose to:
 
 ***Pie Chart***
 
-You can set the default values in the *Bonfire\Modules\Widgets\Config\PieChart* Class
+You can set the default values in the `Bonfire\Modules\Widgets\Config\PieChart` Class
 
 In the administration settings area, you can choose to:
 - Display the title
@@ -134,7 +134,7 @@ In the administration settings area, you can choose to:
 
 ***Polar Area Chart***
 
-You can set the default values in the *Bonfire\Modules\Widgets\Config\PolarAreaChart* Class
+You can set the default values in the `Bonfire\Modules\Widgets\Config\PolarAreaChart` Class
 
 In the administration settings area, you can choose to:
 - Display the title

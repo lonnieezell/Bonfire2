@@ -8,9 +8,11 @@
                     <h4><?= $widget->title() ?></h4>
                     <p><?= $widget->value() ?></p>
                 </div>
+				<?php if (setting('Stats.stats_showLink')) : ?>
                 <div class="widget-stats-link">
                     <a href="<?= $widget->url() ?>">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
+                <?php endif?>
             </div>
         </div>
         <?php endforeach; ?>

@@ -28,21 +28,51 @@ class WidgetsSettingsController extends AdminController
         ]);
     }
 
+    public function show(string $alias): string
+    {
+        return $this->render($this->viewPrefix . '_' . $alias, [
+            'widgets' => setting('LineChart.widgets'),
+            'tab'     => $alias,
+        ]);
+    }
+
     /**
      * Saves the Widgets settings to the config file, where it
      * is automatically saved by our dynamic configuration system.
      */
     public function save(): \CodeIgniter\HTTP\RedirectResponse
     {
-        $this->saveLineSettings();
-        $this->saveBarSettings();
-        $this->saveDoughnutSettings();
-        $this->savePieSettings();
-        $this->savePolarAreaSettings();
+        switch ($this->request->getVar('widget')) {
+            case 'stats':
+                $this->saveStatsSettings();
+                break;
+
+            case 'linechart':
+                $this->saveLineSettings();
+                break;
+
+            case 'barchart':
+                $this->saveBarSettings();
+                break;
+
+            case 'doughnutchart':
+                $this->saveDoughnutSettings();
+                break;
+
+            case 'piechart':
+                $this->savePieSettings();
+                break;
+
+            case 'polarareachart':
+                $this->savePolarAreaSettings();
+                break;
+            /*default:
+                dd($this->request->getVar('widget'));*/
+        }
 
         alert('success', 'The settings have been saved.');
 
-        return redirect()->route('widgets-settings');
+        return redirect()->back();
     }
 
     /**
@@ -56,6 +86,17 @@ class WidgetsSettingsController extends AdminController
         }
 
         return '';
+    }
+
+    /**
+     * Saves the Statistic widgets settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
+     * @return void
+     */
+    private function saveStatsSettings()
+    {
+        setting('Stats.stats_showLink', $this->request->getPost('stats_showLink') ?? false);
     }
 
     /**
@@ -155,6 +196,8 @@ class WidgetsSettingsController extends AdminController
      */
     public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
     {
+        setting()->forget('Stats.stats_showLink');
+
         setting()->forget('LineChart.line_showTitle');
         setting()->forget('LineChart.line_showSubTitle');
         setting()->forget('LineChart.line_showLegend');
