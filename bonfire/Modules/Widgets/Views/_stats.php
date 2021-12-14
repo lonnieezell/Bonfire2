@@ -20,7 +20,7 @@
 
             <legend><i class="fas fa-chart-bar"></i> Stats General Settings</legend>
 
-            <p>In this section you can customize the general parameters concerning the Bar chart.</p>
+            <p>In this section you can customize the general parameters concerning the Stats widget.</p>
 
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="stats_showLink" role="switch" id="stats_showLink"
