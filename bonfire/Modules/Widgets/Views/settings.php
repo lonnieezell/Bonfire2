@@ -12,14 +12,14 @@
 
 <x-admin-box>
 
-    <form action="/admin/settings/widgets" method="post">
+    <form action="/<?= ADMIN_AREA ?>/settings/widgets" method="post">
 		<?= csrf_field() ?>
         <fieldset>
 
             <legend><i class="fas fa-object-group"></i> Widgets Settings</legend>
 
             <p>In this section you can manage widgets on the dashboard.</p>
-             <br/>
+            <br/>
 
 			<?php foreach ($manager as $elem): ?>
 
@@ -27,7 +27,7 @@
                     <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['index'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['index'] ?>"
 						<?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['index'])) : ?> checked <?php endif ?>
                     >
-                    <label class="form-check-label" for="stats_showLink">Enable <?= rtrim($elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
+                    <label class="form-check-label" for="<?= $elem['widget'] ?>_<?= $elem['index'] ?>">Enable <?= rtrim($elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
                 </div>
 
 			<?php endforeach; ?>
@@ -37,7 +37,7 @@
         </div>
     </form>
 
-    <form action="/admin/settings/widgetsReset" method="post">
+    <form action="/<?= ADMIN_AREA ?>/settings/widgetsReset" method="post">
 		<?= csrf_field() ?>
         <div class="text-end px-5 py-3">
             <input type="submit" value="Reset all settings of all widgets to their default values" class="btn btn-danger btn-lg">

@@ -12,7 +12,7 @@
 
 <x-admin-box>
 
-	<form action="/admin/settings/widgets" method="post">
+	<form action="/<?= ADMIN_AREA ?>/settings/widgets" method="post">
 		<?= csrf_field() ?>
         <input type="hidden" id="widget" name="widget" value="<?=$tab?>">
 
