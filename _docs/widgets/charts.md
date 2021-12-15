@@ -39,7 +39,7 @@ Examples options are:
 - col-12
 ```
 
-**addDataset()**
+**addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count')**
 
 Currently, only one dataset can be added to the chart. The required parameters are:
 
