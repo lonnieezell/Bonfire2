@@ -37,10 +37,10 @@ class ConsentSettingsController extends AdminController
     public function save()
     {
         $rules = [
-            'requireConsent' => 'required',
-            'consentLength' => 'required_with[requireConsent]|string',
-            'policyUrl' => 'required_with[requireConsent]|string',
-            'consentMessage' => 'required_with[requireConsent]|string',
+            'requireConsent'  => 'required',
+            'consentLength'   => 'required_with[requireConsent]|string',
+            'policyUrl'       => 'required_with[requireConsent]|string',
+            'consentMessage'  => 'required_with[requireConsent]|string',
             'consents.*.name' => 'required_with[requireConsent]|string',
             'consents.*.desc' => 'required_with[requireConsent]|string',
         ];
