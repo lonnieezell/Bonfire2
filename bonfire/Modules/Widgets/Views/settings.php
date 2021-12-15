@@ -26,7 +26,7 @@
                     <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['index'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['index'] ?>"
 						<?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['index'])) : ?> checked <?php endif ?>
                     >
-                    <label class="form-check-label" for="stats_showLink">Enable <?= rtrim($elem['widget'], 's') ?> widget "<?= $elem['title'] ?>"</label>
+                    <label class="form-check-label" for="stats_showLink">Enable <?= rtrim($elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
                 </div>
 
 			<?php endforeach; ?>
