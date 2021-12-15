@@ -74,7 +74,7 @@
         </fieldset>
 
         <div class="text-end px-5 py-3">
-            <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">
+            <input type="submit" value="Save Doughnut Chart Settings" class="btn btn-primary btn-lg">
         </div>
     </form>
 
