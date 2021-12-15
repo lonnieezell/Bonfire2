@@ -275,8 +275,7 @@ div {
  * --------------------------------------------------------------------------
  */
 .sidebar{
-    width: 380px !important;
-    min-width: 155px !important;
+    min-width: 220px !important;
 }
 .chart-border {
     border: 1px solid #ccc;
