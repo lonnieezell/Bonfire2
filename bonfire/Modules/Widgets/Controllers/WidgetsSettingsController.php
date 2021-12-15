@@ -25,6 +25,7 @@ class WidgetsSettingsController extends AdminController
     {
         return $this->render($this->viewPrefix . 'settings', [
             'widgets' => setting('LineChart.widgets'),
+            'manager' => service('widgets')->manager(),
         ]);
     }
 
@@ -66,8 +67,10 @@ class WidgetsSettingsController extends AdminController
             case 'polarareachart':
                 $this->savePolarAreaSettings();
                 break;
-            /*default:
-                dd($this->request->getVar('widget'));*/
+
+            default:
+                $this->saveWidgetSettings();
+            // dd($this->request->getVar('widget'));
         }
 
         alert('success', 'The settings have been saved.');
@@ -100,6 +103,21 @@ class WidgetsSettingsController extends AdminController
         }
 
         return '';
+    }
+
+    /**
+     * Saves the Widgets settings to the config file, where it
+     * is automatically saved by our dynamic configuration system.
+     *
+     * @return void
+     */
+    private function saveWidgetSettings()
+    {
+        $manager = service('widgets')->manager();
+
+        foreach ($manager as $elem) {
+            setting('Stats.' . $elem['widget'] . '_' . $elem['index'], $this->request->getPost($elem['widget'] . '_' . $elem['index']) ?? false);
+        }
     }
 
     /**
@@ -210,6 +228,12 @@ class WidgetsSettingsController extends AdminController
      */
     public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
     {
+        $manager = service('widgets')->manager();
+
+        foreach ($manager as $elem) {
+            setting()->forget('Stats.' . $elem['widget'] . '_' . $elem['index']);
+        }
+
         setting()->forget('Stats.stats_showLink');
 
         setting()->forget('LineChart.line_showTitle');

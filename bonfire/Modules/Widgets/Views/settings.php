@@ -12,7 +12,7 @@
 
 <x-admin-box>
 
-    <form action="/admin/settings/widgetsReset" method="post">
+    <form action="/admin/settings/widgets" method="post">
 		<?= csrf_field() ?>
         <fieldset>
 
@@ -20,8 +20,24 @@
 
             <p>In this section you can customize the general parameters of the widgets.</p>
 
-        </fieldset>
+			<?php foreach ($manager as $elem): ?>
 
+                <div class="form-check form-switch mt-6 mb-3">
+                    <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['index'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['index'] ?>"
+						<?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['index'])) : ?> checked <?php endif ?>
+                    >
+                    <label class="form-check-label" for="stats_showLink">Enable <?= rtrim($elem['widget'], 's') ?> widget "<?= $elem['title'] ?>"</label>
+                </div>
+
+			<?php endforeach; ?>
+        </fieldset>
+        <div class="text-end px-5 py-3">
+            <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">
+        </div>
+    </form>
+
+    <form action="/admin/settings/widgetsReset" method="post">
+		<?= csrf_field() ?>
         <div class="text-end px-5 py-3">
             <input type="submit" value="Reset All Settings to Default" class="btn btn-danger btn-lg">
         </div>

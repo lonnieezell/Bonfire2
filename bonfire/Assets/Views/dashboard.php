@@ -10,8 +10,14 @@
 <?php $this->section('main') ?>
 <h1>Home sweet home</h1>
 
-<?= view('Bonfire\Views\Widgets\_stats', ['stats' => $widgets->widget('stats')->items()]) ?>
-<?= view('Bonfire\Views\Widgets\_charts', ['charts' => $widgets->widget('charts')->items()]) ?>
+<?= view('Bonfire\Views\Widgets\_stats', [
+    'stats'   => $widgets->widget('stats')->items(),
+    'manager' => $manager,
+]) ?>
+<?= view('Bonfire\Views\Widgets\_charts', [
+    'charts'  => $widgets->widget('charts')->items(),
+    'manager' => $manager,
+]) ?>
 <?php $this->endSection() ?>
 
 
@@ -24,9 +30,23 @@
 
 <script>
 	<?php foreach ($widgets->widget('charts')->items()  as $elem) : ?>
-	<?php foreach ($elem->items() as $widget) : ?>
+
+	<?php foreach ($elem->items() as $index => $widget) : ?>
+
+	<?php
+    $_widgets = array_values(
+    array_filter($manager, static function ($k) {
+        return $k['widget'] === 'Charts';
+    }, ARRAY_FILTER_USE_BOTH)
+);
+
+    ?>
+	<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $index)) : ?>
 	<?= $widget->getScript(); ?>
+	<?php endif?>
+
 	<?php endforeach; ?>
+
 	<?php endforeach; ?>
 
 </script>
