@@ -18,7 +18,8 @@
 
             <legend><i class="fas fa-object-group"></i> Widgets Settings</legend>
 
-            <p>In this section you can customize the general parameters of the widgets.</p>
+            <p>In this section you can manage widgets on the dashboard.</p>
+             <br/>
 
 			<?php foreach ($manager as $elem): ?>
 
@@ -39,7 +40,7 @@
     <form action="/admin/settings/widgetsReset" method="post">
 		<?= csrf_field() ?>
         <div class="text-end px-5 py-3">
-            <input type="submit" value="Reset All Settings to Default" class="btn btn-danger btn-lg">
+            <input type="submit" value="Reset all settings of all widgets to their default values" class="btn btn-danger btn-lg">
         </div>
     </form>
 </x-admin-box>
