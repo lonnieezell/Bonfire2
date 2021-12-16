@@ -23,54 +23,54 @@ class ChartsCollectionTest extends TestCase
 
 	public function testTitles()
 	{
-		$collection = new ChartsCollection();
-		$this->assertNull($collection->title());
+		$chart_collection = new ChartsCollection();
+		$this->assertNull($chart_collection->title());
 
-		$collection = new ChartsCollection(['title' => 'Foo']);
-		$this->assertEquals('Foo', $collection->title());
+		$chart_collection = new ChartsCollection(['title' => 'Foo']);
+		$this->assertEquals('Foo', $chart_collection->title());
 
-		$collection = new ChartsCollection();
-		$collection->setTitle('Foo');
-		$this->assertEquals('Foo', $collection->title());
+		$chart_collection = new ChartsCollection();
+		$chart_collection->setTitle('Foo');
+		$this->assertEquals('Foo', $chart_collection->title());
 	}
 
 	public function testWithItem()
 	{
-		$collection = new ChartsCollection(['name' => 'Foo']);
+		$chart_collection = new ChartsCollection(['name' => 'Foo']);
 		$item1 = new ChartsItem(['title' => 'Item 1']);
 		$item2 = new ChartsItem(['title' => 'Item 2']);
 
-		$collection->addItem($item1);
-		$collection->addItem($item2);
+		$chart_collection->addItem($item1);
+		$chart_collection->addItem($item2);
 
-		$items = $collection->items();
+		$items = $chart_collection->items();
 
 		$this->assertCount(2, $items);
 		$this->assertEquals('Item 1', $items[0]->title());
 		$this->assertEquals('Item 2', $items[1]->title());
 
-		$collection->removeItem('Item 1');
+		$chart_collection->removeItem('Item 1');
 
-		$items = $collection->items();
+		$items = $chart_collection->items();
 
 		$this->assertCount(1, $items);
 		$this->assertEquals('Item 2', $items[0]->title());
 
-		$collection->removeAllItems();
+		$chart_collection->removeAllItems();
 
-		$items = $collection->items();
+		$items = $chart_collection->items();
 		$this->assertEquals([], $items);
 	}
 
 	public function testAddItems()
 	{
-		$collection = new ChartsCollection(['name' => 'Foo']);
+		$chart_collection = new ChartsCollection(['name' => 'Foo']);
 		$item1 = new ChartsItem(['title' => 'Item 1']);
 		$item2 = new ChartsItem(['title' => 'Item 2']);
 
-		$collection->addItems([$item1, $item2]);
+		$chart_collection->addItems([$item1, $item2]);
 
-		$items = $collection->items();
+		$items = $chart_collection->items();
 
 		$this->assertCount(2, $items);
 		$this->assertEquals('Item 1', $items[0]->title());
