@@ -17,7 +17,7 @@
 
                 <div class="form-check form-switch mt-6  mb-3">
                     <input class="form-check-input" type="checkbox" name="requireConsent" role="switch" id="requireConsent"
-                        <?php if(setting('Consent.requireConsent')) : ?> checked <?php endif ?>
+                        <?php if (setting('Consent.requireConsent')) : ?> checked <?php endif ?>
                     >
                     <label class="form-check-label" for="requireConsent">Require Consent form visitors?</label>
                 </div>
@@ -77,7 +77,7 @@
 
                 <p>The available Consents that the user may agree to.</p>
 
-                <?php if(isset($consents) && count($consents)) : ?>
+                <?php if (isset($consents) && count($consents)) : ?>
                 <table class="table">
                     <thead>
                         <tr>
@@ -87,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach(setting('Consent.consents') as $alias => $info) : ?>
+                    <?php foreach (setting('Consent.consents') as $alias => $info) : ?>
                         <tr>
                             <td>
                                 <input type="text" class="form-control" disabled readonly value="<?= esc($alias) ?>">
