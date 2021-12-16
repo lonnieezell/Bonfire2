@@ -1,0 +1,283 @@
+:root {
+    --blue: #348fe2;
+    --red: #ff5b57;
+    --orange: #f59c1a;
+    --light: #f2f3f4;
+    --dark: #2d353c;
+    --inverse: #2d353c;
+    --indigo: #8753de;
+    --purple: #727cb6;
+    --pink: #fb5597;
+    --yellow: #ffd900;
+    --green: #32a932;
+    --teal: #00acac;
+    --lime: #90ca4b;
+    --cyan: #49b6d6;
+    --white: #FFFFFF;
+    --gray: #6c757d;
+    --gray-dark: #2d353c;
+
+    --blue-rgb: 52, 143, 226;
+    --red-rgb: 255, 91, 87;
+    --orange-rgb: 245, 156, 26;
+    --light-rgb: 242, 243, 244;
+    --dark-rgb: 45, 53, 60;
+    --inverse-rgb: 45, 53, 60;
+    --indigo-rgb: 135, 83, 222;
+    --purple-rgb: 114, 124, 182;
+    --pink-rgb: 251, 85, 151;
+    --yellow-rgb: 255, 217, 0;
+    --green-rgb: 50, 169, 50;
+    --teal-rgb: 0, 172, 172;
+    --lime-rgb: 144, 202, 75;
+    --cyan-rgb: 73, 182, 214;
+    --white-rgb: 255, 255, 255;
+    --gray-rgb: 108, 117, 125;
+    --gray-dark-rgb: 45, 53, 60;
+
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * BACKGROUND COLORS
+ * --------------------------------------------------------------------------
+ */
+.bg-blue {
+    --bg-opacity: 1;
+    background-color: rgba(var(--blue-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-red {
+    --bg-opacity: 1;
+    background-color: rgba(var(--red-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-orange {
+    --bg-opacity: 1;
+    background-color: rgba(var(--orange-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-light {
+    --bg-opacity: 1;
+    background-color: rgba(var(--light-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-dark {
+    --bg-opacity: 1;
+    background-color: rgba(var(--dark-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-inverse {
+    --bg-opacity: 1;
+    background-color: rgba(var(--inverse-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-indigo {
+    --bg-opacity: 1;
+    background-color: rgba(var(--indigo-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-purple {
+    --bg-opacity: 1;
+    background-color: rgba(var(--purple-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-pink {
+    --bg-opacity: 1;
+    background-color: rgba(var(--pink-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-yellow {
+    --bg-opacity: 1;
+    background-color: rgba(var(--yellow-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-green {
+    --bg-opacity: 1;
+    background-color: rgba(var(--green-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-teal {
+    --bg-opacity: 1;
+    background-color: rgba(var(--teal-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-lime {
+    --bg-opacity: 1;
+    background-color: rgba(var(--lime-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-cyan {
+    --bg-opacity: 1;
+    background-color: rgba(var(--cyan-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-white {
+    --bg-opacity: 1;
+    background-color: rgba(var(--white-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-gray {
+    --bg-opacity: 1;
+    background-color: rgba(var(--gray-rgb), var(--bg-opacity)) !important;
+}
+
+.bg-gray-dark {
+    --bg-opacity: 1;
+    background-color: rgba(var(--gray-dark-rgb), var(--bg-opacity)) !important;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * RESPONSIVE
+ * --------------------------------------------------------------------------
+ */
+@media (min-width: 100px) {
+    .col-3 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 5px;
+    }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 5px;
+    }
+}
+
+@media (min-width: 400px) {
+    .col-3 {
+        flex: 0 0 auto;
+        width: 94%;
+        padding: 5px;
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 94%;
+        padding: 5px;
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+}
+
+@media (min-width: 768px) {
+    .col-3 {
+        flex: 0 0 auto;
+        width: 50%;
+        padding: 5px;
+        margin-left: 0%;
+        margin-right: 0%;
+    }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 5px;
+        margin-left: 0%;
+        margin-right: 0%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+    .col-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+
+div {
+    display: block;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+.row {
+    --gutter-x: 20px;
+    --gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--gutter-y));
+    margin-right: calc(-.5 * var(--gutter-x));
+    margin-left: calc(-.5 * var(--gutter-x));
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * WIDGET STATS
+ * --------------------------------------------------------------------------
+ */
+.widget-stats {
+    position: relative;
+    color: #fff;
+    padding: .9375rem;
+    border-radius: 4px;
+}
+
+.widget-stats-link a {
+    display: block;
+    margin: .9375rem -.9375rem -.9375rem;
+    padding: .46875rem .9375rem;
+    background: rgba(0, 0, 0, .4);
+    text-align: right;
+    color: rgba(255, 255, 255, .7);
+    text-decoration: none;
+}
+
+.widget-stats-icon {
+    font-size: 42px;
+    height: 56px;
+    width: 56px;
+    text-align: center;
+    line-height: 56px;
+    color: rgba(0, 0, 0, .15);
+    position: absolute;
+    top: .9375rem;
+    margin-left: .9375rem;
+    right: .9375rem;
+}
+
+/** Icon animation */
+.col-3 .widget-stats-icon i {
+    transition: all .5s ease-in-out; /* vendorless fallback */
+    -o-transition: all .5s ease-in-out; /* opera */
+    -ms-transition: all .5s ease-in-out; /* IE 10 */
+    -moz-transition: all .5s ease-in-out; /* Firefox */
+    -webkit-transition: all .5s ease-in-out; /*safari and chrome */
+}
+.col-3:hover .widget-stats-icon i {
+    transform: scale(1.3);
+}
+
+.widget-stats-info h4 {
+    font-size: 12px;
+    margin: 5px 0;
+    color: rgba(255, 255, 255, .7);
+}
+
+.widget-stats-info p {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * WIDGET CHARTS
+ * --------------------------------------------------------------------------
+ */
+.sidebar{
+    min-width: 220px !important;
+}
+.chart-border {
+    border: 1px solid #ccc;
+    padding: 3%;
+}
