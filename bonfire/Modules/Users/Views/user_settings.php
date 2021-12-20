@@ -50,28 +50,28 @@
                 </div>
 
                 <?php if (isset($groups) && count($groups)) : ?>
-                    <!-- Default Group -->
-                    <div class="row">
-                        <div class="col-12 col-sm-4">
+                <!-- Default Group -->
+                <div class="row">
+                    <div class="col-12 col-sm-4">
 
-                            <label class="form-label">Default User Group:</label>
+                        <label class="form-label">Default User Group:</label>
 
-                                <?php foreach ($groups as $group => $info) : ?>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="defaultGroup"
-                                           value="<?= $group ?>"
-                                        <?php if ($group === $defaultGroup) : ?> checked <?php endif ?>>
-                                    <label class="form-check-label" for="defaultGroup">
-                                        <?= esc($info['title']) ?>
-                                    </label>
-                                </div>
-                                <?php endforeach ?>
-
+                        <?php foreach ($groups as $group => $info) : ?>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="defaultGroup"
+                                   value="<?= $group ?>"
+                                    <?php if ($group === $defaultGroup) : ?> checked <?php endif ?>>
+                            <label class="form-check-label" for="defaultGroup">
+                                <?= esc($info['title']) ?>
+                            </label>
                         </div>
-                        <div class="col px-5 py-4">
-                            <p class="text-muted small">The user group newly registered users are members of.</p>
-                        </div>
+                        <?php endforeach ?>
+
                     </div>
+                    <div class="col px-5 py-4">
+                        <p class="text-muted small">The user group newly registered users are members of.</p>
+                    </div>
+                </div>
                 <?php endif ?>
 
             </fieldset>
