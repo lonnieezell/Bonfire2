@@ -208,7 +208,7 @@
     true
 )) : ?>
                                     checked
-<?php endif ?>
+                                <?php endif ?>
                             >
                             <label class="form-check-label">
                                 Dictionary Validator
@@ -306,7 +306,7 @@
 <?php $this->endSection() ?>
 
 <?php $this->section('scripts') ?>
-    <script>
+<script>
 
-    </script>
+</script>
 <?php $this->endSection() ?>
