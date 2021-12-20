@@ -1,83 +1,95 @@
 <?php
 
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 namespace Tests\Bonfire\Widgets;
 
 use Bonfire\Libraries\Widgets\Stats\StatsCollection;
 use Bonfire\Libraries\Widgets\Stats\StatsItem;
 use Tests\Support\TestCase;
 
-class StatsCollectionTest extends TestCase
+/**
+ * @internal
+ */
+final class StatsCollectionTest extends TestCase
 {
-	public function testExtendsStatsItem()
-	{
-		$item = new StatsCollection([
-			'bgColor' => 'bg-blue',
-			'title' => 'Item A',
-			'value' => 15,
-			'url' => '/example/foo',
-			'faIcon' => 'fa fa-users',
-		]);
+    public function testExtendsStatsItem()
+    {
+        $item = new StatsCollection([
+            'bgColor' => 'bg-blue',
+            'title'   => 'Item A',
+            'value'   => 15,
+            'url'     => '/example/foo',
+            'faIcon'  => 'fa fa-users',
+        ]);
 
-		$this->assertEquals('bg-blue', $item->bgColor());
-		$this->assertEquals('ITEM A', $item->title());
-		$this->assertEquals(15, $item->value());
-		$this->assertEquals('/example/foo', $item->url());
-		$this->assertEquals('fa fa-users', $item->faIcon());
-	}
+        $this->assertSame('bg-blue', $item->bgColor());
+        $this->assertSame('ITEM A', $item->title());
+        $this->assertSame(15, $item->value());
+        $this->assertSame('/example/foo', $item->url());
+        $this->assertSame('fa fa-users', $item->faIcon());
+    }
 
-	public function testNames()
-	{
-		$collection = new StatsCollection();
-		$this->assertNull($collection->name());
+    public function testNames()
+    {
+        $collection = new StatsCollection();
+        $this->assertNull($collection->name());
 
-		$collection = new StatsCollection(['name' => 'Foo']);
-		$this->assertEquals('Foo', $collection->name());
+        $collection = new StatsCollection(['name' => 'Foo']);
+        $this->assertSame('Foo', $collection->name());
 
-		$collection = new StatsCollection();
-		$collection->setName('Foo');
-		$this->assertEquals('Foo', $collection->name());
-	}
+        $collection = new StatsCollection();
+        $collection->setName('Foo');
+        $this->assertSame('Foo', $collection->name());
+    }
 
-	public function testWithItem()
-	{
-		$collection = new StatsCollection(['name' => 'Foo']);
-		$item1 = new StatsItem(['title' => 'Item 1']);
-		$item2 = new StatsItem(['title' => 'Item 2']);
+    public function testWithItem()
+    {
+        $collection = new StatsCollection(['name' => 'Foo']);
+        $item1      = new StatsItem(['title' => 'Item 1']);
+        $item2      = new StatsItem(['title' => 'Item 2']);
 
-		$collection->addItem($item1);
-		$collection->addItem($item2);
+        $collection->addItem($item1);
+        $collection->addItem($item2);
 
-		$items = $collection->items();
+        $items = $collection->items();
 
-		$this->assertCount(2, $items);
-		$this->assertEquals('ITEM 1', $items[0]->title);
-		$this->assertEquals('ITEM 2', $items[1]->title);
+        $this->assertCount(2, $items);
+        $this->assertSame('ITEM 1', $items[0]->title);
+        $this->assertSame('ITEM 2', $items[1]->title);
 
-		$collection->removeItem('ITEM 1');
+        $collection->removeItem('ITEM 1');
 
-		$items = $collection->items();
+        $items = $collection->items();
 
-		$this->assertCount(1, $items);
-		$this->assertEquals('ITEM 2', $items[0]->title);
+        $this->assertCount(1, $items);
+        $this->assertSame('ITEM 2', $items[0]->title);
 
-		$collection->removeAllItems();
+        $collection->removeAllItems();
 
-		$items = $collection->items();
-		$this->assertEquals([], $items);
-	}
+        $items = $collection->items();
+        $this->assertSame([], $items);
+    }
 
-	public function testAddItems()
-	{
-		$collection = new StatsCollection(['name' => 'Foo']);
-		$item1 = new StatsItem(['title' => 'Item 1']);
-		$item2 = new StatsItem(['title' => 'Item 2']);
+    public function testAddItems()
+    {
+        $collection = new StatsCollection(['name' => 'Foo']);
+        $item1      = new StatsItem(['title' => 'Item 1']);
+        $item2      = new StatsItem(['title' => 'Item 2']);
 
-		$collection->addItems([$item1, $item2]);
+        $collection->addItems([$item1, $item2]);
 
-		$items = $collection->items();
+        $items = $collection->items();
 
-		$this->assertCount(2, $items);
-		$this->assertEquals('ITEM 1', $items[0]->title);
-		$this->assertEquals('ITEM 2', $items[1]->title);
-	}
+        $this->assertCount(2, $items);
+        $this->assertSame('ITEM 1', $items[0]->title);
+        $this->assertSame('ITEM 2', $items[1]->title);
+    }
 }

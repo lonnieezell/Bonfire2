@@ -1,35 +1,46 @@
 <?php
 
-namespace Tests\Bonfire\Widgets;
+/**
+ * This file is part of Bonfire.
+ *
+ * (c) Lonnie Ezell <lonnieje@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
 
+namespace Tests\Bonfire\Widgets;
 
 use Bonfire\Libraries\Widgets\Charts\ChartsItem;
 use Tests\Support\TestCase;
 
-class ChartsItemTest extends TestCase
+/**
+ * @internal
+ */
+final class ChartsItemTest extends TestCase
 {
     public function testBasicDetails()
     {
         $item = new ChartsItem();
         $item->setTitle('Item A')
-			->setType('line')
+            ->setType('line')
             ->setCssclass('col-3');
 
-        $this->assertEquals('Item A', $item->title());
-		$this->assertEquals('line', $item->type());
-		$this->assertEquals('col-3', $item->cssClass());
+        $this->assertSame('Item A', $item->title());
+        $this->assertSame('line', $item->type());
+        $this->assertSame('col-3', $item->cssClass());
     }
 
     public function testConstructorFill()
     {
         $item = new ChartsItem([
-			'title' => 'Item A',
-			'type' => 'line',
-			'cssClass' => 'col-3',
-		]);
+            'title'    => 'Item A',
+            'type'     => 'line',
+            'cssClass' => 'col-3',
+        ]);
 
-		$this->assertEquals('Item A', $item->title());
-		$this->assertEquals('line', $item->type());
-		$this->assertEquals('col-3', $item->cssClass());
+        $this->assertSame('Item A', $item->title());
+        $this->assertSame('line', $item->type());
+        $this->assertSame('col-3', $item->cssClass());
     }
 }
