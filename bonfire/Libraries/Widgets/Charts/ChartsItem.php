@@ -274,14 +274,14 @@ class ChartsItem implements Item
         }
 
         return '
-			const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
-			const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
-			' . $backgroundColor . '
-			' . $borderColor . '
-			const Chart_' . $this->chartName() . " = new Chart(
-				document.getElementById('" . $this->chartName() . "'),
-				drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
-			);';
+            const data_' . $this->chartName() . ' = ' . json_encode($this->data()) . ';
+            const labels_' . $this->chartName() . ' = ' . json_encode($this->label()) . ';
+            ' . $backgroundColor . '
+            ' . $borderColor . '
+            const Chart_' . $this->chartName() . " = new Chart(
+                document.getElementById('" . $this->chartName() . "'),
+                drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
+            );';
     }
 
     /**
