@@ -29,6 +29,7 @@ class Module extends BaseModule
         $item    = new MenuItem([
             'title'      => 'System Info',
             'namedRoute' => 'sys-info',
+            'fontAwesomeIcon' => 'fas fa-info-circle',
         ]);
 
         $itemLogs = new MenuItem([

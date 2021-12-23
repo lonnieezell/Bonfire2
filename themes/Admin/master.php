@@ -15,11 +15,20 @@
 
 <?= service('alerts')->display(); ?>
 
-<div class="main" x-data="{open: false}">
+<div class="main" x-data="{open: true}">
 	<div class="h-100 d-flex align-items-stretch">
-        <nav id="sidebars" class="sidebar d-none d-sm-block" x-bind:class="{ 'd-none': !open }">
-            <div class="sidebar-inner">
-                <x-sidebar />
+        <nav id="sidebars" class="sidebar d-sm-block" x-bind:class="{ 'collapsed': ! open }">
+            <div class="sidebar-wrap  h-100 w-100 position-relative">
+                <div class="sidebar-inner">
+                    <x-sidebar />
+                </div>
+
+                <div class="nav-item position-absolute bottom-0 w-100">
+                    <a href="#" class="nav-link sidebar-toggle" @click="open = !open">
+                        <i class="fas fa-angle-double-left"></i>
+                        <span>Collapse sidebar</span>
+                    </a>
+                </div>
             </div>
         </nav>
 

@@ -1,12 +1,18 @@
 <a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="/<?= ADMIN_AREA ?>">
-    <?= setting('App.siteName') ?? 'bonfire' ?>
+    <div class="site-stamp rounded d-inline-flex align-content-center justify-content-center">
+        B
+    </div>
+    <span class="site-name"><?= setting('App.siteName') ?? 'bonfire' ?></span>
 </a>
 <div class="pt-3">
 
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link <?= url_is('/'.ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>"><i class="fas fa-home"></i> Dashboard</a>
+            <a class="nav-link <?= url_is('/'.ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>" title="Dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
         </li>
     </ul>
 
@@ -29,7 +35,7 @@
                     <li class="nav-item">
                         <a class="nav-link <?= url_is($item->url.'*') ? 'active' : '' ?>" href="<?= $item->url ?>">
                             <?= $item->icon ?>
-                            <?= $item->title ?>
+                            <span><?= $item->title ?></span>
                         </a>
                     </li>
                 <?php endforeach ?>
