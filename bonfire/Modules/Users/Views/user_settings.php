@@ -39,7 +39,7 @@
                                     checked
                                 <?php endif ?>
                             >
-                            <label class="form-check-label" for="allow-registration">
+                            <label class="form-check-label" for="email-activation">
                                 Force email verification after registration?
                             </label>
                         </div>
@@ -89,7 +89,7 @@
                                 <?php if (old('allowRemember', setting('Auth.sessionConfig')['allowRemembering'])) : ?> checked <?php endif ?>
                                    x-on:click="remember = ! remember"
                             >
-                            <label class="form-check-label" for="allow-registration">
+                            <label class="form-check-label" for="allow-remember">
                                 Allow users to be "remembered"
                             </label>
                         </div>
@@ -106,7 +106,7 @@
                             <?php if (isset($rememberOptions) && count($rememberOptions)) : ?>
                                 <?php foreach ($rememberOptions as $title => $seconds) : ?>
                                     <option value="<?= $seconds ?>"
-                                        <?php if (old('rememberDuration', setting('Auth.sessionConfig')['rememberLength']) === $seconds) : ?> selected <?php endif?>
+                                        <?php if (old('rememberLength', setting('Auth.sessionConfig')['rememberLength']) === (string) $seconds) : ?> selected <?php endif?>
                                     >
                                         <?= $title ?>
                                     </option>
@@ -120,12 +120,12 @@
                     <div class="col-12 col-sm-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="email2FA"
-                                   value="Shield\Authentication\Actions\Email2FA" id="email-activation"
+                                   value="Shield\Authentication\Actions\Email2FA" id="email-2fa"
                                 <?php if (old('email2FA', setting('Auth.actions')['login']) === 'Shield\Authentication\Actions\Email2FA') : ?>
                                     checked
                                 <?php endif ?>
                             >
-                            <label class="form-check-label" for="allow-registration">
+                            <label class="form-check-label" for="email-2fa">
                                 Force 2FA check after login?
                             </label>
                         </div>

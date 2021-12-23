@@ -61,25 +61,25 @@ class UserSettingsController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        setting('Auth.allowRegistration', $this->request->getPost('allowRegistration') === 1);
+        setting('Auth.allowRegistration', $this->request->getPost('allowRegistration') ?? false);
         setting('Auth.minimumPasswordLength', (int) $this->request->getPost('minimumPasswordLength'));
         setting('Auth.passwordValidators', $this->request->getPost('validators'));
         setting('AuthGroups.defaultGroup', $this->request->getPost('defaultGroup'));
 
         // Actions
         $actions             = setting('Auth.actions');
-        $actions['login']    = (bool) $this->request->getPost('email2FA');
-        $actions['register'] = (bool) $this->request->getPost('emailActivation');
+        $actions['login']    = $this->request->getPost('email2FA') ?? false;
+        $actions['register'] = $this->request->getPost('emailActivation') ?? false;
         setting('Auth.actions', $actions);
 
         // Remember Me
         $sessionConfig                     = setting('Auth.sessionConfig');
-        $sessionConfig['allowRemembering'] = $this->request->getPost('allowRemember') === 1;
+        $sessionConfig['allowRemembering'] = $this->request->getPost('allowRemember') ?? false;
         $sessionConfig['rememberLength']   = $this->request->getPost('rememberLength');
         setting('Auth.sessionConfig', $sessionConfig);
 
         // Avatars
-        setting('Users.useGravatar', $this->request->getPost('useGravatar') === 1);
+        setting('Users.useGravatar', $this->request->getPost('useGravatar') ?? false);
         setting('Users.gravatarDefault', $this->request->getPost('gravatarDefault'));
 
         alert('success', lang('Bonfire.resourcesSaved', ['settings']));
