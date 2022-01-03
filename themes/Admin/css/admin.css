@@ -160,6 +160,7 @@ a:hover {
 }
 .sidebar .flyout .nav-link {
     background-color: var(--bf-sidebar-bg);
+    padding-left: 16px;
 }
 .sidebar .nav:hover .flyout {
     display: block;
