@@ -86,9 +86,11 @@ class Bonfire
             ->createCollection('content', 'Content');
         $menus->menu('sidebar')
             ->createCollection('settings', 'Settings')
+            ->setFontAwesomeIcon('fas fa-cog')
             ->setCollapsible();
         $menus->menu('sidebar')
             ->createCollection('tools', 'Tools')
+            ->setFontAwesomeIcon('fas fa-toolbox')
             ->setCollapsible();
 
         // Top "icon" menu for notifications, account, etc.

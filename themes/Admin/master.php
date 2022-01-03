@@ -17,11 +17,11 @@
 
 <div class="main" x-data="{open: true}">
 	<div class="h-100 d-flex align-items-stretch">
-        <nav id="sidebars" class="sidebar d-sm-block" x-bind:class="{ 'collapsed': ! open }">
+        <nav id="sidebars" class="sidebar" x-bind:class="{ 'collapsed': ! open }">
             <div class="sidebar-wrap  h-100 w-100 position-relative">
-                <div class="sidebar-inner">
+<!--                <div class="sidebar-inner">-->
                     <x-sidebar />
-                </div>
+<!--                </div>-->
 
                 <div class="nav-item position-absolute bottom-0 w-100">
                     <a href="#" class="nav-link sidebar-toggle" @click="open = !open">
@@ -44,7 +44,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+<!--<script src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>-->
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="https://unpkg.com/htmx.org@1.5.0"></script>
 <?= $this->renderSection('scripts') ?>

@@ -274,9 +274,6 @@ div {
  * WIDGET CHARTS
  * --------------------------------------------------------------------------
  */
-.sidebar{
-    min-width: 220px !important;
-}
 .chart-border {
     border: 1px solid #ccc;
     padding: 3%;
