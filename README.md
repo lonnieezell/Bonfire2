@@ -28,7 +28,7 @@ This currently has the same requirements as CodeIgniter 4.
 Installation is a simple 2-step process:
 
 ```php
-> composer create-project lonnieezell/bonfire critormiss --stability dev
+> composer create-project lonnieezell/bonfire app --stability dev
 > php spark bf:install
 ```
 
