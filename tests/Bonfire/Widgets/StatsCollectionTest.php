@@ -32,7 +32,7 @@ final class StatsCollectionTest extends TestCase
 
         $this->assertSame('bg-blue', $item->bgColor());
         $this->assertSame('ITEM A', $item->title());
-        $this->assertSame(15, $item->value());
+        $this->assertSame('15', $item->value());
         $this->assertSame('/example/foo', $item->url());
         $this->assertSame('fa fa-users', $item->faIcon());
     }
@@ -40,7 +40,7 @@ final class StatsCollectionTest extends TestCase
     public function testNames()
     {
         $collection = new StatsCollection();
-        $this->assertNull($collection->name());
+        $this->assertEquals('', $collection->name());
 
         $collection = new StatsCollection(['name' => 'Foo']);
         $this->assertSame('Foo', $collection->name());

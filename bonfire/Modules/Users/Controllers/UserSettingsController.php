@@ -61,14 +61,14 @@ class UserSettingsController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        setting('Auth.allowRegistration', $this->request->getPost('allowRegistration') ?? false);
+        setting('Auth.allowRegistration', (bool)$this->request->getPost('allowRegistration'));
         setting('Auth.minimumPasswordLength', (int) $this->request->getPost('minimumPasswordLength'));
         setting('Auth.passwordValidators', $this->request->getPost('validators'));
         setting('AuthGroups.defaultGroup', $this->request->getPost('defaultGroup'));
 
         // Actions
         $actions             = setting('Auth.actions');
-        $actions['login']    = $this->request->getPost('email2FA') ?? false;
+        $actions['login']    = $this->request->getPost('email2FA') > 0 ?? false;
         $actions['register'] = $this->request->getPost('emailActivation') ?? false;
         setting('Auth.actions', $actions);
 

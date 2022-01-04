@@ -27,6 +27,18 @@ class ConsentHelperTest extends TestCase
         Factories::injectMock('config', 'Consent', $config);
     }
 
+    public function testGroupNotGiven()
+    {
+        $_COOKIE['bf_consent'] = json_encode([
+            'consent' => 1,
+            'required' => 1,
+            'ads' => 0
+        ]);
+
+        $this->assertTrue(has_consent('required'));
+        $this->assertFalse(has_consent('ads'));
+    }
+
     public function testGroupNotExist()
     {
         $_COOKIE['bf_consent'] = json_encode([
@@ -36,18 +48,6 @@ class ConsentHelperTest extends TestCase
         ]);
 
         $this->assertFalse(has_consent('foo'));
-    }
-
-    public function testGroupNotGiven()
-    {
-        $_COOKIE['bf_consent'] = json_encode([
-             'consent' => 1,
-             'required' => 1,
-             'ads' => 0
-         ]);
-
-        $this->assertTrue(has_consent('required'));
-        $this->assertFalse(has_consent('ads'));
     }
 
     public function testDefaultNoConsent()

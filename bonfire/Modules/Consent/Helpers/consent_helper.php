@@ -30,7 +30,7 @@ if (! function_exists('has_consent')) {
             helper('cookie');
         }
 
-        $cookie = get_cookie('bf_consent');
+        $cookie = $_COOKIE['bf_consent'] ?? null;
 
         if (empty($cookie)) {
             return false;
@@ -41,7 +41,6 @@ if (! function_exists('has_consent')) {
         if (! is_array($permissions) || ! array_key_exists($group, $permissions)) {
             return false;
         }
-
         // They must have given permission at one time...
         if (! isset($permissions['consent']) || $permissions['consent'] === 0) {
             return false;

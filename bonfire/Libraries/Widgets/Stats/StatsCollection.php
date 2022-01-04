@@ -43,7 +43,7 @@ class StatsCollection extends StatsItem
 
     public function name(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**

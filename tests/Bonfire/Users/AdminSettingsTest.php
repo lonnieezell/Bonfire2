@@ -38,7 +38,7 @@ class AdminSettingsTest extends TestCase
                 'emailActivation' => 1,
                 'allowRemember' => 'on',
                 'rememberLength' => 55,
-                'email2FA' => 'on',
+                'email2FA' => 1,
                 'minimumPasswordLength' => 10,
                 'validators' => [
                     'Sparks\Shield\Authentication\Passwords\CompositionValidator'
@@ -52,6 +52,6 @@ class AdminSettingsTest extends TestCase
         $this->assertEquals(10, setting('Auth.minimumPasswordLength'));
         $this->assertEquals('developer', setting('AuthGroups.defaultGroup'));
         $this->assertEquals(['Sparks\Shield\Authentication\Passwords\CompositionValidator'], setting('Auth.passwordValidators'));
-        $this->assertEquals(['login' => true, 'register' => true], setting('Auth.actions'));
+        $this->assertEquals(['login' => 1, 'register' => 1], setting('Auth.actions'));
     }
 }

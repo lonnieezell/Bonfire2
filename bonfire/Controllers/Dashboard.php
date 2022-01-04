@@ -33,7 +33,7 @@ class Dashboard extends AdminController
     public function index()
     {
         $widgets = service('widgets');
-        echo $this->render('Bonfire\Assets\Views\dashboard', [
+        echo $this->render('Bonfire\Views\dashboard', [
             'widgets' => $widgets,
             'manager' => $widgets->manager(),
         ]);

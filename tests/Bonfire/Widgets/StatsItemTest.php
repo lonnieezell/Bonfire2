@@ -32,7 +32,7 @@ final class StatsItemTest extends TestCase
         $this->assertSame('bg-blue', $item->bgColor());
         $this->assertSame('fa fa-users', $item->faIcon());
         $this->assertSame('/example/foo', $item->url());
-        $this->assertSame(5, $item->value());
+        $this->assertEquals(5, $item->value());
     }
 
     public function testConstructorFill()
@@ -49,6 +49,6 @@ final class StatsItemTest extends TestCase
         $this->assertSame('bg-blue', $item->bgColor());
         $this->assertSame('fa fa-users', $item->faIcon());
         $this->assertSame('/example/foo', $item->url());
-        $this->assertSame(5, $item->value());
+        $this->assertEquals(5, $item->value());
     }
 }
