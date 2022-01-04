@@ -68,7 +68,7 @@ class Install extends BaseCommand
         helper('filesystem');
 
         $this->ensureEnvFile();
-        $this->setAppURL();
+        $this->setAppUrl();
         $this->setDatabase();
         $this->migrate();
         $this->createUser();

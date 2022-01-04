@@ -141,14 +141,12 @@ class MenuCollection extends MenuItem
      * Is this collection "active"?
      * Used in default admin theme to determine
      * if the subnavs should be open or flyouts.
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
-        $url = ADMIN_AREA .'/'. $this->name;
+        $url = ADMIN_AREA . '/' . $this->name;
 
-        return url_is($url .'*');
+        return url_is($url . '*');
     }
 
     /**

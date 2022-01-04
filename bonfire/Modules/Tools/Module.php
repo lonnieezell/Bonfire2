@@ -27,8 +27,8 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'      => 'System Info',
-            'namedRoute' => 'sys-info',
+            'title'           => 'System Info',
+            'namedRoute'      => 'sys-info',
             'fontAwesomeIcon' => 'fas fa-info-circle',
         ]);
 
