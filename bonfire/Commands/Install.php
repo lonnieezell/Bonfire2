@@ -129,7 +129,7 @@ class Install extends BaseCommand
         $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
         $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
         $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
-        $this->updateEnvFile('# database.default.DBPrefix = ', "database.default.DBPrefix = {$prefix}");
+        $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
     }
 
     private function migrate()
