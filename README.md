@@ -29,6 +29,7 @@ Installation is a simple 2-step process:
 
 ```php
 > composer create-project lonnieezell/bonfire app --stability dev
+> cd app
 > php spark bf:install
 ```
 
