@@ -213,7 +213,7 @@ class UserController extends AdminController
         }
 
         if (! $users->delete($user->id)) {
-            log_message('error', $users->error());
+            log_message('error', implode(' ', $users->errors()));
 
             return redirect()->back()->with('error', lang('Bonfire.unknownError'));
         }

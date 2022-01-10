@@ -33,7 +33,7 @@ class AssetController extends Controller
      * Locates and returns the file to the browser
      * with the correct mime-type.
      *
-     * @param array $segments
+     * @param string ...$segments
      */
     public function serve(...$segments)
     {

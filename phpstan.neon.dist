@@ -11,6 +11,7 @@ parameters:
 		- **/Routes.php
 		- **/Views/*
 	ignoreErrors:
+		- '#Call to an undefined method CodeIgniter\\Database\\BaseBuilder::[A-Za-z]+\(\)#'
 	universalObjectCratesClasses:
 		- CodeIgniter\Entity
 		- CodeIgniter\Entity\Entity
