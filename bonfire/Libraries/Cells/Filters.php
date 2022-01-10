@@ -11,23 +11,29 @@
 
 namespace Bonfire\Libraries\Cells;
 
+use RuntimeException;
+
 class Filters
 {
     /**
      * A view cell that displays the list of available filters.
      *
      * @param mixed $params
+     *
+     * @throws RuntimeException
      */
     public function renderList($params = [])
     {
         if (! isset($params['model'])) {
-            throw new \RuntimeException('You must provide the Filter view cell with the model to use.');
+            throw new RuntimeException('You must provide the Filter view cell with the model to use.');
         }
 
         $model = model($params['model']);
-        $view  = config('Bonfire')->views['filter_list'];
+        if (! method_exists($model, 'getFilters')) {
+            throw new RuntimeException('Your model is not compatible with Filters. See Bonfire\Traits\Filterable.');
+        }
 
-        return view($view, [
+        return view(config('Bonfire')->views['filter_list'], [
             'filters' => $model->getFilters(),
             'target'  => $params['target'] ?? null,
         ]);

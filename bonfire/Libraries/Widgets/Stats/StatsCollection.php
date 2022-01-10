@@ -27,7 +27,7 @@ class StatsCollection extends StatsItem
     /**
      * The name this collection is discovered by.
      *
-     * @var string
+     * @var string|null
      */
     protected $name;
 

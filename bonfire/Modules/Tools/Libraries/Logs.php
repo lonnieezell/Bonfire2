@@ -50,7 +50,7 @@ class Logs
     public function processFileLogs($file)
     {
         if (null === $file) {
-            return null;
+            return [];
         }
 
         $logs = $this->getLogs($file);
@@ -137,10 +137,10 @@ class Logs
     /**
      * extract the log level from the logLine
      *
-     * @param $logLineStart - The single line that is the start of log line.
-     * extracted by getLogLineStart()
+     * @param string $logLineStart - The single line that is the start of log line.
+     *                             extracted by getLogLineStart()
      *
-     * @return log level e.g. ERROR, DEBUG, INFO
+     * @return string Log level e.g. ERROR, DEBUG, INFO
      * */
     private function getLogLevel($logLineStart)
     {

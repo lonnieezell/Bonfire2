@@ -26,7 +26,7 @@ final class StatsItemTest extends TestCase
             ->setBgColor('bg-blue')
             ->setFaIcon('fa fa-users')
             ->setUrl('/example/foo')
-            ->setValue(5);
+            ->setValue('5');
 
         $this->assertSame('ITEM A', $item->title());
         $this->assertSame('bg-blue', $item->bgColor());
