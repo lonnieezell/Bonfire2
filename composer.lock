@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f55b536dcbc0be435a71f954be844dd",
+    "content-hash": "cd390f5bcb646ec9bfa9c638b905f098",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -1558,16 +1558,16 @@
         },
         {
             "name": "tatter/alerts",
-            "version": "v2.1.1",
+            "version": "v3.0.0-rc.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tattersoftware/codeigniter4-alerts.git",
-                "reference": "f01d8295ee491e700554d462009644d10a5a9d93"
+                "reference": "f84415eb539532abefbebd2b10db8d6a91b211c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/f01d8295ee491e700554d462009644d10a5a9d93",
-                "reference": "f01d8295ee491e700554d462009644d10a5a9d93",
+                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/f84415eb539532abefbebd2b10db8d6a91b211c1",
+                "reference": "f84415eb539532abefbebd2b10db8d6a91b211c1",
                 "shasum": ""
             },
             "require": {
@@ -1575,7 +1575,7 @@
             },
             "require-dev": {
                 "codeigniter4/codeigniter4": "dev-develop",
-                "tatter/tools": "^1.11"
+                "tatter/tools": "^1.15"
             },
             "type": "library",
             "autoload": {
@@ -1609,7 +1609,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tattersoftware/codeigniter4-alerts/issues",
-                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v2.1.1"
+                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v3.0.0-rc.1"
             },
             "funding": [
                 {
@@ -1621,7 +1621,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-08-31T19:57:33+00:00"
+            "time": "2022-01-02T23:14:09+00:00"
         }
     ],
     "packages-dev": [
@@ -5919,5 +5919,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
