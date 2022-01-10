@@ -2,15 +2,12 @@
 
 use CodeIgniter\I18n\Time;
 
-if (! function_exists('has_error'))
-{
+if (! function_exists('has_error')) {
     /**
      * Determines whether an error exists
      * for a form field. This requires the errors
      * are passed back like:
      *  return redirect()->back()->with('errors', $this->validation->getErrors());
-     *
-     * @param string $field
      */
     function has_error(string $field): bool
     {
@@ -22,12 +19,9 @@ if (! function_exists('has_error'))
     }
 }
 
-if (! function_exists('error'))
-{
+if (! function_exists('error')) {
     /**
      * Displays the error message for a single form field.
-     *
-     * @param string $field
      */
     function error(string $field)
     {
@@ -35,8 +29,7 @@ if (! function_exists('error'))
     }
 }
 
-if (! function_exists('app_date'))
-{
+if (! function_exists('app_date')) {
     /**
      * Formats a date according to the format
      * specified in the general settings page.
@@ -47,28 +40,25 @@ if (! function_exists('app_date'))
      * at the end of the date (i.e. CST, PST, etc)
      *
      * @param mixed $date
-     * @param bool  $includeTime
-     * @param bool  $includeTimezone
      *
-     * @return string
      * @throws Exception
      */
-    function app_date($date, bool $includeTime=false, bool $includeTimezone=false): string
+    function app_date($date, bool $includeTime = false, bool $includeTimezone = false): string
     {
         $format = $includeTime
             ? [
                 setting('App.dateFormat'),
                 setting('App.timeFormat'),
-                $includeTimezone ? 'T' : ''
+                $includeTimezone ? 'T' : '',
             ]
             : [
                 setting('App.dateFormat'),
-                $includeTimezone ? 'T' : ''
+                $includeTimezone ? 'T' : '',
             ];
 
         $format = trim(implode(' ', $format));
 
-        if(is_string($date)) {
+        if (is_string($date)) {
             $date = Time::parse($date);
         }
 

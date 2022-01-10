@@ -10,22 +10,22 @@ class AdditionalUserFields extends Migration
     {
         $this->forge->addColumn('users', [
             'first_name' => [
-                'type' => 'varchar',
+                'type'       => 'varchar',
                 'constraint' => 255,
-                'null' => true,
-                'after' => 'username'
+                'null'       => true,
+                'after'      => 'username',
             ],
             'last_name' => [
-                'type' => 'varchar',
+                'type'       => 'varchar',
                 'constraint' => 255,
-                'null' => true,
-                'after' => 'first_name'
+                'null'       => true,
+                'after'      => 'first_name',
             ],
             'avatar' => [
-                'type' => 'varchar',
+                'type'       => 'varchar',
                 'constraint' => 255,
-                'null' => true,
-                'after' => 'last_name'
+                'null'       => true,
+                'after'      => 'last_name',
             ],
         ]);
     }

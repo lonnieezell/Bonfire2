@@ -3,8 +3,8 @@
 namespace Config;
 
 use Bonfire\Bonfire;
-use CodeIgniter\Config\BaseService;
 use Bonfire\View\View;
+use CodeIgniter\Config\BaseService;
 use Config\Services as AppServices;
 use Config\View as ViewConfig;
 
@@ -28,13 +28,9 @@ class Services extends BaseService
      * The default View class within CodeIgniter is intentionally simple, but this
      * service could easily be replaced by a template engine if the user needed to.
      *
-     * @param string|null     $viewPath
-     * @param ViewConfig|null $config
-     * @param boolean         $getShared
-     *
      * @return View
      */
-    public static function renderer(string $viewPath = null, ViewConfig $config = null, bool $getShared = true)
+    public static function renderer(?string $viewPath = null, ?ViewConfig $config = null, bool $getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('renderer', $viewPath, $config);
@@ -49,8 +45,6 @@ class Services extends BaseService
     /**
      * Core utility class for Bonfire's system.
      *
-     * @param bool $getShared
-     *
      * @return Bonfire|mixed
      */
     public static function bonfire(bool $getShared = true)
@@ -64,8 +58,6 @@ class Services extends BaseService
 
     /**
      * Returns the system menu manager
-     *
-     * @param bool $getShared
      *
      * @return Bonfire\Libraries\Menus\Manager|mixed
      */
@@ -82,8 +74,6 @@ class Services extends BaseService
      * Returns the Resource Tab manager that integrates
      * extra tabs into resources like Users, User Groups, etc.
      *
-     * @param bool $getShared
-     *
      * @return \Bonfire\Resources\ResourceTabs|mixed
      */
     public static function resourceTabs(bool $getShared = true)
@@ -95,19 +85,17 @@ class Services extends BaseService
         return new \Bonfire\Resources\ResourceTabs();
     }
 
-	/**
-	 * Returns the system widgets stats manager
-	 *
-	 * @param bool $getShared
-	 *
-	 * @return Bonfire\Libraries\Widgets\Manager|mixed
-	 */
-	public static function widgets(bool $getShared = true)
-	{
-		if ($getShared) {
-			return static::getSharedInstance('widgets');
-		}
+    /**
+     * Returns the system widgets stats manager
+     *
+     * @return Bonfire\Libraries\Widgets\Manager|mixed
+     */
+    public static function widgets(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('widgets');
+        }
 
-		return new \Bonfire\Libraries\Widgets\Manager();
-	}
+        return new \Bonfire\Libraries\Widgets\Manager();
+    }
 }

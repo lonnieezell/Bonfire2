@@ -1,7 +1,7 @@
 <?php
 
 // Include any core Bonfire constants
-include ROOTPATH .'bonfire/Config/Constants.php';
+include ROOTPATH . 'bonfire/Config/Constants.php';
 
 /*
  | --------------------------------------------------------------------

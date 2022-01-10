@@ -7,10 +7,10 @@
     </x-page-head>
 
     <x-admin-box>
-    <?php if(! isset($results) || ! count($results)) : ?>
+    <?php if (! isset($results) || ! count($results)) : ?>
         <div class="alert alert-info">No records match your search criteria. Revise the criteria and try again.</div>
     <?php else : ?>
-        <?php foreach($results as $name => $info): ?>
+        <?php foreach ($results as $name => $info): ?>
             <fieldset>
                 <legend><?= esc(ucwords($name)) ?></legend>
 

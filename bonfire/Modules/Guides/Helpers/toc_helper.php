@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  */
-
 if (! function_exists('load_recursive_guide')) {
     /**
      * Generates a list of guides when recursively search all subfolders

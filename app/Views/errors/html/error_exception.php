@@ -89,9 +89,10 @@
                                             $mirror = isset($row['class']) ? new \ReflectionMethod($row['class'], $row['function']) : new \ReflectionFunction($row['function']);
                                             $params = $mirror->getParameters();
                                         }
+
                                         foreach ($row['args'] as $key => $value) : ?>
 											<tr>
-												<td><code><?= esc(isset($params[$key]) ? '$' . $params[$key]->name : "#$key") ?></code></td>
+												<td><code><?= esc(isset($params[$key]) ? '$' . $params[$key]->name : "#{$key}") ?></code></td>
 												<td><pre><?= esc(print_r($value, true)) ?></pre></td>
 											</tr>
 										<?php endforeach ?>
@@ -381,7 +382,7 @@
 
 			<p>
 				Displayed at <?= esc(date('H:i:sa')) ?> &mdash;
-				PHP: <?= esc(phpversion()) ?>  &mdash;
+				PHP: <?= esc(PHP_VERSION) ?>  &mdash;
 				CodeIgniter: <?= esc(\CodeIgniter\CodeIgniter::CI_VERSION) ?>
 			</p>
 

@@ -5,10 +5,13 @@ namespace Tests\Bonfire\Settings;
 use App\Entities\User;
 use Tests\Support\TestCase;
 
-class SiteOfflineTest extends TestCase
+/**
+ * @internal
+ */
+final class SiteOfflineTest extends TestCase
 {
     protected $refresh = true;
-    protected $namespace = null;
+    protected $namespace;
 
     /**
      * @var User
@@ -20,7 +23,7 @@ class SiteOfflineTest extends TestCase
      */
     protected $nonAdmin;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -42,8 +45,8 @@ class SiteOfflineTest extends TestCase
 
         // Other users should NOT be able to see the site
         $this->actingAs($this->nonAdmin)
-             ->get(ADMIN_AREA)
-             ->assertRedirectTo('site-offline');
+            ->get(ADMIN_AREA)
+            ->assertRedirectTo('site-offline');
     }
 
     public function testAllWhenOn()
@@ -52,12 +55,12 @@ class SiteOfflineTest extends TestCase
 
         // Superadmin should be able to see the site
         $this->actingAs($this->admin)
-             ->get(ADMIN_AREA)
-             ->assertOK();
+            ->get(ADMIN_AREA)
+            ->assertOK();
 
         // Other users should be able to see the site
         $this->actingAs($this->nonAdmin)
-             ->get(ADMIN_AREA)
-             ->assertOk();
+            ->get(ADMIN_AREA)
+            ->assertOk();
     }
 }

@@ -29,11 +29,11 @@ class Recycler extends BaseRecycler
      */
     public $resources = [
         'users' => [
-            'label' => 'Users',
-            'model' => UserModel::class,
+            'label'   => 'Users',
+            'model'   => UserModel::class,
             'columns' => [
-                'username', 'first_name', 'last_name', 'email'
-            ]
+                'username', 'first_name', 'last_name', 'email',
+            ],
         ],
     ];
 }

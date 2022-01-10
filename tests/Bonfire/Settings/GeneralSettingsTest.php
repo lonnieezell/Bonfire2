@@ -5,17 +5,20 @@ namespace Tests\Bonfire\Settings;
 use App\Entities\User;
 use Tests\Support\TestCase;
 
-class GeneralSettingsTest extends TestCase
+/**
+ * @internal
+ */
+final class GeneralSettingsTest extends TestCase
 {
     protected $refresh = true;
-    protected $namespace = null;
+    protected $namespace;
 
     /**
      * @var User
      */
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,17 +42,16 @@ class GeneralSettingsTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->post('/admin/settings/general', [
-                'siteName' => 'My Great Site',
+                'siteName'   => 'My Great Site',
                 'siteOnline' => '1',
-                'timezone' => 'America/Los_Angeles',
+                'timezone'   => 'America/Los_Angeles',
                 'dateFormat' => 'm/d/Y',
                 'timeFormat' => 'g:i A',
             ]);
 
         $response->assertRedirect();
 
-        $this->assertEquals('My Great Site', setting('App.siteName'));
+        $this->assertSame('My Great Site', setting('App.siteName'));
         $this->assertTrue(setting('App.siteOnline'));
     }
-
 }

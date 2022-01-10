@@ -57,9 +57,9 @@ class Users extends BaseConfig
      *  - validation: a validation rules string. If not present will be 'permit_empty|string'
      */
     public $metaFields = [
-//        'Example Fields' => [
-//            'foo' => ['label' => 'Foo', 'type' => 'text', 'required' => true, 'validation' => 'permit_empty|string'],
-//            'Bar' => ['type' => 'text', 'required' => true, 'validation' => 'required|string'],
-//        ],
+        //        'Example Fields' => [
+        //            'foo' => ['label' => 'Foo', 'type' => 'text', 'required' => true, 'validation' => 'permit_empty|string'],
+        //            'Bar' => ['type' => 'text', 'required' => true, 'validation' => 'required|string'],
+        //        ],
     ];
 }
