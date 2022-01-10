@@ -64,8 +64,8 @@ final class FilterableTest extends TestCase
         $user1 = fake(UserModel::class, ['status' => 'banned', 'active' => 0]);
         $user2 = fake(UserModel::class, ['status' => 'paused', 'active' => 1]);
 
-        $this->assertSame($user1, $class->filter(['status' => 'banned'])->first());
-        $this->assertSame($user2, $class->filter(['status' => 'paused', 'active' => 1])->first());
+        $this->assertSame($user1->id, $class->filter(['status' => 'banned'])->first()->id);
+        $this->assertSame($user2->id, $class->filter(['status' => 'paused', 'active' => 1])->first()->id);
         $this->assertNull($class->filter(['status' => 'paused', 'active' => 0])->first());
     }
 }

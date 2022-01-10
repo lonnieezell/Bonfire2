@@ -55,6 +55,6 @@ final class AdminSettingsTest extends TestCase
         $this->assertSame(10, setting('Auth.minimumPasswordLength'));
         $this->assertSame('developer', setting('AuthGroups.defaultGroup'));
         $this->assertSame(['Sparks\Shield\Authentication\Passwords\CompositionValidator'], setting('Auth.passwordValidators'));
-        $this->assertSame(['login' => 1, 'register' => 1], setting('Auth.actions'));
+        $this->assertSame(['login' => true, 'register' => '1'], setting('Auth.actions'));
     }
 }
