@@ -6,17 +6,20 @@ use App\Entities\User;
 use Sparks\Shield\Authorization\Groups;
 use Tests\Support\TestCase;
 
-class GroupsTest extends TestCase
+/**
+ * @internal
+ */
+final class GroupsTest extends TestCase
 {
     protected $refresh = true;
-    protected $namespace = null;
+    protected $namespace;
 
     /**
      * @var User
      */
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -26,7 +29,7 @@ class GroupsTest extends TestCase
     public function testCanSeeUserList()
     {
         $result = $this->actingAs($this->user)
-                       ->get('/admin/settings/groups');
+            ->get('/admin/settings/groups');
 
         // Page title
         $result->assertSee('User Groups');
@@ -40,14 +43,14 @@ class GroupsTest extends TestCase
         $admin = $this->createUser();
         $admin->addGroup('superadmin');
         $result = $this->actingAs($admin)
-                       ->post('/admin/settings/groups/beta', [
-                           'title' => 'Brave Soul',
-                           'description' => 'Tries broken things',
-                       ]);
+            ->post('/admin/settings/groups/beta', [
+                'title'       => 'Brave Soul',
+                'description' => 'Tries broken things',
+            ]);
 
-       $result->assertSessionHas('message', lang('Bonfire.resourceSaved', ['group']));
-       $groups = setting('AuthGroups.groups');
-       $this->assertEquals(['title' => 'Brave Soul', 'description' => 'Tries broken things'], $groups['beta']);
+        $result->assertSessionHas('message', lang('Bonfire.resourceSaved', ['group']));
+        $groups = setting('AuthGroups.groups');
+        $this->assertSame(['title' => 'Brave Soul', 'description' => 'Tries broken things'], $groups['beta']);
     }
 
     public function testCanSeeGroupPermissions()
@@ -55,7 +58,7 @@ class GroupsTest extends TestCase
         $admin = $this->createUser();
         $admin->addGroup('superadmin');
         $result = $this->actingAs($admin)
-                       ->get('/admin/settings/groups/admin/permissions');
+            ->get('/admin/settings/groups/admin/permissions');
 
         // Page title
         $result->assertSee('admin.access');
@@ -64,19 +67,19 @@ class GroupsTest extends TestCase
     public function testCanSaveGroupPermissions()
     {
         $groups = new Groups();
-        $group = $groups->info('admin');
+        $group  = $groups->info('admin');
 
         $this->assertTrue($group->can('beta.access'));
 
         $admin = $this->createUser();
         $admin->addGroup('superadmin');
         $result = $this->actingAs($admin)
-                       ->post('/admin/settings/groups/admin/permissions', [
-                           'permissions' => [
-                               'admin.access',
-                               'users.edit'
-                           ]
-                       ]);
+            ->post('/admin/settings/groups/admin/permissions', [
+                'permissions' => [
+                    'admin.access',
+                    'users.edit',
+                ],
+            ]);
 
         // Page title
         $result->assertRedirect();

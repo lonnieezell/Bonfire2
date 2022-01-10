@@ -39,7 +39,7 @@ class Assets extends OriginalAssets
      */
     public $versions = [
         'css' => '1.0',
-        'js' => '1.0',
+        'js'  => '1.0',
     ];
 
     /**
@@ -51,9 +51,9 @@ class Assets extends OriginalAssets
      * This should make up the first segment of an asset URL.
      */
     public $folders = [
-        'app' => ROOTPATH.'themes/app',
-        'admin' => ROOTPATH.'themes/Admin',
-        'auth' => ROOTPATH.'themes/Auth',
-        'other' => ROOTPATH.'vendor',
+        'app'   => ROOTPATH . 'themes/app',
+        'admin' => ROOTPATH . 'themes/Admin',
+        'auth'  => ROOTPATH . 'themes/Auth',
+        'other' => ROOTPATH . 'vendor',
     ];
 }

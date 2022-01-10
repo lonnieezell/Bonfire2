@@ -3,30 +3,32 @@
 namespace Tests\Bonfire\Users;
 
 use App\Entities\User;
-use Bonfire\Models\MetaModel;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
 
-class MetaTest extends TestCase
+/**
+ * @internal
+ */
+final class MetaTest extends TestCase
 {
     use DatabaseTestTrait;
 
-    protected $namespace = null;
+    protected $namespace;
 
     /**
      * @var User
      */
     protected $user;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = $this->createUser();
 
         // Ensure we have some fields to test against.
-        $config = config('Users');
+        $config             = config('Users');
         $config->metaFields = [
             'Example Fields' => [
                 'foo' => ['label' => 'Foo', 'type' => 'text', 'required' => true, 'validation' => 'permit_empty|string'],
@@ -44,13 +46,13 @@ class MetaTest extends TestCase
         $this->user->saveMeta('foo', 'Some great info here');
 
         $this->assertTrue($this->user->hasMeta('foo'));
-        $this->assertEquals('Some great info here', $this->user->meta('foo'));
+        $this->assertSame('Some great info here', $this->user->meta('foo'));
 
         $this->seeInDatabase('meta_info', [
-            'class' => User::class,
+            'class'       => User::class,
             'resource_id' => $this->user->id,
-            'key' => 'foo',
-            'value' => 'Some great info here'
+            'key'         => 'foo',
+            'value'       => 'Some great info here',
         ]);
     }
 
@@ -64,9 +66,9 @@ class MetaTest extends TestCase
         $this->user->deleteMeta('foo');
         $this->assertFalse($this->user->hasMeta('foo'));
         $this->dontSeeInDatabase('meta_info', [
-            'class' => User::class,
+            'class'       => User::class,
             'resource_id' => $this->user->id,
-            'key' => 'foo',
+            'key'         => 'foo',
         ]);
 
         // Shouldn't crash when key doesn't exist
@@ -81,12 +83,12 @@ class MetaTest extends TestCase
         $this->user->syncMeta(['foo' => 'aaa']);
 
         $this->assertTrue($this->user->hasMeta('foo'));
-        $this->assertEquals('aaa', $this->user->meta('foo'));
+        $this->assertSame('aaa', $this->user->meta('foo'));
 
         // Update the value
         $this->user->syncMeta(['foo' => 'bbb']);
         $this->assertTrue($this->user->hasMeta('foo'));
-        $this->assertEquals('bbb', $this->user->meta('foo'));
+        $this->assertSame('bbb', $this->user->meta('foo'));
 
         // Delete the value with empty string
         $this->user->syncMeta(['foo' => '']);

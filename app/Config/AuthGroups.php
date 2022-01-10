@@ -99,7 +99,7 @@ class AuthGroups extends ShieldGroups
             'users.edit',
             'beta.access',
             'site.viewOffline',
-            'guides.*'
+            'guides.*',
         ],
         'user' => [],
         'beta' => [

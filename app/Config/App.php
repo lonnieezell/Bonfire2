@@ -109,7 +109,7 @@ class App extends BaseConfig
      *
      * If false, no automatic detection will be performed.
      *
-     * @var boolean
+     * @var bool
      */
     public $negotiateLocale = false;
 
@@ -176,7 +176,7 @@ class App extends BaseConfig
      * secure, the user will be redirected to a secure version of the page
      * and the HTTP Strict Transport Security header will be set.
      *
-     * @var boolean
+     * @var bool
      */
     public $forceGlobalSecureRequests = false;
 
@@ -214,7 +214,7 @@ class App extends BaseConfig
      * The number of SECONDS you want the session to last.
      * Setting to 0 (zero) means expire when the browser is closed.
      *
-     * @var integer
+     * @var int
      */
     public $sessionExpiration = 7200;
 
@@ -247,7 +247,7 @@ class App extends BaseConfig
      * WARNING: If you're using the database driver, don't forget to update
      *          your session table's PRIMARY KEY when changing this setting.
      *
-     * @var boolean
+     * @var bool
      */
     public $sessionMatchIP = false;
 
@@ -258,7 +258,7 @@ class App extends BaseConfig
      *
      * How many seconds between CI regenerating the session ID.
      *
-     * @var integer
+     * @var int
      */
     public $sessionTimeToUpdate = 300;
 
@@ -271,7 +271,7 @@ class App extends BaseConfig
      * when auto-regenerating the session ID. When set to FALSE, the data
      * will be later deleted by the garbage collector.
      *
-     * @var boolean
+     * @var bool
      */
     public $sessionRegenerateDestroy = false;
 
@@ -321,7 +321,7 @@ class App extends BaseConfig
      *
      * Cookie will only be set if a secure HTTPS connection exists.
      *
-     * @var boolean
+     * @var bool
      *
      * @deprecated use Config\Cookie::$secure property instead.
      */
@@ -334,7 +334,7 @@ class App extends BaseConfig
      *
      * Cookie will only be accessible via HTTP(S) (no JavaScript).
      *
-     * @var boolean
+     * @var bool
      *
      * @deprecated use Config\Cookie::$httponly property instead.
      */
@@ -434,7 +434,7 @@ class App extends BaseConfig
      *
      * @deprecated Use `Config\Security` $expire property instead of using this property.
      *
-     * @var integer
+     * @var int
      */
     public $CSRFExpire = 7200;
 
@@ -447,7 +447,7 @@ class App extends BaseConfig
      *
      * @deprecated Use `Config\Security` $regenerate property instead of using this property.
      *
-     * @var boolean
+     * @var bool
      */
     public $CSRFRegenerate = true;
 
@@ -460,7 +460,7 @@ class App extends BaseConfig
      *
      * @deprecated Use `Config\Security` $redirect property instead of using this property.
      *
-     * @var boolean
+     * @var bool
      */
     public $CSRFRedirect = true;
 
@@ -478,7 +478,6 @@ class App extends BaseConfig
      * Defaults to `Lax` as recommended in this link:
      *
      * @see https://portswigger.net/web-security/csrf/samesite-cookies
-     *
      * @deprecated Use `Config\Security` $samesite property instead of using this property.
      *
      * @var string
@@ -501,7 +500,7 @@ class App extends BaseConfig
      * @see http://www.html5rocks.com/en/tutorials/security/content-security-policy/
      * @see http://www.w3.org/TR/CSP/
      *
-     * @var boolean
+     * @var bool
      */
     public $CSPEnabled = false;
 }

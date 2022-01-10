@@ -12,11 +12,9 @@ class User extends ShieldUser
     /**
      * Renders out the user's avatar at the specified size (in pixels)
      *
-     * @param int $size
-     *
      * @return string
      */
-    public function renderAvatar(int $size=52)
+    public function renderAvatar(int $size = 52)
     {
         // Determine the color for the user based on their
         // email address since we know we'll always have that
@@ -28,7 +26,7 @@ class User extends ShieldUser
         $idString = strtoupper($idString);
 
         $idValue = str_split($idString);
-        array_walk($idValue, function (&$char) {
+        array_walk($idValue, static function (&$char) {
             $char = ord($char);
         });
         $idValue = implode('', $idValue);
@@ -36,22 +34,18 @@ class User extends ShieldUser
         $colors = setting('Users.avatarPalette');
 
         return view('\Bonfire\Views\_avatar', [
-            'user' => $this,
-            'size' => $size,
-            'fontSize' => 20 * ($size / 52),
-            'idString' => $idString,
+            'user'       => $this,
+            'size'       => $size,
+            'fontSize'   => 20 * ($size / 52),
+            'idString'   => $idString,
             'background' => $colors[$idValue % count($colors)],
         ]);
     }
 
     /**
      * Generates a link to the user Avatar
-     *
-     * @param int|null $size
-     *
-     * @return string
      */
-    public function avatarLink(int $size=null): string
+    public function avatarLink(?int $size = null): string
     {
         if (empty($this->avatar)) {
 
@@ -69,14 +63,12 @@ class User extends ShieldUser
         }
 
         return ! empty($this->avatar)
-            ? base_url('/uploads/avatars/'. $this->avatar)
+            ? base_url('/uploads/avatars/' . $this->avatar)
             : '';
     }
 
     /**
      * Returns the full name of the user.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -86,9 +78,9 @@ class User extends ShieldUser
     /**
      * @return string
      */
-    public function adminLink(string $postfix=null)
+    public function adminLink(?string $postfix = null)
     {
-        $url = ADMIN_AREA ."/users/{$this->id}";
+        $url = ADMIN_AREA . "/users/{$this->id}";
 
         if (! empty($postfix)) {
             $url .= "/{$postfix}";
@@ -99,8 +91,6 @@ class User extends ShieldUser
 
     /**
      * Returns a list of the groups the user is involved in.
-     *
-     * @return string
      */
     public function groupsList(): string
     {
@@ -108,6 +98,7 @@ class User extends ShieldUser
         $groups = $this->getGroups();
 
         $out = [];
+
         foreach ($groups as $group) {
             $out[] = $config[$group]['title'];
         }
@@ -117,12 +108,8 @@ class User extends ShieldUser
 
     /**
      * Returns the validation rules for all User meta fields, if any.
-     *
-     * @param string|null $prefix
-     *
-     * @return array
      */
-    public function validationRules(string $prefix=null): array
+    public function validationRules(?string $prefix = null): array
     {
         return $this->metaValidationRules('Users', $prefix);
     }

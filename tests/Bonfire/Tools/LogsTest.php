@@ -5,7 +5,10 @@ namespace Tests\Bonfire\Logs;
 use Bonfire\Modules\Tools\Libraries\Logs;
 use Tests\Support\TestCase;
 
-class LogsTest extends TestCase
+/**
+ * @internal
+ */
+final class LogsTest extends TestCase
 {
     /**
      * @var string
@@ -17,7 +20,7 @@ class LogsTest extends TestCase
      */
     protected $logsPath = WRITEPATH . 'logs/';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -69,6 +72,4 @@ class LogsTest extends TestCase
 
         @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
     }
-
-
 }

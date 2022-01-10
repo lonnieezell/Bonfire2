@@ -27,8 +27,8 @@ class Filters extends BaseConfig
         'session'  => SessionAuth::class,
         'tokens'   => TokenAuth::class,
         'chain'    => ChainAuth::class,
-        'online'  => OnlineCheck::class,
-        'consent' => ConsentFilter::class,
+        'online'   => OnlineCheck::class,
+        'consent'  => ConsentFilter::class,
     ];
 
     /**
@@ -41,9 +41,9 @@ class Filters extends BaseConfig
         'before' => [
             'online' => ['except' => 'site-offline'],
         ],
-        'after'  => [
+        'after' => [
             'toolbar',
-            'consent' => ['except' => ADMIN_AREA.'*'],
+            'consent' => ['except' => ADMIN_AREA . '*'],
             // 'honeypot',
         ],
     ];
@@ -70,7 +70,7 @@ class Filters extends BaseConfig
      */
     public $filters = [
         'session' => [
-            'before' => [ADMIN_AREA.'*']
+            'before' => [ADMIN_AREA . '*'],
         ],
     ];
 }

@@ -29,13 +29,13 @@ class Guides extends BaseConfig
      */
     public $collections = [
         'bonfire' => [
-            'title' => 'Bonfire Developer Guides',
-            'path' => '_docs',
+            'title'      => 'Bonfire Developer Guides',
+            'path'       => '_docs',
             'permission' => 'guides.bonfire',
         ],
         'app' => [
-            'title' => 'Application Guides',
-            'path' => 'app/_guides',
+            'title'      => 'Application Guides',
+            'path'       => 'app/_guides',
             'permission' => 'guides.application',
         ],
     ];

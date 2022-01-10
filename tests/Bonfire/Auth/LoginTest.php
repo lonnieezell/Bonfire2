@@ -8,12 +8,15 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use Sparks\Shield\Authentication\Actions\Email2FA;
 use Tests\Support\TestCase;
 
-class LoginTest extends TestCase
+/**
+ * @internal
+ */
+final class LoginTest extends TestCase
 {
     use DatabaseTestTrait;
 
     protected $refresh = true;
-    protected $namespace = null;
+    protected $namespace;
 
     public function testCanViewLoginPage()
     {
@@ -33,7 +36,7 @@ class LoginTest extends TestCase
 
         // Submit registration form
         $response = $this->post(route_to('login'), [
-            'email' => 'foo@example.com',
+            'email'    => 'foo@example.com',
             'password' => 'alsdkfja;sldkfj',
         ]);
 
@@ -70,8 +73,8 @@ class LoginTest extends TestCase
     public function testLoginTo2FAAction()
     {
         setting('Auth.actions', [
-            'login' => Email2FA::class,
-            'register' => null
+            'login'    => Email2FA::class,
+            'register' => null,
         ]);
 
         /**
@@ -82,7 +85,7 @@ class LoginTest extends TestCase
 
         // Submit registration form
         $response = $this->post(route_to('login'), [
-            'email' => 'foo@example.com',
+            'email'    => 'foo@example.com',
             'password' => 'alsdkfja;sldkfj',
         ]);
 

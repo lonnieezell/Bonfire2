@@ -13,8 +13,7 @@ use Sparks\Shield\Models\UserModel as ShieldUsers;
  */
 class UserModel extends ShieldUsers
 {
-    protected $returnType = User::class;
-
+    protected $returnType    = User::class;
     protected $allowedFields = [
         'username', 'status', 'status_message', 'active', 'last_active', 'deleted_at',
         'avatar', 'first_name', 'last_name',
@@ -27,12 +26,12 @@ class UserModel extends ShieldUsers
      */
     public function setupRecycler()
     {
-        return $this->select("users.*, 
-            (SELECT secret 
-                from auth_identities 
+        return $this->select("users.*,
+            (SELECT secret
+                from auth_identities
                 where user_id = users.id
                     and type = 'email_password'
-                order by last_used_at desc 
+                order by last_used_at desc
                 limit 1
             ) as email
        ");
@@ -41,10 +40,10 @@ class UserModel extends ShieldUsers
     public function fake(Generator &$faker)
     {
         return [
-            'username' => $faker->userName,
+            'username'   => $faker->userName,
             'first_name' => $faker->firstName,
-            'last_name' => $faker->lastName,
-            'active'   => true,
+            'last_name'  => $faker->lastName,
+            'active'     => true,
         ];
     }
 }

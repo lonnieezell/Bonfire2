@@ -9,19 +9,19 @@
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link <?= url_is('/'.ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>" title="Dashboard">
+            <a class="nav-link <?= url_is('/' . ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>" title="Dashboard">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
         </li>
     </ul>
 
-    <?php if(isset($menu)) : ?>
-        <?php foreach($menu->collections() as $collection) : ?>
+    <?php if (isset($menu)) : ?>
+        <?php foreach ($menu->collections() as $collection) : ?>
 
         <div>
             <ul class="nav flex-column px-0">
-                <?php if($collection->isCollapsible()) : ?>
+                <?php if ($collection->isCollapsible()) : ?>
                     <li class="nav-item">
                         <a class="nav-link <?= $collection->isActive() ? 'active' : '' ?>" href="#">
                             <?= $collection->icon ?>
@@ -37,17 +37,17 @@
                 <?php endif ?>
 
 
-                <?php foreach($collection->items() as $item) : ?>
+                <?php foreach ($collection->items() as $item) : ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= url_is($item->url.'*') ? 'active' : '' ?>" href="<?= $item->url ?>">
-                            <?php if(! $collection->isCollapsible()) : ?>
+                        <a class="nav-link <?= url_is($item->url . '*') ? 'active' : '' ?>" href="<?= $item->url ?>">
+                            <?php if (! $collection->isCollapsible()) : ?>
                                 <?= $item->icon ?>
                             <?php endif ?>
                             <span><?= $item->title ?></span>
                         </a>
                     </li>
                 <?php endforeach ?>
-                <?php if($collection->isCollapsible()) : ?>
+                <?php if ($collection->isCollapsible()) : ?>
                     </ul>
                 <?php endif ?>
             </ul>

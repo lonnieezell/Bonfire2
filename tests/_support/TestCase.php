@@ -10,7 +10,10 @@ use CodeIgniter\Test\FeatureTestTrait;
 use Faker\Factory;
 use Sparks\Shield\Test\AuthenticationTesting;
 
-class TestCase extends CIUnitTestCase
+/**
+ * @internal
+ */
+abstract class TestCase extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
@@ -27,23 +30,21 @@ class TestCase extends CIUnitTestCase
      */
     protected $faker;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->faker = Factory::create();   /* @phpstan-ignore-line */
+        $this->faker = Factory::create();   // @phpstan-ignore-line
     }
 
     /**
      * Creates a simple user with email/password identities.
      */
-    protected function createUser(array $params=null)
+    protected function createUser(?array $params = null)
     {
-        $email = isset($params['email'])
-            ? $params['email']
-            : $this->faker->email;
-        $password = isset($params['password'])
-            ? $params['password']
-            : 'secret123';
+        $email = $params['email']
+            ?? $this->faker->email;
+        $password = $params['password']
+            ?? 'secret123';
 
         unset($params['email'], $params['password']);
 
@@ -52,8 +53,8 @@ class TestCase extends CIUnitTestCase
          */
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([
-            'email' => $email,
-            'password' => $password
+            'email'    => $email,
+            'password' => $password,
         ]);
 
         return $user;
