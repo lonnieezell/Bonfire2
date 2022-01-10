@@ -45,7 +45,7 @@ layers:
       - type: bool
         must:
         - type: directory
-          regex: src/Config/.*
+          regex: app/Config/.*
         must_not:
         - type: className
           regex: .*Services
@@ -65,7 +65,7 @@ layers:
       - type: bool
         must:
         - type: directory
-          regex: src/Entities/.*
+          regex: app/Entities/.*
         must_not:
         - type: directory
           regex: vendor/.*
@@ -80,7 +80,7 @@ layers:
       - type: bool
         must:
         - type: directory
-          regex: src/Views/.*
+          regex: app/Views/.*
         must_not:
         - type: directory
           regex: vendor/.*
@@ -110,6 +110,7 @@ ruleset:
     - Entity
     - Service
     - Vendor Config
+    - Vendor Entity
     - Vendor Model
   Service:
     - Config
