@@ -11,7 +11,6 @@
 
 namespace Bonfire\Recycler\Config;
 
-use App\Models\UserModel;
 use CodeIgniter\Config\BaseConfig;
 
 class Recycler extends BaseConfig
@@ -39,7 +38,7 @@ class Recycler extends BaseConfig
     public $resources = [
         'users' => [
             'label'   => 'Users',
-            'model'   => UserModel::class,
+            'model'   => 'App\Models\UserModel',
             'columns' => [
                 'username', 'first_name', 'last_name', 'email',
             ],

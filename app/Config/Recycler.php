@@ -2,7 +2,6 @@
 
 namespace Config;
 
-use App\Models\UserModel;
 use Bonfire\Recycler\Config\Recycler as BaseRecycler;
 
 class Recycler extends BaseRecycler
@@ -30,7 +29,7 @@ class Recycler extends BaseRecycler
     public $resources = [
         'users' => [
             'label'   => 'Users',
-            'model'   => UserModel::class,
+            'model'   => 'App\Models\UserModel',
             'columns' => [
                 'username', 'first_name', 'last_name', 'email',
             ],
