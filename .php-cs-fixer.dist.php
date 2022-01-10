@@ -13,23 +13,18 @@ declare(strict_types=1);
 
 use CodeIgniter\CodingStandard\CodeIgniter4;
 use Nexus\CsConfig\Factory;
-use Nexus\CsConfig\Fixer\Comment\NoCodeSeparatorCommentFixer;
-use Nexus\CsConfig\Fixer\Comment\SpaceAfterCommentStartFixer;
-use Nexus\CsConfig\FixerGenerator;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->files()
     ->in([
+        __DIR__ . '/app',
         __DIR__ . '/bonfire',
+        __DIR__ . '/tests',
+        __DIR__ . '/themes',
     ])
-    ->notName('#Foobar.php$#')
-    ->append([
-        __FILE__,
-        __DIR__ . '/.no-header.php-cs-fixer.dist.php',
-        __DIR__ . '/rector.php',
-        __DIR__ . '/spark',
-    ]);
+    ->exclude('build')
+    ->append([__FILE__]);
 
 $overrides = [
     'ordered_class_elements' => [
@@ -44,17 +39,8 @@ $overrides = [
 ];
 
 $options = [
-    'cacheFile'    => 'build/.php-cs-fixer.cache',
-    'finder'       => $finder,
-    'customFixers' => FixerGenerator::create('vendor/nexusphp/cs-config/src/Fixer', 'Nexus\\CsConfig\\Fixer'),
-    'customRules'  => [
-        NoCodeSeparatorCommentFixer::name() => true,
-        SpaceAfterCommentStartFixer::name() => true,
-    ],
+    'finder'    => $finder,
+    'cacheFile' => 'build/.php-cs-fixer.cache',
 ];
 
-return Factory::create(new CodeIgniter4(), $overrides, $options)->forLibrary(
-    'Bonfire',
-    'Lonnie Ezell',
-    'lonnieje@gmail.com'
-);
+return Factory::create(new CodeIgniter4(), $overrides, $options)->forProjects();
