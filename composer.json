@@ -17,7 +17,7 @@
 		"lonnieezell/codigniter-shield": "dev-develop",
 		"roave/security-advisories": "dev-latest",
 		"spatie/commonmark-highlighter": "^3.0",
-		"tatter/alerts": "^2.1"
+		"tatter/alerts": "^3.0"
 	},
 	"require-dev": {
 		"codeigniter/coding-standard": "^1.1",

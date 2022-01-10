@@ -8,12 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <?= asset_link('admin/css/admin.css', 'css') ?>
     <?= asset_link('other/components/font-awesome/css/all.css', 'css') ?>
-    <?= service('alerts')->css(); ?>
     <?= $this->renderSection('styles') ?>
 </head>
 <body>
 
-<?= service('alerts')->display(); ?>
+<aside id="alerts-wrapper">
+{alerts}
+</aside>
 
 <div class="main" x-data="{open: true}">
 	<div class="h-100 d-flex align-items-stretch">
