@@ -2,16 +2,22 @@
 	"name": "lonnieezell/bonfire",
 	"type": "project",
 	"description": "A project skeleton/admin area for CodeIgniter 4 projects",
+	"keywords": [
+		"codeigniter",
+		"codeigniter4"
+	],
+	"homepage": "https://github.com/lonnieezell/Bonfire2",
 	"license": "MIT",
 	"require": {
-		"php": "^7.4||^8.0",
+		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
-		"codeigniter4/framework": "^4",
+		"codeigniter4/framework": "^4.0",
 		"tatter/alerts": "^2.1",
 		"lonnieezell/codigniter-shield": "dev-develop",
 		"components/font-awesome": "^5.15",
 		"league/commonmark": "^2.0",
-		"spatie/commonmark-highlighter": "^3.0"
+		"spatie/commonmark-highlighter": "^3.0",
+		"roave/security-advisories": "dev-latest"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",
@@ -21,9 +27,6 @@
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
 		"phpstan/phpstan": "^1.1"
-	},
-	"suggest": {
-		"ext-fileinfo": "Improves mime type detection for files"
 	},
 	"autoload": {
 		"psr-4": {
@@ -36,17 +39,13 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
+			"Bonfire\\": "bonfire",
 			"Tests\\": "tests",
-			"Tests\\Support\\": "tests/_support",
-			"Bonfire\\": "bonfire"
+			"Tests\\Support\\": "tests/_support"
 		}
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/lonnieezell/codigniter-shield"
-		}
-	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"scripts": {
 		"analyze": "phpstan analyze",
 		"ci": [
@@ -59,9 +58,17 @@
 		],
 		"deduplicate": "phpcpd app/ bonfire/",
 		"inspect": "deptrac analyze --cache-file=build/deptrac.cache",
-		"mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
 		"style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
 		"test": "phpunit"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/lonnieezell/codigniter-shield"
+		}
+	],
+	"suggest": {
+		"ext-fileinfo": "Improves mime type detection for files"
 	},
 	"support": {
 		"forum": "http://forum.codeigniter.com/",

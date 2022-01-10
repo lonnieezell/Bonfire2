@@ -7,11 +7,14 @@ use Bonfire\Libraries\Menus\MenuCollection;
 use Bonfire\Libraries\Menus\MenuItem;
 use Tests\Support\TestCase;
 
-class MenuTest extends TestCase
+/**
+ * @internal
+ */
+final class MenuTest extends TestCase
 {
     public function testWithItems()
     {
-        $menu = new Menu();
+        $menu  = new Menu();
         $item1 = new MenuItem(['title' => 'Item 1']);
         $item2 = new MenuItem(['title' => 'Item 2']);
 
@@ -21,8 +24,8 @@ class MenuTest extends TestCase
         $items = $menu->items();
 
         $this->assertCount(2, $items);
-        $this->assertEquals('Item 1', $items[0]->title);
-        $this->assertEquals('Item 2', $items[1]->title);
+        $this->assertSame('Item 1', $items[0]->title);
+        $this->assertSame('Item 2', $items[1]->title);
     }
 
     public function testCreateCollection()
@@ -32,15 +35,15 @@ class MenuTest extends TestCase
         $collection = $menu->createCollection('settings-collection', 'Settings');
 
         $this->assertInstanceOf(MenuCollection::class, $collection);
-        $this->assertEquals('settings-collection', $collection->name);
-        $this->assertEquals('settings-collection', $collection->name());
-        $this->assertEquals('Settings', $collection->title);
-        $this->assertEquals('Settings', $collection->title());
+        $this->assertSame('settings-collection', $collection->name);
+        $this->assertSame('settings-collection', $collection->name());
+        $this->assertSame('Settings', $collection->title);
+        $this->assertSame('Settings', $collection->title());
     }
 
     public function testCollectCreatesNewCollection()
     {
-        $menu = new Menu();
+        $menu  = new Menu();
         $item1 = new MenuItem(['title' => 'Item 1']);
         $item2 = new MenuItem(['title' => 'Item 2']);
 
@@ -52,9 +55,9 @@ class MenuTest extends TestCase
 
     public function testCollectUsesExistingCollection()
     {
-        $menu = new Menu();
-        $item1 = new MenuItem(['title' => 'Item 1']);
-        $item2 = new MenuItem(['title' => 'Item 2']);
+        $menu     = new Menu();
+        $item1    = new MenuItem(['title' => 'Item 1']);
+        $item2    = new MenuItem(['title' => 'Item 2']);
         $collect1 = $menu->createCollection('settings', 'Settings');
 
         $collection = $menu->collect('settings', [$item1, $item2]);
@@ -66,7 +69,7 @@ class MenuTest extends TestCase
 
     public function testGetCollection()
     {
-        $menu = new Menu();
+        $menu     = new Menu();
         $collect1 = $menu->createCollection('collect-1', 'Collect 1');
         $collect2 = $menu->createCollection('collect-2', 'Collect 2');
 

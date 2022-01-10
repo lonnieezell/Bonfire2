@@ -37,24 +37,25 @@ class Autoload extends AutoloadConfig
      *       'App'	       => APPPATH
      *   ];
      *```
+     *
      * @var array<string, string>
      */
     public $psr4 = [
-        APP_NAMESPACE => APPPATH, // For custom app namespace
-        'Config'      => APPPATH . 'Config',
-        'Bonfire'     => ROOTPATH .'bonfire',
-        'Bonfire\Email' => ROOTPATH .'bonfire/Modules/Email',
-        'Bonfire\Users' => ROOTPATH .'bonfire/Modules/Users',
-        'Bonfire\Groups' => ROOTPATH .'bonfire/Modules/Groups',
-        'Bonfire\Assets' => ROOTPATH .'bonfire/Modules/Assets',
-        'Bonfire\Tools' => ROOTPATH .'bonfire/Modules/Tools',
-        'Bonfire\Search' => ROOTPATH .'bonfire/Modules/Search',
-        'Bonfire\Settings' => ROOTPATH .'bonfire/Modules/Settings',
-        'Bonfire\Guides' => ROOTPATH .'bonfire/Modules/Guides',
-        'Bonfire\Recycler' => ROOTPATH .'bonfire/Modules/Recycler',
-        'Bonfire\Consent' => ROOTPATH .'bonfire/Modules/Consent',
-		'Bonfire\Widgets' => ROOTPATH .'bonfire/Modules/Widgets',
-        'Themes' => ROOTPATH .'themes',
+        APP_NAMESPACE      => APPPATH, // For custom app namespace
+        'Config'           => APPPATH . 'Config',
+        'Bonfire'          => ROOTPATH . 'bonfire',
+        'Bonfire\Email'    => ROOTPATH . 'bonfire/Modules/Email',
+        'Bonfire\Users'    => ROOTPATH . 'bonfire/Modules/Users',
+        'Bonfire\Groups'   => ROOTPATH . 'bonfire/Modules/Groups',
+        'Bonfire\Assets'   => ROOTPATH . 'bonfire/Modules/Assets',
+        'Bonfire\Tools'    => ROOTPATH . 'bonfire/Modules/Tools',
+        'Bonfire\Search'   => ROOTPATH . 'bonfire/Modules/Search',
+        'Bonfire\Settings' => ROOTPATH . 'bonfire/Modules/Settings',
+        'Bonfire\Guides'   => ROOTPATH . 'bonfire/Modules/Guides',
+        'Bonfire\Recycler' => ROOTPATH . 'bonfire/Modules/Recycler',
+        'Bonfire\Consent'  => ROOTPATH . 'bonfire/Modules/Consent',
+        'Bonfire\Widgets'  => ROOTPATH . 'bonfire/Modules/Widgets',
+        'Themes'           => ROOTPATH . 'themes',
     ];
 
     /**
@@ -73,6 +74,7 @@ class Autoload extends AutoloadConfig
      *       'MyClass'   => '/path/to/class/file.php'
      *   ];
      *```
+     *
      * @var array<string, string>
      */
     public $classmap = [];
@@ -91,6 +93,7 @@ class Autoload extends AutoloadConfig
      *	 	   '/path/to/my/file.php',
      *    ];
      * ```
+     *
      * @var array<int, string>
      */
     public $files = [];

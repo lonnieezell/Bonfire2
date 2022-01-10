@@ -40,7 +40,7 @@ final class StatsCollectionTest extends TestCase
     public function testNames()
     {
         $collection = new StatsCollection();
-        $this->assertEquals('', $collection->name());
+        $this->assertSame('', $collection->name());
 
         $collection = new StatsCollection(['name' => 'Foo']);
         $this->assertSame('Foo', $collection->name());

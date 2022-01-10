@@ -4,22 +4,24 @@ namespace Tests\Bonfire\Users;
 
 use Bonfire\Modules\Users\SearchProvider;
 use CodeIgniter\Test\DatabaseTestTrait;
-use Sparks\Shield\Models\UserModel;
 use Tests\Support\TestCase;
 
-class SearchProviderTest extends TestCase
+/**
+ * @internal
+ */
+final class SearchProviderTest extends TestCase
 {
     use DatabaseTestTrait;
 
     protected $refresh = true;
-    protected $namespace = null;
+    protected $namespace;
 
     /**
      * @var SearchProvider
      */
     protected $provider;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -53,7 +55,7 @@ class SearchProviderTest extends TestCase
         $result = $this->provider->search('rog');
 
         $this->assertCount(1, $result);
-        $this->assertEquals('Rogers', $result[0]->last_name);
+        $this->assertSame('Rogers', $result[0]->last_name);
     }
 
     public function testSearchMatchEmail()
@@ -69,6 +71,6 @@ class SearchProviderTest extends TestCase
 
     public function testResourceUrl()
     {
-        $this->assertEquals('admin/users', $this->provider->resourceUrl());
+        $this->assertSame('admin/users', $this->provider->resourceUrl());
     }
 }

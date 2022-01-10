@@ -7,7 +7,7 @@ parameters:
 		- tests
 	bootstrapFiles:
 		- vendor/codeigniter4/framework/system/Test/bootstrap.php
-	excludes_analyse:
+	excludePaths:
 		- **/Routes.php
 		- **/Views/*
 	ignoreErrors:

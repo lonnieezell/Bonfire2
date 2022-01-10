@@ -5,9 +5,12 @@ namespace Tests\Assets;
 use CodeIgniter\Config\Factories;
 use Tests\Support\TestCase;
 
-class AssetHelperTest extends TestCase
+/**
+ * @internal
+ */
+final class AssetHelperTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +35,7 @@ class AssetHelperTest extends TestCase
 
     public function testAssetVersion()
     {
-        $config = config('Assets');
+        $config              = config('Assets');
         $config->bustingType = 'version';
         Factories::injectMock('config', 'Assets', $config);
 
@@ -46,7 +49,7 @@ class AssetHelperTest extends TestCase
 
     public function testAssetFile()
     {
-        $config = config('Assets');
+        $config              = config('Assets');
         $config->bustingType = 'file';
         Factories::injectMock('config', 'Assets', $config);
 
@@ -55,6 +58,6 @@ class AssetHelperTest extends TestCase
         // In testing environment, would be the current timestamp
         // so just test the pattern to ensure that works.
         preg_match('|assets/admin/css/admin.([\d]+).css|i', $link, $matches);
-        $this->assertEquals(filemtime(ROOTPATH.'themes/Admin/css/admin.css'), $matches[1]);
+        $this->assertSame(filemtime(ROOTPATH . 'themes/Admin/css/admin.css'), (int) $matches[1]);
     }
 }

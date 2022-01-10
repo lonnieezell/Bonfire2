@@ -5,7 +5,10 @@ namespace Tests\Bonfire\Menus;
 use Bonfire\Libraries\Menus\MenuItem;
 use Tests\Support\TestCase;
 
-class MenuItemTest extends TestCase
+/**
+ * @internal
+ */
+final class MenuItemTest extends TestCase
 {
     public function testBasicDetails()
     {
@@ -16,50 +19,50 @@ class MenuItemTest extends TestCase
             ->setWeight(5)
             ->setIconUrl('example.com/img/foo.jpg');
 
-        $this->assertEquals('Item A', $item->title());
-        $this->assertEquals('/example.com/foo?bar=baz', $item->url());
-        $this->assertEquals('Alternate A', $item->altText());
-        $this->assertEquals('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
-        $this->assertEquals(5, $item->weight());
+        $this->assertSame('Item A', $item->title());
+        $this->assertSame('/example.com/foo?bar=baz', $item->url());
+        $this->assertSame('Alternate A', $item->altText());
+        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
+        $this->assertSame(5, $item->weight());
     }
 
     public function testConstructorFill()
     {
         $item = new MenuItem([
-            'title' => 'Item A',
-            'url' => 'example.com/foo?bar=baz',
+            'title'   => 'Item A',
+            'url'     => 'example.com/foo?bar=baz',
             'altText' => 'Alternate A',
-            'weight' => 5,
-            'iconUrl' => 'example.com/img/foo.jpg'
-]       );
+            'weight'  => 5,
+            'iconUrl' => 'example.com/img/foo.jpg',
+        ]);
 
-        $this->assertEquals('Item A', $item->title());
-        $this->assertEquals('/example.com/foo?bar=baz', $item->url());
-        $this->assertEquals('Alternate A', $item->altText());
-        $this->assertEquals('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
-        $this->assertEquals(5, $item->weight());
+        $this->assertSame('Item A', $item->title());
+        $this->assertSame('/example.com/foo?bar=baz', $item->url());
+        $this->assertSame('Alternate A', $item->altText());
+        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
+        $this->assertSame(5, $item->weight());
     }
 
     public function testBuildsFontAwesomeTag()
     {
         $item = new MenuItem();
 
-        $this->assertEquals('', $item->icon());
+        $this->assertSame('', $item->icon());
 
         $item->setFontAwesomeIcon('fa-envelope');
 
-        $this->assertEquals('<i class="fa-envelope"></i>', $item->icon());
+        $this->assertSame('<i class="fa-envelope"></i>', $item->icon());
     }
 
     public function testBuildsFontAwesomeTagWithExtraClass()
     {
         $item = new MenuItem();
 
-        $this->assertEquals('', $item->icon());
+        $this->assertSame('', $item->icon());
 
         $item->setFontAwesomeIcon('fa-envelope');
 
-        $this->assertEquals('<i class="fa-envelope extra"></i>', $item->icon('extra'));
+        $this->assertSame('<i class="fa-envelope extra"></i>', $item->icon('extra'));
     }
 
     public function testPrefersFontAwesomeOverImg()
@@ -68,16 +71,16 @@ class MenuItemTest extends TestCase
         $item->setFontAwesomeIcon('fa-envelope')
             ->setIconUrl('example.com/img/foo.jpg');
 
-        $this->assertEquals('<i class="fa-envelope"></i>', $item->icon());
+        $this->assertSame('<i class="fa-envelope"></i>', $item->icon());
     }
 
     public function testImageTagWithExtraClass()
     {
         $item = new MenuItem();
         $item->setTitle('Item A')
-             ->setIconUrl('example.com/img/foo.jpg');
+            ->setIconUrl('example.com/img/foo.jpg');
 
-        $this->assertEquals('<img href="/example.com/img/foo.jpg" alt="Item A" class="extra" />', $item->icon('extra'));
+        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" class="extra" />', $item->icon('extra'));
     }
 
     public function testWithNamedRoutes()
@@ -88,14 +91,14 @@ class MenuItemTest extends TestCase
         $item = new MenuItem();
         $item->setNamedRoute('home');
 
-        $this->assertEquals('/home-sweet-home', $item->url());
+        $this->assertSame('/home-sweet-home', $item->url());
     }
 
     public function testPropertyGetter()
     {
         $item = new MenuItem(['title' => 'Item 1', 'fontAwesomeIcon' => 'fa-envelope']);
 
-        $this->assertEquals('Item 1', $item->title);
-        $this->assertEquals('<i class="fa-envelope"></i>', $item->icon);
+        $this->assertSame('Item 1', $item->title);
+        $this->assertSame('<i class="fa-envelope"></i>', $item->icon);
     }
 }

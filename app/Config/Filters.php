@@ -45,9 +45,9 @@ class Filters extends BaseConfig
         'before' => [
             'online' => ['except' => 'site-offline'],
         ],
-        'after'  => [
+        'after' => [
             'toolbar',
-            'consent' => ['except' => ADMIN_AREA.'*'],
+            'consent' => ['except' => ADMIN_AREA . '*'],
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -75,7 +75,7 @@ class Filters extends BaseConfig
      */
     public $filters = [
         'session' => [
-            'before' => [ADMIN_AREA.'*']
+            'before' => [ADMIN_AREA . '*'],
         ],
     ];
 }

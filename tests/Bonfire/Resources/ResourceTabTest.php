@@ -2,17 +2,20 @@
 
 namespace Tests\Bonfire\Resources;
 
-use App\Models\UserModel;
 use Bonfire\Resources\ResourceTab;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
 
-class ResourceTabTest extends TestCase
+/**
+ * @internal
+ */
+final class ResourceTabTest extends TestCase
 {
     use DatabaseTestTrait;
-    protected $namespace = null;
 
-    public function tearDown(): void
+    protected $namespace;
+
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -22,14 +25,14 @@ class ResourceTabTest extends TestCase
     public function testBasicCreation()
     {
         $tab = new ResourceTab([
-            'title' => 'Resource A',
-            'url' => 'users/gallery',
-            'permission' => 'users.edit'
+            'title'      => 'Resource A',
+            'url'        => 'users/gallery',
+            'permission' => 'users.edit',
         ]);
 
-        $this->assertEquals('Resource A', $tab->title);
-        $this->assertEquals(site_url(ADMIN_AREA .'/users/gallery'), $tab->url);
-        $this->assertEquals('users.edit', $tab->permission);
+        $this->assertSame('Resource A', $tab->title);
+        $this->assertSame(site_url(ADMIN_AREA . '/users/gallery'), $tab->url);
+        $this->assertSame('users.edit', $tab->permission);
         $this->assertNull($tab->foo);
     }
 
@@ -37,6 +40,6 @@ class ResourceTabTest extends TestCase
     {
         $tab = new ResourceTab();
 
-        $this->assertEquals('', $tab->url);
+        $this->assertSame('', $tab->url);
     }
 }

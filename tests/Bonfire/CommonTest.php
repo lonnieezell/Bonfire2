@@ -5,7 +5,10 @@ namespace Tests\Bonfire;
 use CodeIgniter\I18n\Time;
 use Tests\Support\TestCase;
 
-class CommonTest extends TestCase
+/**
+ * @internal
+ */
+final class CommonTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -36,6 +39,6 @@ class CommonTest extends TestCase
         setting('App.dateFormat', $format);
         setting('App.timeFormat', $timeFormat);
 
-        $this->assertEquals($expected, app_date($time, $includeTime));
+        $this->assertSame($expected, app_date($time, $includeTime));
     }
 }
