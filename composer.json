@@ -16,7 +16,8 @@
 		"lonnieezell/codigniter-shield": "dev-develop",
 		"components/font-awesome": "^5.15",
 		"league/commonmark": "^2.0",
-		"spatie/commonmark-highlighter": "^3.0"
+		"spatie/commonmark-highlighter": "^3.0",
+		"roave/security-advisories": "dev-latest"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9",
