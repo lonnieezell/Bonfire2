@@ -8,6 +8,8 @@ use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
+use CodeIgniter\Filters\InvalidChars;
+use CodeIgniter\Filters\SecureHeaders;
 use Sparks\Shield\Filters\ChainAuth;
 use Sparks\Shield\Filters\SessionAuth;
 use Sparks\Shield\Filters\TokenAuth;
@@ -21,14 +23,16 @@ class Filters extends BaseConfig
      * @var array
      */
     public $aliases = [
-        'csrf'     => CSRF::class,
-        'toolbar'  => DebugToolbar::class,
-        'honeypot' => Honeypot::class,
-        'session'  => SessionAuth::class,
-        'tokens'   => TokenAuth::class,
-        'chain'    => ChainAuth::class,
-        'online'  => OnlineCheck::class,
-        'consent' => ConsentFilter::class,
+        'csrf'          => CSRF::class,
+        'toolbar'       => DebugToolbar::class,
+        'honeypot'      => Honeypot::class,
+        'invalidchars'  => InvalidChars::class,
+        'secureheaders' => SecureHeaders::class,
+        'session'       => SessionAuth::class,
+        'tokens'        => TokenAuth::class,
+        'chain'         => ChainAuth::class,
+        'online'        => OnlineCheck::class,
+        'consent'       => ConsentFilter::class,
     ];
 
     /**
@@ -45,6 +49,7 @@ class Filters extends BaseConfig
             'toolbar',
             'consent' => ['except' => ADMIN_AREA.'*'],
             // 'honeypot',
+            // 'secureheaders',
         ],
     ];
 
