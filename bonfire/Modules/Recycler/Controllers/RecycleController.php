@@ -26,11 +26,8 @@ class RecycleController extends AdminController
      */
     public function viewResource()
     {
-        $resources = setting('Recycler.resources');
-
-        $resourceType = $this->request->getVar('r')
-            ? $this->request->getVar('r') ?? null
-            : setting('Recycler.defaultResource');
+        $resources    = setting('Recycler.resources');
+        $resourceType = $this->request->getVar('r') ?: setting('Recycler.defaultResource');
 
         if (empty($resourceType) || ! array_key_exists($resourceType, $resources)) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['resource type']));

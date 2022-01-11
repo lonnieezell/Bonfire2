@@ -12,21 +12,25 @@
 		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
 		"codeigniter4/framework": "^4.0",
-		"tatter/alerts": "^2.1",
-		"lonnieezell/codigniter-shield": "dev-develop",
 		"components/font-awesome": "^5.15",
 		"league/commonmark": "^2.0",
+		"lonnieezell/codigniter-shield": "dev-develop",
+		"roave/security-advisories": "dev-latest",
 		"spatie/commonmark-highlighter": "^3.0",
-		"roave/security-advisories": "dev-latest"
+		"tatter/alerts": "^3.0"
 	},
 	"require-dev": {
+		"codeigniter/coding-standard": "^1.1",
 		"fakerphp/faker": "^1.9",
 		"mikey179/vfsstream": "^1.6",
-		"phpunit/phpunit": "^9.1",
-		"codeigniter/coding-standard": "^1.1",
 		"nexusphp/cs-config": "^3.1",
 		"nexusphp/tachycardia": "^1.0",
-		"phpstan/phpstan": "^1.1"
+		"phpstan/phpstan": "^1.1",
+		"phpunit/phpunit": "^9.1",
+		"psr/container": "^1.0"
+	},
+	"suggest": {
+		"ext-fileinfo": "Improves mime type detection for files"
 	},
 	"autoload": {
 		"psr-4": {
@@ -44,6 +48,12 @@
 			"Tests\\Support\\": "tests/_support"
 		}
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/lonnieezell/codigniter-shield.git"
+		}
+	],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"scripts": {
@@ -60,15 +70,6 @@
 		"inspect": "deptrac analyze --cache-file=build/deptrac.cache",
 		"style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
 		"test": "phpunit"
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/lonnieezell/codigniter-shield"
-		}
-	],
-	"suggest": {
-		"ext-fileinfo": "Improves mime type detection for files"
 	},
 	"support": {
 		"forum": "http://forum.codeigniter.com/",

@@ -46,6 +46,7 @@ class Filters extends BaseConfig
             'online' => ['except' => 'site-offline'],
         ],
         'after' => [
+            'alerts',
             'toolbar',
             'consent' => ['except' => ADMIN_AREA . '*'],
             // 'honeypot',

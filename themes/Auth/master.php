@@ -8,12 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <?= asset_link('auth/css/auth.css', 'css') ?>
     <?= asset_link('other/components/font-awesome/css/all.css', 'css') ?>
-    <?= service('alerts')->css(); ?>
     <?= $this->renderSection('styles') ?>
 </head>
 <body>
 
-<?= service('alerts')->display(); ?>
+<aside id="alerts-wrapper">
+{alerts}
+</aside>
+
 <header class="navbar navbar-light bg-none flex-md-nowrap p-0 shadow-sm">
     <a class="px-3 d-block fs-3 text-dark text-decoration-none col-md-3 col-lg-2 me-0" href="/<?= ADMIN_AREA ?>">
         <?= setting('App.siteName') ?? 'Bonfire' ?>
