@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'Widgets',
             'namedRoute'      => 'widgets-settings',
             'fontAwesomeIcon' => 'far fa-object-group',
+            'permission'      => 'widgets.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }

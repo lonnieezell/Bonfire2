@@ -32,6 +32,7 @@ class Module extends BaseModule
             'title'           => 'User Groups',
             'namedRoute'      => 'user-group-settings',
             'fontAwesomeIcon' => 'fas fa-users',
+            'permission'      => 'groups.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
 

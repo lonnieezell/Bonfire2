@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'Consent',
             'namedRoute'      => 'consent-settings',
             'fontAwesomeIcon' => 'fas fa-handshake',
+            'permission'      => 'consent.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }

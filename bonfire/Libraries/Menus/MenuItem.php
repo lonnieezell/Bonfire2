@@ -48,6 +48,14 @@ class MenuItem
      */
     protected $weight;
 
+    /**
+     * The permission to check to see if the
+     * user can view the menu item or not.
+     *
+     * @var string
+     */
+    protected $permission;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -122,6 +130,18 @@ class MenuItem
     }
 
     /**
+     * Sets the permission required to see this menu item.
+     *
+     * @return $this
+     */
+    public function setPermission(string $permission)
+    {
+        $this->permission = $permission;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function title()
@@ -151,6 +171,23 @@ class MenuItem
     public function weight()
     {
         return $this->weight ?? 0;
+    }
+
+    /**
+     * Can the active user see this menu item?
+     *
+     * @return bool
+     */
+    public function userCanSee(): bool
+    {
+        // No permission set means anyone can view.
+        if (empty($this->permission)) {
+            return true;
+        }
+
+        helper('auth');
+
+        return auth()->user()->can($this->permission);
     }
 
     public function __get(string $key)

@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'Guides',
             'namedRoute'      => 'guides',
             'fontAwesomeIcon' => 'fas fa-book',
+            'permission'      => 'guides.view',
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
     }

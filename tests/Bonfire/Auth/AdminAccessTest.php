@@ -2,6 +2,7 @@
 
 namespace Tests\Bonfire\Auth;
 
+use CodeIgniter\Config\Factories;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
 
@@ -33,8 +34,39 @@ final class AdminAccessTest extends TestCase
         $response->assertSessionHas('error', lang('Bonfire.notAuthorized'));
     }
 
-    public function testCannotView()
+    public function testCannotViewNavItemsWithoutPermission()
     {
-        
+        $config = config('AuthGroups');
+        $config->matrix['admin'] = ['admin.access'];
+        Factories::injectMock('config', 'AuthGroups', $config);
+
+        $admin = $this->createUser();
+        $admin->addGroup('admin');
+
+        $response = $this->actingAs($admin)->get(ADMIN_AREA);
+
+        // Should see 'Dashboard' link
+        $response->assertSee('Dashboard');
+
+        // Cannot see the User menus
+        $response->assertDontSee('Users');
+        $response->assertDontSee('Users');
+        $response->assertDontSee('User Groups');
+
+        // Cannot see General Admin settings
+        $response->assertDontSee('Email');
+        $response->assertDontSee('General');
+
+        // Cannot see Consent settings
+        $response->assertDontSee('Consent');
+
+        // Cannot see Widget settings
+        $response->assertDontSee('<span>Widgets');
+
+        // Cannot see the Recycler area
+        $response->assertDontSee('Recycler');
+
+        // Cannot see the Guides page
+        $response->assertDontSee('Guides');
     }
 }

@@ -32,6 +32,7 @@ class Module extends BaseModule
             'title'           => 'Users',
             'namedRoute'      => 'user-settings',
             'fontAwesomeIcon' => 'fas fa-user',
+            'permission'      => 'users.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
 
@@ -40,6 +41,7 @@ class Module extends BaseModule
             'title'           => 'Users',
             'namedRoute'      => 'user-list',
             'fontAwesomeIcon' => 'fas fa-users',
+            'permission'      => 'users.list',
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
 

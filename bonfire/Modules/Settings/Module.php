@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'General',
             'namedRoute'      => 'general-settings',
             'fontAwesomeIcon' => 'fas fa-cog',
+            'permission'      => 'admin.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }

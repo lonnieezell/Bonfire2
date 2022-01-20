@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'Recycler',
             'namedRoute'      => 'recycler',
             'fontAwesomeIcon' => 'fas fa-recycle',
+            'permission'      => 'recycler.view',
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
     }

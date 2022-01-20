@@ -38,14 +38,16 @@
 
 
                 <?php foreach ($collection->items() as $item) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link <?= url_is($item->url . '*') ? 'active' : '' ?>" href="<?= $item->url ?>">
-                            <?php if (! $collection->isCollapsible()) : ?>
-                                <?= $item->icon ?>
-                            <?php endif ?>
-                            <span><?= $item->title ?></span>
-                        </a>
-                    </li>
+                    <?php if ($item->userCanSee()): ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= url_is($item->url . '*') ? 'active' : '' ?>" href="<?= $item->url ?>">
+                                <?php if (! $collection->isCollapsible()) : ?>
+                                    <?= $item->icon ?>
+                                <?php endif ?>
+                                <span><?= $item->title ?></span>
+                            </a>
+                        </li>
+                    <?php endif ?>
                 <?php endforeach ?>
                 <?php if ($collection->isCollapsible()) : ?>
                     </ul>
