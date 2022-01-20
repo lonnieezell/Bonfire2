@@ -32,4 +32,9 @@ final class AdminAccessTest extends TestCase
         $response->assertRedirectTo('/');
         $response->assertSessionHas('error', lang('Bonfire.notAuthorized'));
     }
+
+    public function testCannotView()
+    {
+        
+    }
 }

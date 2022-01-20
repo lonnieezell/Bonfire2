@@ -27,7 +27,7 @@ class Admin implements FilterInterface
     {
         helper(['auth', 'setting']);
 
-        if (! auth('session')->user()->hasPermission('admin.access')) {
+        if (! auth('session')->user()->can('admin.access')) {
             return redirect()->to('/')->with('error', lang('Bonfire.notAuthorized'));
         }
     }
