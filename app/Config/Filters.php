@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Filters\OnlineCheck;
 use CodeIgniter\Config\BaseConfig;
@@ -33,6 +34,7 @@ class Filters extends BaseConfig
         'chain'         => ChainAuth::class,
         'online'        => OnlineCheck::class,
         'consent'       => ConsentFilter::class,
+        'admin'         => Admin::class,
     ];
 
     /**
@@ -76,6 +78,9 @@ class Filters extends BaseConfig
      */
     public $filters = [
         'session' => [
+            'before' => [ADMIN_AREA . '*'],
+        ],
+        'admin' => [
             'before' => [ADMIN_AREA . '*'],
         ],
     ];
