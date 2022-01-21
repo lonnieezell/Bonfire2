@@ -317,10 +317,12 @@ input[type="checkbox"]:indeterminate {
  */
 
 #alerts-wrapper {
+    position: absolute;
     top: 30px !important;
     right: 1% !important;
     left: auto !important;
     min-width: 20rem !important;
+    z-index: 9999;
 }
 #alerts-wrapper .alert {
     background: var(--bf-white);
