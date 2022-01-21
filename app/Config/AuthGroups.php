@@ -91,6 +91,7 @@ class AuthGroups extends ShieldGroups
             'guides.*',
             'widgets.*',
             'consent.*',
+            'recycler.*',
         ],
         'admin' => [
             'admin.access',
@@ -119,6 +120,7 @@ class AuthGroups extends ShieldGroups
             'guides.*',
             'widgets.*',
             'consent.*',
+            'recycler.*',
         ],
         'user' => [],
         'beta' => [
