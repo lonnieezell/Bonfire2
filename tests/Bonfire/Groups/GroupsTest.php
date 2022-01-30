@@ -24,6 +24,7 @@ final class GroupsTest extends TestCase
         parent::setUp();
 
         $this->user = $this->createUser();
+        $this->user->addGroup('superadmin');
     }
 
     public function testCanSeeUserList()

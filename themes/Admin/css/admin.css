@@ -76,6 +76,7 @@ a:hover {
 }
 .sidebar-wrap {
     padding-bottom: 50px;
+    /*overflow-y: scroll;*/
 }
 .sidebar-wrap .sidebar-toggle {
     border-top: 1px solid var(--bf-sidebar-bg-active);
@@ -124,6 +125,11 @@ a:hover {
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
     color: inherit;
+}
+
+.sidebar a.sidebar-toggle {
+    background: var(--bf-sidebar-bg);
+    border-top: 1px solid var(--bf-sidebar-bg-active);
 }
 
 /* Sub-folder navs */

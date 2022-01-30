@@ -20,9 +20,7 @@
 	<div class="h-100 d-flex align-items-stretch">
         <nav id="sidebars" class="sidebar" x-bind:class="{ 'collapsed': ! open }">
             <div class="sidebar-wrap  h-100 w-100 position-relative">
-<!--                <div class="sidebar-inner">-->
-                    <x-sidebar />
-<!--                </div>-->
+                <x-sidebar />
 
                 <div class="nav-item position-absolute bottom-0 w-100">
                     <a href="#" class="nav-link sidebar-toggle" @click="open = !open">

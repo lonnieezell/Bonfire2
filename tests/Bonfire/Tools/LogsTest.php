@@ -29,15 +29,19 @@ final class LogsTest extends TestCase
         $this->logFileName = 'log-' . date('Y-m-d') . '.log';
     }
 
-    public function testeViewLogFile()
+    public function testViewLogFile()
     {
-        $response = $this->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
+        $user = $this->createUser();
+        $user->addGroup('superadmin');
+
+        $response = $this->actingAs($user)
+             ->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
 
         $response->assertOK();
         $response->assertSee('Logs : ' . date('F j, Y'));
     }
 
-    public function testeListLogsFiles()
+    public function testListLogsFiles()
     {
         $logs = get_filenames($this->logsPath . $this->logFileName);
 
@@ -47,7 +51,7 @@ final class LogsTest extends TestCase
         $this->assertEmpty($logs);
     }
 
-    public function testeListFileLogs()
+    public function testListFileLogs()
     {
         $logHandler = new Logs();
 

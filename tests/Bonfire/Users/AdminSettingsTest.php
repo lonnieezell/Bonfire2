@@ -22,6 +22,7 @@ final class AdminSettingsTest extends TestCase
         parent::setUp();
 
         $this->user = $this->createUser();
+        $this->user->addGroup('superadmin');
     }
 
     public function testCanSeePage()
