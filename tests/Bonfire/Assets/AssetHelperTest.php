@@ -3,6 +3,7 @@
 namespace Tests\Assets;
 
 use CodeIgniter\Config\Factories;
+use RuntimeException;
 use Tests\Support\TestCase;
 
 /**
@@ -19,7 +20,7 @@ final class AssetHelperTest extends TestCase
 
     public function testAssetThrowsNoFilename()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('You must provide a valid filename and extension to the asset() helper.');
 
         asset_link('foo', 'css');
@@ -27,7 +28,7 @@ final class AssetHelperTest extends TestCase
 
     public function testAssetThrowsNoExtension()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('You must provide a valid filename and extension to the asset() helper.');
 
         asset_link('admin/foo', 'css');

@@ -3,7 +3,6 @@
 namespace Tests\Bonfire\Recycler;
 
 use App\Entities\User;
-use App\Filters\Admin;
 use App\Models\UserModel;
 use Tests\Support\TestCase;
 
@@ -25,7 +24,7 @@ final class RecyclerTest extends TestCase
      */
     protected $users;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +42,7 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $response = $this->actingAs($this->admin)
-            ->get(ADMIN_AREA .'/recycler');
+            ->get(ADMIN_AREA . '/recycler');
 
         $response->assertOK();
         $response->assertSee($user1->first_name);
@@ -56,11 +55,11 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $result = $this->actingAs($this->admin)
-            ->get(ADMIN_AREA .'/recycler/restore/users/'. $user1->id);
+            ->get(ADMIN_AREA . '/recycler/restore/users/' . $user1->id);
 
         $this->seeInDatabase('users', [
-            'id' => $user1->id,
-            'deleted_at' => null
+            'id'         => $user1->id,
+            'deleted_at' => null,
         ]);
     }
 
@@ -70,7 +69,7 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $result = $this->actingAs($this->admin)
-                       ->get(ADMIN_AREA .'/recycler/purge/users/'. $user1->id);
+            ->get(ADMIN_AREA . '/recycler/purge/users/' . $user1->id);
 
         $this->dontSeeInDatabase('users', [
             'id' => $user1->id,

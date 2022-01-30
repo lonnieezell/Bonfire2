@@ -6,7 +6,6 @@ use App\Entities\User;
 use App\Models\UserModel;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Sparks\Shield\Authentication\Actions\Email2FA;
-use Sparks\Shield\Authentication\Passwords;
 use Tests\Support\TestCase;
 
 /**

@@ -13,6 +13,7 @@ namespace Bonfire\Recycler\Controllers;
 
 use App\Controllers\AdminController;
 use CodeIgniter\HTTP\RedirectResponse;
+use ReflectionException;
 
 class RecycleController extends AdminController
 {
@@ -60,7 +61,7 @@ class RecycleController extends AdminController
     /**
      * Restores a single record.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *
      * @return RedirectResponse
      */

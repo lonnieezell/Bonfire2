@@ -35,7 +35,7 @@ final class LogsTest extends TestCase
         $user->addGroup('superadmin');
 
         $response = $this->actingAs($user)
-             ->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
+            ->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
 
         $response->assertOK();
         $response->assertSee('Logs : ' . date('F j, Y'));

@@ -175,8 +175,6 @@ class MenuItem
 
     /**
      * Can the active user see this menu item?
-     *
-     * @return bool
      */
     public function userCanSee(): bool
     {

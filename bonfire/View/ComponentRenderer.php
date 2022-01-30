@@ -11,6 +11,8 @@
 
 namespace Bonfire\View;
 
+use RuntimeException;
+
 class ComponentRenderer
 {
     public function __construct()
@@ -226,7 +228,7 @@ class ComponentRenderer
             }
         }
 
-        throw new \RuntimeException('View not found for component: ' . $name);
+        throw new RuntimeException('View not found for component: ' . $name);
         // @todo look in all normal namespaces
     }
 

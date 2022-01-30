@@ -55,7 +55,7 @@ class View extends CIView
         // Store the results here so even if
         // multiple views are called in a view, it won't
         // clean it unless we mean it to.
-        $saveData                    = $saveData ?? $this->saveData;
+        $saveData ??= $this->saveData;
         $fileExt                     = pathinfo($view, PATHINFO_EXTENSION);
         $realPath                    = empty($fileExt) ? $view . '.php' : $view; // allow Views as .html, .tpl, etc (from CI3)
         $this->renderVars['view']    = $realPath;
@@ -87,7 +87,7 @@ class View extends CIView
         }
 
         // Make our view data available to the view.
-        $this->tempData = $this->tempData ?? $this->data;
+        $this->tempData ??= $this->data;
 
         if ($saveData) {
             $this->data = $this->tempData;

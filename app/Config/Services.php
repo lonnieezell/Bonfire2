@@ -37,7 +37,7 @@ class Services extends BaseService
         }
 
         $viewPath = $viewPath ?: config('Paths')->viewDirectory;
-        $config   = $config ?? config('View');
+        $config ??= config('View');
 
         return new View($config, $viewPath, AppServices::locator(), CI_DEBUG, AppServices::logger());
     }

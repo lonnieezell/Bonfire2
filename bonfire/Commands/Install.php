@@ -59,7 +59,7 @@ class Install extends BaseCommand
      * @var array
      */
     protected $options = [
-        '--continue' => 'Execute the second install step.'
+        '--continue' => 'Execute the second install step.',
     ];
 
     /**
@@ -80,8 +80,7 @@ class Install extends BaseCommand
             CLI::newLine();
             CLI::write('To migrate and create the initial user, please run: ', 'yellow');
             CLI::write("\tphp spark bf:install --continue", 'green');
-        }
-        else {
+        } else {
             $this->migrate();
             $this->createUser();
         }
@@ -127,7 +126,7 @@ class Install extends BaseCommand
         $url = CLI::prompt('What URL are you running Bonfire under locally?');
 
         if (strpos($url, 'http://') === false && strpos($url, 'https://') === false) {
-            $url = 'http://'. $url;
+            $url = 'http://' . $url;
         }
 
         $this->updateEnvFile("# app.baseURL = ''", "app.baseURL = '{$url}'");
@@ -169,17 +168,17 @@ class Install extends BaseCommand
         $users = model(UserModel::class);
 
         $user = new User([
-                             'first_name' => $firstName,
-                             'last_name'  => $lastName,
-                             'username'   => $username,
-                         ]);
+            'first_name' => $firstName,
+            'last_name'  => $lastName,
+            'username'   => $username,
+        ]);
         $users->save($user);
 
         $user = $users->where('username', $username)->first();
         $user->createEmailIdentity([
-                                       'email'    => $email,
-                                       'password' => $password,
-                                   ]);
+            'email'    => $email,
+            'password' => $password,
+        ]);
 
         $user->addGroup('superadmin');
 

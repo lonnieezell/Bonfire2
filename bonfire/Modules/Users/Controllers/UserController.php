@@ -16,6 +16,7 @@ use App\Entities\User;
 use App\Models\UserModel;
 use Bonfire\Modules\Users\Models\UserFilter;
 use CodeIgniter\Database\Exceptions\DataException;
+use ReflectionException;
 use Sparks\Shield\Models\LoginModel;
 use Sparks\Shield\Models\UserIdentityModel;
 
@@ -96,7 +97,7 @@ class UserController extends AdminController
     /**
      * Creates or saves the basic user details.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
      */

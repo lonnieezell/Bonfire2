@@ -36,7 +36,7 @@ final class AdminAccessTest extends TestCase
 
     public function testCannotViewNavItemsWithoutPermission()
     {
-        $config = config('AuthGroups');
+        $config                  = config('AuthGroups');
         $config->matrix['admin'] = ['admin.access'];
         Factories::injectMock('config', 'AuthGroups', $config);
 

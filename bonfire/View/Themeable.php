@@ -12,6 +12,7 @@
 namespace Bonfire\View;
 
 use CodeIgniter\View\View;
+use RuntimeException;
 
 /**
  * Trait Themeable
@@ -60,7 +61,7 @@ trait Themeable
         $path = Theme::path();
 
         if (! is_dir($path)) {
-            throw new \RuntimeException("`{$this->theme}` is not a valid theme folder.");
+            throw new RuntimeException("`{$this->theme}` is not a valid theme folder.");
         }
 
         $this->renderer = single_service('renderer', $path);

@@ -18,8 +18,7 @@ class Admin implements FilterInterface
      * sent back to the client, allowing for error pages,
      * redirects, etc.
      *
-     * @param RequestInterface $request
-     * @param array|null       $arguments
+     * @param array|null $arguments
      *
      * @return mixed
      */
@@ -38,14 +37,12 @@ class Admin implements FilterInterface
      * to stop execution of other after filters, short of
      * throwing an Exception or Error.
      *
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     * @param array|null        $arguments
+     * @param array|null $arguments
      *
      * @return mixed
      */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        //
+
     }
 }
