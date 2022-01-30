@@ -79,7 +79,7 @@ class Install extends BaseCommand
             CLI::write("\tphp spark db:create <database name>", 'green');
             CLI::newLine();
             CLI::write('To migrate and create the initial user, please run: ', 'yellow');
-            CLI::write("\tphp spark install --continue", 'green');
+            CLI::write("\tphp spark bf:install --continue", 'green');
         }
         else {
             $this->migrate();
