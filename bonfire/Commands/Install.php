@@ -72,6 +72,7 @@ class Install extends BaseCommand
         if (! CLI::getOption('continue')) {
             $this->ensureEnvFile();
             $this->setAppUrl();
+            $this->setEncryptionKey();
             $this->setDatabase();
 
             CLI::newLine();
@@ -147,6 +148,17 @@ class Install extends BaseCommand
         $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
         $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
         $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
+    }
+
+    private function setEncryptionKey()
+    {
+        # generate a key using the out-of-the-box defaults for the Encryption library
+        CLI::newLine();
+        CLI::write('Generating encryption key', 'yellow');
+        $key = bin2hex(\CodeIgniter\Encryption\Encryption::createKey());
+        $this->updateEnvFile('# encryption.key =', "encryption.key = hex2bin:{$key}");
+        CLI::write('Encryption key saved to .env file', 'green');
+        CLI::newLine();
     }
 
     private function migrate()
