@@ -81,7 +81,7 @@ class GuideCollection
         $pages = $this->readDir(ROOTPATH . $this->settings['path']);
 
         // Ensure guide numbers are sorted correctly
-        asort($pages);
+        ksort($pages);
 
         return view('\Bonfire\Modules\Guides\Views\_toc', [
             'pages' => $pages,
@@ -236,9 +236,11 @@ class GuideCollection
      */
     private function readDir(string $path, $pages = [])
     {
-        $files = directory_map($path, 2);
+        $files = directory_map($path, 3);
+        $count = 0;
 
         foreach ($files as $folder => $file) {
+            $count++;
             // Handle folders of pages
             if (is_array($file)) {
                 $pages[$folder] = $this->readDir(rtrim($path, '/') . '/' . $folder);
@@ -247,7 +249,9 @@ class GuideCollection
             }
 
             // Handle single page
-            $pages[] = $file;
+            preg_match('|^[0-9]|', $file, $matches);
+            $prefix = count($matches) ? $matches[0] : null;
+            $pages[$prefix ?? $count] = $file;
         }
 
         return $pages;
