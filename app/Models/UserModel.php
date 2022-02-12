@@ -26,10 +26,11 @@ class UserModel extends ShieldUsers
      */
     public function setupRecycler()
     {
-        return $this->select("users.*,
+		$dbPrefix = $this->getPrefix();
+        return $this->select("{$dbPrefix}users.*,
             (SELECT secret
-                from auth_identities
-                where user_id = users.id
+                from {$dbPrefix}auth_identities
+                where user_id = {$dbPrefix}users.id
                     and type = 'email_password'
                 order by last_used_at desc
                 limit 1
