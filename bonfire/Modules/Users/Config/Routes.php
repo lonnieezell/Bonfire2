@@ -9,7 +9,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Email\Config;
+namespace Bonfire\Users\Config;
 
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Modules\Users\Controllers'], static function ($routes) {
     // User Settings
