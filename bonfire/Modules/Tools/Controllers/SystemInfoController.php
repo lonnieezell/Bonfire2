@@ -36,7 +36,7 @@ class SystemInfoController extends AdminController
             'ciVersion'  => CodeIgniter::CI_VERSION,
             'dbDriver'   => $db->DBDriver,
             'dbVersion'  => $db->getVersion(),
-            'serverLoad' => current(sys_getloadavg()),
+            'serverLoad' => function_exists('sys_getloadavg')?current(sys_getloadavg()):null,
         ]);
     }
 
