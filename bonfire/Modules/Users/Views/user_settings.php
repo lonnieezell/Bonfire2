@@ -253,6 +253,21 @@
             <fieldset x-data="{useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? true : false ?>}">
                 <legend>Avatars</legend>
 
+                <!-- Name Basis -->
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-4">
+                        <label class="form-check-label" for="avatarNameBasis">Display initials based on:</label>
+                        <select name="avatarNameBasis" class="form-select">
+                            <option value="name" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'name' ? 'selected' : '' ?>>Full Name</option>
+                            <option value="username" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'username' ? 'selected' : '' ?>>Username</option>
+                        </select>
+                    </div>
+                    <div class="col px-5 pt-4">
+                        <p class="text-muted small">Will use either the user's full name or their username to display the
+                            initials within their avatar if no image exists.</p>
+                    </div>
+                </div>
+
                 <!-- Use Gravatar -->
                 <div class="row">
                     <div class="col-12 col-sm-4">
@@ -277,7 +292,7 @@
                 <div class="row" x-show="useGravatar">
                     <div class="col-12 col-sm-4">
                         <label for="gravatarDefault" class="form-label">Gravatar default style</label>
-                        <select name="gravatarDefault" class="form-control">
+                        <select name="gravatarDefault" class="form-select">
                             <option value="">Select default style....</option>
                             <option value="mp" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'mp' ? 'selected' : '' ?>>mystery person</option>
                             <option value="identicon" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'identicon' ? 'selected' : '' ?>>identicon</option>

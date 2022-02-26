@@ -81,6 +81,7 @@ class UserSettingsController extends BaseController
         // Avatars
         setting('Users.useGravatar', $this->request->getPost('useGravatar') ?? false);
         setting('Users.gravatarDefault', $this->request->getPost('gravatarDefault'));
+        setting('Users.avatarNameBasis', $this->request->getPost('avatarNameBasis'));
 
         alert('success', lang('Bonfire.resourcesSaved', ['settings']));
 
