@@ -1,6 +1,8 @@
-<span style="width: <?= $size ?>px; height: <?= $size ?>px; font-size: <?= $fontSize ?>px; background-color: <?= $background ?>" class="avatar" title="<?= $user->name() ?>">
+<span style="width: <?= $size ?>px; height: <?= $size ?>px; font-size: <?= $fontSize ?>px; background-color: <?= $background ?>"
+      class="avatar overflow-hidden" title="<?= $user->name() ?>"
+>
     <?php if ($user->avatarLink() !== '') : ?>
-        <img src="<?= $user->avatarLink(120) ?>" alt="<?= $user->name() ?>">
+        <img src="<?= $user->avatarLink($size) ?>" alt="<?= $user->name() ?>">
     <?php else :?>
         <?= $idString ?>
     <?php endif ?>

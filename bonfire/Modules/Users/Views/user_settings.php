@@ -250,7 +250,7 @@
 
 
 
-            <fieldset x-data="{use-gravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? true : false ?>}">
+            <fieldset x-data="{useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? true : false ?>}">
                 <legend>Avatars</legend>
 
                 <!-- Use Gravatar -->
@@ -259,7 +259,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="useGravatar"
                                    value="1" id="use-gravatar"
-                                   @change="use-gravatar = ! use-gravatar"
+                                   @change="useGravatar = ! useGravatar"
                                 <?php if (old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
                             >
                             <label class="form-check-label" for="use-gravatar">
@@ -274,7 +274,7 @@
                 </div>
 
                 <!-- Gravatar Default -->
-                <div class="row" x-show="use-gravatar">
+                <div class="row" x-show="useGravatar">
                     <div class="col-12 col-sm-4">
                         <label for="gravatarDefault" class="form-label">Gravatar default style</label>
                         <select name="gravatarDefault" class="form-control">
