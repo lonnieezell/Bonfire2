@@ -1,5 +1,9 @@
 <?php $this->extend('master') ?>
 
+<?php $this->section('styles') ?>
+  <?= asset_link('auth/css/auth.css', 'css') ?>
+<?php $this->endSection() ?>
+
 <?php $this->section('main') ?>
 <x-page-head>
     <a href="/<?= ADMIN_AREA ?>/users" class="back">&larr; Users</a>
@@ -9,6 +13,12 @@
 <?= view('Bonfire\Modules\Users\Views\_tabs', ['tab' => 'security', 'user' => $user]) ?>
 
 <x-admin-box>
+
+    <fieldset>
+
+        <legend>Change password</legend>
+        <?= view('Bonfire\Modules\Users\Views\password_change', [ 'user' => $user ?? null]) ?>
+  </fieldset>
 
     <fieldset>
         <legend>Recent Logins</legend>
@@ -78,3 +88,10 @@
 </x-admin-box>
 
 <?php $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+
+  <?= asset_link('auth/js/passStrength.js', 'js') ?>
+  <script src="/zxcvbn.js"></script>
+
+<?= $this->endSection() ?>
