@@ -19,9 +19,19 @@ class User extends ShieldUser
         // Determine the color for the user based on their
         // email address since we know we'll always have that
         // Use default hash if the avatar is used as a placeholder
-        $idString = ! empty($this->first_name)
-        ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
-        : $this->username[0] ?? $this->email[0] ?? 'default-avatar-hash';
+        if (setting('Users.avatarNameBasis') === 'name') {
+            $idString = ! empty($this->first_name)
+                ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
+                : $this->username[0]
+                    ?? $this->email[0]
+                        ?? 'default-avatar-hash';
+        } else {
+            $idString = ! empty($this->username)
+                ? $this->username[0] . $this->username[1]
+                : ($this->first_name[0]) . ($this->last_name[0] ?? '')
+                    ?? $this->email[0]
+                        ?? 'default-avatar-hash';
+        }
 
         $idString = strtoupper($idString);
 

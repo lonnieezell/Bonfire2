@@ -28,6 +28,16 @@ class Users extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
+     * Avatar Display Name
+     * --------------------------------------------------------------------------
+     *
+     * Chooses the basis for the letters shown on avatar when no picture
+     * has been uploaded. Valid choices are either 'name' or 'username'.
+     */
+    public $avatarNameBasis = 'name';
+
+    /**
+     * --------------------------------------------------------------------------
      * Avatar Background Colors
      * --------------------------------------------------------------------------
      *
