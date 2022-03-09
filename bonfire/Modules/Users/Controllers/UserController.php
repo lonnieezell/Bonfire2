@@ -195,6 +195,52 @@ class UserController extends AdminController
     }
 
     /**
+     * Change user's password.
+     *
+     * @throws ReflectionException
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     */
+    public function changePassword(?int $userId = null)
+    {
+        if (! auth()->user()->can('users.edit')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        $users = new UserModel();
+        /**
+         * @var User
+         */
+        $user = $userId !== null
+            ? $users->find($userId)
+            : new User();
+
+        /** @phpstan-ignore-next-line */
+        if ($user === null) {
+            return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
+        }
+
+        if (! $this->validate(['password' => 'required|strong_password','pass_confirm' => 'required|matches[password]'])) {
+            return redirect()->back()->withInput()->with('errors', service('validation')->getErrors());
+        }
+
+        // Save the new user's email/password
+        $password = $this->request->getPost('password');
+        $identity = $user->getEmailIdentity();
+
+            if ($password !== null) {
+                $identity->secret2 = service('passwords')->hash($password);
+            }
+
+            if ($identity->hasChanged()) {
+                model(UserIdentityModel::class)->save($identity);
+            }
+
+
+        return redirect()->to($user->adminLink('/security'))->with('message', lang('Bonfire.resourceSaved', ['user']));
+    }
+
+    /**
      * Delete the specified user.
      *
      * @return \CodeIgniter\HTTP\RedirectResponse

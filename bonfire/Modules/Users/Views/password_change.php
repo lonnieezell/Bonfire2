@@ -1,39 +1,24 @@
-<?= $this->extend('master') ?>
+<form action="<?= $user->adminLink('/changePassword') ?>" method="post">
 
-<?= $this->section('title') ?><?= lang('Auth.register') ?> <?= $this->endSection() ?>
+            <?= csrf_field() ?>
 
-<?= $this->section('main') ?>
-
-<div class="container d-flex justify-content-center p-5">
-    <div class="card col-5 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title mb-5"><?= lang('Auth.register') ?></h5>
-
-            <form action="<?= route_to('register') ?>" method="post">
-                <?= csrf_field() ?>
-
-                <!-- Email -->
-                <div class="mb-2">
-                    <input type="email" class="form-control" name="email" autocomplete="email" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>" required />
-                </div>
-
-                <!-- Username -->
-                <div class="mb-4">
-                    <input type="text" class="form-control" name="username" autocomplete="username" placeholder="<?= lang('Auth.username') ?>" value="<?= old('username') ?>" required />
-                </div>
+                <input type="hidden" name="id" value="<?= $user->id ?>">
 
                 <div id="pass-suggestions"></div>
 
                 <div class="row mb-2">
                     <!-- Password -->
                     <div class="col">
+                      <div class="form-group">
+                        <label for="password" class="form-label"><?= lang('Auth.password') ?></label>
                         <input type="password" class="form-control" name="password" id="password" autocomplete="password"
                                placeholder="<?= lang('Auth.password') ?>"
                                onkeyup="checkStrength()" required
                         />
+                      </div>
                     </div>
                     <!-- Password Meter -->
-                    <div class="col-auto" style="margin-left: 0">
+                    <div class="col-auto" style="margin-left: 0;padding-top: 2.5rem">
                         <div id="pass-meter">
                             <div class="segment segment-4"></div>
                             <div class="segment segment-3"></div>
@@ -46,8 +31,11 @@
                 <!-- Password (Again) -->
                 <div class="row mb-5">
                     <div class="col">
+                      <div class="form-group">
+                        <label for="pass_confirm" class="form-label"><?= lang('Auth.passwordConfirm') ?></label>
                         <input type="password" class="form-control" name="pass_confirm" id="pass_confirm" autocomplete="pass_confirm"
                                placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="checkPasswordMatch()" />
+                     </div>
                     </div>
                     <div class="col-auto pass-match-wrap">
                         <div class="pass-match" id="pass-match" style="display:none"><span>&check;</span></div>
@@ -55,20 +43,8 @@
                     </div>
                 </div>
 
-                <div class="d-grid col-23 mx-auto m-3">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg"><?= lang('Auth.register') ?></button>
-                </div>
+            <div class="text-end py-3">
+                <input type="submit" value="Update Password" class="btn btn-primary btn-lg">
+            </div>
 
-                <p class="text-center"><?= lang('Auth.haveAccount') ?> <a href="<?= route_to('login') ?>"><?= lang('Auth.login') ?></a></p>
-
-            </form>
-        </div>
-    </div>
-</div>
-
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<?= asset_link('auth/js/passStrength.js', 'js') ?>
-<script src="/zxcvbn.js"></script>
-<?= $this->endSection() ?>
+        </form>
