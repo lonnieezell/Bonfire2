@@ -56,7 +56,9 @@ class AssetController extends Controller
         // If we have a fingerprint...
         $filename = count($filename) === 3
             ? $filename[0] . '.' . $filename[2]
-            : $origFilename;
+            : ((count($filename) === 4 && isset($filename[3]))
+            ? $filename[0] . '.' . $filename[1] . '.' . $filename[3]
+            : $origFilename);
 
         $folder = config('Assets')->folders[array_shift($segments)];
         $path   = $folder . '/' . implode('/', $segments) . '/' . $filename;
