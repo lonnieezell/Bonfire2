@@ -2,13 +2,20 @@
 
 namespace Tests\Support;
 
-use App\Entities\User;
-use App\Models\UserModel;
+use Bonfire\Users\User;
+use Bonfire\Users\Models\UserModel;
+use Bonfire\Bonfire;
+use CodeIgniter\CodeIgniter;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
+use CodeIgniter\Test\Mock\MockCodeIgniter;
+use Config\App;
+use Config\Autoload;
+use Config\Modules;
+use Config\Services;
 use Faker\Factory;
-use Sparks\Shield\Test\AuthenticationTesting;
+use CodeIgniter\Shield\Test\AuthenticationTesting;
 
 /**
  * @internal
@@ -34,6 +41,25 @@ abstract class TestCase extends CIUnitTestCase
     {
         parent::setUp();
         $this->faker = Factory::create();   // @phpstan-ignore-line
+        helper('bonfire');
+    }
+
+    /**
+     * Loads up an instance of CodeIgniter
+     * and gets the environment setup.
+     *
+     * @return CodeIgniter
+     */
+    protected function createApplication()
+    {
+        $app = new MockCodeIgniter(new App());
+        $app->initialize();
+
+        // Initialize Bonfire so that the BF namespaces get added in
+        $bonfire = new Bonfire();
+        $bonfire->boot();
+
+        return $app;
     }
 
     /**

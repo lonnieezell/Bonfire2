@@ -48,47 +48,16 @@ Vagrantfile
 #-------------------------
 # Temporary Files
 #-------------------------
-writable/cache/*
-!writable/cache/index.html
-
-writable/logs/*
-!writable/logs/index.html
-
-writable/session/*
-!writable/session/index.html
-
-writable/uploads/*
-!writable/uploads/index.html
-
-writable/debugbar/*
-
-#-------------------------
-# Public Uploads
-#-------------------------
-
-public/uploads/*
-public/error_log
-
-#-------------------------
-# User Guide Temp Files
-#-------------------------
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+php_errors.log
 
 #-------------------------
 # Test Files
 #-------------------------
 tests/coverage*
-phpunit*.xml
-phpunit
-.phpunit*.cache
-php_errors.log
-build/
 
 # Don't save phpunit under version control.
 phpunit
+phpunit.xml
 
 #-------------------------
 # Composer
@@ -111,6 +80,7 @@ _modules/*
 
 # Netbeans
 nbproject/
+build/
 nbbuild/
 dist/
 nbdist/
@@ -132,7 +102,8 @@ nb-configuration.xml
 
 /results/
 /phpunit*.xml
-/.phpunit.*.cache
 
-# Node Modules
-node_modules/
+#-------------------------
+# Javascript assets
+#-------------------------
+node_modules/*

@@ -8,7 +8,7 @@
     <tbody>
     <?php foreach ($rows as $user) : ?>
         <tr>
-            <?= view('Bonfire\Modules\Users\Views\_row_info', ['user' => $user]) ?>
+            <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>
         </tr>
     <?php endforeach ?>
     </tbody>

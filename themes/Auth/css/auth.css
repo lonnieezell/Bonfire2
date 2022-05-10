@@ -12,6 +12,7 @@
     --danger: #d9534f;
     --dark: #292b2c;
 }
+
 /*
  * --------------------------------------------------------------------------
  * LAYOUT
@@ -21,6 +22,7 @@ body {
     font-size: 1rem;
     background: var(--bf-body-bg);
 }
+
 /*
  * --------------------------------------------------------------------------
  * PASSWORDS
@@ -30,6 +32,7 @@ div#pass-meter {
     display: flex;
     flex-direction: column-reverse;
 }
+
 div#pass-meter .segment {
     display: block;
     background: var(--bf-white);
@@ -37,34 +40,41 @@ div#pass-meter .segment {
     height: 9px;
     width: 30px;
 }
+
 div#pass-meter .segment:last-child {
     margin-right: 0;
 }
+
 div#pass-meter.good .segment {
     background-color: var(--bf-success);
     border-color: var(--bf-success);
     border-bottom: 1px solid var(--bf-white);
 }
+
 div#pass-meter.warn .segment {
     background-color: var(--warning);
     border-color: var(--warning);
     border-bottom: 1px solid var(--bf-white);
 }
+
 div#pass-meter.bad .segment {
     background-color: var(--danger);
     border-color: var(--danger);
 }
+
 div#pass-meter.str-1 .segment:nth-child(2),
 div#pass-meter.str-1 .segment:nth-child(3),
 div#pass-meter.str-1 .segment:nth-child(4) {
     background-color: var(--bf-white);
     border-color: var(--bf-light-grey);
 }
+
 div#pass-meter.str-2 .segment:nth-child(3),
 div#pass-meter.str-2 .segment:nth-child(4) {
     background-color: var(--bf-white);
     border-color: var(--bf-light-grey);
 }
+
 div#pass-meter.str-3 .segment:nth-child(4) {
     background-color: var(--bf-white);
     border-color: var(--bf-light-grey);
@@ -78,12 +88,14 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     margin-bottom: 10px;
     min-height: 2.5rem;
 }
+
 .pass-match-wrap {
     display: flex;
     align-content: center;
     justify-content: center;
     width: 53px;
 }
+
 .pass-match,
 .pass-not-match {
     display: inline-block;
@@ -91,6 +103,7 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     font-size: 20px;
     color: var(--bf-success);
 }
+
 .pass-not-match {
     color: var(--danger);
 }
@@ -99,4 +112,65 @@ div#pass-meter.str-3 .segment:nth-child(4) {
 .collapsible .signal {
     position: absolute;
     right: 5px;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * ALERTS
+ * --------------------------------------------------------------------------
+ */
+
+#alerts-wrapper {
+    position: absolute;
+    top: 30px !important;
+    right: 1% !important;
+    left: auto !important;
+    min-width: 20rem !important;
+    z-index: 9999;
+}
+
+#alerts-wrapper .alert {
+    background: var(--bf-white);
+    border: 1px solid var(--bf-light-grey);
+    opacity: 0.95;
+}
+
+#alerts-wrapper .alert-info {
+    border-bottom: 3px solid var(--info);
+}
+
+#alerts-wrapper .alert-warning {
+    border-bottom: 3px solid var(--warning);
+}
+
+#alerts-wrapper .alert-danger {
+    border-bottom: 3px solid var(--danger);
+}
+
+#alerts-wrapper .alert-success {
+    border-bottom: 3px solid var(--bf-success);
+}
+
+/*#alerts-wrapper button {*/
+/*    border: none;*/
+/*    background-color: transparent;*/
+/*    font-size: 1.5rem;*/
+/*    position: absolute;*/
+/*    right: 5px;*/
+/*}*/
+
+.text-info {
+    color: var(--info);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+.text-warning {
+    color: var(--warning);
+}
+
+.text-success {
+    color: var(--bf-success);
 }

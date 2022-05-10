@@ -14,14 +14,16 @@
     </form>
 
     <!-- User Menu -->
-    <div class="dropdown text-end mx-4">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <?= auth()->user()->renderAvatar(32) ?>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">
-            <li><a class="dropdown-item" href="/<?= ADMIN_AREA ?>/users/<?= auth()->id() ?>">My Account</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="<?= route_to('logout') ?>">Sign out</a></li>
-        </ul>
-    </div>
+    <?php if (auth()->user()) :?>
+        <div class="dropdown text-end mx-4">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <?= auth()->user()->renderAvatar(32) ?>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">
+                <li><a class="dropdown-item" href="/<?= ADMIN_AREA ?>/users/<?= auth()->id() ?>">My Account</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="<?= route_to('logout') ?>">Sign out</a></li>
+            </ul>
+        </div>
+    <?php endif ?>
 </header>
