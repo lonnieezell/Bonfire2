@@ -25,7 +25,7 @@ class Paths
      *
      * @var string
      */
-    public $systemDirectory = __DIR__ . '/../../../vendor/codeigniter4/codeigniter4/system';
+    public $systemDirectory = __DIR__ . '/../../../vendor/codeigniter4/framework/system';
 
     /**
      * ---------------------------------------------------------------
@@ -41,7 +41,7 @@ class Paths
      *
      * @var string
      */
-    public $appDirectory = __DIR__ . '/../../../vendor/codeigniter4/codeigniter4/app';
+    public $appDirectory = __DIR__ . '/../../../vendor/codeigniter4/framework/app';
 
     /**
      * ---------------------------------------------------------------
@@ -56,7 +56,7 @@ class Paths
      *
      * @var string
      */
-    public $writableDirectory = __DIR__ . '/../../../vendor/codeigniter4/codeigniter4/writable';
+    public $writableDirectory = __DIR__ . '/../../../vendor/codeigniter4/framework/writable';
 
     /**
      * ---------------------------------------------------------------

@@ -22,11 +22,33 @@ class Auth extends ShieldAuth
     }
 
     /**
+     * Returns the URL that a user should be redirected
+     * to after they are logged out.
+     */
+    public function logoutRedirect(): string
+    {
+        $url = setting('Auth.redirects')['logout'];
+
+        return $this->getUrl($url);
+    }
+
+    /**
+     * Returns the URL the user should be redirected to
+     * after a successful registration.
+     */
+    public function registerRedirect(): string
+    {
+        $url = setting('Auth.redirects')['register'];
+
+        return $this->getUrl($url);
+    }
+
+    /**
      * ////////////////////////////////////////////////////////////////////
      * AUTHENTICATION
      * ////////////////////////////////////////////////////////////////////
      */
-    public $views = [
+    public array $views = [
         'layout'                      => 'master',
         'email_layout'                => '\Bonfire\Views\email.php',
         'login'                       => '\Bonfire\Views\Auth\login',
@@ -52,7 +74,7 @@ class Auth extends ShieldAuth
      * should extend the appropriate controller and overrider the
      * `getRedirect()` methods to apply any logic you may need.
      */
-    public $redirects = [
+    public array $redirects = [
         'register' => '/',
         'login'    => '/',
         'logout'   => 'login',
@@ -69,7 +91,7 @@ class Auth extends ShieldAuth
      * - login:    Shield\Authentication\Actions\Email2FA
      * - register: Shield\Authentication\Actions\EmailActivate
      */
-    public $actions = [
+    public array $actions = [
         'login'    => null,
         'register' => null,
     ];
@@ -83,10 +105,31 @@ class Auth extends ShieldAuth
      * by alias in the auth helper:
      *      auth('api')->attempt($credentials);
      */
-    public $authenticators = [
+    public array $authenticators = [
         'tokens'  => AccessTokens::class,
         'session' => Session::class,
     ];
+
+    /**
+     * --------------------------------------------------------------------
+     * Name of Authenticator Header
+     * --------------------------------------------------------------------
+     * The name of Header that the Authorization token should be found.
+     * According to the specs, this should be `Authorization`, but rare
+     * circumstances might need a different header.
+     */
+    public array $authenticatorHeader = [
+        'tokens' => 'Authorization',
+    ];
+
+    /**
+     * --------------------------------------------------------------------
+     * Unused Token Lifetime
+     * --------------------------------------------------------------------
+     * Determines the amount of time, in seconds, that an unused
+     * access token can be used.
+     */
+    public int $unusedTokenLifetime = YEAR;
 
     /**
      * --------------------------------------------------------------------
@@ -95,7 +138,7 @@ class Auth extends ShieldAuth
      * The authentication handler to use when none is specified.
      * Uses the $key from the $authenticators array above.
      */
-    public $defaultAuthenticator = 'session';
+    public string $defaultAuthenticator = 'session';
 
     /**
      * --------------------------------------------------------------------
@@ -105,7 +148,7 @@ class Auth extends ShieldAuth
      * when using the 'chain' filter. Each handler listed will be checked.
      * If no match is found, then the next in the chain will be checked.
      */
-    public $authenticationChain = [
+    public array $authenticationChain = [
         'session',
         'tokens',
     ];
@@ -117,7 +160,7 @@ class Auth extends ShieldAuth
      * If true, will always update the `last_active` datetime for the
      * logged in user on every page request.
      */
-    public $recordActiveDate = true;
+    public bool $recordActiveDate = true;
 
     /**
      * --------------------------------------------------------------------
@@ -125,7 +168,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      * Determines whether users can register for the site.
      */
-    public $allowRegistration = true;
+    public bool $allowRegistration = true;
 
     /**
      * --------------------------------------------------------------------
@@ -137,7 +180,7 @@ class Auth extends ShieldAuth
      * could be modified as the only method of login once an account
      * has been set up.
      */
-    public $allowMagicLinkLogins = true;
+    public bool $allowMagicLinkLogins = true;
 
     /**
      * --------------------------------------------------------------------
@@ -145,7 +188,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      * Specifies the amount of time, in seconds, that a magic link is valid.
      */
-    public $magicLinkLifetime = 1 * HOUR;
+    public int $magicLinkLifetime = 1 * HOUR;
 
     /**
      * --------------------------------------------------------------------
@@ -159,7 +202,7 @@ class Auth extends ShieldAuth
      * - rememberCookieName     The name of the cookie to use for "remember-me"
      * - rememberLength         The length of time, in seconds, to remember a user.
      */
-    public $sessionConfig = [
+    public array $sessionConfig = [
         'field'              => 'logged_in',
         'allowRemembering'   => true,
         'rememberCookieName' => 'remember',
@@ -173,7 +216,7 @@ class Auth extends ShieldAuth
      * The minimum length that a password must be to be accepted.
      * Recommended minimum value by NIST = 8 characters.
      */
-    public $minimumPasswordLength = 8;
+    public int $minimumPasswordLength = 8;
 
     /**
      * --------------------------------------------------------------------
@@ -183,8 +226,10 @@ class Auth extends ShieldAuth
      * classes, each getting the opportunity to pass/fail the password.
      * You can add custom classes as long as they adhere to the
      * Password\ValidatorInterface.
+     *
+     * @var class-string<ValidatorInterface>[]
      */
-    public $passwordValidators = [
+    public array $passwordValidators = [
         'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
         'CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator',
         'CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator',
@@ -197,7 +242,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      * Fields that are available to be used as credentials for login.
      */
-    public $validFields = [
+    public array $validFields = [
         'email',
         'username',
     ];
@@ -216,7 +261,7 @@ class Auth extends ShieldAuth
      * For example:
      *     $personalFields = ['firstname', 'lastname'];
      */
-    public $personalFields = ['first_name', 'last_name'];
+    public array $personalFields = ['first_name', 'last_name'];
 
     /**
      * --------------------------------------------------------------------
@@ -250,7 +295,7 @@ class Auth extends ShieldAuth
      * To disable similarity checking set the value to 0.
      *     public $maxSimilarity = 0;
      */
-    public $maxSimilarity = 50;
+    public int $maxSimilarity = 50;
 
     /**
      * --------------------------------------------------------------------
@@ -265,7 +310,7 @@ class Auth extends ShieldAuth
      * If you choose to use any ARGON algorithm, then you might want to
      * uncomment the "ARGON2i/D Algorithm" options to suit your needs
      */
-    public $hashAlgorithm = PASSWORD_DEFAULT;
+    public string $hashAlgorithm = PASSWORD_DEFAULT;
 
     /**
      * --------------------------------------------------------------------
@@ -279,10 +324,10 @@ class Auth extends ShieldAuth
      * and the power of your hardware, you might want to increase the
      * cost. This makes the hashing process takes longer.
      */
-    public $hashMemoryCost = 2048;  // PASSWORD_ARGON2_DEFAULT_MEMORY_COST;
+    public int $hashMemoryCost = 2048;  // PASSWORD_ARGON2_DEFAULT_MEMORY_COST;
 
-    public $hashTimeCost = 4;       // PASSWORD_ARGON2_DEFAULT_TIME_COST;
-    public $hashThreads  = 4;        // PASSWORD_ARGON2_DEFAULT_THREADS;
+    public int $hashTimeCost = 4;       // PASSWORD_ARGON2_DEFAULT_TIME_COST;
+    public int $hashThreads  = 4;        // PASSWORD_ARGON2_DEFAULT_THREADS;
 
     /**
      * --------------------------------------------------------------------
@@ -297,23 +342,7 @@ class Auth extends ShieldAuth
      *
      * Valid range is between 4 - 31.
      */
-    public $hashCost = 10;
-
-    /**
-     * ////////////////////////////////////////////////////////////////////
-     * AUTHORIZATION
-     * ////////////////////////////////////////////////////////////////////
-     */
-
-    /**
-     * --------------------------------------------------------------------
-     * Authorizers
-     * --------------------------------------------------------------------
-     * The classnames and aliases ot the available Authorization classes.
-     */
-    public $authorizers = [
-        'policy' => '\CodeIgniter\Shield\Authorizers\Policy',
-    ];
+    public int $hashCost = 10;
 
     /**
      * ////////////////////////////////////////////////////////////////////
@@ -328,6 +357,17 @@ class Auth extends ShieldAuth
      * The name of the class that handles user persistence.
      * By default, this is the included UserModel, which
      * works with any of the database engines supported by CodeIgniter.
+     * You can change it as long as they adhere to the
+     * CodeIgniter\Shield\Models\UserModel.
+     *
+     * @var class-string<UserModel>
      */
-    public $userProvider = 'Bonfire\Users\Models\UserModel';
+    public string $userProvider = 'CodeIgniter\Shield\Models\UserModel';
+
+    protected function getUrl(string $url): string
+    {
+        return strpos($url, 'http') === 0
+            ? $url
+            : rtrim(site_url($url), '/ ');
+    }
 }

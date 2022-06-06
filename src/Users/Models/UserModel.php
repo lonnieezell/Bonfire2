@@ -35,16 +35,16 @@ class UserModel extends ShieldUsers
                 order by last_used_at desc
                 limit 1
             ) as email
-       ");
+        ");
     }
 
-    public function fake(Generator &$faker)
+    public function fake(Generator &$faker): User
     {
-        return [
+        return new User([
             'username'   => $faker->userName,
             'first_name' => $faker->firstName,
             'last_name'  => $faker->lastName,
             'active'     => true,
-        ];
+        ]);
     }
 }

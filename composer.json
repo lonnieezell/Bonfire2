@@ -12,10 +12,10 @@
 	"require": {
 		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
-		"codeigniter4/codeigniter4": "dev-develop",
+		"codeigniter4/framework": "^4.2",
 		"components/font-awesome": "^5.15",
 		"league/commonmark": "^2.0",
-		"codeigniter4/shield": "dev-develop",
+		"codeigniter4/shield": "^1.0.0",
 		"roave/security-advisories": "dev-latest",
 		"spatie/commonmark-highlighter": "^3.0",
 		"tatter/alerts": "^3.0"
@@ -47,12 +47,6 @@
 			"Tests\\Support\\": "tests/_support"
 		}
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/codeigniter4/codeigniter4"
-		}
-	],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"scripts": {

@@ -24,6 +24,8 @@ final class UserFormTest extends TestCase
 
         $this->user = $this->createUser();
         $this->user->addGroup('superadmin');
+
+        setting('Auth.actions', ['login' => null, 'register' => null]);
     }
 
     public function testCanSeeUserList()
