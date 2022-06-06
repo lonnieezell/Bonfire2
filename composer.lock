@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e54dafaa4e920e937c8ed1a5277f82f8",
+    "content-hash": "2522b77926dd5a45aefccec559a13832",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -188,16 +188,16 @@
         },
         {
             "name": "components/font-awesome",
-            "version": "5.15.4",
+            "version": "6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "e6fd09f30f578915cc0cf186b0dd0da54385b6be"
+                "reference": "9c95a6a9572933bc964f05b810f0808a5de00ee1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/e6fd09f30f578915cc0cf186b0dd0da54385b6be",
-                "reference": "e6fd09f30f578915cc0cf186b0dd0da54385b6be",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/9c95a6a9572933bc964f05b810f0808a5de00ee1",
+                "reference": "9c95a6a9572933bc964f05b810f0808a5de00ee1",
                 "shasum": ""
             },
             "type": "component",
@@ -221,9 +221,9 @@
             "description": "Font Awesome, the iconic SVG, font, and CSS framework.",
             "support": {
                 "issues": "https://github.com/components/font-awesome/issues",
-                "source": "https://github.com/components/font-awesome/tree/5.15.4"
+                "source": "https://github.com/components/font-awesome/tree/6.1.1"
             },
-            "time": "2021-08-15T10:31:24+00:00"
+            "time": "2022-04-18T13:15:48+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -5931,5 +5931,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

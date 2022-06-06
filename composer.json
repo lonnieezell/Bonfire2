@@ -13,7 +13,7 @@
 		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
 		"codeigniter4/framework": "^4.2",
-		"components/font-awesome": "^5.15",
+		"components/font-awesome": "^6.1",
 		"league/commonmark": "^2.0",
 		"codeigniter4/shield": "^1.0.0",
 		"roave/security-advisories": "dev-latest",
