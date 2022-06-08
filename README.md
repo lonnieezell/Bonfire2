@@ -53,7 +53,7 @@ Installation is a simple 2-step process: (Needs updating)
 > php spark bf:install
 ```
 
-Find more details in the [docs folder](_docs).
+Find more details in the [docs folder](docs).
 
 ## Third Party Software Used
 
