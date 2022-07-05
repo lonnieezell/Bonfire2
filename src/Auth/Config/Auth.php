@@ -362,7 +362,7 @@ class Auth extends ShieldAuth
      *
      * @var class-string<UserModel>
      */
-    public string $userProvider = 'CodeIgniter\Shield\Models\UserModel';
+    public string $userProvider = 'Bonfire\Users\Models\UserModel';
 
     protected function getUrl(string $url): string
     {
