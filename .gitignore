@@ -58,6 +58,7 @@ tests/coverage*
 # Don't save phpunit under version control.
 phpunit
 phpunit.xml
+.phpunit.result.cache
 
 #-------------------------
 # Composer
