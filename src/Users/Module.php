@@ -26,9 +26,18 @@ class Module extends BaseModule
         $item    = new MenuItem([
             'title'           => 'Users',
             'namedRoute'      => 'user-list',
-            'fontAwesomeIcon' => 'fas fa-info-circle',
+            'fontAwesomeIcon' => 'fas fa-users',
             'permission'      => 'users.view',
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
+
+        // Add Users Settings
+        $item    = new MenuItem([
+            'title'           => 'Users',
+            'namedRoute'      => 'user-settings',
+            'fontAwesomeIcon' => 'fas fa-user-cog',
+            'permission'      => 'users.settings',
+        ]);
+        $sidebar->menu('sidebar')->collection('settings')->addItem($item);
     }
 }
