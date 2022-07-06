@@ -27,8 +27,8 @@ class Module extends BaseModule
             'title'           => 'Users',
             'namedRoute'      => 'user-list',
             'fontAwesomeIcon' => 'fas fa-info-circle',
+            'permission'      => 'users.view',
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
     }
 }
-
