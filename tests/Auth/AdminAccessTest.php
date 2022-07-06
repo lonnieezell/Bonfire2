@@ -75,8 +75,5 @@ final class AdminAccessTest extends TestCase
 
         // Cannot see the Recycler area
         $response->assertDontSee('Recycler');
-
-        // Cannot see the Guides page
-        $response->assertDontSee('Guides');
     }
 }
