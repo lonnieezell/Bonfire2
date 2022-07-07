@@ -3,13 +3,11 @@
 namespace Bonfire\Config;
 
 use Bonfire\Bonfire;
-use Bonfire\View\View;
 use CodeIgniter\Config\BaseService;
-use Config\Services as AppServices;
-use Config\View as ViewConfig;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\Widgets\Manager as WidgetManager;
+use Bonfire\View\Metadata;
 
 /**
  * Services Configuration file.
@@ -67,6 +65,20 @@ class Services extends BaseService
         }
 
         return new ResourceTabs();
+    }
+
+    /**
+     * Returns the view metadata manager.
+     *
+     * @return Bonfire\View\Metadata
+     */
+    public static function viewMeta(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('viewMeta');
+        }
+
+        return new Metadata();
     }
 
     /**

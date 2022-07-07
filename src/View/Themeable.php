@@ -39,6 +39,9 @@ trait Themeable
 
         $renderer = $this->getRenderer();
 
+        $viewMeta = service('viewMeta');
+        $data['viewMeta'] = $viewMeta;
+
         return $renderer->setData($data)
             ->render($view, $options, true);
     }
