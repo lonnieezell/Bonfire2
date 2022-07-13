@@ -27,7 +27,6 @@ class MagicLinkController extends ShieldMagicLinkController
 
     /**
      * Display the "What's happening/next" message to the user.
-
      */
     protected function displayMessage(): string
     {

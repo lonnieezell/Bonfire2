@@ -12,13 +12,13 @@
 
 	<?php if (isset($widgets)) :?>
 		<?= view('Bonfire\Views\Widgets\_stats', [
-            'stats'   => $widgets->widget('stats')->items(),
-            'manager' => $manager,
-        ]) ?>
+		    'stats'   => $widgets->widget('stats')->items(),
+		    'manager' => $manager,
+		]) ?>
 		<?= view('Bonfire\Views\Widgets\_charts', [
-            'charts'  => $widgets->widget('charts')->items(),
-            'manager' => $manager,
-        ]) ?>
+		    'charts'  => $widgets->widget('charts')->items(),
+		    'manager' => $manager,
+		]) ?>
 	<?php endif ?>
 <?php $this->endSection() ?>
 

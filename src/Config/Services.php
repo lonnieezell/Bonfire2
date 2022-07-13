@@ -3,11 +3,11 @@
 namespace Bonfire\Config;
 
 use Bonfire\Bonfire;
-use CodeIgniter\Config\BaseService;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Resources\ResourceTabs;
-use Bonfire\Widgets\Manager as WidgetManager;
 use Bonfire\View\Metadata;
+use Bonfire\Widgets\Manager as WidgetManager;
+use CodeIgniter\Config\BaseService;
 
 /**
  * Services Configuration file.

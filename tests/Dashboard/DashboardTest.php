@@ -2,10 +2,13 @@
 
 namespace Tests\Dashboard;
 
-use Tests\Support\TestCase;
 use Bonfire\Users\User;
+use Tests\Support\TestCase;
 
-class DashboardTest extends TestCase
+/**
+ * @internal
+ */
+final class DashboardTest extends TestCase
 {
     protected $refresh = true;
     protected $namespace;

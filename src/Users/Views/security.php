@@ -17,7 +17,7 @@
     <fieldset>
 
         <legend>Change password</legend>
-        <?= view('Bonfire\Users\Views\password_change', [ 'user' => $user ?? null]) ?>
+        <?= view('Bonfire\Users\Views\password_change', ['user' => $user ?? null]) ?>
   </fieldset>
 
     <fieldset>

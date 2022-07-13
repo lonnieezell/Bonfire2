@@ -2,8 +2,8 @@
 
 namespace Tests\Bonfire\Recycler;
 
-use Bonfire\Users\User;
 use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
 use Tests\Support\TestCase;
 
 /**
@@ -38,7 +38,7 @@ final class RecyclerTest extends TestCase
     {
         $user1 = $this->createUser();
         $user2 = $this->createUser();
-        
+
         $this->users->delete($user1->id);
 
         $response = $this->actingAs($this->admin)

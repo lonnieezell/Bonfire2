@@ -11,8 +11,8 @@
 
 namespace Bonfire\Commands;
 
-use Bonfire\Users\User;
 use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
@@ -152,7 +152,7 @@ class Install extends BaseCommand
 
     private function setEncryptionKey()
     {
-        # generate a key using the out-of-the-box defaults for the Encryption library
+        // generate a key using the out-of-the-box defaults for the Encryption library
         CLI::newLine();
         CLI::write('Generating encryption key', 'yellow');
         $key = bin2hex(\CodeIgniter\Encryption\Encryption::createKey());

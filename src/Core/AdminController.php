@@ -2,8 +2,6 @@
 
 namespace Bonfire\Core;
 
-use Bonfire\Core\BaseController;
-
 class AdminController extends BaseController
 {
     /**

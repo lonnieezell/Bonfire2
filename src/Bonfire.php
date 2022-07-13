@@ -14,7 +14,7 @@ namespace Bonfire;
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Stats\Stats;
 
-include_once __DIR__ .'/Common.php';
+include_once __DIR__ . '/Common.php';
 
 /**
  * Class Bonfire
@@ -124,7 +124,7 @@ class Bonfire
     private function discoverCoreModules()
     {
         if (! $modules = cache('bf-modules-search')) {
-            $modules = [];
+            $modules  = [];
             $excluded = ['Core', 'Config', 'Language', 'Views'];
 
             $map = directory_map(__DIR__, 1);
@@ -135,11 +135,11 @@ class Bonfire
                 }
 
                 $name = trim($row, DIRECTORY_SEPARATOR);
-                if (in_array($name, $excluded)) {
+                if (in_array($name, $excluded, true)) {
                     continue;
                 }
 
-                $modules["Bonfire\\$name"] = __DIR__ . "/{$name}";
+                $modules["Bonfire\\{$name}"] = __DIR__ . "/{$name}";
             }
 
             cache()->save('bf-modules-search', $modules);

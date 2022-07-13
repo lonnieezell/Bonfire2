@@ -2,10 +2,10 @@
 
 namespace Tests\Auth;
 
-use Bonfire\Users\User;
 use Bonfire\Users\Models\UserModel;
-use CodeIgniter\Test\DatabaseTestTrait;
+use Bonfire\Users\User;
 use CodeIgniter\Shield\Authentication\Actions\Email2FA;
+use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
 
 /**

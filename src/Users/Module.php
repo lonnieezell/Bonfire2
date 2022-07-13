@@ -32,7 +32,7 @@ class Module extends BaseModule
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
 
         // Add Users Settings
-        $item    = new MenuItem([
+        $item = new MenuItem([
             'title'           => 'Users',
             'namedRoute'      => 'user-settings',
             'fontAwesomeIcon' => 'fas fa-user-cog',

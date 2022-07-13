@@ -3,7 +3,6 @@
 namespace Bonfire\View;
 
 use CodeIgniter\View\ViewDecoratorInterface;
-use Bonfire\View\ComponentRenderer;
 
 /**
  * Class Decorator
@@ -18,9 +17,7 @@ class Decorator implements ViewDecoratorInterface
     {
         $components = self::factory();
 
-        $html = $components->render($html);
-
-        return $html;
+        return $components->render($html);
     }
 
     /**
@@ -31,6 +28,7 @@ class Decorator implements ViewDecoratorInterface
         if (self::$components === null) {
             self::$components = new ComponentRenderer();
         }
+
         return self::$components;
     }
 }

@@ -89,9 +89,9 @@ class ComponentRenderer
             $matches[attributes] = array of attribute string (class="foo")
          */
         return preg_replace_callback($pattern, function ($match) {
-            $view = $this->locateView($match['name']);
+            $view       = $this->locateView($match['name']);
             $attributes = $this->parseAttributes($match['attributes']);
-            $component = $this->factory($match['name'], $view);
+            $component  = $this->factory($match['name'], $view);
 
             return $component instanceof Component
                 ? $component->withView($view)->render()
@@ -111,10 +111,10 @@ class ComponentRenderer
             $matches[slot] = the content inside the tags
          */
         return preg_replace_callback($pattern, function ($match) {
-            $view = $this->locateView($match['name']);
-            $attributes = $this->parseAttributes($match['attributes']);
+            $view               = $this->locateView($match['name']);
+            $attributes         = $this->parseAttributes($match['attributes']);
             $attributes['slot'] = $match['slot'];
-            $component = $this->factory($match['name'], $view);
+            $component          = $this->factory($match['name'], $view);
 
             return $component instanceof Component
                 ? $component->withView($view)->withData($attributes)->render()

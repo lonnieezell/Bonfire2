@@ -2,10 +2,10 @@
 
 namespace Tests\Bonfire;
 
-use Bonfire\Users\User;
-use Bonfire\Users\Models\UserModel;
-use Bonfire\Users\Models\UserFilter;
 use Bonfire\Core\Traits\Filterable;
+use Bonfire\Users\Models\UserFilter;
+use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
 use CodeIgniter\Model;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
@@ -44,7 +44,7 @@ final class FilterableTest extends TestCase
 
     public function testFilterMethod()
     {
-        $class = new class() extends Model {
+        $class = new class () extends Model {
             use Filterable;
 
             protected $table      = 'users';

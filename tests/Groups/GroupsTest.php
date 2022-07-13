@@ -3,7 +3,6 @@
 namespace Tests\Bonfire\Groups;
 
 use Bonfire\Users\User;
-use CodeIgniter\Config\Factories;
 use CodeIgniter\Shield\Authorization\Groups;
 use Tests\Support\TestCase;
 
@@ -28,7 +27,7 @@ final class GroupsTest extends TestCase
         $this->user->addGroup('superadmin');
 
         // Ensure superadmin always has Group permissions
-        $auth = config('AuthGroups');
+        $auth                         = config('AuthGroups');
         $auth->matrix['superadmin'][] = 'groups.*';
         helper('setting');
         setting('AuthGroups.matrix', $auth->matrix);

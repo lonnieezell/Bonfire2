@@ -3,7 +3,6 @@
 namespace Bonfire\Auth\Controllers;
 
 use Bonfire\View\Themeable;
-use CodeIgniter\Events\Events;
 use CodeIgniter\Shield\Controllers\LoginController as ShieldLogin;
 
 class LoginController extends ShieldLogin

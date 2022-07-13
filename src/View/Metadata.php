@@ -2,19 +2,21 @@
 
 namespace Bonfire\View;
 
+use RuntimeException;
+
 class Metadata
 {
     private string $title = '';
-    private array $meta = [];
-    private array $link = [];
+    private array $meta   = [];
+    private array $link   = [];
     private array $script = [];
-    private array $style = [];
+    private array $style  = [];
 
     public function __construct()
     {
         helper('setting');
 
-        $this->title = setting('Site.siteName');
+        $this->title  = setting('Site.siteName');
         $this->meta[] = ['charset' => 'UTF-8'];
         $this->meta[] = ['viewport' => 'width=device-width, initial-scale=1'];
     }
@@ -26,14 +28,14 @@ class Metadata
     public function render(string $type): string
     {
         if (! isset($this->{$type})) {
-            throw new \RuntimeException('Metadata type not found');
+            throw new RuntimeException('Metadata type not found');
         }
 
         if ($type === 'title') {
             return '<title>' . $this->title . '</title>';
         }
 
-        $html = '';
+        $html    = '';
         $content = $this->{$type};
         if ($type === 'style') {
             $type = 'link';
@@ -46,10 +48,10 @@ class Metadata
                 $html .= $key . '="' . $value . '" ';
             }
 
-            $html .= ">";
+            $html .= '>';
 
             if ($type === 'script') {
-                $html .= "</script>";
+                $html .= '</script>';
             }
 
             $html .= "\n";

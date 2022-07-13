@@ -2,17 +2,20 @@
 
 namespace Tests\View;
 
-use Tests\Support\TestCase;
 use Bonfire\View\Metadata;
+use Tests\Support\TestCase;
 
-class MetadataTest extends TestCase
+/**
+ * @internal
+ */
+final class MetadataTest extends TestCase
 {
     /**
      * @var \Bonfire\View\Metadata
      */
     protected $meta;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -21,14 +24,14 @@ class MetadataTest extends TestCase
 
     public function testCanRenderTitleTag()
     {
-        $this->assertEquals('<title>'. setting('Site.siteName') .'</title>', $this->meta->render('title'));
+        $this->assertSame('<title>' . setting('Site.siteName') . '</title>', $this->meta->render('title'));
     }
 
     public function testCanRenderMetaTags()
     {
-        $this->assertEquals(
+        $this->assertSame(
             '<meta charset="UTF-8" >' . "\n" .
-            '<meta viewport="width=device-width, initial-scale=1" >'. "\n",
+            '<meta viewport="width=device-width, initial-scale=1" >' . "\n",
             $this->meta->render('meta')
         );
     }
@@ -37,20 +40,20 @@ class MetadataTest extends TestCase
     {
         $this->meta->addLink(['rel' => 'icon', 'href' => 'favicon.ico']);
 
-        $this->assertEquals('<link rel="icon" href="favicon.ico" >'. "\n", $this->meta->render('link'));
+        $this->assertSame('<link rel="icon" href="favicon.ico" >' . "\n", $this->meta->render('link'));
     }
 
     public function testCanRenderScriptTags()
     {
         $this->meta->addScript(['src' => 'https://example.com/app.js']);
 
-        $this->assertEquals('<script src="https://example.com/app.js" ></script>'. "\n", $this->meta->render('script'));
+        $this->assertSame('<script src="https://example.com/app.js" ></script>' . "\n", $this->meta->render('script'));
     }
 
     public function testCanRenderStyleTags()
     {
         $this->meta->addStyle(['href' => 'https://example.com/app.css', 'rel' => 'stylesheet']);
 
-        $this->assertEquals('<link href="https://example.com/app.css" rel="stylesheet" >'. "\n", $this->meta->render('style'));
+        $this->assertSame('<link href="https://example.com/app.css" rel="stylesheet" >' . "\n", $this->meta->render('style'));
     }
 }

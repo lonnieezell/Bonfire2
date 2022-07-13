@@ -2,8 +2,8 @@
 
 namespace Tests\Bonfire\Auth;
 
-use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator;
+use CodeIgniter\Test\DatabaseTestTrait;
 use Tests\Support\TestCase;
 
 /**
@@ -57,9 +57,9 @@ final class RegisterTest extends TestCase
 
         // Submit registration form
         $response = $this->post(route_to('register'), [
-            'email'        => 'fred@example.com',
-            'username'     => 'freddy101',
-            'password'     => 'secret123abc!@',
+            'email'            => 'fred@example.com',
+            'username'         => 'freddy101',
+            'password'         => 'secret123abc!@',
             'password_confirm' => 'secret123abc!@',
         ]);
 
@@ -88,9 +88,9 @@ final class RegisterTest extends TestCase
         // Submit registration form
         $response = $this->withSession([])
             ->post(route_to('register'), [
-                'email'        => 'fred@example.com',
-                'username'     => 'freddy101',
-                'password'     => 'secret123abc!@',
+                'email'            => 'fred@example.com',
+                'username'         => 'freddy101',
+                'password'         => 'secret123abc!@',
                 'password_confirm' => 'secret123abc!@',
             ]);
         $response->assertRedirectTo('/auth/a/show');

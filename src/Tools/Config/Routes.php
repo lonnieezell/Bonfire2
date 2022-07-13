@@ -2,8 +2,7 @@
 /**
  * @var CodeIgniter\Router\RouteCollection $routes
  */
-
-$routes->group(ADMIN_AREA .'/tools', ['namespace' => '\Bonfire\Tools\Controllers'], static function ($routes) {
+$routes->group(ADMIN_AREA . '/tools', ['namespace' => '\Bonfire\Tools\Controllers'], static function ($routes) {
     $routes->get('system-info', '\Bonfire\Tools\Controllers\SystemInfoController::index', ['as' => 'sys-info']);
     $routes->get('php-info', '\Bonfire\Tools\Controllers\SystemInfoController::phpInfo');
     $routes->match(['get', 'post'], 'logs', '\Bonfire\Tools\Controllers\LogsController::index', ['as' => 'sys-logs']);

@@ -11,8 +11,8 @@
 
 namespace Bonfire\Users;
 
-use Bonfire\Users\Models\UserModel;
 use Bonfire\Search\Interfaces\SearchProviderInterface;
+use Bonfire\Users\Models\UserModel;
 
 class SearchProvider extends UserModel implements SearchProviderInterface
 {

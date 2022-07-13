@@ -3,8 +3,8 @@
 namespace Bonfire\Users\Models;
 
 use Bonfire\Users\User;
-use Faker\Generator;
 use CodeIgniter\Shield\Models\UserModel as ShieldUsers;
+use Faker\Generator;
 
 /**
  * This User model is ready for your customization.
@@ -27,6 +27,7 @@ class UserModel extends ShieldUsers
     public function setupRecycler()
     {
         $dbPrefix = $this->db->getPrefix();
+
         return $this->select("{$dbPrefix}users.*,
             (SELECT secret
                 from {$dbPrefix}auth_identities

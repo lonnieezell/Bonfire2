@@ -37,7 +37,7 @@ final class AssetHelperTest extends TestCase
 
     public function testAssetVersion()
     {
-        $config              = config('Assets');
+        $config = config('Assets');
 
         $config->bustingType = 'version';
         Factories::injectMock('config', 'Assets', $config);

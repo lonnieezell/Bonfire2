@@ -37,7 +37,7 @@ class RecycleController extends AdminController
         $currentResource = $resources[$resourceType];
 
         $model = model($currentResource['model']);
-        
+
         // Any special setup for this model?
         if (method_exists($model, 'setupRecycler')) {
             $model = $model->setupRecycler();

@@ -9,41 +9,6 @@ use CodeIgniter\Shield\Config\Auth as ShieldAuth;
 class Auth extends ShieldAuth
 {
     /**
-     * Returns the URL that a user should be redirected
-     * to after a successful login.
-     */
-    public function loginRedirect(): string
-    {
-        $url = auth()->user()->can('admin.access')
-            ? site_url(ADMIN_AREA)
-            : setting('Auth.redirects')['login'];
-
-        return $this->getUrl($url);
-    }
-
-    /**
-     * Returns the URL that a user should be redirected
-     * to after they are logged out.
-     */
-    public function logoutRedirect(): string
-    {
-        $url = setting('Auth.redirects')['logout'];
-
-        return $this->getUrl($url);
-    }
-
-    /**
-     * Returns the URL the user should be redirected to
-     * after a successful registration.
-     */
-    public function registerRedirect(): string
-    {
-        $url = setting('Auth.redirects')['register'];
-
-        return $this->getUrl($url);
-    }
-
-    /**
      * ////////////////////////////////////////////////////////////////////
      * AUTHENTICATION
      * ////////////////////////////////////////////////////////////////////
@@ -365,6 +330,41 @@ class Auth extends ShieldAuth
      * @phpstan-ignore-next-line
      */
     public string $userProvider = 'Bonfire\Users\Models\UserModel';
+
+    /**
+     * Returns the URL that a user should be redirected
+     * to after a successful login.
+     */
+    public function loginRedirect(): string
+    {
+        $url = auth()->user()->can('admin.access')
+            ? site_url(ADMIN_AREA)
+            : setting('Auth.redirects')['login'];
+
+        return $this->getUrl($url);
+    }
+
+    /**
+     * Returns the URL that a user should be redirected
+     * to after they are logged out.
+     */
+    public function logoutRedirect(): string
+    {
+        $url = setting('Auth.redirects')['logout'];
+
+        return $this->getUrl($url);
+    }
+
+    /**
+     * Returns the URL the user should be redirected to
+     * after a successful registration.
+     */
+    public function registerRedirect(): string
+    {
+        $url = setting('Auth.redirects')['register'];
+
+        return $this->getUrl($url);
+    }
 
     protected function getUrl(string $url): string
     {

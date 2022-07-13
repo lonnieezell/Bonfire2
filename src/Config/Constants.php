@@ -9,5 +9,5 @@
  * the LICENSE file that was distributed with this source code.
  */
 defined('BONFIRE_VERSION') || define('BONFIRE_VERSION', '2.0.0-dev');
-defined('BFPATH') || define('BFPATH', realpath(__DIR__ .'/../').'/');
-defined('ADMIN_AREA') || define('ADMIN_AREA', 'admin');
+defined('BFPATH')          || define('BFPATH', realpath(__DIR__ . '/../') . '/');
+defined('ADMIN_AREA')      || define('ADMIN_AREA', 'admin');

@@ -2,20 +2,18 @@
 
 namespace Tests\Support;
 
-use Bonfire\Users\User;
-use Bonfire\Users\Models\UserModel;
 use Bonfire\Bonfire;
+use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
 use CodeIgniter\CodeIgniter;
+use CodeIgniter\Shield\Test\AuthenticationTesting;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\Mock\MockCodeIgniter;
 use Config\App;
-use Config\Autoload;
 use Config\Modules;
-use Config\Services;
 use Faker\Factory;
-use CodeIgniter\Shield\Test\AuthenticationTesting;
 
 /**
  * @internal

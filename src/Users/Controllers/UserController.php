@@ -12,13 +12,13 @@
 namespace Bonfire\Users\Controllers;
 
 use Bonfire\Core\AdminController;
-use Bonfire\Users\User;
-use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\Models\UserFilter;
+use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
 use CodeIgniter\Database\Exceptions\DataException;
-use ReflectionException;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
+use ReflectionException;
 
 class UserController extends AdminController
 {
@@ -157,16 +157,15 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
-
                 $avatarDir = ROOTPATH . 'public/uploads/avatars';
-                $filename = $user->id . '_avatar.' . $file->getExtension();
+                $filename  = $user->id . '_avatar.' . $file->getExtension();
 
                 // Create if uploads/avatar directories not exist
-                if (!is_dir($avatarDir)){
+                if (! is_dir($avatarDir)) {
                     mkdir($avatarDir, 0755, true);
                 }
 
-                if($file->move($avatarDir, $filename, true)) {
+                if ($file->move($avatarDir, $filename, true)) {
                     $users->update($user->id, ['avatar' => $filename]);
                 }
             }
@@ -228,7 +227,7 @@ class UserController extends AdminController
             return redirect()->back()->withInput()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        if (! $this->validate(['password' => 'required|strong_password','pass_confirm' => 'required|matches[password]'])) {
+        if (! $this->validate(['password' => 'required|strong_password', 'pass_confirm' => 'required|matches[password]'])) {
             return redirect()->back()->withInput()->with('errors', service('validation')->getErrors());
         }
 
@@ -243,7 +242,6 @@ class UserController extends AdminController
         if ($identity->hasChanged()) {
             model(UserIdentityModel::class)->save($identity);
         }
-
 
         return redirect()->to($user->adminLink('/security'))->with('message', lang('Bonfire.resourceSaved', ['user']));
     }
