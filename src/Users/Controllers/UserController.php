@@ -157,8 +157,16 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
+
+                $avatarDir = ROOTPATH . 'public/uploads/avatars';
                 $filename = $user->id . '_avatar.' . $file->getExtension();
-                if ($file->move(ROOTPATH . 'public/uploads/avatars', $filename, true)) {
+
+                // Create if uploads/avatar directories not exist
+                if (!is_dir($avatarDir)){
+                    mkdir($avatarDir, 0755, true);
+                }
+
+                if($file->move($avatarDir, $filename, true)) {
                     $users->update($user->id, ['avatar' => $filename]);
                 }
             }
