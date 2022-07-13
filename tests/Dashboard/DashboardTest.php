@@ -33,6 +33,6 @@ final class DashboardTest extends TestCase
             ->get(ADMIN_AREA);
 
         $response->assertOK();
-        $response->assertSee('Home sweet home');
+        $response->assertSee('Quick Links');
     }
 }
