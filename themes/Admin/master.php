@@ -34,7 +34,7 @@
 		<main class="ms-sm-auto flex-grow-1" style="overflow: auto">
             <?= $this->include('_header') ?>
 
-            <div class="px-md-4">
+            <div class="px-md-4 vh-100" style="margin-top: -48px; padding-top: 48px;">
                 <?= $this->renderSection('main') ?>
             </div>
 		</main>
@@ -47,4 +47,5 @@
 <script src="https://unpkg.com/htmx.org@1.5.0"></script>
 <?= $this->renderSection('scripts') ?>
 <?= $viewMeta->render('script') ?>
+<?= $viewMeta->render('rawScripts') ?>
 </body></html>

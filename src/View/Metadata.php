@@ -10,6 +10,7 @@ class Metadata
     private array $meta   = [];
     private array $link   = [];
     private array $script = [];
+    private array $rawScripts = [];
     private array $style  = [];
 
     public function __construct()
@@ -23,7 +24,7 @@ class Metadata
 
     /**
      * Renders out the html for the given meta type,
-     * i.e. 'meta', 'title', 'link', 'script', 'style'.
+     * i.e. 'meta', 'title', 'link', 'script', 'rawScript', 'style'.
      */
     public function render(string $type): string
     {
@@ -36,6 +37,14 @@ class Metadata
         }
 
         $html    = '';
+
+        if ($type === 'rawScripts') {
+            foreach ($this->rawScripts as $script) {
+                $html .= '<script>' . $script . '</script>';
+            }
+            return $html;
+        }
+
         $content = $this->{$type};
         if ($type === 'style') {
             $type = 'link';
@@ -149,6 +158,23 @@ class Metadata
     {
         return $this->script;
     }
+
+    public function addRawScript(string $content): self
+    {
+        $this->rawScripts[] = $content;
+
+        return $this;
+    }
+
+    /**
+     * Get all raw script content.
+     */
+    public function rawScripts(): array
+    {
+        return $this->rawScripts;
+    }
+
+
 
     /**
      * Add a style tag to the page.

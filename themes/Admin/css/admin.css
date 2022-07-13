@@ -451,3 +451,37 @@ input[type="checkbox"]:indeterminate {
     align-items: center;
     justify-content: center;
 }
+/*
+ * --------------------------------------------------------------------------
+ * DASHBOARD
+ * --------------------------------------------------------------------------
+ */
+.dashboard-cell-container {
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.quick-link {
+    display: inline-block;
+    height: 100px;
+}
+.quick-link a {
+    color: var(--bf-black);
+    text-decoration: none;
+    font-size: 24px;
+    height: 100%;
+    width: auto;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid var(--bf-grey);
+    border-radius: 0.5rem;
+    display: inline-block;
+    opacity: 0.5;
+}
+.quick-link a:hover {
+    opacity: 1.0;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, .1) ;
+}
+.quick-link a i {
+    display: block;
+}

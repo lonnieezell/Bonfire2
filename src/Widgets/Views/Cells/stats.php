@@ -1,4 +1,4 @@
-<div class="row">
+<div class="dashboard-cell-container row">
 	<?php foreach ($stats  as $elem) : ?>
 
 		<?php foreach ($elem->items() as $index => $widget) : ?>
