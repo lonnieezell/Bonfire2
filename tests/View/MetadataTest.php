@@ -21,7 +21,7 @@ class MetadataTest extends TestCase
 
     public function testCanRenderTitleTag()
     {
-        $this->assertEquals('<title>Bonfire</title>', $this->meta->render('title'));
+        $this->assertEquals('<title>'. setting('Site.siteName') .'</title>', $this->meta->render('title'));
     }
 
     public function testCanRenderMetaTags()
