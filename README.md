@@ -21,7 +21,7 @@ will only be available as a drop-in admin panel.
 
 ## What is Bonfire?
 
-Bonfire will be a robust application skeleton for CodeIgniter 4-based applications. It provides a number of helpful
+Bonfire is a robust application skeleton for CodeIgniter 4-based applications. It provides a number of helpful
 libraries to assist you in making better software for your clients, faster, while allowing you to focus on the
 new parts that matter to each specific application.
 
@@ -42,15 +42,7 @@ This currently has the same requirements as CodeIgniter 4.
 
 ## Installation
 
-Installation is a simple 2-step process: (Needs updating)
-
-```php
-> composer create-project lonnieezell/bonfire app --stability dev
-> cd app
-> php spark bf:install
-```
-
-Find more details in the [docs folder](docs).
+Installation instructions can be found in the [install guide](docs/2.installation.md).
 
 ## Third Party Software Used
 
