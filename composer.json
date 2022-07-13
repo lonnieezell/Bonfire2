@@ -63,7 +63,7 @@
 		"deduplicate": "phpcpd src/",
 		"inspect": "deptrac analyze --cache-file=build/deptrac.cache",
 		"style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
-		"test": "vendor/bin/phpunit"
+		"test": "./vendor/bin/phpunit"
 	},
 	"support": {
 		"forum": "http://forum.codeigniter.com/",
