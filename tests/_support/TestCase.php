@@ -68,6 +68,7 @@ abstract class TestCase extends CIUnitTestCase
     protected function createUser(?array $params = null)
     {
         $email = $params['email']
+            /** @phpstan-ignore-next-line */
             ?? $this->faker->email;
         $password = $params['password']
             ?? 'secret123';

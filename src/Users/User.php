@@ -28,7 +28,7 @@ class User extends ShieldUser
         } else {
             $idString = ! empty($this->username)
                 ? $this->username[0] . $this->username[1]
-                : ($this->first_name[0]) . ($this->last_name[0] ?? '')
+                : ($this->first_name[0]) . ($this->last_name[0] ?? '')  // @phpstan-ignore-line
                     ?? $this->email[0]
                         ?? 'default-avatar-hash';
         }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var CodeIgniter\Router\RouteCollection $routes
+ */
 
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Recycler\Controllers'], static function ($routes) {
     $routes->get('recycler', 'RecycleController::viewResource', ['as' => 'recycler']);

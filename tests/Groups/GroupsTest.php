@@ -2,7 +2,7 @@
 
 namespace Tests\Bonfire\Groups;
 
-use App\Entities\User;
+use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Shield\Authorization\Groups;
 use Tests\Support\TestCase;

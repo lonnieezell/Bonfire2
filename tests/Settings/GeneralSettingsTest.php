@@ -2,7 +2,7 @@
 
 namespace Tests\Bonfire\Settings;
 
-use App\Entities\User;
+use Bonfire\Users\User;
 use Tests\Support\TestCase;
 
 /**

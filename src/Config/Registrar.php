@@ -10,7 +10,6 @@ use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Core\Filters\OnlineCheck;
 use Bonfire\Users\Validation\UserRules;
 use Bonfire\View\Decorator;
-use CodeIgniter\Config\Factories;
 use ReflectionProperty;
 use CodeIgniter\Shield\Authentication\Passwords\ValidationRules as PasswordRules;
 
@@ -98,13 +97,13 @@ class Registrar
     {
         helper('filesystem');
         $map = directory_map(__DIR__ . '/../', 1);
-        /** @var $autoloader Autoloader */
+        /** @var \CodeIgniter\Autoloader\Autoloader $autoloader  */
         $autoloader = service('autoloader');
 
         $namespaces = [];
 
         foreach ($map as $row) {
-            if (substr($row, -1) !== DIRECTORY_SEPARATOR || in_array(trim($row, '/ '), static::$nonModuleFolders)) {
+            if (substr($row, -1) !== DIRECTORY_SEPARATOR || in_array(trim($row, '/ '), self::$nonModuleFolders)) {
                 continue;
             }
 

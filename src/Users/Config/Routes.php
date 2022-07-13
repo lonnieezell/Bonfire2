@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var CodeIgniter\Router\RouteCollection $routes
+ */
 
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static function ($routes) {
     // User Settings

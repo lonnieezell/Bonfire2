@@ -186,6 +186,7 @@ class Install extends BaseCommand
         ]);
         $users->save($user);
 
+        /** @var \Bonfire\Users\User $user */
         $user = $users->where('username', $username)->first();
         $user->createEmailIdentity([
             'email'    => $email,

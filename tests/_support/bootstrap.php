@@ -84,7 +84,7 @@ if (! class_exists('CodeIgniter\Services', false)) {
 
 // Initialize and register the loader with the SPL autoloader stack.
 require_once SYSTEMPATH .'Helpers/filesystem_helper.php';
-$autoloader = Services::autoloader();
+$autoloader = \Config\Services::autoloader();
 $autoloader->initialize(new Autoload(), new Modules())->register();
 $autoloader->addNamespace('App', APPPATH);
 $autoloader->addNamespace('Config', APPPATH.'Config');

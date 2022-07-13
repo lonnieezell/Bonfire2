@@ -227,7 +227,8 @@ class Auth extends ShieldAuth
      * You can add custom classes as long as they adhere to the
      * Password\ValidatorInterface.
      *
-     * @var class-string<ValidatorInterface>[]
+     * @var class-string[]
+     * @phpstan-ignore-next-line
      */
     public array $passwordValidators = [
         'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
@@ -361,6 +362,7 @@ class Auth extends ShieldAuth
      * CodeIgniter\Shield\Models\UserModel.
      *
      * @var class-string<UserModel>
+     * @phpstan-ignore-next-line
      */
     public string $userProvider = 'Bonfire\Users\Models\UserModel';
 

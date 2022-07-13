@@ -1,14 +1,14 @@
 # User Meta Info
 
 By default, Bonfire comes with a pretty limited amount of data saved to a user. Most applications will likely require
-additional information available to the user, whether this is a bio, a website URL, the name of the school they 
-attended, or anything else. Bonfire provides User Meta information that you can easily define to add additional 
+additional information available to the user, whether this is a bio, a website URL, the name of the school they
+attended, or anything else. Bonfire provides User Meta information that you can easily define to add additional
 information to a user. This data is seamlessly integrated into the Create/Edit User form so you do not have to
-modify that manually. 
+modify that manually.
 
 ## Defining Meta Fields
 
-All fields are defined within `app/Config/Users.php`. Two fields are provided (though commented out) as examples. 
+All fields are defined within `app/Config/Users.php`. Two fields are provided (though commented out) as examples.
 
 ```php
 public $metaFields = [
@@ -20,29 +20,29 @@ public $metaFields = [
 ```
 
 Each major grouping within the `$metaFields` array specifies a fieldset legend name. This provides logical grouping
-of fields within the Edit User form. 
+of fields within the Edit User form.
 
-Each entry within this fieldset is a single piece of information. The key is the name that you would refer to the 
-field by later. Then each has an array of information that defines it. The array has the following options that 
-you can specify: 
+Each entry within this fieldset is a single piece of information. The key is the name that you would refer to the
+field by later. Then each has an array of information that defines it. The array has the following options that
+you can specify:
 
 - **label** is the label shown for the HTML input.
 
 - **type** is the type of HTML input. Currently most of the text-type inputs are supported (text, password, email, date, number, etc)
-    as well as textareas for when you need more information. 
+    as well as textareas for when you need more information.
 
 - **required** is a boolean about whether that field is required when editing a user.
 
-- **validation** is the set of validation rules that should be applied to this field when saving. 
+- **validation** is the set of validation rules that should be applied to this field when saving.
 
 ## Using Meta Info
 
-The User entity has a trait applied, `HasMeta`, that provides all the functionality you should need to work 
+The User entity has a trait applied, `HasMeta`, that provides all the functionality you should need to work
 with the meta information for that user.
 
 **meta(string $key)**
 
-This returns the value of the user's meta named `$key`, or `null` if nothing has been set for that user. 
+This returns the value of the user's meta named `$key`, or `null` if nothing has been set for that user.
 The name is the key of the array mentioned above.
 
 ```php
@@ -51,17 +51,17 @@ $website = $user->meta('website_url');
 
 **allMeta()**
 
-This returns all meta fields for this user. Note that it returns the full database results, not just the name/value. 
+This returns all meta fields for this user. Note that it returns the full database results, not just the name/value.
 
 ```php
 $meta = $user->allMeta();
 
 var_dump($meta);
 
-// Returns: 
+// Returns:
 [
     'resource_id' => 123,
-    'class' => 'App\Entities\User',
+    'class' => 'Bonfire\Users\User',
     'key' => 'website_url',
     'value' => 'https://example.com',
     'created_at' => '2021-01-12 12:31:12',
@@ -69,7 +69,7 @@ var_dump($meta);
 ]
 ```
 
-**hasMeta(string $key)** 
+**hasMeta(string $key)**
 
 Used to check if a user has a value set for the given meta field.
 
@@ -112,9 +112,9 @@ $user->syncMeta($post);
 
 **metaValidationRules(string $configClass, string $prefix=null)**
 
-This examines the specified config file and returns an array with the names of each field and their validation rules, 
+This examines the specified config file and returns an array with the names of each field and their validation rules,
 ready to be used within CodeIgniter's validation library. If your form groups the name as an array, (like `meta[website_url]`)
-you may specify the prefix to append to the field names so that validation will pick it up properly. 
+you may specify the prefix to append to the field names so that validation will pick it up properly.
 
 ```php
 $rules = $user->metaValidationRules('\Config\Users', 'meta');
@@ -130,10 +130,10 @@ var_dump($rules);
 ## Using Meta on Your Classes
 
 The meta solution is flexible enough to be used outside of Users in your own classes, if desired. There are two steps
-required to make that work. 
+required to make that work.
 
 1. Create a Config file. This should include a `$metaFields` array, formatted as described above.
-2. Add the `HasMeta` trait to the Entity class that represents your resource. 
+2. Add the `HasMeta` trait to the Entity class that represents your resource.
 
 ```php
 use Bonfire\Traits\HasMeta;

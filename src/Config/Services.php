@@ -70,7 +70,7 @@ class Services extends BaseService
     /**
      * Returns the view metadata manager.
      *
-     * @return Bonfire\View\Metadata
+     * @return Metadata
      */
     public static function viewMeta(bool $getShared = true)
     {

@@ -33,7 +33,7 @@ final class ResourceTabTest extends TestCase
         $this->assertSame('Resource A', $tab->title);
         $this->assertSame(site_url(ADMIN_AREA . '/users/gallery'), $tab->url);
         $this->assertSame('users.edit', $tab->permission);
-        $this->assertNull($tab->foo);
+        $this->assertNull($tab->foo); // @phpstan-ignore-line
     }
 
     public function testBasicWithEmptyUrl()
