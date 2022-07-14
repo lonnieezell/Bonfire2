@@ -33,14 +33,14 @@ class Metadata
         }
 
         if ($type === 'title') {
-            return '<title>' . esc($this->title, 'attr') . '</title>';
+            return '<title>' . $this->title . '</title>';
         }
 
         $html    = '';
 
         if ($type === 'rawScripts') {
             foreach ($this->rawScripts as $script) {
-                $html .= '<script>' . $script. '</script>';
+                $html .= '<script>' . $script . '</script>';
             }
             return $html;
         }
@@ -54,7 +54,7 @@ class Metadata
             $html .= '<' . $type . ' ';
 
             foreach ($item as $key => $value) {
-                $html .= esc($key, 'attr') . '="' . esc($value, 'attr') . '" ';
+                $html .= $key . '="' . $value . '" ';
             }
 
             $html .= '>';
