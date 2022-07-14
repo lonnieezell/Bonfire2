@@ -55,36 +55,6 @@
         </table>
     </fieldset>
 
-
-    <fieldset>
-        <legend>Password Reset Attempts</legend>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>IP Address</th>
-                    <th>User Agent</th>
-                    <th>Token</th>
-                </tr>
-            </thead>
-            <?php if (isset($resetAttempts) && count($resetAttempts)) : ?>
-            <tbody>
-                <?php foreach ($resetAttempts as $attempt) : ?>
-                    <tr>
-                        <td><?= $attempt->created_at->format('M j, Y h:ia T') ?? '' ?></td>
-                        <td><?= $attempt->ip_address ?? '' ?></td>
-                        <td><?= $attempt->user_agent ?></td>
-                        <td><?= $attempt->token ?></td>
-                    </tr>
-                <?php endforeach ?>
-            </tbody>
-            <?php else : ?>
-                <div class="alert alert-secondary">No recent password reset attempts.</div>
-            <?php endif ?>
-        </table>
-    </fieldset>
-
 </x-admin-box>
 
 <?php $this->endSection() ?>
