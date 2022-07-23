@@ -56,7 +56,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Test with PHPUnit
-        run: vendor/bin/phpunit --verbose --coverage-text
+        run: vendor/bin/phpunit --verbose --no-coverage
         env:
           TERM: xterm-256color
           TACHYCARDIA_MONITOR_GA: enabled
