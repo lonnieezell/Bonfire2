@@ -33,4 +33,13 @@ class Site extends BaseConfig
      * able to view the site. All others will see the "System Offline" page.
      */
     public $siteOnline = true;
+
+    /**
+     * --------------------------------------------------------------------------
+     * Site Offline View
+     * --------------------------------------------------------------------------
+     *
+     * The view file that is displayed when the site is offline.
+     */
+    public $siteOfflineView = 'Bonfire\Views\site_offline';
 }

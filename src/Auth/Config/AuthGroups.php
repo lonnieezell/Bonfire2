@@ -88,6 +88,7 @@ class AuthGroups extends ShieldGroups
             'widgets.*',
             'consent.*',
             'recycler.*',
+            'site.*',
         ],
         'admin' => [
             'admin.access',

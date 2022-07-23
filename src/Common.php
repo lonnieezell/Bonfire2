@@ -67,3 +67,14 @@ if (! function_exists('app_date')) {
         return $date->format($format);
     }
 }
+
+if (! function_exists('site_offline'))
+{
+    /**
+     * Determines whether the site is offline.
+     */
+    function site_offline(): bool
+    {
+        return setting('Site.siteOnline') === false;
+    }
+}

@@ -39,7 +39,7 @@ class ConsentFilter implements FilterInterface
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         // Consent system disabled?
-        if (! setting('Consent.requireConsent')) {
+        if (! defined('setting') || ! setting('Consent.requireConsent')) {
             return;
         }
 

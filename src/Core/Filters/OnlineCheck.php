@@ -34,7 +34,11 @@ class OnlineCheck implements FilterInterface
         if (! setting('Site.siteOnline')) {
             $user = auth()->user();
 
-            if ($user !== null && ! $user->inGroup('superadmin') && ! $user->hasPermission('site.viewOffline')) {
+            if ($user === null || (
+                $user !== null &&
+                ! $user->inGroup('superadmin') &&
+                ! $user->hasPermission('site.viewOffline')
+            )) {
                 return redirect()->to('site-offline');
             }
         }

@@ -17,7 +17,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="form-check">
                         <label class="form-label" for="siteName">Site Name</label>
-                        <input type="text"  class="form-control" name="siteName" value="<?= esc(old('siteName', setting('App.siteName')), 'attr') ?>" />
+                        <input type="text"  class="form-control" name="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
                     </div>
                 </div>
                 <div class="col px-5">
