@@ -1,7 +1,6 @@
 # Bonfire 2
 
 [![Build Status](https://github.com/lonnieezell/Bonfire2/workflows/PHPUnit/badge.svg)](https://github.com/lonnieezell/Bonfire2/actions?query=workflow%3A%22PHPUnit%22)
-[![Coverage Status](https://coveralls.io/repos/github/lonnieezell/Bonfire2/badge.svg?branch=develop)](https://coveralls.io/github/lonnieezell/Bonfire2?branch=develop)
 [![GitHub license](https://img.shields.io/github/license/lonnieezell/Bonfire2)](https://github.com/lonnieezell/Bonfire2/blob/develop/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/lonnieezell/Bonfire2/pulls)
 
