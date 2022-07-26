@@ -174,14 +174,14 @@ class Install extends BaseCommand
         CLI::newLine();
         CLI::write('Publishing config files', 'yellow');
 
-        foreach($this->configFiles as $className) {
+        foreach ($this->configFiles as $className) {
             $publisher->publishClass($className);
         }
     }
 
     private function publishThemes()
     {
-        $source = BFPATH .'../themes';
+        $source      = BFPATH . '../themes';
         $destination = APPPATH . '../themes';
 
         $publisher = new Publisher();

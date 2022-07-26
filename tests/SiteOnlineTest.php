@@ -4,7 +4,10 @@ namespace Tests;
 
 use Tests\Support\TestCase;
 
-class SiteOnlineTest extends TestCase
+/**
+ * @internal
+ */
+final class SiteOnlineTest extends TestCase
 {
     public function testSiteOnline()
     {

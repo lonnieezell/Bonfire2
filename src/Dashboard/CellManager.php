@@ -17,9 +17,9 @@ class CellManager
 
         foreach ($cellClasses as $alias) {
             [$class, $method] = explode('::', $alias);
-            $class = new $class();
+            $class            = new $class();
 
-            echo (string)$class->$method();
+            echo (string) $class->{$method}();
         }
     }
 }

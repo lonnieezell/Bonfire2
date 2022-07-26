@@ -4,7 +4,7 @@
 		<?php foreach ($elem->items() as $index => $widget) : ?>
 			<?php
             $_widgets = array_filter($manager, static fn ($k) => $k['widget'] === 'Stats', ARRAY_FILTER_USE_BOTH);
-            ?>
+		    ?>
 
 			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['index'])) : ?>
                 <div class="col-3">

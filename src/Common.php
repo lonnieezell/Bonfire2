@@ -68,8 +68,7 @@ if (! function_exists('app_date')) {
     }
 }
 
-if (! function_exists('site_offline'))
-{
+if (! function_exists('site_offline')) {
     /**
      * Determines whether the site is offline.
      */

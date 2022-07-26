@@ -6,12 +6,12 @@ use RuntimeException;
 
 class Metadata
 {
-    private string $title = '';
-    private array $meta   = [];
-    private array $link   = [];
-    private array $script = [];
+    private string $title     = '';
+    private array $meta       = [];
+    private array $link       = [];
+    private array $script     = [];
     private array $rawScripts = [];
-    private array $style  = [];
+    private array $style      = [];
 
     public function __construct()
     {
@@ -36,12 +36,13 @@ class Metadata
             return '<title>' . $this->title . '</title>';
         }
 
-        $html    = '';
+        $html = '';
 
         if ($type === 'rawScripts') {
             foreach ($this->rawScripts as $script) {
                 $html .= '<script>' . $script . '</script>';
             }
+
             return $html;
         }
 
@@ -173,8 +174,6 @@ class Metadata
     {
         return $this->rawScripts;
     }
-
-
 
     /**
      * Add a style tag to the page.

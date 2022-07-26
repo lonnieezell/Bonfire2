@@ -186,10 +186,10 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator"
                                 <?php if (in_array(
-    'CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                    'CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator',
+                                    old('validators', setting('Auth.passwordValidators')),
+                                    true
+                                )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -203,10 +203,10 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator"
                                 <?php if (in_array(
-    'CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                    'CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator',
+                                    old('validators', setting('Auth.passwordValidators')),
+                                    true
+                                )) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -220,10 +220,10 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\PwnedValidator"
                                 <?php if (in_array(
-    'CodeIgniter\Shield\Authentication\Passwords\PwnedValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                    'CodeIgniter\Shield\Authentication\Passwords\PwnedValidator',
+                                    old('validators', setting('Auth.passwordValidators')),
+                                    true
+                                )) : ?>
                                     checked
                                 <?php endif ?>
                             >

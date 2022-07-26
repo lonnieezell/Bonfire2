@@ -2,9 +2,8 @@
 
 namespace Bonfire\Commands\Install;
 
-use CodeIgniter\CLI\CLI;
 use CodeIgniter\Autoloader\FileLocator;
-use PHPUnit\Util\FileLoader;
+use CodeIgniter\CLI\CLI;
 
 /**
  * ContentReplacer
@@ -28,9 +27,9 @@ class Publisher
      */
     public function setDestination(string $destination): self
     {
-        if (! is_dir($destination))
-        {
+        if (! is_dir($destination)) {
             CLI::error('The destination directory does not exist.');
+
             exit(1);
         }
 
@@ -39,46 +38,43 @@ class Publisher
         return $this;
     }
 
-    /**
-     * @param string $className
-     */
     public function publishClass(string $className): void
     {
         $file = $this->locator->locateFile($className);
 
-        if (! $file)
-        {
+        if (! $file) {
             CLI::error("The class '{$className}' could not be found.");
+
             return;
         }
 
         // Don't overwrite existing files
-        if (file_exists($this->destination . $file))
-        {
+        if (file_exists($this->destination . $file)) {
             CLI::error("The file '{$file}' already exists. Skipping.");
+
             return;
         }
 
-        $namespace = explode('\\', $className);
+        $namespace    = explode('\\', $className);
         $rawClassName = array_pop($namespace);
-        $namespace = implode('\\', $namespace);
-        $newNamespace = 'Config\\'. $rawClassName;
+        $namespace    = implode('\\', $namespace);
+        $newNamespace = 'Config\\' . $rawClassName;
 
         $content = file_get_contents($file);
 
         $replace = [
-            $namespace => $newNamespace,
-            'BaseConfig' => 'Bonfire'. $rawClassName,
+            $namespace                           => $newNamespace,
+            'BaseConfig'                         => 'Bonfire' . $rawClassName,
             'use CodeIgniter\Config\BaseConfig;' => "use {$className} as Bonfire{$rawClassName};",
         ];
 
-        if ($className == 'Bonfire\Assets\Config\Assets') {
+        if ($className === 'Bonfire\Assets\Config\Assets') {
             $replace['__DIR__ . \'/../../../themes'] = 'ROOTPATH . \'/themes';
         }
 
         $content = $this->replace($content, $replace);
 
-        $destination = $this->destination . $rawClassName .'.php';
+        $destination = $this->destination . $rawClassName . '.php';
 
         $this->writeFile($destination, $content);
     }
@@ -127,25 +123,28 @@ class Publisher
         }
     }
 
-    public function copyDirectory($source, $destination) {
-        if ( is_dir( $source ) ) {
-            @mkdir( $destination );
-            $directory = dir( $source );
-            while ( FALSE !== ( $readdirectory = $directory->read() ) ) {
-                if ( $readdirectory == '.' || $readdirectory == '..' ) {
+    public function copyDirectory($source, $destination)
+    {
+        if (is_dir($source)) {
+            @mkdir($destination);
+            $directory = dir($source);
+
+            while (false !== ($readdirectory = $directory->read())) {
+                if ($readdirectory === '.' || $readdirectory === '..') {
                     continue;
                 }
                 $PathDir = $source . '/' . $readdirectory;
-                if ( is_dir( $PathDir ) ) {
-                    $this->copyDirectory( $PathDir, $destination . '/' . $readdirectory );
+                if (is_dir($PathDir)) {
+                    $this->copyDirectory($PathDir, $destination . '/' . $readdirectory);
+
                     continue;
                 }
-                copy( $PathDir, $destination . '/' . $readdirectory );
+                copy($PathDir, $destination . '/' . $readdirectory);
             }
 
             $directory->close();
-        }else {
-            copy( $source, $destination );
+        } else {
+            copy($source, $destination);
         }
     }
 }

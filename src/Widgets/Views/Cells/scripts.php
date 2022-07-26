@@ -3,8 +3,8 @@
 
         <?php
             $_widgets = array_values(
-                array_filter($manager, static fn ($k) => $k['widget'] === 'Charts', ARRAY_FILTER_USE_BOTH)
-            );
+    array_filter($manager, static fn ($k) => $k['widget'] === 'Charts', ARRAY_FILTER_USE_BOTH)
+);
         ?>
         <?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $index)) : ?>
             <?= $widget->getScript(); ?>

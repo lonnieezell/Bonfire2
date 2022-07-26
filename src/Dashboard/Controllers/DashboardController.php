@@ -27,7 +27,7 @@ class DashboardController extends AdminController
     public function index()
     {
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
-            'cells'   => new CellManager(),
+            'cells' => new CellManager(),
         ]);
     }
 }

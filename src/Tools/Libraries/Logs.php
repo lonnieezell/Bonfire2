@@ -59,7 +59,7 @@ class Logs
 
         foreach ($logs as $log) {
 
-       // get the logLine Start
+            // get the logLine Start
             $logLineStart = $this->getLogLineStart($log);
 
             if (! empty($logLineStart)) {
