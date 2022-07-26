@@ -38,8 +38,10 @@ class ConsentFilter implements FilterInterface
      */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
+        helper('setting');
+
         // Consent system disabled?
-        if (! defined('setting') || ! setting('Consent.requireConsent')) {
+        if (! setting('Consent.requireConsent')) {
             return;
         }
 
@@ -49,7 +51,9 @@ class ConsentFilter implements FilterInterface
         }
 
         $cookie      = get_cookie('bf_consent');
-        $permissions = json_decode($cookie, true);
+        $permissions = $cookie !== null
+            ? json_decode($cookie, true)
+            : [];
 
         // Do we already have consent from the visitor?
         // then nothing to do here...

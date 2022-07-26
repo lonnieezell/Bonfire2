@@ -89,6 +89,12 @@
     #consent-popup .show-simple {
         display: block;
     }
+    #consent-popup .show-simple > div {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
     #consent-popup.custom .show-simple {
         display: none;
     }

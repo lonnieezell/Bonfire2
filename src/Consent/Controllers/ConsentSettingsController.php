@@ -37,7 +37,7 @@ class ConsentSettingsController extends AdminController
     public function save()
     {
         $rules = [
-            'requireConsent'  => 'required',
+            'requireConsent'  => 'permit_empty',
             'consentLength'   => 'required_with[requireConsent]|string',
             'policyUrl'       => 'required_with[requireConsent]|string',
             'consentMessage'  => 'required_with[requireConsent]|string',
@@ -49,7 +49,7 @@ class ConsentSettingsController extends AdminController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        setting('Consent.requireConsent', $this->request->getPost('requireConsent'));
+        setting('Consent.requireConsent', $this->request->getPost('requireConsent') ? true : false);
         setting('Consent.consentLength', $this->request->getPost('consentLength'));
         setting('Consent.policyUrl', $this->request->getPost('policyUrl'));
         setting('Consent.consentMessage', $this->request->getPost('consentMessage'));

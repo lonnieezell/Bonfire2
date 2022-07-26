@@ -25,7 +25,7 @@ class Consent extends BaseConfig
      *
      * If false, then those cookies won't be set.
      */
-    public bool $requireConsent = true;
+    public bool $requireConsent = false;
 
     /**
      * --------------------------------------------------------------------------
