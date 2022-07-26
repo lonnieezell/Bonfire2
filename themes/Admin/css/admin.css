@@ -361,25 +361,36 @@ input[type="checkbox"]:indeterminate {
 }
 
 #alerts-wrapper .alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: var(--bf-white);
     border: 1px solid var(--bf-light-grey);
     opacity: 0.8;
 }
 
+#alerts-wrapper .alert-message {
+    flex: 1;
+}
+
+#alerts-wrapper .alert-primary {
+    border-bottom: 3px solid var(--bs-primary);
+}
+
 #alerts-wrapper .alert-info {
-    border-bottom: 3px solid var(--info);
+    border-bottom: 3px solid var(--bs-info);
 }
 
 #alerts-wrapper .alert-warning {
-    border-bottom: 3px solid var(--warning);
+    border-bottom: 3px solid var(--bs-warning);
 }
 
 #alerts-wrapper .alert-danger {
-    border-bottom: 3px solid var(--danger);
+    border-bottom: 3px solid var(--bs-danger);
 }
 
 #alerts-wrapper .alert-success {
-    border-bottom: 3px solid var(--bf-success);
+    border-bottom: 3px solid var(--bs-success);
 }
 
 .text-info {

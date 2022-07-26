@@ -14,7 +14,9 @@
                 <i class="fas fa-check-circle text-<?= $class ?> mx-2"></i>
             <?php endif ?>
 
-            <?= $content ?>
+            <div class="alert-message">
+                <?= $content ?>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endforeach; ?>
