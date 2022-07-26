@@ -72,6 +72,10 @@ class Publisher
             'use CodeIgniter\Config\BaseConfig;' => "use {$className} as Bonfire{$rawClassName};",
         ];
 
+        if ($className == 'Bonfire\Assets\Config\Assets') {
+            $replace['__DIR__ . \'/../../../themes'] = 'ROOTPATH . \'/themes';
+        }
+
         $content = $this->replace($content, $replace);
 
         $destination = $this->destination . $rawClassName .'.php';
