@@ -14,10 +14,8 @@
 		"ext-json": "*",
 		"codeigniter4/framework": "^4.2",
 		"components/font-awesome": "^5.15",
-		"league/commonmark": "^2.0",
 		"codeigniter4/shield": "^1.0.0",
 		"roave/security-advisories": "dev-latest",
-		"spatie/commonmark-highlighter": "^3.0",
 		"tatter/alerts": "^3.0"
 	},
 	"require-dev": {

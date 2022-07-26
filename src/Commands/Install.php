@@ -11,6 +11,7 @@
 
 namespace Bonfire\Commands;
 
+use Bonfire\Commands\Install\Publisher;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\CLI\BaseCommand;
@@ -62,6 +63,19 @@ class Install extends BaseCommand
         '--continue' => 'Execute the second install step.',
     ];
 
+    private array $configFiles = [
+        'Bonfire\Assets\Config\Assets',
+        'Bonfire\Auth\Config\Auth',
+        'Bonfire\Auth\Config\AuthGroups',
+        'Bonfire\Config\Bonfire',
+        'Bonfire\Config\Site',
+        'Bonfire\Config\Themes',
+        'Bonfire\Consent\Config\Consent',
+        'Bonfire\Dashboard\Config\Dashboard',
+        'Bonfire\Recycler\Config\Recycler',
+        'Bonfire\Users\Config\Users',
+    ];
+
     /**
      * Actually execute a command.
      */
@@ -74,6 +88,8 @@ class Install extends BaseCommand
             $this->setAppUrl();
             $this->setEncryptionKey();
             $this->setDatabase();
+            $this->publishConfigFiles();
+            $this->publishThemes();
 
             CLI::newLine();
             CLI::write('If you need to create your database, you may run:', 'yellow');
@@ -148,6 +164,28 @@ class Install extends BaseCommand
         $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
         $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
         $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
+    }
+
+    private function publishConfigFiles()
+    {
+        $publisher = new Publisher();
+        $publisher->setDestination(APPPATH . 'Config/');
+
+        CLI::newLine();
+        CLI::write('Publishing config files', 'yellow');
+
+        foreach($this->configFiles as $className) {
+            $publisher->publishClass($className);
+        }
+    }
+
+    private function publishThemes()
+    {
+        $source = BFPATH .'../themes';
+        $destination = APPPATH . '../themes';
+
+        $publisher = new Publisher();
+        $publisher->copyDirectory($source, $destination);
     }
 
     private function setEncryptionKey()
