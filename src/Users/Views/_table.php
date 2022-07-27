@@ -4,9 +4,11 @@
     <?php if (isset($users) && count($users)) : ?>
         <?php foreach ($users as $user) : ?>
             <tr>
-                <td>
-                    <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check">
-                </td>
+                <?php if(auth()->user()->can('users.delete')): ?>
+                    <td>
+                        <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check">
+                    </td>
+                <?php endif ?>
                 <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>
             </tr>
         <?php endforeach ?>

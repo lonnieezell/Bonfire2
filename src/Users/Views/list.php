@@ -6,9 +6,11 @@
             <div class="col">
                 <h2>Users</h2>
             </div>
-            <div class="col-auto">
-                <a href="<?= route_to('user-new') ?>" class="btn btn-primary">New User</a>
-            </div>
+            <?php if(auth()->user()->can('users.create')): ?>
+                <div class="col-auto">
+                    <a href="<?= route_to('user-new') ?>" class="btn btn-primary">New User</a>
+                </div>
+            <?php endif ?>
         </div>
     </x-page-head>
 
