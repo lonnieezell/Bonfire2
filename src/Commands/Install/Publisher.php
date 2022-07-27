@@ -91,7 +91,7 @@ class Publisher
      * Write a file, catching any exceptions and showing a
      * nicely formatted error.
      *
-     * @param string $file Relative file path like 'Config/Auth.php'.
+     * @param string $path Relative file path like 'Config/Auth.php'.
      */
     protected function writeFile(string $path, string $content): void
     {
