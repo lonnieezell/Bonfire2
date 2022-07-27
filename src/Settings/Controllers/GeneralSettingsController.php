@@ -33,6 +33,10 @@ class GeneralSettingsController extends AdminController
      */
     public function general()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $timezoneAreas = [];
 
         foreach (timezone_identifiers_list() as $timezone) {
@@ -69,6 +73,10 @@ class GeneralSettingsController extends AdminController
      */
     public function saveGeneral()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $rules = [
             'siteName'   => 'required|string',
             'timezone'   => 'required|string',

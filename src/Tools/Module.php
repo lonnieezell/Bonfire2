@@ -30,6 +30,7 @@ class Module extends BaseModule
             'title'           => 'System Info',
             'namedRoute'      => 'sys-info',
             'fontAwesomeIcon' => 'fas fa-info-circle',
+            'permission'      => 'admin.settings',
         ]);
 
         $itemLogs = new MenuItem([
