@@ -25,6 +25,10 @@ class ConsentSettingsController extends AdminController
      */
     public function index()
     {
+        if (! auth()->user()->can('consent.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         return $this->render($this->viewPrefix . 'settings', [
             'consents' => setting('Consent.consents'),
         ]);
@@ -36,6 +40,10 @@ class ConsentSettingsController extends AdminController
      */
     public function save()
     {
+        if (! auth()->user()->can('consent.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $rules = [
             'requireConsent'  => 'permit_empty',
             'consentLength'   => 'required_with[requireConsent]|string',
