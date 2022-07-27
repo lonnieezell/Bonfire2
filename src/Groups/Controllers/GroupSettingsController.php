@@ -27,6 +27,10 @@ class GroupSettingsController extends AdminController
      */
     public function list()
     {
+        if (! auth()->user()->can('groups.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $groups = setting('AuthGroups.groups');
         asort($groups);
 
@@ -50,6 +54,10 @@ class GroupSettingsController extends AdminController
      */
     public function show(string $alias)
     {
+        if (! auth()->user()->can('groups.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $group = setting('AuthGroups.groups')[$alias];
 
         if (empty($group)) {
@@ -136,6 +144,10 @@ class GroupSettingsController extends AdminController
      */
     public function savePermissions(string $group)
     {
+        if (! auth()->user()->can('groups.edit')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $groups = new Groups();
         $group  = $groups->info($group);
         if ($group === null) {

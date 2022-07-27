@@ -58,7 +58,8 @@ class AuthGroups extends ShieldGroups
     public array $permissions = [
         'admin.access'        => 'Can access the sites admin area',
         'admin.settings'      => 'Can access the main site settings',
-        'groups.settings'     => 'Can edit existing user groups',
+        'groups.settings'     => 'Can access the groups settings',
+        'groups.edit'         => 'Can edit existing user groups',
         'users.list'          => 'Can view a list of users in the system',
         'users.manage-admins' => 'Can manage other admins',
         'users.view'          => 'Can view user details',
