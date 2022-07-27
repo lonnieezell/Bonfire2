@@ -32,6 +32,10 @@ class UserController extends AdminController
      */
     public function list()
     {
+        if (! auth()->user()->can('users.list')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         /** @var UserFilter $userModel */
         $userModel = model(UserFilter::class);
 
@@ -59,6 +63,10 @@ class UserController extends AdminController
      */
     public function create()
     {
+        if (! auth()->user()->can('users.create')) {
+            return redirect()->to(ADMIN_AREA .'/users')->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $groups = setting('AuthGroups.groups');
         asort($groups);
 
@@ -310,6 +318,10 @@ class UserController extends AdminController
      */
     public function security(int $userId)
     {
+        if (! auth()->user()->can('users.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $users = model(UserModel::class);
         /** @var User|null $user */
         $user = $users->find($userId);
@@ -335,6 +347,10 @@ class UserController extends AdminController
      */
     public function permissions(int $userId)
     {
+        if (! auth()->user()->can('users.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $users = model(UserModel::class);
         $user  = $users->find($userId);
         if ($user === null) {
@@ -359,6 +375,10 @@ class UserController extends AdminController
      */
     public function savePermissions(int $userId)
     {
+        if (! auth()->user()->can('users.edit')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $users = model(UserModel::class);
         /** @var User|null $user */
         $user = $users->find($userId);
