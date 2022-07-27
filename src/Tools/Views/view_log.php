@@ -56,7 +56,7 @@ $this->section('main') ?>
             </tbody>
         </table>
 
-        <?= $pager('log', 'bonfire_full') ?>
+        <?= $pager->links('default', 'bonfire_full') ?>
 
     </div>
 
@@ -66,7 +66,9 @@ $this->section('main') ?>
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
-            <input type="submit" name="delete" class="btn btn-danger btn-sm" value="<?= lang('Logs.delete_file'); ?>" onclick="return confirm('<?= lang('Logs.delete_confirm') ?>')"/>
+            <input type="submit" name="delete" class="btn btn-outline-danger btn-sm" value="<?= lang('Logs.delete_file'); ?>"
+                onclick="return confirm('<?= lang('Logs.delete_confirm') ?>')"
+            />
 
         </form>
 

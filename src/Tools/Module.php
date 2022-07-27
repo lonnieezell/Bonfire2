@@ -36,6 +36,7 @@ class Module extends BaseModule
             'title'           => 'Logs',
             'namedRoute'      => 'sys-logs',
             'fontAwesomeIcon' => 'fas fa-clipboard-list',
+            'permission'      => 'logs.view',
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
         $sidebar->menu('sidebar')->collection('tools')->addItem($itemLogs);

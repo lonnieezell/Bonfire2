@@ -7,7 +7,7 @@
 
     <x-admin-box>
 
-    <?php if (count($logs)) { ?>
+    <?php if (count($logs)) : ?>
 
         <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log'); ?>" method="post">
             <?= csrf_field() ?>
@@ -16,7 +16,11 @@
             <table class="table table-hover logs" cellspacing="0" width="100%" >
                 <thead>
                     <tr>
-                        <th class="column-check"><input class="select-all" type="checkbox" /></th>
+                        <?php if (auth()->user()->can('logs.manage')) : ?>
+                            <th class="column-check text-center" style="width: 2rem">
+                                <input class="select-all" type="checkbox" />
+                            </th>
+                        <?php endif ?>
                         <th class='date'><?= lang('Logs.date'); ?></th>
                         <th><?= lang('Logs.file'); ?></th>
                     </tr>
@@ -31,9 +35,11 @@
                         }
                         ?>
                     <tr>
-                        <td class="column-check">
-                            <input type="checkbox" value="<?= esc($log); ?>" name="checked[]" />
-                        </td>
+                        <?php if (auth()->user()->can('logs.manage')) : ?>
+                            <td class="column-check text-center">
+                                <input type="checkbox" value="<?= esc($log); ?>" name="checked[]" />
+                            </td>
+                        <?php endif ?>
                         <td class='date'>
                             <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/{$log}"); ?>'>
                                 <?= date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $log)))); ?>
@@ -50,16 +56,23 @@
 
         <?= $pager->links('default', 'bonfire_full') ?>
 
-        <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-danger" value="<?= lang('Logs.delete_selected'); ?>" onclick="return confirm('<?= lang('Logs.delete_selected_confirm'); ?>')" />
+        <?php if (auth()->user()->can('logs.manage')) : ?>
+            <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-outline-danger"
+                value="<?= lang('Logs.delete_selected'); ?>"
+                onclick="return confirm('<?= lang('Logs.delete_selected_confirm'); ?>')"
+            />
 
-        <input type="submit" value='<?= lang('Logs.delete_all'); ?>' name="delete_all" class="btn btn-sm btn-danger" onclick="return confirm('<?= lang('Logs.delete_all_confirm'); ?>')" />
+            <input type="submit" value='<?= lang('Logs.delete_all'); ?>' name="delete_all"
+                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Logs.delete_all_confirm'); ?>')"
+            />
+        <?php endif ?>
 
     </form>
-        <?php } else { ?>
+    <?php else : ?>
         <div class="text-center">
             <i class="fas fa-clipboard-list fa-3x my-3"></i><br/> <?= lang('Logs.empty'); ?>
         </div>
-    <?php } ?>
+    <?php endif ?>
 
         </x-admin-box>
     <?php $this->endSection() ?>
