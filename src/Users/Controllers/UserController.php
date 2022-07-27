@@ -49,7 +49,7 @@ class UserController extends AdminController
                 'last_active' => 'Last Active',
             ],
             'showSelectAll' => true,
-            'users'         => $userModel->paginate(setting('App.perPage')),
+            'users'         => $userModel->paginate(setting('Site.perPage')),
             'pager'         => $userModel->pager,
         ]);
     }

@@ -26,7 +26,7 @@ class LogsController extends AdminController
     public function __construct()
     {
         helper('filesystem');
-        $this->logsLimit   = service('settings')->get('Logs.paginationLimit');
+        $this->logsLimit   = setting('Site.perPage');
         $this->logsHandler = new Logs();
     }
 

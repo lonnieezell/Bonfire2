@@ -15,5 +15,5 @@
 </table>
 
 <div class="text-center">
-    <?= $pager->links() ?>
+    <?= $pager->links('default', 'bonfire_full') ?>
 </div>

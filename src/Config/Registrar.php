@@ -25,9 +25,11 @@ class Registrar
     public static function Pager(): array
     {
         return [
-            'default_full'   => 'Bonfire\Views\_pager_full',
-            'default_simple' => 'Bonfire\Views\_pager_simple',
-            'default_head'   => 'Bonfire\Views\_pager_head',
+            'templates' => [
+                'bonfire_full'   => 'Bonfire\Views\_pager_full',
+                'bonfire_simple' => 'Bonfire\Views\_pager_simple',
+                'bonfire_head'   => 'Bonfire\Views\_pager_head',
+            ],
         ];
     }
 

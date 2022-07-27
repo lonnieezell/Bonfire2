@@ -47,7 +47,7 @@ class RecycleController extends AdminController
             ->asArray()
             ->onlyDeleted()
             ->orderBy('deleted_at', 'desc')
-            ->paginate(setting('App.perPage'));
+            ->paginate(setting('Site.perPage'));
 
         return $this->render($this->viewPrefix . 'listResource', [
             'resources'       => $resources,

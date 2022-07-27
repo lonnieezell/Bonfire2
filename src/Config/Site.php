@@ -13,7 +13,7 @@ class Site extends BaseConfig
      *
      * The number of items that should be displayed in content lists.
      */
-    public $perPage = 20;
+    public $perPage = 15;
 
     /**
      * --------------------------------------------------------------------------

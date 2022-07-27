@@ -56,7 +56,7 @@ $this->section('main') ?>
             </tbody>
         </table>
 
-        <?= $pager->links() ?>
+        <?= $pager('log', 'bonfire_full') ?>
 
     </div>
 
