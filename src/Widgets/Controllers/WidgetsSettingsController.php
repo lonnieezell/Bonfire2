@@ -23,6 +23,10 @@ class WidgetsSettingsController extends AdminController
      */
     public function index(): string
     {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         return $this->render($this->viewPrefix . 'settings', [
             'widgets' => setting('LineChart.widgets'),
             'manager' => service('widgets')->manager(),
@@ -31,6 +35,10 @@ class WidgetsSettingsController extends AdminController
 
     public function show(string $alias): string
     {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         return $this->render($this->viewPrefix . '_' . $alias, [
             'widgets' => setting('LineChart.widgets'),
             'tab'     => $alias,
@@ -43,6 +51,10 @@ class WidgetsSettingsController extends AdminController
      */
     public function save(): \CodeIgniter\HTTP\RedirectResponse
     {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         switch ($this->request->getVar('widget')) {
             case 'stats':
                 $this->saveStatsSettings();
@@ -83,6 +95,10 @@ class WidgetsSettingsController extends AdminController
      */
     public function getColorSchemePreview(): string
     {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $req = 'null';
 
         if ($this->request->getVar('bar_colorScheme')) {
@@ -228,6 +244,10 @@ class WidgetsSettingsController extends AdminController
      */
     public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
     {
+        if (! auth()->user()->can('wiedgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $manager = service('widgets')->manager();
 
         foreach ($manager as $elem) {
