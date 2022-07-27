@@ -366,7 +366,7 @@ input[type="checkbox"]:indeterminate {
     justify-content: space-between;
     background: var(--bf-white);
     border: 1px solid var(--bf-light-grey);
-    opacity: 0.8;
+    opacity: 0.95;
 }
 
 #alerts-wrapper .alert-message {

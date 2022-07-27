@@ -71,6 +71,8 @@ class AuthGroups extends ShieldGroups
         'widgets.settings'    => 'Can view the settings for site Widgets',
         'consent.settings'    => 'Can view the settings for the Consent module',
         'recycler.view'       => 'Can view the Recycler area',
+        'logs.view'           => 'Can view the logs',
+        'logs.manage'         => 'Can manage the logs',
     ];
 
     /**
@@ -89,6 +91,7 @@ class AuthGroups extends ShieldGroups
             'consent.*',
             'recycler.*',
             'site.*',
+            'logs.*',
         ],
         'admin' => [
             'admin.access',
@@ -101,6 +104,7 @@ class AuthGroups extends ShieldGroups
             'beta.access',
             'widgets.*',
             'consent.*',
+            'logs.view',
         ],
         'developer' => [
             'admin.access',
@@ -115,6 +119,7 @@ class AuthGroups extends ShieldGroups
             'widgets.*',
             'consent.*',
             'recycler.*',
+            'logs.*',
         ],
         'user' => [],
         'beta' => [

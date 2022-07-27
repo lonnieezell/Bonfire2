@@ -17,4 +17,5 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static
     $routes->get('users/(:num)/security', 'UserController::security/$1');
     $routes->get('users/(:num)/permissions', 'UserController::permissions/$1');
     $routes->post('users/(:num)/permissions', 'UserController::savePermissions/$1');
+    $routes->post('users/delete-batch', 'UserController::deleteBatch');
 });

@@ -275,6 +275,34 @@ class UserController extends AdminController
     }
 
     /**
+     * Deletes multiple users from the database.
+     * Called via the checked() records in the table.
+     */
+    public function deleteBatch()
+    {
+        if (! auth()->user()->can('users.delete')) {
+            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        $ids = $this->request->getPost('selects');
+
+        if (empty($ids)) {
+            return redirect()->back()->with('error', lang('Bonfire.resourcesNotSelected', ['users']));
+        }
+        $ids = array_keys($ids);
+
+        $users = model(UserModel::class);
+
+        if (! $users->delete($ids)) {
+            log_message('error', implode(' ', $users->errors()));
+
+            return redirect()->back()->with('error', lang('Bonfire.unknownError'));
+        }
+
+        return redirect()->back()->with('message', lang('Bonfire.resourcesDeleted', ['users']));
+    }
+
+    /**
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *

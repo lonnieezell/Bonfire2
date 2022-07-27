@@ -17,6 +17,7 @@ return [
     'resourcesDeleted' => 'The {0} have been deleted.',
     'unknownSaveError' => 'Unknown error saving the {0}.',
     'unknownError'     => 'Unknown error.',
+    'resourcesNotSelected' => 'No {0} were selected.',
 
     'deleteResource' => 'Delete this {0}?',
     'delete'         => 'Delete',

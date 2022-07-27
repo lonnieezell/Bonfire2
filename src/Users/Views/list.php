@@ -19,7 +19,11 @@
             <div class="row">
                 <!-- List Users -->
                 <div class="col" id="user-list">
-                    <?= $this->include('Bonfire\Users\Views\_table') ?>
+                    <form action="<?= site_url(ADMIN_AREA .'/users/delete-batch') ?>" method="post">
+                        <?= csrf_field() ?>
+
+                        <?= $this->include('Bonfire\Users\Views\_table') ?>
+                    </form>
                 </div>
 
                 <!-- Filters -->

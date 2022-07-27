@@ -5,7 +5,7 @@
         <?php foreach ($users as $user) : ?>
             <tr>
                 <td>
-                    <input type="checkbox" name="selects[]" class="form-check" @click="toggleAllCheckboxes()">
+                    <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check">
                 </td>
                 <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>
             </tr>
@@ -13,6 +13,10 @@
     <?php endif ?>
     </tbody>
 </table>
+
+<?php if(auth()->user()->can('users.delete')) : ?>
+    <input type="submit" value="Delete Selected" class="btn btn-sm btn-outline-danger" />
+<?php endif ?>
 
 <div class="text-center">
     <?= $pager->links('default', 'bonfire_full') ?>
