@@ -5,7 +5,7 @@
         <?php foreach ($users as $user) : ?>
             <tr>
                 <td>
-                    <input type="checkbox" name="selects[]" class="form-check">
+                    <input type="checkbox" name="selects[]" class="form-check" @click="toggleAllCheckboxes()">
                 </td>
                 <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>
             </tr>

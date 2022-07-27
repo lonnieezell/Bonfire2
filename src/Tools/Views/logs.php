@@ -16,7 +16,7 @@
             <table class="table table-hover logs" cellspacing="0" width="100%" >
                 <thead>
                     <tr>
-                        <th class="column-check"><input class="check-all" type="checkbox" /></th>
+                        <th class="column-check"><input class="select-all" type="checkbox" /></th>
                         <th class='date'><?= lang('Logs.date'); ?></th>
                         <th><?= lang('Logs.file'); ?></th>
                     </tr>
