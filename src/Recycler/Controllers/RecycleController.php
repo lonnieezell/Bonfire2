@@ -27,6 +27,10 @@ class RecycleController extends AdminController
      */
     public function viewResource()
     {
+        if (! auth()->user()->can('recycler.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $resources    = setting('Recycler.resources');
         $resourceType = $this->request->getVar('r') ?: setting('Recycler.defaultResource');
 
@@ -67,6 +71,10 @@ class RecycleController extends AdminController
      */
     public function restore(string $resourceType, int $resourceId)
     {
+        if (! auth()->user()->can('recycler.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $resources = setting('Recycler.resources');
 
         if (! array_key_exists($resourceType, $resources)) {
@@ -97,6 +105,10 @@ class RecycleController extends AdminController
      */
     public function purge(string $resourceType, int $resourceId)
     {
+        if (! auth()->user()->can('recycler.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $resources = setting('Recycler.resources');
 
         if (! array_key_exists($resourceType, $resources)) {
