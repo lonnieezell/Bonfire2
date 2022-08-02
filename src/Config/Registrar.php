@@ -18,6 +18,7 @@ include_once __DIR__ . '/../Common.php';
 
 class Registrar
 {
+
     private static $nonModuleFolders = [
         'Config', 'Core',
     ];
@@ -38,6 +39,11 @@ class Registrar
      */
     public static function Filters()
     {
+        // CodeIgniter currently doesn't support merging
+        // nested arrays within the registrars....
+        $ref = new \ReflectionClass('Config\Filters');
+        $props = $ref->getDefaultProperties();
+
         return [
             'aliases' => [
                 'session' => SessionAuth::class,
@@ -48,13 +54,13 @@ class Registrar
                 'admin'   => Admin::class,
             ],
             'globals' => [
-                'before' => [
+                'before' => array_merge($props['globals']['before'], [
                     'online' => ['except' => 'site-offline'],
-                ],
-                'after' => [
+                ]),
+                'after' => array_merge($props['globals']['after'], [
                     'alerts',
                     'consent' => ['except' => ADMIN_AREA . '*'],
-                ],
+                ]),
             ],
             'filters' => [
                 'session' => [
