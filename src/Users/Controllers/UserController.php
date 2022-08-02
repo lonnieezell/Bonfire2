@@ -64,7 +64,7 @@ class UserController extends AdminController
     public function create()
     {
         if (! auth()->user()->can('users.create')) {
-            return redirect()->to(ADMIN_AREA .'/users')->with('error', lang('Bonfire.notAuthorized'));
+            return redirect()->to(ADMIN_AREA . '/users')->with('error', lang('Bonfire.notAuthorized'));
         }
 
         $groups = setting('AuthGroups.groups');

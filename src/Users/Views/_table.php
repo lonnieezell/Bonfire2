@@ -4,7 +4,7 @@
     <?php if (isset($users) && count($users)) : ?>
         <?php foreach ($users as $user) : ?>
             <tr>
-                <?php if(auth()->user()->can('users.delete')): ?>
+                <?php if (auth()->user()->can('users.delete')): ?>
                     <td>
                         <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check">
                     </td>
@@ -16,7 +16,7 @@
     </tbody>
 </table>
 
-<?php if(auth()->user()->can('users.delete')) : ?>
+<?php if (auth()->user()->can('users.delete')) : ?>
     <input type="submit" value="Delete Selected" class="btn btn-sm btn-outline-danger" />
 <?php endif ?>
 

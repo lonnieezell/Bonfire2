@@ -6,7 +6,7 @@
             <div class="col">
                 <h2>Users</h2>
             </div>
-            <?php if(auth()->user()->can('users.create')): ?>
+            <?php if (auth()->user()->can('users.create')): ?>
                 <div class="col-auto">
                     <a href="<?= route_to('user-new') ?>" class="btn btn-primary">New User</a>
                 </div>
@@ -21,7 +21,7 @@
             <div class="row">
                 <!-- List Users -->
                 <div class="col" id="user-list">
-                    <form action="<?= site_url(ADMIN_AREA .'/users/delete-batch') ?>" method="post">
+                    <form action="<?= site_url(ADMIN_AREA . '/users/delete-batch') ?>" method="post">
                         <?= csrf_field() ?>
 
                         <?= $this->include('Bonfire\Users\Views\_table') ?>

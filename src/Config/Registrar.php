@@ -11,6 +11,7 @@ use CodeIgniter\Shield\Authentication\Passwords\ValidationRules as PasswordRules
 use CodeIgniter\Shield\Filters\ChainAuth;
 use CodeIgniter\Shield\Filters\SessionAuth;
 use CodeIgniter\Shield\Filters\TokenAuth;
+use ReflectionClass;
 use ReflectionProperty;
 
 include_once __DIR__ . '/Constants.php';
@@ -18,7 +19,6 @@ include_once __DIR__ . '/../Common.php';
 
 class Registrar
 {
-
     private static $nonModuleFolders = [
         'Config', 'Core',
     ];
@@ -41,7 +41,7 @@ class Registrar
     {
         // CodeIgniter currently doesn't support merging
         // nested arrays within the registrars....
-        $ref = new \ReflectionClass('Config\Filters');
+        $ref   = new ReflectionClass('Config\Filters');
         $props = $ref->getDefaultProperties();
 
         return [
