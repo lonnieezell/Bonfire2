@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0679ab6f88d51037ff37dd162ba71d14",
+    "content-hash": "3fa86c3415199fa492bf484fe745f631",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -188,16 +188,16 @@
         },
         {
             "name": "components/font-awesome",
-            "version": "5.15.4",
+            "version": "6.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "e6fd09f30f578915cc0cf186b0dd0da54385b6be"
+                "reference": "2c8dd579722272a218d2cfb510d7ca2d239e48ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/e6fd09f30f578915cc0cf186b0dd0da54385b6be",
-                "reference": "e6fd09f30f578915cc0cf186b0dd0da54385b6be",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/2c8dd579722272a218d2cfb510d7ca2d239e48ad",
+                "reference": "2c8dd579722272a218d2cfb510d7ca2d239e48ad",
                 "shasum": ""
             },
             "type": "component",
@@ -221,9 +221,9 @@
             "description": "Font Awesome, the iconic SVG, font, and CSS framework.",
             "support": {
                 "issues": "https://github.com/components/font-awesome/issues",
-                "source": "https://github.com/components/font-awesome/tree/5.15.4"
+                "source": "https://github.com/components/font-awesome/tree/6.1.2"
             },
-            "time": "2021-08-15T10:31:24+00:00"
+            "time": "2022-07-29T06:42:00+00:00"
         },
         {
             "name": "kint-php/kint",
