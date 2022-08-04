@@ -4,19 +4,10 @@
 [![GitHub license](https://img.shields.io/github/license/lonnieezell/Bonfire2)](https://github.com/lonnieezell/Bonfire2/blob/develop/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/lonnieezell/Bonfire2/pulls)
 
-NOT QUITE READY FOR PRIME TIME. More details at [Patreon](https://www.patreon.com/lonnieezell)
+THIS IS IN BETA CURRENTLY. More details at [Patreon](https://www.patreon.com/lonnieezell)
 
-NOTE: If you need the previous, standalone version, it is available under the `kickstart` branch.
 
-This repo holds the primary code of [Bonfire](https://github.com/lonnieezell/Bonfire2). It was ripped from the previous
-standalone installation and converted into a standalone package. In short order this will be installable through Composer
-to work as an admin panel for your new or existing CodeIgniter 4 projects.
-
-This allows the Bonfire core to be easily upgraded, without touching any parts that
-may have been customized in the final application itself.
-
-It is still undecided if there will be ready-to-download app kickstarter like it was originally written or if it
-will only be available as a drop-in admin panel.
+This repo holds the primary code of [Bonfire](https://github.com/lonnieezell/Bonfire2), an admin panel for your new or existing CodeIgniter 4 projects.
 
 ## What is Bonfire?
 
@@ -29,10 +20,13 @@ Currently, it includes the following features:
 - View Components to reduce the complexity of your UI by allowing you to create reusable HTML snippets, that can be optionally controlled via code.
 - A Settings library that allows you to save config file values to the database and access them whether they're in the db or just in the files.
 - Resource Filter system to make filtering lists of User, Post, etc, simple to implement and with a comfortable, consistent UI.
-- A powerful, very customizable, user authentication/authorization system, [Shield](https://github.com/lonnieezell/codigniter-shield).
+- A powerful, very customizable, user authentication/authorization system, [Shield](https://github.com/codeigniter4/shield).
 - Global search feature that modules can easily integrate into
 - A Recycle Bin to handle restoring/purghing soft deleted models that modules can easily integrate into
-- and more to come...
+- A way to manage cookie consent to help with GDPR rules.
+- Site offline status
+- Online Log viewer/manager
+- and more...
 
 
 ## Server Requirements
@@ -41,7 +35,7 @@ This currently has the same requirements as CodeIgniter 4.
 
 ## Installation
 
-Installation instructions can be found in the [install guide](docs/2.installation.md).
+Installation instructions can be found in the [install guide](docs/installation.md).
 
 ## Third Party Software Used
 
