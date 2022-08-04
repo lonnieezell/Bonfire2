@@ -89,7 +89,7 @@ class GeneralSettingsController extends AdminController
         }
 
         setting('Site.siteName', $this->request->getPost('siteName', FILTER_SANITIZE_STRING));
-        setting('Site.siteOnline', $this->request->getPost('siteOnline') === '1');
+        setting('Site.siteOnline', $this->request->getPost('siteOnline'));
         setting('App.appTimezone', $this->request->getPost('timezone'));
 
         setting('App.dateFormat', $this->request->getPost('dateFormat'));

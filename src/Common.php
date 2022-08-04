@@ -74,6 +74,6 @@ if (! function_exists('site_offline')) {
      */
     function site_offline(): bool
     {
-        return setting('Site.siteOnline') === false;
+        return empty(setting('Site.siteOnline'));
     }
 }

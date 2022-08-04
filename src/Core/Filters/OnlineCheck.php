@@ -31,7 +31,7 @@ class OnlineCheck implements FilterInterface
     {
         helper(['setting', 'auth']);
 
-        if (! setting('Site.siteOnline')) {
+        if (setting('Site.siteOnline') === null) {
             $user = auth()->user();
 
             if ($user === null || (
@@ -39,7 +39,7 @@ class OnlineCheck implements FilterInterface
                 && ! $user->inGroup('superadmin')
                 && ! $user->hasPermission('site.viewOffline')
             )) {
-                return redirect()->to('site-offline');
+                return redirect()->to('/site-offline');
             }
         }
     }
