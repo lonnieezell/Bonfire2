@@ -35,7 +35,7 @@ This currently has the same requirements as CodeIgniter 4.
 
 ## Installation
 
-Installation instructions can be found in the [install guide](docs/installation.md).
+Installation instructions can be found in the [docs](docs/index.md).
 
 ## Third Party Software Used
 
@@ -44,3 +44,5 @@ Installation instructions can be found in the [install guide](docs/installation.
 - [Alpine.js](https://alpinejs.dev/) handles interactivity within the page for the admin area.
 - [htmx](https://htmx.org/) provides AJAX form handling, and more.
 - [Tatter/Alerts](https://github.com/tattersoftware/codeigniter4-alerts) CodeIgniter library for simple user alerts.
+- [CodeIgniter/Shield](https://github.com/codeigniter4/shield) Authentication library (originally developed for Bonfire)
+- [CodeIgniter/Settings](https://github.com/codeigniter4/settings) Database config layer (originally developed for Bonfire)
