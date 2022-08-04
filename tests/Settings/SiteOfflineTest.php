@@ -36,7 +36,7 @@ final class SiteOfflineTest extends TestCase
 
     public function testOnlySuperAdminWhenOff()
     {
-        setting('Site.siteOnline', false);
+        setting('Site.siteOnline', null);
 
         // Superadmin should be able to see the site
         $this->actingAs($this->admin)

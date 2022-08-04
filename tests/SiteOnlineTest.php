@@ -21,7 +21,7 @@ final class SiteOnlineTest extends TestCase
 
     public function testSiteOffline()
     {
-        setting('Site.siteOnline', false);
+        setting('Site.siteOnline', null);
         $response = $this->get('/');
 
         $response->assertRedirectTo('site-offline');
@@ -29,7 +29,7 @@ final class SiteOnlineTest extends TestCase
 
     public function testSiteOfflineSuperAdmin()
     {
-        setting('Site.siteOnline', false);
+        setting('Site.siteOnline', null);
 
         $user = $this->createUser();
         $user->addGroup('superadmin');

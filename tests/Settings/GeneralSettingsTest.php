@@ -52,6 +52,6 @@ final class GeneralSettingsTest extends TestCase
         $response->assertRedirect();
 
         $this->assertSame('My Great Site', setting('Site.siteName'));
-        $this->assertTrue(setting('Site.siteOnline'));
+        $this->assertTrue(setting('Site.siteOnline') === '1');
     }
 }
