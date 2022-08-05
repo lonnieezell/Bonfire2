@@ -31,7 +31,7 @@
                         </tr>
                         <tr>
                             <td>Server Load</td>
-                            <td><?= number_format($serverLoad, 1) ?></td>
+                            <td><?= $serverLoad !== null ? number_format($serverLoad, 1) : 'Unknown' ?></td>
                         </tr>
                         <tr>
                             <td>Max Upload</td>
