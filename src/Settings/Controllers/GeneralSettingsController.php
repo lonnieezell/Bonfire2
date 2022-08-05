@@ -88,7 +88,7 @@ class GeneralSettingsController extends AdminController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        setting('Site.siteName', $this->request->getPost('siteName', FILTER_SANITIZE_STRING));
+        setting('Site.siteName', $this->request->getPost('siteName'));
         setting('Site.siteOnline', $this->request->getPost('siteOnline'));
         setting('App.appTimezone', $this->request->getPost('timezone'));
 
