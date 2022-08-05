@@ -68,7 +68,7 @@ class AuthGroups extends ShieldGroups
         'users.delete'        => 'Can delete existing non-admin users',
         'users.settings'      => 'Can manage User settings in admin area',
         'beta.access'         => 'Can access beta-level features',
-        'site.viewOffline'    => 'Can the site even when in "offline" mode',
+        'site.viewOffline'    => 'Can view the site even when in "offline" mode',
         'widgets.settings'    => 'Can view the settings for site Widgets',
         'consent.settings'    => 'Can view the settings for the Consent module',
         'recycler.view'       => 'Can view the Recycler area',

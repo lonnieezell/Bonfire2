@@ -154,7 +154,8 @@ class GroupSettingsController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user group']));
         }
 
-        $group->setPermissions($this->request->getPost('permissions') ?? []);
+        $permissions = $this->request->getPost('permissions');
+        $group->setPermissions($permissions ?? []);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
