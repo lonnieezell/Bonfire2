@@ -1,8 +1,8 @@
 <a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="/<?= ADMIN_AREA ?>">
     <div class="site-stamp rounded d-inline-flex align-content-center justify-content-center">
-        <?= substr(setting('App.siteName') ?? 'bonfire', 0, 1) ?>
+        <?= substr(setting('Site.siteName') ?? 'bonfire', 0, 1) ?>
     </div>
-    <span class="site-name"><?= setting('App.siteName') ?? 'bonfire' ?></span>
+    <span class="site-name"><?= setting('Site.siteName') ?? 'bonfire' ?></span>
 </a>
 <div class="pt-3">
 
