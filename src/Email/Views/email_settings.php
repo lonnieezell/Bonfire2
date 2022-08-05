@@ -139,7 +139,7 @@
                             <div class="form-group col-12 col-sm-6">
                                 <label for="SMTPCrypto" class="form-label">Encryption</label>
                                 <select name="SMTPCrypto" class="form-select">
-                                    <option value="" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) == '') : ?> selected <?php endif?>>None</option>
+                                    <option value="" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === '') : ?> selected <?php endif?>>None</option>
                                     <option value="tls" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'tls') : ?> selected <?php endif?>>TLS</option>
                                     <option value="ssl" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'ssl') : ?> selected <?php endif?>>SSL</option>
                                 </select>
