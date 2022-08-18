@@ -155,7 +155,7 @@ class Install extends BaseCommand
         $name   = CLI::prompt('Database name:', 'bonfire');
         $user   = CLI::prompt('Database username:', 'root');
         $pass   = CLI::prompt('Database password:', 'root');
-        $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3']);
+        $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $prefix = CLI::prompt('Table prefix:');
 
         $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
