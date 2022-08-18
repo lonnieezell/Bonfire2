@@ -58,6 +58,7 @@ class Bonfire
         }
 
         $this->discoverCoreModules();
+        $this->discoverAppModules();
         $this->initModules();
     }
 
@@ -143,6 +144,56 @@ class Bonfire
             }
 
             cache()->save('bf-modules-search', $modules);
+        }
+
+        // save instances of our module configs
+        foreach ($modules as $namespace => $dir) {
+            if (! is_file($dir . '/Module.php')) {
+                continue;
+            }
+
+            include_once $dir . '/Module.php';
+            $className                       = $namespace . '\Module';
+            $this->moduleConfigs[$namespace] = new $className();
+        }
+    }
+
+    private function discoverAppModules()
+    {
+        if (! $modules = cache('app-modules-search')) {
+            $modules  = [];
+            $excluded = ['Core', 'Config', 'Language', 'Views'];
+
+            $paths = config('Bonfire')->appModules;
+
+            if (! is_array($paths) || empty($paths)) {
+                log_message('debug', 'No app modules directories specified. Skipping.');
+                return;
+            }
+
+            foreach($paths as $namespace => $dir) {
+                if (! is_dir($dir)) {
+                    continue;
+                }
+
+                $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+                $map = directory_map($dir, 1);
+
+                foreach ($map as $row) {
+                    if (substr($row, -1) !== DIRECTORY_SEPARATOR) {
+                        continue;
+                    }
+
+                    $name = trim($row, DIRECTORY_SEPARATOR);
+                    if (in_array($name, $excluded, true)) {
+                        continue;
+                    }
+
+                    $modules["{$namespace}\\{$name}"] ="{$dir}/{$name}";
+                }
+            }
+
+            // cache()->save('app-modules-search', $modules);
         }
 
         // save instances of our module configs

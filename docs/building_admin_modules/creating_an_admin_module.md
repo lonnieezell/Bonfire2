@@ -7,11 +7,9 @@ into the admin area. Other than that you will be able to take advantage of solut
 directly into settings pages, be part of the global search results, automatically display and manage filtering of
 a resource list, or show up in the Recycler.
 
-Admin Modules can be located any place that the autoloader can find it, but an `app/Modules` folder exists for you
-to use if you'd like. As an example, we could create a Blog folder in modules to store our new blog package. You would
-then need to create the standard directories, `Config`, `Controllers`, `Models` and `Views` at the very least.
-A `Module.php` file is also expected to live here, which we will look at in more detail a little later.
-The directory structure would look like:
+## Configuring Module Locations
+
+In order for Bonfire to discover your modules, you need to specify one or more locations that you plan on storing the modules. By default, the system will look within `app/Modules` for directories. As an example, we could create a Blog folder to store our new blog package. You would then need to create the standard directories, `Config`, `Controllers`, `Models` and `Views` at the very least. A `Module.php` file is also expected to live here, which we will look at in more detail a little later. The directory structure would look like:
 
 ```
 app/
@@ -24,18 +22,23 @@ app/
             Module.php
 ```
 
-## Registering The Module
-
-Each module must have its namespace registered manually. This is done in `app/Config/Autoload.php`.
+All files within the Blog directory would be expected to live within the `App\Modules\{ModuleName}` namespace, i.e. `App\Modules\Blog\Config\Routes`. You can customize this by editing `Config\Bonfire` and changing the key of the `$appModules` setting within it.
 
 ```php
-public $psr4 = [
-        APP_NAMESPACE => APPPATH, // For custom app namespace
-        'Config'      => APPPATH . 'Config',
-        'Bonfire'     => ROOTPATH . 'bonfire',
-        'MyCode\Blog' => ROOTPATH . 'app/Modules/Blog',
+public $appModules = [
+    'App\Modules' => APPPATH .'Modules',
 ];
 ```
+
+For example, if I would prefer the modules to simply live within my company's namespace, `Acme`, I could edit the key to reflect that:
+
+```php
+public $appModules = [
+    'Acme' => APPPATH .'Modules',
+];
+```
+
+If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.
 
 ## The Module File
 
@@ -44,7 +47,7 @@ menus, insert itself into the existing sidebar menus, etc. The `initAdmin` metho
 for displaying and admin page should be done.
 
 ```php
-namespace MyCode\Blog;
+namespace Acme\Blog;
 
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
