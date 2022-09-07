@@ -9,3 +9,12 @@ $routes->group(ADMIN_AREA . '/tools', ['namespace' => '\Bonfire\Tools\Controller
     $routes->get('view-log/(:segment)', '\Bonfire\Tools\Controllers\LogsController::view/$1', ['as' => 'view-log']);
     $routes->post('delete-log', '\Bonfire\Tools\Controllers\LogsController::delete', ['as' => 'log-delete']);
 });
+
+$routes->get('render-test', function() {
+    $data = [
+        'title' => 'Test',
+        'content' => 'This is a test',
+    ];
+
+    return render('admin', '\Bonfire\Tools\Views\index', $data);
+});
