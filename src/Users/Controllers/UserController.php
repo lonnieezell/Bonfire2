@@ -386,7 +386,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        $user->syncPermissions($this->request->getPost('permissions') ?? []);
+        $user->syncPermissions(...$this->request->getPost('permissions') ?? []);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
