@@ -28,7 +28,7 @@ class UserController extends AdminController
     /**
      * Display the uses currently in the system.
      *
-     * @return string
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function list()
     {
@@ -201,7 +201,7 @@ class UserController extends AdminController
         }
 
         // Save the user's groups
-        $user->syncGroups($this->request->getPost('groups') ?? []);
+        $user->syncGroups(...($this->request->getPost('groups') ?? []));
 
         // Save the user's meta fields
         $user->syncMeta($this->request->getPost('meta') ?? []);
@@ -314,7 +314,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function security(int $userId)
     {
@@ -343,7 +343,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string|void
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function permissions(int $userId)
     {
@@ -386,7 +386,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        $user->syncPermissions($this->request->getPost('permissions') ?? []);
+        $user->syncPermissions(...($this->request->getPost('permissions') ?? []));
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
