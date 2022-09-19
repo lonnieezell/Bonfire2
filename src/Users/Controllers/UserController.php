@@ -199,9 +199,9 @@ class UserController extends AdminController
                 model(UserIdentityModel::class)->save($identity);
             }
         }
-
         // Save the user's groups
-        $user->syncGroups(...($this->request->getPost('groups') ?? []));
+        $groups = $this->request->getPost('groups') ?? [];
+        $user->syncGroups(...$groups);
 
         // Save the user's meta fields
         $user->syncMeta($this->request->getPost('meta') ?? []);
@@ -385,8 +385,8 @@ class UserController extends AdminController
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
-
-        $user->syncPermissions(...($this->request->getPost('permissions') ?? []));
+        $permissions = $this->request->getPost('permissions') ?? [];
+        $user->syncPermissions(...$permissions);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
