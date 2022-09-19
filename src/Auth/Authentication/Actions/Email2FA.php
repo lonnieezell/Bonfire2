@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Bonfire\Auth\Authentication\Actions;
 
 use Bonfire\View\Themeable;
@@ -129,32 +127,6 @@ class Email2FA extends ShieldEmail2FA
     }
 
     /**
-     * Creates an identity for the action of the user.
-     *
-     * @return string secret
-     */
-    public function createIdentity(User $user): string
-    {
-        /** @var UserIdentityModel $identityModel */
-        $identityModel = model(UserIdentityModel::class);
-
-        // Delete any previous identities for action
-        $identityModel->deleteIdentitiesByType($user, $this->type);
-
-        $generator = static fn (): string => random_string('nozero', 6);
-
-        return $identityModel->createCodeIdentity(
-            $user,
-            [
-                'type'  => $this->type,
-                'name'  => 'login',
-                'extra' => lang('Auth.need2FA'),
-            ],
-            $generator
-        );
-    }
-
-    /**
      * Returns an identity for the action of the user.
      */
     private function getIdentity(User $user): ?UserIdentity
@@ -166,13 +138,5 @@ class Email2FA extends ShieldEmail2FA
             $user,
             $this->type
         );
-    }
-
-    /**
-     * Returns the string type of the action class.
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 }

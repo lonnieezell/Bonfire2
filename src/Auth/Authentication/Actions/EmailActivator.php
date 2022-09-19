@@ -1,14 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Bonfire\Auth\Authentication\Actions;
 
 use Bonfire\View\Themeable;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
@@ -74,16 +70,6 @@ class EmailActivator extends ShieldEmailActivator
     }
 
     /**
-     * This method is unused.
-     *
-     * @return Response|string
-     */
-    public function handle(IncomingRequest $request)
-    {
-        throw new PageNotFoundException();
-    }
-
-    /**
      * Verifies the email address and code matches an
      * identity we have for that user.
      *
@@ -120,32 +106,6 @@ class EmailActivator extends ShieldEmailActivator
     }
 
     /**
-     * Creates an identity for the action of the user.
-     *
-     * @return string secret
-     */
-    public function createIdentity(User $user): string
-    {
-        /** @var UserIdentityModel $identityModel */
-        $identityModel = model(UserIdentityModel::class);
-
-        // Delete any previous identities for action
-        $identityModel->deleteIdentitiesByType($user, $this->type);
-
-        $generator = static fn (): string => random_string('nozero', 6);
-
-        return $identityModel->createCodeIdentity(
-            $user,
-            [
-                'type'  => $this->type,
-                'name'  => 'register',
-                'extra' => lang('Auth.needVerification'),
-            ],
-            $generator
-        );
-    }
-
-    /**
      * Returns an identity for the action of the user.
      */
     private function getIdentity(User $user): ?UserIdentity
@@ -157,13 +117,5 @@ class EmailActivator extends ShieldEmailActivator
             $user,
             $this->type
         );
-    }
-
-    /**
-     * Returns the string type of the action class.
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 }
