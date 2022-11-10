@@ -917,16 +917,16 @@
         },
         {
             "name": "tatter/alerts",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tattersoftware/codeigniter4-alerts.git",
-                "reference": "96d3716f86c38ff3fdabf02354724bda356eb582"
+                "reference": "aa7a57d5aaef3b9d0103f6fe17eca86c147fcf04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/96d3716f86c38ff3fdabf02354724bda356eb582",
-                "reference": "96d3716f86c38ff3fdabf02354724bda356eb582",
+                "url": "https://api.github.com/repos/tattersoftware/codeigniter4-alerts/zipball/aa7a57d5aaef3b9d0103f6fe17eca86c147fcf04",
+                "reference": "aa7a57d5aaef3b9d0103f6fe17eca86c147fcf04",
                 "shasum": ""
             },
             "require": {
@@ -968,7 +968,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tattersoftware/codeigniter4-alerts/issues",
-                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v3.0.0"
+                "source": "https://github.com/tattersoftware/codeigniter4-alerts/tree/v3.1.0"
             },
             "funding": [
                 {
@@ -980,7 +980,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-07-22T16:05:37+00:00"
+            "time": "2022-11-10T19:00:28+00:00"
         }
     ],
     "packages-dev": [
