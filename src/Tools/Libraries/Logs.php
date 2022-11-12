@@ -58,7 +58,6 @@ class Logs
         $superLog = [];
 
         foreach ($logs as $log) {
-
             // get the logLine Start
             $logLineStart = $this->getLogLineStart($log);
 
@@ -101,6 +100,7 @@ class Logs
      * in the underlying log file
      *
      * @returns array | each line of file contents is an entry in the returned array.
+     *
      * @params complete fileName
      *
      * @param mixed $fileName

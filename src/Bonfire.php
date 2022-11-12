@@ -168,10 +168,11 @@ class Bonfire
 
             if (! is_array($paths) || empty($paths)) {
                 log_message('debug', 'No app modules directories specified. Skipping.');
+
                 return;
             }
 
-            foreach($paths as $namespace => $dir) {
+            foreach ($paths as $namespace => $dir) {
                 if (! is_dir($dir)) {
                     continue;
                 }
@@ -189,7 +190,7 @@ class Bonfire
                         continue;
                     }
 
-                    $modules["{$namespace}\\{$name}"] ="{$dir}/{$name}";
+                    $modules["{$namespace}\\{$name}"] = "{$dir}/{$name}";
                 }
             }
 

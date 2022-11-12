@@ -262,7 +262,6 @@ class ChartsItem implements Item
                 $backgroundColor = setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') . "'" : 'null';
                 $borderColor     = $backgroundColor;
                 break;
-
         }
 
         if (str_replace("'", '', $backgroundColor) !== 'null') {

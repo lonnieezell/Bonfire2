@@ -5,26 +5,26 @@ namespace Bonfire\Auth\Authentication\Actions;
 use Bonfire\View\Themeable;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Shield\Authentication\Actions\EmailActivator as ShieldEmailActivator;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Exceptions\LogicException;
 use CodeIgniter\Shield\Exceptions\RuntimeException;
-use CodeIgniter\Shield\Models\UserIdentityModel;
 
-use CodeIgniter\Shield\Authentication\Actions\EmailActivator as ShieldEmailActivator;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 
 class EmailActivator extends ShieldEmailActivator
 {
     use Themeable;
+
+    private string $type = Session::ID_TYPE_EMAIL_ACTIVATE;
 
     public function __construct()
     {
         $this->theme = 'Auth';
         helper('auth');
     }
-
-    private string $type = Session::ID_TYPE_EMAIL_ACTIVATE;
 
     /**
      * Shows the initial screen to the user telling them
@@ -92,6 +92,7 @@ class EmailActivator extends ShieldEmailActivator
         // No match - let them try again.
         if (! $authenticator->checkAction($identity, $postedToken)) {
             session()->setFlashdata('error', lang('Auth.invalidActivateToken'));
+
             return $this->render(config('Auth')->views['action_email_activate_show']);
         }
 

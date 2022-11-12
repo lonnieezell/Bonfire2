@@ -105,9 +105,9 @@ class UserController extends AdminController
     /**
      * Creates or saves the basic user details.
      *
-     * @throws ReflectionException
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
+     *
+     * @throws ReflectionException
      */
     public function save(?int $userId = null)
     {
@@ -212,9 +212,9 @@ class UserController extends AdminController
     /**
      * Change user's password.
      *
-     * @throws ReflectionException
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
+     *
+     * @throws ReflectionException
      */
     public function changePassword(?int $userId = null)
     {

@@ -73,10 +73,6 @@ if (! function_exists('render')) {
     /**
      * Renders a view using the current theme.
      *
-     * @param string $view
-     * @param array  $data
-     * @param array  $options
-     *
      * @return string
      */
     function render(string $theme, string $view, array $data = [], array $options = [])

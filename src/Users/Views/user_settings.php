@@ -169,10 +169,10 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\CompositionValidator"
                                 <?php if (in_array(
-    'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                    'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
+                                    old('validators', setting('Auth.passwordValidators')),
+                                    true
+                                )) : ?>
                                     checked
                                 <?php endif ?>
                             >

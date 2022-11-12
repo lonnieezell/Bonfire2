@@ -65,9 +65,9 @@ class RecycleController extends AdminController
     /**
      * Restores a single record.
      *
-     * @throws ReflectionException
-     *
      * @return RedirectResponse
+     *
+     * @throws ReflectionException
      */
     public function restore(string $resourceType, int $resourceId)
     {

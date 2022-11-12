@@ -5,12 +5,12 @@ namespace Bonfire\Auth\Authentication\Actions;
 use Bonfire\View\Themeable;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Shield\Authentication\Actions\Email2FA as ShieldEmail2FA;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Exceptions\RuntimeException;
 use CodeIgniter\Shield\Models\UserIdentityModel;
-use CodeIgniter\Shield\Authentication\Actions\Email2FA as ShieldEmail2FA;
 
 /**
  * Class Email2FA
@@ -21,13 +21,13 @@ class Email2FA extends ShieldEmail2FA
 {
     use Themeable;
 
+    private string $type = Session::ID_TYPE_EMAIL_2FA;
+
     public function __construct()
     {
         $this->theme = 'Auth';
         helper('auth');
     }
-
-    private string $type = Session::ID_TYPE_EMAIL_2FA;
 
     /**
      * Displays the "Hey we're going to send you a number to your email"
@@ -44,6 +44,7 @@ class Email2FA extends ShieldEmail2FA
         }
 
         $this->createIdentity($user);
+
         return $this->render(config('Auth')->views['action_email_2fa'], [
             'user' => $user,
         ]);
@@ -119,6 +120,7 @@ class Email2FA extends ShieldEmail2FA
         // Token mismatch? Let them try again...
         if (! $authenticator->checkAction($identity, $postedToken)) {
             session()->setFlashdata('error', lang('Auth.invalid2FAToken'));
+
             return $this->render(config('Auth')->views['action_email_2fa_verify']);
         }
 
