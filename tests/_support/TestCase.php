@@ -63,7 +63,7 @@ abstract class TestCase extends CIUnitTestCase
     /**
      * Creates a simple user with email/password identities.
      */
-    protected function createUser(?array $params = null)
+    protected function createUser(?array $params = null): User
     {
         $email = $params['email']
             /** @phpstan-ignore-next-line */
@@ -74,7 +74,7 @@ abstract class TestCase extends CIUnitTestCase
         unset($params['email'], $params['password']);
 
         /**
-         * @var User
+         * @var User $user
          */
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([

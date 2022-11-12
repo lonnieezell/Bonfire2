@@ -3,6 +3,7 @@
 namespace Tests\Users;
 
 use Bonfire\Users\User;
+use CodeIgniter\Router\Exceptions\RedirectException;
 use Tests\Support\TestCase;
 
 /**
@@ -16,7 +17,7 @@ final class UserFormTest extends TestCase
     /**
      * @var User
      */
-    protected $user;
+    protected User $user;
 
     protected function setUp(): void
     {
@@ -28,6 +29,10 @@ final class UserFormTest extends TestCase
         setting('Auth.actions', ['login' => null, 'register' => null]);
     }
 
+    /**
+     * @throws RedirectException
+     * @throws \Exception
+     */
     public function testCanSeeUserList()
     {
         $result = $this->actingAs($this->user)

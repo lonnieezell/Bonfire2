@@ -67,6 +67,8 @@ require_once SYSTEMPATH . 'Config/BaseService.php';
 require_once SYSTEMPATH . 'Config/Services.php';
 require_once APPPATH . 'Config/Services.php';
 
+require_once SUPPORTPATH . 'Config/Security.php';
+
 // Use Config\Services as CodeIgniter\Services
 if (! class_exists('CodeIgniter\Services', false)) {
     class_alias('Config\Services', 'CodeIgniter\Services');
