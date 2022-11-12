@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Auth;
+namespace Tests\Auth;
 
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Test\DatabaseTestTrait;

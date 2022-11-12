@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Consent;
+namespace Tests\Consent;
 
 use CodeIgniter\Config\Factories;
 use Tests\Support\TestCase;

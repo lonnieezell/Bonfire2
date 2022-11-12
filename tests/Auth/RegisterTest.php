@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Auth;
+namespace Tests\Auth;
 
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator;
 use CodeIgniter\Test\DatabaseTestTrait;

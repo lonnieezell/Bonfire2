@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Users;
+namespace Tests\Users;
 
 use Bonfire\Users\User;
 use Tests\Support\TestCase;
