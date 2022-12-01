@@ -62,6 +62,6 @@
 <?= $this->section('scripts') ?>
 
   <?= asset_link('auth/js/passStrength.js', 'js') ?>
-  <?= asset_link('auth/js/zxcvbn.js', 'js') ?>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
 
 <?= $this->endSection() ?>
