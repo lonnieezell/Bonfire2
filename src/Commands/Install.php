@@ -83,7 +83,7 @@ class Install extends BaseCommand
     {
         helper('filesystem');
 
-        if (! CLI::getOption('continue')) {
+        if (!CLI::getOption('continue')) {
             $this->ensureEnvFile();
             $this->setAppUrl();
             $this->setEncryptionKey();
@@ -94,6 +94,7 @@ class Install extends BaseCommand
             CLI::newLine();
             CLI::write('If you need to create your database, you may run:', 'yellow');
             CLI::write("\tphp spark db:create <database name>", 'green');
+            CLI::write('If you chose SQLite3 as your database driver, the database will be created automatically on the next step (migration).', 'yellow');
             CLI::newLine();
             CLI::write('To migrate and create the initial user, please run: ', 'yellow');
             CLI::write("\tphp spark bf:install --continue", 'green');
@@ -118,14 +119,14 @@ class Install extends BaseCommand
             return;
         }
 
-        if (! file_exists(ROOTPATH . 'env')) {
+        if (!file_exists(ROOTPATH . 'env')) {
             CLI::error('The original `env` file is not found.');
 
             exit();
         }
 
         // Create the .env file
-        if (! copy(ROOTPATH . 'env', ROOTPATH . '.env')) {
+        if (!copy(ROOTPATH . 'env', ROOTPATH . '.env')) {
             CLI::error('Error copying the env file');
         }
 
@@ -151,18 +152,22 @@ class Install extends BaseCommand
 
     private function setDatabase()
     {
-        $host   = CLI::prompt('Database host:', 'localhost');
-        $name   = CLI::prompt('Database name:', 'bonfire');
-        $user   = CLI::prompt('Database username:', 'root');
-        $pass   = CLI::prompt('Database password:', 'root');
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
-        $prefix = CLI::prompt('Table prefix:');
+        $name   = CLI::prompt('Database name:', 'bonfire');
+        if ($driver != 'SQLite3') {
+            $host   = CLI::prompt('Database host:', 'localhost');
+            $user   = CLI::prompt('Database username:', 'root');
+            $pass   = CLI::prompt('Database password:', 'root');
+        }
+        $prefix = CLI::prompt('Table prefix, if any (like bf_)');
 
-        $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
-        $this->updateEnvFile('# database.default.database = ci4', "database.default.database = {$name}");
-        $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
-        $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
         $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
+        $this->updateEnvFile('# database.default.database = ci4', "database.default.database = {$name}");
+        if ($driver != 'SQLite3') {
+            $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
+            $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
+            $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
+        }
         $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
     }
 

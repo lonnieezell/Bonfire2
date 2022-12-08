@@ -2,7 +2,7 @@
       class="avatar overflow-hidden" title="<?= $user->name() ?>"
 >
     <?php if ($user->avatarLink() !== '') : ?>
-        <img src="<?= $user->avatarLink($size) ?>" alt="<?= $user->name() ?>">
+        <img class="img-fluid" src="<?= $user->avatarLink($size) ?>" alt="<?= $user->name() ?>">
     <?php else :?>
         <?= $idString ?>
     <?php endif ?>
