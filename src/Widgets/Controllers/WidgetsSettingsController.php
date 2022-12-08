@@ -82,7 +82,6 @@ class WidgetsSettingsController extends AdminController
 
             default:
                 $this->saveWidgetSettings();
-                // dd($this->request->getVar('widget'));
         }
 
         alert('success', 'The settings have been saved.');
