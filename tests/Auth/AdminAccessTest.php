@@ -5,6 +5,7 @@ namespace Tests\Auth;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Router\Exceptions\RedirectException;
 use CodeIgniter\Test\DatabaseTestTrait;
+use Exception;
 use Tests\Support\TestCase;
 
 /**
@@ -18,8 +19,8 @@ final class AdminAccessTest extends TestCase
     protected $namespace;
 
     /**
+     * @throws Exception
      * @throws RedirectException
-     * @throws \Exception
      */
     public function testAdminsCanAccess()
     {
@@ -35,8 +36,8 @@ final class AdminAccessTest extends TestCase
     }
 
     /**
+     * @throws Exception
      * @throws RedirectException
-     * @throws \Exception
      */
     public function testCannotAccessAdminWithoutPermission()
     {
@@ -54,8 +55,8 @@ final class AdminAccessTest extends TestCase
     }
 
     /**
+     * @throws Exception
      * @throws RedirectException
-     * @throws \Exception
      */
     public function testCannotViewNavItemsWithoutPermission()
     {

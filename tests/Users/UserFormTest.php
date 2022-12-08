@@ -4,6 +4,7 @@ namespace Tests\Users;
 
 use Bonfire\Users\User;
 use CodeIgniter\Router\Exceptions\RedirectException;
+use Exception;
 use Tests\Support\TestCase;
 
 /**
@@ -14,9 +15,6 @@ final class UserFormTest extends TestCase
     protected $refresh = true;
     protected $namespace;
 
-    /**
-     * @var User
-     */
     protected User $user;
 
     protected function setUp(): void
@@ -30,8 +28,8 @@ final class UserFormTest extends TestCase
     }
 
     /**
+     * @throws Exception
      * @throws RedirectException
-     * @throws \Exception
      */
     public function testCanSeeUserList()
     {

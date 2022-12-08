@@ -83,7 +83,7 @@ class Install extends BaseCommand
     {
         helper('filesystem');
 
-        if (!CLI::getOption('continue')) {
+        if (! CLI::getOption('continue')) {
             $this->ensureEnvFile();
             $this->setAppUrl();
             $this->setEncryptionKey();
@@ -119,14 +119,14 @@ class Install extends BaseCommand
             return;
         }
 
-        if (!file_exists(ROOTPATH . 'env')) {
+        if (! file_exists(ROOTPATH . 'env')) {
             CLI::error('The original `env` file is not found.');
 
             exit();
         }
 
         // Create the .env file
-        if (!copy(ROOTPATH . 'env', ROOTPATH . '.env')) {
+        if (! copy(ROOTPATH . 'env', ROOTPATH . '.env')) {
             CLI::error('Error copying the env file');
         }
 
@@ -154,16 +154,16 @@ class Install extends BaseCommand
     {
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $name   = CLI::prompt('Database name:', 'bonfire');
-        if ($driver != 'SQLite3') {
-            $host   = CLI::prompt('Database host:', 'localhost');
-            $user   = CLI::prompt('Database username:', 'root');
-            $pass   = CLI::prompt('Database password:', 'root');
+        if ($driver !== 'SQLite3') {
+            $host = CLI::prompt('Database host:', 'localhost');
+            $user = CLI::prompt('Database username:', 'root');
+            $pass = CLI::prompt('Database password:', 'root');
         }
         $prefix = CLI::prompt('Table prefix, if any (like bf_)');
 
         $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
         $this->updateEnvFile('# database.default.database = ci4', "database.default.database = {$name}");
-        if ($driver != 'SQLite3') {
+        if ($driver !== 'SQLite3') {
             $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
             $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
             $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");

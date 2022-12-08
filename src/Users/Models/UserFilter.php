@@ -59,8 +59,8 @@ class UserFilter extends UserModel
      */
     public function filter(?array $params = null)
     {
-        // two ways to go; if we have to search by groups, we have 
-        // to perform two queries instead of one to avoid dublicates
+        // two ways to go; if we have to search by groups, we have
+        // to perform two queries instead of one to avoid duplicates
         if (isset($params['role']) && count($params['role'])) {
             $secondQuery = true;
             $this->select('users.id');
@@ -81,10 +81,11 @@ class UserFilter extends UserModel
             $this->where('last_active >=', Time::now()->subDays($days)->toDateTimeString());
         }
 
-        // if we need second query to avoid dublicates: 
+        // if we need second query to avoid duplicates:
         if ($secondQuery) {
             $idList = $this->findAll();
-            $in = [];
+            $in     = [];
+
             foreach ($idList as $v) {
                 $in[] = $v->id;
             }
@@ -92,6 +93,7 @@ class UserFilter extends UserModel
             $this->select('users.*');
             $this->whereIn('id', $nodup);
         }
+
         return $this;
     }
 
