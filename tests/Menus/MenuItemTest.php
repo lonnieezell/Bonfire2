@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Menus;
+namespace Tests\Menus;
 
 use Bonfire\Menus\MenuItem;
 use Tests\Support\TestCase;

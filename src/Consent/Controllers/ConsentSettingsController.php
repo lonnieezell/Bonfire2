@@ -20,8 +20,6 @@ class ConsentSettingsController extends AdminController
 
     /**
      * Display the Consent settings page.
-     *
-     * @return string
      */
     public function index()
     {

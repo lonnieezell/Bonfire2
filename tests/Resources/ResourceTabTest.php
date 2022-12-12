@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Resources;
+namespace Tests\Resources;
 
 use Bonfire\Resources\ResourceTab;
 use CodeIgniter\Test\DatabaseTestTrait;

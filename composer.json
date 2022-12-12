@@ -14,7 +14,7 @@
 		"ext-json": "*",
 		"codeigniter4/framework": "^4.2",
 		"components/font-awesome": "^5.15",
-		"codeigniter4/shield": "^1.0.0",
+		"codeigniter4/shield": "dev-develop",
 		"roave/security-advisories": "dev-latest",
 		"tatter/alerts": "^3.0"
 	},
@@ -64,7 +64,7 @@
 		"test": "./vendor/bin/phpunit"
 	},
 	"support": {
-		"forum": "http://forum.codeigniter.com/",
+		"forum": "https://forum.codeigniter.com/",
 		"source": "https://github.com/lonnieezell/bonfire2-internals"
 	}
 }

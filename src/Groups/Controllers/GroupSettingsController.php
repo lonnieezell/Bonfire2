@@ -22,8 +22,6 @@ class GroupSettingsController extends AdminController
 
     /**
      * Displays a list of all Roles in the system.
-     *
-     * @return string
      */
     public function list()
     {

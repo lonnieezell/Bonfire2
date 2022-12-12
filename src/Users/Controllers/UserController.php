@@ -28,7 +28,7 @@ class UserController extends AdminController
     /**
      * Display the uses currently in the system.
      *
-     * @return string
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function list()
     {
@@ -105,9 +105,9 @@ class UserController extends AdminController
     /**
      * Creates or saves the basic user details.
      *
-     * @throws ReflectionException
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
+     *
+     * @throws ReflectionException
      */
     public function save(?int $userId = null)
     {
@@ -212,9 +212,9 @@ class UserController extends AdminController
     /**
      * Change user's password.
      *
-     * @throws ReflectionException
-     *
      * @return \CodeIgniter\HTTP\RedirectResponse|void
+     *
+     * @throws ReflectionException
      */
     public function changePassword(?int $userId = null)
     {
@@ -314,7 +314,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function security(int $userId)
     {
@@ -343,7 +343,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string|void
+     * @return \CodeIgniter\HTTP\RedirectResponse|string
      */
     public function permissions(int $userId)
     {

@@ -1,9 +1,11 @@
 <?php
 
-namespace Tests\Bonfire\Auth;
+namespace Tests\Auth;
 
 use CodeIgniter\Config\Factories;
+use CodeIgniter\Router\Exceptions\RedirectException;
 use CodeIgniter\Test\DatabaseTestTrait;
+use Exception;
 use Tests\Support\TestCase;
 
 /**
@@ -16,6 +18,10 @@ final class AdminAccessTest extends TestCase
     protected $refresh = true;
     protected $namespace;
 
+    /**
+     * @throws Exception
+     * @throws RedirectException
+     */
     public function testAdminsCanAccess()
     {
         $admin = $this->createUser();
@@ -29,6 +35,10 @@ final class AdminAccessTest extends TestCase
         $response->assertOK();
     }
 
+    /**
+     * @throws Exception
+     * @throws RedirectException
+     */
     public function testCannotAccessAdminWithoutPermission()
     {
         $admin = $this->createUser();
@@ -44,6 +54,10 @@ final class AdminAccessTest extends TestCase
         $response->assertSessionHas('error', lang('Bonfire.notAuthorized'));
     }
 
+    /**
+     * @throws Exception
+     * @throws RedirectException
+     */
     public function testCannotViewNavItemsWithoutPermission()
     {
         $config                  = config('AuthGroups');
@@ -59,7 +73,6 @@ final class AdminAccessTest extends TestCase
         $response->assertSee('Dashboard');
 
         // Cannot see the User menus
-        $response->assertDontSee('Users');
         $response->assertDontSee('Users');
         $response->assertDontSee('User Groups');
 

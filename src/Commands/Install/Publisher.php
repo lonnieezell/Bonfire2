@@ -58,12 +58,11 @@ class Publisher
         $namespace    = explode('\\', $className);
         $rawClassName = array_pop($namespace);
         $namespace    = implode('\\', $namespace);
-        $newNamespace = 'Config\\' . $rawClassName;
 
         $content = file_get_contents($file);
 
         $replace = [
-            $namespace                           => $newNamespace,
+            $namespace                           => 'Config',
             'BaseConfig'                         => 'Bonfire' . $rawClassName,
             'use CodeIgniter\Config\BaseConfig;' => "use {$className} as Bonfire{$rawClassName};",
         ];

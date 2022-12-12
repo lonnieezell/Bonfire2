@@ -9,7 +9,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Tests\Bonfire\Widgets;
+namespace Tests\Widgets;
 
 use Bonfire\Widgets\Types\Stats\StatsItem;
 use Tests\Support\TestCase;

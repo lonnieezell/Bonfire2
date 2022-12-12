@@ -68,8 +68,8 @@ class UserSettingsController extends BaseController
 
         // Actions
         $actions             = setting('Auth.actions');
-        $actions['login']    = $this->request->getPost('email2FA') ?? false;
-        $actions['register'] = $this->request->getPost('emailActivation') ?? false;
+        $actions['login']    = $this->request->getPost('email2FA') ?? null;
+        $actions['register'] = $this->request->getPost('emailActivation') ?? null;
         setting('Auth.actions', $actions);
 
         // Remember Me

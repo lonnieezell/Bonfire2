@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Groups;
+namespace Tests\Groups;
 
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Authorization\Groups;

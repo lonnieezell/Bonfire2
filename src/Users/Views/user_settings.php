@@ -34,8 +34,8 @@
                     <div class="col-12 col-sm-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="emailActivation"
-                                   value='Shield\Authentication\Actions\EmailActivate' id="email-activation"
-                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'Shield\Authentication\Actions\EmailActivate') : ?>
+                                   value='CodeIgniter\Shield\Authentication\Actions\EmailActivator' id="email-activation"
+                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'CodeIgniter\Shield\Authentication\Actions\EmailActivator') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -120,8 +120,8 @@
                     <div class="col-12 col-sm-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="email2FA"
-                                   value="Shield\Authentication\Actions\Email2FA" id="email-2fa"
-                                <?php if (old('email2FA', setting('Auth.actions')['login']) === 'Shield\Authentication\Actions\Email2FA') : ?>
+                                   value="CodeIgniter\Shield\Authentication\Actions\Email2FA" id="email-2fa"
+                                <?php if (old('email2FA', setting('Auth.actions')['login']) === 'CodeIgniter\Shield\Authentication\Actions\Email2FA') : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -169,10 +169,10 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\CompositionValidator"
                                 <?php if (in_array(
-    'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
-    old('validators', setting('Auth.passwordValidators')),
-    true
-)) : ?>
+                                    'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
+                                    old('validators', setting('Auth.passwordValidators')),
+                                    true
+                                )) : ?>
                                     checked
                                 <?php endif ?>
                             >

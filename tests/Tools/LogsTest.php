@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Logs;
+namespace Tests\Logs;
 
 use Bonfire\Tools\Libraries\Logs;
 use Tests\Support\TestCase;

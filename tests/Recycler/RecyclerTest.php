@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bonfire\Recycler;
+namespace Tests\Recycler;
 
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;

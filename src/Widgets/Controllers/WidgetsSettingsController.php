@@ -21,7 +21,7 @@ class WidgetsSettingsController extends AdminController
     /**
      * Display the Widgets settings page.
      */
-    public function index(): string
+    public function index()
     {
         if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
@@ -33,7 +33,7 @@ class WidgetsSettingsController extends AdminController
         ]);
     }
 
-    public function show(string $alias): string
+    public function show(string $alias)
     {
         if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
@@ -82,7 +82,6 @@ class WidgetsSettingsController extends AdminController
 
             default:
                 $this->saveWidgetSettings();
-            // dd($this->request->getVar('widget'));
         }
 
         alert('success', 'The settings have been saved.');
@@ -93,7 +92,7 @@ class WidgetsSettingsController extends AdminController
     /**
      * Return the image with preview scheme colors.
      */
-    public function getColorSchemePreview(): string
+    public function getColorSchemePreview()
     {
         if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));

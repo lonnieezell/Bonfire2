@@ -10,9 +10,9 @@ $routes->group(ADMIN_AREA . '/tools', ['namespace' => '\Bonfire\Tools\Controller
     $routes->post('delete-log', '\Bonfire\Tools\Controllers\LogsController::delete', ['as' => 'log-delete']);
 });
 
-$routes->get('render-test', function() {
+$routes->get('render-test', static function () {
     $data = [
-        'title' => 'Test',
+        'title'   => 'Test',
         'content' => 'This is a test',
     ];
 

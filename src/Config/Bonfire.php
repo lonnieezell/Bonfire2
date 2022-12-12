@@ -25,6 +25,6 @@ class Bonfire extends BaseConfig
      *  You may leave the array empty if you do not wish to use module discovery.
      */
     public $appModules = [
-        'App\Modules' => APPPATH .'Modules',
+        'App\Modules' => APPPATH . 'Modules',
     ];
 }
