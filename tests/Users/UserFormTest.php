@@ -14,7 +14,6 @@ final class UserFormTest extends TestCase
 {
     protected $refresh = true;
     protected $namespace;
-
     protected User $user;
 
     protected function setUp(): void
