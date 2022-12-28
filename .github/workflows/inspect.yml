@@ -7,20 +7,16 @@ on:
     branches:
       - 'develop'
     paths:
-      - 'app/**'
-      - 'bonfire/**'
-      - 'tests/**'
-      - 'composer.**'
+      - '**.php'
+      - 'composer.*'
       - 'depfile.yaml'
       - '.github/workflows/inspect.yml'
   push:
     branches:
       - 'develop'
     paths:
-      - 'app/**'
-      - 'bonfire/**'
-      - 'tests/**'
-      - 'composer.**'
+      - '**.php'
+      - 'composer.*'
       - 'depfile.yaml'
       - '.github/workflows/inspect.yml'
 
