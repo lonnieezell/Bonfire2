@@ -67,7 +67,7 @@ abstract class TestCase extends CIUnitTestCase
     {
         $email = $params['email']
             /** @phpstan-ignore-next-line */
-            ?? $this->faker->email;
+            ?? $this->faker->email();
         $password = $params['password']
             ?? 'secret123';
 

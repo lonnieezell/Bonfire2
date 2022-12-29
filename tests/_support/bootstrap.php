@@ -1,10 +1,20 @@
 <?php
 
+/**
+ * This file is part of CodeIgniter 4 framework.
+ *
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 use CodeIgniter\Config\DotEnv;
 use CodeIgniter\Router\RouteCollection;
 use Config\Autoload;
 use Config\Modules;
 use Config\Paths;
+use Config\Services;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -19,14 +29,13 @@ defined('CI_DEBUG') || define('CI_DEBUG', true);
 defined('HOMEPATH') || define('HOMEPATH', realpath(rtrim(getcwd(), '\\/ ')) . DIRECTORY_SEPARATOR);
 $source = is_dir(HOMEPATH . 'app')
     ? HOMEPATH
-    : (is_dir('vendor/codeigniter4/framework/')
-        ? 'vendor/codeigniter4/framework/'
-        : 'vendor/codeigniter4/codeigniter4/');
+    : (is_dir('vendor/codeigniter4/framework/') ? 'vendor/codeigniter4/framework/' : 'vendor/codeigniter4/codeigniter4/');
 defined('CONFIGPATH') || define('CONFIGPATH', realpath($source . 'app/Config') . DIRECTORY_SEPARATOR);
 defined('PUBLICPATH') || define('PUBLICPATH', realpath($source . 'public') . DIRECTORY_SEPARATOR);
 unset($source);
 
 // Load framework paths from their config file
+// **Bonfire**
 require 'tests/_support/Config/Paths.php';
 $paths = new Paths();
 
@@ -41,10 +50,11 @@ defined('TESTPATH')      || define('TESTPATH', realpath(HOMEPATH . 'tests/') . D
 defined('SUPPORTPATH')   || define('SUPPORTPATH', realpath(TESTPATH . '_support/') . DIRECTORY_SEPARATOR);
 defined('COMPOSER_PATH') || define('COMPOSER_PATH', realpath(HOMEPATH . 'vendor/autoload.php'));
 defined('VENDORPATH')    || define('VENDORPATH', realpath(HOMEPATH . 'vendor') . DIRECTORY_SEPARATOR);
+// **Bonfire**
 defined('ADMIN_AREA')    || define('ADMIN_AREA', 'admin');
 
 // Load Common.php from App then System
-if (file_exists(APPPATH . 'Common.php')) {
+if (is_file(APPPATH . 'Common.php')) {
     require_once APPPATH . 'Common.php';
 }
 
@@ -67,21 +77,13 @@ require_once SYSTEMPATH . 'Config/BaseService.php';
 require_once SYSTEMPATH . 'Config/Services.php';
 require_once APPPATH . 'Config/Services.php';
 
+// **Bonfire** Change Config\Security settings
 require_once SUPPORTPATH . 'Config/Security.php';
 
-// Use Config\Services as CodeIgniter\Services
-if (! class_exists('CodeIgniter\Services', false)) {
-    class_alias('Config\Services', 'CodeIgniter\Services');
-}
-
 // Initialize and register the loader with the SPL autoloader stack.
-require_once SYSTEMPATH . 'Helpers/filesystem_helper.php';
-$autoloader = \Config\Services::autoloader();
-$autoloader->initialize(new Autoload(), new Modules())->register();
-$autoloader->addNamespace('App', APPPATH);
-$autoloader->addNamespace('Config', APPPATH . 'Config');
+Services::autoloader()->initialize(new Autoload(), new Modules())->register();
 
-// Ensure Bonfire namespaces are added early enough that the tests are aware
+// **Bonfire** Ensure Bonfire namespaces are added early enough that the tests are aware
 $registrar = new Bonfire\Config\Registrar();
 
 // Now load Composer's if it's available
