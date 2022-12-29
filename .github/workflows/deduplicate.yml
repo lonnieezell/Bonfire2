@@ -7,17 +7,13 @@ on:
     branches:
       - 'develop'
     paths:
-      - 'app/**'
-      - 'bonfire/**'
-      - 'tests/**'
+      - '**.php'
       - '.github/workflows/deduplicate.yml'
   push:
     branches:
       - 'develop'
     paths:
-      - 'app/**'
-      - 'bonfire/**'
-      - 'tests/**'
+      - '**.php'
       - '.github/workflows/deduplicate.yml'
 
 jobs:
