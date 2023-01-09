@@ -8,20 +8,19 @@
     "packages": [
         {
             "name": "codeigniter4/framework",
-            "version": "v4.2.10",
+            "version": "v4.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "6ffad151a303c5817ad6b2d9b996d07960aff2cc"
+                "reference": "bc3f312a3ebaf53394fa099b090b7a52a29375c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/6ffad151a303c5817ad6b2d9b996d07960aff2cc",
-                "reference": "6ffad151a303c5817ad6b2d9b996d07960aff2cc",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/bc3f312a3ebaf53394fa099b090b7a52a29375c2",
+                "reference": "bc3f312a3ebaf53394fa099b090b7a52a29375c2",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
                 "ext-intl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
@@ -33,13 +32,14 @@
             "require-dev": {
                 "codeigniter/coding-standard": "^1.5",
                 "fakerphp/faker": "^1.9",
-                "friendsofphp/php-cs-fixer": "~3.13.0",
+                "friendsofphp/php-cs-fixer": "3.13.0",
                 "mikey179/vfsstream": "^1.6",
                 "nexusphp/cs-config": "^3.6",
                 "phpunit/phpunit": "^9.1",
                 "predis/predis": "^1.1 || ^2.0"
             },
             "suggest": {
+                "ext-curl": "If you use CURLRequest class",
                 "ext-dom": "If you use TestResponse",
                 "ext-exif": "If you run Image class tests",
                 "ext-fileinfo": "Improves mime type detection for files",
@@ -74,11 +74,11 @@
             "description": "The CodeIgniter framework v4",
             "homepage": "https://codeigniter.com",
             "support": {
-                "forum": "http://forum.codeigniter.com/",
+                "forum": "https://forum.codeigniter.com/",
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2022-11-05T22:23:07+00:00"
+            "time": "2023-01-09T06:53:50+00:00"
         },
         {
             "name": "codeigniter4/settings",
