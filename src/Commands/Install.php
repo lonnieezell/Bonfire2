@@ -152,6 +152,7 @@ class Install extends BaseCommand
 
     private function setDatabase()
     {
+        $host = $user = $pass = '';
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $name   = CLI::prompt('Database name:', 'bonfire');
         if ($driver !== 'SQLite3') {

@@ -144,18 +144,8 @@ class UserController extends AdminController
         // Fill in basic details
         $user->fill($this->request->getPost());
 
-        // Try saving basic details
-        try {
-            if (! $users->save($user)) {
-                log_message('error', 'User errors', $users->errors());
-
-                return redirect()->back()->withInput()->with('error', lang('Bonfire.unknownSaveError', ['user']));
-            }
-        } catch (DataException $e) {
-            // Just log the message for now since it's
-            // likely saying the user's data is all the same
-            log_message('debug', 'SAVING USER: ' . $e->getMessage());
-        }
+        // Save basic details
+        $users->save($user);
 
         // We need an ID to on the entity to save groups.
         if ($user->id === null) {

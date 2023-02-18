@@ -51,7 +51,7 @@ defined('SUPPORTPATH')   || define('SUPPORTPATH', realpath(TESTPATH . '_support/
 defined('COMPOSER_PATH') || define('COMPOSER_PATH', realpath(HOMEPATH . 'vendor/autoload.php'));
 defined('VENDORPATH')    || define('VENDORPATH', realpath(HOMEPATH . 'vendor') . DIRECTORY_SEPARATOR);
 // **Bonfire**
-defined('ADMIN_AREA')    || define('ADMIN_AREA', 'admin');
+defined('ADMIN_AREA') || define('ADMIN_AREA', 'admin');
 
 // Load Common.php from App then System
 if (is_file(APPPATH . 'Common.php')) {
