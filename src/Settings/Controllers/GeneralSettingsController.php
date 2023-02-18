@@ -123,7 +123,7 @@ class GeneralSettingsController extends AdminController
         $options = [];
 
         if ($area === 'UTC') {
-            $options[] = ['UTC' => 'UTC'];
+            $options['UTC'] = 'UTC';
         } else {
             foreach (timezone_identifiers_list($ids[$area]) as $timezone) {
                 $formattedTimezone  = str_replace('_', ' ', $timezone);
