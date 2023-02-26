@@ -73,7 +73,7 @@ final class AdminAccessTest extends TestCase
         $response->assertSee('Dashboard');
 
         // Cannot see the User menus
-        $response->assertDontSee('Users');
+        $response->assertDontSee('href="admin/users"');
         $response->assertDontSee('User Groups');
 
         // Cannot see General Admin settings
