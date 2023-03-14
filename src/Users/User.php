@@ -17,20 +17,17 @@ class User extends ShieldUser
     public function renderAvatar(int $size = 52)
     {
         // Determine the color for the user based on their
-        // email address since we know we'll always have that
-        // Use default hash if the avatar is used as a placeholder
-        if (setting('Users.avatarNameBasis') === 'name') {
-            $idString = ! empty($this->first_name)
-                ? ($this->first_name[0]) . ($this->last_name[0] ?? '')
-                : $this->username[0]
-                    ?? $this->email[0]
-                        ?? 'default-avatar-hash';
-        } else {
-            $idString = ! empty($this->username)
-                ? $this->username[0] . $this->username[1]
-                : ($this->first_name[0]) . ($this->last_name[0] ?? '')  // @phpstan-ignore-line
-                    ?? $this->email[0]
-                        ?? 'default-avatar-hash';
+        // for existing users, email address since we know we'll always have that
+        // Use default hash if new user or the avatar is used as a placeholder
+
+        $idString = 'default-avatar-hash'; // Default avatar string
+
+        if ($this->id) {
+            if (setting('Users.avatarNameBasis') === 'name') {
+                $idString = $this->first_name ? $this->first_name[0] . ($this->last_name[0] ?? '') : $this->username[0] . $this->username[1];
+            } else {
+                $idString = $this->email[0] . $this->email[1];
+            }
         }
 
         $idString = strtoupper($idString);
