@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "codeigniter4/framework",
-            "version": "v4.3.2",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeigniter4/framework.git",
-                "reference": "e91e4fa20bb4440bf21513fe9b702db2269ca921"
+                "reference": "e3821f9e58fadf16a89b3becb4a00e58d466f390"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/e91e4fa20bb4440bf21513fe9b702db2269ca921",
-                "reference": "e91e4fa20bb4440bf21513fe9b702db2269ca921",
+                "url": "https://api.github.com/repos/codeigniter4/framework/zipball/e3821f9e58fadf16a89b3becb4a00e58d466f390",
+                "reference": "e3821f9e58fadf16a89b3becb4a00e58d466f390",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                 "codeigniter/coding-standard": "^1.5",
                 "fakerphp/faker": "^1.9",
                 "friendsofphp/php-cs-fixer": "3.13.0",
-                "kint-php/kint": "^5.0.3",
+                "kint-php/kint": "^5.0.4",
                 "mikey179/vfsstream": "^1.6",
                 "nexusphp/cs-config": "^3.6",
                 "phpunit/phpunit": "^9.1",
@@ -78,7 +78,7 @@
                 "slack": "https://codeigniterchat.slack.com",
                 "source": "https://github.com/codeigniter4/CodeIgniter4"
             },
-            "time": "2023-02-18T10:37:34+00:00"
+            "time": "2023-03-26T01:13:46+00:00"
         },
         {
             "name": "codeigniter4/settings",
