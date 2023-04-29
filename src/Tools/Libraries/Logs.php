@@ -18,23 +18,29 @@ class Logs
 {
     public const MAX_LOG_SIZE           = 52428800; // 50MB
     public const MAX_STRING_LENGTH      = 300; // 300 chars
-    public const LOG_LINE_START_PATTERN = '/((INFO)|(ERROR)|(CRITICAL)|(DEBUG)|(ALL))[\\s\\-\\d:\\.\\/]+(-->)/';
-    public const LOG_DATE_PATTERN       = ['/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))\\s\\-\\s/', '/\\s(-->)/'];
-    public const LOG_LEVEL_PATTERN      = '/^((ERROR)|(CRITICAL)|(INFO)|(DEBUG)|(ALL))/';
+    public const LOG_LINE_START_PATTERN = '/((DEBUG)|(INFO)|(NOTICE)|(WARNING)|(ERROR)|(CRITICAL)|(ALERT)|(EMERGENCY))[\\s\\-\\d:\\.\\/]+(-->)/';
+    public const LOG_DATE_PATTERN       = ['/^((DEBUG)|(INFO)|(NOTICE)|(WARNING)|(ERROR)|(CRITICAL)|(ALERT)|(EMERGENCY))\\s\\-\\s/', '/\\s(-->)/'];
+    public const LOG_LEVEL_PATTERN      = '/^((DEBUG)|(INFO)|(NOTICE)|(WARNING)|(ERROR)|(CRITICAL)|(ALERT)|(EMERGENCY))/';
 
     private static $levelsIcon = [
-        'INFO'     => 'fas fa-info-circle',
-        'ERROR'    => 'fas fa-times',
-        'CRITICAL' => 'fas fa-exclamation-triangle',
-        'DEBUG'    => 'fas fa-bug',
-        'ALL'      => 'fas fa-minus',
+        'DEBUG'     => 'fas fa-bug',
+        'INFO'      => 'fas fa-info-circle',
+        'NOTICE'    => 'fas fa-info-circle',
+        'WARNING'   => 'fas fa-times',
+        'ERROR'     => 'fas fa-times',
+        'CRITICAL'  => 'fas fa-exclamation-triangle',
+        'ALERT'     => 'fas fa-exclamation-triangle',
+        'EMERGENCY' => 'fas fa-exclamation-triangle',
     ];
     private static $levelClasses = [
-        'INFO'     => 'info',
-        'ERROR'    => 'danger',
-        'CRITICAL' => 'danger',
-        'DEBUG'    => 'warning',
-        'ALL'      => 'muted',
+        'DEBUG'     => 'warning',
+        'INFO'      => 'info',
+        'NOTICE'    => 'info',
+        'WARNING'   => 'warning',
+        'ERROR'     => 'danger',
+        'CRITICAL'  => 'danger',
+        'ALERT'     => 'danger',
+        'EMERGENCY' => 'danger',
     ];
 
     /**
