@@ -82,7 +82,10 @@ class UserController extends AdminController
      */
     public function edit(int $userId)
     {
-        if (! auth()->user()->can('users.edit')) {
+        // check if it's the current user
+        $itsMe = (auth()->user()->can('me.edit') || auth()->user()->can('me.security')) && auth()->id() === $userId;
+        // check if the user should be granted access
+        if (! auth()->user()->can('users.edit') && ! $itsMe) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -111,7 +114,10 @@ class UserController extends AdminController
      */
     public function save(?int $userId = null)
     {
-        if (! auth()->user()->can('users.edit')) {
+        // check if it's the current user
+        $itsMe = auth()->user()->can('me.edit') && auth()->id() === $userId;
+        // check if the user should be permitted access
+        if (! auth()->user()->can('users.edit') && ! $itsMe) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -190,8 +196,10 @@ class UserController extends AdminController
             }
         }
 
-        // Save the user's groups
-        $user->syncGroups(...($this->request->getPost('groups') ?? []));
+        // Save the user's groups if the user has right permissions
+        if (auth()->user()->can('users.edit')) {
+           $user->syncGroups(...($this->request->getPost('groups') ?? []));
+        }
 
         // Save the user's meta fields
         $user->syncMeta($this->request->getPost('meta') ?? []);
@@ -208,7 +216,8 @@ class UserController extends AdminController
      */
     public function changePassword(?int $userId = null)
     {
-        if (! auth()->user()->can('users.edit')) {
+        $itsMe = auth()->user()->can('me.security') && auth()->id() === $userId;
+        if (! auth()->user()->can('users.edit') && ! $itsMe) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -263,7 +272,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        if (! $users->delete($user->id)) {
+        if (!$users->delete($user->id)) {
             log_message('error', implode(' ', $users->errors()));
 
             return redirect()->back()->with('error', lang('Bonfire.unknownError'));
@@ -308,7 +317,8 @@ class UserController extends AdminController
      */
     public function security(int $userId)
     {
-        if (! auth()->user()->can('users.view')) {
+        $itsMe = auth()->user()->can('me.security') && auth()->id() === $userId;
+        if (! auth()->user()->can('users.edit') && ! $itsMe) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
