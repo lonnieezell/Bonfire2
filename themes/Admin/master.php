@@ -9,6 +9,9 @@
     <?= asset_link('other/components/font-awesome/css/all.css', 'css') ?>
     <?= $this->renderSection('styles') ?>
     <?= $viewMeta->render('style') ?>
+    <style>
+        [x-cloak] {display: none !important;}
+    </style>
 </head>
 <body>
 
