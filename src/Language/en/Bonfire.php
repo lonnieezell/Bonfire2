@@ -15,6 +15,7 @@ return [
     'resourcesSaved'       => 'The {0} have been saved.',
     'resourceDeleted'      => 'The {0} has been deleted.',
     'resourcesDeleted'     => 'The {0} have been deleted.',
+    'resourceRestored'     => 'The {0} have been restored.',
     'unknownSaveError'     => 'Unknown error saving the {0}.',
     'unknownError'         => 'Unknown error.',
     'resourcesNotSelected' => 'No {0} were selected.',
