@@ -1,4 +1,4 @@
-<div style="background-image: url(https://source.unsplash.com/random); background-size: cover; position: absolute; top: 43px; left:0; right: 0; bottom: 0; z-index: 0">
+<div style="background-image: url(https://source.unsplash.com/1600x900/?nature,water); background-size: cover; position: absolute; top: 43px; left:0; right: 0; bottom: 0; z-index: 0">
     <?= $slot ?>
 
     <p style="position: absolute; bottom: 0px; right: 15px; width: auto; mix-blend-mode: difference; color: white; font-size: 12px">
