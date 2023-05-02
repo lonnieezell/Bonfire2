@@ -168,6 +168,22 @@ class Install extends BaseCommand
             $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
             $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
             $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
+        } else {
+            CLI::newLine();
+            CLI::write('Updating SQLite3 database config', 'yellow');
+
+            $orig = "'port'     => 3306," . PHP_EOL . "    ];";
+            $new =  "'port'     => 3306,"
+                . PHP_EOL . "        'foreignKeys' => true,"
+                . PHP_EOL . "        'busyTimeout' => 1000,"
+                . PHP_EOL . "    ];";
+            $this->updateConfigFile('Database', $orig, $new);
+
+            $orig2 = "# database.default.port = 3306";
+            $new2  = "# database.default.port = 3306"
+                . PHP_EOL . "database.default.foreignKeys = true"
+                . PHP_EOL . "database.default.busyTimeout = 1000";
+            $this->updateEnvFile($orig2, $new2);
         }
         $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
     }
@@ -250,5 +266,15 @@ class Install extends BaseCommand
         $env = file_get_contents(ROOTPATH . '.env');
         $env = str_replace($find, $replace, $env);
         write_file(ROOTPATH . '.env', $env);
+    }
+
+    /**
+     * Replaces text within the config file.
+     */
+    private function updateConfigFile(string $filename, string $find, string $replace)
+    {
+        $file = file_get_contents(APPPATH . 'Config/' . $filename . '.php');
+        $conf = str_replace($find, $replace, $file);
+        write_file(APPPATH . 'Config/' . $filename . '.php', $conf);
     }
 }
