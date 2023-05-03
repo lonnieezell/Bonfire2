@@ -37,7 +37,7 @@ This information should only be what is needed to allow someone to find the corr
 
 ## Localization of Column names in Recycler
 
-To localize the column names, an array `recycler` should created in the localization file of the module, named after the `$resource['label']` value (with the `.php` extension (in case of label 'Users' – Users.php). The array should have subkeys `label` and `columns`, with each column name corresponding `$resource['columns']` array value. Example for module Users:
+To localize the column names, an array `recycler` should be created in the module's language file, named after the `$resource['label']` value (with the `.php` extension (in case of label 'Users' – Users.php). The array should have sub-keys `label` and `columns`, with each column name corresponding `$resource['columns']` array value. Example for module Users:
 
 ```php
     'recycler' => [
