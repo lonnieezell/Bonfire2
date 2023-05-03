@@ -5,7 +5,7 @@
 <x-page-head>
     <div class="row">
         <div class="col">
-            <h2>Recycler</h2>
+            <h2><?= lang('Recycler.recyclerModTitle') ?></h2>
         </div>
         <?php if (count($resources) > 1) : ?>
             <div class="col-auto">
@@ -25,12 +25,12 @@
         <legend><?= $currentResource['label'] ?></legend>
 
         <?php if (isset($items) && count($items)) : ?>
-            <p><?= $pager->getTotal() ?> result(s)</p>
+            <p><?=lang('Recycler.resultLabel', [$pager->getTotal()])?></p>
 
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                <?php foreach ($currentResource['columns'] as $column) : ?>
+                <?php foreach ($currentResource['localizedColumns'] as $column) : ?>
                     <th><?= esc(ucwords(str_replace('_', ' ', $column))) ?></th>
                 <?php endforeach ?>
                     <th></th>
@@ -44,15 +44,15 @@
                         <?php endforeach ?>
                             <td class="text-end">
                                 <a href="/<?= ADMIN_AREA ?>/recycler/restore/<?= $currentAlias . '/' . $item['id'] ?>"
-                                   class="text-success" title="Restore"
-                                   onclick="return confirm('Restore this record?');"
+                                   class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
+                                   onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
                                 >
                                     <i class="fas fa-trash-restore"></i>
                                 </a>
                                 &nbsp;
                                 <a href="/<?= ADMIN_AREA ?>/recycler/purge/<?= $currentAlias . '/' . $item['id'] ?>"
-                                   class="text-danger" title="Purge forever"
-                                   onclick="return confirm('Permanently delete this record?');"
+                                   class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
+                                   onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
                                 >
                                     <i class="fas fa-minus-circle"></i>
                                 </a>
@@ -63,7 +63,7 @@
             </table>
         <?php else : ?>
             <div class="alert alert-info">
-                No <?= $currentAlias ?> found.
+            <?= lang('Recycler.notFound', [$currentAlias]) ?>
             </div>
         <?php endif ?>
 

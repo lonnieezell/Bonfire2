@@ -27,7 +27,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Recycler',
+            'title'           => lang('Recycler.recyclerModTitle'),
             'namedRoute'      => 'recycler',
             'fontAwesomeIcon' => 'fas fa-recycle',
             'permission'      => 'recycler.view',
