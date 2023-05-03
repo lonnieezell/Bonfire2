@@ -9,9 +9,9 @@
     <!-- Dashboard -->
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link <?= url_is('/' . ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>" title="Dashboard">
+            <a class="nav-link <?= url_is('/' . ADMIN_AREA) ? 'active' : '' ?>" href="/<?= ADMIN_AREA ?>" title="<?= lang('Bonfire.dashboard') ?>">
                 <i class="fas fa-home"></i>
-                <span>Dashboard</span>
+                <span><?= lang('Bonfire.dashboard') ?></span>
             </a>
         </li>
     </ul>

@@ -24,7 +24,7 @@ class Module extends BaseModule
         // Add to the Content menu
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Users',
+            'title'           => lang('Users.usersModTitle'),
             'namedRoute'      => 'user-list',
             'fontAwesomeIcon' => 'fas fa-users',
             'permission'      => 'users.view',
@@ -33,7 +33,7 @@ class Module extends BaseModule
 
         // Add Users Settings
         $item = new MenuItem([
-            'title'           => 'Users',
+            'title'           => lang('Users.usersModTitle'),
             'namedRoute'      => 'user-settings',
             'fontAwesomeIcon' => 'fas fa-user-cog',
             'permission'      => 'users.settings',

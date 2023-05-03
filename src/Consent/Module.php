@@ -27,7 +27,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Consent',
+            'title'           => lang('Consent.consentModTitle'),
             'namedRoute'      => 'consent-settings',
             'fontAwesomeIcon' => 'fas fa-handshake',
             'permission'      => 'consent.settings',

@@ -18,8 +18,8 @@
 
 <?php if (site_offline()) : ?>
     <div class="alert alert-secondary alert-offline">
-        Site is currently offline. Enable it
-        <a href="<?= site_url(ADMIN_AREA .'/settings/general') ?>">here</a>.
+    <?= lang('Bonfire.offlineNotice') ?>
+        <a href="<?= site_url(ADMIN_AREA .'/settings/general') ?>"><?= lang('Bonfire.here') ?></a>.
     </div>
 <?php endif ?>
 
@@ -32,7 +32,7 @@
                 <div class="nav-item position-absolute bottom-0 w-100">
                     <a href="#" class="nav-link sidebar-toggle" @click="open = !open">
                         <i class="fas fa-angle-double-left"></i>
-                        <span>Collapse sidebar</span>
+                        <span><?= lang('Bonfire.collapseSidebar') ?></span>
                     </a>
                 </div>
             </div>

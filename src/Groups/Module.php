@@ -29,7 +29,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'User Groups',
+            'title'           => lang('Groups.groupsModTitle'),
             'namedRoute'      => 'user-group-settings',
             'fontAwesomeIcon' => 'fas fa-users',
             'permission'      => 'groups.settings',

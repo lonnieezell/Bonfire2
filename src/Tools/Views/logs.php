@@ -21,8 +21,8 @@
                                 <input class="select-all" type="checkbox" />
                             </th>
                         <?php endif ?>
-                        <th class='date'><?= lang('Logs.date'); ?></th>
-                        <th><?= lang('Logs.file'); ?></th>
+                        <th class='date'><?= lang('Tools.date'); ?></th>
+                        <th><?= lang('Tools.file'); ?></th>
                     </tr>
                 </thead>
 
@@ -58,19 +58,19 @@
 
         <?php if (auth()->user()->can('logs.manage')) : ?>
             <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-outline-danger"
-                value="<?= lang('Logs.delete_selected'); ?>"
-                onclick="return confirm('<?= lang('Logs.delete_selected_confirm'); ?>')"
+                value="<?= lang('Tools.deleteSelected'); ?>"
+                onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm'); ?>')"
             />
 
-            <input type="submit" value='<?= lang('Logs.delete_all'); ?>' name="delete_all"
-                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Logs.delete_all_confirm'); ?>')"
+            <input type="submit" value='<?= lang('Tools.deleteAll'); ?>' name="delete_all"
+                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Tools.deleteAllConfirm'); ?>')"
             />
         <?php endif ?>
 
     </form>
     <?php else : ?>
         <div class="text-center">
-            <i class="fas fa-clipboard-list fa-3x my-3"></i><br/> <?= lang('Logs.empty'); ?>
+            <i class="fas fa-clipboard-list fa-3x my-3"></i><br/> <?= lang('Tools.empty'); ?>
         </div>
     <?php endif ?>
 

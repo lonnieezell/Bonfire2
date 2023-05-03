@@ -86,13 +86,13 @@ class Bonfire
         // Sidebar menu
         $menus->createMenu('sidebar');
         $menus->menu('sidebar')
-            ->createCollection('content', 'Content');
+            ->createCollection('content', lang('Bonfire.contentModTitle'));
         $menus->menu('sidebar')
-            ->createCollection('settings', 'Settings')
+            ->createCollection('settings', lang('Bonfire.settingsModTitle'))
             ->setFontAwesomeIcon('fas fa-cog')
             ->setCollapsible();
         $menus->menu('sidebar')
-            ->createCollection('tools', 'Tools')
+            ->createCollection('tools', lang('Bonfire.toolsModTitle'))
             ->setFontAwesomeIcon('fas fa-toolbox')
             ->setCollapsible();
 

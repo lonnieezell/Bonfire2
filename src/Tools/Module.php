@@ -27,14 +27,14 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'System Info',
+            'title'           => lang('Tools.systemInfoModTitle'),
             'namedRoute'      => 'sys-info',
             'fontAwesomeIcon' => 'fas fa-info-circle',
             'permission'      => 'admin.settings',
         ]);
 
         $itemLogs = new MenuItem([
-            'title'           => 'Logs',
+            'title'           => lang('Tools.logsModTitle'),
             'namedRoute'      => 'sys-logs',
             'fontAwesomeIcon' => 'fas fa-clipboard-list',
             'permission'      => 'logs.view',

@@ -16,9 +16,9 @@ $this->section('main') ?>
     <div class="table-responsive">
         <table class="table table-hover nowrap" id="log">
             <tr>
-                <th><?= lang('Logs.level'); ?></th>
-                <th><?= lang('Logs.date'); ?></th>
-                <th><?= lang('Logs.content'); ?></th>
+                <th><?= lang('Tools.level'); ?></th>
+                <th><?= lang('Tools.date'); ?></th>
+                <th><?= lang('Tools.content'); ?></th>
 
             </tr>
             <tbody>
@@ -66,8 +66,8 @@ $this->section('main') ?>
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
-            <input type="submit" name="delete" class="btn btn-outline-danger btn-sm" value="<?= lang('Logs.delete_file'); ?>"
-                onclick="return confirm('<?= lang('Logs.delete_confirm') ?>')"
+            <input type="submit" name="delete" class="btn btn-outline-danger btn-sm" value="<?= lang('Tools.deleteFile'); ?>"
+                onclick="return confirm('<?= lang('Tools.deleteConfirm') ?>')"
             />
 
         </form>

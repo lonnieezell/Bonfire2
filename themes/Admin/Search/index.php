@@ -3,12 +3,12 @@
 <?= $this->section('main') ?>
 
     <x-page-head>
-        <h2>Search Results</h2>
+        <h2><?= lang('Bonfire.searchResults') ?></h2>
     </x-page-head>
 
     <x-admin-box>
     <?php if (! isset($results) || ! count($results)) : ?>
-        <div class="alert alert-info">No records match your search criteria. Revise the criteria and try again.</div>
+        <div class="alert alert-info"><?= lang('Bonfire.nothingFound') ?></div>
     <?php else : ?>
         <?php foreach ($results as $name => $info): ?>
             <fieldset>
@@ -17,7 +17,7 @@
                 <?= $this->setData(['rows' => $info['results']])->include($info['provider']->resultView()) ?>
 
                 <dd class="d-flex justify-content-end">
-                    <a href="<?= site_url($info['url']) ?>">See all <?= esc($name) ?></a>
+                    <a href="<?= site_url($info['url']) ?>"><?= lang('Bonfire.seeAll') ?> <?= esc($name) ?></a>
                 </dd>
             </fieldset>
         <?php endforeach ?>
