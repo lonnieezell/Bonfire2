@@ -35,6 +35,25 @@ Recycler. Each entry must contain an array that gives additional information tha
 **columns** is an array of database column names for this resource that will be displayed on the Recycler table. 
 This information should only be what is needed to allow someone to find the correct record. 
 
+## Localization of Column names in Recycler
+
+To localize the column names, an array `recycler` should be created in the module's language file, named after the `$resource['label']` value (with the `.php` extension (in case of label 'Users' – Users.php). The array should have sub-keys `label` and `columns`, with each column name corresponding `$resource['columns']` array value. Example for module Users:
+
+```php
+    'recycler' => [
+        'label'     => 'Users',
+        'columns'   => [
+            'id'           => 'ID',
+            'username'     => 'User Name',
+            'first_name'   => 'Name',
+            'last_name'    => 'Surname',
+            'email'        => 'Email Addr',  
+        ],
+    ],
+```
+
+If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (first letter capitalized, undescore replaced with space) will be used.
+
 ## Modifying the Recycler Query
 
 When the Recycler displays its records, it does a paginated search of deleted resources on the table specified

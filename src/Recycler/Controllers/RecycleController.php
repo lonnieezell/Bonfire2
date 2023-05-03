@@ -35,7 +35,7 @@ class RecycleController extends AdminController
         $resourceType = $this->request->getVar('r') ?: setting('Recycler.defaultResource');
 
         if (empty($resourceType) || ! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['resource type']));
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
         }
 
         $currentResource = $resources[$resourceType];
@@ -53,9 +53,11 @@ class RecycleController extends AdminController
             ->orderBy('deleted_at', 'desc')
             ->paginate(setting('Site.perPage'));
 
+
+
         return $this->render($this->viewPrefix . 'listResource', [
             'resources'       => $resources,
-            'currentResource' => $currentResource,
+            'currentResource' => $this->localizeResource($currentResource),
             'currentAlias'    => $resourceType,
             'items'           => $items,
             'pager'           => $model->pager,
@@ -78,9 +80,8 @@ class RecycleController extends AdminController
         $resources = setting('Recycler.resources');
 
         if (! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['resource type']));
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
         }
-
         $currentResource = $resources[$resourceType];
         $model           = model($currentResource['model']);
 
@@ -112,7 +113,7 @@ class RecycleController extends AdminController
         $resources = setting('Recycler.resources');
 
         if (! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['resource type']));
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
         }
 
         $currentResource = $resources[$resourceType];
@@ -128,5 +129,24 @@ class RecycleController extends AdminController
         }
 
         return redirect()->back()->with('message', lang('Bonfire.resourcesDeleted', [$resourceType]));
+    }
+
+    /**
+     * Checks if there is localization available for resource label and columns
+     * and uses them if it finds the strings defined in localization files
+     */
+    protected function localizeResource(array $resource): array
+    {
+        foreach ($resource['columns'] as $colKey => $colName) {
+            $key = $resource['label'] . '.recycler.columns.' . $colName;
+            $value = lang($key);
+            $resource['localizedColumns'][$colKey] = $key == $value ? $resource['columns'][$colKey] : $value;
+        }
+        
+        $key = $resource['label'] . '.recycler.label';
+        $value = lang($key);
+        $resource['label'] = $key == $value ? $resource['label'] : $value;
+        
+        return $resource;
     }
 }
