@@ -10,7 +10,7 @@
  */
 
 return [
-'systemInfoModTitle'        => 'System Info',
+    'systemInfoModTitle'        => 'System Info',
     'logsModTitle'          => 'Logs',
     'empty'                 => 'No logs registered.',
     'level'                 => 'Level',
