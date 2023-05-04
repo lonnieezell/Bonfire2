@@ -27,7 +27,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'General',
+            'title'           => lang('Bonfire.generalModTitle'),
             'namedRoute'      => 'general-settings',
             'fontAwesomeIcon' => 'fas fa-cog',
             'permission'      => 'admin.settings',

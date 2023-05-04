@@ -27,7 +27,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Email',
+            'title'           => lang('Email.emailModTitle'),
             'namedRoute'      => 'email-settings',
             'fontAwesomeIcon' => 'fas fa-envelope',
             'permission'      => 'admin.settings',

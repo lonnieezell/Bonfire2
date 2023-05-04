@@ -27,7 +27,7 @@ class Module extends BaseModule
         // Settings menu for sidebar
         $sidebar = service('menus');
         $item    = new MenuItem([
-            'title'           => 'Widgets',
+            'title'           => lang('Widgets.widgetsModTitle'),
             'namedRoute'      => 'widgets-settings',
             'fontAwesomeIcon' => 'far fa-object-group',
             'permission'      => 'widgets.settings',

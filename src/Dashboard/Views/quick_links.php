@@ -1,5 +1,5 @@
 <div class="dashboard-cell-container">
-    <h2 class="text-start">Quick Links</h2>
+    <h2 class="text-start"><?= lang('Bonfire.quickLinks') ?></h2>
 
     <div class="text-start">
     <?php foreach ($menu->items() as $item) : ?>

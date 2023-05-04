@@ -4,7 +4,7 @@
     <x-page-head>
         <div class="row">
             <div class="col">
-                <h2>Users</h2>
+                <h2><?= lang('Users.usersModTitle') ?></h2>
             </div>
             <?php if (auth()->user()->can('users.create')): ?>
                 <div class="col-auto">

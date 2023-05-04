@@ -63,7 +63,7 @@ class LogsController extends AdminController
         $file = sanitize_filename($file);
 
         if (empty($file) || ! file_exists($this->logsPath . $file)) {
-            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Logs.empty'));
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
         }
 
         $logs = $this->logsHandler->processFileLogs($this->logsPath . $file);
@@ -107,7 +107,7 @@ class LogsController extends AdminController
                     @unlink($this->logsPath . sanitize_filename($file));
                 }
 
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Logs.delete_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteSuccess'));
             }
         }
 
@@ -116,10 +116,10 @@ class LogsController extends AdminController
                 // Restore the index.html file.
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
 
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Logs.delete_all_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAll_success'));
             }
 
-            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Logs.delete_error'));
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Tools.deleteError'));
         }
 
         return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Bonfire.unknownAction'));
