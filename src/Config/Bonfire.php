@@ -27,4 +27,35 @@ class Bonfire extends BaseConfig
     public $appModules = [
         'App\Modules' => APPPATH . 'Modules',
     ];
+
+    /**
+     * --------------------------------------------------------------------------
+     * Menu ordering
+     * --------------------------------------------------------------------------
+     *
+     * $menuWeights property is an array of named routes with weight asigned to 
+     * each named route. If no weight is assigned, the weight will default to 
+     * 0 (highest in the menu). 
+     * 
+     * It is used by MenuItem class to assign non-default weight to a menu.
+     * 
+     * Menu Users and the menus belonging to custom modules can be arranged this way, 
+     * as well as the submenus of Tools and Settings. the menus Tools and Settings
+     * will not be affected by the property below.
+     */
+    public $menuWeights = [
+
+        // Main content: 
+        'user-list'     => 1,
+        'pages-list'    => 2,
+
+        // Settings submenu: 
+        'user-group-settings' => 0,
+        // ... other items here
+
+        // Tools submenu: 
+        'recycler'      => 1,
+        'sys-info'      => 2,
+        'sys-logs'      => 3,
+    ];
 }
