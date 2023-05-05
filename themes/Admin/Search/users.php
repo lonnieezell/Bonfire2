@@ -1,9 +1,9 @@
 <table class="table table-hover">
     <?= $this->setData(['headers' => [
-        'email'       => 'Email',
-        'username'    => 'Username',
-        'groups'      => 'Groups',
-        'last_active' => 'Last Active',
+        'email'       => lang('Bonfire.email'),
+        'username'    => lang('Bonfire.username'),
+        'groups'      => lang('Bonfire.groups'),
+        'last_active' => lang('Bonfire.lastActive'),
     ]])->include('_table_head') ?>
     <tbody>
     <?php foreach ($rows as $user) : ?>

@@ -52,4 +52,10 @@ return [
 
     // Dashboard:
     'quickLinks'    =>  'Patogios nuorodos',
+
+    //users module Search template:
+    'email'         => 'El. adresas',
+    'username'      => 'Vartotojo vardas',
+    'groups'        => 'Grupės',
+    'lastActive'    => 'Aktyvus prieš',
 ];
