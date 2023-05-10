@@ -22,7 +22,7 @@ class Metadata
         $this->title  = setting('Site.siteName');
         $this->locale = $request->getLocale();
         $this->meta[] = ['charset' => 'UTF-8'];
-        $this->meta[] = ['viewport' => 'width=device-width, initial-scale=1'];
+        $this->meta[] = ['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1'];
     }
 
     /**
