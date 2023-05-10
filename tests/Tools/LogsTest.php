@@ -35,10 +35,11 @@ final class LogsTest extends TestCase
         $user->addGroup('superadmin');
 
         $response = $this->actingAs($user)
-            ->get(ADMIN_AREA . '/tools/view-log/' . $this->logFileName);
+            ->get(ADMIN_AREA . '/tools/view-log/' . str_replace('.log', '', $this->logFileName));
 
         $response->assertOK();
-        $response->assertSee('Logs : ' . date('F j, Y'));
+        $response->assertSee(lang('Tools.log') . ' : ' 
+            . app_date(str_replace('.log', '', str_replace('log-', '', $this->logFileName))));
     }
 
     public function testListLogsFiles()
