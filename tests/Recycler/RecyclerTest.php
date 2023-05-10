@@ -42,7 +42,7 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $response = $this->actingAs($this->admin)
-            ->get(ADMIN_AREA . '/recycler');
+            ->get(route_to('recycler'));
 
         $response->assertOK();
         $response->assertSee($user1->first_name);
@@ -55,7 +55,8 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $result = $this->actingAs($this->admin)
-            ->get(ADMIN_AREA . '/recycler/restore/users/' . $user1->id);
+            ->get(route_to('recycler-restore', 'users', $user1->id));
+
 
         $this->seeInDatabase('users', [
             'id'         => $user1->id,
@@ -69,7 +70,7 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $result = $this->actingAs($this->admin)
-            ->get(ADMIN_AREA . '/recycler/purge/users/' . $user1->id);
+            ->get(route_to('recycler-purge', 'users', $user1->id));
 
         $this->dontSeeInDatabase('users', [
             'id' => $user1->id,

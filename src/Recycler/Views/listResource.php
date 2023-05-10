@@ -43,14 +43,14 @@
                             <td><?= esc($item[$column] ?? '') ?></td>
                         <?php endforeach ?>
                             <td class="text-end">
-                                <a href="/<?= ADMIN_AREA ?>/recycler/restore/<?= $currentAlias . '/' . $item['id'] ?>"
+                                <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
                                    class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
                                    onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
                                 >
                                     <i class="fas fa-trash-restore"></i>
                                 </a>
                                 &nbsp;
-                                <a href="/<?= ADMIN_AREA ?>/recycler/purge/<?= $currentAlias . '/' . $item['id'] ?>"
+                                <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
                                    class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
                                    onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
                                 >
