@@ -42,7 +42,6 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user1->id);
 
         $response = $this->actingAs($this->admin)
-            //->get(ADMIN_AREA . '/recycler');
             ->get(route_to('recycler'));
 
         $response->assertOK();
