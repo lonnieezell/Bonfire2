@@ -52,4 +52,11 @@ return [
 
     // Dashboard:
     'quickLinks'        => 'Quick Links',
+
+    //users module Search template:
+    'email'         => 'Email',
+    'username'      => 'Username',
+    'groups'        => 'Groups',
+    'lastActive'    => 'Last Active',
+
 ];
