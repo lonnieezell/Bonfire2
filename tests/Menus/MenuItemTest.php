@@ -91,7 +91,7 @@ final class MenuItemTest extends TestCase
         $item = new MenuItem();
         $item->setNamedRoute('home');
 
-        $this->assertSame('/home-sweet-home', $item->url());
+        $this->assertSame(site_url('/home-sweet-home'), $item->url());
     }
 
     public function testPropertyGetter()
