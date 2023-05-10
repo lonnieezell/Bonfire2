@@ -60,7 +60,7 @@ class LogsController extends AdminController
     public function view(string $file = '')
     {
         helper('security');
-        $file = sanitize_filename($file);
+        $file = sanitize_filename($file) . '.log';
 
         if (empty($file) || ! file_exists($this->logsPath . $file)) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
@@ -71,11 +71,11 @@ class LogsController extends AdminController
         $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
         return $this->render($this->viewPrefix . 'view_log', [
-            'logFile'       => $file,
+            'logFile'       => str_replace('.log', '', $file),
             'canDelete'     => 1,
             'logContent'    => $result['logs'],
             'pager'         => $result['pager'],
-            'logFilePretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
+            'logFilePretty' => app_date(str_replace('.log', '', str_replace('log-', '', $file))),
         ]);
     }
 
@@ -104,7 +104,7 @@ class LogsController extends AdminController
 
             if (is_array($checked) && $numChecked) {
                 foreach ($checked as $file) {
-                    @unlink($this->logsPath . sanitize_filename($file));
+                    @unlink($this->logsPath . sanitize_filename($file) . '.log');
                 }
 
                 return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteSuccess'));
@@ -116,7 +116,7 @@ class LogsController extends AdminController
                 // Restore the index.html file.
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
 
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAll_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAllSuccess'));
             }
 
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Tools.deleteError'));

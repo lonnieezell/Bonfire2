@@ -12,6 +12,7 @@
 return [
     'systemInfoModTitle'      => 'Sistemos info',
     'logsModTitle'            => 'Žurnalai',
+    'log'                     => 'Žurnalas',
     'empty'                   => 'Žurnalų failų nėra.',
     'level'                   => 'Lygmuo',
     'date'                    => 'Data',

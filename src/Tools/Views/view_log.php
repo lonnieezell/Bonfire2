@@ -4,8 +4,8 @@ $this->extend('master') ?>
 <?php
 $this->section('main') ?>
 <x-page-head>
-    <a href="/<?= ADMIN_AREA ?>/tools/logs" class="back">&larr; Logs</a>
-    <h2>Logs : <?= $logFilePretty; ?></h2>
+    <a href="<?= site_url(ADMIN_AREA . '/tools/logs') ?>" class="back">&larr; <?= lang('Tools.logsModTitle')?></a>
+    <h2><?= lang('Tools.log') ?> : <?= $logFilePretty ?></h2>
     <h2>
         <Logs
     </h2>
@@ -29,8 +29,7 @@ $this->section('main') ?>
                     <?php endif ?>
                 >
                     <td class="text-<?= $log['class']; ?>">
-                        <span class="<?= $log['icon']; ?>" aria-hidden="true"></span>
-                        &nbsp;<?= $log['level'] ?>
+                        <span class="<?= $log['icon']; ?>" aria-hidden="true"></span>&nbsp;<?= $log['level'] ?>
                     </td>
                     <td class="date"><?= app_date($log['date'], true) ?></td>
                     <td class="text">
@@ -62,7 +61,7 @@ $this->section('main') ?>
 
     <?php if ($canDelete) : ?>
 
-        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log'); ?>" class='form-horizontal' method="post">
+        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" class='form-horizontal' method="post">
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
