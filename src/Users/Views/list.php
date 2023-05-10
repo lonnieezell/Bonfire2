@@ -8,7 +8,7 @@
             </div>
             <?php if (auth()->user()->can('users.create')): ?>
                 <div class="col-auto">
-                    <a href="<?= route_to('user-new') ?>" class="btn btn-primary">New User</a>
+                    <a href="<?= url_to('user-new') ?>" class="btn btn-primary">New User</a>
                 </div>
             <?php endif ?>
         </div>

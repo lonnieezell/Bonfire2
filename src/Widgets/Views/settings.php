@@ -12,7 +12,7 @@
 
 <x-admin-box>
 
-    <form action="/<?= ADMIN_AREA ?>/settings/widgets" method="post">
+    <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
 		<?= csrf_field() ?>
         <fieldset>
 
@@ -37,7 +37,7 @@
         </div>
     </form>
 
-    <form action="/<?= ADMIN_AREA ?>/settings/widgetsReset" method="post">
+    <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post">
 		<?= csrf_field() ?>
         <div class="text-end px-5 py-3">
             <input type="submit" value="Reset all settings of all widgets to their default values" class="btn btn-danger btn-lg">

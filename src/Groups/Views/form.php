@@ -2,7 +2,7 @@
 
 <?php $this->section('main') ?>
 <x-page-head>
-    <a href="/<?= ADMIN_AREA ?>/settings/groups" class="back">&larr; Groups</a>
+    <a href="<?= site_url(ADMIN_AREA . '/settings/groups') ?>" class="back">&larr; Groups</a>
     <h2>Edit Groups &amp; Permissions</h2>
 </x-page-head>
 

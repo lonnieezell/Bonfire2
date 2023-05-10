@@ -2,7 +2,7 @@
 
 <?php $this->section('main') ?>
 <x-page-head>
-    <a href="/<?= ADMIN_AREA ?>/users" class="back">&larr; Users</a>
+    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">&larr; Users</a>
     <h2><?= isset($user) ? 'Edit User' : 'New User' ?></h2>
 </x-page-head>
 

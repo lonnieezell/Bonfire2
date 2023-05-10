@@ -16,7 +16,7 @@
                         </div>
 						<?php if (setting('Stats.stats_showLink')) : ?>
                             <div class="widget-stats-link">
-                                <a href="<?= $widget->url() ?>"><?= lang('Widgets.viewDetail') ?> <i class="fa fa-arrow-alt-circle-right"></i></a>
+                                <a href="<?= site_url($widget->url()) ?>"><?= lang('Widgets.viewDetail') ?> <i class="fa fa-arrow-alt-circle-right"></i></a>
                             </div>
 						<?php endif?>
                     </div>

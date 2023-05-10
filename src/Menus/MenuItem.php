@@ -66,7 +66,7 @@ class MenuItem
 
     public function __construct(?array $data = null)
     {
-        if (! is_array($data)) {
+        if (!is_array($data)) {
             return;
         }
 
@@ -120,7 +120,7 @@ class MenuItem
      */
     public function setNamedRoute(string $name)
     {
-        $this->url = route_to($name);
+        $this->url = url_to($name);
 
         return $this;
     }

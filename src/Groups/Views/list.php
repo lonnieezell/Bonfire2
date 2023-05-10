@@ -26,7 +26,7 @@
                 <?php foreach ($groups as $alias => $group) : ?>
                     <tr>
                         <td>
-                            <a href="/<?= ADMIN_AREA ?>/settings/groups/<?= $alias ?>">
+                            <a href="<?= site_url(ADMIN_AREA . '/settings/groups/' . $alias) ?>">
                                 <?= esc($group['title']) ?>
                             </a>
                         </td>
