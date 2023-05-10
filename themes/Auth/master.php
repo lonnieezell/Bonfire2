@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="<?= $viewMeta->render('locale') ?>"><head>
 	<?= $viewMeta->render('meta') ?>
 
     <?= $viewMeta->render('title') ?>
