@@ -56,11 +56,31 @@ class MenuItem
      */
     protected $permission;
 
+    /**
+     * Route for use in setting weight
+     * based on values from config
+     * 
+     * @var string
+     */
+    private $namedRoute;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
             return;
         }
+
+        // store the named route to use to draw  the weight of the
+        // item from settings
+        if (
+            isset($data['namedRoute'])
+            && is_string($data['namedRoute'])
+        ) {
+            $this->namedRoute = $data['namedRoute'];
+        }
+
+        if (! isset($data['weight']))
+            $data['weight'] = 0;
 
         foreach ($data as $key => $value) {
             $method = 'set' . ucfirst($key);
@@ -119,12 +139,20 @@ class MenuItem
      * Sets the "weight" of the menu item.
      * The large the value, the later in the menu
      * it will appear.
+     * Uses the value from Config/Bonfire.php $menuWeights
+     * if it is set, key is the unique named route.
      *
      * @return $this
      */
     public function setWeight(int $weight)
     {
-        $this->weight = $weight;
+        if (
+            $this->namedRoute
+            && isset(setting('Bonfire.menuWeights')[$this->namedRoute])
+        )
+            $this->weight = setting('Bonfire.menuWeights')[$this->namedRoute];
+        else
+            $this->weight = $weight;
 
         return $this;
     }
