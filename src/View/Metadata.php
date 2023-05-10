@@ -7,6 +7,7 @@ use RuntimeException;
 class Metadata
 {
     private string $title     = '';
+    private string $locale    = '';
     private array $meta       = [];
     private array $link       = [];
     private array $script     = [];
@@ -16,8 +17,10 @@ class Metadata
     public function __construct()
     {
         helper('setting');
+        $request = \Config\Services::request();
 
         $this->title  = setting('Site.siteName');
+        $this->locale = $request->getLocale();
         $this->meta[] = ['charset' => 'UTF-8'];
         $this->meta[] = ['viewport' => 'width=device-width, initial-scale=1'];
     }
@@ -34,6 +37,10 @@ class Metadata
 
         if ($type === 'title') {
             return '<title>' . $this->title . '</title>';
+        }
+
+        if ($type === 'locale') {
+            return $this->locale;
         }
 
         $html = '';
