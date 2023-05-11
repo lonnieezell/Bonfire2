@@ -99,7 +99,7 @@ class Registrar
     }
 
     /**
-     * Registers all Bonfire Module namespaces
+     * Registers all Bonfire Module namespaces and app module namespaces
      */
     public static function registerNamespaces(): void
     {
@@ -118,6 +118,30 @@ class Registrar
             $name = trim($row, DIRECTORY_SEPARATOR);
 
             $namespaces["Bonfire\\{{$name}}"] = [realpath(__DIR__ . "/../{$name}")];
+        }
+
+        // Now define app modules nemespaces
+        $appModulesPaths = config('Bonfire')->appModules;
+        
+        if (! is_array($appModulesPaths) || empty($appModulesPaths)) {
+            log_message('debug', 'No app modules directories specified. Skipping setup of app modules namespaces.');
+        }
+
+        foreach ($appModulesPaths as $baseName => $path) {
+            if (! file_exists($path)) {
+                log_message('debug', 'app/Config/Bonfire.php array $appModules '
+                    . 'key ' . $baseName . ' points to app modules directory '
+                    . $path . ' which does not exist.');
+                continue;
+            }
+
+            $map = directory_map($path, 1);
+            foreach ($map as $row) {
+
+                $name = trim($row, DIRECTORY_SEPARATOR);
+
+                $namespaces[$baseName . "\\{{$name}}"] = [realpath($path . "/{$name}")];
+            }
         }
 
         // Insert the namespaces into the psr4 array in the autoloader
