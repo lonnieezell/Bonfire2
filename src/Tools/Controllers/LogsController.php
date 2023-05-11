@@ -20,6 +20,7 @@ class LogsController extends AdminController
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Tools\Views\\';
     protected $logsPath   = WRITEPATH . 'logs/';
+    protected $ext = '.log';
     protected $logsLimit;
     protected $logsHandler;
 
@@ -60,22 +61,22 @@ class LogsController extends AdminController
     public function view(string $file = '')
     {
         helper('security');
-        $file = sanitize_filename($file) . '.log';
+        $file = sanitize_filename($file);
 
-        if (empty($file) || ! file_exists($this->logsPath . $file)) {
+        if (empty($file) || ! file_exists($this->logsPath . $file . $this->ext)) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
         }
 
-        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file);
+        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file . $this->ext);
 
         $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
         return $this->render($this->viewPrefix . 'view_log', [
-            'logFile'       => str_replace('.log', '', $file),
+            'logFile'       => $file . $this->ext,
             'canDelete'     => 1,
             'logContent'    => $result['logs'],
             'pager'         => $result['pager'],
-            'logFilePretty' => app_date(str_replace('.log', '', str_replace('log-', '', $file))),
+            'logFilePretty' => app_date(str_replace('log-', '', $file)),
         ]);
     }
 
@@ -104,7 +105,7 @@ class LogsController extends AdminController
 
             if (is_array($checked) && $numChecked) {
                 foreach ($checked as $file) {
-                    @unlink($this->logsPath . sanitize_filename($file) . '.log');
+                    @unlink($this->logsPath . sanitize_filename($file . $this->ext));
                 }
 
                 return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteSuccess'));
