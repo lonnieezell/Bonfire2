@@ -1,4 +1,4 @@
-<?= $this->extend('master') ?>
+<?php $this->extend('master'); ?>
 
 <?= $this->section('title') ?><?= lang('Auth.register') ?> <?= $this->endSection() ?>
 
@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-5"><?= lang('Auth.register') ?></h5>
 
-                <form action="<?= route_to('register') ?>" method="post">
+                <form action="<?= url_to('register') ?>" method="post">
                     <?= csrf_field() ?>
 
                     <!-- Email -->
@@ -59,7 +59,7 @@
                         <button type="submit" class="btn btn-primary btn-block btn-lg"><?= lang('Auth.register') ?></button>
                     </div>
 
-                    <p class="text-center"><?= lang('Auth.haveAccount') ?> <a href="<?= route_to('login') ?>"><?= lang('Auth.login') ?></a></p>
+                    <p class="text-center"><?= lang('Auth.haveAccount') ?> <a href="<?= url_to('login') ?>"><?= lang('Auth.login') ?></a></p>
 
                 </form>
             </div>

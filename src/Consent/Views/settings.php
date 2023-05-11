@@ -7,7 +7,7 @@
     </x-page-head>
 
     <x-admin-box>
-        <form action="/admin/settings/consent" method="post">
+        <form action="<?= site_url(ADMIN_AREA . '/settings/consent') ?>" method="post">
             <?= csrf_field() ?>
 
             <fieldset>

@@ -6,7 +6,7 @@
 </x-page-head>
 
 <x-admin-box>
-    <form action="/admin/settings/general" method="post">
+    <form action="<?= site_url(ADMIN_AREA . '/settings/general') ?>" method="post">
         <?= csrf_field() ?>
 
         <fieldset>

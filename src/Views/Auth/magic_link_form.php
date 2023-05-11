@@ -10,7 +10,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-4"><?= lang('Auth.useMagicLink') ?></h5>
 
-                <form action="<?= route_to('magic-link') ?>" method="post">
+                <form action="<?= url_to('magic-link') ?>" method="post">
                     <?= csrf_field() ?>
 
                     <p class="text-muted mb-4"><?= lang('Bonfire.magicLinkInfo') ?></p>

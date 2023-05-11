@@ -53,7 +53,7 @@
         <fieldset>
             <legend>PHP Info</legend>
 
-            <a href="/<?= ADMIN_AREA ?>/tools/php-info" class="btn btn-primary" target="_blank">View PHP Info</a>
+            <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-primary" target="_blank">View PHP Info</a>
         </fieldset>
 
         <fieldset>
