@@ -122,25 +122,20 @@ class Registrar
 
         // Now define app modules nemespaces
         $appModulesPaths = config('Bonfire')->appModules;
-        
-        if (! is_array($appModulesPaths) || empty($appModulesPaths)) {
-            log_message('debug', 'No app modules directories specified. Skipping setup of app modules namespaces.');
-        }
 
-        foreach ($appModulesPaths as $baseName => $path) {
-            if (! file_exists($path)) {
-                log_message('debug', 'app/Config/Bonfire.php array $appModules '
-                    . 'key ' . $baseName . ' points to app modules directory '
-                    . $path . ' which does not exist.');
-                continue;
-            }
+        if (is_array($appModulesPaths) && !empty($appModulesPaths)) {
+            foreach ($appModulesPaths as $baseName => $path) {
+                if (! file_exists($path)) {
+                    continue;
+                }
 
-            $map = directory_map($path, 1);
-            foreach ($map as $row) {
+                $map = directory_map($path, 1);
+                foreach ($map as $row) {
 
-                $name = trim($row, DIRECTORY_SEPARATOR);
+                    $name = trim($row, DIRECTORY_SEPARATOR);
 
-                $namespaces[$baseName . "\\{{$name}}"] = [realpath($path . "/{$name}")];
+                    $namespaces[$baseName . "\\{{$name}}"] = [realpath($path . "/{$name}")];
+                }
             }
         }
 
