@@ -20,6 +20,7 @@ class LogsController extends AdminController
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Tools\Views\\';
     protected $logsPath   = WRITEPATH . 'logs/';
+    protected $ext = '.log';
     protected $logsLimit;
     protected $logsHandler;
 
@@ -62,20 +63,20 @@ class LogsController extends AdminController
         helper('security');
         $file = sanitize_filename($file);
 
-        if (empty($file) || ! file_exists($this->logsPath . $file)) {
+        if (empty($file) || ! file_exists($this->logsPath . $file . $this->ext)) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
         }
 
-        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file);
+        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file . $this->ext);
 
         $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
 
         return $this->render($this->viewPrefix . 'view_log', [
-            'logFile'       => $file,
+            'logFile'       => $file . $this->ext,
             'canDelete'     => 1,
             'logContent'    => $result['logs'],
             'pager'         => $result['pager'],
-            'logFilePretty' => date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $file)))),
+            'logFilePretty' => app_date(str_replace('log-', '', $file)),
         ]);
     }
 
@@ -104,7 +105,7 @@ class LogsController extends AdminController
 
             if (is_array($checked) && $numChecked) {
                 foreach ($checked as $file) {
-                    @unlink($this->logsPath . sanitize_filename($file));
+                    @unlink($this->logsPath . sanitize_filename($file . $this->ext));
                 }
 
                 return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteSuccess'));
@@ -116,7 +117,7 @@ class LogsController extends AdminController
                 // Restore the index.html file.
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
 
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAll_success'));
+                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAllSuccess'));
             }
 
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Tools.deleteError'));

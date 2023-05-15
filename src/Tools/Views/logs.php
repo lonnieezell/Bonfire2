@@ -2,7 +2,7 @@
 
 <?php $this->section('main') ?>
     <x-page-head>
-        <h2>Logs</h2>
+        <h2><?= lang('Tools.logsModTitle')?></h2>
     </x-page-head>
 
     <x-admin-box>
@@ -37,12 +37,12 @@
                     <tr>
                         <?php if (auth()->user()->can('logs.manage')) : ?>
                             <td class="column-check text-center">
-                                <input type="checkbox" value="<?= esc($log); ?>" name="checked[]" />
+                                <input type="checkbox" value="<?= esc(str_replace('.log', '', $log)); ?>" name="checked[]" />
                             </td>
                         <?php endif ?>
                         <td class='date'>
-                            <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/{$log}"); ?>'>
-                                <?= date('F j, Y', strtotime(str_replace('.log', '', str_replace('log-', '', $log)))); ?>
+                            <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/" . str_replace('.log', '', $log)); ?>'>
+                                <?= app_date(str_replace('.log', '', str_replace('log-', '', $log))); ?>
                             </a>
                         </td>
                         <td><?= esc($log); ?></td>
@@ -63,7 +63,7 @@
             />
 
             <input type="submit" value='<?= lang('Tools.deleteAll'); ?>' name="delete_all"
-                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Tools.deleteAllConfirm'); ?>')"
+                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Tools.deleteAll_confirm'); ?>')"
             />
         <?php endif ?>
 
