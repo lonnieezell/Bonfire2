@@ -54,7 +54,7 @@ class User extends ShieldUser
      */
     public function avatarLink(?int $size = null): string
     {
-        if (empty($this->avatar)) {
+        if (isset($this->id) && empty($this->avatar)) {
             // Default from Gravatar
             if (setting('Users.useGravatar')) {
                 $hash = md5(strtolower(trim($this->email)));
