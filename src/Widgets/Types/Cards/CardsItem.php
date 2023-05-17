@@ -21,7 +21,6 @@ use Bonfire\Widgets\Interfaces\Item;
  * @property string $title
  * @property string $url
  * @property string $value
- * @property string permission
  */
 class CardsItem implements Item
 {
