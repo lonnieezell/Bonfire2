@@ -18,7 +18,7 @@ class LoginController extends ShieldLogin
     /**
      * Display the login view
      */
-    public function loginView(): string
+    public function loginView()
     {
         // prevent login page access to logged-in users
         if (auth()->loggedIn()) {
