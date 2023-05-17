@@ -18,22 +18,29 @@
 
         <fieldset>
 
-            <legend><i class="fas fa-chart-bar"></i> Stats General Settings</legend>
+            <legend><i class="fas fa-chart-bar"></i> Stats and Cards General Settings</legend>
 
-            <p>In this section you can customize the general parameters concerning the Stats widget.</p>
+            <p>In this section you can customize the general parameters concerning the Stats and Cards widgets.</p>
 
             <div class="form-check form-switch mt-6 mb-3">
                 <input class="form-check-input" type="checkbox" name="stats_showLink" role="switch" id="stats_showLink"
 					<?php if (setting('Stats.stats_showLink')) : ?> checked <?php endif ?>
                 >
-                <label class="form-check-label" for="stats_showLink">Show the Link "View Detail"?</label>
+                <label class="form-check-label" for="stats_showLink">Show the Link "View Detail" on Stats Widgets?</label>
+            </div>
+
+            <div class="form-check form-switch mt-6 mb-3">
+                <input class="form-check-input" type="checkbox" name="cards_showLink" role="switch" id="cards_showLink"
+					<?php if (setting('Cards.cards_showLink')) : ?> checked <?php endif ?>
+                >
+                <label class="form-check-label" for="stats_showLink">Show the Link "View Detail" on Cards Widgets?</label>
             </div>
 
 
         </fieldset>
 
 		<div class="text-end px-5 py-3">
-			<input type="submit" value="Save Stats Settings" class="btn btn-primary btn-lg">
+			<input type="submit" value="Save Stats / Cards Settings" class="btn btn-primary btn-lg">
 		</div>
 	</form>
 

@@ -269,6 +269,11 @@ div {
     margin-bottom: 0;
 }
 
+.widget-stats-info th, .widget-stats-info thead, .widget-stats-info tr, .widget-stats-info td, .widget-stats-info p, .widget-stats-info.div {
+    font-size:0.9rem;
+    color: rgba(255, 255, 255, .7);
+}
+
 /*
  * --------------------------------------------------------------------------
  * WIDGET CHARTS

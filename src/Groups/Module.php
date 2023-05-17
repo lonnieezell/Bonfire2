@@ -15,6 +15,8 @@ use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\StatsItem;
+use Bonfire\Widgets\Types\Cards\CardsItem;
+use Bonfire\Groups\Libraries\GroupsCardWidget;
 
 /**
  * User Module setup
@@ -38,6 +40,7 @@ class Module extends BaseModule
 
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');
+
         $groups    = setting('AuthGroups.groups');
         $statsItem = new StatsItem([
             'bgColor' => 'bg-teal',
@@ -47,6 +50,16 @@ class Module extends BaseModule
             'faIcon'  => 'fa fa-users',
         ]);
         $widgets->widget('stats')->collection('stats')->addItem($statsItem);
+
+        // Card on dashboard
+        $cardsItem = new CardsItem([
+            'bgColor' => 'bg-teal',
+            'title'   => 'Group List',
+            'value'   => (new GroupsCardWidget)->listGroups(),
+            'url'     => ADMIN_AREA . '/settings/groups',
+            'faIcon'  => 'fas fa-user-friends',
+        ]);
+        $widgets->widget('cards')->collection('cards')->addItem($cardsItem);
 
         // Chart Section Begin
         $statsItem = new ChartsItem([

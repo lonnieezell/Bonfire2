@@ -13,6 +13,7 @@ namespace Bonfire;
 
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Stats\Stats;
+use Bonfire\Widgets\Types\Cards\Cards;
 
 include_once __DIR__ . '/Common.php';
 
@@ -115,6 +116,10 @@ class Bonfire
         $widgets->createWidget(Charts::class, 'charts');
         $widgets->widget('charts')
             ->createCollection('charts');
+
+        $widgets->createWidget(Cards::class, 'cards');
+        $widgets->widget('cards')
+            ->createCollection('cards');
     }
 
     /**
