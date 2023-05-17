@@ -8,8 +8,11 @@
             );
 		    ?>
 
-			<?php //if(true): 
-            if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['index'])) : 
+			<?php 
+            if (
+                $widget->userCanSee() 
+                && setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['index'])
+                ) : 
             ?>
                 <div class="col-6">
                     <div class="widget-stats <?= $widget->bgColor() ?>">

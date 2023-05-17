@@ -21,6 +21,7 @@ use Bonfire\Widgets\Interfaces\Item;
  * @property string $title
  * @property string $url
  * @property string $value
+ * @property string permission
  */
 class CardsItem implements Item
 {
@@ -33,6 +34,14 @@ class CardsItem implements Item
      * @var string|null
      */
     protected $value;
+
+    /**
+     * The permission to check to see if the
+     * user can view the widget item or not.
+     *
+     * @var string
+     */
+    protected $permission;
 
     /**
      * FontAwesome 5 icon name
@@ -94,6 +103,18 @@ class CardsItem implements Item
     public function setValue(?string $value): CardsItem
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Sets the permission required to see this widget item.
+     *
+     * @return $this
+     */
+    public function setPermission(string $permission)
+    {
+        $this->permission = $permission;
 
         return $this;
     }
@@ -173,5 +194,20 @@ class CardsItem implements Item
     public function bgColor(): ?string
     {
         return $this->bgColor;
+    }
+
+    /**
+     * Can the active user see this widget item?
+     */
+    public function userCanSee(): bool
+    {
+        // No permission set means anyone can view.
+        if (empty($this->permission)) {
+            return true;
+        }
+
+        helper('auth');
+
+        return auth()->user()->can($this->permission);
     }
 }

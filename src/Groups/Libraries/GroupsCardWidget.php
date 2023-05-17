@@ -23,9 +23,6 @@ class GroupsCardWidget
      */
     public function listGroups()
     {
-        if (! auth()->user()->can('groups.settings')) {
-            return '';
-        }
 
         $groups = setting('AuthGroups.groups');
         asort($groups);

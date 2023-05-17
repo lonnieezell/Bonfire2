@@ -52,6 +52,7 @@ class Module extends BaseModule
             'value'   => (new LoginsCardWidget)->showRecentLogins(),
             'url'     => ADMIN_AREA . '/users',
             'faIcon'  => 'fa fa-users',
+            'permission' => 'users.view',
         ]);
         $widgets->widget('cards')->collection('cards')->addItem($cardsItem);
 

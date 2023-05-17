@@ -53,11 +53,12 @@ class Module extends BaseModule
 
         // Card on dashboard
         $cardsItem = new CardsItem([
-            'bgColor' => 'bg-teal',
-            'title'   => 'Group List',
-            'value'   => (new GroupsCardWidget)->listGroups(),
-            'url'     => ADMIN_AREA . '/settings/groups',
-            'faIcon'  => 'fas fa-user-friends',
+            'bgColor'    => 'bg-teal',
+            'title'      => 'Group List',
+            'value'      => (new GroupsCardWidget)->listGroups(),
+            'url'        => ADMIN_AREA . '/settings/groups',
+            'faIcon'     => 'fas fa-user-friends',
+            'permission' => 'groups.settings',
         ]);
         $widgets->widget('cards')->collection('cards')->addItem($cardsItem);
 
