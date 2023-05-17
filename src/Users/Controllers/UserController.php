@@ -354,7 +354,7 @@ class UserController extends AdminController
 
         /** @var LoginModel $loginModel */
         $loginModel = model(LoginModel::class);
-        $logins     = $loginModel->where('identifier', $user->email)->orderBy('date', 'desc')->limit(20)->findAll();
+        $logins     = $loginModel->where('identifier', $user->email)->orderBy('date', 'desc')->findAll(20);
 
         return $this->render($this->viewPrefix . 'security', [
             'user'   => $user,
