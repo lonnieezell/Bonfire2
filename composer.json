@@ -1,22 +1,21 @@
 {
 	"name": "lonnieezell/bonfire",
 	"type": "project",
-	"description": "A project skeleton/admin area for CodeIgniter 4 projects",
+	"description": "Drop-in admin panel form CodeIgniter 4",
 	"keywords": [
 		"codeigniter",
-		"codeigniter4"
+		"codeigniter4",
+		"bonfire"
 	],
-	"homepage": "https://github.com/lonnieezell/Bonfire2",
+	"homepage": "https://github.com/lonnieezell/bonfire2-refactor",
 	"license": "MIT",
 	"require": {
 		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
-		"codeigniter4/framework": "^4.0",
-		"components/font-awesome": "^5.15",
-		"league/commonmark": "^2.0",
-		"lonnieezell/codigniter-shield": "dev-develop",
+		"codeigniter4/framework": "^4.2",
+		"components/font-awesome": "^6.2",
+		"codeigniter4/shield": "dev-develop",
 		"roave/security-advisories": "dev-latest",
-		"spatie/commonmark-highlighter": "^3.0",
 		"tatter/alerts": "^3.0"
 	},
 	"require-dev": {
@@ -27,15 +26,15 @@
 		"nexusphp/tachycardia": "^1.0",
 		"phpstan/phpstan": "^1.1",
 		"phpunit/phpunit": "^9.1",
-		"psr/container": "^1.0"
+		"psr/container": "^1.0",
+		"qossmic/deptrac-shim": "^0.24.0"
 	},
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"
 	},
 	"autoload": {
 		"psr-4": {
-			"App\\": "app",
-			"Config\\": "app/Config"
+			"Bonfire\\": "src"
 		},
 		"exclude-from-classmap": [
 			"**/Database/Migrations/**"
@@ -43,17 +42,10 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Bonfire\\": "bonfire",
 			"Tests\\": "tests",
 			"Tests\\Support\\": "tests/_support"
 		}
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/lonnieezell/codigniter-shield.git"
-		}
-	],
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"scripts": {
@@ -66,13 +58,13 @@
 			"@inspect",
 			"@style"
 		],
-		"deduplicate": "phpcpd app/ bonfire/",
+		"deduplicate": "phpcpd src/",
 		"inspect": "deptrac analyze --cache-file=build/deptrac.cache",
 		"style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
-		"test": "phpunit"
+		"test": "./vendor/bin/phpunit"
 	},
 	"support": {
-		"forum": "http://forum.codeigniter.com/",
-		"source": "https://github.com/lonnieezell/Bonfire2"
+		"forum": "https://forum.codeigniter.com/",
+		"source": "https://github.com/lonnieezell/bonfire2-internals"
 	}
 }

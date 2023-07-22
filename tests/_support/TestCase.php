@@ -2,13 +2,18 @@
 
 namespace Tests\Support;
 
-use App\Entities\User;
-use App\Models\UserModel;
+use Bonfire\Bonfire;
+use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\User;
+use CodeIgniter\CodeIgniter;
+use CodeIgniter\Shield\Test\AuthenticationTesting;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
+use CodeIgniter\Test\Mock\MockCodeIgniter;
+use Config\App;
+use Config\Modules;
 use Faker\Factory;
-use Sparks\Shield\Test\AuthenticationTesting;
 
 /**
  * @internal
@@ -34,22 +39,42 @@ abstract class TestCase extends CIUnitTestCase
     {
         parent::setUp();
         $this->faker = Factory::create();   // @phpstan-ignore-line
+        helper('bonfire');
+    }
+
+    /**
+     * Loads up an instance of CodeIgniter
+     * and gets the environment setup.
+     *
+     * @return CodeIgniter
+     */
+    protected function createApplication()
+    {
+        $app = new MockCodeIgniter(new App());
+        $app->initialize();
+
+        // Initialize Bonfire so that the BF namespaces get added in
+        $bonfire = new Bonfire();
+        $bonfire->boot();
+
+        return $app;
     }
 
     /**
      * Creates a simple user with email/password identities.
      */
-    protected function createUser(?array $params = null)
+    protected function createUser(?array $params = null): User
     {
         $email = $params['email']
-            ?? $this->faker->email;
+            /** @phpstan-ignore-next-line */
+            ?? $this->faker->email();
         $password = $params['password']
             ?? 'secret123';
 
         unset($params['email'], $params['password']);
 
         /**
-         * @var User
+         * @var User $user
          */
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([

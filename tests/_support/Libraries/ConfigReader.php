@@ -29,10 +29,13 @@
  * THE SOFTWARE.
  *
  * @copyright  2019-2021 CodeIgniter Foundation
+ *
  * @license    https://opensource.org/licenses/MIT	MIT License
  *
  * @see       https://codeigniter.com
+ *
  * @since      Version 4.0.0
+ *
  * @filesource
  */
 

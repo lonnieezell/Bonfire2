@@ -6,22 +6,24 @@
     </button>
 
     <!-- Search Form -->
-    <form action="<?= route_to('search') ?>" method="post" class="flex-grow-1">
+    <form action="<?= url_to('search') ?>" method="post" class="flex-grow-1">
         <?= csrf_field() ?>
 
-        <input class="form-control form-control bg-light w-100" type="text" name="search_term" placeholder="Search" aria-label="Search"
+        <input class="form-control form-control bg-light w-100" type="text" name="search_term" placeholder="<?= lang('Bonfire.search') ?>" aria-label="<?= lang('Bonfire.search'); ?>"
             value="<?= old('search_term', $searchTerm ?? '') ?>">
     </form>
 
     <!-- User Menu -->
-    <div class="dropdown text-end mx-4">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <?= auth()->user()->renderAvatar(32) ?>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">
-            <li><a class="dropdown-item" href="/<?= ADMIN_AREA ?>/users/<?= auth()->id() ?>">My Account</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="<?= route_to('logout') ?>">Sign out</a></li>
-        </ul>
-    </div>
+    <?php if (auth()->user()) :?>
+        <div class="dropdown text-end mx-4">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <?= auth()->user()->renderAvatar(32) ?>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">
+                <li><a class="dropdown-item" href="<?= site_url(ADMIN_AREA . '/users/' . auth()->id()) ?>"><?= lang('Bonfire.myAccount') ?></a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="<?= site_url('logout') ?>"><?= lang('Bonfire.signOut') ?></a></li>
+            </ul>
+        </div>
+    <?php endif ?>
 </header>
