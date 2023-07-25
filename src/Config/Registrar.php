@@ -54,10 +54,10 @@ class Registrar
                 'admin'   => Admin::class,
             ],
             'globals' => [
-                'before' => array_merge($props['globals']['before'], [
+                'before' => array_merge_recursive($props['globals']['before'], [
                     'online' => ['except' => 'site-offline'],
                 ]),
-                'after' => array_merge($props['globals']['after'], [
+                'after' => array_merge_recursive($props['globals']['after'], [
                     'alerts',
                     'consent' => ['except' => ADMIN_AREA . '*'],
                 ]),
