@@ -143,7 +143,6 @@ class Bonfire
                 $modules["Bonfire\\{$name}"] = __DIR__ . "/{$name}";
             }
 
-            $modules = array_merge($modules, $this->getAppModules());
             cache()->save('bf-modules-search', $modules);
         }
 
@@ -220,20 +219,5 @@ class Bonfire
         foreach ($this->moduleConfigs as $config) {
             $config->{$method}($this);
         }
-    }
-
-    private function getAppModules(){
-        $modules = [];
-        $map = directory_map(APPPATH . 'Modules', 1);
-
-            foreach ($map as $row) {
-                if (substr($row, -1) !== DIRECTORY_SEPARATOR) {
-                    continue;
-                }
-
-                $name                                 = trim($row, DIRECTORY_SEPARATOR);
-                $modules["App\\Modules\\{$name}"] = APPPATH . "Modules/{$name}";
-            }
-        return $modules;
     }
 }
