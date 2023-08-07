@@ -218,16 +218,16 @@
         },
         {
             "name": "components/font-awesome",
-            "version": "6.2.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "75823cacdc5a2b34befa423b390432f5bef373b5"
+                "reference": "f70143b8251916dbb207940f06fcb14d5f91e2c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/75823cacdc5a2b34befa423b390432f5bef373b5",
-                "reference": "75823cacdc5a2b34befa423b390432f5bef373b5",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/f70143b8251916dbb207940f06fcb14d5f91e2c6",
+                "reference": "f70143b8251916dbb207940f06fcb14d5f91e2c6",
                 "shasum": ""
             },
             "type": "component",
@@ -251,9 +251,9 @@
             "description": "Font Awesome, the iconic SVG, font, and CSS framework.",
             "support": {
                 "issues": "https://github.com/components/font-awesome/issues",
-                "source": "https://github.com/components/font-awesome/tree/6.2.0"
+                "source": "https://github.com/components/font-awesome/tree/6.4.2"
             },
-            "time": "2022-09-08T05:14:26+00:00"
+            "time": "2023-08-07T13:23:07+00:00"
         },
         {
             "name": "laminas/laminas-escaper",
