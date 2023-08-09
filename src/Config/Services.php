@@ -41,7 +41,7 @@ class Services extends BaseService
     /**
      * Returns the system menu manager
      *
-     * @return Bonfire\Menus\Manager|mixed
+     * @return \Bonfire\Menus\Manager
      */
     public static function menus(bool $getShared = true)
     {
