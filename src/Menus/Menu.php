@@ -7,36 +7,59 @@
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
+ *
+ * php version 8.0
+ *
+ * @category Menus
+ * @package  Bonfire
+ * @author   Lonnie Ezell <lonnieje@gmail.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/lonnieezell/Bonfire2/
+ * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
 namespace Bonfire\Menus;
 
+/**
+ * Menu Class
+ *
+ * Represent list of Menu items and collection
+ *
+ * @category Menus
+ * @package  Bonfire
+ * @author   Lonnie Ezell <lonnieje@gmail.com>
+ * @license  MIT https://opensource.org/licenses/MIT
+ * @link     https://github.com/lonnieezell/Bonfire2/
+ * @see      https://github.com/lonnieezell/Bonfire2/
+ */
 class Menu
 {
     /**
-     * Holds all items/collections that appear
-     * at top level in this menu.
+     * Holds all Menu items or Menu collections that appear at
+     * top level in this menu.
      *
-     * @var array
+     * @var array<\Bonfire\Menus\MenuCollection|\Bonfire\Menus\MenuItem>
      */
-    protected $items = [];
+    protected array $items = [];
 
     /**
-     * Returns all items/collections in the menu.
+     * Returns all Menu items or Menu collections in the menu.
      *
-     * @return array
+     * @return array<\Bonfire\Menus\MenuCollection|\Bonfire\Menus\MenuItem>
      */
-    public function items()
+    public function items(): array
     {
         return $this->items;
     }
 
     /**
-     * Adds a new item
+     * Adds a new Menu item
      *
-     * @return $this
+     * @param \Bonfire\Menus\MenuItem $item Instance of MenuItem
+     *
+     * @return self
      */
-    public function addItem(MenuItem $item)
+    public function addItem(MenuItem $item): self
     {
         $this->items[] = $item;
 
@@ -47,12 +70,16 @@ class Menu
      * Creates a new collection with default values for
      * everything except the `name` and `title`, which are
      * required parameters.
+     *
+     * @param string $name  name or slug of the new Menu Collection
+     * @param string $title Title of the new Menu Collection
+     *
+     * @return \Bonfire\Menus\MenuCollection
      */
     public function createCollection(string $name, string $title): MenuCollection
     {
         $collection = new MenuCollection();
-        $collection->setName($name)
-            ->setTitle($title);
+        $collection->setName($name)->setTitle($title);
 
         $this->items[] = $collection;
 
@@ -63,10 +90,18 @@ class Menu
      * Creates a new collection, if one with $name doesn't exist,
      * and adds the items to the collection.
      *
-     * @return MenuCollection|mixed
+     * @param string $name  name of Menu Collection
+     * @param array  $items Array of Menu Item
+     *
+     * @return \Bonfire\Menus\MenuCollection
      */
-    public function collect(string $name, array $items)
+    public function collect(string $name, array $items): MenuCollection
     {
+        /**
+         *  Get Menu Collection
+         *
+         * @var \Bonfire\Menus\MenuCollection|null $collection
+         */
         $collection = $this->collection($name);
 
         if ($collection === null) {
@@ -84,7 +119,9 @@ class Menu
     /**
      * Locates a collection by name.
      *
-     * @return mixed
+     * @param string $name name of the Menu Collection
+     *
+     * @return \Bonfire\Menus\MenuCollection|null
      */
     public function collection(string $name)
     {
@@ -93,10 +130,14 @@ class Menu
                 return $item;
             }
         }
+
+        return null;
     }
 
     /**
      * Returns an array of all collections stored, if any.
+     *
+     * @return array<\Bonfire\Menus\MenuCollection>
      */
     public function collections(): array
     {
