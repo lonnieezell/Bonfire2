@@ -11,10 +11,7 @@
  * php version 8.0
  *
  * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
  * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
  * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
@@ -22,13 +19,6 @@ namespace Bonfire\Menus;
 
 /**
  * Trait HasMenuIcons
- *
- * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
- * @see      https://github.com/lonnieezell/Bonfire2/
  */
 trait HasMenuIcons
 {
@@ -84,15 +74,13 @@ trait HasMenuIcons
      * or an `<img>` tag for images.
      *
      * @param string $classOrIconUrl FontAwesome Icon Class Name or Icon URL
-     *
-     * @return string
      */
     public function icon(string $classOrIconUrl = ''): string
     {
-        if (!empty($this->faIcon)) {
+        if (! empty($this->faIcon)) {
             return $this->buildFontAwesomeIconTag($classOrIconUrl);
         }
-        if (!empty($this->iconUrl)) {
+        if (! empty($this->iconUrl)) {
             return $this->buildImageIconTag($classOrIconUrl);
         }
 
@@ -105,12 +93,10 @@ trait HasMenuIcons
      * Eg: `<i class="fas fa-users"></i>`
      *
      * @param string $className Custom class name for FontAwesome Icon
-     *
-     * @return string
      */
     protected function buildFontAwesomeIconTag(string $className): string
     {
-        $class = !empty($className) ? " {$className}" : '';
+        $class = ! empty($className) ? " {$className}" : '';
 
         return "<i class=\"{$this->faIcon}{$class}\"></i>";
     }
@@ -121,12 +107,10 @@ trait HasMenuIcons
      * Eg: `<img src="https://example.com" class="some-class"/>`
      *
      * @param string $class Custom Icon class name
-     *
-     * @return string
      */
     protected function buildImageIconTag(string $class): string
     {
-        $class = !empty($class) ? "class=\"{$class}\" " : '';
+        $class = ! empty($class) ? "class=\"{$class}\" " : '';
 
         $iconUrl = strpos($this->iconUrl, '://') !== false
             ? $this->iconUrl

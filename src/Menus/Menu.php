@@ -11,10 +11,7 @@
  * php version 8.0
  *
  * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
  * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
  * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
@@ -24,13 +21,6 @@ namespace Bonfire\Menus;
  * Menu Class
  *
  * Represent list of Menu items and collection
- *
- * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
- * @see      https://github.com/lonnieezell/Bonfire2/
  */
 class Menu
 {
@@ -56,8 +46,6 @@ class Menu
      * Adds a new Menu item
      *
      * @param \Bonfire\Menus\MenuItem $item Instance of MenuItem
-     *
-     * @return self
      */
     public function addItem(MenuItem $item): self
     {

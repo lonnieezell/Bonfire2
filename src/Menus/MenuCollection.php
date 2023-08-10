@@ -11,10 +11,7 @@
  * php version 8.0
  *
  * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
  * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
  * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
@@ -27,13 +24,6 @@ namespace Bonfire\Menus;
  *
  * @property string $name
  * @property string $title
- *
- * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
- * @see      https://github.com/lonnieezell/Bonfire2/
  */
 class MenuCollection extends MenuItem
 {
@@ -60,8 +50,6 @@ class MenuCollection extends MenuItem
      * Sets the name this collection can be referenced by.
      *
      * @param string $name Name of Menu item
-     *
-     * @return self
      */
     public function setName(string $name): self
     {
@@ -72,8 +60,6 @@ class MenuCollection extends MenuItem
 
     /**
      * Gets the name this collection can be referenced by.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -84,8 +70,6 @@ class MenuCollection extends MenuItem
      * Sets this collection is collapsible.
      *
      * @param bool $collapse Is collapsible or not
-     *
-     * @return self
      */
     public function setCollapsible(bool $collapse = true): self
     {
@@ -96,8 +80,6 @@ class MenuCollection extends MenuItem
 
     /**
      * Gets this collection is collapsible
-     *
-     * @return bool
      */
     public function isCollapsible(): bool
     {
@@ -108,8 +90,6 @@ class MenuCollection extends MenuItem
      * Adds a single item to the menu.
      *
      * @param \Bonfire\Menus\MenuItem $item Instance of MenuItem
-     *
-     * @return self
      */
     public function addItem(MenuItem $item): self
     {
@@ -122,8 +102,6 @@ class MenuCollection extends MenuItem
      * Add multiple Menu items at once.
      *
      * @param array<\Bonfire\Menus\MenuItem> $items list of MenuItem Instance
-     *
-     * @return self
      */
     public function addItems(array $items): self
     {
@@ -136,8 +114,6 @@ class MenuCollection extends MenuItem
      * Remove Menu Item from this collection
      *
      * @param string $title title of MenuItem that want to remove
-     *
-     * @return void
      */
     public function removeItem(string $title): void
     {
@@ -151,8 +127,6 @@ class MenuCollection extends MenuItem
 
     /**
      * Removes all of the items from this collection.
-     *
-     * @return self
      */
     public function removeAllItems(): self
     {
@@ -178,8 +152,6 @@ class MenuCollection extends MenuItem
      * Is this collection "active"? Used in default admin
      * theme to determine if the sub-navs should be open
      * or flyout.
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
@@ -191,8 +163,6 @@ class MenuCollection extends MenuItem
     /**
      * Sorts the items by the weight, ensuring that bigger
      * weights drop to the bottom.
-     *
-     * @return void
      */
     protected function sortItems(): void
     {

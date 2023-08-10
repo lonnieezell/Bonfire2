@@ -11,10 +11,7 @@
  * php version 8.0
  *
  * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
  * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
  * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
@@ -27,13 +24,6 @@ namespace Bonfire\Menus;
  *
  * @method self                createMenu(string $name)
  * @method \Bonfire\Menus\Menu menu(string $name)
- *
- * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
- * @see      https://github.com/lonnieezell/Bonfire2/
  */
 class Manager
 {
@@ -48,8 +38,6 @@ class Manager
      * Creates a new menu in the system.
      *
      * @param string $name New Menu's name
-     *
-     * @return self
      */
     public function createMenu(string $name): self
     {
@@ -65,9 +53,9 @@ class Manager
      *
      * @return \Bonfire\Menus\Menu
      */
-    public function menu(string $name):Menu
+    public function menu(string $name): Menu
     {
-        if (!isset($this->_menus[$name])) {
+        if (! isset($this->_menus[$name])) {
             $this->createMenu($name);
         }
 

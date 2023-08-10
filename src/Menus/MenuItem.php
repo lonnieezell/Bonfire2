@@ -11,10 +11,7 @@
  * php version 8.0
  *
  * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
  * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
  * @see      https://github.com/lonnieezell/Bonfire2/
  */
 
@@ -30,13 +27,6 @@ namespace Bonfire\Menus;
  * @property string $title
  * @property string $url
  * @property int    $weight
- *
- * @category Menus
- * @package  Bonfire
- * @author   Lonnie Ezell <lonnieje@gmail.com>
- * @license  MIT https://opensource.org/licenses/MIT
- * @link     https://github.com/lonnieezell/Bonfire2/
- * @see      https://github.com/lonnieezell/Bonfire2/
  */
 class MenuItem
 {
@@ -105,8 +95,6 @@ class MenuItem
      * Sets Title of this Menu Item
      *
      * @param string $title Title of Menu Item
-     *
-     * @return self
      */
     public function setTitle(string $title): self
     {
@@ -119,8 +107,6 @@ class MenuItem
      * Sets URL of this Menu Item
      *
      * @param string $url Url of Menu Item
-     *
-     * @return self
      */
     public function setUrl(string $url): self
     {
@@ -133,8 +119,6 @@ class MenuItem
      * Sets the URL via reverse routing, so can use named routes to set the URL by.
      *
      * @param string $name NamedRoute or alias of
-     *
-     * @return self Route for Menu Item
      */
     public function setNamedRoute(string $name): self
     {
@@ -147,8 +131,6 @@ class MenuItem
      * Sets the Alternative Text of this Menu Item
      *
      * @param string $text AltText for Menu Item
-     *
-     * @return self
      */
     public function setAltText(string $text): self
     {
@@ -164,8 +146,6 @@ class MenuItem
      * the unique named route.
      *
      * @param int $weight Weight of Menu Item
-     *
-     * @return self
      */
     public function setWeight(int $weight): self
     {
@@ -184,8 +164,6 @@ class MenuItem
      * Sets the permission required to see this menu item.
      *
      * @param string $permission Permission for user can
-     *
-     * @return self see this menu item
      */
     public function setPermission(string $permission): self
     {
@@ -196,8 +174,6 @@ class MenuItem
 
     /**
      * Gets Title of this Menu Item
-     *
-     * @return string
      */
     public function title(): string
     {
@@ -206,8 +182,6 @@ class MenuItem
 
     /**
      * Gets Url of this Menu Item
-     *
-     * @return string
      */
     public function url(): string
     {
@@ -216,8 +190,6 @@ class MenuItem
 
     /**
      * Gets altText of this Menu Item
-     *
-     * @return string
      */
     public function altText(): string
     {
@@ -226,18 +198,14 @@ class MenuItem
 
     /**
      * Gets Weight of this Menu Item
-     *
-     * @return int
      */
-    public function weight():int
+    public function weight(): int
     {
         return $this->weight ?? 0;
     }
 
     /**
      * Can the active user see this menu item?
-     *
-     * @return bool
      */
     public function userCanSee(): bool
     {
