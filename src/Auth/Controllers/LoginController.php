@@ -18,8 +18,13 @@ class LoginController extends ShieldLogin
     /**
      * Display the login view
      */
-    public function loginView(): string
+    public function loginView()
     {
+        // prevent login page access to logged-in users
+        if (auth()->loggedIn()) {
+            return redirect()->to(config('Auth')->loginRedirect());
+        }
+
         return $this->render(config('Auth')->views['login'], [
             'allowRemember' => setting('Auth.sessionConfig')['allowRemembering'],
         ]);
