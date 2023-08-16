@@ -179,6 +179,24 @@ class MenuCollection extends MenuItem
     }
 
     /**
+     * Returns true if the collection contains at least one item that is
+     * visible to current user, false otherwise
+     */
+    public function hasVisibleItems(): bool
+    {
+        $visible = false;
+
+        foreach ($this->items as $item) {
+            if ($item->userCanSee()) {
+                $visible = true;
+                break;
+            }
+        }
+
+        return $visible;
+    }
+
+    /**
      * Gets callable of MenuCollection Class
      *
      * @param string $key one of the Method name of MenuCollection Class
