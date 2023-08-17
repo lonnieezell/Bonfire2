@@ -15,7 +15,6 @@ use Bonfire\Core\AdminController;
 use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
-use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use ReflectionException;
@@ -161,14 +160,32 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
+
+                // Check
+                $maxDimension     = setting('Users.avatarResize') ?? false;
+                [$width, $height] = getimagesize($file->getPathname());
+                if ($maxDimension && ($width > $maxDimension || $height > $maxDimension)) {
+                    $image = service('image')->withFile($file->getPathname());
+                    $image->resize($maxDimension, $maxDimension, true);
+                    $image->save();
+                }
+
                 $avatarDir = FCPATH . '/uploads/avatars';
-                $filename  = $user->id . '_avatar.' . $file->getExtension();
+                helper('text');
+                $randomString = random_string('alnum', 5);
+                $filename     = $user->id . '_' . $randomString . '.jpg';
 
                 // Create if uploads/avatar directories not exist
                 if (! is_dir($avatarDir)) {
                     mkdir($avatarDir, 0755, true);
                 }
 
+                // delete the previous file if there is one in db & filesystem
+                if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
+                    @unlink($avatarDir . '/' . $user->avatar);
+                }
+
+                // move the uploaded file and update user object
                 if ($file->move($avatarDir, $filename, true)) {
                     $users->update($user->id, ['avatar' => $filename]);
                 }
@@ -198,7 +215,7 @@ class UserController extends AdminController
 
         // Save the user's groups if the user has right permissions
         if (auth()->user()->can('users.edit')) {
-           $user->syncGroups(...($this->request->getPost('groups') ?? []));
+            $user->syncGroups(...($this->request->getPost('groups') ?? []));
         }
 
         // Save the user's meta fields
@@ -272,7 +289,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        if (!$users->delete($user->id)) {
+        if (! $users->delete($user->id)) {
             log_message('error', implode(' ', $users->errors()));
 
             return redirect()->back()->with('error', lang('Bonfire.unknownError'));

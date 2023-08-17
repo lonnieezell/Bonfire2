@@ -51,6 +51,18 @@ class Users extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
+     * Uploaded Image Manipulation
+     * --------------------------------------------------------------------------
+     *
+     * Should uploaded avatar be resized? 
+     * Possible values either false or image max size of any dimension in pixels
+     */
+    public $avatarResize = false;
+
+
+
+    /**
+     * --------------------------------------------------------------------------
      * Additional User Fields
      * --------------------------------------------------------------------------
      * Validation rules used when saving a user.
