@@ -14,6 +14,7 @@ You specify the available filters within your Model, using a class property name
 protected $filters = [
     'column_name' => [
         'title' => 'Column Title',
+        'type' => 'radio',
         'options' => ['one' => 'Option 1', 'two' => 'Option 2']
     ],
     'column_two' => [
@@ -24,9 +25,13 @@ protected $filters = [
 ```
 
 The key of each array element is the name of the `column` that you wish to filter on. The column must be within the
-table for the model (see below for other options). It is then described by an array with the keys `title`, and `options`.
+table for the model (see below for other options). It is then described by an array with the keys `title`, `options`, and 
+optional key `type`. 
 Title is the display title for that group of options. The `options` value is typically an array of keys and their display
-values that the column should be filtered by. The keys must match valid values within the database.
+values that the column should be filtered by. The keys must match valid values within the database. Key `type` signifies if
+the filter should be composed of checkboxes (default) or radio's. If it is omitted, the default value `checkbox` would be 
+assumed. In case `type` => `radio` is specified, the last option in the `options` array will be pre-selected in the filter
+UI, so it should probably contain value representing all entries.
 
 Sometimes you need to pull values from a config file, or another table, etc, in order to provide the list of options.
 In this case, you can use the string `methodName` where `methodName` is a method within the model to call
