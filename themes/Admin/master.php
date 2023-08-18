@@ -23,7 +23,7 @@
     </div>
 <?php endif ?>
 
-<div class="main <?= site_offline() ? 'offline' : '' ?>" x-data="{open: true}" >
+<div class="main <?= site_offline() ? 'offline' : '' ?>" x-data="{open: (window.innerWidth >= 576)}">
     <div class="h-100 d-flex align-items-stretch">
         <nav id="sidebars" class="sidebar" x-bind:class="{ 'collapsed': ! open }">
             <div class="sidebar-wrap  h-100 position-relative">
