@@ -34,18 +34,21 @@ class UserFilter extends UserModel
             'options' => [0 => 'Inactive', 1 => 'Active'],
         ],
         'last_active' => [
-            'title'   => 'Last Active',
+            'title'   => 'Last Active Within',
+            'type'    => 'radio',
             'options' => [
-                1   => '1 day',
-                2   => '2 days',
-                3   => '3 days',
-                7   => '1 week',
-                14  => '2 weeks',
-                30  => '1 month',
-                90  => '3 months',
-                180 => '6 months',
-                365 => '1 year',
-                366 => '> 1 year',
+                1       => '1 day',
+                2       => '2 days',
+                3       => '3 days',
+                7       => '1 week',
+                14      => '2 weeks',
+                30      => '1 month',
+                90      => '3 months',
+                180     => '6 months',
+                365     => '1 year',
+                'any'   => 'any time',
+                'never' => 'never',
+                'all'   => 'show all',
             ],
         ],
     ];
@@ -75,11 +78,14 @@ class UserFilter extends UserModel
             $this->whereIn('users.active', $params['active']);
         }
 
-        if (isset($params['last_active']) && count($params['last_active'])) {
-            // We only use the largest value
-            $days = max($params['last_active']);
-            $this->where('last_active >=', Time::now()->subDays($days)->toDateTimeString());
+        if (isset($params['last_active']) && is_numeric($params['last_active'])) {
+            $this->where('last_active >=', Time::now()->subDays($params['last_active'])->toDateTimeString());
+        } elseif (isset($params['last_active']) && $params['last_active'] === 'any') {
+            $this->where('last_active !=', null);
+        } elseif (isset($params['last_active']) && $params['last_active'] === 'never') {
+            $this->where('last_active', null);
         }
+        // omitting 'where' for $params['last_active'] == 'all'
 
         // if we need second query to avoid duplicates:
         if ($secondQuery) {
