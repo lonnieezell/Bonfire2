@@ -41,7 +41,7 @@
         <main class="ms-sm-auto flex-grow-1" style="overflow: auto">
             <?= $this->include('_header') ?>
 
-            <div class="px-md-4 vh-100" style="margin-top: -48px; padding-top: 48px;">
+            <div class="px-2 px-md-4 vh-100" style="margin-top: -48px; padding-top: 48px;">
                 <?= $this->renderSection('main') ?>
             </div>
         </main>
