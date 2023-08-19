@@ -31,7 +31,7 @@ final class MetadataTest extends TestCase
     {
         $this->assertSame(
             '<meta charset="UTF-8" >' . "\n" .
-            '<meta viewport="width=device-width, initial-scale=1" >' . "\n",
+            '<meta name="viewport" content="width=device-width, initial-scale=1" >' . "\n",
             $this->meta->render('meta')
         );
     }
