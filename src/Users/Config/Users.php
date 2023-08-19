@@ -51,15 +51,27 @@ class Users extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
-     * Uploaded Image Manipulation
+     * Avatar Upload directory
+     * --------------------------------------------------------------------------
+     * relative to FCPATH and base_url
+     */
+
+    public $avatarDirectory = 'uploads/avatars';
+
+    /**
+     * --------------------------------------------------------------------------
+     * Uploaded Avatar Image Manipulation
      * --------------------------------------------------------------------------
      *
-     * Should uploaded avatar be resized? 
-     * Possible values either false or image max size of any dimension in pixels
+     * Should uploaded avatar be resized? (bool)
+     * If so, what is the maximum size (vertical or horizontal, whichever
+     * bigger), in px? (int)
+     * $avatarResizeFloor is the minimum size of an avatar (set to 32 as required by
+     * toolbar avatar size)
      */
     public $avatarResize = false;
-
-
+    public $avatarSize = 140;
+    public $avatarResizeFloor = 32;
 
     /**
      * --------------------------------------------------------------------------

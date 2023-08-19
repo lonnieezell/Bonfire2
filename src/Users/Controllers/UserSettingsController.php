@@ -55,6 +55,8 @@ class UserSettingsController extends BaseController
         $rules = [
             'minimumPasswordLength' => 'required|integer|greater_than[6]',
             'defaultGroup'          => 'required|string',
+            'avatarResize'          => 'required|in_list[0,1]',
+            'avatarSize'            => 'required_with[avatarResize]|integer|greater_than_equal_to[' . (setting('Users.avatarSizeFloor') ?? '32') . ']',
         ];
 
         if (! $this->validate($rules)) {
@@ -82,6 +84,10 @@ class UserSettingsController extends BaseController
         setting('Users.useGravatar', $this->request->getPost('useGravatar') ?? false);
         setting('Users.gravatarDefault', $this->request->getPost('gravatarDefault'));
         setting('Users.avatarNameBasis', $this->request->getPost('avatarNameBasis'));
+        setting('Users.avatarResize', (bool) $this->request->getPost('avatarResize'));
+        if ($this->request->getPost('avatarResize') == 1) {
+            setting('Users.avatarSize', (int) $this->request->getPost('avatarSize'));
+        }
 
         alert('success', lang('Bonfire.resourcesSaved', ['settings']));
 

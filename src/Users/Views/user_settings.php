@@ -76,8 +76,6 @@
 
             </fieldset>
 
-            <hr>
-
             <fieldset x-data="{remember: <?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? 1 : 0 ?>}">
                 <legend>Login</legend>
 
@@ -135,8 +133,6 @@
                     </div>
                 </div>
             </fieldset>
-
-            <hr>
 
             <fieldset>
                 <legend>Passwords</legend>
@@ -250,13 +246,16 @@
 
 
 
-            <fieldset x-data="{useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? true : false ?>}">
+            <fieldset x-data="{
+                        useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? 'true' : 'false' ?>, 
+                        avatarResize: <?= old('avatarResize', setting('Users.avatarResize')) ? 'true' : 'false' ?>
+                        }">
                 <legend>Avatars</legend>
 
                 <!-- Name Basis -->
                 <div class="row mb-3">
                     <div class="col-12 col-sm-4">
-                        <label class="form-check-label" for="avatarNameBasis">Display initials based on:</label>
+                        <label class="form-label" for="avatarNameBasis">Display initials based on:</label>
                         <select name="avatarNameBasis" class="form-select">
                             <option value="name" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'name' ? 'selected' : '' ?>>Full Name</option>
                             <option value="username" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'username' ? 'selected' : '' ?>>Username</option>
@@ -277,7 +276,7 @@
                                    @change="useGravatar = ! useGravatar"
                                 <?php if (old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
                             >
-                            <label class="form-check-label" for="use-gravatar">
+                            <label class="form-check-label fw-bold" for="use-gravatar">
                                 Use Gravatar for avatars
                             </label>
                         </div>
@@ -289,7 +288,7 @@
                 </div>
 
                 <!-- Gravatar Default -->
-                <div class="row" x-show="useGravatar">
+                <div class="row mb-3" x-show="useGravatar">
                     <div class="col-12 col-sm-4">
                         <label for="gravatarDefault" class="form-label">Gravatar default style</label>
                         <select name="gravatarDefault" class="form-select">
@@ -309,9 +308,47 @@
                         </p>
                     </div>
                 </div>
-            </fieldset>
 
-            <br><hr>
+                <!-- Avatar downsize -->
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <div class="form-check">
+                            <input type="hidden" name="avatarResize" value="0">
+                            <input class="form-check-input" type="checkbox" name="avatarResize"
+                                   value="1" id="avatar-resize"
+                                   @change="avatarResize = ! avatarResize"
+                                <?php if (old('avatarResize', setting('Users.avatarResize'))) : ?> checked <?php endif ?>
+                            >
+                            <label class="form-check-label" for="avatar-resize">
+                                Downsize avatar on upload
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col px-5">
+                        <p class="text-muted small">Should the user-uploaded avatar image be downsized?</p>
+                    </div>
+                </div>
+
+                <!-- Gravatar Default -->
+                <div class="row" x-show="avatarResize">
+                    <div class="col-12 col-sm-4">
+                        <label for="avatar-size" class="form-label">Avatar max dimensions</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text" id="px-notation">px</span>
+                            <input placeholder="<?= setting('User.avatarSizeFloor') ?? 32 ?>" name="avatarSize" type="number" min="<?= setting('User.avatarSizeFloor') ?? 32 ?>" class="form-control" value="<?= old('avatarSize', setting('Users.avatarSize')) ?>" id="avatar-size">
+                        </div>
+                    </div>
+                    <div class="col px-5 pt-2">
+                        <p class="text-muted small">
+                            The smallest dimension should not be less than <?= setting('User.avatarSizeFloor') ?? 32 ?> px.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            </fieldset>
 
             <div class="text-end px-5 py-3">
                 <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">
