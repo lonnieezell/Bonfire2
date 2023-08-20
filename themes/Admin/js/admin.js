@@ -13,6 +13,12 @@ function toggleSelectAll(checkbox) {
     }
 }
 
-document.querySelector('.select-all').addEventListener('click', function (e) {
-    toggleSelectAll(e.target)
-})
+// Check if there is a .select-all element on the page
+const selectAllElement = document.querySelector('.select-all');
+
+// Attach the event listener only if the element exists
+if (selectAllElement) {
+    selectAllElement.addEventListener('click', function (e) {
+        toggleSelectAll(e.target);
+    });
+}
