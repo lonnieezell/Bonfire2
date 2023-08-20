@@ -104,7 +104,9 @@ final class MenuCollectionTest extends TestCase
     {
         // first create user:
         $user = fake(UserModel::class);
+        /** @phpstan-ignore-next-line */
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
+        /** @phpstan-ignore-next-line */
         $user->addGroup('admin');
 
         // immitate user login
