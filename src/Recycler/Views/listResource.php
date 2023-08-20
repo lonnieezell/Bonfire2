@@ -60,21 +60,19 @@
                             <td><?= esc($item[$column] ?? '') ?></td>
                         <?php endforeach ?>
                             <td class="text-end">
-                                <div class="btn-group">
-                                    <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
-                                    class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
-                                    onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
-                                    >
-                                        <i class="fas fa-trash-restore"></i>
-                                    </a>
-                                    &nbsp;
-                                    <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
-                                    class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
-                                    onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
-                                    >
-                                        <i class="fas fa-minus-circle"></i>
-                                    </a>
-                                </div>
+                                <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
+                                class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
+                                onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
+                                >
+                                    <i class="fas fa-trash-restore"></i>
+                                </a>
+                                &nbsp;
+                                <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
+                                class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
+                                onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
+                                >
+                                    <i class="fas fa-minus-circle"></i>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach ?>
