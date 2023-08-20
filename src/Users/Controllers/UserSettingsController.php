@@ -85,7 +85,7 @@ class UserSettingsController extends BaseController
         setting('Users.gravatarDefault', $this->request->getPost('gravatarDefault'));
         setting('Users.avatarNameBasis', $this->request->getPost('avatarNameBasis'));
         setting('Users.avatarResize', (bool) $this->request->getPost('avatarResize'));
-        if ($this->request->getPost('avatarResize') == 1) {
+        if ((int) $this->request->getPost('avatarResize') === 1) {
             setting('Users.avatarSize', (int) $this->request->getPost('avatarSize'));
         }
 

@@ -165,7 +165,7 @@ class UserController extends AdminController
                 $avatarResize     = setting('Users.avatarResize') ?? false;
                 $maxDimension     = setting('Users.avatarSize') ?? 140;
                 [$width, $height] = getimagesize($file->getPathname());
-                if ($avatarResize && ($width > $maxDimension || $height > $maxDimension)) {
+                if ($avatarResize && ($width > (int) $maxDimension || $height > (int) $maxDimension)) {
                     $image = service('image')->withFile($file->getPathname());
                     $image->resize($maxDimension, $maxDimension, true);
                     $image->save();

@@ -69,6 +69,7 @@ class UserModel extends ShieldUsers
             return $data;
         }
 
+        /** @phpstan-ignore-next-line  TODO: any better way of accessing $avatar on user objet? It works, but phpstan complains */
         $userAvatar = $user->avatar;
 
         $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
