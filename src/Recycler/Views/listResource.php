@@ -9,7 +9,24 @@
         </div>
         <?php if (count($resources) > 1) : ?>
             <div class="col-auto">
-                <select name="r" class="form-select" hx-get="?" hx-target="#resource">
+            <select name="r" class="form-select" x-data="{
+                    getRequest(selectedValue) {
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('r', selectedValue);
+                        fetch(url.toString()).then(response => {
+                            if (response.ok) {
+                                return response.text();
+                            }
+                            throw new Error('Network response was not ok.');
+                        }).then(html => {
+                            document.body.innerHTML = html; // Replace the whole page content
+                            window.history.pushState(null, null, url.toString()); // Update the URL
+                        }).catch(error => {
+                            console.error('Error fetching data:', error);
+                        });
+                    }
+                }" x-on:change="getRequest($event.target.value)"
+            >
                 <?php foreach ($resources as $alias => $details) : ?>
                     <option value="<?= strtolower($alias) ?>" <?= (strtolower($currentAlias) === strtolower($alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>
                 <?php endforeach ?>
@@ -43,19 +60,21 @@
                             <td><?= esc($item[$column] ?? '') ?></td>
                         <?php endforeach ?>
                             <td class="text-end">
-                                <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
-                                   class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
-                                   onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
-                                >
-                                    <i class="fas fa-trash-restore"></i>
-                                </a>
-                                &nbsp;
-                                <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
-                                   class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
-                                   onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
-                                >
-                                    <i class="fas fa-minus-circle"></i>
-                                </a>
+                                <div class="btn-group">
+                                    <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
+                                    class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
+                                    onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
+                                    >
+                                        <i class="fas fa-trash-restore"></i>
+                                    </a>
+                                    &nbsp;
+                                    <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
+                                    class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
+                                    onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
+                                    >
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach ?>
