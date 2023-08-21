@@ -4,6 +4,7 @@ namespace Tests\Menus;
 
 use Bonfire\Menus\MenuCollection;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Users\Models\UserModel;
 use Tests\Support\TestCase;
 
 /**
@@ -104,5 +105,50 @@ final class MenuCollectionTest extends TestCase
         $this->assertCount(2, $items);
         $this->assertSame('Item 2', $items[0]->title);
         $this->assertSame('Item 1', $items[1]->title);
+    }
+
+    public function testHasVisibleItems()
+    {
+        // first create user:
+        $user = fake(UserModel::class);
+        /** @phpstan-ignore-next-line */
+        $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
+        /** @phpstan-ignore-next-line */
+        $user->addGroup('admin');
+
+        // immitate user login
+        $response = $this->post(route_to('login'), [
+            'email'    => 'foo@example.com',
+            'password' => 'alsdkfja;sldkfj',
+        ]);
+        // check if login successfull
+        $response->assertSessionHas('logged_in');
+
+        // create menu collection to test
+        $collection = new MenuCollection(['name' => 'Bar']);
+
+        // add item that will not be visible to admin:
+        $superadminMenu = new MenuItem([
+            'title'           => 'Item not seen to admin',
+            'namedRoute'      => 'user-list',
+            'fontAwesomeIcon' => 'fas fa-user-cog',
+            'permission'      => 'admin.settings',
+        ]);
+        $collection->addItem($superadminMenu);
+
+        // test that collection does not have visible items: 
+        $this->assertFalse($collection->hasVisibleItems());
+
+        // add item that would be visible to admin
+        $adminMenu = new MenuItem([
+            'title'           => 'Item available to admin',
+            'namedRoute'      => 'user-list',
+            'fontAwesomeIcon' => 'fas fa-user',
+            'permission'      => 'admin.access',
+        ]);
+        $collection->addItem($adminMenu);
+        
+        // test that collection now does have visible items: 
+        $this->assertTrue($collection->hasVisibleItems());
     }
 }
