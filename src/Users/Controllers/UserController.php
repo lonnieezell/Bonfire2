@@ -15,7 +15,6 @@ use Bonfire\Core\AdminController;
 use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
-use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use ReflectionException;
@@ -161,14 +160,33 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
-                $avatarDir = FCPATH . '/uploads/avatars';
-                $filename  = $user->id . '_avatar.' . $file->getExtension();
+
+                // Check if the avatar is to be resized
+                $avatarResize     = setting('Users.avatarResize') ?? false;
+                $maxDimension     = setting('Users.avatarSize') ?? 140;
+                [$width, $height] = getimagesize($file->getPathname());
+                if ($avatarResize && ($width > (int) $maxDimension || $height > (int) $maxDimension)) {
+                    $image = service('image')->withFile($file->getPathname());
+                    $image->resize($maxDimension, $maxDimension, true);
+                    $image->save();
+                }
+
+                $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
+                helper('text');
+                $randomString = random_string('alnum', 5);
+                $filename     = $user->id . '_' . $randomString . '.jpg';
 
                 // Create if uploads/avatar directories not exist
                 if (! is_dir($avatarDir)) {
                     mkdir($avatarDir, 0755, true);
                 }
 
+                // delete the previous file if there is one in db & filesystem
+                if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
+                    @unlink($avatarDir . '/' . $user->avatar);
+                }
+
+                // move the uploaded file and update user object
                 if ($file->move($avatarDir, $filename, true)) {
                     $users->update($user->id, ['avatar' => $filename]);
                 }
@@ -198,7 +216,7 @@ class UserController extends AdminController
 
         // Save the user's groups if the user has right permissions
         if (auth()->user()->can('users.edit')) {
-           $user->syncGroups(...($this->request->getPost('groups') ?? []));
+            $user->syncGroups(...($this->request->getPost('groups') ?? []));
         }
 
         // Save the user's meta fields
@@ -272,7 +290,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        if (!$users->delete($user->id)) {
+        if (! $users->delete($user->id)) {
             log_message('error', implode(' ', $users->errors()));
 
             return redirect()->back()->with('error', lang('Bonfire.unknownError'));
@@ -389,5 +407,37 @@ class UserController extends AdminController
         $user->syncPermissions(...($this->request->getPost('permissions') ?? []));
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
+    }
+
+    /**
+     * Deletes user avatar on HTMX ajax request
+     *
+     * @return string
+     */
+    public function deleteAvatar(int $userId)
+    {
+        // check if it's the current user
+        $itsMe = auth()->user()->can('me.edit') && auth()->id() === $userId;
+        // check if the user should be permitted access
+
+        $users = new UserModel();
+        /**
+         * @var User
+         */
+        $user = $users->find($userId);
+
+        if (auth()->user()->can('users.edit') || $itsMe) {
+
+            $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
+            if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
+                @unlink($avatarDir . '/' . $user->avatar);
+                $user->avatar = null;
+                $users->save($user);
+            }
+
+            return $this->render($this->viewPrefix . '_avatar', ['user'   => $user]);
+        }
+        // TODO: will have to find a way to return error message via ajax fragment later
+        return '';
     }
 }

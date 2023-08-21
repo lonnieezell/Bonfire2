@@ -44,6 +44,8 @@ final class AdminSettingsTest extends TestCase
                 'rememberLength'        => 55,
                 'email2FA'              => 1,
                 'minimumPasswordLength' => 10,
+                'avatarResize'          => 1,
+                'avatarSize'            => 180,
                 'validators'            => [
                     'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
                 ],

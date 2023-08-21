@@ -19,6 +19,9 @@ class UserModel extends ShieldUsers
         'avatar', 'first_name', 'last_name',
     ];
 
+    protected $allowCallbacks = true;
+    protected $beforeDelete = ['deleteAvatar'];
+
     /**
      * Performs additional setup when finding objects
      * for the recycler. This might pull in additional
@@ -47,5 +50,36 @@ class UserModel extends ShieldUsers
             'last_name'  => $faker->lastName(),
             'active'     => true,
         ]);
+    }
+
+    /**
+     * Event-triggered method to delete user avatar if the user is being purged
+     * from the system
+     */
+    public function deleteAvatar(array $data): array
+    {
+        // if it is a soft delete, return at once
+        if (!$data['purge']) {
+            return $data;
+        }
+
+        $user = $this->withDeleted()->find($data['id'][0]); // Retrieve the entity
+
+        if (!$user) {
+            return $data;
+        }
+
+        /** @phpstan-ignore-next-line  TODO: any better way of accessing $avatar on user objet? It works, but phpstan complains */
+        $userAvatar = $user->avatar;
+
+        $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
+        if (
+            !empty($userAvatar)
+            && file_exists($avatarDir . '/' . $userAvatar)
+        ) {
+            @unlink($avatarDir . '/' . $userAvatar);
+        }
+
+        return $data;
     }
 }

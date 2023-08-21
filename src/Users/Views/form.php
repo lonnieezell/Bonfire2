@@ -32,16 +32,9 @@
                 <legend>Basic Info</legend>
 
                 <div class="row">
-                    <div class="col-12 col-sm-3 d-flex align-items-top pt-3">
+                    <div id="avatar-place" class="col-12 col-sm-3 d-flex align-items-top pt-3">
                         <!-- Avatar preview and edit links -->
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-center">
-                                <?= isset($user) ? $user->renderAvatar(140) : (new \Bonfire\Users\User())->renderAvatar(140) ?>
-                            </div>
-                            <div class="col-12 mt-4">
-                                <input type="file" class="form-control btn-upload" name="avatar" accept="image/*" />
-                            </div>
-                        </div>
+                        <?= $this->include('\Bonfire\Users\Views\_avatar') ?>
                     </div>
                     <div class="col">
                         <div class="row">
