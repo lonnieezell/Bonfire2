@@ -27,7 +27,7 @@ class Auth extends ShieldAuth
         'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
         'action_email_2fa_verify'     => '\CodeIgniter\Shield\Views\email_2fa_verify',
         'action_email_2fa_email'      => '\CodeIgniter\Shield\Views\Email\email_2fa_email',
-        'action_email_activate_show'  => '\CodeIgniter\Shield\Views\email_activate_show',
+        'action_email_activate_show'  => '\Bonfire\Views\Auth\email_activate_show',
         'action_email_activate_email' => '\CodeIgniter\Shield\Views\Email\email_activate_email',
         'magic-link-login'            => '\Bonfire\Views\Auth\magic_link_form',
         'magic-link-message'          => '\Bonfire\Views\Auth\magic_link_message',
@@ -59,8 +59,12 @@ class Auth extends ShieldAuth
      *
      * Available actions with Shield:
      * - register: 'CodeIgniter\Shield\Authentication\Actions\EmailActivator'
+     * (replaced with 'Bonfire\Auth\Actions\EmailActivator' in Bonfire)
      * - login:    'CodeIgniter\Shield\Authentication\Actions\Email2FA'
      *
+     * These values should be left unchanged in configuration file; they will
+     * be configured in the Admin panel of website and stored in database
+     * 
      * @var array<string, class-string<ActionInterface>|null>
      */
     public array $actions = [
