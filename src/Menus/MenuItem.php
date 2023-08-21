@@ -60,7 +60,7 @@ class MenuItem
     /**
      * Route for use in setting weight based on values from config
      */
-    private string $_namedRoute;
+    private string $_namedRoute = '';
 
     /**
      * Undocumented function
