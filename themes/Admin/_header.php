@@ -1,10 +1,12 @@
 <header class="navbar navbar-light flex-md-nowrap p-0 shadow-sm d-flex">
-    <button class="navbar-toggler d-sm-none collapsed mx-2 border-none" type="button"
-        @click="open = ! open"
-    >
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
+<?php
+/** disable button untill a more elegant solution is
+ * found. The menu can be toggled using the bottom-left expand button anyway
+ * <button class="navbar-toggler d-sm-none collapsed mx-2 border-none" type="button" @click="open = ! open">
+ *     <span class="navbar-toggler-icon"></span>
+ * </button>
+ */
+?>
     <!-- Search Form -->
     <form action="<?= url_to('search') ?>" method="post" class="flex-grow-1">
         <?= csrf_field() ?>

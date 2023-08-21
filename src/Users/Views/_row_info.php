@@ -2,7 +2,7 @@
 <td><a href="<?= $user->adminLink() ?>"><?= esc($user->username) ?></a></td>
 <td><?= $user->groupsList() ?></td>
 <td><?= $user->last_active !== null ? $user->last_active->humanize() : 'never' ?></td>
-<td class="d-flex justify-content-end">
+<td class="justify-content-end">
     <?php if (auth()->user()->can('users.edit') || auth()->user()->can('users.delete')): ?>
         <!-- Action Menu -->
         <div class="dropdown">

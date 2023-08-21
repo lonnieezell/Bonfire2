@@ -18,31 +18,32 @@
             <p>These permissions are applied in addition to any allowed by the user's groups.</p>
 
             <p>Indeterminate checkboxes indicate the permission is already available from one or more groups the user is a part of.</p>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 3rem"></th>
-                        <th>Permission</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($permissions as $permission => $description) : ?>
-                    <tr>
-                        <td>
-                            <input class="form-check-input <?= $user->can($permission) ? 'in-group' : '' ?>" type="checkbox" name="permissions[]" value="<?= $permission ?>"
-                                <?php if ($user->hasPermission($permission)) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                        </td>
-                        <td><?= $permission ?></td>
-                        <td><?= $description ?></td>
-                    </tr>
-                <?php endforeach ?>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 3rem"></th>
+                            <th>Permission</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($permissions as $permission => $description) : ?>
+                        <tr>
+                            <td>
+                                <input class="form-check-input <?= $user->can($permission) ? 'in-group' : '' ?>" type="checkbox" name="permissions[]" value="<?= $permission ?>"
+                                    <?php if ($user->hasPermission($permission)) : ?>
+                                        checked
+                                    <?php endif ?>
+                                >
+                            </td>
+                            <td><?= $permission ?></td>
+                            <td><?= $description ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
         </fieldset>
 
         <div class="text-end">
