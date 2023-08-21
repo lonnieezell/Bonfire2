@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="<?= service('request')->getLocale() ?>">
+<head>
 	<?= $viewMeta->render('meta') ?>
 
     <?= $viewMeta->render('title') ?>

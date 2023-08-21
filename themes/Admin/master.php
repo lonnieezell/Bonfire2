@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="<?= service('request')->getLocale() ?>">
+<head>
     <?= $viewMeta->render('meta') ?>
 
     <?= $viewMeta->render('title') ?>
@@ -19,7 +20,7 @@
 <?php if (site_offline()) : ?>
     <div class="alert alert-secondary alert-offline">
     <?= lang('Bonfire.offlineNotice') ?>
-        <a href="<?= site_url(ADMIN_AREA .'/settings/general') ?>"><?= lang('Bonfire.here') ?></a>.
+        <a href="<?= site_url(ADMIN_AREA . '/settings/general') ?>"><?= lang('Bonfire.here') ?></a>.
     </div>
 <?php endif ?>
 
