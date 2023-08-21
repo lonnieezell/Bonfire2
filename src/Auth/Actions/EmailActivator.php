@@ -18,6 +18,11 @@ use CodeIgniter\Shield\Exceptions\LogicException;
 use CodeIgniter\Shield\Exceptions\RuntimeException;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
+/**
+ * Class borrowed from Shield which it extends
+ * The methods are only modified where needed to adapt to Bonfire themes and 
+ * alerts system
+ */
 class EmailActivator extends ShieldEmailActivator
 {
     use Themeable;
@@ -125,32 +130,6 @@ class EmailActivator extends ShieldEmailActivator
             ->with('message', lang('Auth.registerSuccess'));
     }
 
-    // /**
-    //  * Creates an identity for the action of the user.
-    //  *
-    //  * @return string secret
-    //  */
-    // public function createIdentity(User $user): string
-    // {
-    //     /** @var UserIdentityModel $identityModel */
-    //     $identityModel = model(UserIdentityModel::class);
-
-    //     // Delete any previous identities for action
-    //     $identityModel->deleteIdentitiesByType($user, $this->type);
-
-    //     $generator = static fn (): string => random_string('nozero', 6);
-
-    //     return $identityModel->createCodeIdentity(
-    //         $user,
-    //         [
-    //             'type'  => $this->type,
-    //             'name'  => 'register',
-    //             'extra' => lang('Auth.needVerification'),
-    //         ],
-    //         $generator
-    //     );
-    // }
-
     /**
      * Returns an identity for the action of the user.
      */
@@ -164,12 +143,4 @@ class EmailActivator extends ShieldEmailActivator
             $this->type
         );
     }
-
-    // /**
-    //  * Returns the string type of the action class.
-    //  */
-    // public function getType(): string
-    // {
-    //     return $this->type;
-    // }
 }
