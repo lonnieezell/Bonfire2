@@ -11,6 +11,12 @@ use Tests\Support\TestCase;
  */
 final class MenuCollectionTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        helper('setting');
+    }
+
     public function testExtendsMenuItem()
     {
         $item = new MenuCollection([
@@ -31,7 +37,8 @@ final class MenuCollectionTest extends TestCase
     public function testNames()
     {
         $collection = new MenuCollection();
-        $this->assertNull($collection->name());
+        // changing to empty as string is the type in the class
+        $this->assertEmpty($collection->name());
 
         $collection = new MenuCollection(['name' => 'Foo']);
         $this->assertSame('Foo', $collection->name());

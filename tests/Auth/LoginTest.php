@@ -20,10 +20,13 @@ final class LoginTest extends TestCase
 
     public function testCanViewLoginPage()
     {
+        // primitive perhaps, but works: make sure we are logged out first:
+        $response = $this->get(route_to('logout'));
+
         $response = $this->get(route_to('login'));
 
         $response->assertOK();
-        $response->assertSee('Login');
+        $response->assertSee(lang('Auth.login'));
     }
 
     public function testLoginSuccess()
@@ -67,6 +70,9 @@ final class LoginTest extends TestCase
 
     public function testAllowRememberShowsUp()
     {
+        // primitive perhaps, but works: make sure we are logged out first:
+        $response = $this->get(route_to('logout'));
+
         helper('setting');
         setting('Auth.sessionConfig', [
             'field'              => 'logged_in',
@@ -76,7 +82,8 @@ final class LoginTest extends TestCase
         ]);
 
         $response = $this->get(route_to('login'));
-
+        $response->assertOK();
+        $response->assertNotRedirect();
         $response->assertSee(lang('Auth.rememberMe'));
 
         setting('Auth.sessionConfig', [

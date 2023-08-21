@@ -51,6 +51,30 @@ class Users extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
+     * Avatar Upload directory
+     * --------------------------------------------------------------------------
+     * relative to FCPATH and base_url
+     */
+
+    public $avatarDirectory = 'uploads/avatars';
+
+    /**
+     * --------------------------------------------------------------------------
+     * Uploaded Avatar Image Manipulation
+     * --------------------------------------------------------------------------
+     *
+     * Should uploaded avatar be resized? (bool)
+     * If so, what is the maximum size (vertical or horizontal, whichever
+     * bigger), in px? (int)
+     * $avatarResizeFloor is the minimum size of an avatar (set to 32 as required by
+     * toolbar avatar size)
+     */
+    public $avatarResize = false;
+    public $avatarSize = 140;
+    public $avatarResizeFloor = 32;
+
+    /**
+     * --------------------------------------------------------------------------
      * Additional User Fields
      * --------------------------------------------------------------------------
      * Validation rules used when saving a user.

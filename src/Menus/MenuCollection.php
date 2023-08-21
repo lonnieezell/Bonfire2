@@ -39,7 +39,7 @@ class MenuCollection extends MenuItem
     /**
      * The name this collection is discovered by.
      */
-    protected string $name;
+    protected string $name = '';
 
     /**
      * If true, should be presented as a collapsible menu.
