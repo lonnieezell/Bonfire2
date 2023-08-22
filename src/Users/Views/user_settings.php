@@ -34,8 +34,8 @@
                     <div class="col-12 col-sm-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="emailActivation"
-                                   value='CodeIgniter\Shield\Authentication\Actions\EmailActivator' id="email-activation"
-                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'CodeIgniter\Shield\Authentication\Actions\EmailActivator') : ?>
+                                   value='Bonfire\Auth\Actions\EmailActivator' id="email-activation"
+                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'Bonfire\Auth\Actions\EmailActivator') : ?>
                                     checked
                                 <?php endif ?>
                             >
