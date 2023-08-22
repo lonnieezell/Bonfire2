@@ -5,7 +5,7 @@
     <?php foreach ($menu->items() as $item) : ?>
         <?php if ($item->userCanSee()): ?>
             <div class="quick-link">
-                <a href="<?= $item->url ?>">
+                <a href="<?= site_url($item->url) ?>">
                     <?= $item->icon ?>
                     <span><?= $item->title ?></span>
                 </a>

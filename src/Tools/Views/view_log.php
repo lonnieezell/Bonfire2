@@ -6,9 +6,6 @@ $this->section('main') ?>
 <x-page-head>
     <a href="<?= site_url(ADMIN_AREA . '/tools/logs') ?>" class="back">&larr; <?= lang('Tools.logsModTitle')?></a>
     <h2><?= lang('Tools.log') ?> : <?= $logFilePretty ?></h2>
-    <h2>
-        <Logs
-    </h2>
 </x-page-head>
 
 <x-admin-box>
