@@ -9,23 +9,7 @@
         </div>
         <?php if (count($resources) > 1) : ?>
             <div class="col-auto">
-            <select name="r" class="form-select" x-data="{
-                    getRequest(selectedValue) {
-                        const url = new URL(window.location.href);
-                        url.searchParams.set('r', selectedValue);
-                        fetch(url.toString()).then(response => {
-                            if (response.ok) {
-                                return response.text();
-                            }
-                            throw new Error('Network response was not ok.');
-                        }).then(html => {
-                            document.body.innerHTML = html; // Replace the whole page content
-                            window.history.pushState(null, null, url.toString()); // Update the URL
-                        }).catch(error => {
-                            console.error('Error fetching data:', error);
-                        });
-                    }
-                }" x-on:change="getRequest($event.target.value)"
+            <select name="r" class="form-select" x-on:change="sendRecyclerGetRequest($event.target.value)"
             >
                 <?php foreach ($resources as $alias => $details) : ?>
                     <option value="<?= strtolower($alias) ?>" <?= (strtolower($currentAlias) === strtolower($alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>
