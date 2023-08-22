@@ -122,7 +122,7 @@ class MenuItem
      */
     public function setNamedRoute(string $name): self
     {
-        $this->url = url_to($name);
+        $this->url = route_to($name);
 
         return $this;
     }
