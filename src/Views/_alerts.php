@@ -1,17 +1,17 @@
 
     <?php foreach ($alerts as $alert): ?>
     <?php [$class, $content] = $alert; ?>
-        <div role="alert" class="alert alert-<?= $class ?> alert-dismissible fade show shadow">
+        <div role="alert" class="alert alert-<?= $class ?> alert-dismissible fade show shadow d-flex">
             <?php if ($class === 'info'): ?>
-                <i class="fas fa-info-circle text-info mx-2"></i>
+                <i class="fas fa-info-circle text-info mx-2 mt-1"></i>
             <?php elseif ($class === 'warning'): ?>
-                <i class="fas fa-exclamation-circle text-warning mx-2"></i>
+                <i class="fas fa-exclamation-circle text-warning mx-2 mt-1"></i>
             <?php elseif ($class === 'danger'): ?>
-                <i class="fas fa-exclamation-triangle text-danger mx-2"></i>
+                <i class="fas fa-exclamation-triangle text-danger mx-2 mt-1"></i>
             <?php elseif ($class === 'success'): ?>
-                <i class="fas fa-check-circle text-success mx-2"></i>
+                <i class="fas fa-check-circle text-success mx-2 mt-1"></i>
             <?php else: ?>
-                <i class="fas fa-check-circle text-<?= $class ?> mx-2"></i>
+                <i class="fas fa-check-circle text-<?= $class ?> mx-2 mt-1"></i>
             <?php endif ?>
 
             <div class="alert-message">
