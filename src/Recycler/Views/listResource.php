@@ -9,7 +9,7 @@
         </div>
         <?php if (count($resources) > 1) : ?>
             <div class="col-auto">
-            <select name="r" class="form-select" x-data x-on:change="sendGetRequest($event.target.value)"
+            <select name="r" class="form-select" x-on:change="sendRecyclerGetRequest($event.target.value)"
             >
                 <?php foreach ($resources as $alias => $details) : ?>
                     <option value="<?= strtolower($alias) ?>" <?= (strtolower($currentAlias) === strtolower($alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>

@@ -25,7 +25,7 @@ if (selectAllElement) {
 
 
 // function for recycler get requests issued directly from select box
-function sendGetRequest(selectedValue) {
+function sendRecyclerGetRequest(selectedValue) {
     const url = new URL(window.location.href);
     url.searchParams.set('r', selectedValue);
     fetch(url.toString()).then(response => {
