@@ -30,8 +30,8 @@ class LoginsCardWidget
         $loginModel = model(LoginModel::class);
         $logins = $loginModel->select('users.first_name, users.last_name, auth_logins.identifier, auth_logins.ip_address, auth_logins.date, auth_logins.success')
         ->orderBy('date', 'desc')
-            ->join('users', 'auth_logins.user_id = users.id')
-            ->findAll(5);
+            ->join('users', 'auth_logins.user_id = users.id', 'left')
+            ->findAll(6);
 
 
         return view($this->viewPrefix . '_recent_logins_card', [
