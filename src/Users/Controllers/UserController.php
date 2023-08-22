@@ -149,6 +149,11 @@ class UserController extends AdminController
         // Fill in basic details
         $user->fill($this->request->getPost());
 
+        // Mark the user active if it is created by admin
+        if ($userId === null) {
+            $user->active = 1;
+        }
+
         // Save basic details
         $users->save($user);
 

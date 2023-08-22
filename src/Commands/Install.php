@@ -243,6 +243,7 @@ class Install extends BaseCommand
             'first_name' => $firstName,
             'last_name'  => $lastName,
             'username'   => $username,
+            'active'     => 1,
         ]);
         $users->save($user);
 
