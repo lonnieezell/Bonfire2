@@ -29,7 +29,7 @@
                         <div class="col">
                             <input type="password" class="form-control" name="password" id="password" autocomplete="password"
                                 placeholder="<?= lang('Auth.password') ?>"
-                                onkeyup="checkStrength()" required
+                                onkeyup="checkStrength(); debounceCheckPasswordMatch()" required
                             />
                         </div>
                         <!-- Password Meter -->
@@ -46,8 +46,8 @@
                     <!-- Password (Again) -->
                     <div class="row mb-5">
                         <div class="col">
-                            <input type="password" class="form-control" name="password_confirm" id="password_confirm" autocomplete="password_confirm"
-                                placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="checkPasswordMatch()" />
+                            <input type="password" class="form-control" name="password_confirm" id="pass_confirm" autocomplete="password_confirm"
+                                placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="debouncedCheckPasswordMatch()" />
                         </div>
                         <div class="col-auto pass-match-wrap">
                             <div class="pass-match" id="pass-match" style="display:none"><span>&check;</span></div>
