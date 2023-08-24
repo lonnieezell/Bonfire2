@@ -101,6 +101,7 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     display: inline-block;
     margin: auto;
     font-size: 20px;
+    font-weight: bold;
     color: var(--bf-success);
 }
 

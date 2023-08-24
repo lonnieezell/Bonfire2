@@ -34,8 +34,8 @@
                                placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="debouncedCheckPasswordMatch()" />
                     </div>
                     <div class="col-auto pass-match-wrap">
-                        <div class="pass-match" id="pass-match" style="display:none"><span>&check;</span></div>
-                        <div class="pass-not-match" id="pass-not-match" style="display:none"><span>&times;</span></div>
+                        <div class="pass-match" id="pass-match" style="display:none; padding-top:2.5rem;"><span>&check;</span></div>
+                        <div class="pass-not-match" id="pass-not-match" style="display:none; padding-top:2.5rem;"><span>&times;</span></div>
                     </div>
                 </div>
 
