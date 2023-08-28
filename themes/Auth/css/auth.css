@@ -115,6 +115,24 @@ div#pass-meter.str-3 .segment:nth-child(4) {
     right: 5px;
 }
 
+/* Eye positioning in inputs */
+.pass-eye-parent {
+    position: relative;
+}
+
+.pass-eye {
+    position: absolute;
+    color: var(--bf-grey);
+    top: 50%;
+    right: 13px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.pass-eye-register {
+    right: 20px;
+}
+
 /*
  * --------------------------------------------------------------------------
  * ALERTS

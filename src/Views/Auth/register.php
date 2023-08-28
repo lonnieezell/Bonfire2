@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title mb-5"><?= lang('Auth.register') ?></h5>
 
-                <form action="<?= url_to('register') ?>" method="post">
+                <form action="<?= url_to('register') ?>" method="post" x-data="{ showPassword: false, password: '' }">
                     <?= csrf_field() ?>
 
                     <!-- Email -->
@@ -26,10 +26,13 @@
 
                     <div class="row mb-2">
                         <!-- Password -->
-                        <div class="col">
+                        <div class="col pass-eye-parent">
+                            <div class="pass-eye pass-eye-register" x-on:click="showPassword = !showPassword">
+                                <i x-bind:class="showPassword ? 'fa-eye-slash' : 'fa-eye'" class="fa-regular"></i>
+                            </div>
                             <input type="password" class="form-control" name="password" id="password" autocomplete="password"
-                                placeholder="<?= lang('Auth.password') ?>"
-                                onkeyup="checkStrength(); debounceCheckPasswordMatch()" required
+                                placeholder="<?= lang('Auth.password') ?>" value=""
+                                x-on:keyup="checkStrength(); debouncedCheckPasswordMatch()" x-model:value="password" x-bind:type="showPassword ? 'text' : 'password'" required
                             />
                         </div>
                         <!-- Password Meter -->
@@ -44,14 +47,17 @@
                     </div>
 
                     <!-- Password (Again) -->
-                    <div class="row mb-5">
+                    <div class="row mb-5" x-show="!showPassword">
                         <div class="col">
-                            <input type="password" class="form-control" name="password_confirm" id="pass_confirm" autocomplete="password_confirm"
-                                placeholder="<?= lang('Auth.passwordConfirm') ?>" required onkeyup="debouncedCheckPasswordMatch()" />
+                            <input x-bind:disabled="showPassword" type="password" class="form-control" name="password_confirm" id="pass_confirm" 
+                                autocomplete="password_confirm" placeholder="<?= lang('Auth.passwordConfirm') ?>" required x-on:keyup="debouncedCheckPasswordMatch()"
+                            />
+                            <!--hidden input in case the first one is disabled-->
+                            <input type="hidden" name="password_confirm" value="" x-bind:disabled="!showPassword" x-model:value="password">
                         </div>
                         <div class="col-auto pass-match-wrap">
-                            <div class="pass-match" id="pass-match" style="display:none"><span>&check;</span></div>
-                            <div class="pass-not-match" id="pass-not-match" style="display:none"><span>&times;</span></div>
+                            <div class="pass-match" id="pass-match" style="display:none"><i class="fa-regular fa-circle-check"></i></div>
+                            <div class="pass-not-match" id="pass-not-match" style="display:none"><i class="fa-regular fa-circle-xmark"></i></div>
                         </div>
                     </div>
 
