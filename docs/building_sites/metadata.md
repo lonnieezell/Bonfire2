@@ -38,7 +38,7 @@ Within your layouts you can use the `render()` method to render any of the data 
 // Render the title tag - <title>...</title>
 <?= $viewMeta->render('title') ?>
 // Get just the title value
-<?= $viewMeta->title ?>
+<?= $viewMeta->title() ?>
 
 // Render all meta tags
 <?= $viewMeta->render('meta') ?>
