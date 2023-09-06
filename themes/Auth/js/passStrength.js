@@ -28,13 +28,20 @@ function checkStrength() {
     suggestBox.innerText = info.feedback.suggestions.join(' ');
 }
 
+let debounceTimeout;
+
+function debouncedCheckPasswordMatch() {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(checkPasswordMatch, 250);
+}
+
 function checkPasswordMatch() {
     let origPass = document.getElementById('password').value;
     let thisPass = document.getElementById('pass_confirm').value;
 
-    console.log(origPass, thisPass);
+    //console.log(origPass, thisPass);
 
-    if(thisPass == null) {
+    if (thisPass === '') {
         document.getElementById('pass-match').style.display = 'none';
         document.getElementById('pass-not-match').style.display = 'none';
     } else if (thisPass === origPass) {
