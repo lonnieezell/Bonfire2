@@ -12,7 +12,7 @@
 	"require": {
 		"php": "^7.4 || ^8.0",
 		"ext-json": "*",
-		"codeigniter4/framework": "^4.2",
+		"codeigniter4/framework": "^4.4",
 		"components/font-awesome": "^6.2",
 		"codeigniter4/shield": "dev-develop",
 		"roave/security-advisories": "dev-latest",
@@ -27,7 +27,7 @@
 		"phpstan/phpstan": "^1.1",
 		"phpunit/phpunit": "^9.1",
 		"psr/container": "^1.0",
-		"qossmic/deptrac-shim": "^0.24.0"
+		"qossmic/deptrac-shim": "^1.0.2"
 	},
 	"suggest": {
 		"ext-fileinfo": "Improves mime type detection for files"

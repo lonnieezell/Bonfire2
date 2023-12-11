@@ -16,6 +16,8 @@ use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Config\Autoload as AutoloadConfig;
+use ReflectionException;
 
 class Install extends BaseCommand
 {
@@ -78,6 +80,7 @@ class Install extends BaseCommand
 
     /**
      * Actually execute a command.
+     * @throws ReflectionException
      */
     public function run(array $params)
     {
@@ -89,6 +92,8 @@ class Install extends BaseCommand
             $this->setEncryptionKey();
             $this->setDatabase();
             $this->publishConfigFiles();
+            $this->setAutoloadHelpers();
+            $this->setSecurityCSRF();
             $this->publishThemes();
 
             CLI::newLine();
@@ -152,7 +157,7 @@ class Install extends BaseCommand
 
     private function setDatabase()
     {
-        $host = $user = $pass = '';
+        $host   = $user = $pass = '';
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $name   = CLI::prompt('Database name:', 'bonfire');
         if ($driver !== 'SQLite3') {
@@ -172,17 +177,17 @@ class Install extends BaseCommand
             CLI::newLine();
             CLI::write('Updating SQLite3 database config', 'yellow');
 
-            $orig = "'port'     => 3306," . PHP_EOL . "    ];";
-            $new =  "'port'     => 3306,"
+            $orig = "'port'     => 3306," . PHP_EOL . '    ];';
+            $new  = "'port'     => 3306,"
                 . PHP_EOL . "        'foreignKeys' => true,"
                 . PHP_EOL . "        'busyTimeout' => 1000,"
-                . PHP_EOL . "    ];";
+                . PHP_EOL . '    ];';
             $this->updateConfigFile('Database', $orig, $new);
 
-            $orig2 = "# database.default.port = 3306";
-            $new2  = "# database.default.port = 3306"
-                . PHP_EOL . "database.default.foreignKeys = true"
-                . PHP_EOL . "database.default.busyTimeout = 1000";
+            $orig2 = '# database.default.port = 3306';
+            $new2  = '# database.default.port = 3306'
+                . PHP_EOL . 'database.default.foreignKeys = true'
+                . PHP_EOL . 'database.default.busyTimeout = 1000';
             $this->updateEnvFile($orig2, $new2);
         }
         $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
@@ -227,6 +232,9 @@ class Install extends BaseCommand
         CLI::newLine();
     }
 
+    /**
+     * @throws ReflectionException
+     */
     private function createUser()
     {
         CLI::write('Create initial user', 'yellow');
@@ -247,7 +255,7 @@ class Install extends BaseCommand
         ]);
         $users->save($user);
 
-        /** @var \Bonfire\Users\User $user */
+        /** @var User $user */
         $user = $users->where('username', $username)->first();
         $user->createEmailIdentity([
             'email'    => $email,
@@ -277,5 +285,105 @@ class Install extends BaseCommand
         $file = file_get_contents(APPPATH . 'Config/' . $filename . '.php');
         $conf = str_replace($find, $replace, $file);
         write_file(APPPATH . 'Config/' . $filename . '.php', $conf);
+    }
+
+    private function setAutoloadHelpers(): void
+    {
+        $file = 'Config/Autoload.php';
+
+        $path      = APPPATH . $file;
+        $cleanPath = clean_path($path);
+
+        $config     = new AutoloadConfig();
+        $helpers    = $config->helpers;
+        $newHelpers = array_unique(array_merge($helpers, ['auth', 'setting']));
+
+        $pattern = '/^ {4}public \$helpers = \[.*];/mu';
+        $replace = '    public $helpers = [\'' . implode("', '", $newHelpers) . '\'];';
+        $content = file_get_contents($path);
+        $output  = preg_replace($pattern, $replace, $content);
+
+        // check if the content is updated
+        if ($output === $content) {
+            CLI::write(CLI::color('  Autoload Setup: ', 'green') . 'Everything is fine.');
+
+            return;
+        }
+
+        if (write_file($path, $output)) {
+            CLI::write(CLI::color('  Updated: ', 'green') . $cleanPath);
+
+            $this->removeHelperLoadingInBaseController();
+        } else {
+            error("  Error updating file '{$cleanPath}'.");
+        }
+    }
+
+    private function removeHelperLoadingInBaseController(): void
+    {
+        $file = 'Controllers/BaseController.php';
+
+        $check = '        $this->helpers = array_merge($this->helpers, [\'setting\']);';
+
+        // Replace old helper setup
+        $replaces = [
+            '$this->helpers = array_merge($this->helpers, [\'auth\', \'setting\']);' => $check,
+        ];
+        $this->replace($file, $replaces);
+
+        // Remove helper setup
+        $replaces = [
+            "\n" . $check . "\n" => '',
+        ];
+        $this->replace($file, $replaces);
+    }
+
+    private function setSecurityCSRF(): void
+    {
+        $file     = 'Config/Security.php';
+        $replaces = [
+            '$csrfProtection = \'cookie\';' => '$csrfProtection = \'session\';',
+        ];
+
+        $path      = APPPATH . $file;
+        $cleanPath = clean_path($path);
+
+        if (! is_file($path)) {
+            error("  Not found file '{$cleanPath}'.");
+
+            return;
+        }
+
+        $this->replace($file, $replaces);
+    }
+
+
+    /**
+     * Replace for setupHelper()
+     *
+     * @param string $file     Relative file path like 'Controllers/BaseController.php'.
+     * @param array  $replaces [search => replace]
+     */
+    private function replace(string $file, array $replaces): void
+    {
+        $path      = APPPATH . $file;
+        $cleanPath = clean_path($path);
+
+        $content = file_get_contents($path);
+
+        $output = strtr($content, $replaces);
+
+        if ($output === $content) {
+            return;
+        }
+
+        if (write_file($path, $output)) {
+            CLI::write(CLI::color('  Updated: ', 'green') . $cleanPath);
+
+            return;
+        }
+
+        error("  Error updating {$cleanPath}.");
+
     }
 }
