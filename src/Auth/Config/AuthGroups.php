@@ -2,9 +2,10 @@
 
 namespace Bonfire\Auth\Config;
 
-use CodeIgniter\Shield\Config\AuthGroups as ShieldGroups;
+use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Shield\Config\AuthGroups as ShieldAuthGroups;
 
-class AuthGroups extends ShieldGroups
+class AuthGroups extends ShieldAuthGroups
 {
     /**
      * --------------------------------------------------------------------

@@ -69,6 +69,7 @@ class Install extends BaseCommand
         'Bonfire\Assets\Config\Assets',
         'Bonfire\Auth\Config\Auth',
         'Bonfire\Auth\Config\AuthGroups',
+        'Bonfire\Auth\Config\AuthToken',
         'Bonfire\Config\Bonfire',
         'Bonfire\Config\Site',
         'Bonfire\Config\Themes',

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Bonfire\Auth\Config;
 
+use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Shield\Config\AuthToken as ShieldAuthToken;
 
 /**

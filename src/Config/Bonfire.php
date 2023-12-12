@@ -56,7 +56,6 @@ class Bonfire extends BaseConfig
      * Menu Users and the menus belonging to custom modules can be arranged
      * this way, as well as the submenus of Tools and Settings. The placement
      * of menus Tools and Settings will not be affected by this setting.
-     *
      */
     public $menuWeights = [];
 }

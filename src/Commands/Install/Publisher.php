@@ -65,6 +65,7 @@ class Publisher
             $namespace                           => 'Config',
             'BaseConfig'                         => 'Bonfire' . $rawClassName,
             'use CodeIgniter\Config\BaseConfig;' => "use {$className} as Bonfire{$rawClassName};",
+            "class {$rawClassName} extends Shield{$rawClassName}" => "class {$rawClassName} extends Bonfire{$rawClassName}",
         ];
 
         if ($className === 'Bonfire\Assets\Config\Assets') {
