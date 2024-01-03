@@ -19,7 +19,7 @@
                     <input class="form-check-input" type="checkbox" name="requireConsent" role="switch" id="requireConsent"
                         <?php if (setting('Consent.requireConsent')) : ?> checked <?php endif ?>
                     >
-                    <label class="form-check-label" for="requireConsent">Require Consent form visitors?</label>
+                    <label class="form-check-label" for="requireConsent">Require consent from visitors?</label>
                 </div>
 
                 <!-- Consent Length -->
