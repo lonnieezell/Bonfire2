@@ -40,13 +40,14 @@ final class AssetHelperTest extends TestCase
         $config = config('Assets');
 
         $config->bustingType = 'version';
+        $config->separator = '~~';
         Factories::injectMock('config', 'Assets', $config);
 
         $link = asset_link('admin/css/admin.css', 'css');
 
         // In testing environment, would be the current timestamp
         // so just test the pattern to ensure that works.
-        preg_match('|assets/admin/css/admin.([\d]+).css|i', $link, $matches);
+        preg_match('|assets/admin/css/admin~~([\d]+).css|i', $link, $matches);
         $this->assertIsNumeric($matches[1]);
     }
 
@@ -54,13 +55,14 @@ final class AssetHelperTest extends TestCase
     {
         $config              = config('Assets');
         $config->bustingType = 'file';
+        $config->separator = '~~';
         Factories::injectMock('config', 'Assets', $config);
 
         $link = asset_link('admin/css/admin.css', 'css');
 
         // In testing environment, would be the current timestamp
         // so just test the pattern to ensure that works.
-        preg_match('|assets/admin/css/admin.([\d]+).css|i', $link, $matches);
+        preg_match('|assets/admin/css/admin~~([\d]+).css|i', $link, $matches);
         $this->assertSame(filemtime(BFPATH . '../themes/Admin/css/admin.css'), (int) $matches[1]);
     }
 }

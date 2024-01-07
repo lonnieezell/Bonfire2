@@ -40,9 +40,11 @@ if (! defined('asset')) {
         $location = trim($location, ' /');
 
         // Add a cache-busting fingerprint to the filename
-        $segments = explode('/', $location);
-        $filename = array_pop($segments);
-        $ext      = substr($filename, strrpos($filename, '.'));
+        $segments   = explode('/', $location);
+        $filename   = array_pop($segments);
+        $ext        = substr($filename, strrpos($filename, '.'));
+        $namelength = strlen($filename) - strlen($ext);
+        $name       = substr($filename, 0, $namelength);
 
         if (empty($filename) || empty($ext) || $filename === $ext || empty($segments)) {
             throw new \RuntimeException('You must provide a valid filename and extension to the asset() helper.');
@@ -50,15 +52,16 @@ if (! defined('asset')) {
 
         // VERSION cache-busting
         $fingerprint = '';
+        $separator   = $config->separator ?? '~~';
         if ($config->bustingType === 'version') {
             switch (ENVIRONMENT) {
                 case 'testing':
                 case 'development':
-                    $fingerprint = time();
+                    $fingerprint = $separator . time();
                     break;
 
                 default:
-                    $fingerprint = $config->versions[$type];
+                    $fingerprint = $separator . $config->versions[$type];
             }
         }
         // FILE cache-busting
@@ -70,14 +73,14 @@ if (! defined('asset')) {
                 $tempSegments
             ) . '/' . $filename;
 
-            $fingerprint = filemtime($path);
+            $fingerprint = $separator . filemtime($path);
 
             if ($fingerprint === false) {
                 throw new \RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
         }
 
-        $filename = str_replace($ext, '.' . $fingerprint . $ext, $filename);
+        $filename = $name . $fingerprint . $ext;
 
         // Stitch the location back together
         $segments[] = $filename;
