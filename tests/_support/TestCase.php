@@ -39,7 +39,7 @@ abstract class TestCase extends CIUnitTestCase
     {
         parent::setUp();
         $this->faker = Factory::create();   // @phpstan-ignore-line
-        helper('bonfire');
+        helper(['bonfire', 'auth', 'setting']);
     }
 
     /**
