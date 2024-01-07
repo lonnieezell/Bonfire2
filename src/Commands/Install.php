@@ -52,14 +52,14 @@ class Install extends BaseCommand
     /**
      * The Command's Arguments
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $arguments = [];
 
     /**
      * The Command's Options
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $options = [
         '--continue' => 'Execute the second install step.',
