@@ -73,11 +73,12 @@ if (! defined('asset')) {
                 $tempSegments
             ) . '/' . $filename;
 
-            $fingerprint = $separator . filemtime($path);
-
-            if ($fingerprint === false) {
+            $filetime = filemtime($path);
+            
+            if (!$filetime) {
                 throw new \RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
+            $fingerprint = $separator . $filetime;
         }
 
         $filename = $name . $fingerprint . $ext;
