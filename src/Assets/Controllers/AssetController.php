@@ -44,29 +44,29 @@ class AssetController extends Controller
          */
         $filename     = array_pop($segments);
         $origFilename = $filename;
-        $fileparts = explode('.', $filename);
-        $count = count($fileparts);
+        $fileparts    = explode('.', $filename);
+        $count        = count($fileparts);
         // Must be at least a name and extension
         if ($count < 2) {
             $this->response->setStatusCode(404);
 
             return;
-        } else {
-            $ext = $fileparts[$count-1];
         }
+        $ext = $fileparts[$count - 1];
+
         // To keep backward compatibility, we will assume there might not be
         // a separator defined in user's config
-        $separator = config('Assets')->separator ?? '~~'; 
-        $parts = explode($separator, $filename);
+        $separator = config('Assets')->separator ?? '~~';
+        $parts     = explode($separator, $filename);
         if (count($parts) === 2) {
             $filename = $parts[0] . '.' . $ext;
         } else {
             $filename = $origFilename;
         }
-        
+
         $folder = config('Assets')->folders[array_shift($segments)];
-        
-        $path   = $folder . '/' . implode('/', $segments) . '/' . $filename;
+
+        $path = $folder . '/' . implode('/', $segments) . '/' . $filename;
         if (! is_file($path)) {
             $this->response->setStatusCode(404);
 

@@ -74,8 +74,8 @@ if (! defined('asset')) {
             ) . '/' . $filename;
 
             $filetime = filemtime($path);
-            
-            if (!$filetime) {
+
+            if (! $filetime) {
                 throw new \RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
             $fingerprint = $separator . $filetime;

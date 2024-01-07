@@ -40,7 +40,7 @@ final class AssetHelperTest extends TestCase
         $config = config('Assets');
 
         $config->bustingType = 'version';
-        $config->separator = '~~';
+        $config->separator   = '~~';
         Factories::injectMock('config', 'Assets', $config);
 
         $link = asset_link('admin/css/admin.css', 'css');
@@ -55,7 +55,7 @@ final class AssetHelperTest extends TestCase
     {
         $config              = config('Assets');
         $config->bustingType = 'file';
-        $config->separator = '~~';
+        $config->separator   = '~~';
         Factories::injectMock('config', 'Assets', $config);
 
         $link = asset_link('admin/css/admin.css', 'css');
