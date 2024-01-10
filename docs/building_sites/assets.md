@@ -41,7 +41,7 @@ The `Config\Assets` class has a handful of settings to customize the experience.
 ### $bustingType
 
 When a link is generated it includes a string within the filename for cache-busting reasons. This would look something
-like: `https://localhost:8080/admin/css/admin.213264216523.css`. The config setting, `$bustingType` defines how this
+like: `https://localhost:8080/admin/css/admin~~213264216523.css`. The config setting, `$bustingType` defines how this
 string is derived. It has two possible values, either `file` or `version`.
 
 The `file` setting will examine the requested file and use the file modified date/time as the basis, and convert it
@@ -54,6 +54,15 @@ The `version` method requires the developer to set a new version in the configur
 to deploy to staging or production environments. See the next setting for details. To make this easier during development
 the current timestamp is used in testing/development environments ensuring that no caching will happen. In other
 environments it inserts the version number that was specified.
+
+### $separator
+
+The `$separator` setting allows the app to detect the part of the asset file name that was 
+added for cache-busting purposes. It can be a single web-safe non-reserved character or 
+a combination of such characters (characters that are allowed in a URI, but do not have 
+a reserved purpose) that DOES NOT OCCUR in your asset file names (like `~`, `-` 
+or `_` or any combination of ASCII letters and numbers). Separator will be inserted 
+before the file version/timestamp, in between the file name and file extension.
 
 ### $versions
 
