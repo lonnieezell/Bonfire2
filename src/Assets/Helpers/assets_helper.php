@@ -14,19 +14,22 @@ if (! defined('asset_link')) {
      *
      * @param string $type css, js
      */
-    function asset_link(string $location, string $type): string
+    function asset_link(string $location, string $type, bool $preload=false): string
     {
         $url = asset($location, $type);
 
         $tag = '';
+        $relationString = $preload
+            ? 'rel="preload" as="' . ($type === 'css' ? 'style' : 'script') . '"'
+            : ($type === 'css' ? "rel='stylesheet'" : '');
 
         switch ($type) {
             case 'css':
-                $tag = "<link href='{$url}' rel='stylesheet' />";
+                $tag = "<link href='{$url}' {$relationString} />";
                 break;
 
             case 'js':
-                $tag = "<script src='{$url}'></script>";
+                $tag = "<script src='{$url}' {$relationString}></script>";
         }
 
         return $tag;
