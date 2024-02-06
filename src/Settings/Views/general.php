@@ -125,6 +125,14 @@
                             mmm dd, yyyy
                         </label>
                     </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="dateFormat" value="d.m.Y"
+                            <?php if (old('dateFormat', $dateFormat) === 'd.m.Y') : ?> checked <?php endif ?>>
+                        <label class="form-check-label" for="dateFormat">
+                            dd.mm.YYYY
+                        </label>
+                    </div>
                 </div>
 
                 <!-- Time Format -->
