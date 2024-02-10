@@ -4,7 +4,20 @@
             <legend><?= esc($group) ?></legend>
 
             <?php foreach ($fields as $field => $info) : ?>
-                <?php if ($info['type'] === 'textarea') : ?>
+                <?php if ($info['type'] === 'checkbox') : ?>
+                    <div class="form-check col-12 col-sm-6">
+                        <?php $metaValue = $user->meta(strtolower($field)) ?? 'false'; ?>
+                        <input type="hidden" name="meta[<?= strtolower($field) ?>]" value="false">
+                        <input type="checkbox" class="form-check-input" name="meta[<?= strtolower($field) ?>]"
+                               value="true" <?= $metaValue === 'true' ? 'checked' : '' ?>>
+                        <?php if (!isset($info['label'])) : ?>
+                            <label for="meta[<?= $field ?>]"
+                                   class="form-check-label"><?= esc(ucwords(strtolower(str_replace(['-', '_'], ' ', $field)))) ?></label>
+                        <?php else : ?>
+                            <label for="meta[<?= $field ?>]" class="form-check-label"><?= esc($info['label']) ?></label>
+                        <?php endif ?>
+                    </div>
+                <?php elseif ($info['type'] === 'textarea') : ?>
 
                 <?php elseif ($info['type'] === 'number') : ?>
 
