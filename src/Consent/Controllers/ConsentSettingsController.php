@@ -46,6 +46,7 @@ class ConsentSettingsController extends AdminController
             'requireConsent'  => 'permit_empty',
             'consentLength'   => 'required_with[requireConsent]|string',
             'policyUrl'       => 'required_with[requireConsent]|string',
+            'policyTitle'       => 'required_with[requireConsent]|string',
             'consentMessage'  => 'required_with[requireConsent]|string',
             'consents.*.name' => 'required_with[requireConsent]|string',
             'consents.*.desc' => 'required_with[requireConsent]|string',
@@ -58,6 +59,7 @@ class ConsentSettingsController extends AdminController
         setting('Consent.requireConsent', $this->request->getPost('requireConsent') ? true : false);
         setting('Consent.consentLength', $this->request->getPost('consentLength'));
         setting('Consent.policyUrl', $this->request->getPost('policyUrl'));
+        setting('Consent.policyTitle', $this->request->getPost('policyTitle'));
         setting('Consent.consentMessage', $this->request->getPost('consentMessage'));
         setting('Consent.consents', $this->request->getPost('consents'));
 

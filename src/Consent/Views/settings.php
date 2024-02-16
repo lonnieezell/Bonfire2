@@ -54,7 +54,19 @@
                         <p class="text-muted small pt-5">May be either a full or relative URL</p>
                     </div>
                 </div>
-
+                <!-- Cookie Policy Document Title-->
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-6">
+                        <label class="form-label" for="policyTitle">Title of Cookie Policy document</label>
+                        <input type="text" class="form-control" name="policyTitle" value="<?= old('policyTitle', setting('Consent.policyTitle')) ?>">
+                        <?php if (has_error('policyTitle')) : ?>
+                            <p class="text-danger"><?= error('policyTitle') ?></p>
+                        <?php endif ?>
+                    </div>
+                    <div class="col">
+                        <p class="text-muted small pt-5">Will be shown in the Cookies Consent dialog instead of {policy_url}</p>
+                    </div>
+                </div>
                 <!-- Consent Message -->
                 <div class="row mb-3">
                     <div class="col-12 col-sm-6">
@@ -65,7 +77,7 @@
                         <?php endif ?>
                     </div>
                     <div class="col">
-                        <p class="text-muted small pt-5">May be either a full or relative URL. Will replace {policy_url} with the correct URL.</p>
+                        <p class="text-muted small pt-5">May be either a full or relative URL. Will replace {policy_url} with the correct URL and Cookie Policy document title</p>
                     </div>
                 </div>
             </fieldset>
