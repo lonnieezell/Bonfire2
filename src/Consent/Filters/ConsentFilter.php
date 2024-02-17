@@ -71,7 +71,8 @@ class ConsentFilter implements FilterInterface
         $link = strpos('http', (string) $link) === 0
             ? $link
             : site_url($link);
-        $html = str_ireplace('{policy_url}', "<a href='{$link}' target='_blank'>Cookie policy</a>", $html);
+        $policyTitle = setting('Consent.policyTitle');
+        $html = str_ireplace('{policy_url}', "<a href='{$link}' target='_blank'>{$policyTitle}</a>", $html);
 
         $cssFile = setting('Consent.consentFormStyles');
         $jsFile  = setting('Consent.consentFormScripts');

@@ -65,6 +65,16 @@ class Consent extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
+     * Cookie Policy Document Title
+     * --------------------------------------------------------------------------
+     *
+     * A title of the document that contains the cookie policy.
+     * For example, 'Privacy Policy' or 'Cookie Policy'.
+     */
+    public string $policyTitle = 'Cookie Policy';
+
+    /**
+     * --------------------------------------------------------------------------
      * Cookie Message
      * --------------------------------------------------------------------------
      *
