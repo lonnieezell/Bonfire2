@@ -12,13 +12,14 @@ if (!defined('asset_link')) {
     /**
      * Generates the URL to serve an asset to the client
      *
-     * @param string $location url to asset file
-     * @param string $type css, js
+     * @param string $location   url to asset file
+     * @param string $type       css, js
      * @param mixed  $attributes Additional attributes to include in the asset link tag. 
-     *                           Can be provided as a string or an associative array of attribute-value pairs.
-     *                           Defaults to null if no additional attributes are needed.
+     *                           Can be provided as a string (for value-less attributes like "defer") 
+     *                           or an associative array of attribute-value pairs.
+     *                           Defaults to null.
      */
-    function asset_link(string $location, string $type, ?mixed $attributes = null): string
+    function asset_link(string $location, string $type, mixed $attributes = null): string
     {
         $url = asset($location, $type);
 
@@ -32,10 +33,11 @@ if (!defined('asset_link')) {
         }
         if (is_array($attributes)) {
             foreach ($attributes as $key => $value) {
+                // if the array already includes the 'rel', remove the default
                 if ($key === 'rel') {
                     $defaultAttr = '';
                 }
-                $additionalAttr .= " $key='{$value}'";
+                $additionalAttr .= "{$key}='{$value}' ";
             }
         }
 
