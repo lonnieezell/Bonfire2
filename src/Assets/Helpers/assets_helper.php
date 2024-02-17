@@ -8,35 +8,53 @@
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  */
-if (! defined('asset_link')) {
+if (!defined('asset_link')) {
     /**
      * Generates the URL to serve an asset to the client
      *
+     * @param string $location url to asset file
      * @param string $type css, js
+     * @param mixed  $attributes Additional attributes to include in the asset link tag. 
+     *                           Can be provided as a string or an associative array of attribute-value pairs.
+     *                           Defaults to null if no additional attributes are needed.
      */
-    function asset_link(string $location, string $type, bool $preload=false): string
+    function asset_link(string $location, string $type, ?mixed $attributes = null): string
     {
         $url = asset($location, $type);
 
         $tag = '';
-        $relationString = $preload
-            ? 'rel="preload" as="' . ($type === 'css' ? 'style' : 'script') . '"'
-            : ($type === 'css' ? "rel='stylesheet'" : '');
+
+        $additionalAttr = '';
+        $defaultAttr = $type === 'css' ? "rel='stylesheet'" : "";
+
+        if (is_string($attributes)) {
+            $additionalAttr = $attributes;
+        }
+        if (is_array($attributes)) {
+            foreach ($attributes as $key => $value) {
+                if ($key === 'rel') {
+                    $defaultAttr = '';
+                }
+                $additionalAttr .= " $key='{$value}'";
+            }
+        }
+
+        $additionalAttr .= $defaultAttr;
 
         switch ($type) {
             case 'css':
-                $tag = "<link href='{$url}' {$relationString} />";
+                $tag = "<link href='{$url}' {$additionalAttr} />";
                 break;
 
             case 'js':
-                $tag = "<script src='{$url}' {$relationString}></script>";
+                $tag = "<script src='{$url}' {$additionalAttr}></script>";
         }
 
         return $tag;
     }
 }
 
-if (! defined('asset')) {
+if (!defined('asset')) {
     function asset(string $location, string $type): string
     {
         $config   = config('Assets');
@@ -78,7 +96,7 @@ if (! defined('asset')) {
 
             $filetime = filemtime($path);
 
-            if (! $filetime) {
+            if (!$filetime) {
                 throw new \RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
             $fingerprint = $separator . $filetime;
