@@ -28,7 +28,7 @@
                         <!-- Password -->
                         <div class="col pass-eye-parent">
                             <div class="pass-eye pass-eye-register" x-on:click="showPassword = !showPassword">
-                                <i x-bind:class="showPassword ? 'fa-eye-slash' : 'fa-eye'" class="fa-regular"></i>
+                                <i x-bind:class="showPassword ? 'fa-eye-slash' : 'fa-eye'" class="fa fa-regular"></i>
                             </div>
                             <input type="password" class="form-control" name="password" id="password" autocomplete="password"
                                 placeholder="<?= lang('Auth.password') ?>" value=""
