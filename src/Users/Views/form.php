@@ -94,7 +94,14 @@
                         <div class="form-group col-12 col-sm-6">
                             <select name="groups[]" multiple="multiple" class="form-control" <?php if (! auth()->user()->can('users.edit')) echo ' disabled' ?>>
                                 <?php foreach ($groups as $group => $info) : ?>
-                                    <option value="<?= $group ?>" <?php if (isset($user) && $user->inGroup($group)) : ?> selected <?php endif ?>>
+                                    <option value="<?= $group ?>"
+                                        <?php if (isset($user) && $user->inGroup($group)) : ?> selected <?php endif ?>
+                                        <?php if (
+                                            ! auth()->user()->can('users.manage-admins')
+                                            && in_array($group, ['admin','superadmin'])
+                                            && (isset($user) && ! $user->inGroup($group))
+                                            ) : ?> disabled <?php endif ?>
+                                    >
                                         <?= $info['title'] ?? $group ?>
                                     </option>
                                 <?php endforeach ?>
