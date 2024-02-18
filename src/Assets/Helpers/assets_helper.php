@@ -14,8 +14,8 @@ if (!defined('asset_link')) {
      *
      * @param string $location   url to asset file
      * @param string $type       css, js
-     * @param mixed  $attributes Additional attributes to include in the asset link tag. 
-     *                           Can be provided as a string (for value-less attributes like "defer") 
+     * @param mixed  $attributes Additional attributes to include in the asset link tag.
+     *                           Can be provided as a string (for value-less attributes like "defer")
      *                           or an associative array of attribute-value pairs.
      *                           Defaults to null.
      */
@@ -26,7 +26,7 @@ if (!defined('asset_link')) {
         $tag = '';
 
         $additionalAttr = '';
-        $defaultAttr = $type === 'css' ? "rel='stylesheet'" : "";
+        $defaultAttr    = $type === 'css' ? "rel='stylesheet'" : '';
 
         if (is_string($attributes)) {
             $additionalAttr = $attributes;
