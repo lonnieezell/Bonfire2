@@ -33,6 +33,10 @@ class UserFilter extends UserModel
             'title'   => 'Active?',
             'options' => [0 => 'Inactive', 1 => 'Active'],
         ],
+        'banned' => [
+            'title'   => 'Banned?',
+            'options' => [0 => 'Not Banned', 1 => 'Banned'],
+        ],
         'last_active' => [
             'title'   => 'Last Active Within',
             'type'    => 'radio',
@@ -76,6 +80,17 @@ class UserFilter extends UserModel
 
         if (isset($params['active']) && count($params['active'])) {
             $this->whereIn('users.active', $params['active']);
+        }
+
+        if (isset($params['banned']) && count($params['banned'])) {
+            $this->groupStart();
+            if(isset($params['banned'][0])) {
+                $this->where('users.status', null);
+            }
+            if(isset($params['banned'][1])) {
+                $this->orWhere('users.status', 'banned');
+            }
+            $this->groupEnd();
         }
 
         if (isset($params['last_active']) && is_numeric($params['last_active'])) {

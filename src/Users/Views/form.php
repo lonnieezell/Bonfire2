@@ -80,6 +80,35 @@
                     </div>
                 </div>
             </fieldset>
+            <?php if (isset($user) && $user->id !== null) : ?>
+            <fieldset>
+                <legend>User Status</legend>
+                <div
+                    x-data="{ isChecked: <?= $user->isBanned() ? 'true' : 'false' ?> }">
+                    <input class="form-check-input" type="checkbox" name="activate" id="activate" value="1"
+                    <?php if (! $user->isNotActivated()) : ?>
+                        checked disabled
+                    <?php endif; ?>
+                    >
+                    <label class="form-check-label" for="activate">
+                        User is activated
+                    </label><br>
+                    <input type="hidden" name="ban" value="0">
+                    <input class="form-check-input" type="checkbox" name="ban" id="ban" value="1" x-model="isChecked"
+                    <?php if ($itsMe) : ?>
+                        disabled
+                    <?php endif; ?>
+                    >
+                    <label class="form-check-label" for="ban">
+                        User is banned<span class="x-cloak fw-bold" x-show="isChecked">, enter reason for the ban (will
+                            be shown at login attempt)</span>
+                    </label>
+                    <input x-show="isChecked" x-bind:disabled="!isChecked" type="text" name="ban_reason" id="ban_reason"
+                        class="form-control form-control-sm x-cloak"
+                        value="<?= $user->getBanMessage() ?>">
+                </div>
+            </fieldset>
+            <?php endif; ?>
 
                 <fieldset>
                     <legend>Groups</legend>
