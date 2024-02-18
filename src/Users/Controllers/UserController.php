@@ -165,7 +165,6 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
-
                 // Check if the avatar is to be resized
                 $avatarResize     = setting('Users.avatarResize') ?? false;
                 $maxDimension     = setting('Users.avatarSize') ?? 140;
@@ -225,12 +224,19 @@ class UserController extends AdminController
             // omit previously unset admin groups if user performing changes
             // should not manage admins
             if (! auth()->user()->can('users.manage-admins')) {
+                // prevent adding
                 foreach ($groups as $key => $group) {
                     if (
                         ! $user->inGroup($group)
-                        && in_array($group, ['admin','superadmin'])
+                        && in_array($group, ['admin', 'superadmin'], true)
                     ) {
                         unset($groups[$key]);
+                    }
+                }
+                // prevent removing: return any removed admin role
+                foreach ($user->getGroups() as $group) {
+                    if (in_array($group, ['admin', 'superadmin'], true) && ! in_array($group, $groups, true)) {
+                        $groups[] = $group;
                     }
                 }
             }

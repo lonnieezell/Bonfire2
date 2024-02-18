@@ -85,7 +85,11 @@
                     <legend>Groups</legend>
 
                     <?php if (auth()->user()->can('users.edit')) : ?>
-                        <p>Select one or more groups for the user to belong to.</p>
+                        <p>Select one or more groups for the user to belong to.
+                        <?php if(! auth()->user()->can('users.manage-admins')) : ?>
+                            Groups with administrator privileges cannot be added or removed with your current permissions.
+                        <?php endif; ?>
+                        </p>
                     <?php else : ?>
                         <p>Groups that the user belongs to (you do not have permission to modify the list).</p>
                     <?php endif; ?>
