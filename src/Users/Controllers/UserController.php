@@ -101,6 +101,7 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix . 'form', [
             'user'   => $user,
             'groups' => $groups,
+            'itsMe' => $itsMe
         ]);
     }
 
@@ -149,9 +150,24 @@ class UserController extends AdminController
         // Fill in basic details
         $user->fill($this->request->getPost());
 
-        // Mark the user active if it is created by admin
-        if ($userId === null) {
+        // Mark the user active if it is created by admin, or if it is marked active by admin
+        if (
+            $userId === null
+            || (
+                $user->isNotActivated()
+                && auth()->user()->can('users.edit')
+                && (int) $this->request->getPost('activate') === 1
+            )
+        ) {
             $user->active = 1;
+        }
+
+        if (auth()->user()->can('users.edit') && ! $itsMe) {
+            if ((int) $this->request->getPost('ban') === 1) {
+                $user->ban($this->request->getPost('ban_reason'));
+            } elseif($user->isBanned() && (int) $this->request->getPost('ban') === 0) {
+                $user->unBan();
+            }
         }
 
         // Save basic details
