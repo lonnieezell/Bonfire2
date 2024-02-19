@@ -67,6 +67,7 @@ class EmailActivator extends ShieldEmailActivator
         $date      = Time::now()->toDateTimeString();
 
         // Send the email
+        helper('email');
         $email = emailer()->setFrom(setting('Email.fromEmail'), setting('Email.fromName') ?? '');
         $email->setTo($userEmail);
         $email->setSubject(lang('Auth.emailActivateSubject'));
