@@ -165,7 +165,6 @@ class UserController extends AdminController
         // Check for an avatar to upload
         if ($file = $this->request->getFile('avatar')) {
             if ($file->isValid()) {
-
                 // Check if the avatar is to be resized
                 $avatarResize     = setting('Users.avatarResize') ?? false;
                 $maxDimension     = setting('Users.avatarSize') ?? 140;
@@ -221,7 +220,27 @@ class UserController extends AdminController
 
         // Save the user's groups if the user has right permissions
         if (auth()->user()->can('users.edit')) {
-            $user->syncGroups(...($this->request->getPost('groups') ?? []));
+            $groups = $this->request->getPost('groups') ?? [];
+            // omit previously unset admin groups if user performing changes
+            // should not manage admins
+            if (! auth()->user()->can('users.manage-admins')) {
+                // prevent adding
+                foreach ($groups as $key => $group) {
+                    if (
+                        ! $user->inGroup($group)
+                        && in_array($group, ['admin', 'superadmin'], true)
+                    ) {
+                        unset($groups[$key]);
+                    }
+                }
+                // prevent removing: return any removed admin role
+                foreach ($user->getGroups() as $group) {
+                    if (in_array($group, ['admin', 'superadmin'], true) && ! in_array($group, $groups, true)) {
+                        $groups[] = $group;
+                    }
+                }
+            }
+            $user->syncGroups(...$groups);
         }
 
         // Save the user's meta fields
@@ -409,7 +428,22 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', ['user']));
         }
 
-        $user->syncPermissions(...($this->request->getPost('permissions') ?? []));
+        $permissions = $this->request->getPost('permissions') ?? [];
+
+        // if the administrator cannot manage admins, remove all user-management related permissions
+        // unless they have been set previously
+        if (! auth()->user()->can('users.manage-admins')) {
+            foreach ($permissions as $key => $permission) {
+                if (
+                    ! $user->hasPermission($permission)
+                    && explode('.', $permission)[0] === 'users'
+                ) {
+                    unset($permissions[$key]);
+                }
+            }
+        }
+
+        $user->syncPermissions(...$permissions);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', ['permissions']));
     }
@@ -432,7 +466,6 @@ class UserController extends AdminController
         $user = $users->find($userId);
 
         if (auth()->user()->can('users.edit') || $itsMe) {
-
             $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
             if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
                 @unlink($avatarDir . '/' . $user->avatar);
@@ -440,8 +473,9 @@ class UserController extends AdminController
                 $users->save($user);
             }
 
-            return $this->render($this->viewPrefix . '_avatar', ['user'   => $user]);
+            return $this->render($this->viewPrefix . '_avatar', ['user' => $user]);
         }
+
         // TODO: will have to find a way to return error message via ajax fragment later
         return '';
     }

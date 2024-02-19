@@ -15,9 +15,13 @@
         <fieldset>
             <legend>User Permissions</legend>
 
-            <p>These permissions are applied in addition to any allowed by the user's groups.</p>
+            <p>These permissions are applied in addition to any allowed by the user's groups.
+                If you do not have the <em>users.manage-admins</em> permission, permissions
+                related to user management will not be selectable (unless they have been
+                granted previously).</p>
 
-            <p>Indeterminate checkboxes indicate the permission is already available from one or more groups the user is a part of.</p>
+            <p>Indeterminate checkboxes indicate the permission is already available from one or more groups the user is
+                a part of.</p>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -28,19 +32,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($permissions as $permission => $description) : ?>
+                        <?php foreach ($permissions as $permission => $description) : ?>
                         <tr>
                             <td>
-                                <input class="form-check-input <?= $user->can($permission) ? 'in-group' : '' ?>" type="checkbox" name="permissions[]" value="<?= $permission ?>"
+                                <input
+                                    class="form-check-input <?= $user->can($permission) ? 'in-group' : '' ?>"
+                                    type="checkbox" name="permissions[]"
+                                    value="<?= $permission ?>"
                                     <?php if ($user->hasPermission($permission)) : ?>
-                                        checked
-                                    <?php endif ?>
+                                checked
+                                <?php endif ?>
+                                <?php if (
+                                    ! $user->hasPermission($permission)
+                                    && ! auth()->user()->can('users.manage-admins')
+                                    && explode('.', $permission)[0] === 'users'
+                                ) :
+                                    ?>
+                                disabled
+                                <?php endif ?>
                                 >
                             </td>
                             <td><?= $permission ?></td>
                             <td><?= $description ?></td>
                         </tr>
-                    <?php endforeach ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
