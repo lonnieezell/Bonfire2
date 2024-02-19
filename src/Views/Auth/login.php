@@ -21,7 +21,7 @@
                     <!-- Password -->
                     <div class="mb-2 pass-eye-parent" x-data="{ showPassword: false }">
                         <div class="pass-eye" x-on:click="showPassword = !showPassword">
-                            <i x-bind:class="showPassword ? 'fa-eye-slash' : 'fa-eye'" class="fa-regular"></i>
+                            <i x-bind:class="showPassword ? 'fa-eye-slash' : 'fa-eye'" class="fa fa-regular"></i>
                         </div>
                         <input type="password" class="form-control" name="password" autocomplete="off" 
                             placeholder="<?= lang('Auth.password') ?>" x-bind:type="showPassword ? 'text' : 'password'" required
