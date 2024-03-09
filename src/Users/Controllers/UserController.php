@@ -101,7 +101,7 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix . 'form', [
             'user'   => $user,
             'groups' => $groups,
-            'itsMe' => $itsMe
+            'itsMe'  => $itsMe,
         ]);
     }
 
@@ -162,10 +162,20 @@ class UserController extends AdminController
             $user->active = 1;
         }
 
-        if (auth()->user()->can('users.edit') && ! $itsMe) {
+        // Limits on banning:
+        // (1) Cannot ban oneself
+        // (2) Only users who can manage admins can ban admins
+        if (
+            auth()->user()->can('users.edit')
+            && ! $itsMe
+            && (
+                ! $user->inGroup('admin', 'superadmin')
+                || auth()->user()->can('users.manage-admins')
+            )
+        ) {
             if ((int) $this->request->getPost('ban') === 1) {
                 $user->ban($this->request->getPost('ban_reason'));
-            } elseif($user->isBanned() && (int) $this->request->getPost('ban') === 0) {
+            } elseif ($user->isBanned() && (int) $this->request->getPost('ban') === 0) {
                 $user->unBan();
             }
         }
@@ -249,6 +259,7 @@ class UserController extends AdminController
                         unset($groups[$key]);
                     }
                 }
+
                 // prevent removing: return any removed admin role
                 foreach ($user->getGroups() as $group) {
                     if (in_array($group, ['admin', 'superadmin'], true) && ! in_array($group, $groups, true)) {
