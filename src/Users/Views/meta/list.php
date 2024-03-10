@@ -5,11 +5,10 @@
 
             <?php foreach ($fields as $field => $info) : ?>
                 <?php if ($info['type'] === 'checkbox') : ?>
-                    <div class="form-check col-12 col-sm-6">
-                        <?php $metaValue = $user->meta(strtolower($field)) ?? 'false'; ?>
+                <div class="form-check col-12 col-sm-6 mt-3">
                         <input type="hidden" name="meta[<?= strtolower($field) ?>]" value="false">
                         <input type="checkbox" class="form-check-input" name="meta[<?= strtolower($field) ?>]"
-                               value="true" <?= $metaValue === 'true' ? 'checked' : '' ?>>
+                            value="true" <?= set_checkbox('meta.' . strtolower($field), 'true', ($user->meta(strtolower($field))) === 'true') ?>>
                         <?php if (!isset($info['label'])) : ?>
                             <label for="meta[<?= $field ?>]"
                                    class="form-check-label"><?= esc(ucwords(strtolower(str_replace(['-', '_'], ' ', $field)))) ?></label>
@@ -29,7 +28,7 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                         <input type="text" name="meta[<?= strtolower($field) ?>]" class="form-control" autocomplete="<?= strtolower($field) ?>"
-                               value="<?= old('meta[' . strtolower($field) . ']', $user->meta(strtolower($field)) ?? '') ?>">
+                            value="<?= old('meta.' . strtolower($field), $user->meta(strtolower($field)) ?? '') ?>">
                         <?php if (has_error('meta.' . $field)) : ?>
                             <p class="text-danger"><?= error('meta.' . $field) ?></p>
                         <?php endif ?>
