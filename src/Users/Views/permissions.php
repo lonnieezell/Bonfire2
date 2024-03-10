@@ -12,7 +12,7 @@
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
-        <fieldset>
+        <fieldset class="first">
             <legend>User Permissions</legend>
 
             <p>These permissions are applied in addition to any allowed by the user's groups.

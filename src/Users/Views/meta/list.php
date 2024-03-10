@@ -1,6 +1,8 @@
 <?php if (isset($fieldGroups) && count($fieldGroups)) : ?>
     <?php foreach ($fieldGroups as $group => $fields) : ?>
         <fieldset>
+    <div class="row">
+        <div class="col">
             <legend><?= esc($group) ?></legend>
 
             <?php foreach ($fields as $field => $info) : ?>
@@ -36,6 +38,8 @@
                     </div>
                 <?php endif ?>
             <?php endforeach ?>
+        </div>
+    </div>
         </fieldset>
     <?php endforeach ?>
 <?php endif ?>

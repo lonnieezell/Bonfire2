@@ -28,7 +28,7 @@
                 <input type="hidden" name="id" value="<?= $user->id ?>">
             <?php endif ?>
 
-            <fieldset>
+            <fieldset class="first">
                 <legend>Basic Info</legend>
 
                 <div class="row">
@@ -153,9 +153,7 @@
             </fieldset>
 
             <!-- User Meta Fields -->
-            <div class="row">
                 <?= view_cell('\Bonfire\Users\Libraries\UserCells::metaFormFields') ?>
-            </div>
 
             <div class="text-end py-3">
                 <input type="submit" value="Save User" class="btn btn-primary btn-lg">
