@@ -29,7 +29,7 @@ you can specify:
 - **label** is the label shown for the HTML input.
 
 - **type** is the type of HTML input. Currently most of the text-type inputs are supported (text, password, email, date, number, etc)
-    as well as textareas for when you need more information.
+    as well as checkboxes, and textareas for when you need more information.
 
 - **required** is a boolean about whether that field is required when editing a user.
 
