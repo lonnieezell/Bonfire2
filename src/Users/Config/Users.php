@@ -115,8 +115,8 @@ class Users extends BaseConfig
      * Each field can have the following values in it's options array:
      *  - label: the input label. If one is not provided, the field name will be used.
      *  - type: the type of HTML input used. Should be the simpler inputs,
-     *      like text, number, email, textarea, etc.
-     *      Selects, checkboxes, radios, etc are not supported.
+     *      like text, number, email, url, date, etc., as well as textarea, checkbox.
+     *      Selects, radios, etc are not supported.
      *  - required: true/false
      *  - validation: a validation rules string. If not present will be 'permit_empty|string'
      */
