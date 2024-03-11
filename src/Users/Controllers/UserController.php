@@ -98,6 +98,8 @@ class UserController extends AdminController
         $groups = setting('AuthGroups.groups');
         asort($groups);
 
+        helper('form');
+
         return $this->render($this->viewPrefix . 'form', [
             'user'   => $user,
             'groups' => $groups,
