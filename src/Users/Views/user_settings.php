@@ -10,7 +10,7 @@
         <form action="<?= site_url(ADMIN_AREA . '/settings/users') ?>" method="post">
             <?= csrf_field() ?>
 
-            <fieldset>
+            <fieldset class="first">
                 <legend>Registration</legend>
 
                 <div class="row">

@@ -14,7 +14,7 @@
 
 <x-admin-box>
 
-    <fieldset>
+    <fieldset class="first">
 
         <legend>Change password</legend>
         <?= view('Bonfire\Users\Views\password_change', ['user' => $user ?? null]) ?>
