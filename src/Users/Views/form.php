@@ -155,9 +155,7 @@
             <!-- User Meta Fields -->
                 <?= view_cell('\Bonfire\Users\Libraries\UserCells::metaFormFields') ?>
 
-            <div class="text-end py-3">
-                <input type="submit" value="Save User" class="btn btn-primary btn-lg">
-            </div>
+            <x-save-button>Save User</x-save-button>
 
             </form>
 

@@ -23,6 +23,10 @@ This is the box that wraps the list of filters in a resource list page.
 
 This is used within the admin page headers to display the main page title. 
 
+**<x-save-button\>**
+
+This is used within the admin forms to save data.
+
 **<x-page-head\>**
 
 This wraps the page header on admin pages. 

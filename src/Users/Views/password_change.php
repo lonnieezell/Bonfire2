@@ -39,8 +39,6 @@
                     </div>
                 </div>
 
-            <div class="text-end py-3">
-                <input type="submit" value="Update Password" class="btn btn-primary btn-lg">
-            </div>
+                <x-save-button>Update Password</x-save-button>
 
         </form>
