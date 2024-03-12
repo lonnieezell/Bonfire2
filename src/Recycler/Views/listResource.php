@@ -22,7 +22,7 @@
 
 <x-admin-box>
 
-    <fieldset id="resource">
+    <fieldset id="resource" class="first">
         <legend><?= $currentResource['label'] ?></legend>
 
         <?php if (isset($items) && count($items)) : ?>

@@ -14,7 +14,7 @@
 
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
 		<?= csrf_field() ?>
-        <fieldset>
+        <fieldset class="first">
 
             <legend><i class="fas fa-object-group"></i> Widgets Settings</legend>
 

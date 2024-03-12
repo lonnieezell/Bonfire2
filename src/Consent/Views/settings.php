@@ -10,7 +10,7 @@
         <form action="<?= site_url(ADMIN_AREA . '/settings/consent') ?>" method="post">
             <?= csrf_field() ?>
 
-            <fieldset>
+            <fieldset class="first">
                 <legend>Basic Details</legend>
 
                 <p>The Consent module asks users to provide consent before you set various cookies.</p>

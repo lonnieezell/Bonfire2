@@ -16,7 +16,7 @@
 		<?= csrf_field() ?>
         <input type="hidden" id="widget" name="widget" value="<?=$tab?>">
 
-        <fieldset>
+        <fieldset class="first">
 
             <legend><i class="fas fa-chart-line"></i> Line Chart General Settings</legend>
 

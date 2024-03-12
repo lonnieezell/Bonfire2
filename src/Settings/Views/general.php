@@ -9,18 +9,16 @@
     <form action="<?= site_url(ADMIN_AREA . '/settings/general') ?>" method="post">
         <?= csrf_field() ?>
 
-        <fieldset>
+        <fieldset class="first">
             <legend>General</legend>
 
             <!-- Site Name -->
             <div class="row">
                 <div class="col-12 col-sm-4">
-                    <div class="form-check">
-                        <label class="form-label" for="siteName">Site Name</label>
-                        <input type="text"  class="form-control" name="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
-                    </div>
+                    <label class="form-label" for="siteName">Site Name</label>
+                    <input type="text"  class="form-control" name="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
                 </div>
-                <div class="col px-5">
+                <div class="col px-5 pt-2">
                     <p class="text-muted small">Appears in admin, and is available throughout the site.</p>
                 </div>
             </div>
@@ -28,16 +26,14 @@
             <!-- Site Online? -->
             <div class="row mt-3">
                 <div class="col-12 col-sm-4">
-                    <div class="form-check py-3 px-5">
-                        <input class="form-check-input" type="checkbox" name="siteOnline"
-                               value="1"
-                            <?php if (old('siteOnline', setting('Site.siteOnline') ?? false)) : ?> checked <?php endif ?> />
-                        <label class="form-check-label" for="siteOnline">
-                            Site Online?
-                        </label>
-                    </div>
+                    <input class="form-check-input" type="checkbox" name="siteOnline"
+                            value="1"
+                        <?php if (old('siteOnline', setting('Site.siteOnline') ?? false)) : ?> checked <?php endif ?> />
+                    <label class="form-check-label" for="siteOnline">
+                        Site Online?
+                    </label>
                 </div>
-                <div class="col px-5 pt-3">
+                <div class="col px-5">
                     <p class="text-muted small">If unchecked, only Superadmin and user groups with permission can access the site.</p>
                 </div>
             </div>
@@ -160,8 +156,6 @@
 
             </div>
         </fieldset>
-
-        <br><hr>
 
         <div class="text-end px-5 py-3">
             <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">

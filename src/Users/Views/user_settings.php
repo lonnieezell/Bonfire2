@@ -261,7 +261,7 @@
                             <option value="username" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'username' ? 'selected' : '' ?>>Username</option>
                         </select>
                     </div>
-                    <div class="col px-5 pt-4">
+                    <div class="col px-5 pt-2">
                         <p class="text-muted small">Will use either the user's full name or their username to display the
                             initials within their avatar if no image exists.</p>
                     </div>
@@ -346,8 +346,6 @@
                     </div>
                 </div>
 
-            </div>
-
             </fieldset>
 
             <div class="text-end px-5 py-3">
@@ -355,10 +353,4 @@
             </div>
         </form>
     </x-admin-box>
-<?php $this->endSection() ?>
-
-<?php $this->section('scripts') ?>
-<script>
-
-</script>
 <?php $this->endSection() ?>
