@@ -37,7 +37,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      */
     public array $views = [
-        'layout'                      => 'master',
+        'layout'                      => '\CodeIgniter\Shield\Views\layout',
         'email_layout'                => '\Bonfire\Views\email',
         'login'                       => '\Bonfire\Views\Auth\login',
         'register'                    => '\Bonfire\Views\Auth\register',
