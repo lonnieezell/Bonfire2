@@ -10,7 +10,7 @@
         <form action="<?= site_url(ADMIN_AREA . '/settings/email') ?>" method="post">
             <?= csrf_field() ?>
 
-            <fieldset>
+            <fieldset class="first">
                 <legend>From</legend>
 
                 <p>This specifies the default email address and name that will be used when sending an email.</p>
@@ -39,7 +39,6 @@
                 </div>
             </fieldset>
 
-            <hr>
 
             <fieldset x-data="{openTab: '<?= $activeTab ?>'}">
                 <legend>Mail Settings</legend>
@@ -177,7 +176,6 @@
 
             </fieldset>
 
-            <br><hr>
 
             <div class="text-end px-5 py-3">
                 <input type="submit" value="Save Settings" class="btn btn-primary btn-lg">

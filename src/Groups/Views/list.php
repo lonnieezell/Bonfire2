@@ -7,7 +7,7 @@
 
 <x-admin-box>
 
-    <fieldset>
+    <fieldset class="first">
         <legend>User Groups</legend>
 
         <p>User Groups function like traditional roles, but can also be more specific groupings of users

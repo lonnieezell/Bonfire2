@@ -7,7 +7,7 @@
 
     <x-admin-box>
 
-        <fieldset>
+        <fieldset class="first">
             <legend>Server Information</legend>
 
             <div class="col-12 col-sm-6">
@@ -59,7 +59,7 @@
         <fieldset>
             <legend>Filesystem</legend>
 
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-md-10 col-xl-6">
                 <table class="table table-striped">
                     <tbody>
                         <tr>
