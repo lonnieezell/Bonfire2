@@ -155,7 +155,9 @@
             <!-- User Meta Fields -->
                 <?= view_cell('\Bonfire\Users\Libraries\UserCells::metaFormFields') ?>
 
-            <x-save-button>Save User</x-save-button>
+            <x-button-container>
+                    <x-button>Save User</x-button>
+            </x-button-container>
 
             </form>
 

@@ -23,9 +23,13 @@ This is the box that wraps the list of filters in a resource list page.
 
 This is used within the admin page headers to display the main page title. 
 
-**<x-save-button\>**
+**<x-button\>**
 
-This is used within the admin forms to save data.
+This is used within the admin forms to add pre-styled buttons (configurable via attributes `color` (any pre-defined Bootstrap 5 color, like `primary`, `secondary`, `success`, etc., defaulting to `primary`) and `type` (defaults to `submit`, but can also be `reset`, `button`, etc.).
+
+**<x-button-container\>**
+
+Wrapper for form button area enforcing uniform margins.
 
 **<x-page-head\>**
 

@@ -348,7 +348,9 @@
 
             </fieldset>
 
-            <x-save-button>Save Settings</x-save-button>
+            <x-button-container>
+                <x-button>Save Settings</x-button>
+            </x-button-container>
         </form>
     </x-admin-box>
 <?php $this->endSection() ?>

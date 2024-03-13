@@ -61,7 +61,9 @@
             </div>
         </fieldset>
 
-        <x-save-button>Save Permissions</x-save-button>
+        <x-button-container>
+            <x-button>Save Permissions</x-button>
+        </x-button-container>
 
     </form>
 

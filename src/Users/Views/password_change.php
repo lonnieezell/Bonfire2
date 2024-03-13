@@ -39,6 +39,8 @@
                     </div>
                 </div>
 
-                <x-save-button>Update Password</x-save-button>
+                <x-button-container>
+                    <x-button>Update Password</x-button>
+                </x-button-container>
 
         </form>
