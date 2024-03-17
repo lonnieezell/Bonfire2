@@ -75,13 +75,13 @@ class Users extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
-     * Additional User Fields
+     * User Fields
      * --------------------------------------------------------------------------
      * Validation rules used when saving a user.
      */
     public $validation = [
         'id' => [
-            // Needed for the id in email test;
+            // Needed for the id in email and username validation (below);
             // see https://codeigniter4.github.io/userguide/installation/upgrade_435.html
             'rules' => 'permit_empty|is_natural_no_zero',
         ],
@@ -117,13 +117,23 @@ class Users extends BaseConfig
      *  - type: the type of HTML input used. Should be the simpler inputs,
      *      like text, number, email, url, date, etc., as well as textarea, checkbox.
      *      Selects, radios, etc are not supported.
-     *  - required: true/false
      *  - validation: a validation rules string. If not present will be 'permit_empty|string'
+     * NOTE: if you need labels for fields in validation messages, expand the 'validation'
+     * value into multidimensional array of it's own, with keys 'label' and 'rules',
+     * like it is done with 'baz' value below.
      */
     public $metaFields = [
         //        'Example Fields' => [
-        //            'foo' => ['label' => 'Foo', 'type' => 'text', 'required' => true, 'validation' => 'permit_empty|string'],
-        //            'Bar' => ['type' => 'text', 'required' => true, 'validation' => 'required|string'],
+        //            'foo' => ['label' => 'Foo', 'type' => 'text', 'validation' => 'permit_empty|string'],
+        //            'Bar' => ['type' => 'text', 'validation' => 'required|string'],
+        //            'baz' => [
+        //                 'label' => 'Baz',
+        //                 'type' => 'checkbox',
+        //                 'validation' => [
+        //                     'label' => 'Baz',
+        //                     'rules' => 'permit_empty|in_list[true,false]'
+        //                     ],
+        //                 ],
         //        ],
     ];
 }
