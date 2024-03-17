@@ -10,6 +10,12 @@ class User extends ShieldUser
     use HasMeta;
 
     /**
+     * Necessary property for classes using HasMeta trait,
+     * containing the name of the config class with $metaFields property.
+     */
+    public string $configClass = 'Users';
+
+    /**
      * Renders out the user's avatar at the specified size (in pixels)
      *
      * @return string
@@ -117,6 +123,6 @@ class User extends ShieldUser
      */
     public function validationRules(?string $prefix = null): array
     {
-        return $this->metaValidationRules('Users', $prefix);
+        return $this->metaValidationRules($prefix);
     }
 }

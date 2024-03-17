@@ -189,7 +189,7 @@ trait HasMeta
         $updates = [];
         $deletes = [];
 
-        foreach (setting('Users.metaFields') as $group => $fields) {
+        foreach (setting("{$this->configClass}.metaFields") as $group => $fields) {
             if (! is_array($fields) || ! count($fields)) {
                 continue;
             }
@@ -255,11 +255,11 @@ trait HasMeta
      *
      * @param string|null $prefix // Specifies the form array name, if any
      */
-    public function metaValidationRules(string $configClass, ?string $prefix = null): array
+    public function metaValidationRules(?string $prefix = null): array
     {
         $rules = [];
         helper('setting');
-        $metaInfo = setting("{$configClass}.metaFields");
+        $metaInfo = setting("{$this->configClass}.metaFields");
 
         if (empty($metaInfo)) {
             return $rules;
