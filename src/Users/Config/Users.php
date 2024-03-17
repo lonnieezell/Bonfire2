@@ -120,7 +120,7 @@ class Users extends BaseConfig
      *  - validation: a validation rules string. If not present will be 'permit_empty|string'
      * NOTE: if you need labels for fields in validation messages, expand the 'validation'
      * value into multidimensional array of it's own, with keys 'label' and 'rules',
-     * like it is done with 'baz' value below.
+     * like it is done with 'baz' value below (adding custom error messages is also possible here).
      */
     public $metaFields = [
         //        'Example Fields' => [
@@ -132,8 +132,8 @@ class Users extends BaseConfig
         //                 'validation' => [
         //                     'label' => 'Baz',
         //                     'rules' => 'permit_empty|in_list[true,false]'
-        //                     ],
         //                 ],
+        //             ],
         //        ],
     ];
 }

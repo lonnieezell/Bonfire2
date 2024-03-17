@@ -9,15 +9,31 @@ modify that manually.
 ## Defining Meta Fields
 
 All fields are defined within `app/Config/Users.php`. Two fields are provided (though commented out) as examples.
+Additionally, if you need labels for fields in validation messages, or if you need custom validation messages,
+expand the $metaFields 'validation' value into multidimensional array of it's own, with keys
+`label` and `rules` like it is done with 'baz' value below (in case of custom error messages, you can add them
+in `errors` subarray, see
+[Validation in Codeigniter 4 documentation](https://codeigniter4.github.io/userguide/libraries/validation.html) 
+for more details).
 
 ```php
 public $metaFields = [
         'Example Fields' => [
-            'foo' => ['label' => 'Foo', 'type' => 'text', 'required' => true, 'validation' => 'permit_empty|string'],
-            'Bar' => ['type' => 'text', 'required' => true, 'validation' => 'required|string'],
+            'foo' => ['label' => 'Foo', 'type' => 'text', 'validation' => 'permit_empty|string'],
+            'Bar' => ['type' => 'text', 'validation' => 'required|string'],
+            'baz' => [
+                'label' => 'Baz',
+                'type' => 'checkbox',
+                'validation' => [
+                    'label' => 'Baz',
+                    'rules' => 'required|in_list[true,false]'
+                ],
+            ],
         ],
     ];
 ```
+
+
 
 Each major grouping within the `$metaFields` array specifies a fieldset legend name. This provides logical grouping
 of fields within the Edit User form.
@@ -26,14 +42,13 @@ Each entry within this fieldset is a single piece of information. The key is the
 field by later. Then each has an array of information that defines it. The array has the following options that
 you can specify:
 
-- **label** is the label shown for the HTML input.
+- **label** is the label shown for the HTML input (if **label** is within validation sub-array, it is displayed in validation messages).
 
 - **type** is the type of HTML input. Currently most of the text-type inputs are supported (text, password, email, date, number, etc)
     as well as checkboxes, and textareas for when you need more information.
 
-- **required** is a boolean about whether that field is required when editing a user.
-
-- **validation** is the set of validation rules that should be applied to this field when saving.
+- **validation** is the set of validation rules that should be applied to this field when saving, or a container for validation array of
+  a field (with optional `label`, `rules`, `errors` keys).
 
 ## Using Meta Info
 
