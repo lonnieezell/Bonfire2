@@ -61,9 +61,9 @@
             </div>
         </fieldset>
 
-        <div class="text-end">
-            <input type="submit" class="btn btn-primary" value="Save Permissions">
-        </div>
+        <x-button-container>
+            <x-button>Save Permissions</x-button>
+        </x-button-container>
 
     </form>
 
