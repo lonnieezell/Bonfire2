@@ -482,6 +482,7 @@ input[type="checkbox"]:indeterminate {
 .quick-link {
     display: inline-block;
     height: 100px;
+    margin: 0.3em 1em 1em 0em;
 }
 
 .quick-link a {
