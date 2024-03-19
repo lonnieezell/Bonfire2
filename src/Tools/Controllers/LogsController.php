@@ -97,7 +97,7 @@ class LogsController extends AdminController
             );
         }
 
-        if (! empty($delete)) {
+        if (! empty($delete) && isset($_POST['checked'])) {
             helper('security');
 
             $checked    = $_POST['checked'];
