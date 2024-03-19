@@ -243,7 +243,7 @@ class WidgetsSettingsController extends AdminController
      */
     public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
     {
-        if (! auth()->user()->can('wiedgets.settings')) {
+        if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
