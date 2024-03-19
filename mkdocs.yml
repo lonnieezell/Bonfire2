@@ -1,0 +1,105 @@
+site_name: Bonfire 2
+site_description: Bonfire 2 for CodeIgniter User Guide
+
+theme:
+  name: material
+  # logo: assets/flame.svg
+  # favicon: assets/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep-purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep-purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    # - navigation.instant
+    # - navigation.instant.prefetch
+    # - navigation.instant.progress
+    - content.code.copy
+    - navigation.footer
+    - content.action.edit
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+
+extra:
+  homepage: https://codeigniter.com
+  generator: false
+
+  social:
+    - icon: material/github
+      link: https://github.com/lonnieezell/Bonfire2
+      name: GitHub
+    - icon: material/forum
+      link: https://github.com/lonnieezell/Bonfire2/discussions
+      name: Discussions
+
+repo_url: https://github.com/lonnieezell/Bonfire2
+edit_uri: edit/develop/docs/
+copyright: Copyright &copy; 2023 Lonnie Ezell
+
+markdown_extensions:
+  - admonition
+  - pymdownx.snippets:
+      base_path: ["docs"]
+      check_paths: false
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      use_pygments: false
+  - toc:
+      toc_depth: 2
+  - tables
+
+extra_css:
+  - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css
+  - assets/css/codeigniter.css
+  - assets/css/codeigniter_dark_mode.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js
+  - assets/js/hljs.js
+
+nav:
+  - Home: index.md
+  - Welcome to Bonfire 2:
+      - intro/installation.md
+      - intro/app_structure.md
+  - Users and Security:
+      - users_and_security/index.md
+      - users_and_security/user_meta.md
+  - Building Sites:
+      - building_sites/index.md
+      - building_sites/overview.md
+      - building_sites/alerts.md
+      - building_sites/assets.md
+      - building_sites/common_functions.md
+      - building_sites/components.md
+      - building_sites/consent.md
+      - building_sites/metadata.md
+      - building_sites/settings.md
+  - Building Admin Modules:
+      - building_admin_modules/index.md
+      - building_admin_modules/creating_an_admin_module.md
+      - building_admin_modules/dashboard_cells.md
+      - building_admin_modules/filters.md
+      - building_admin_modules/recycler.md
+      - building_admin_modules/resource_tabs.md
+      - building_admin_modules/search.md
+      - building_admin_modules/view_components.md
+      - building_admin_modules/widgets.md

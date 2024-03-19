@@ -1,25 +1,19 @@
-# Bonfire Guides
+# Welcome to Bonfire
 
-- [Welcome](welcome.md)
-- [Installation](installation.md)
-- [App Structure](app_structure.md)
-- [Building Sites](building_sites/index.md)
-  - [Overview](building_sites/overview.md)
-  - [Common Functions](building_sites/common_functions.md)
-  - [Assets](building_sites/assets.md)
-  - [Alerts](building_sites/alerts.md)
-  - [View Components](building_sites/components.md)
-  - [Consent](building_sites/consent.md)
-  - [Settings](building_sites/settings.md)
-  - [View MetaData](building_sites/metadata.md)
-- [Building Admin Modules](building_admin_modules/index.md)
-  - [Creating an Admin Modules](building_admin_modules/creating_an_admin_module.md)
-  - [View Components](building_admin_modules/view_components.md)
-  - [Filters](building_admin_modules/filters.md)
-  - [Recycler](building_admin_modules/recycler.md)
-  - [Resource Tabs](building_admin_modules/resource_tabs.md)
-  - [Search](building_admin_modules/search.md)
-  - [Widgets](building_admin_modules/widgets.md)
-  - [Dashboard Cells](building_admin_modules/dashboard_cells.md)
-- [User and Security](users_and_security/index.md)
-  - [User Meta](users_and_security/user_meta.md)
+Bonfire is here to kickstart the development of your projects providing an admin area, giving you
+common tools that keep you from reinventing the wheel, while allowing you to focus on the unique
+business logic of your application.
+
+Among the many features and tools it provides are:
+
+- Powerful and flexible user authentication system, with either password or personal access tokens
+- Simple theme system with reusable component system
+- Admin area
+- Easily expandable users
+- Meta information that can be stored on per-object basis
+- Quickly add filters to resource lists in the admin
+- Global search feature that you can easily tie your own resources into
+- Global "recycle bin" where admins can un-delete or purge soft-deleted resources
+- Cookie Consent framework to help you comply with GDPR
+- Customizable charts and stats for the dashboard
+- A way to provide documentation with your app

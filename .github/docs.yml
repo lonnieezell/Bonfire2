@@ -1,0 +1,26 @@
+name: docs
+on:
+  push:
+    branches:
+      - develop
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install Dependencies
+        run: |
+          pip3 install mkdocs-material
+          pip3 install mkdocs-git-revision-date-localized-plugin
+          pip3 install mkdocs-redirects
+      - name: Publish Bonfire 2 Documentation
+        run: mkdocs gh-deploy --force
