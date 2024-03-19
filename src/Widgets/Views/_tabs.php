@@ -8,7 +8,7 @@
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'stats') : ?> active <?php endif ?>"
            href="<?= site_url(ADMIN_AREA . '/settings/widgets/stats') ?>">
-            Statistics Widget
+            Stats/Cards
         </a>
     </li>
     <li class="nav-item">

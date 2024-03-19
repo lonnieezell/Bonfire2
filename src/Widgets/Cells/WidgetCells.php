@@ -20,6 +20,19 @@ class WidgetCells
     }
 
     /**
+     * Displays the card blocks in the admin dashboard.
+     */
+    public function cards()
+    {
+        $widgets = service('widgets');
+
+        return view('Bonfire\Widgets\Views\Cells\cards', [
+            'cards'   => $widgets->widget('cards')->items(),
+            'manager' => $widgets->manager(),
+        ]);
+    }
+
+    /**
      * Displays the chart blocks in the admin dashboard.
      */
     public function charts()

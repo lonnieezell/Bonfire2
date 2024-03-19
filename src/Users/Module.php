@@ -13,6 +13,8 @@ namespace Bonfire\Users;
 
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Widgets\Types\Cards\CardsItem;
+use Bonfire\Users\Libraries\LoginsCardWidget;
 
 class Module extends BaseModule
 {
@@ -39,5 +41,20 @@ class Module extends BaseModule
             'permission'      => 'users.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+
+        // Load widgets service
+        $widgets   = service('widgets');
+
+        // Card on dashboard
+        $cardsItem = new CardsItem([
+            'bgColor' => 'bg-gray',
+            'title'   => 'Latest logins',
+            'value'   => (new LoginsCardWidget)->showRecentLogins(),
+            'url'     => ADMIN_AREA . '/users',
+            'faIcon'  => 'fas fa-sign-in-alt',
+            'permission' => 'users.view',
+        ]);
+        $widgets->widget('cards')->collection('cards')->addItem($cardsItem);
+
     }
 }

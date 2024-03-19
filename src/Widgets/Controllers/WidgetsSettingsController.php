@@ -144,6 +144,7 @@ class WidgetsSettingsController extends AdminController
     private function saveStatsSettings()
     {
         setting('Stats.stats_showLink', $this->request->getPost('stats_showLink') ?? false);
+        setting('Cards.cards_showLink', $this->request->getPost('cards_showLink') ?? false);
     }
 
     /**
@@ -254,6 +255,7 @@ class WidgetsSettingsController extends AdminController
         }
 
         setting()->forget('Stats.stats_showLink');
+        setting()->forget('Cards.cards_showLink');
 
         setting()->forget('LineChart.line_showTitle');
         setting()->forget('LineChart.line_showSubTitle');

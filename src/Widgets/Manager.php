@@ -77,6 +77,17 @@ class Manager
                         }
                         break;
 
+                    case 'Cards':
+                        foreach ($items as $item) {
+                            $results[] = [
+                                'widget' => $pos,
+                                'title'  => $item->title(),
+                                'index'  => $i,
+                            ];
+                            $i++;
+                        }
+                        break;
+
                     case 'Charts':
                         foreach ($items as $item) {
                             $results[] = [
