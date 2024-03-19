@@ -6,7 +6,6 @@
 
 THIS IS IN BETA CURRENTLY. More details at [Patreon](https://www.patreon.com/lonnieezell)
 
-
 This repo holds the primary code of [Bonfire](https://github.com/lonnieezell/Bonfire2), an admin panel for your new or existing CodeIgniter 4 projects.
 
 ## What is Bonfire?
@@ -16,6 +15,7 @@ libraries to assist you in making better software for your clients, faster, whil
 new parts that matter to each specific application.
 
 Currently, it includes the following features:
+
 - Theme/template system, that ships with a flexible Auth and Admin theme.
 - View Components to reduce the complexity of your UI by allowing you to create reusable HTML snippets, that can be optionally controlled via code.
 - A Settings library that allows you to save config file values to the database and access them whether they're in the db or just in the files.
@@ -27,7 +27,6 @@ Currently, it includes the following features:
 - Site offline status
 - Online Log viewer/manager
 - and more...
-
 
 ## Server Requirements
 
@@ -46,3 +45,7 @@ Installation instructions can be found in the [docs](docs/index.md).
 - [Tatter/Alerts](https://github.com/tattersoftware/codeigniter4-alerts) CodeIgniter library for simple user alerts.
 - [CodeIgniter/Shield](https://github.com/codeigniter4/shield) Authentication library (originally developed for Bonfire)
 - [CodeIgniter/Settings](https://github.com/codeigniter4/settings) Database config layer (originally developed for Bonfire)
+
+## Documentation
+
+Documentation is available in the [docs](docs/index.md) directory. It can also be viewed online at [Bonfire 2 Documentation](https://lonnieezell.github.io/Bonfire2/)

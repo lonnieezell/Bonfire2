@@ -2,7 +2,6 @@
 
 Bonfire is an admin area at heart. It is designed so that you can download it and incorporate into your new or existing CodeIgniter 4 application, modifying everything as you would need to. It uses [Composer](https://getcomposer.org) to install and manage dependencies. These directions assume that you have Composer installed globally. If you do not, then you will need to adjust the commands according to your setup.
 
-
 ## Install CodeIgniter
 
 You must have an existing CodeIgniter 4 project already setup. To install a new project, type the following at the command line:
@@ -58,4 +57,4 @@ Continuing the installation will then do the following:
 
 ## Enjoy
 
-That's all that's needed to get started. You can now visit `http://localhost:8080/admin` and login with your new user.
+That's all that's needed to get started. You can now visit [http://localhost:8080/admin](http://localhost:8080/admin) and login with your new user.
