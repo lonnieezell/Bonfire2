@@ -1,8 +1,6 @@
 # Welcome to Bonfire
 
-Bonfire is here to kickstart the development of your projects providing an admin area, giving you
-common tools that keep you from reinventing the wheel, while allowing you to focus on the unique
-business logic of your application.
+Bonfire provides CodeIgniter 4 applications with powerful tools, and a ready-to-integrate admin area, to help you build robust applications faster. It does not aim to be a full CMS, but rather a framework to help you build your own web application or internal tools.
 
 Among the many features and tools it provides are:
 

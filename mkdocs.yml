@@ -77,9 +77,11 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Welcome to Bonfire 2:
+  - Welcome:
       - intro/installation.md
+      - intro/philosophy.md
       - intro/app_structure.md
+      - intro/changelog.md
   - Users and Security:
       - users_and_security/index.md
       - users_and_security/user_meta.md
