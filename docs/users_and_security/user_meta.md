@@ -125,14 +125,14 @@ $post = [
 $user->syncMeta($post);
 ```
 
-**metaValidationRules(string $configClass, string $prefix=null)**
+**metaValidationRules(string $prefix=null)**
 
 This examines the specified config file and returns an array with the names of each field and their validation rules,
 ready to be used within CodeIgniter's validation library. If your form groups the name as an array, (like `meta[website_url]`)
 you may specify the prefix to append to the field names so that validation will pick it up properly.
 
 ```php
-$rules = $user->metaValidationRules('\Config\Users', 'meta');
+$rules = $user->metaValidationRules('meta');
 
 var_dump($rules);
 
@@ -148,7 +148,8 @@ The meta solution is flexible enough to be used outside of Users in your own cla
 required to make that work.
 
 1. Create a Config file. This should include a `$metaFields` array, formatted as described above.
-2. Add the `HasMeta` trait to the Entity class that represents your resource.
+2. Add the `HasMeta` trait and a protected `$configClass` property with a string value, the name of the above-mentioned
+   Config class containing `$metaFields` array, to the Entity class that represents your resource.
 
 ```php
 use Bonfire\Traits\HasMeta;
@@ -157,5 +158,7 @@ use CodeIgniter\Entity;
 class CustomEntity extends Entity
 {
     use HasMeta;
+
+    protected string $configClass = 'CustomConfig';
 }
 ```
