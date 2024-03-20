@@ -63,7 +63,7 @@ markdown_extensions:
   - pymdownx.highlight:
       use_pygments: false
   - toc:
-      toc_depth: 2
+      toc_depth: 3
   - tables
 
 extra_css:
@@ -82,6 +82,9 @@ nav:
       - intro/philosophy.md
       - intro/app_structure.md
       - intro/changelog.md
+  - Modules:
+      - modules/assets.md
+      - modules/auth.md
   - Users and Security:
       - users_and_security/index.md
       - users_and_security/user_meta.md
