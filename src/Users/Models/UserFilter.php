@@ -66,11 +66,10 @@ class UserFilter extends UserModel
      */
     public function filter(?array $params = null)
     {
-        // two ways to go; if we have to search by groups, we have
-        // to perform two queries instead of one to avoid duplicates
+       
         if (isset($params['role']) && count($params['role'])) {
             $this->distinct();
-            $this->select('users.id');
+            $this->select('users.*');
             $this->join('auth_groups_users agu', 'agu.user_id = users.id')
                 ->whereIn('agu.group', $params['role']);
         }
