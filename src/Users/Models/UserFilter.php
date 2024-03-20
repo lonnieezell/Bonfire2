@@ -66,16 +66,12 @@ class UserFilter extends UserModel
      */
     public function filter(?array $params = null)
     {
-        // two ways to go; if we have to search by groups, we have
-        // to perform two queries instead of one to avoid duplicates
+       
         if (isset($params['role']) && count($params['role'])) {
-            $secondQuery = true;
-            $this->select('users.id');
+            $this->distinct();
+            $this->select('users.*');
             $this->join('auth_groups_users agu', 'agu.user_id = users.id')
                 ->whereIn('agu.group', $params['role']);
-        } else {
-            $secondQuery = false;
-            $this->select('users.*');
         }
 
         if (isset($params['active']) && count($params['active'])) {
@@ -101,19 +97,6 @@ class UserFilter extends UserModel
             $this->where('last_active', null);
         }
         // omitting 'where' for $params['last_active'] == 'all'
-
-        // if we need second query to avoid duplicates:
-        if ($secondQuery) {
-            $idList = $this->findAll();
-            $in     = [];
-
-            foreach ($idList as $v) {
-                $in[] = $v->id;
-            }
-            $nodup = array_unique($in);
-            $this->select('users.*');
-            $this->whereIn('id', $nodup);
-        }
 
         return $this;
     }
