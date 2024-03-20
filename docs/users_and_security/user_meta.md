@@ -148,7 +148,7 @@ The meta solution is flexible enough to be used outside of Users in your own cla
 required to make that work.
 
 1. Create a Config file. This should include a `$metaFields` array, formatted as described above.
-2. Add the `HasMeta` trait and a public `$configClass` property with a string value, the name of the above-mentioned
+2. Add the `HasMeta` trait and a protected `$configClass` property with a string value, the name of the above-mentioned
    Config class containing `$metaFields` array, to the Entity class that represents your resource.
 
 ```php
@@ -159,6 +159,6 @@ class CustomEntity extends Entity
 {
     use HasMeta;
 
-    public string $configClass = 'CustomConfig';
+    protected string $configClass = 'CustomConfig';
 }
 ```

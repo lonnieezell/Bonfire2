@@ -180,7 +180,7 @@ trait HasMeta
      * doesn't exist, it's deleted, otherwise it is
      * either inserted or updated.
      */
-    public function syncMeta(array $post)
+    public function syncMeta(array $post): void
     {
         $this->hydrateMeta();
         helper('setting');
@@ -189,7 +189,12 @@ trait HasMeta
         $updates = [];
         $deletes = [];
 
-        foreach (setting("{$this->configClass}.metaFields") as $group => $fields) {
+        $metaInfo = setting("{$this->configClass}.metaFields");
+        if (empty($metaInfo)) {
+            return;
+        }
+
+        foreach ($metaInfo as $group => $fields) {
             if (! is_array($fields) || ! count($fields)) {
                 continue;
             }

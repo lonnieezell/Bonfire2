@@ -18,7 +18,7 @@ class UserCells
 {
     protected $viewPrefix = 'Bonfire\Users\Views\\';
 
-    public string $configClass = 'Users';
+    protected string $configClass = 'Users';
 
     /**
      * Displays the form fields for user meta fields.

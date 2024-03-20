@@ -13,7 +13,7 @@ class User extends ShieldUser
      * Necessary property for classes using HasMeta trait,
      * containing the name of the config class with $metaFields property.
      */
-    public string $configClass = 'Users';
+    protected string $configClass = 'Users';
 
     /**
      * Renders out the user's avatar at the specified size (in pixels)
