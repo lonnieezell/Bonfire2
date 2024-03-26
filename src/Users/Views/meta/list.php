@@ -26,7 +26,7 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                         <textarea class="form-control" rows="3" name="meta[<?= strtolower($field) ?>]"
-                            ><?= old('meta[' . strtolower($field) . ']', $user->meta(strtolower($field)) ?? '') ?></textarea>
+                            ><?= old('meta.' . strtolower($field), $user->meta(strtolower($field)) ?? '') ?></textarea>
                         <?php if (has_error('meta.' . $field)) : ?>
                             <p class="text-danger"><?= error('meta.' . $field) ?></p>
                         <?php endif ?>
@@ -39,7 +39,7 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                             <input type="<?= $info['type'] ?>" name="meta[<?= strtolower($field) ?>]" class="form-control" autocomplete="<?= strtolower($field) ?>"
-                                value="<?= old('meta[' . strtolower($field) . ']', $user->meta(strtolower($field)) ?? '') ?>">
+                                value="<?= old('meta.' . strtolower($field), $user->meta(strtolower($field)) ?? '') ?>">
                         <?php if (has_error('meta.' . $field)) : ?>
                             <p class="text-danger"><?= error('meta.' . $field) ?></p>
                         <?php endif ?>
