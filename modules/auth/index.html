@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../overview/">
+        <link rel="prev" href="../assets/">
       
       
-        <link rel="next" href="../assets/">
+        <link rel="next" href="../consent/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Alerts - Bonfire 2 (beta)</title>
+        <title>Authentication and Authorization - Bonfire 2 (beta)</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#alerts" class="md-skip">
+        <a href="#authentication-and-authorization" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Alerts
+              Authentication and Authorization
             
           </span>
         </div>
@@ -421,8 +421,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -438,12 +440,12 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -457,7 +459,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Modules
@@ -471,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/assets/" class="md-nav__link">
+      <a href="../assets/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -489,10 +491,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../modules/auth/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Authentication and Authorization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -501,6 +523,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#extending-the-authentication-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extending the Authentication System
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extending the Authentication System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Views
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controllers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -513,7 +588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/consent/" class="md-nav__link">
+      <a href="../consent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -534,7 +609,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/dashboard/" class="md-nav__link">
+      <a href="../dashboard/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,8 +717,6 @@
       
   
   
-    
-  
   
   
     
@@ -673,17 +746,17 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../building_sites/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -700,7 +773,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Building Sites
@@ -716,7 +789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../building_sites/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -734,19 +807,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../building_sites/alerts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -755,7 +819,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -768,7 +831,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../assets/" class="md-nav__link">
+      <a href="../../building_sites/assets/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -789,7 +852,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../common_functions/" class="md-nav__link">
+      <a href="../../building_sites/common_functions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -810,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../components/" class="md-nav__link">
+      <a href="../../building_sites/components/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -831,7 +894,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../consent/" class="md-nav__link">
+      <a href="../../building_sites/consent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -852,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metadata/" class="md-nav__link">
+      <a href="../../building_sites/metadata/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -873,7 +936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../settings/" class="md-nav__link">
+      <a href="../../building_sites/settings/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1158,6 +1221,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#extending-the-authentication-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extending the Authentication System
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extending the Authentication System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Views
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Controllers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1171,7 +1275,7 @@
                   
 
   
-    <a href="https://github.com/lonnieezell/Bonfire2/edit/develop/docs/building_sites/alerts.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/lonnieezell/Bonfire2/edit/develop/docs/modules/auth.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -1179,22 +1283,45 @@
   
 
 
-<h1 id="alerts">Alerts</h1>
-<p>Bonfire uses <a href="https://github.com/tattersoftware/codeigniter4-alerts">Tatter\Alerts</a> to provide support for
-simple alerts. The usage is simple: </p>
-<pre class="highlight"><code>alert('success', 'Your message goes here.');</code></pre>
-<p>This displays a green message that appears in the top-right corner of the admin area. The first argument (<code>success</code>)
-specifies a <a href="https://getbootstrap.com/docs/5.0/components/alerts/#examples">Bootstrap alert type</a> that is added
-to the class automatically to specify how it looks. The second argument is the content that should be in the alert
-and can be a single string or an array of strings to apply multiple alerts.</p>
-<p>Additionally, you can use flash messages in the session to trigger alerts. 
-This would typically be used during a redirect: </p>
-<pre class="highlight"><code>return redirect()-&gt;back()-&gt;with('message', 'It worked!');
-return redirect()-&gt;back()-&gt;with('error', 'Did not work');
-return redirect()-&gt;back()-&gt;with('error', ['not good', 'nope', 'cannot do it']);</code></pre>
-<p>When an array is used it will display a new alert for each element in the array.</p>
-<p>You can adjust which session variables are checked and their class mapping using the
-Alerts config file. Read more in the docs at the repo linked above.</p>
+<h1 id="authentication-and-authorization">Authentication and Authorization</h1>
+<p>All of the authentication and authorization is handled by CodeIgniter's <a href="https://shield.codeigniter.com">Shield</a> library. This library provides a flexible and powerful system for managing users, groups, and permissions. Please refer to the <a href="https://shield.codeigniter.com">Shield documentation</a> for more information on how to use it.</p>
+<h2 id="extending-the-authentication-system">Extending the Authentication System</h2>
+<p>While none of the functionality has been overridden, the views and controllers have been extended to integrate with Bonfire's theme system. This allows you to easily customize the look and feel of the authentication system to match the rest of your application.</p>
+<h3 id="views">Views</h3>
+<p>The authentication pages are styled via the <code>auth</code> theme. Much of the look and feel can be modified by modifying the theme itself. If you need to modify the forms or other elements, you can specify the view that should be used in the <code>Auth</code> configuration file and then create your own views.</p>
+<pre class="highlight"><code class="language-php">public array $views = [
+    'layout'                      =&gt; 'master',
+    'email_layout'                =&gt; '\Bonfire\Views\email',
+    'login'                       =&gt; '\Bonfire\Views\Auth\login',
+    'register'                    =&gt; '\Bonfire\Views\Auth\register',
+    'forgotPassword'              =&gt; '\CodeIgniter\Shield\Views\forgot_password',
+    'resetPassword'               =&gt; '\CodeIgniter\Shield\Views\reset_password',
+    'action_email_2fa'            =&gt; '\CodeIgniter\Shield\Views\email_2fa_show',
+    'action_email_2fa_verify'     =&gt; '\CodeIgniter\Shield\Views\email_2fa_verify',
+    'action_email_2fa_email'      =&gt; '\CodeIgniter\Shield\Views\Email\email_2fa_email',
+    'action_email_activate_show'  =&gt; '\Bonfire\Views\Auth\email_activate_show',
+    'action_email_activate_email' =&gt; '\CodeIgniter\Shield\Views\Email\email_activate_email',
+    'magic-link-login'            =&gt; '\Bonfire\Views\Auth\magic_link_form',
+    'magic-link-message'          =&gt; '\Bonfire\Views\Auth\magic_link_message',
+    'magic-link-email'            =&gt; '\Bonfire\Views\Auth\magic_link_email',
+];</code></pre>
+<p>You can change the main layout that is used for the authentication pages by changing the <code>layout</code> value. You can change the layout used for emails by changing the <code>email_layout</code> value.</p>
+<h3 id="controllers">Controllers</h3>
+<p>When you need to modify the behavior of the authentication system, you should create a new controller and extend the existing controller. You should then override only the methods that you need to modify. If possible, you should do your changes and call the parent method to ensure that any security fixes that are discovered later are not lost to your application due to your overrides.</p>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+namespace App\Controllers\Auth;
+
+use Bonfire\Auth\Controllers\LoginController as BonfireLoginController;
+
+class LoginController extends BonfireLoginController
+{
+    // ... your custom methods here
+}</code></pre>
+<div class="admonition info note">
+<p class="admonition-title">Info</p>
+<p>You should always extend the Bonfire controller, not the Shield controller. This will ensure that the theme system is used properly, as Bonfire's auth controllers extend the view methods to use the theme system.</p>
+</div>
 
 
 
@@ -1230,7 +1357,7 @@ Alerts config file. Read more in the docs at the repo linked above.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building Sites">
+          <a href="../assets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Asset Management">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -1240,20 +1367,20 @@ Alerts config file. Read more in the docs at the repo linked above.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Building Sites
+                Asset Management
               </div>
             </div>
           </a>
         
         
           
-          <a href="../assets/" class="md-footer__link md-footer__link--next" aria-label="Next: Asset Management">
+          <a href="../consent/" class="md-footer__link md-footer__link--next" aria-label="Next: Consent">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Asset Management
+                Consent
               </div>
             </div>
             <div class="md-footer__button md-icon">

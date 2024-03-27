@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../overview/">
+        <link rel="prev" href="../../intro/changelog/">
       
       
-        <link rel="next" href="../assets/">
+        <link rel="next" href="../auth/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Alerts - Bonfire 2 (beta)</title>
+        <title>Asset Management - Bonfire 2 (beta)</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#alerts" class="md-skip">
+        <a href="#asset-management" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Alerts
+              Asset Management
             
           </span>
         </div>
@@ -421,8 +421,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -438,12 +440,12 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -457,7 +459,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Modules
@@ -468,10 +470,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../modules/assets/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Asset Management
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -480,6 +502,128 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#loading-the-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Loading the Helpers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-asset-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Asset Locations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linking to assets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linking to assets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset_link" class="md-nav__link">
+    <span class="md-ellipsis">
+      asset_link()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asset" class="md-nav__link">
+    <span class="md-ellipsis">
+      asset()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bustingtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      $bustingType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separator" class="md-nav__link">
+    <span class="md-ellipsis">
+      $separator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      $versions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#folders" class="md-nav__link">
+    <span class="md-ellipsis">
+      $folders
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -492,7 +636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/auth/" class="md-nav__link">
+      <a href="../auth/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -513,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/consent/" class="md-nav__link">
+      <a href="../consent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -534,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/dashboard/" class="md-nav__link">
+      <a href="../dashboard/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,8 +786,6 @@
       
   
   
-    
-  
   
   
     
@@ -673,17 +815,17 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../building_sites/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -700,7 +842,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Building Sites
@@ -716,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../building_sites/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -734,19 +876,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../building_sites/alerts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -755,7 +888,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -768,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../assets/" class="md-nav__link">
+      <a href="../../building_sites/assets/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -789,7 +921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../common_functions/" class="md-nav__link">
+      <a href="../../building_sites/common_functions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -810,7 +942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../components/" class="md-nav__link">
+      <a href="../../building_sites/components/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -831,7 +963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../consent/" class="md-nav__link">
+      <a href="../../building_sites/consent/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -852,7 +984,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metadata/" class="md-nav__link">
+      <a href="../../building_sites/metadata/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -873,7 +1005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../settings/" class="md-nav__link">
+      <a href="../../building_sites/settings/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1158,6 +1290,116 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#loading-the-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Loading the Helpers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-asset-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Asset Locations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linking to assets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linking to assets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset_link" class="md-nav__link">
+    <span class="md-ellipsis">
+      asset_link()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asset" class="md-nav__link">
+    <span class="md-ellipsis">
+      asset()
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bustingtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      $bustingType
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separator" class="md-nav__link">
+    <span class="md-ellipsis">
+      $separator
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      $versions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#folders" class="md-nav__link">
+    <span class="md-ellipsis">
+      $folders
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1171,7 +1413,7 @@
                   
 
   
-    <a href="https://github.com/lonnieezell/Bonfire2/edit/develop/docs/building_sites/alerts.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/lonnieezell/Bonfire2/edit/develop/docs/modules/assets.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -1179,22 +1421,66 @@
   
 
 
-<h1 id="alerts">Alerts</h1>
-<p>Bonfire uses <a href="https://github.com/tattersoftware/codeigniter4-alerts">Tatter\Alerts</a> to provide support for
-simple alerts. The usage is simple: </p>
-<pre class="highlight"><code>alert('success', 'Your message goes here.');</code></pre>
-<p>This displays a green message that appears in the top-right corner of the admin area. The first argument (<code>success</code>)
-specifies a <a href="https://getbootstrap.com/docs/5.0/components/alerts/#examples">Bootstrap alert type</a> that is added
-to the class automatically to specify how it looks. The second argument is the content that should be in the alert
-and can be a single string or an array of strings to apply multiple alerts.</p>
-<p>Additionally, you can use flash messages in the session to trigger alerts. 
-This would typically be used during a redirect: </p>
-<pre class="highlight"><code>return redirect()-&gt;back()-&gt;with('message', 'It worked!');
-return redirect()-&gt;back()-&gt;with('error', 'Did not work');
-return redirect()-&gt;back()-&gt;with('error', ['not good', 'nope', 'cannot do it']);</code></pre>
-<p>When an array is used it will display a new alert for each element in the array.</p>
-<p>You can adjust which session variables are checked and their class mapping using the
-Alerts config file. Read more in the docs at the repo linked above.</p>
+<h1 id="asset-management">Asset Management</h1>
+<p>Bonfire provides a simple assets system that was created to solve two main challenges:</p>
+<ol>
+<li>We should be able to serve CSS/JS assets from anywhere. While this is primarily for use by themes, it could serve many purposes.</li>
+<li>How to easily handle browser caching/cache-busting with updated assets.</li>
+</ol>
+<p>And try to do this in the simplest way possible.</p>
+<p>For the examples, we will link to assets for the Admin theme.</p>
+<div class="admonition warning route conflict warning">
+<p class="admonition-title">Warning</p>
+<p>To make this all work, a route is specified at <code>/assets/(:any)</code> to capture the request. The assets system will not work if you override this route in your own application. For most sites this should not be a problem.</p>
+</div>
+<h2 id="loading-the-helpers">Loading the Helpers</h2>
+<p>As long as you use Bonfire's custom View system, this helper will be automatically loaded. Otherwise, you will need to load it manually.</p>
+<pre class="highlight"><code class="language-php">helper('assets');</code></pre>
+<h2 id="defining-asset-locations">Defining Asset Locations</h2>
+<p>The first step is to define the locations where assets can be located. This is done in the <code>app/Config/Assets.php</code> file. The <code>$folders</code> array defines an alias for each folder that we can reference later, and the actual path to the folder.</p>
+<pre class="highlight"><code class="language-php">public $folders = [
+    'app' =&gt; ROOTPATH.'themes/app',
+    'admin' =&gt; ROOTPATH.'themes/Admin',
+    'auth' =&gt; ROOTPATH.'themes/Auth',
+    'other' =&gt; ROOTPATH.'vendor',
+];</code></pre>
+<h2 id="linking-to-assets">Linking to assets</h2>
+<p>Within your views you can link to assets anywhere within your project with the <code>asset()</code> or <code>asset_link()</code> helper functions.</p>
+<h3 id="asset_link">asset_link()</h3>
+<p><code>asset_link()</code> takes two arguments. The first is the path to the file to load. The first segment of this path must be one of the defined folders. The rest of the path would be based on the actual file structure within that location.</p>
+<pre class="highlight"><code class="language-php">{$folder alias}/path/to/file.{css|js}</code></pre>
+<p>For the <code>Admin</code> theme, a folder has been defined called <code>admin</code>. Both the <code>Auth</code> and <code>App</code> themes have similar folders already defined. Assuming there was a file at <code>themes/Admin/css/admin.css</code>, you would build the link to it like this:</p>
+<pre class="highlight"><code class="language-php">'admin/css/admin.css'</code></pre>
+<p>The second argument is the type of asset being loaded. This tells it how the resulting link should be formed.
+Currently, it only supports <code>css</code> and <code>js</code> files.</p>
+<pre class="highlight"><code class="language-php">&lt;?= asset_link('admin/css/admin.css', 'css') ?&gt;
+&lt;?= asset_link('admin/js/admin.js', 'js') ?&gt;</code></pre>
+<h3 id="asset">asset()</h3>
+<p>The <code>asset()</code> function is similar, except it only returns the URL and allows you to include it in your own HTML tags manually if needed.</p>
+<pre class="highlight"><code class="language-html">&lt;link rel="stylesheet" href="&lt;?= asset('admin/css/admin.css', 'css') ?&gt;" /&gt;
+&lt;script src="&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"&gt;&lt;/script&gt;</code></pre>
+<h2 id="configuration">Configuration</h2>
+<p>The <code>Config\Assets</code> class has a handful of settings to customize the experience.</p>
+<h3 id="bustingtype">$bustingType</h3>
+<p>When a link is generated it includes a string within the filename for cache-busting reasons. This would look something like: <code>https://localhost:8080/admin/css/admin~~213264216523.css</code>. The config setting, <code>$bustingType</code> defines how this string is derived. It has two possible values, either <code>file</code> or <code>version</code>.</p>
+<p>The <code>file</code> setting will examine the requested file and use the file modified date/time as the basis, and convert it to a Unix timestamp. This is the easiest value to use as it is automatically updates itself based on the file.However, it does force an extra file read, and the overhead needed to get the information from the file. On many small to medium sites this is likely just fine. However, large sites, or sites that require every ounce of performance, may want to use the <code>version</code> method.</p>
+<p>The <code>version</code> method requires the developer to set a new version in the configuration file whenever new code is ready to deploy to staging or production environments. See the next setting for details. To make this easier during development the current timestamp is used in testing/development environments ensuring that no caching will happen. In other environments it inserts the version number that was specified.</p>
+<h3 id="separator">$separator</h3>
+<p>The <code>$separator</code> setting allows the app to detect the part of the asset file name that was added for cache-busting purposes. It can be a single web-safe non-reserved character or a combination of such characters (characters that are allowed in a URI, but do not have a reserved purpose) that DOES NOT OCCUR in your asset file names (like <code>~</code>, <code>-</code> or <code>_</code> or any combination of ASCII letters and numbers). Separator will be inserted before the file version/timestamp, in between the file name and file extension.</p>
+<h3 id="versions">$versions</h3>
+<p>The <code>$versions</code> setting allows you to define the version number for <code>css</code> and <code>js</code> separately. This value is used as the cache-busting string when the <code>version</code> busting type is used.</p>
+<pre class="highlight"><code class="language-php">public $versions = [
+    'css' =&gt; '1.0',
+    'js' =&gt; '1.0',
+];</code></pre>
+<h3 id="folders">$folders</h3>
+<p>This values is where you define the folders that are looked in linking to an asset. Folders for all themes and the vendor folder are setup by default.</p>
+<pre class="highlight"><code class="language-php">public $folders = [
+    'app' =&gt; ROOTPATH.'themes/app',
+    'admin' =&gt; ROOTPATH.'themes/Admin',
+    'auth' =&gt; ROOTPATH.'themes/Auth',
+    'other' =&gt; ROOTPATH.'vendor',
+];</code></pre>
 
 
 
@@ -1230,7 +1516,7 @@ Alerts config file. Read more in the docs at the repo linked above.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building Sites">
+          <a href="../../intro/changelog/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Change Log">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -1240,20 +1526,20 @@ Alerts config file. Read more in the docs at the repo linked above.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Building Sites
+                Change Log
               </div>
             </div>
           </a>
         
         
           
-          <a href="../assets/" class="md-footer__link md-footer__link--next" aria-label="Next: Asset Management">
+          <a href="../auth/" class="md-footer__link md-footer__link--next" aria-label="Next: Authentication and Authorization">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Asset Management
+                Authentication and Authorization
               </div>
             </div>
             <div class="md-footer__button md-icon">
