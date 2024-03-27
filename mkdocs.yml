@@ -86,6 +86,7 @@ nav:
       - modules/assets.md
       - modules/auth.md
       - modules/consent.md
+      - modules/dashboard.md
   - Users and Security:
       - users_and_security/index.md
       - users_and_security/user_meta.md
