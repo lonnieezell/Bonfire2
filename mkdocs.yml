@@ -1,4 +1,4 @@
-site_name: Bonfire 2
+site_name: Bonfire 2 (beta)
 site_description: Bonfire 2 for CodeIgniter User Guide
 
 theme:
@@ -63,7 +63,7 @@ markdown_extensions:
   - pymdownx.highlight:
       use_pygments: false
   - toc:
-      toc_depth: 2
+      toc_depth: 3
   - tables
 
 extra_css:
@@ -82,6 +82,11 @@ nav:
       - intro/philosophy.md
       - intro/app_structure.md
       - intro/changelog.md
+  - Modules:
+      - modules/assets.md
+      - modules/auth.md
+      - modules/consent.md
+      - modules/dashboard.md
   - Users and Security:
       - users_and_security/index.md
       - users_and_security/user_meta.md
