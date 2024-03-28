@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
+
 /**
  * This file is part of Bonfire.
  *
