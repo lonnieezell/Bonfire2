@@ -11,6 +11,18 @@
 
 namespace Bonfire\Commands;
 
+use Bonfire\Assets\Config\Assets;
+use Bonfire\Auth\Config\Auth;
+use Bonfire\Auth\Config\AuthGroups;
+use Bonfire\Auth\Config\AuthToken;
+use Bonfire\Config\Bonfire;
+use Bonfire\Config\Site;
+use Bonfire\Config\Themes;
+use Bonfire\Consent\Config\Consent;
+use Bonfire\Dashboard\Config\Dashboard;
+use Bonfire\Recycler\Config\Recycler;
+use Bonfire\Users\Config\Users;
+use CodeIgniter\Encryption\Encryption;
 use Bonfire\Commands\Install\Publisher;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
@@ -66,17 +78,17 @@ class Install extends BaseCommand
     ];
 
     private array $configFiles = [
-        'Bonfire\Assets\Config\Assets',
-        'Bonfire\Auth\Config\Auth',
-        'Bonfire\Auth\Config\AuthGroups',
-        'Bonfire\Auth\Config\AuthToken',
-        'Bonfire\Config\Bonfire',
-        'Bonfire\Config\Site',
-        'Bonfire\Config\Themes',
-        'Bonfire\Consent\Config\Consent',
-        'Bonfire\Dashboard\Config\Dashboard',
-        'Bonfire\Recycler\Config\Recycler',
-        'Bonfire\Users\Config\Users',
+        Assets::class,
+        Auth::class,
+        AuthGroups::class,
+        AuthToken::class,
+        Bonfire::class,
+        Site::class,
+        Themes::class,
+        Consent::class,
+        Dashboard::class,
+        Recycler::class,
+        Users::class,
     ];
 
     /**
@@ -158,7 +170,9 @@ class Install extends BaseCommand
 
     private function setDatabase()
     {
-        $host   = $user = $pass = '';
+        $host = '';
+        $user = '';
+        $pass = '';
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $name   = CLI::prompt('Database name:', 'bonfire');
         if ($driver !== 'SQLite3') {
@@ -221,7 +235,7 @@ class Install extends BaseCommand
         // generate a key using the out-of-the-box defaults for the Encryption library
         CLI::newLine();
         CLI::write('Generating encryption key', 'yellow');
-        $key = bin2hex(\CodeIgniter\Encryption\Encryption::createKey());
+        $key = bin2hex(Encryption::createKey());
         $this->updateEnvFile('# encryption.key =', "encryption.key = hex2bin:{$key}");
         CLI::write('Encryption key saved to .env file', 'green');
         CLI::newLine();
@@ -300,7 +314,7 @@ class Install extends BaseCommand
         $newHelpers = array_unique(array_merge($helpers, ['auth', 'setting']));
 
         $pattern = '/^ {4}public \$helpers = \[.*];/mu';
-        $replace = '    public $helpers = [\'' . implode("', '", $newHelpers) . '\'];';
+        $replace = '    public $helpers = [\'' . implode("', '", $newHelpers) . "'];";
         $content = file_get_contents($path);
         $output  = preg_replace($pattern, $replace, $content);
 

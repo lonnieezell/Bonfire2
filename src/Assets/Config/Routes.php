@@ -1,6 +1,7 @@
 <?php
 
+use CodeIgniter\Router\RouteCollection;
 /**
- * @var CodeIgniter\Router\RouteCollection $routes
+ * @var RouteCollection $routes
  */
 $routes->get('assets/(:any)', '\Bonfire\Assets\Controllers\AssetController::serve/$1');

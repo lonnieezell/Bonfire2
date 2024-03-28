@@ -80,8 +80,8 @@ class AuthGroups extends ShieldAuthGroups
         'recycler.view'       => 'Can view the Recycler area',
         'logs.view'           => 'Can view the logs',
         'logs.manage'         => 'Can manage the logs',
-        'me.edit'             => 'Can edit user\'s own settings',
-        'me.security'         => 'Can change user\'s own password',
+        'me.edit'             => "Can edit user's own settings",
+        'me.security'         => "Can change user's own password",
     ];
 
     /**

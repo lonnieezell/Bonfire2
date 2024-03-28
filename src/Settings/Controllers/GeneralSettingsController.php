@@ -11,6 +11,7 @@
 
 namespace Bonfire\Settings\Controllers;
 
+use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
 use DateTimeZone;
 
@@ -69,7 +70,7 @@ class GeneralSettingsController extends AdminController
     /**
      * Saves the general settings
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function saveGeneral()
     {
@@ -104,9 +105,7 @@ class GeneralSettingsController extends AdminController
      */
     public function getTimezones(?string $area = null): string
     {
-        $area = $area === null
-            ? $this->request->getVar('timezoneArea')
-            : $area;
+        $area ??= $this->request->getVar('timezoneArea');
         $ids = [
             'Africa'     => DateTimeZone::AFRICA,
             'America'    => DateTimeZone::AMERICA,

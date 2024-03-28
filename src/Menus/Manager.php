@@ -23,14 +23,14 @@ namespace Bonfire\Menus;
  * The main class used to work with menus in the system.
  *
  * @method self                createMenu(string $name)
- * @method \Bonfire\Menus\Menu menu(string $name)
+ * @method Menu menu(string $name)
  */
 class Manager
 {
     /**
      * A collection of menus currently known about.
      *
-     * @var array<\Bonfire\Menus\Menu> array of `\Bonfire\Menus\Menu`
+     * @var array<Menu> array of `\Bonfire\Menus\Menu`
      */
     private array $_menus = [];
 
@@ -51,7 +51,7 @@ class Manager
      *
      * @param string $name Menu's name
      *
-     * @return \Bonfire\Menus\Menu
+     * @return Menu
      */
     public function menu(string $name): Menu
     {

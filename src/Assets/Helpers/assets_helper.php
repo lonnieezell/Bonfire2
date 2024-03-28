@@ -69,8 +69,8 @@ if (!defined('asset')) {
         $namelength = strlen($filename) - strlen($ext);
         $name       = substr($filename, 0, $namelength);
 
-        if (empty($filename) || empty($ext) || $filename === $ext || empty($segments)) {
-            throw new \RuntimeException('You must provide a valid filename and extension to the asset() helper.');
+        if (empty($filename) || empty($ext) || $filename === $ext || $segments === []) {
+            throw new RuntimeException('You must provide a valid filename and extension to the asset() helper.');
         }
 
         // VERSION cache-busting
@@ -99,7 +99,7 @@ if (!defined('asset')) {
             $filetime = filemtime($path);
 
             if (!$filetime) {
-                throw new \RuntimeException('Unable to get modification time of asset file: ' . $filename);
+                throw new RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
             $fingerprint = $separator . $filetime;
         }

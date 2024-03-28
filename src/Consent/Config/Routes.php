@@ -1,6 +1,8 @@
 <?php
+
+use CodeIgniter\Router\RouteCollection;
 /**
- * @var CodeIgniter\Router\RouteCollection $routes
+ * @var RouteCollection $routes
  */
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Consent\Controllers'], static function ($routes) {
     $routes->get('settings/consent', 'ConsentSettingsController::index', ['as' => 'consent-settings']);

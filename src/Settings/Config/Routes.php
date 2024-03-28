@@ -1,6 +1,8 @@
 <?php
+
+use CodeIgniter\Router\RouteCollection;
 /**
- * @var CodeIgniter\Router\RouteCollection $routes
+ * @var RouteCollection $routes
  */
 $routes->group(ADMIN_AREA . '/settings', ['namespace' => '\Bonfire\Settings\Controllers'], static function ($routes) {
     $routes->get('general', 'GeneralSettingsController::general', ['as' => 'general-settings']);

@@ -87,7 +87,7 @@ class Logs
                 }
 
                 $superLog[] = $data;
-            } elseif (! empty($superLog)) {
+            } elseif ($superLog !== []) {
                 // this log line is a continuation of previous logline
                 // so let's add them as extra
                 $prevLog                        = $superLog[count($superLog) - 1];

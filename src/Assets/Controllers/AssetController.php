@@ -58,11 +58,7 @@ class AssetController extends Controller
         // a separator defined in user's config
         $separator = config('Assets')->separator ?? '~~';
         $parts     = explode($separator, $filename);
-        if (count($parts) === 2) {
-            $filename = $parts[0] . '.' . $ext;
-        } else {
-            $filename = $origFilename;
-        }
+        $filename = count($parts) === 2 ? $parts[0] . '.' . $ext : $origFilename;
 
         $folder = config('Assets')->folders[array_shift($segments)];
 

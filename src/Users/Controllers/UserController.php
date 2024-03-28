@@ -11,6 +11,7 @@
 
 namespace Bonfire\Users\Controllers;
 
+use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
 use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
@@ -27,7 +28,7 @@ class UserController extends AdminController
     /**
      * Display the uses currently in the system.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function list()
     {
@@ -77,7 +78,7 @@ class UserController extends AdminController
     /**
      * Display the Edit form for a single user.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function edit(int $userId)
     {
@@ -110,7 +111,7 @@ class UserController extends AdminController
     /**
      * Creates or saves the basic user details.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @return RedirectResponse|void
      *
      * @throws ReflectionException
      */
@@ -191,37 +192,31 @@ class UserController extends AdminController
         }
 
         // Check for an avatar to upload
-        if ($file = $this->request->getFile('avatar')) {
-            if ($file->isValid()) {
-                // Check if the avatar is to be resized
-                $avatarResize     = setting('Users.avatarResize') ?? false;
-                $maxDimension     = setting('Users.avatarSize') ?? 140;
-                [$width, $height] = getimagesize($file->getPathname());
-                if ($avatarResize && ($width > (int) $maxDimension || $height > (int) $maxDimension)) {
-                    $image = service('image')->withFile($file->getPathname());
-                    $image->resize($maxDimension, $maxDimension, true);
-                    $image->save();
-                }
-
-                $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
-                helper('text');
-                $randomString = random_string('alnum', 5);
-                $filename     = $user->id . '_' . $randomString . '.jpg';
-
-                // Create if uploads/avatar directories not exist
-                if (! is_dir($avatarDir)) {
-                    mkdir($avatarDir, 0755, true);
-                }
-
-                // delete the previous file if there is one in db & filesystem
-                if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
-                    @unlink($avatarDir . '/' . $user->avatar);
-                }
-
-                // move the uploaded file and update user object
-                if ($file->move($avatarDir, $filename, true)) {
-                    $users->update($user->id, ['avatar' => $filename]);
-                }
+        if (($file = $this->request->getFile('avatar')) && $file->isValid()) {
+            // Check if the avatar is to be resized
+            $avatarResize     = setting('Users.avatarResize') ?? false;
+            $maxDimension     = setting('Users.avatarSize') ?? 140;
+            [$width, $height] = getimagesize($file->getPathname());
+            if ($avatarResize && ($width > (int) $maxDimension || $height > (int) $maxDimension)) {
+                $image = service('image')->withFile($file->getPathname());
+                $image->resize($maxDimension, $maxDimension, true);
+                $image->save();
+            }
+            $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
+            helper('text');
+            $randomString = random_string('alnum', 5);
+            $filename     = $user->id . '_' . $randomString . '.jpg';
+            // Create if uploads/avatar directories not exist
+            if (! is_dir($avatarDir)) {
+                mkdir($avatarDir, 0755, true);
+            }
+            // delete the previous file if there is one in db & filesystem
+            if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
+                @unlink($avatarDir . '/' . $user->avatar);
+            }
+            // move the uploaded file and update user object
+            if ($file->move($avatarDir, $filename, true)) {
+                $users->update($user->id, ['avatar' => $filename]);
             }
         }
 
@@ -232,7 +227,7 @@ class UserController extends AdminController
             helper('text');
             $user->createEmailIdentity([
                 'email'    => $this->request->getPost('email'),
-                'password' => ! empty($password) ? $password : random_string('alnum', 12),
+                'password' => empty($password) ? random_string('alnum', 12) : $password,
             ]);
         }
         // Update existing user's email identity
@@ -281,7 +276,7 @@ class UserController extends AdminController
     /**
      * Change user's password.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @return RedirectResponse|void
      *
      * @throws ReflectionException
      */
@@ -327,7 +322,7 @@ class UserController extends AdminController
     /**
      * Delete the specified user.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete(int $userId)
     {
@@ -384,7 +379,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function security(int $userId)
     {
@@ -414,7 +409,7 @@ class UserController extends AdminController
      * Displays basic security info, like previous login info,
      * and ability to force a password reset, ban, etc.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function permissions(int $userId)
     {
@@ -442,7 +437,7 @@ class UserController extends AdminController
     /**
      * Updates the permissions for a single user.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function savePermissions(int $userId)
     {

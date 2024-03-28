@@ -74,9 +74,9 @@ class Theme
      */
     public static function current()
     {
-        return ! empty(static::$currentTheme)
-            ? static::$currentTheme
-            : static::$defaultTheme;
+        return empty(static::$currentTheme)
+            ? static::$defaultTheme
+            : static::$currentTheme;
     }
 
     /**
@@ -91,7 +91,7 @@ class Theme
         foreach (config('Themes')->collections as $collection) {
             $info = get_dir_file_info($collection, true);
 
-            if (! count($info)) {
+            if ($info === []) {
                 continue;
             }
 

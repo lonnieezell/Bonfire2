@@ -48,7 +48,7 @@ class GroupSettingsController extends AdminController
     /**
      * Allows the user to choose the permissions for a group.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function show(string $alias)
     {
@@ -71,7 +71,7 @@ class GroupSettingsController extends AdminController
     /**
      * Save the group settings
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse|void
+     * @return RedirectResponse|void
      */
     public function save(string $alias)
     {
@@ -138,7 +138,7 @@ class GroupSettingsController extends AdminController
     /**
      * Updates the permissions for a single group.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse
+     * @return RedirectResponse
      */
     public function savePermissions(string $group)
     {
