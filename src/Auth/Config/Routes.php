@@ -1,8 +1,10 @@
 <?php
-/**
- * @var CodeIgniter\Router\RouteCollection $routes
- */
 
+use CodeIgniter\Router\RouteCollection;
+
+/**
+ * @var RouteCollection $routes
+ */
 // Authentication Routes that override Shield's
 $routes->group('', ['namespace' => '\Bonfire\Auth\Controllers'], static function ($routes) {
     $routes->get('register', 'RegisterController::registerView');

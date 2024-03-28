@@ -35,22 +35,22 @@ class MenuItem
     /**
      * Title of Menu Item
      */
-    protected ?string $title;
+    protected ?string $title = null;
 
     /**
      * URL of Menu Item
      */
-    protected ?string $url;
+    protected ?string $url = null;
 
     /**
      * Alternative Text of Menu Item
      */
-    protected ?string $altText;
+    protected ?string $altText = null;
 
     /**
      * The 'weight' used for sorting.
      */
-    protected ?int $weight;
+    protected ?int $weight = null;
 
     /**
      * The permission to check to see if the user can view the menu item or not.

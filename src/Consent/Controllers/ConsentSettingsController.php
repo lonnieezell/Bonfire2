@@ -56,7 +56,7 @@ class ConsentSettingsController extends AdminController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        setting('Consent.requireConsent', $this->request->getPost('requireConsent') ? true : false);
+        setting('Consent.requireConsent', (bool) $this->request->getPost('requireConsent'));
         setting('Consent.consentLength', $this->request->getPost('consentLength'));
         setting('Consent.policyUrl', $this->request->getPost('policyUrl'));
         setting('Consent.policyTitle', $this->request->getPost('policyTitle'));

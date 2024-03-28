@@ -166,7 +166,7 @@ class Bonfire
 
             $paths = config('Bonfire')->appModules;
 
-            if (! is_array($paths) || empty($paths)) {
+            if (! is_array($paths) || $paths === []) {
                 log_message('debug', 'No app modules directories specified. Skipping.');
 
                 return;

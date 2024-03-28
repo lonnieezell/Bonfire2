@@ -31,7 +31,7 @@ return [
     'lastModified' => 'Vėliausiai keista',
     'fileSize'     => 'Failo dydis',
 
-    //collections: 
+    //collections:
     'contentModTitle'   => 'Turinys',
     'settingsModTitle'  => 'Nustatymai',
     'toolsModTitle'     => 'Įrankiai',

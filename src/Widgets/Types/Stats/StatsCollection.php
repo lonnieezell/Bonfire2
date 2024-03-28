@@ -75,7 +75,8 @@ class StatsCollection extends StatsItem
      */
     public function removeItem(string $title)
     {
-        for ($i = 0; $i < count($this->items); $i++) {
+        $counter = count($this->items);
+        for ($i = 0; $i < $counter; $i++) {
             if ($this->items[$i]->title() === $title) {
                 unset($this->items[$i]);
                 break;

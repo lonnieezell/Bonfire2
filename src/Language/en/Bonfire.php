@@ -31,7 +31,7 @@ return [
     'lastModified' => 'Last Modified',
     'fileSize'     => 'File Size',
 
-    //collections: 
+    //collections:
     'contentModTitle'   => 'Content',
     'settingsModTitle'  => 'Settings',
     'toolsModTitle'     => 'Tools',

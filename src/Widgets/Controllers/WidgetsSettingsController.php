@@ -11,6 +11,7 @@
 
 namespace Bonfire\Widgets\Controllers;
 
+use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
 
 class WidgetsSettingsController extends AdminController
@@ -49,7 +50,7 @@ class WidgetsSettingsController extends AdminController
      * Saves the Widgets settings to the config file, where it
      * is automatically saved by our dynamic configuration system.
      */
-    public function save(): \CodeIgniter\HTTP\RedirectResponse
+    public function save(): RedirectResponse
     {
         if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
@@ -241,7 +242,7 @@ class WidgetsSettingsController extends AdminController
     /**
      * Reset all the widget settings to their default values
      */
-    public function resetSettings(): \CodeIgniter\HTTP\RedirectResponse
+    public function resetSettings(): RedirectResponse
     {
         if (! auth()->user()->can('widgets.settings')) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));

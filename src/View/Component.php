@@ -74,11 +74,10 @@ class Component
      */
     protected function renderView(string $view, array $data): string
     {
-        return (function (string $view, $data) {
+        return (static function (string $view, $data) {
             extract($data);
             ob_start();
             eval('?>' . file_get_contents($view));
-
             return ob_get_clean() ?: '';
         })($view, $data);
     }

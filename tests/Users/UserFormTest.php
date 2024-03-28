@@ -43,32 +43,32 @@ final class UserFormTest extends TestCase
      * being dumb, even though manual testing
      * shows this works.
      */
-//    public function testCanEditUser()
-//    {
-//        // Open the Edit User page
-//        $result = $this->actingAs($this->user)
-//            ->get('/admin/users/'. $this->user->id);
-//
-//        $result->assertOK();
-//        $result->assertSee('Edit User');
-//        $result->assertSee($this->user->email);
-//
-//        // Save the form
-//        $result = $this->actingAs($this->user)
-//            ->post("/admin/users/{$this->user->id}/save", [
-//                'email' => $this->user->email,
-//                'username' => 'Freddy',
-//                'first_name' => 'Fred',
-//                'last_name' => 'Flintstone',
-//                'groups' => ['beta']
-//            ]);
-//
-//        $result->assertRedirect();
-//
-//        $this->seeInDatabase('users', [
-//            'id' => $this->user->id,
-//            'first_name' => 'Fred',
-//            'last_name' => 'Flintstone'
-//        ]);
-//    }
+    //    public function testCanEditUser()
+    //    {
+    //        // Open the Edit User page
+    //        $result = $this->actingAs($this->user)
+    //            ->get('/admin/users/'. $this->user->id);
+    //
+    //        $result->assertOK();
+    //        $result->assertSee('Edit User');
+    //        $result->assertSee($this->user->email);
+    //
+    //        // Save the form
+    //        $result = $this->actingAs($this->user)
+    //            ->post("/admin/users/{$this->user->id}/save", [
+    //                'email' => $this->user->email,
+    //                'username' => 'Freddy',
+    //                'first_name' => 'Fred',
+    //                'last_name' => 'Flintstone',
+    //                'groups' => ['beta']
+    //            ]);
+    //
+    //        $result->assertRedirect();
+    //
+    //        $this->seeInDatabase('users', [
+    //            'id' => $this->user->id,
+    //            'first_name' => 'Fred',
+    //            'last_name' => 'Flintstone'
+    //        ]);
+    //    }
 }

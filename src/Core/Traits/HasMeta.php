@@ -195,7 +195,7 @@ trait HasMeta
         }
 
         foreach ($metaInfo as $group => $fields) {
-            if (! is_array($fields) || ! count($fields)) {
+            if (! is_array($fields) || $fields === []) {
                 continue;
             }
 
@@ -238,15 +238,15 @@ trait HasMeta
             }
 
             $model = model(MetaModel::class);
-            if (count($deletes)) {
+            if ($deletes !== []) {
                 $model->whereIn('id', $deletes)->delete();
             }
 
-            if (count($inserts)) {
+            if ($inserts !== []) {
                 $model->insertBatch($inserts);
             }
 
-            if (count($updates)) {
+            if ($updates !== []) {
                 $model->updateBatch($updates, 'id');
             }
 

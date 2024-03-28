@@ -1,4 +1,10 @@
-<?php $this->extend('master') ?>
+<?php use Bonfire\Auth\Actions\EmailActivator;
+use CodeIgniter\Shield\Authentication\Actions\Email2FA;
+use CodeIgniter\Shield\Authentication\Passwords\CompositionValidator;
+use CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator;
+use CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator;
+use CodeIgniter\Shield\Authentication\Passwords\PwnedValidator;
+$this->extend('master') ?>
 
 <?php $this->section('main') ?>
     <x-page-head>
@@ -35,7 +41,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="emailActivation"
                                    value='Bonfire\Auth\Actions\EmailActivator' id="email-activation"
-                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === 'Bonfire\Auth\Actions\EmailActivator') : ?>
+                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === EmailActivator::class) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -119,7 +125,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="email2FA"
                                    value="CodeIgniter\Shield\Authentication\Actions\Email2FA" id="email-2fa"
-                                <?php if (old('email2FA', setting('Auth.actions')['login']) === 'CodeIgniter\Shield\Authentication\Actions\Email2FA') : ?>
+                                <?php if (old('email2FA', setting('Auth.actions')['login']) === Email2FA::class) : ?>
                                     checked
                                 <?php endif ?>
                             >
@@ -165,7 +171,7 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\CompositionValidator"
                                 <?php if (in_array(
-                                    'CodeIgniter\Shield\Authentication\Passwords\CompositionValidator',
+                                    CompositionValidator::class,
                                     old('validators', setting('Auth.passwordValidators')),
                                     true
                                 )) : ?>
@@ -182,7 +188,7 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator"
                                 <?php if (in_array(
-                                    'CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator',
+                                    NothingPersonalValidator::class,
                                     old('validators', setting('Auth.passwordValidators')),
                                     true
                                 )) : ?>
@@ -199,7 +205,7 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator"
                                 <?php if (in_array(
-                                    'CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator',
+                                    DictionaryValidator::class,
                                     old('validators', setting('Auth.passwordValidators')),
                                     true
                                 )) : ?>
@@ -216,7 +222,7 @@
                             <input class="form-check-input" type="checkbox" name="validators[]"
                                    value="CodeIgniter\Shield\Authentication\Passwords\PwnedValidator"
                                 <?php if (in_array(
-                                    'CodeIgniter\Shield\Authentication\Passwords\PwnedValidator',
+                                    PwnedValidator::class,
                                     old('validators', setting('Auth.passwordValidators')),
                                     true
                                 )) : ?>

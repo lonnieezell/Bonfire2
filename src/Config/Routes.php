@@ -1,6 +1,9 @@
 <?php
+
+use CodeIgniter\Router\RouteCollection;
+
 /**
- * @var CodeIgniter\Router\RouteCollection $routes
+ * @var RouteCollection $routes
  */
 $routes->get('site-offline', static function () {
     helper('setting');

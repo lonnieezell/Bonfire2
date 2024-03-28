@@ -38,6 +38,7 @@ class ComponentRenderer
         $output = $this->renderSelfClosingTags($output);
         service('timer')->stop('self-closing');
         service('timer')->start('paired-tags');
+
         $output = $this->renderPairedTags($output);
         service('timer')->stop('paired-tags');
 
@@ -162,11 +163,10 @@ class ComponentRenderer
      */
     private function renderView(string $view, array $data): string
     {
-        return (function (string $view, $data) {
+        return (static function (string $view, $data) {
             extract($data);
             ob_start();
             eval('?>' . file_get_contents($view));
-
             return ob_get_clean() ?: '';
         })($view, $data);
     }

@@ -2,6 +2,7 @@
 
 namespace Bonfire\Commands\Install;
 
+use Bonfire\Assets\Config\Assets;
 use CodeIgniter\Autoloader\FileLocator;
 use CodeIgniter\CLI\CLI;
 
@@ -68,8 +69,8 @@ class Publisher
             "class {$rawClassName} extends Shield{$rawClassName}" => "class {$rawClassName} extends Bonfire{$rawClassName}",
         ];
 
-        if ($className === 'Bonfire\Assets\Config\Assets') {
-            $replace['__DIR__ . \'/../../../themes'] = 'ROOTPATH . \'/themes';
+        if ($className === Assets::class) {
+            $replace["__DIR__ . '/../../../themes"] = "ROOTPATH . '/themes";
         }
 
         $content = $this->replace($content, $replace);

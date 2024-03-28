@@ -66,7 +66,7 @@ class UserFilter extends UserModel
      */
     public function filter(?array $params = null)
     {
-       
+
         if (isset($params['role']) && count($params['role'])) {
             $this->distinct();
             $this->select('users.*');

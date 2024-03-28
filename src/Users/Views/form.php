@@ -1,4 +1,5 @@
-<?php $this->extend('master') ?>
+<?php use Bonfire\Users\User;
+$this->extend('master') ?>
 
 <?php $this->section('main') ?>
 <x-page-head>
@@ -20,7 +21,7 @@
     <?php if (isset($user) && $user !== null) : ?>
         <form action="<?= $user->adminLink('/save') ?>" method="post" enctype="multipart/form-data">
         <?php else : ?>
-            <form action="<?= (new \Bonfire\Users\User())->adminLink('/save') ?>" method="post" enctype="multipart/form-data">
+            <form action="<?= (new User())->adminLink('/save') ?>" method="post" enctype="multipart/form-data">
             <?php endif ?>
             <?= csrf_field() ?>
 

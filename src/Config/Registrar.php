@@ -2,6 +2,8 @@
 
 namespace Bonfire\Config;
 
+use Config\Filters;
+use CodeIgniter\Autoloader\Autoloader;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Core\Filters\OnlineCheck;
@@ -41,7 +43,7 @@ class Registrar
     {
         // CodeIgniter currently doesn't support merging
         // nested arrays within the registrars....
-        $ref   = new ReflectionClass('Config\Filters');
+        $ref   = new ReflectionClass(Filters::class);
         $props = $ref->getDefaultProperties();
 
         return [
@@ -105,7 +107,7 @@ class Registrar
     {
         helper('filesystem');
         $map = directory_map(__DIR__ . '/../', 1);
-        /** @var \CodeIgniter\Autoloader\Autoloader $autoloader */
+        /** @var Autoloader $autoloader */
         $autoloader = service('autoloader');
 
         $namespaces = [];
@@ -123,7 +125,7 @@ class Registrar
         // Now define app modules nemespaces
         $appModulesPaths = config('Bonfire')->appModules;
 
-        if (is_array($appModulesPaths) && !empty($appModulesPaths)) {
+        if (is_array($appModulesPaths) && $appModulesPaths !== []) {
             foreach ($appModulesPaths as $baseName => $path) {
                 if (! file_exists($path)) {
                     continue;
@@ -143,6 +145,7 @@ class Registrar
         // to ensure that Bonfire's files get loader prior to vendor files
         $rp = new ReflectionProperty($autoloader, 'prefixes');
         $rp->setAccessible(true);
+
         $prefixes = $rp->getValue($autoloader);
         $keys     = array_keys($prefixes);
 

@@ -136,7 +136,7 @@ final class MenuCollectionTest extends TestCase
         ]);
         $collection->addItem($superadminMenu);
 
-        // test that collection does not have visible items: 
+        // test that collection does not have visible items:
         $this->assertFalse($collection->hasVisibleItems());
 
         // add item that would be visible to admin
@@ -147,8 +147,8 @@ final class MenuCollectionTest extends TestCase
             'permission'      => 'admin.access',
         ]);
         $collection->addItem($adminMenu);
-        
-        // test that collection now does have visible items: 
+
+        // test that collection now does have visible items:
         $this->assertTrue($collection->hasVisibleItems());
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Bonfire\Auth\Config;
 
-
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Shield\Authentication\Actions\ActionInterface;
 use CodeIgniter\Shield\Authentication\AuthenticatorInterface;

@@ -60,23 +60,20 @@ class User extends ShieldUser
      */
     public function avatarLink(?int $size = null): string
     {
-        if (isset($this->id) && empty($this->avatar)) {
-            // Default from Gravatar
-            if (setting('Users.useGravatar')) {
-                $hash = md5(strtolower(trim($this->email)));
-
-                return "https://www.gravatar.com/avatar/{$hash}?" . http_build_query([
-                    's' => ($size ?? 60),
-                    'd' => setting(
-                        'Users.gravatarDefault'
-                    ),
-                ]);
-            }
+        // Default from Gravatar
+        if (isset($this->id) && empty($this->avatar) && setting('Users.useGravatar')) {
+            $hash = md5(strtolower(trim($this->email)));
+            return "https://www.gravatar.com/avatar/{$hash}?" . http_build_query([
+                's' => ($size ?? 60),
+                'd' => setting(
+                    'Users.gravatarDefault'
+                ),
+            ]);
         }
 
-        return ! empty($this->avatar)
-            ? base_url('/uploads/avatars/' . $this->avatar)
-            : '';
+        return empty($this->avatar)
+            ? ''
+            : base_url('/uploads/avatars/' . $this->avatar);
     }
 
     /**

@@ -77,8 +77,8 @@ class ConsentFilter implements FilterInterface
         $cssFile = setting('Consent.consentFormStyles');
         $jsFile  = setting('Consent.consentFormScripts');
 
-        $css = ! empty($cssFile) ? view($cssFile) : null;
-        $js  = ! empty($jsFile) ? view($jsFile) : null;
+        $css = empty($cssFile) ? null : view($cssFile);
+        $js  = empty($jsFile) ? null : view($jsFile);
 
         $output = $response->getBody();
 
