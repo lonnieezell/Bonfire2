@@ -24,9 +24,12 @@
     "mikey179/vfsstream": "^1.6",
     "nexusphp/cs-config": "^3.1",
     "nexusphp/tachycardia": "^1.0",
-    "phpstan/phpstan": "^1.1",
+    "php-parallel-lint/php-console-highlighter": "^1.0",
+    "php-parallel-lint/php-parallel-lint": "^1.3",
     "phpunit/phpunit": "^9.1",
     "psr/container": "^1.0",
+    "rector/rector": "^1.0",
+    "roave/security-advisories": "dev-latest",
     "qossmic/deptrac-shim": "^0.24 || ^1.0.2"
   },
   "suggest": {
@@ -49,18 +52,18 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "analyze": "phpstan analyze",
-    "ci": [
-      "Composer\\Config::disableProcessTimeout",
-      "@deduplicate",
-      "@analyze",
-      "@test",
-      "@inspect",
-      "@style"
+    "clean": [
+      "@lint",
+      "@style-fix",
+      "@rector-fix"
     ],
     "deduplicate": "phpcpd src/",
     "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
-    "style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
+    "lint": "vendor/bin/parallel-lint --exclude .git --exclude vendor .",
+    "rector": "rector process --config .config/rector.php --dry-run",
+    "rector-fix": "rector process --config .config/rector.php",
+    "style": "php-cs-fixer fix --config=.config/.php-cs-fixer.dist.php --dry-run",
+    "style-fix": "php-cs-fixer --config=.config/.php-cs-fixer.dist.php fix",
     "test": "./vendor/bin/phpunit"
   },
   "support": {

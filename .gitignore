@@ -110,3 +110,8 @@ nb-configuration.xml
 # Javascript assets
 #-------------------------
 node_modules/*
+
+#-------------------------
+# MKDocs
+#-------------------------
+/site/
