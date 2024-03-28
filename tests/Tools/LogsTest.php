@@ -38,7 +38,7 @@ final class LogsTest extends TestCase
             ->get(ADMIN_AREA . '/tools/view-log/' . str_replace('.log', '', $this->logFileName));
 
         $response->assertOK();
-        $response->assertSee(lang('Tools.log') . ' : ' 
+        $response->assertSee(lang('Tools.log') . ' : '
             . app_date(str_replace('.log', '', str_replace('log-', '', $this->logFileName))));
     }
 

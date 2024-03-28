@@ -20,7 +20,7 @@ use CodeIgniter\Shield\Models\UserIdentityModel;
 
 /**
  * Class borrowed from Shield which it extends
- * The methods are only modified where needed to adapt to Bonfire themes and 
+ * The methods are only modified where needed to adapt to Bonfire themes and
  * alerts system
  */
 class EmailActivator extends ShieldEmailActivator
