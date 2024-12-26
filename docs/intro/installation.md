@@ -75,3 +75,11 @@ php spark serve
 That's all that's needed to get started. You can now visit [http://localhost:8080/admin](http://localhost:8080/admin) and login with your new user.
 
 If you'd rather use a different server, like Apache or Nginx, you can follow the [CodeIgniter 4 guide](https://codeigniter.com/user_guide/installation/running.html) suggestions for a number of different server setups.
+
+## Generate some data for testing
+
+You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):
+
+```bash
+php spark db:seed Bonfire\\Users\\Database\\Seeds\\Seed100Users
+```
