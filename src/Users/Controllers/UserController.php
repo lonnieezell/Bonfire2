@@ -39,9 +39,9 @@ class UserController extends AdminController
         /** @var UserFilter $userModel */
         $userModel = model(UserFilter::class);
 
-        $userModel->filter($this->request->getPost('filters'));
+        $userModel->filter($this->request->getGet('filters'));
 
-        $view = $this->request->getMethod() === 'post'
+        $view = $this->request->hasHeader('HX-Request')
             ? $this->viewPrefix . '_table'
             : $this->viewPrefix . 'list';
 
@@ -69,6 +69,8 @@ class UserController extends AdminController
 
         $groups = setting('AuthGroups.groups');
         asort($groups);
+
+        helper('form');
 
         return $this->render($this->viewPrefix . 'form', [
             'groups' => $groups,

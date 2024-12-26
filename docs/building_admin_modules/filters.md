@@ -95,11 +95,11 @@ There are 4 parts that are needed to get a working, filterable list of resources
 The main route for your resource list page must support both GET and POST methods.
 
 ```php
-$routes->match(['get', 'post'], 'users', 'UserController::list', ['as' => 'user-list']);
+$routes->match(['GET', 'POST'], 'users', 'UserController::list', ['as' => 'user-list']);
 ```
 
-The controller should then choose between sending either a full HTML page for a GET request, or just
-sending back the table for POST requests. You might do it something like:
+The controller should then choose between sending either a full HTML page for a regular GET request, 
+or just sending back the table for ajax requests issued via HTMX. You might do it something like:
 
 ```php
 public function list()
@@ -109,7 +109,7 @@ public function list()
     // Performs the actual filtering of the results.
     $userModel->filter($this->request->getPost('filters'));
 
-    $view = $this->request->getMethod() == 'post'
+    $view = $this->request->hasHeader('HX-Request')
         ? $this->viewPrefix .'_table'
         : $this->viewPrefix .'list';
 
@@ -151,14 +151,17 @@ Here's how this is used for the list of users within Bonfire.
 
     <div class="row">
         <!-- List Users -->
-        <div class="col" id="user-list">
+        <div class="col" id="content-list">
             <?= $this->include('Bonfire\Users\Views\_table') ?>
         </div>
 
         <!-- Filters -->
         <div class="col-auto" x-show="filtered" x-transition.duration.240ms>
-            <?= view_cell('Bonfire\Libraries\Cells\Filters::renderList', 'model=UserFilter target=#user-list') ?>
+            <?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?>
         </div>
     </div>
 </div>
 ```
+
+Note that the id of the eleent that contains the included table should be with `id="content-list"` as it this `id` is
+the default target for content replacements by the pager and the filter.

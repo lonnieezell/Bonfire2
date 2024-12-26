@@ -1,7 +1,7 @@
 <section class="filters">
     <?php if (isset($filters) && count($filters)): ?>
-    <form action="<?= current_url() ?>" method="post"
-          hx-post="<?= current_url() ?>"
+    <form action="<?= current_url() ?>" method="get"
+          hx-get="<?= current_url() ?>"
           hx-trigger="change delay:400ms from:.filter-check"
           hx-target="<?= $target ?>"
     >

@@ -20,17 +20,13 @@
 
             <div class="row">
                 <!-- List Users -->
-                <div class="col" id="user-list">
-                    <form action="<?= site_url(ADMIN_AREA . '/users/delete-batch') ?>" method="post">
-                        <?= csrf_field() ?>
-
-                        <?= $this->include('Bonfire\Users\Views\_table') ?>
-                    </form>
+                <div class="col" id="content-list">
+                    <?= $this->include('Bonfire\Users\Views\_table') ?>
                 </div>
 
                 <!-- Filters -->
                 <div class="col-auto" x-show="filtered" x-transition.duration.240ms>
-                    <?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=UserFilter target=#user-list') ?>
+                    <?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=UserFilter target=#content-list') ?>
                 </div>
             </div>
         </div>

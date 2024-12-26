@@ -13,16 +13,25 @@ function toggleSelectAll(checkbox) {
     }
 }
 
-// Check if there is a .select-all element on the page
-const selectAllElement = document.querySelector('.select-all');
+// Function to attach the event listener
+function attachSelectAllListener() {
+    const selectAllElement = document.querySelector('.select-all');
 
-// Attach the event listener only if the element exists
-if (selectAllElement) {
-    selectAllElement.addEventListener('click', function (e) {
-        toggleSelectAll(e.target);
-    });
+    // Attach the event listener only if the element exists
+    if (selectAllElement) {
+        selectAllElement.addEventListener('click', function (e) {
+            toggleSelectAll(e.target);
+        });
+    }
 }
 
+// Initial attachment
+attachSelectAllListener();
+
+// Re-attach the event listener after each htmx request
+document.body.addEventListener('htmx:afterSettle', function () {
+    attachSelectAllListener();
+});
 
 // function for recycler get requests issued directly from select box
 function sendRecyclerGetRequest(selectedValue) {
