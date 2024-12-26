@@ -10,7 +10,7 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static
     $routes->get('settings/users', 'UserSettingsController::index', ['as' => 'user-settings']);
     $routes->post('settings/users', 'UserSettingsController::save');
     // Manage Users
-    $routes->match(['get', 'post'], 'users', 'UserController::list', ['as' => 'user-list']);
+    $routes->match(['GET', 'POST'], 'users', 'UserController::list', ['as' => 'user-list']);
     $routes->get('users/new', 'UserController::create', ['as' => 'user-new']);
     $routes->get('users/(:num)', 'UserController::edit/$1', ['as' => 'user-edit']);
     $routes->get('users/(:num)/delete', 'UserController::delete/$1', ['as' => 'user-delete']);
