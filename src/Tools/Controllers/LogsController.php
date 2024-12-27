@@ -20,7 +20,7 @@ class LogsController extends AdminController
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Tools\Views\\';
     protected $logsPath   = WRITEPATH . 'logs/';
-    protected $ext = '.log';
+    protected $ext        = '.log';
     protected $logsLimit;
     protected $logsHandler;
 

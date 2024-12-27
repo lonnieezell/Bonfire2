@@ -16,6 +16,7 @@ return [
     'empty'                 => 'Nessun registro trovato.',
     'level'                 => 'Livello',
     'date'                  => 'Data',
+    'time'                  => 'Ora',
     'file'                  => 'Nome del file',
     'content'               => 'Contenuto',
     'deleteFile'            => 'Elimina il file di registro',

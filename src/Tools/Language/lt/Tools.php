@@ -16,6 +16,7 @@ return [
     'empty'                   => 'Žurnalų failų nėra.',
     'level'                   => 'Lygmuo',
     'date'                    => 'Data',
+    'time'                    => 'Laikas',
     'file'                    => 'Failo pavadinimas',
     'content'                 => 'Turinys',
     'deleteFile'              => 'Trinti žurnalo failą',

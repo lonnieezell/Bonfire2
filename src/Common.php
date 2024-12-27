@@ -48,12 +48,13 @@ if (! function_exists('app_date')) {
     {
         $format = $includeTime
             ? [
-                setting('App.dateFormat'),
-                setting('App.timeFormat'),
+                // values not by default in the Config\App, therefore need defaults
+                setting('App.dateFormat') ?? 'Y-m-d',
+                setting('App.timeFormat') ?? 'H:i:s',
                 $includeTimezone ? 'T' : '',
             ]
             : [
-                setting('App.dateFormat'),
+                setting('App.dateFormat') ?? 'Y-m-d',
                 $includeTimezone ? 'T' : '',
             ];
 

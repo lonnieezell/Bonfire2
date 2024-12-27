@@ -16,6 +16,7 @@ return [
     'empty'                 => 'No logs registered.',
     'level'                 => 'Level',
     'date'                  => 'Date',
+    'time'                  => 'Time',
     'file'                  => 'Filename',
     'content'               => 'Content',
     'deleteFile'            => 'Delete log file',
