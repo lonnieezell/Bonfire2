@@ -73,6 +73,10 @@
 
     </fieldset>
 
+    <div class="text-center">
+        <?= $pager->links('default', 'bonfire_full') ?>
+    </div>
+
 </x-admin-box>
 
 <?php $this->endSection() ?>
