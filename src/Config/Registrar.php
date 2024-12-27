@@ -2,17 +2,17 @@
 
 namespace Bonfire\Config;
 
-use Config\Filters;
-use CodeIgniter\Autoloader\Autoloader;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Core\Filters\OnlineCheck;
 use Bonfire\Users\Validation\UserRules;
 use Bonfire\View\Decorator;
+use CodeIgniter\Autoloader\Autoloader;
 use CodeIgniter\Shield\Authentication\Passwords\ValidationRules as PasswordRules;
 use CodeIgniter\Shield\Filters\ChainAuth;
 use CodeIgniter\Shield\Filters\SessionAuth;
 use CodeIgniter\Shield\Filters\TokenAuth;
+use Config\Filters;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -29,9 +29,11 @@ class Registrar
     {
         return [
             'templates' => [
-                'bonfire_full'   => 'Bonfire\Views\_pager_full',
-                'bonfire_simple' => 'Bonfire\Views\_pager_simple',
-                'bonfire_head'   => 'Bonfire\Views\_pager_head',
+                'bonfire_full'      => 'Bonfire\Views\_pager_full',
+                'bonfire_full_hx'   => 'Bonfire\Views\_pager_full_htmx',
+                'bonfire_simple'    => 'Bonfire\Views\_pager_simple',
+                'bonfire_simple_hx' => 'Bonfire\Views\_pager_simple_htmx',
+                'bonfire_head'      => 'Bonfire\Views\_pager_head',
             ],
         ];
     }
@@ -132,8 +134,8 @@ class Registrar
                 }
 
                 $map = directory_map($path, 1);
-                foreach ($map as $row) {
 
+                foreach ($map as $row) {
                     $name = trim($row, DIRECTORY_SEPARATOR);
 
                     $namespaces[$baseName . "\\{{$name}}"] = [realpath($path . "/{$name}")];

@@ -26,5 +26,5 @@
 </form>
 
 <div class="text-center">
-    <?= $pager->links('default', 'bonfire_full') ?>
+    <?= $pager->links('default', 'bonfire_full_hx') ?>
 </div>
