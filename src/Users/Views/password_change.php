@@ -40,7 +40,7 @@
                 </div>
 
                 <x-button-container>
-                    <x-button>Update Password</x-button>
+                    <x-button><?= lang('Users.updatePass') ?></x-button>
                 </x-button-container>
 
         </form>

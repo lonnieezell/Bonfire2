@@ -47,6 +47,7 @@ return [
     'savePerms'          => 'Išsaugoti leidimus',
     // security
     'changePass'     => 'Keisti slaptažodį',
+    'updatePass'     => 'Atnaujinti slaptažodį',
     'recentLogins'   => 'Naujausi prisijungimai',
     'date'           => 'Data',
     'ipAddress'      => 'IP adresas',

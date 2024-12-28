@@ -47,6 +47,7 @@ return [
     'savePerms'          => 'Salva Permessi',
     // security
     'changePass'     => 'Cambia Password',
+    'updatePass'     => 'Aggiorna Password',
     'recentLogins'   => 'Accessi Recenti',
     'date'           => 'Data',
     'ipAddress'      => 'Indirizzo IP',

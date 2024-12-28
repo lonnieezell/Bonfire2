@@ -49,6 +49,7 @@ return [
     'savePerms'   => 'Save Permissions',
     // security
     'changePass'     => 'Change Password',
+    'updatePass'     => 'Update Password',
     'recentLogins'   => 'Recent Logins',
     'date'           => 'Date',
     'ipAddress'      => 'IP Address',
