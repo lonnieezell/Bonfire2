@@ -20,10 +20,11 @@ return [
     'unknownError'         => 'Unknown error.',
     'resourcesNotSelected' => 'No {0} were selected.',
 
-    'deleteResource' => 'Delete this {0}?',
-    'delete'         => 'Delete',
-    'edit'           => 'Edit',
-    'deleteSelected' => 'Delete Selected',
+    'deleteSelectedConfirm' => 'Are you sure you wish to delete the selected {0}?',
+    'deleteResource'        => 'Delete this {0}?',
+    'delete'                => 'Delete',
+    'edit'                  => 'Edit',
+    'deleteSelected'        => 'Delete Selected',
 
     'notAuthorized' => 'You do not have the correct permissions.',
     'unknownAction' => 'Did not recognize the action you requested.',
@@ -32,33 +33,32 @@ return [
     'lastModified' => 'Last Modified',
     'fileSize'     => 'File Size',
 
-    //collections:
-    'contentModTitle'   => 'Content',
-    'settingsModTitle'  => 'Settings',
-    'toolsModTitle'     => 'Tools',
-    'generalModTitle'   => 'General',
+    // collections:
+    'contentModTitle'  => 'Content',
+    'settingsModTitle' => 'Settings',
+    'toolsModTitle'    => 'Tools',
+    'generalModTitle'  => 'General',
 
-    //theme:
-    'filter'            => 'Filter',
-    'dashboard'         => 'Dashboard',
-    'searchResults'     => 'Search Results',
-    'nothingFound'      => 'No records match your search criteria. Revise the criteria and try again.',
-    'seeAll'            => 'See all',
-    'search'            => 'Search',
-    'myAccount'         => 'My Account',
-    'signOut'           => 'Sign out',
-    'offlineNotice'     => 'Site is currently offline. Enable it',
-    'here'              => 'here',
-    'collapseSidebar'   => 'Collapse Sidebar',
-    'actionsCol'        => 'Actions',
+    // theme:
+    'filter'          => 'Filter',
+    'dashboard'       => 'Dashboard',
+    'searchResults'   => 'Search Results',
+    'nothingFound'    => 'No records match your search criteria. Revise the criteria and try again.',
+    'seeAll'          => 'See all',
+    'search'          => 'Search',
+    'myAccount'       => 'My Account',
+    'signOut'         => 'Sign out',
+    'offlineNotice'   => 'Site is currently offline. Enable it',
+    'here'            => 'here',
+    'collapseSidebar' => 'Collapse Sidebar',
+    'actionsCol'      => 'Actions',
 
     // Dashboard:
-    'quickLinks'        => 'Quick Links',
+    'quickLinks' => 'Quick Links',
 
-    //users module Search template:
-    'email'         => 'Email',
-    'username'      => 'Username',
-    'groups'        => 'Groups',
-    'lastActive'    => 'Last Active',
-
+    // users module Search template:
+    'email'      => 'Email',
+    'username'   => 'Username',
+    'groups'     => 'Groups',
+    'lastActive' => 'Last Active',
 ];

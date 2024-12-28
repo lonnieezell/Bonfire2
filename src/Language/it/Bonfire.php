@@ -20,10 +20,11 @@ return [
     'unknownError'         => 'Errore sconosciuto.',
     'resourcesNotSelected' => 'Nessun {0} selezionato.',
 
-    'deleteResource' => 'Eliminare questo {0}?',
-    'delete'         => 'Elimina',
-    'edit'           => 'Modifica',
-    'deleteSelected' => 'Elimina selezionati',
+    'deleteSelectedConfirm' => 'Sei sicuro di voler eliminare i {0} selezionati?',
+    'deleteResource'        => 'Eliminare questo {0}?',
+    'delete'                => 'Elimina',
+    'edit'                  => 'Modifica',
+    'deleteSelected'        => 'Elimina selezionati',
 
     'notAuthorized' => 'Non hai i permessi per accedere.',
     'unknownAction' => 'L\'azione da te richiesta non è stata riconosciuta.',

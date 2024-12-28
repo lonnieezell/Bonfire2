@@ -20,10 +20,11 @@ return [
     'unknownError'         => 'Nežinoma klaida.',
     'resourcesNotSelected' => 'Nebuvo pažymėta {0}.',
 
-    'deleteResource' => 'Trinti šį {0}?',
-    'delete'         => 'Trinti',
-    'edit'           => 'Redaguoti',
-    'deleteSelected' => 'Trinti pažymėtus',
+    'deleteSelectedConfirm' => 'Ar tikrai norite ištrinti pažymėtus {0}?',
+    'deleteResource'        => 'Trinti šį {0}?',
+    'delete'                => 'Trinti',
+    'edit'                  => 'Redaguoti',
+    'deleteSelected'        => 'Trinti pažymėtus',
 
     'notAuthorized' => 'Jūs neturite tinkamų leidimų.',
     'unknownAction' => 'Mums nepavyko atpažinti prašomo veiksmo.',
@@ -32,32 +33,32 @@ return [
     'lastModified' => 'Vėliausiai keista',
     'fileSize'     => 'Failo dydis',
 
-    //collections:
-    'contentModTitle'   => 'Turinys',
-    'settingsModTitle'  => 'Nustatymai',
-    'toolsModTitle'     => 'Įrankiai',
-    'generalModTitle'   => 'Bendrieji',
+    // collections:
+    'contentModTitle'  => 'Turinys',
+    'settingsModTitle' => 'Nustatymai',
+    'toolsModTitle'    => 'Įrankiai',
+    'generalModTitle'  => 'Bendrieji',
 
-    //theme:
-    'filter'            => 'Filtras',
-    'dashboard'         => 'Skydelis',
-    'searchResults'     => 'Paieškos rezultatai',
-    'nothingFound'      => 'Nerasta paieškos kriterijus atitinkančių įrašų. Pakeiskite paiešką ir bandykite iš naujo.',
-    'seeAll'            => 'Žiūrėti visus',
-    'search'            => 'Ieškoti',
-    'myAccount'         => 'Mano paskyra',
-    'signOut'           => 'Išsiregistruoti',
-    'offlineNotice'     => 'Svetainė išjungta. Įjunkite ją',
-    'here'              => 'čia',
-    'collapseSidebar'   => 'Susiaurinti',
-    'actionsCol'        => 'Veiksmai',
+    // theme:
+    'filter'          => 'Filtras',
+    'dashboard'       => 'Skydelis',
+    'searchResults'   => 'Paieškos rezultatai',
+    'nothingFound'    => 'Nerasta paieškos kriterijus atitinkančių įrašų. Pakeiskite paiešką ir bandykite iš naujo.',
+    'seeAll'          => 'Žiūrėti visus',
+    'search'          => 'Ieškoti',
+    'myAccount'       => 'Mano paskyra',
+    'signOut'         => 'Išsiregistruoti',
+    'offlineNotice'   => 'Svetainė išjungta. Įjunkite ją',
+    'here'            => 'čia',
+    'collapseSidebar' => 'Susiaurinti',
+    'actionsCol'      => 'Veiksmai',
 
     // Dashboard:
-    'quickLinks'    =>  'Patogios nuorodos',
+    'quickLinks' => 'Patogios nuorodos',
 
-    //users module Search template:
-    'email'         => 'El. adresas',
-    'username'      => 'Vartotojo vardas',
-    'groups'        => 'Grupės',
-    'lastActive'    => 'Aktyvus prieš',
+    // users module Search template:
+    'email'      => 'El. adresas',
+    'username'   => 'Vartotojo vardas',
+    'groups'     => 'Grupės',
+    'lastActive' => 'Aktyvus prieš',
 ];
