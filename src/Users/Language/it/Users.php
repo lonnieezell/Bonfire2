@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'usersModTitle' => 'Utenti',
-    'editUser'      => 'Modifica Utente',
-    'newUser'       => 'Nuovo Utente',
-    'users'         => 'Utenti',
-    'user'          => 'Utente',
+    'usersModTitle'   => 'Utenti',
+    'editUser'        => 'Modifica utente',
+    'newUser'         => 'Nuovo utente',
+    'users'           => 'utenti',
+    'user'            => 'utente',
+    'userGenitive'    => 'utente',
+    'userAccusative'  => 'utente',
+    'usersAccusative' => 'utenti',
+    'permissions'     => 'Permessi',
     // avatar
     'deleteImageConfirm' => 'Sei sicuro di voler rimuovere l\'immagine? Non può essere ripristinata',
     'deleteImage'        => 'Elimina immagine caricata',

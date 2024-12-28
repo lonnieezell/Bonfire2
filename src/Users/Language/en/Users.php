@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'usersModTitle' => 'Users',
-    'editUser'      => 'Edit User',
-    'newUser'       => 'New User',
-    'users'         => 'users',
-    'user'          => 'user',
+    'usersModTitle'   => 'Users',
+    'editUser'        => 'Edit User',
+    'newUser'         => 'New User',
+    'users'           => 'Users',
+    'user'            => 'user',
+    'userGenitive'    => 'user',
+    'userAccusative'  => 'user',
+    'usersAccusative' => 'users',
+    'permissions'     => 'Permissions',
     // avatar
     'deleteImageConfirm' => 'Are you sure you wish to remove the image? It cannot be restored',
     'deleteImage'        => 'Delete uploaded image',

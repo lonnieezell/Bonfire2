@@ -14,7 +14,7 @@
                 <?php if (auth()->user()->can('users.delete')): ?>
                     <li><hr class="dropdown-divider"></li>
                     <li><a href="<?= $user->adminLink('delete') ?>" class="dropdown-item"
-                        onclick="return confirm(<?= lang('Bonfire.deleteResource', ['user']) ?>)">
+                        onclick="return confirm('<?= lang('Bonfire.deleteResource', [lang('Users.userAccusative')]) ?>')">
                             <?= lang('Bonfire.delete') ?>
                         </a>
                     </li>
