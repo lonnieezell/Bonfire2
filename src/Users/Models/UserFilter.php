@@ -80,10 +80,10 @@ class UserFilter extends UserModel
 
         if (isset($params['banned']) && count($params['banned'])) {
             $this->groupStart();
-            if(isset($params['banned'][0])) {
+            if (isset($params['banned'][0])) {
                 $this->where('users.status', null);
             }
-            if(isset($params['banned'][1])) {
+            if (isset($params['banned'][1])) {
                 $this->orWhere('users.status', 'banned');
             }
             $this->groupEnd();
