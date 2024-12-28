@@ -47,10 +47,10 @@ class UserController extends AdminController
 
         return $this->render($view, [
             'headers' => [
-                'email'       => 'Email',
-                'username'    => 'Username',
-                'groups'      => 'Groups',
-                'last_active' => 'Last Active',
+                'email'       => lang('Users.headers.email'),
+                'username'    => lang('Users.headers.username'),
+                'groups'      => lang('Users.headers.groups'),
+                'last_active' => lang('Users.headers.last_active'),
             ],
             'showSelectAll' => true,
             'users'         => $userModel->paginate(setting('Site.perPage')),

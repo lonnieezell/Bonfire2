@@ -21,7 +21,7 @@
     </div>
 
     <?php if (auth()->user()->can('users.delete')) : ?>
-        <input type="submit" value="Delete Selected" class="btn btn-sm btn-outline-danger" />
+        <input type="submit" value="<?= lang('Bonfire.deleteSelected') ?>" class="btn btn-sm btn-outline-danger" />
     <?php endif ?>
 </form>
 

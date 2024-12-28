@@ -3,14 +3,17 @@ $this->extend('master') ?>
 
 <?php $this->section('main') ?>
 <x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">&larr; Users</a>
-    <h2><?= isset($user) ? 'Edit User' : 'New User' ?></h2>
+    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">
+        <i class="fa fa-arrow-left"></i>
+        <?= lang('Users.usersModTitle') ?>
+    </a>
+    <h2><?= isset($user) ? lang('Users.editUser') : lang('Users.newUser') ?></h2>
 </x-page-head>
 
 <?php if (isset($user) && $user->deleted_at !== null) : ?>
     <div class="alert danger">
-        This user was deleted on <?= $user->deleted_at->humanize() ?>.
-        <a href="#">Restore user?</a>
+        <?= lang('Users.userDeletedOn', [$user->deleted_at->humanize()]) ?>.
+        <a href="#"><?= lang('Users.restoreUser') ?>?</a>
     </div>
 <?php endif ?>
 
@@ -30,7 +33,7 @@ $this->extend('master') ?>
             <?php endif ?>
 
             <fieldset class="first">
-                <legend>Basic Info</legend>
+                <legend><?= lang('Users.basicInfo') ?></legend>
 
                 <div class="row">
                     <div id="avatar-place" class="col-12 col-sm-3 d-flex align-items-top pt-3">
@@ -41,7 +44,7 @@ $this->extend('master') ?>
                         <div class="row">
                             <!-- Email Address -->
                             <div class="form-group col-12 col-sm-6">
-                                <label for="email" class="form-label">Email Address</label>
+                                <label for="email" class="form-label"><?= lang('Users.email') ?></label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="email">@</span>
                                     <input type="text" name="email" class="form-control" autocomplete="email" value="<?= old('email', $user->email ?? '') ?>">
@@ -52,7 +55,7 @@ $this->extend('master') ?>
                             </div>
                             <!-- Username -->
                             <div class="form-group col-12 col-sm-6">
-                                <label for="username" class="form-label">Username</label>
+                                <label for="username" class="form-label"><?= lang('Users.username') ?></label>
                                 <input type="text" name="username" class="form-control" autocomplete="username" value="<?= old('username', $user->username ?? '') ?>">
                                 <?php if (has_error('username')) : ?>
                                     <p class="text-danger"><?= error('username') ?></p>
@@ -63,7 +66,7 @@ $this->extend('master') ?>
                         <div class="row">
                             <!-- First Name -->
                             <div class="form-group col-12 col-sm-6">
-                                <label for="first_name" class="form-label">First Name</label>
+                                <label for="first_name" class="form-label"><?= lang('Users.firstName') ?></label>
                                 <input type="text" name="first_name" class="form-control" autocomplete="first_name" value="<?= old('first_name', $user->first_name ?? '') ?>">
                                 <?php if (has_error('first_name')) : ?>
                                     <p class="text-danger"><?= error('first_name') ?></p>
@@ -71,7 +74,7 @@ $this->extend('master') ?>
                             </div>
                             <!-- Last Name -->
                             <div class="form-group col-12 col-sm-6">
-                                <label for="last_name" class="form-label">Last Name</label>
+                                <label for="last_name" class="form-label"><?= lang('Users.lastName') ?></label>
                                 <input type="text" name="last_name" class="form-control" autocomplete="last_name" value="<?= old('last_name', $user->last_name ?? '') ?>">
                                 <?php if (has_error('last_name')) : ?>
                                     <p class="text-danger"><?= error('last_name') ?></p>
@@ -83,7 +86,7 @@ $this->extend('master') ?>
             </fieldset>
             <?php if (isset($user) && $user->id !== null) : ?>
             <fieldset>
-                <legend>User Status</legend>
+                <legend><?= lang('Users.status') ?></legend>
                 <div
                     x-data="{ isChecked: <?= $user->isBanned() ? 'true' : 'false' ?> }">
                     <input class="form-check-input" type="checkbox" name="activate" id="activate" value="1"
@@ -92,7 +95,7 @@ $this->extend('master') ?>
                         <?php endif; ?>
                     >
                     <label class="form-check-label" for="activate">
-                        User is activated
+                    <?= lang('Users.activated') ?>
                     </label><br>
                     <input type="hidden" name="ban" value="0">
                     <input class="form-check-input" type="checkbox" name="ban" id="ban" value="1" x-model="isChecked"
@@ -107,8 +110,7 @@ $this->extend('master') ?>
                     <?php endif; ?>
                     >
                     <label class="form-check-label" for="ban">
-                        User is banned<span class="x-cloak fw-bold" x-show="isChecked">, enter reason for the ban (will
-                            be shown at login attempt)</span>
+                    <?= lang('Users.banned') ?><span class="x-cloak fw-bold" x-show="isChecked">, <?= lang('Users.enterBanReason') ?></span>
                     </label>
                     <input x-show="isChecked" x-bind:disabled="!isChecked" type="text" name="ban_reason" id="ban_reason"
                         class="form-control form-control-sm x-cloak"
@@ -118,16 +120,16 @@ $this->extend('master') ?>
             <?php endif; ?>
 
             <fieldset>
-                <legend>Groups</legend>
+                <legend><?= lang('Users.groups') ?></legend>
 
                 <?php if (auth()->user()->can('users.edit')) : ?>
-                <p>Select one or more groups for the user to belong to.
+                <p><?= lang('Users.selectGroups') ?>
                     <?php if(! auth()->user()->can('users.manage-admins')) : ?>
-                        Groups with administrator privileges cannot be added or removed with your current permissions.
+                        <?= lang('Users.cannotAddAdminGroups') ?>.
                     <?php endif; ?>
                 </p>
                 <?php else : ?>
-                    <p>Groups that the user belongs to (you do not have permission to modify the list).</p>
+                    <p><?= lang('Users.groupListDisabled') ?>.</p>
                 <?php endif; ?>
 
                 <div class="row">
@@ -157,7 +159,7 @@ $this->extend('master') ?>
                 <?= view_cell('\Bonfire\Users\Libraries\UserCells::metaFormFields') ?>
 
             <x-button-container>
-                    <x-button>Save User</x-button>
+                    <x-button><?= lang('Users.saveUser') ?></x-button>
             </x-button-container>
 
             </form>

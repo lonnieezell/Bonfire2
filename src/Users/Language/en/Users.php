@@ -1,6 +1,95 @@
 <?php
 
 return [
-    'usersModTitle'     => 'Users',
+    'usersModTitle' => 'Users',
+    'editUser'      => 'Edit User',
+    'newUser'       => 'New User',
+    'users'         => 'users',
+    'user'          => 'user',
+    // avatar
+    'deleteImageConfirm' => 'Are you sure you wish to remove the image? It cannot be restored',
+    'deleteImage'        => 'Delete uploaded image',
+    // row_info
+    'never' => 'never',
+    // cards
+    'cardDetails'     => 'User Details',
+    'cardPermissions' => 'Permissions',
+    'cardSecurity'    => 'Security',
+    // details
+    'userDeletedOn'        => 'This user was deleted on {0}.',
+    'restoreUser'          => 'Restore user',
+    'basicInfo'            => 'Basic Info',
+    'email'                => 'Email Address',
+    'username'             => 'Username',
+    'firstName'            => 'First Name',
+    'lastName'             => 'Last Name',
+    'status'               => 'User Status',
+    'activated'            => 'User is activated',
+    'banned'               => 'User is banned',
+    'enterBanReason'       => 'enter reason for the ban (will be shown at login attempt)',
+    'groups'               => 'Groups',
+    'selectGroups'         => 'Select one or more groups for the user to belong to',
+    'cannotAddAdminGroups' => 'Groups with administrator privileges cannot be added or removed with your current permissions',
+    'groupListDisabled'    => 'Groups that the user belongs to (you do not have permission to modify the list)',
+    'saveUser'             => 'Save User',
+    // permissions
+    'perms'       => 'User Permissions',
+    'permsDetail' => 'These permissions are applied in addition to any allowed by the user\'s groups.
+                If you do not have the <em>{0}</em> permission, permissions
+                related to user management will not be selectable (unless they have been
+                granted previously).',
+    'permsIndeterminate' => 'Indeterminate checkboxes indicate the permission is already available from one or more groups the user is
+                a part of.',
+    'permission'  => 'Permission',
+    'description' => 'Description',
+    'savePerms'   => 'Save Permissions',
+    // security
+    'changePass'     => 'Change Password',
+    'recentLogins'   => 'Recent Logins',
+    'date'           => 'Date',
+    'ipAddress'      => 'IP Address',
+    'userAgent'      => 'User Agent',
+    'success'        => 'Success?',
+    'successYes'     => 'Success',
+    'successNo'      => 'Failed',
+    'noRecentLogins' => 'No recent login attempts',
 
-];
+    // filter
+    'userRole'             => 'User Role',
+    'userActiveQuestion'   => 'Active?',
+    'userActiveOptionsYes' => 'Active',
+    'userActiveOptionsNo'  => 'Inactive',
+    'userBannedQuestion'   => 'Banned?',
+    'userBannedOptionsYes' => 'Banned',
+    'userBannedOptionsNo'  => 'Not Banned',
+    'lastActiveWintin'     => 'Last Active Within',
+    'labelDay'             => 'day',
+    'labelDays'            => 'days',
+    'labelWeek'            => 'week',
+    'labelWeeks'           => 'weeks',
+    'labelMonth'           => 'month',
+    'labelMonths'          => 'months',
+    'labelYear'            => 'year',
+    'labelAnyTime'         => 'at any time',
+    'labelNever'           => 'never',
+    'labelAll'             => 'show all',
+    'recycler'             => [
+        'label'   => 'Users',
+        'columns' => [
+            'id'         => 'ID',
+            'username'   => 'Username',
+            'first_name' => 'First Name',
+            'last_name'  => 'Last Name',
+            'email'      => 'Email',
+        ],
+    ],
+    'headers' => [
+        'id'          => 'ID',
+        'username'    => 'Username',
+        'first_name'  => 'First Name',
+        'last_name'   => 'Last Name',
+        'groups'      => 'Groups',
+        'email'       => 'Email',
+        'last_active' => 'Last Active',
+    ],
+]; // <?= lang('Users.')

@@ -2,7 +2,7 @@
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'details') : ?> active <?php endif ?>"
            href="<?= isset($user) ? $user->adminLink() : '#' ?>">
-            User Details
+            <?= lang('Users.cardDetails') ?>
         </a>
     </li>
     <?php if (isset($user) && $user !== null) : ?>
@@ -10,7 +10,7 @@
             <li class="nav-item">
                 <a class="nav-link <?php if ($tab === 'permissions') : ?> active <?php endif ?>"
                    href="<?= $user->adminLink('permissions') ?>">
-                    Permissions
+                    <?= lang('Users.cardPermissions') ?>
                 </a>
             </li>
         <?php endif ?>
@@ -19,7 +19,7 @@
         <?php if (isset($user) && $user !== null) : ?>
             <a class="nav-link <?php if ($tab === 'security') : ?> active <?php endif ?>"
                href="<?= $user->adminLink('security') ?>">
-                Security
+                <?= lang('Users.cardSecurity') ?>
             </a>
         <?php endif ?>
     </li>

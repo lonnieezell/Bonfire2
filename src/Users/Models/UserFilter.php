@@ -24,49 +24,59 @@ class UserFilter extends UserModel
      *
      * @var array
      */
-    protected $filters = [
-        'role' => [
-            'title'   => 'User Role',
-            'options' => 'getRoleFilters',
-        ],
-        'active' => [
-            'title'   => 'Active?',
-            'options' => [0 => 'Inactive', 1 => 'Active'],
-        ],
-        'banned' => [
-            'title'   => 'Banned?',
-            'options' => [0 => 'Not Banned', 1 => 'Banned'],
-        ],
-        'last_active' => [
-            'title'   => 'Last Active Within',
-            'type'    => 'radio',
-            'options' => [
-                1       => '1 day',
-                2       => '2 days',
-                3       => '3 days',
-                7       => '1 week',
-                14      => '2 weeks',
-                30      => '1 month',
-                90      => '3 months',
-                180     => '6 months',
-                365     => '1 year',
-                'any'   => 'any time',
-                'never' => 'never',
-                'all'   => 'show all',
+    protected $filters = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->filters = [
+            'role' => [
+                'title'   => lang('Users.Users.userRole'),
+                'options' => 'getRoleFilters',
             ],
-        ],
-    ];
+            'active' => [
+                'title'   => lang('Users.userActiveQuestion'),
+                'options' => [
+                    0 => lang('Users.userActiveOptionsNo'),
+                    1 => lang('Users.userActiveOptionsYes'),
+                ],
+            ],
+            'banned' => [
+                'title'   => lang('Users.userBannedQuestion'),
+                'options' => [
+                    0 => lang('Users.userBannedOptionsNo'),
+                    1 => lang('Users.userBannedOptionsYes'),
+                ],
+            ],
+            'last_active' => [
+                'title'   => lang('Users.lastActiveWintin'),
+                'type'    => 'radio',
+                'options' => [
+                    1       => '1 ' . lang('Users.labelDay'),
+                    2       => '2 ' . lang('Users.labelDays'),
+                    3       => '3 ' . lang('Users.labelDays'),
+                    7       => '1 ' . lang('Users.labelWeek'),
+                    14      => '2 ' . lang('Users.labelWeeks'),
+                    30      => '1 ' . lang('Users.labelMonth'),
+                    90      => '3 ' . lang('Users.labelMonths'),
+                    180     => '6 ' . lang('Users.labelMonths'),
+                    365     => '1 ' . lang('Users.labelYear'),
+                    'any'   => lang('Users.labelAnyTime'),
+                    'never' => lang('Users.labelNever'),
+                    'all'   => lang('Users.labelAll'),
+                ],
+            ],
+        ];
+    }
 
     /**
      * Provides filtering functionality.
-     *
-     * @param array $params
      *
      * @return UserFilter
      */
     public function filter(?array $params = null)
     {
-
         if (isset($params['role']) && count($params['role'])) {
             $this->distinct();
             $this->select('users.*');
@@ -80,10 +90,10 @@ class UserFilter extends UserModel
 
         if (isset($params['banned']) && count($params['banned'])) {
             $this->groupStart();
-            if(isset($params['banned'][0])) {
+            if (isset($params['banned'][0])) {
                 $this->where('users.status', null);
             }
-            if(isset($params['banned'][1])) {
+            if (isset($params['banned'][1])) {
                 $this->orWhere('users.status', 'banned');
             }
             $this->groupEnd();

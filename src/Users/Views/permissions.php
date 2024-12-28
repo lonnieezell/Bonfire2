@@ -2,8 +2,11 @@
 
 <?php $this->section('main') ?>
 <x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">&larr; Users</a>
-    <h2>Edit User</h2>
+    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">
+        <i class="fa fa-arrow-left"></i>
+        <?= lang('Users.usersModTitle') ?>
+    </a>
+    <h2><?= lang('Users.editUser') ?></h2>
 </x-page-head>
 
 <?= view('Bonfire\Users\Views\_tabs', ['tab' => 'permissions', 'user' => $user]) ?>
@@ -13,22 +16,16 @@
         <?= csrf_field() ?>
 
         <fieldset class="first">
-            <legend>User Permissions</legend>
-
-            <p>These permissions are applied in addition to any allowed by the user's groups.
-                If you do not have the <em>users.manage-admins</em> permission, permissions
-                related to user management will not be selectable (unless they have been
-                granted previously).</p>
-
-            <p>Indeterminate checkboxes indicate the permission is already available from one or more groups the user is
-                a part of.</p>
+            <legend><?= lang('Users.perms') ?></legend>
+            <p><?= lang('Users.permsDetail', ['users.manage-admins']) ?></p>
+            <p><?= lang('Users.permsIndeterminate') ?></p>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th style="width: 3rem"></th>
-                            <th>Permission</th>
-                            <th>Description</th>
+                            <th><?= lang('Users.permission') ?></th>
+                            <th><?= lang('Users.description') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +59,7 @@
         </fieldset>
 
         <x-button-container>
-            <x-button>Save Permissions</x-button>
+            <x-button><?= lang('Users.savePerms') ?></x-button>
         </x-button-container>
 
     </form>

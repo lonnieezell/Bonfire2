@@ -6,8 +6,11 @@
 
 <?php $this->section('main') ?>
 <x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">&larr; Users</a>
-    <h2>Edit User</h2>
+    <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">
+        <i class="fa fa-arrow-left"></i>
+        <?= lang('Users.usersModTitle') ?>
+    </a>
+    <h2><?= lang('Users.editUser') ?></h2>
 </x-page-head>
 
 <?= view('Bonfire\Users\Views\_tabs', ['tab' => 'security', 'user' => $user]) ?>
@@ -16,20 +19,20 @@
 
     <fieldset class="first">
 
-        <legend>Change password</legend>
+        <legend><?= lang('Users.changePass') ?></legend>
         <?= view('Bonfire\Users\Views\password_change', ['user' => $user ?? null]) ?>
   </fieldset>
 
     <fieldset>
-        <legend>Recent Logins</legend>
+        <legend><?= lang('Users.recentLogins') ?></legend>
 
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>IP Address</th>
-                    <th>User Agent</th>
-                    <th>Success?</th>
+                    <th><?= lang('Users.date') ?></th>
+                    <th><?= lang('Users.ipAddress') ?></th>
+                    <th><?= lang('Users.userAgent') ?></th>
+                    <th><?= lang('Users.success') ?></th>
                 </tr>
             </thead>
             <?php if (isset($logins) && count($logins)) : ?>
@@ -41,16 +44,16 @@
                         <td><?= $login->user_agent ?? '' ?></td>
                         <td>
                             <?php if ($login->success) : ?>
-                                <span class="badge rounded-pill bg-success">Success</span>
+                                <span class="badge rounded-pill bg-success"><?= lang('Users.successYes') ?></span>
                             <?php else : ?>
-                                <span class="badge rounded-pill bg-secondary">Failed</span>
+                                <span class="badge rounded-pill bg-secondary"><?= lang('Users.successNo') ?></span>
                             <?php endif ?>
                         </td>
                     </tr>
                 <?php endforeach ?>
             </tbody>
             <?php else : ?>
-                <div class="alert alert-secondary">No recent login attempts.</div>
+                <div class="alert alert-secondary"><?= lang('Users.noRecentLogins') ?></div>
             <?php endif ?>
         </table>
     </fieldset>
