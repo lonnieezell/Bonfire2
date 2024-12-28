@@ -17,10 +17,10 @@ use Rector\CodeQuality\Rector\For_\ForRepeatedCountToOwnVariableRector;
 use Rector\CodeQuality\Rector\Foreach_\ForeachToInArrayRector;
 use Rector\CodeQuality\Rector\Foreach_\SimplifyForeachToCoalescingRector;
 use Rector\CodeQuality\Rector\FuncCall\ArrayMergeOfNonArraysToSimpleArrayRector;
-use Rector\CodeQuality\Rector\FuncCall\BoolvalToTypeCastRector;
+//use Rector\CodeQuality\Rector\FuncCall\BoolvalToTypeCastRector;
 use Rector\CodeQuality\Rector\FuncCall\ChangeArrayPushToArrayAssignRector;
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
-use Rector\CodeQuality\Rector\FuncCall\FloatvalToTypeCastRector;
+//use Rector\CodeQuality\Rector\FuncCall\FloatvalToTypeCastRector;
 use Rector\CodeQuality\Rector\FuncCall\InlineIsAInstanceOfRector;
 use Rector\CodeQuality\Rector\FuncCall\IntvalToTypeCastRector;
 use Rector\CodeQuality\Rector\FuncCall\SetTypeToCastRector;
@@ -151,8 +151,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(ArrayKeyExistsTernaryThenValueToCoalescingRector::class);
     $rectorConfig->rule(ArrayMergeOfNonArraysToSimpleArrayRector::class);
     $rectorConfig->rule(BooleanNotIdenticalToNotIdenticalRector::class);
-    $rectorConfig->rule(BoolvalToTypeCastRector::class);
-    $rectorConfig->rule(CallableThisArrayToAnonymousFunctionRector::class);
+    //$rectorConfig->rule(BoolvalToTypeCastRector::class);
+    //$rectorConfig->rule(CallableThisArrayToAnonymousFunctionRector::class);
     $rectorConfig->rule(ChangeArrayPushToArrayAssignRector::class);
     $rectorConfig->rule(CleanupUnneededNullsafeOperatorRector::class);
     $rectorConfig->rule(CombineIfRector::class);
@@ -163,13 +163,13 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(CompleteMissingIfElseBracketRector::class);
     $rectorConfig->rule(ConsecutiveNullCompareReturnsToNullCoalesceQueueRector::class);
     $rectorConfig->rule(ConvertStaticPrivateConstantToSelfRector::class);
-    $rectorConfig->rule(FloatvalToTypeCastRector::class);
+    //$rectorConfig->rule(FloatvalToTypeCastRector::class);
     $rectorConfig->rule(ForRepeatedCountToOwnVariableRector::class);
     $rectorConfig->rule(ForeachToInArrayRector::class);
-    $rectorConfig->rule(GetClassToInstanceOfRector::class);
+    //$rectorConfig->rule(GetClassToInstanceOfRector::class);
     $rectorConfig->rule(InlineIfToExplicitIfRector::class);
     $rectorConfig->rule(InlineIsAInstanceOfRector::class);
-    $rectorConfig->rule(IntvalToTypeCastRector::class);
+    //$rectorConfig->rule(IntvalToTypeCastRector::class);
     $rectorConfig->rule(JoinStringConcatRector::class);
     $rectorConfig->rule(NewStaticToNewSelfRector::class);
     $rectorConfig->rule(NumberCompareToMaxFuncCallRector::class);
@@ -194,7 +194,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(SingleInArrayToCompareRector::class);
     $rectorConfig->rule(SingularSwitchToIfRector::class);
     $rectorConfig->rule(StrlenZeroToIdenticalEmptyStringRector::class);
-    $rectorConfig->rule(StrvalToTypeCastRector::class);
+    //$rectorConfig->rule(StrvalToTypeCastRector::class);
     $rectorConfig->rule(SwitchNegatedTernaryRector::class);
     $rectorConfig->rule(SwitchTrueToIfRector::class);
     $rectorConfig->rule(TernaryEmptyArrayArrayDimFetchToCoalesceRector::class);
@@ -222,7 +222,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(StaticClosureRector::class);
     $rectorConfig->rule(SymplifyQuoteEscapeRector::class);
     $rectorConfig->rule(TernaryConditionVariableAssignmentRector::class);
-    $rectorConfig->rule(UseIncrementAssignRector::class);
+    //$rectorConfig->rule(UseIncrementAssignRector::class);
     $rectorConfig->rule(VersionCompareFuncCallToConstantRector::class);
     $rectorConfig->rule(WrapEncapsedVariableInCurlyBracesRector::class);
     // Removing
