@@ -52,4 +52,4 @@ jobs:
           fi
 
       - name: Check code for standards compliance
-        run: vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --using-cache=no --diff
+        run: vendor/bin/php-cs-fixer --config=.config/.php-cs-fixer.dist.php fix --verbose --ansi --dry-run --using-cache=no --diff

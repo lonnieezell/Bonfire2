@@ -58,12 +58,12 @@
       "@rector-fix"
     ],
     "deduplicate": "phpcpd src/",
-    "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
+    "inspect": "vendor/bin/deptrac analyze --cache-file=build/deptrac.cache",
     "lint": "vendor/bin/parallel-lint --exclude .git --exclude vendor .",
-    "rector": "rector process --config .config/rector.php --dry-run",
-    "rector-fix": "rector process --config .config/rector.php",
-    "style": "php-cs-fixer fix --config=.config/.php-cs-fixer.dist.php --dry-run",
-    "style-fix": "php-cs-fixer --config=.config/.php-cs-fixer.dist.php fix",
+    "rector": "vendor/bin/rector process --config .config/rector.php --dry-run",
+    "rector-fix": "vendor/bin/rector process --config .config/rector.php",
+    "style": "vendor/bin/php-cs-fixer fix --config=.config/.php-cs-fixer.dist.php --dry-run",
+    "style-fix": "vendor/bin/php-cs-fixer --config=.config/.php-cs-fixer.dist.php fix",
     "test": "./vendor/bin/phpunit"
   },
   "support": {
