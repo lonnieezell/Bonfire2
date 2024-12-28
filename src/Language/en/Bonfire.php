@@ -23,6 +23,7 @@ return [
     'deleteResource' => 'Delete this {0}?',
     'delete'         => 'Delete',
     'edit'           => 'Edit',
+    'deleteSelected' => 'Delete Selected',
 
     'notAuthorized' => 'You do not have the correct permissions.',
     'unknownAction' => 'Did not recognize the action you requested.',
@@ -49,6 +50,7 @@ return [
     'offlineNotice'     => 'Site is currently offline. Enable it',
     'here'              => 'here',
     'collapseSidebar'   => 'Collapse Sidebar',
+    'actionsCol'        => 'Actions',
 
     // Dashboard:
     'quickLinks'        => 'Quick Links',

@@ -47,17 +47,17 @@ To localize the column names, an array `recycler` should be created in the modul
             'username'     => 'User Name',
             'first_name'   => 'Name',
             'last_name'    => 'Surname',
-            'email'        => 'Email Addr',  
+            'email'        => 'Email',
         ],
     ],
 ```
 
-If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (first letter capitalized, undescore replaced with space) will be used.
+If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.
 
 ## Modifying the Recycler Query
 
 When the Recycler displays its records, it does a paginated search of deleted resources on the table specified
-within the model. The results are ordered by the deteted at date and returned as arrays. 
+within the model. The results are ordered by the deteted at date and returned as arrays.
 
 There will be times when you need to modify this query. While the basics mentioned above cannot be changed without
 breaking functionality, you can add requirements, or specify the fields to select, etc. This can be achieved by

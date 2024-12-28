@@ -9,11 +9,10 @@
         </div>
         <?php if (count($resources) > 1) : ?>
             <div class="col-auto">
-            <select name="r" class="form-select" x-on:change="sendRecyclerGetRequest($event.target.value)"
-            >
-                <?php foreach ($resources as $alias => $details) : ?>
-                    <option value="<?= strtolower($alias) ?>" <?= (strtolower($currentAlias) === strtolower($alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>
-                <?php endforeach ?>
+                <select name="r" class="form-select" x-on:change="sendRecyclerGetRequest($event.target.value)">
+                    <?php foreach ($resources as $alias => $details) : ?>
+                        <option value="<?= strtolower($alias) ?>" <?= (strtolower($currentAlias) === strtolower($alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
         <?php endif ?>
@@ -30,11 +29,11 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
-                    <tr>
+                    <tr class="text-uppercase">
                     <?php foreach ($currentResource['localizedColumns'] as $column) : ?>
-                        <th><?= esc(ucwords(str_replace('_', ' ', $column))) ?></th>
+                        <th><?= esc(str_replace('_', ' ', $column)) ?></th>
                     <?php endforeach ?>
-                        <th></th>
+                        <th class="text-end"><?= lang('Recycler.actions') ?></th>
                     </tr>
                     </thead>
                     <tbody>

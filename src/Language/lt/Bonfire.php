@@ -23,6 +23,7 @@ return [
     'deleteResource' => 'Trinti šį {0}?',
     'delete'         => 'Trinti',
     'edit'           => 'Redaguoti',
+    'deleteSelected' => 'Trinti pažymėtus',
 
     'notAuthorized' => 'Jūs neturite tinkamų leidimų.',
     'unknownAction' => 'Mums nepavyko atpažinti prašomo veiksmo.',
@@ -49,6 +50,7 @@ return [
     'offlineNotice'     => 'Svetainė išjungta. Įjunkite ją',
     'here'              => 'čia',
     'collapseSidebar'   => 'Susiaurinti',
+    'actionsCol'        => 'Veiksmai',
 
     // Dashboard:
     'quickLinks'    =>  'Patogios nuorodos',

@@ -53,7 +53,10 @@ class RecycleController extends AdminController
             ->orderBy('deleted_at', 'desc')
             ->paginate(setting('Site.perPage'));
 
-
+        // localize resources if possible
+        $resources = array_map(function ($resource) {
+            return $this->localizeResource($resource);
+        }, $resources);
 
         return $this->render($this->viewPrefix . 'listResource', [
             'resources'       => $resources,
@@ -135,8 +138,10 @@ class RecycleController extends AdminController
      * Checks if there is localization available for resource label and columns
      * and uses them if it finds the strings defined in localization files
      */
-    protected function localizeResource(array $resource): array
+    public function localizeResource(array $resource): array
     {
+
+        //dd($resource);
         foreach ($resource['columns'] as $colKey => $colName) {
             $key = $resource['label'] . '.recycler.columns.' . $colName;
             $value = lang($key);
