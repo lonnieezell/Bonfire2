@@ -9,9 +9,13 @@
                     <tr>
                         <?php if (auth()->user()->can('users.delete')) : ?>
                             <td>
-                                <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check">
+                                <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check" 
+                                    <?php if ($user->id === auth()->user()->id || ($user->can('users.manage-admins') && !auth()->user()->can('users.manage-admins'))) : ?>
+                                        disabled
+                                    <?php endif; ?>
+                                >
                             </td>
-                        <?php endif ?>
+                        <?php endif; ?>
                         <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>
                     </tr>
                 <?php endforeach ?>
