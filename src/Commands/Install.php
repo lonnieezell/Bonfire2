@@ -102,6 +102,7 @@ class Install extends BaseCommand
         if (! CLI::getOption('continue')) {
             $this->ensureEnvFile();
             $this->setAppUrl();
+            $this->removeIndexDotPhp();
             $this->setEncryptionKey();
             $this->setDatabase();
             $this->publishConfigFiles();
@@ -163,13 +164,29 @@ class Install extends BaseCommand
     private function setAppUrl()
     {
         CLI::newLine();
-        $url = CLI::prompt('What URL are you running Bonfire under locally?');
+        $url = CLI::prompt('What URL are you running Bonfire under locally? Default:', 'http://localhost:8080');
 
         if (strpos($url, 'http://') === false && strpos($url, 'https://') === false) {
             $url = 'http://' . $url;
         }
 
         $this->updateEnvFile("# app.baseURL = ''", "app.baseURL = '{$url}'");
+    }
+
+    private function removeIndexDotPhp()
+    {
+        $envFile = ROOTPATH . '.env';
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES);
+
+        $newLines = [];
+        foreach ($lines as $line) {
+            if (strpos($line, 'app.baseURL') === 0) {
+                $newLines[] = "app.indexPage = ''";
+            }
+            $newLines[] = $line;
+        }
+
+        file_put_contents($envFile, implode(PHP_EOL, $newLines));
     }
 
     private function setDatabase()
@@ -240,27 +257,36 @@ class Install extends BaseCommand
     private function publishSampleAppContent()
     {
         CLI::newLine();
-        CLI::write('Do you want the default CodeIgniter front page in your app to be replaced with Sample App theme code? Good idea for new projects.', 'yellow');
+        CLI::write('Do you want the default CodeIgniter front page in your app to be replaced with Sample App theme code? ' . PHP_EOL .  'Good if you are starting to explore.', 'yellow');
         $answer = CLI::prompt('Replace front page with Sample App theme code?', ['n', 'y']);
-        if (strtolower($answer) === 'n') {
-            CLI::write('Publishing Sample App code Module to app/Modules/Bonfire2Home', 'yellow');
+        if (strtolower($answer) === 'y') {
+            CLI::write('Publishing Sample App code Module to app/Modules/Bonfire2Home...', 'yellow');
             CLI::newLine();
+
             $source      = BFPATH . '../themes/App/Bonfire2Home';
             $destination = APPPATH . 'Modules/Bonfire2Home';
-
+            // TODO: solve later by integrating into publisher copyDirectory()
+            @mkdir(APPPATH . 'Modules');
             $publisher = new Publisher();
             $publisher->copyDirectory($source, $destination);
 
             $source      = BFPATH . '../themes/App/bonfire2_for_ci4.svg';
             $destination = FCPATH . 'bonfire2_for_ci4.svg';
             $publisher->copyFile($source, $destination);
+
             @unlink(APPPATH . '../themes/App/Bonfire2Home');
             @unlink(APPPATH . '../themes/App/bonfire2_for_ci4.svg');
 
-            CLI::write('Modifying default page route if it has not been changed from default', 'yellow');
+            CLI::write('Modifying default page route if it has not been changed from default...', 'yellow');
             $orig = 'Home::index';
             $new  = '\App\Modules\Bonfire2Home\Controllers\Bonfire2Home::index';
             $this->updateConfigFile('Routes', $orig, $new);
+
+            CLI::write('Enabling autodiscovery of the App Modules...', 'yellow');
+            $orig = '// \'App\Modules\'';
+            $new  = '\'App\Modules\'';
+            $this->updateConfigFile('Bonfire', $orig, $new);
+
         } else {
             $sampleCodePlace = BFPATH . '../themes/App/Bonfire2Home';
             CLI::write('You can always find the sample code in ' . $sampleCodePlace, 'yellow');
@@ -316,7 +342,16 @@ class Install extends BaseCommand
 
         $user->addGroup('superadmin');
 
-        CLI::write('Done. You can now login as a superadmin.', 'green');
+        CLI::newLine();
+        CLI::write("DONE. Assuming you took care of the database, you can now start the app using" . PHP_EOL .  "\tphp spark serve " . PHP_EOL . "command and open the website in browser.", 'green');
+        CLI::newLine();
+        CLI::write("Application front-page URL: {$this->getAppUrl()}", 'green');
+        CLI::write('To login as superadmin, visit the ' . $this->getAppUrl() . '/login page.', 'green');
+        CLI::newLine();
+        CLI::write('You can also create some user data for testing, run ', 'yellow');
+
+        CLI::write("\tphp spark db:seed Bonfire\\\Users\\\Database\\\Seeds\\\Seed100Users", 'yellow');
+
     }
 
     /**
@@ -478,5 +513,13 @@ class Install extends BaseCommand
         file_put_contents($composerJsonPath, json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         CLI::write("composer.json updated successfully.", 'green');
+    }
+
+    private function getAppUrl(): string
+    {
+        $env = file_get_contents(ROOTPATH . '.env');
+        preg_match('/^app\.baseURL\s*=\s*[\'"]([^\'"]+)[\'"]/m', $env, $matches);
+
+        return $matches[1] ?? 'http://localhost:8080';
     }
 }
