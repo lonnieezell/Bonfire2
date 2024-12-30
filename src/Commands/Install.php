@@ -109,6 +109,7 @@ class Install extends BaseCommand
             $this->setAutoloadHelpers();
             $this->setSecurityCSRF();
             $this->publishThemes();
+            $this->publishSampleAppContent();
             $this->updateComposerJson();
             $this->publishSampleAppContent();
 
