@@ -6,5 +6,4 @@ use CodeIgniter\View\Cells\Cell;
 
 class BonfireContributorsCell extends Cell
 {
-
 }

@@ -36,16 +36,6 @@
     <div class="container-fluid main-content">
         <!-- Main Content -->
         <?= $this->renderSection('main') ?>
-        <?php
-        /** in the main home_view it would render:
-         * <div class="row">
-         * <!-- Main Content -->
-         * <?= $this->include('bonfire2/_content'); ?>
-         * <?= $this->include('bonfire2/_sidebar'); ?>
-         * </div>
-         */
-        ?>
-
     </div>
 
     <footer class="text-center mt-4">
