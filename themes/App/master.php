@@ -21,7 +21,7 @@
 
     <?= $viewMeta->render('style') ?>
 
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
     <?= asset_link('app/js/app.js', 'js') ?>
 </head>
