@@ -148,4 +148,13 @@ class Publisher
             copy($source, $destination);
         }
     }
+
+    public function copyFile($source, $destination)
+    {
+        if (is_file($source)) {
+            return copy($source, $destination);
+        }
+
+        return false;
+    }
 }

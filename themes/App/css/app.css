@@ -1,0 +1,49 @@
+/* ensure navigation does not hide card titles */
+.scroll-offset {
+    position: relative;
+    top: -90px;
+    visibility: hidden;
+}
+
+/* Space between header and content: default and screen-size based */
+.main-content {
+    margin-top: 50px;
+}
+@media (max-width: 1200px) {
+    .main-content {
+        margin-top: 30px;
+    }
+}
+@media (max-width: 992px) {
+    .main-content {
+        margin-top: 20px;
+    }
+}
+@media (max-width: 768px) {
+    .main-content {
+        margin-top: 15px;
+    }
+}
+@media (max-width: 576px) {
+    .main-content {
+        margin-top: 10px;
+    }
+}
+
+.icon-style {
+    font-size: 2rem;
+    /* Adjust the size as needed */
+    color: #dd4814;
+    margin: 1rem;
+    /* Set the color to #dd4814 */
+}
+
+.nav-pills .nav-link.active {
+    color: #fff; /* Active text color */
+    background-color: #dd4814; /* Active background color */
+}
+
+.nav-pills .nav-link:hover {
+    color: #fff; /* Active text color */
+    background-color:rgba(221, 74, 20, 0.51); /* Active background color */
+}

@@ -1,33 +1,62 @@
 <!doctype html>
 <html lang="<?= service('request')->getLocale() ?>">
+
 <head>
-	<?= $viewMeta->render('meta') ?>
+    <?= $viewMeta->render('meta') ?>
 
     <?= $viewMeta->render('title') ?>
+    <!-- hopefully this will be replaced with the data from view
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonfire2 Admin Area for CodeIgniter 4</title>
+    -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-    <?= asset_link('auth/css/auth.css', 'css') ?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <?= asset_link('app/css/app.css', 'css') ?>
+
     <?= asset_link('other/components/font-awesome/css/all.css', 'css') ?>
-    <?= $this->renderSection('styles') ?>
-    <?= $viewMeta->render('style') ?>
-</head>
-<body>
 
+    <?= $this->renderSection('styles') ?>
+
+    <?= $viewMeta->render('style') ?>
+
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <?= asset_link('app/js/app.js', 'js') ?>
+</head>
+
+<body>
     <aside id="alerts-wrapper">
-    {alerts}
+        {alerts}
     </aside>
 
-    <div class="container">
-        <main class="ms-sm-auto px-md-4 py-5">
-            <?= $this->renderSection('main') ?>
-        </main>
+    <?= $this->renderSection('navbar') ?>
+
+    <div class="container-fluid main-content">
+        <!-- Main Content -->
+        <?= $this->renderSection('main') ?>
+        <?php
+        /** in the main home_view it would render:
+         * <div class="row">
+         * <!-- Main Content -->
+         * <?= $this->include('bonfire2/_content'); ?>
+         * <?= $this->include('bonfire2/_sidebar'); ?>
+         * </div>
+         */
+        ?>
+
     </div>
 
-    <footer class="border-top text-center p-5">
-        <div class="environment">
-            <p>Page rendered in {elapsed_time} seconds  &hearts;  Environment: <?= ENVIRONMENT ?></p>
-        </div>
+    <footer class="text-center mt-4">
+        <p>&copy; 2020 – <?= date('Y') ?> Lonnie Ezell and contributors. Distributed under the <a href="https://choosealicense.com/licenses/mit/">MIT License</a>
+            <br>Page rendered in {elapsed_time} seconds. Environment: <?= ENVIRONMENT ?>
+        </p>
     </footer>
 
     <?= $viewMeta->render('script') ?>
-</body></html>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+
+</html>

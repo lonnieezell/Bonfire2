@@ -109,6 +109,7 @@ class Install extends BaseCommand
             $this->setSecurityCSRF();
             $this->publishThemes();
             $this->updateComposerJson();
+            $this->publishSampleAppContent();
 
             CLI::newLine();
             CLI::write('If you need to create your database, you may run:', 'yellow');
@@ -231,6 +232,39 @@ class Install extends BaseCommand
 
         $publisher = new Publisher();
         $publisher->copyDirectory($source, $destination);
+        // remove the sample App code from the theme folder
+        @unlink(APPPATH . '../themes/App/Bonfire2Home');
+        @unlink(APPPATH . '../themes/App/bonfire2_for_ci4.svg');
+    }
+
+    private function publishSampleAppContent()
+    {
+        CLI::newLine();
+        CLI::write('Do you want the default CodeIgniter front page in your app to be replaced with Sample App theme code? Good idea for new projects.', 'yellow');
+        $answer = CLI::prompt('Replace front page with Sample App theme code?', ['Yes', 'No'], 'No');
+        if ($answer != 'No') {
+            CLI::write('Publishing Sample App code Module to app/Modules/Bonfire2Home', 'yellow');
+            CLI::newLine();
+            $source      = BFPATH . '../themes/App/Bonfire2Home';
+            $destination = APPPATH . 'Modules/Bonfire2Home';
+
+            $publisher = new Publisher();
+            $publisher->copyDirectory($source, $destination);
+
+            $source      = BFPATH . '../themes/App/bonfire2_for_ci4.svg';
+            $destination = FCPATH . 'bonfire2_for_ci4.svg';
+            $publisher->copyFile($source, $destination);
+            @unlink(APPPATH . '../themes/App/Bonfire2Home');
+            @unlink(APPPATH . '../themes/App/bonfire2_for_ci4.svg');
+
+            CLI::write('Modifying default page route if it has not been changed from default', 'yellow');
+            $orig = 'Home::index';
+            $new  = '\App\Modules\Bonfire2Home\Controllers\Bonfire2Home::index';
+            $this->updateConfigFile('Routes', $orig, $new);
+        } else {
+            $sampleCodePlace = BFPATH . '../themes/App/Bonfire2Home';
+            CLI::write('You can always find the sample code in ' . $sampleCodePlace, 'yellow');
+        }
     }
 
     private function setEncryptionKey()
