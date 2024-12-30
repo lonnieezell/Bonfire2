@@ -241,8 +241,8 @@ class Install extends BaseCommand
     {
         CLI::newLine();
         CLI::write('Do you want the default CodeIgniter front page in your app to be replaced with Sample App theme code? Good idea for new projects.', 'yellow');
-        $answer = CLI::prompt('Replace front page with Sample App theme code?', ['Yes', 'No'], 'No');
-        if ($answer != 'No') {
+        $answer = CLI::prompt('Replace front page with Sample App theme code?', ['n', 'y']);
+        if (strtolower($answer) === 'n') {
             CLI::write('Publishing Sample App code Module to app/Modules/Bonfire2Home', 'yellow');
             CLI::newLine();
             $source      = BFPATH . '../themes/App/Bonfire2Home';
