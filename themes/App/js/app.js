@@ -4,7 +4,6 @@ function contributorsData() {
         contributors: [],
         loading: true,
         init() {
-            console.log('Fetching contributors...');
             fetch('https://api.github.com/repos/lonnieezell/Bonfire2/contributors')
                 .then(response => {
                     if (!response.ok) {
@@ -13,7 +12,6 @@ function contributorsData() {
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Contributors fetched:', data);
                     this.contributors = data.filter(contributor => contributor.login !== 'dependabot[bot]').slice(0, 5);
                 })
                 .catch(error => {
@@ -21,12 +19,10 @@ function contributorsData() {
                 })
                 .finally(() => {
                     this.loading = false;
-                    console.log('Loading finished');
                 });
         }
     }
 };
-
 
 // Highlight the active nav link based on the section in view
 document.addEventListener('DOMContentLoaded', function() {
@@ -41,27 +37,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            console.log(entry.target.id + ' is intersecting: ' + entry.isIntersecting);
             if (entry.isIntersecting) {
                 navLinks.forEach(link => link.classList.remove('active'));
                 const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
                 if (activeLink) {
                     activeLink.classList.add('active');
-                    console.log(activeLink + ' is active');
                 }
             }
         });
     }, observerOptions);
 
     sections.forEach(section => {
-        console.log('Observing section:', section.id);
         observer.observe(section);
     });
 
     navLinks.forEach(link => {
         link.addEventListener('click', function(event) {
             // Allow default behavior for the login link
-            if (this.getAttribute('href') === '<?= route_to('login') ?>') {
+            if (this.getAttribute('href').includes('login')) {
                 return;
             }
 
@@ -87,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeLink) {
             navLinks.forEach(nav => nav.classList.remove('active'));
             activeLink.classList.add('active');
-            console.log(activeLink + ' is active on load');
         }
     }
 });
