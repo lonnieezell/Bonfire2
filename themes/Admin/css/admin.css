@@ -204,6 +204,10 @@ a:hover {
     width: 45px;
 }
 
+.sidebar.collapsed .subnav {
+    position: absolute;
+}
+
 .sidebar.collapsed .nav-link {
     padding-right: 0;
 }
@@ -223,20 +227,24 @@ a:hover {
     display: none;
 }
 
+.sidebar.collapsed .nav:hover .active,
 .sidebar.collapsed .nav:hover .flyout {
     display: block !important;
     left: 45px;
 }
 
-.sidebar.collapsed .flyout .nav-link {
+.sidebar.collapsed .flyout .nav-link,
+.sidebar.collapsed .active .nav-link {
     padding-left: 16px;
 }
 
-.sidebar.collapsed .flyout .nav-item span {
+.sidebar.collapsed .flyout .nav-item span,
+.sidebar.collapsed .active .nav-item span {
     display: inherit !important;
 }
 
-.sidebar.collapsed .flyout .nav-title {
+.sidebar.collapsed .flyout .nav-title,
+.sidebar.collapsed .active .nav-title {
     display: block;
 }
 
