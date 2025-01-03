@@ -6,7 +6,11 @@ class Bonfire2Home extends AppController
 {
     public function index(): string
     {
-        //return view('bonfire2/home_view');
+
+        // Add the page title
+        $viewMeta = service('viewMeta');
+        $viewMeta->setTitle('Bonfire2: Admin Area for CodeIgniter 4');
+
         return $this->render('App\Modules\Bonfire2Home\Views\home_view', []);
     }
 }
