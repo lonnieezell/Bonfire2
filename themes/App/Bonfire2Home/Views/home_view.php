@@ -14,6 +14,8 @@
     <!-- Sidebar -->
     <div class="col-md-3">
         <?= view_cell('TakeActionCell') ?>
+        <!-- controlled component example -->
+        <x-famous-quotes />
         <?= view_cell('ArticlesCell') ?>
         <?= view_cell('UsersCell::render', 'limit=8') ?>
         <?= view_cell('BonfireContributorsCell') ?>
