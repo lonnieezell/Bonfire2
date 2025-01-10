@@ -4,25 +4,24 @@ use Bonfire\View\Component;
 
 class FamousQuotesComponent extends Component
 {
-    public function __construct($attributes = [])
-    {
-        $this->attributes = $attributes;
-    }
+    protected $defaultNoOfSeconds = 5;
+
+    protected string $famousQuotesAPINode = 'https://zenquotes.io/api/random';
 
     public function render(): string
     {
         return $this->renderView($this->view, $this->getFamousQuote());
     }
 
-    public function getFamousQuote($seconds = 5): array
+    public function getFamousQuote(): array
     {
         helper('cache');
 
-        if (isset($this->attributes['seconds']) && is_numeric($this->attributes['seconds'])) {
-            $seconds = (int) round($this->attributes['seconds'], 0);
+        if (isset($this->data['seconds']) && is_numeric($this->data['seconds'])) {
+            $this->data['seconds'] = (int) round($this->data['seconds'], 0);
+        } else {
+            $this->data['seconds'] = $this->defaultNoOfSeconds;
         }
-
-        $this->attributes['seconds'] ?? $seconds;
 
         // Define a cache key
         $cacheKey = 'famous_quote';
@@ -33,31 +32,25 @@ class FamousQuotesComponent extends Component
         }
 
         // If not cached, fetch from the API
-        $url = 'https://zenquotes.io/api/random';
-        $response = file_get_contents($url);
-        $data = json_decode($response, true);
+        $response = file_get_contents($this->famousQuotesAPINode);
+        $quoteData = json_decode($response, true);
 
-        if (isset($data[0])) {
-            $quote = [
-                'seconds' => $seconds,
-                'quote'   => $data[0]['q'],
-                'author'  => $data[0]['a']
+        if (isset($quoteData[0])) {
+            $this->data['quote'] = [
+                'text'    => $quoteData[0]['q'],
+                'author'  => $quoteData[0]['a']
             ];
 
             // Cache the quote for 60 seconds
-            cache()->save($cacheKey, $quote, $seconds);
-
-            return $quote;
+            cache()->save($cacheKey, $this->data, $this->data['seconds']);
+        } else {
+            // Default quote if API fails
+            $this->data['quote'] = [
+                'text' => 'The only way to do great work is to love what you do',
+                'author' => 'Steve Jobs'
+            ];
         }
 
-        // Default quote if API fails
-        $defaultQuote = [
-            'quote' => 'The only way to do great work is to love what you do',
-            'author' => 'Steve Jobs'
-        ];
-
-        cache()->save($cacheKey, $defaultQuote, $seconds);
-
-        return $defaultQuote;
+        return $this->data;
     }
 }
