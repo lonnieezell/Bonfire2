@@ -1242,13 +1242,14 @@ Advanced Search form, and by providing results that will be displayed.</p>
 <h2 id="providing-search-results">Providing Search Results</h2>
 <p>The most basic integration is to register your module as a search provider. This is done by creating a class at
 the root of your module's code called <code>SearchProvider</code>. It must extend <code>Bonfire\Search\Interfaces\SearchProviderInterface</code>
-and fill in a few small methods.</p>
+and fill in a few small methods. Below is an example search provider
+for module Users.</p>
 <pre class="highlight"><code class="language-php">&lt;?php
 
 namespace Bonfire\Users;
 
 use Bonfire\Search\Interfaces\SearchProviderInterface;
-use App\Models\UserModel;
+use Bonfire\Users\Models\UserModel;
 
 class SearchProvider extends UserModel implements SearchProviderInterface
 {
@@ -1261,9 +1262,17 @@ class SearchProvider extends UserModel implements SearchProviderInterface
      *
      * @return array
      */
-    public function search(string $term, int $limit=10, array $post=null): array
+    public function search(string $term, int $limit = 10, array $post = null): array
     {
-        //
+        return $this-&gt;select('users.*')
+            -&gt;distinct()
+            -&gt;join('auth_identities', 'auth_identities.user_id = users.id', 'inner')
+            -&gt;like('first_name', $term, 'right', true, true)
+            -&gt;orlike('last_name', $term, 'right', true, true)
+            -&gt;orLike('username', $term, 'right', true, true)
+            -&gt;orLike('secret', $term, 'both', true, true)
+            -&gt;orderBy('first_name', 'asc')
+            -&gt;findAll($limit);
     }
 
     /**
@@ -1303,6 +1312,52 @@ class SearchProvider extends UserModel implements SearchProviderInterface
 <p>Given the search term it will return an array of any search results for this resource type. You'll see this SearcProvider
 extends the UserModel. It is not necessary to do so, but is a simple way to get access to the model features when you
 need them.</p>
+<p>If you want the search to find not only the data from the main table, but also
+the related meta info (see <a href="../../users_and_security/user_meta/">User Meta Info</a>), you should:</p>
+<ol>
+<li>
+<p>Put a property <code>$includeMetaFieldsInSearech</code> into the module config file
+    (example for <code>app/Config/Users.php</code>, since, suppose, we want to be able to search
+    for users by their blog urls, which we keep in the <code>meta_info</code> table):</p>
+<pre class="highlight"><code class="language-php">    public $includeMetaFieldsInSearech = [
+    'blog',
+    ];</code></pre>
+</li>
+<li>
+<p>Employ <code>Bonfire\Core\Traits\SearchInMeta</code> trait: put <code>use Bonfire\Core\Traits\SearchInMeta;</code> before the SearchProvider class declaration and <code>use SearchInMeta</code> after the class declaration;</p>
+</li>
+<li>
+<p>Write the <code>search()</code> method employing the trait methods <code>joinMetaInfo</code> and <code>orLikeInMetaInfo()</code> when constructing the query:</p>
+<pre class="highlight"><code class="language-php">public function search(string $term, int $limit = 10, ?array $post = null): array
+{
+    $query = $this-&gt;select('users.*')-&gt;distinct();
+    $query-&gt;join('auth_identities', 'auth_identities.user_id = users.id', 'inner');
+
+    $searchInMeta = setting('Users.includeMetaFieldsInSearech');
+
+    if (!empty($searchInMeta)) {
+        // first argument is the resource entity name, second – the DB table name
+        $query-&gt;joinMetaInfo('Bonfire\Users\User', 'users');
+    }
+
+    $query-&gt;like('first_name', $term, 'right', true, true)
+        -&gt;orlike('last_name', $term, 'right', true, true)
+        -&gt;orLike('username', $term, 'right', true, true)
+        -&gt;orLike('secret', $term, 'both', true, true);
+
+    if (!empty($searchInMeta)) {
+        foreach ($searchInMeta as $metaField) {
+            // here syntax almost exactly like that of orLike()
+            $query-&gt;orLikeInMetaInfo($metaField, $term, 'both', true, true);
+        }
+    }
+
+    $query-&gt;orderBy('first_name', 'asc');
+
+    return $query-&gt;findAll($limit);
+}</code></pre>
+</li>
+</ol>
 <p><strong>resourceName()</strong></p>
 <p>The name of the resource. This is displayed as a header on the search results page where it shows the top 10 results
 from all search providers.</p>

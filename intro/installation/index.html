@@ -425,6 +425,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-some-data-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate some data for testing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1284,6 +1293,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generate-some-data-for-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate some data for testing
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1352,6 +1370,9 @@ To migrate and create the initial user, please run:
 <h2 id="enjoy">Enjoy!</h2>
 <p>That's all that's needed to get started. You can now visit <a href="http://localhost:8080/admin">http://localhost:8080/admin</a> and login with your new user.</p>
 <p>If you'd rather use a different server, like Apache or Nginx, you can follow the <a href="https://codeigniter.com/user_guide/installation/running.html">CodeIgniter 4 guide</a> suggestions for a number of different server setups.</p>
+<h2 id="generate-some-data-for-testing">Generate some data for testing</h2>
+<p>You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):</p>
+<pre class="highlight"><code class="language-bash">php spark db:seed Bonfire\\Users\\Database\\Seeds\\Seed100Users</code></pre>
 
 
 

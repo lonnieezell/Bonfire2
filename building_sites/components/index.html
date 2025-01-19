@@ -855,9 +855,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-tags" class="md-nav__link">
+  <a href="#tags-with-content" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Tags
+      Tags With Content
     </span>
   </a>
   
@@ -1231,9 +1231,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-tags" class="md-nav__link">
+  <a href="#tags-with-content" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Tags
+      Tags With Content
     </span>
   </a>
   
@@ -1300,7 +1300,7 @@ in the following output: </p>
   style="width: 150px"
   alt="John Smith"
 /&gt; </code></pre>
-<h2 id="custom-tags">Custom Tags</h2>
+<h2 id="tags-with-content">Tags With Content</h2>
 <p>You can include the content within the opening and closing tags by inserting the reserved <code>$slot</code> variable: </p>
 <pre class="highlight"><code>&lt;x-green-button&gt;Click Me!&lt;/x-green-button&gt;</code></pre>
 <pre class="highlight"><code>// app/Components/green-button.php
@@ -1308,12 +1308,16 @@ in the following output: </p>
     &lt;?= $slot ?&gt;
 &lt;/button&gt;</code></pre>
 <h2 id="controlled-components">Controlled Components</h2>
-<p>Finally, you can create a class to add additional logic to the output. The file must be in the same directory
-as the component view, and should have a name that is the PascalCase version of the filename, with 'Component'
-added to the end of it. </p>
+<p>Finally, you can create a class to add additional logic to the output for both self-closing tags and tags 
+with content. The file must be in the same directory as the component view, and should have a name that is
+the PascalCase version of the filename, with 'Component' added to the end of it. Any attributes that you 
+set on the custom element and any content within element will be passed to the class of the controlled 
+component to be, optionally, processed by the component class and/or rendered by the comonent view file. 
+The data you pass will be available within the class as it's <code>$data</code> property (the tag content – as 
+<code>$data['slot']</code> property). </p>
 <p>A <code>famous-qoutes</code> component would have a view called <code>famous-quotes.php</code> and a controlling class called
-<code>FamousQuotesComponent.php</code>. The class must extend <code>Bonfire\View\Component</code>. The only requirement is that you 
-implment a method called <code>render()</code>. </p>
+<code>FamousQuotesComponent.php</code>. The class must extend <code>Bonfire\View\Component</code>. The only requirement is that you
+implement a method called <code>render()</code>.</p>
 
 
 

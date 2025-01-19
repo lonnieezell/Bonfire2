@@ -1360,11 +1360,11 @@ a form and updating all the values at once.</p>
     'facebook_name' =&gt; 'johnny.rose'
 ];
 $user-&gt;syncMeta($post);</code></pre>
-<p><strong>metaValidationRules(string $configClass, string $prefix=null)</strong></p>
+<p><strong>metaValidationRules(string $prefix=null)</strong></p>
 <p>This examines the specified config file and returns an array with the names of each field and their validation rules,
 ready to be used within CodeIgniter's validation library. If your form groups the name as an array, (like <code>meta[website_url]</code>)
 you may specify the prefix to append to the field names so that validation will pick it up properly.</p>
-<pre class="highlight"><code class="language-php">$rules = $user-&gt;metaValidationRules('\Config\Users', 'meta');
+<pre class="highlight"><code class="language-php">$rules = $user-&gt;metaValidationRules('meta');
 
 var_dump($rules);
 
@@ -1377,7 +1377,8 @@ var_dump($rules);
 required to make that work.</p>
 <ol>
 <li>Create a Config file. This should include a <code>$metaFields</code> array, formatted as described above.</li>
-<li>Add the <code>HasMeta</code> trait to the Entity class that represents your resource.</li>
+<li>Add the <code>HasMeta</code> trait and a protected <code>$configClass</code> property with a string value, the name of the above-mentioned
+   Config class containing <code>$metaFields</code> array, to the Entity class that represents your resource.</li>
 </ol>
 <pre class="highlight"><code class="language-php">use Bonfire\Traits\HasMeta;
 use CodeIgniter\Entity;
@@ -1385,6 +1386,8 @@ use CodeIgniter\Entity;
 class CustomEntity extends Entity
 {
     use HasMeta;
+
+    protected string $configClass = 'CustomConfig';
 }</code></pre>
 
 

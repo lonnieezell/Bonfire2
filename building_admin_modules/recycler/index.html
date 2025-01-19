@@ -1339,13 +1339,13 @@ This information should only be what is needed to allow someone to find the corr
             'username'     =&gt; 'User Name',
             'first_name'   =&gt; 'Name',
             'last_name'    =&gt; 'Surname',
-            'email'        =&gt; 'Email Addr',  
+            'email'        =&gt; 'Email',
         ],
     ],</code></pre>
-<p>If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (first letter capitalized, undescore replaced with space) will be used.</p>
+<p>If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.</p>
 <h2 id="modifying-the-recycler-query">Modifying the Recycler Query</h2>
 <p>When the Recycler displays its records, it does a paginated search of deleted resources on the table specified
-within the model. The results are ordered by the deteted at date and returned as arrays. </p>
+within the model. The results are ordered by the deteted at date and returned as arrays.</p>
 <p>There will be times when you need to modify this query. While the basics mentioned above cannot be changed without
 breaking functionality, you can add requirements, or specify the fields to select, etc. This can be achieved by
 creating a new method on the model, <code>setupRecycler</code>. This doesn't take any arguments, and should return the modified

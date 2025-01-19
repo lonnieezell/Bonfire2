@@ -1421,9 +1421,9 @@ options you provided manually, returning the query object.</p>
 <p>There are 4 parts that are needed to get a working, filterable list of resources in the admin area.</p>
 <h3 id="the-route">The Route</h3>
 <p>The main route for your resource list page must support both GET and POST methods.</p>
-<pre class="highlight"><code class="language-php">$routes-&gt;match(['get', 'post'], 'users', 'UserController::list', ['as' =&gt; 'user-list']);</code></pre>
-<p>The controller should then choose between sending either a full HTML page for a GET request, or just
-sending back the table for POST requests. You might do it something like:</p>
+<pre class="highlight"><code class="language-php">$routes-&gt;match(['GET', 'POST'], 'users', 'UserController::list', ['as' =&gt; 'user-list']);</code></pre>
+<p>The controller should then choose between sending either a full HTML page for a regular GET request, 
+or just sending back the table for ajax requests issued via HTMX. You might do it something like:</p>
 <pre class="highlight"><code class="language-php">public function list()
 {
     $userModel = model('UserFilter');
@@ -1431,7 +1431,7 @@ sending back the table for POST requests. You might do it something like:</p>
     // Performs the actual filtering of the results.
     $userModel-&gt;filter($this-&gt;request-&gt;getPost('filters'));
 
-    $view = $this-&gt;request-&gt;getMethod() == 'post'
+    $view = $this-&gt;request-&gt;hasHeader('HX-Request')
         ? $this-&gt;viewPrefix .'_table'
         : $this-&gt;viewPrefix .'list';
 
@@ -1464,16 +1464,18 @@ results as the <code>target</code>.</p>
 
     &lt;div class="row"&gt;
         &lt;!-- List Users --&gt;
-        &lt;div class="col" id="user-list"&gt;
+        &lt;div class="col order-2 order-md-1" id="content-list"&gt;
             &lt;?= $this-&gt;include('Bonfire\Users\Views\_table') ?&gt;
         &lt;/div&gt;
 
         &lt;!-- Filters --&gt;
-        &lt;div class="col-auto" x-show="filtered" x-transition.duration.240ms&gt;
-            &lt;?= view_cell('Bonfire\Libraries\Cells\Filters::renderList', 'model=UserFilter target=#user-list') ?&gt;
+        &lt;div class="col-auto order-1 order-md-2" x-show="filtered" x-transition.duration.240ms&gt;
+            &lt;?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?&gt;
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+<p>Note that the id of the eleent that contains the included table should be with <code>id="content-list"</code> as it this <code>id</code> is
+the default target for content replacements by the pager and the filter.</p>
 
 
 

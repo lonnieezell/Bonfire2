@@ -407,6 +407,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Change Log
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -416,6 +427,61 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#19-january-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      19 January 2024
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-january-2024-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      18 January 2024 (breaking change)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-january-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      16 January 2024
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-march-2024-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      18 March 2024 (breaking change)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1158,6 +1224,50 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#19-january-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      19 January 2024
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-january-2024-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      18 January 2024 (breaking change)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-january-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      16 January 2024
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-march-2024-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      18 March 2024 (breaking change)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1181,6 +1291,34 @@
 
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
+<p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="19-january-2024">19 January 2024</h2>
+<p>Resource Meta Info (if you have configured such) can now be included in the Admin area search (see docs page
+<a href="../../building_admin_modules/search/">Search</a> for details).</p>
+<h2 id="18-january-2024-breaking-change">18 January 2024 (breaking change)</h2>
+<p>Possibility to have Second Factor Authentication is added to Bonfire2, implementing Codeigniter Shield
+feature.</p>
+<p>To use the feature on existing installs you will first need to update the userspace Config file <code>app/Config/Auth.php</code>,
+in particular – the property <code>$views</code>, two keys relating to 2FA to look like this:</p>
+<pre class="highlight"><code class="language-php">    'action_email_2fa'        =&gt; '\Bonfire\Views\Auth\email_2fa_show',
+    'action_email_2fa_verify' =&gt; '\Bonfire\Views\Auth\email_2fa_verify',</code></pre>
+<p>Failing to do that and enabling 2FA in the admin area will lock the users out of your website.</p>
+<p>To fix it, after modifying the config file, issue this command on your database to clean up references 
+to wrong classes:</p>
+<pre class="highlight"><code class="language-sql">DELETE FROM settings WHERE class="Config\Auth" AND key="actions";</code></pre>
+<h2 id="16-january-2024">16 January 2024</h2>
+<p>Bonfire can henceforth warn you about breaking changes (like need to update Admin/Auth themes, change config files, etc).</p>
+<p>To get such notifications when updating Bonfire, you can add a command to your
+composer.json scripts section:</p>
+<pre class="highlight"><code class="language-json">    "scripts": {
+        "post-update-cmd": [
+            "php spark notify:breaking-changes"
+        ]
+    }</code></pre>
+<p>New Bonfire install will automatically include this command.</p>
+<h2 id="18-march-2024-breaking-change">18 March 2024 (breaking change)</h2>
+<p><strong>&lt;x-button&gt;</strong> and <strong>&lt;x-button-container&gt;</strong> view <a href="https://github.com/lonnieezell/Bonfire2/blob/develop/docs/building_admin_modules/view_components.md">components</a> implemented.</p>
+<p>When updating, copy files <code>themes/Admin/Components/button-container.php</code> and <code>themes/Admin/Components/button.php</code> into the corresponding folder of your project's Admin theme. See <a href="https://github.com/lonnieezell/Bonfire2/pull/434">#434</a> for details about the change.</p>
 
 
 
