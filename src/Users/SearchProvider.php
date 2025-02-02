@@ -34,7 +34,7 @@ class SearchProvider extends UserModel implements SearchProviderInterface
         if (!empty($searchInMeta)) {
             // TODO: find a better way to access both of these variables -
             // Entity to which the data is assigned and table name to join meta_info with
-            $query->joinMetaInfo('Bonfire\Users\User', 'users');
+            $query->joinMetaInfo(User::class, 'users');
         }
 
         $query->like('first_name', $term, 'right', true, true)

@@ -11,6 +11,7 @@
 
 namespace Bonfire\View;
 
+use Throwable;
 use RuntimeException;
 
 class ComponentRenderer
@@ -129,7 +130,7 @@ class ComponentRenderer
                         ? $component->withView($view)->withData($attributes)->render()
                         : $this->renderView($view, $attributes);
                 }, $output, -1, $replaceCount);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 break;
             }
         } while (!empty($replaceCount));

@@ -34,7 +34,7 @@ return [
     'groups'               => 'Gruppi',
     'selectGroups'         => 'Seleziona uno o più gruppi a cui l\'utente apparterrà',
     'cannotAddAdminGroups' => 'Non è possibile aggiungere o rimuovere gruppi con privilegi di amministratore con i tuoi attuali permessi',
-    'groupListDisabled'    => 'Gruppi a cui l\'utente appartiene (non hai il permesso di modificare l\'elenco)',
+    'groupListDisabled'    => "Gruppi a cui l'utente appartiene (non hai il permesso di modificare l'elenco)",
     'saveUser'             => 'Salva Utente',
     // permissions
     'perms'       => 'Permessi Utente',

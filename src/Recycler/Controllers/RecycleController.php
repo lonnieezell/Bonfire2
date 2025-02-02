@@ -54,9 +54,7 @@ class RecycleController extends AdminController
             ->paginate(setting('Site.perPage'));
 
         // localize resources if possible
-        $resources = array_map(function ($resource) {
-            return $this->localizeResource($resource);
-        }, $resources);
+        $resources = array_map(fn ($resource) => $this->localizeResource($resource), $resources);
 
         return $this->render($this->viewPrefix . 'listResource', [
             'resources'       => $resources,

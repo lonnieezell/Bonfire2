@@ -1,4 +1,4 @@
-<?= $this->extend(config('Auth')->views['layout']) ?>
+<?php echo $this->extend(config('Auth')->views['layout']) ?>
 
 <?= $this->section('title') ?><?= lang('Auth.useMagicLink') ?> <?= $this->endSection() ?>
 

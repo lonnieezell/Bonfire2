@@ -11,6 +11,8 @@
 
 namespace Bonfire\Tools\Libraries;
 
+use DateTime;
+
 /**
  * Provides view cells for Users
  */
@@ -111,7 +113,7 @@ class Logs
         $fileContent = file_get_contents($filePath);
 
         if ($fileContent === false) {
-            throw new Exception("Unable to read the file: $filePath");
+            throw new Exception("Unable to read the file: {$filePath}");
         }
 
         // Count occurrences of each level
@@ -120,9 +122,7 @@ class Logs
         }
 
         // Remove entries with value 0
-        $counts = array_filter($counts, function ($value) {
-            return $value > 0;
-        });
+        $counts = array_filter($counts, static fn ($value) => $value > 0);
 
         $counts = array_reverse($counts);
 
@@ -189,7 +189,7 @@ class Logs
     {
         // Extract the date from the current log file name
         preg_match('/log-(\d{4}-\d{2}-\d{2})/', $currentLogFileBasename, $matches);
-        $currentDate = new \DateTime($matches[1]);
+        $currentDate = new DateTime($matches[1]);
 
         // Retrieve the list of log files in the directory
         $logFiles = glob($logsPath . '/log-*.log');
@@ -252,7 +252,7 @@ class Logs
     private function getLogLineStart($logLine)
     {
         preg_match(self::LOG_LINE_START_PATTERN, $logLine, $matches);
-        if (! empty($matches)) {
+        if ($matches !== []) {
             return $matches[0];
         }
 
