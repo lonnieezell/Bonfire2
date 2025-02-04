@@ -25,8 +25,8 @@ $overrides = [
 ];
 
 $options = [
-    'finder'      => $finder,
-    'cacheFile'   => '../build/.php-cs-fixer.cache',
+    'finder'    => $finder,
+    'cacheFile' => '../build/.php-cs-fixer.cache',
 ];
 
 return Factory::create(new CodeIgniter4(), $overrides, $options)->forProjects();
