@@ -14,20 +14,20 @@ $finder = Finder::create()
     ])
 ;
 
-$overrides = [
-    'yoda_style' => ['identical' => false],
-];
-
-$options = [
-    'finder'    => $finder,
-    'cacheFile' => '../build/.php-cs-fixer.cache',
-];
+// $overrides = [
+//     'yoda_style' => ['identical' => false],
+// ];
 
 return (new PhpCsFixer\Config())
     ->setRules([
-        '@PSR12' => true,
-        'array_syntax' => ['syntax' => 'short'],
+        '@PSR12'                 => true,
+        'array_syntax'           => ['syntax' => 'short'],
+        'binary_operator_spaces' => [
+            'operators' => [
+                '=>' => 'align_single_space_minimal',
+            ],
+        ],
     ])
-    ->setCacheFile(__DIR__.'/../build/.php-cs-fixer.cache')
+    ->setCacheFile(__DIR__ . '/../build/.php-cs-fixer.cache')
     ->setFinder($finder)
 ;
