@@ -64,7 +64,9 @@
     "rector-fix": "vendor/bin/rector process --config .config/rector.php",
     "style": "vendor/bin/php-cs-fixer fix --config=.config/.php-cs-fixer.dist.php --dry-run",
     "style-fix": "vendor/bin/php-cs-fixer --config=.config/.php-cs-fixer.dist.php fix",
-    "test": "./vendor/bin/phpunit"
+    "test": "./vendor/bin/phpunit",
+    "lang-extract": "php admin/lang_strings_extract.php",
+    "lang-update": "php admin/lang_strings_extract.php other"
   },
   "support": {
     "forum": "https://forum.codeigniter.com/",
