@@ -17,7 +17,7 @@ final class CommonTest extends TestCase
         helper('setting');
     }
 
-    public static function provideAppDate(): iterable
+    public function appDateProvider()
     {
         return [
             ['m/d/Y', 'g:i A', false, '01/15/2021'],
@@ -28,7 +28,9 @@ final class CommonTest extends TestCase
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideAppDate')]
+    /**
+     * @dataProvider appDateProvider
+     */
     public function testAppDate(string $format, string $timeFormat, bool $includeTime, string $expected)
     {
         $time = '2021-01-15 15:32:00';
