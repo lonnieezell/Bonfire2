@@ -32,7 +32,7 @@ class UserFilter extends UserModel
 
         $this->filters = [
             'role' => [
-                'title'   => lang('Users.Users.userRole'),
+                'title'   => lang('Users.userRole'),
                 'options' => 'getRoleFilters',
             ],
             'active' => [
