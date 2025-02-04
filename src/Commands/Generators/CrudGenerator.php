@@ -3,11 +3,8 @@
 namespace Bonfire\Commands\Generators;
 
 use CodeIgniter\CLI\BaseCommand;
-use CodeIgniter\CLI\CLI;
 use CodeIgniter\CLI\GeneratorTrait;
 use CodeIgniter\Controller;
-use CodeIgniter\RESTful\ResourceController;
-use CodeIgniter\RESTful\ResourcePresenter;
 
 /**
  * Generates a controller and view files for a CRUD.

@@ -110,7 +110,7 @@ class MenuItem
      */
     public function setUrl(string $url): self
     {
-        $this->url = strpos($url, '://') !== false ? $url : '/' . ltrim($url, '/ ');
+        $this->url = str_contains($url, '://') ? $url : '/' . ltrim($url, '/ ');
 
         return $this;
     }

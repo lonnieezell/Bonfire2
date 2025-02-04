@@ -10,5 +10,5 @@
  */
 
 return [
-    'emailModTitle'     => 'El. laiškai',
+    'emailModTitle' => 'El. laiškai',
 ];

@@ -10,6 +10,6 @@
  */
 
 return [
-    'widgetsModTitle'     => 'Widgets',
-    'viewDetail'     => 'Visualizza dettaglio',
+    'widgetsModTitle' => 'Widgets',
+    'viewDetail'      => 'Visualizza dettaglio',
 ];

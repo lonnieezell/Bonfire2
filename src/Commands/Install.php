@@ -15,6 +15,7 @@ use Bonfire\Assets\Config\Assets;
 use Bonfire\Auth\Config\Auth;
 use Bonfire\Auth\Config\AuthGroups;
 use Bonfire\Auth\Config\AuthToken;
+use Bonfire\Commands\Install\Publisher;
 use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
 use Bonfire\Config\Themes;
@@ -22,12 +23,11 @@ use Bonfire\Consent\Config\Consent;
 use Bonfire\Dashboard\Config\Dashboard;
 use Bonfire\Recycler\Config\Recycler;
 use Bonfire\Users\Config\Users;
-use CodeIgniter\Encryption\Encryption;
-use Bonfire\Commands\Install\Publisher;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use CodeIgniter\Encryption\Encryption;
 use Config\Autoload as AutoloadConfig;
 use ReflectionException;
 
@@ -93,6 +93,7 @@ class Install extends BaseCommand
 
     /**
      * Actually execute a command.
+     *
      * @throws ReflectionException
      */
     public function run(array $params)
@@ -164,7 +165,7 @@ class Install extends BaseCommand
         CLI::newLine();
         $url = CLI::prompt('What URL are you running Bonfire under locally?');
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false) {
+        if (! str_contains($url, 'http://') && ! str_contains($url, 'https://')) {
             $url = 'http://' . $url;
         }
 
@@ -173,9 +174,9 @@ class Install extends BaseCommand
 
     private function setDatabase()
     {
-        $host = '';
-        $user = '';
-        $pass = '';
+        $host   = '';
+        $user   = '';
+        $pass   = '';
         $driver = CLI::prompt('Database driver:', ['MySQLi', 'Postgre', 'SQLite3', 'SQLSRV']);
         $name   = CLI::prompt('Database name:', 'bonfire');
         if ($driver !== 'SQLite3') {
@@ -375,7 +376,6 @@ class Install extends BaseCommand
         $this->replace($file, $replaces);
     }
 
-
     /**
      * Replace for setupHelper()
      *
@@ -402,7 +402,6 @@ class Install extends BaseCommand
         }
 
         error("  Error updating {$cleanPath}.");
-
     }
 
     /**
@@ -412,37 +411,39 @@ class Install extends BaseCommand
     {
         $composerJsonPath = ROOTPATH . 'composer.json';
 
-        if (!file_exists($composerJsonPath)) {
-            CLI::write("composer.json not found.", 'red');
+        if (! file_exists($composerJsonPath)) {
+            CLI::write('composer.json not found.', 'red');
+
             return;
         }
 
         $composerJson = json_decode(file_get_contents($composerJsonPath), true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            CLI::write("Error decoding composer.json: " . json_last_error_msg(), 'red');
+            CLI::write('Error decoding composer.json: ' . json_last_error_msg(), 'red');
+
             return;
         }
 
         // Ensure the scripts section exists
-        if (!isset($composerJson['scripts'])) {
+        if (! isset($composerJson['scripts'])) {
             $composerJson['scripts'] = [];
         }
 
         // Ensure the post-update-cmd section exists
-        if (!isset($composerJson['scripts']['post-update-cmd'])) {
+        if (! isset($composerJson['scripts']['post-update-cmd'])) {
             $composerJson['scripts']['post-update-cmd'] = [];
         }
 
         // Add the Bonfire update script if it's not already present
-        $bonfireUpdateScript = "php spark notify:breaking-changes";
-        if (!in_array($bonfireUpdateScript, $composerJson['scripts']['post-update-cmd'])) {
+        $bonfireUpdateScript = 'php spark notify:breaking-changes';
+        if (! in_array($bonfireUpdateScript, $composerJson['scripts']['post-update-cmd'], true)) {
             $composerJson['scripts']['post-update-cmd'][] = $bonfireUpdateScript;
         }
 
         // Save the updated composer.json
         file_put_contents($composerJsonPath, json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        CLI::write("composer.json updated successfully.", 'green');
+        CLI::write('composer.json updated successfully.', 'green');
     }
 }

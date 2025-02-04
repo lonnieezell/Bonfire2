@@ -11,11 +11,11 @@
 
 namespace Bonfire\Users\Controllers;
 
-use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
 use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
+use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use ReflectionException;

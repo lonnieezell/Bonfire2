@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'usersModTitle' => 'Vartotojai',
-    'editUser'      => 'Keisti vartotoją',
-    'newUser'       => 'Naujas vartotojas',
-    'users'         => 'Vartotojai',
-    'user'          => 'Vartotojas',
-    'userGenitive'  => 'vartotojo',
-    'userAccusative' => 'vartotoją',
+    'usersModTitle'   => 'Vartotojai',
+    'editUser'        => 'Keisti vartotoją',
+    'newUser'         => 'Naujas vartotojas',
+    'users'           => 'Vartotojai',
+    'user'            => 'Vartotojas',
+    'userGenitive'    => 'vartotojo',
+    'userAccusative'  => 'vartotoją',
     'usersAccusative' => 'vartotojus',
-    'permissions'   => 'Leidimai',
+    'permissions'     => 'Leidimai',
     // avatar
     'deleteImageConfirm' => 'Ar tikrai norite pašalinti paveikslėlį? Jo atkurti nebus galima',
     'deleteImage'        => 'Ištrinti įkeltą paveikslėlį',

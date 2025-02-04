@@ -10,7 +10,7 @@ return [
     'restoreMsgContent' => 'Atkurti šį įrašą?',
     'purgeMsgTitle'     => 'Ištrinti amžiams',
     'purgeMsgContent'   => 'Ištrinti įrašą visam laikui?',
-    'resultLabel'      => '{0, plural,
+    'resultLabel'       => '{0, plural,
                 =0 {# įrašų}
                 =1 {# įrašas}
                 one {# įrašas}

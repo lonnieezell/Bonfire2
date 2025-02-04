@@ -10,5 +10,5 @@
  */
 
 return [
-    'emailModTitle'     => 'Email',
+    'emailModTitle' => 'Email',
 ];

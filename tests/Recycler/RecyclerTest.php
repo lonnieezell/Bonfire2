@@ -57,7 +57,6 @@ final class RecyclerTest extends TestCase
         $result = $this->actingAs($this->admin)
             ->get(route_to('recycler-restore', 'users', $user1->id));
 
-
         $this->seeInDatabase('users', [
             'id'         => $user1->id,
             'deleted_at' => null,

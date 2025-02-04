@@ -22,13 +22,13 @@ class BreakingChangesNotification extends BaseCommand
         // Read the changelog file
         $breakingChangeDate = $this->getLatestBreakingChangeDate($changelogFile);
 
-        if ($breakingChangeDate && (!$lastUpdateDate || $lastUpdateDate < $breakingChangeDate)) {
+        if ($breakingChangeDate && (! $lastUpdateDate || $lastUpdateDate < $breakingChangeDate)) {
             CLI::write(
                 '======= WARNING: =======' . PHP_EOL .
                 'Breaking changes since the previous update of your Bonfire install detected. ' . PHP_EOL .
                 'You may need to update your app manually. ' . PHP_EOL .
                 'Please read the docs/intro/changelog.md file for more information.',
-                'yellow'
+                'yellow',
             );
             CLI::write('Latest breaking change date: ' . $breakingChangeDate, 'yellow');
 
@@ -47,22 +47,24 @@ class BreakingChangesNotification extends BaseCommand
 
         // Create the file if it does not exist
         file_put_contents($filePath, '');
+
         return null;
     }
 
     private function getLatestBreakingChangeDate(string $filePath): ?string
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return null;
         }
 
-        $file = fopen($filePath, 'r');
+        $file = fopen($filePath, 'rb');
         if ($file) {
             while (($line = fgets($file)) !== false) {
-                if (strpos($line, '(breaking change)') !== false) {
+                if (str_contains($line, '(breaking change)')) {
                     preg_match('/## (\d{1,2} \w+ \d{4})/', $line, $matches);
                     if (isset($matches[1])) {
                         fclose($file);
+
                         return date('Y-m-d', strtotime($matches[1]));
                     }
                 }

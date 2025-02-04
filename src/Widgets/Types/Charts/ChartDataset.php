@@ -69,7 +69,7 @@ class ChartDataset
     }
 
     /**
-     * @return array|string[]
+     * @return array|list<string>
      */
     public function backgroundColor(): array
     {
@@ -77,7 +77,7 @@ class ChartDataset
     }
 
     /**
-     * @return array|string[]
+     * @return array|list<string>
      */
     public function borderColor(): array
     {

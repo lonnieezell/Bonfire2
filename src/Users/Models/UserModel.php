@@ -18,9 +18,8 @@ class UserModel extends ShieldUsers
         'username', 'status', 'status_message', 'active', 'last_active', 'deleted_at',
         'avatar', 'first_name', 'last_name',
     ];
-
     protected $allowCallbacks = true;
-    protected $beforeDelete = ['deleteAvatar'];
+    protected $beforeDelete   = ['deleteAvatar'];
 
     /**
      * Performs additional setup when finding objects
@@ -59,13 +58,13 @@ class UserModel extends ShieldUsers
     public function deleteAvatar(array $data): array
     {
         // if it is a soft delete, return at once
-        if (!$data['purge']) {
+        if (! $data['purge']) {
             return $data;
         }
 
         $user = $this->withDeleted()->find($data['id'][0]); // Retrieve the entity
 
-        if (!$user) {
+        if (! $user) {
             return $data;
         }
 
@@ -74,7 +73,7 @@ class UserModel extends ShieldUsers
 
         $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
         if (
-            !empty($userAvatar)
+            ! empty($userAvatar)
             && file_exists($avatarDir . '/' . $userAvatar)
         ) {
             @unlink($avatarDir . '/' . $userAvatar);

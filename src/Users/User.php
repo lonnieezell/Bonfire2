@@ -63,10 +63,11 @@ class User extends ShieldUser
         // Default from Gravatar
         if (isset($this->id) && empty($this->avatar) && setting('Users.useGravatar')) {
             $hash = md5(strtolower(trim($this->email)));
+
             return "https://www.gravatar.com/avatar/{$hash}?" . http_build_query([
                 's' => ($size ?? 60),
                 'd' => setting(
-                    'Users.gravatarDefault'
+                    'Users.gravatarDefault',
                 ),
             ]);
         }

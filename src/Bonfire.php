@@ -72,7 +72,7 @@ class Bonfire
 
         $path = parse_url($url, PHP_URL_PATH);
 
-        $this->inAdmin = strpos($path, ADMIN_AREA) !== false;
+        $this->inAdmin = str_contains($path, ADMIN_AREA);
     }
 
     /**

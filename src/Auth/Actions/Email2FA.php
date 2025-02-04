@@ -8,8 +8,8 @@ use Bonfire\View\Themeable;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
-use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Authentication\Actions\Email2FA as ShieldEmail2FA;
+use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Exceptions\RuntimeException;
@@ -49,7 +49,6 @@ class Email2FA extends ShieldEmail2FA
         $this->createIdentity($user);
 
         return $this->render(config('Auth')->views['action_email_2fa'], ['user' => $user]);
-
     }
 
     /**
@@ -94,7 +93,7 @@ class Email2FA extends ShieldEmail2FA
         $email->setMessage($this->view(
             setting('Auth.views')['action_email_2fa_email'],
             ['code'  => $identity->secret, 'ipAddress' => $ipAddress, 'userAgent' => $userAgent, 'date' => $date],
-            ['debug' => false]
+            ['debug' => false],
         ));
 
         if ($email->send(false) === false) {
@@ -105,7 +104,6 @@ class Email2FA extends ShieldEmail2FA
         $email->clear();
 
         return $this->render(config('Auth')->views['action_email_2fa_verify'], ['user' => $user]);
-
     }
 
     /**
@@ -132,7 +130,6 @@ class Email2FA extends ShieldEmail2FA
             session()->setFlashdata('error', lang('Auth.invalid2FAToken'));
 
             return $this->render(config('Auth')->views['action_email_2fa_verify']);
-
         }
 
         // Get our login redirect url
@@ -149,8 +146,7 @@ class Email2FA extends ShieldEmail2FA
 
         return $identityModel->getIdentityByType(
             $user,
-            $this->type
+            $this->type,
         );
     }
-
 }

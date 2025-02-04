@@ -107,7 +107,7 @@ class StatsItem implements Item
 
     public function setUrl(string $url = '#'): StatsItem
     {
-        $this->url = strpos($url, '://') !== false
+        $this->url = str_contains($url, '://')
             ? $url
             : '/' . ltrim($url, '/ ');
 

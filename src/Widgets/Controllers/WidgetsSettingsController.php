@@ -11,8 +11,8 @@
 
 namespace Bonfire\Widgets\Controllers;
 
-use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class WidgetsSettingsController extends AdminController
 {

@@ -32,7 +32,7 @@ class MenuCollection extends MenuItem
     /**
      * Holds all Menu items of a collection
      *
-     * @var array<MenuItem>
+     * @var list<MenuItem>
      */
     protected array $items = [];
 
@@ -101,7 +101,7 @@ class MenuCollection extends MenuItem
     /**
      * Add multiple Menu items at once.
      *
-     * @param array<MenuItem> $items list of MenuItem Instance
+     * @param list<MenuItem> $items list of MenuItem Instance
      */
     public function addItems(array $items): self
     {
@@ -118,6 +118,7 @@ class MenuCollection extends MenuItem
     public function removeItem(string $title): void
     {
         $counter = count($this->items);
+
         for ($i = 0; $i < $counter; $i++) {
             if ($this->items[$i]->title() === $title) {
                 unset($this->items[$i]);
@@ -140,7 +141,7 @@ class MenuCollection extends MenuItem
      * Returns all items in the Collection, sorted by weight,
      * where larger weights make them fall to the bottom.
      *
-     * @return array<MenuItem>
+     * @return list<MenuItem>
      */
     public function items(): array
     {
@@ -175,7 +176,7 @@ class MenuCollection extends MenuItem
                 }
 
                 return $a->weight <=> $b->weight;
-            }
+            },
         );
     }
 

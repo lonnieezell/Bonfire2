@@ -7,7 +7,6 @@ use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Core\Filters\OnlineCheck;
 use Bonfire\Users\Validation\UserRules;
 use Bonfire\View\Decorator;
-use CodeIgniter\Autoloader\Autoloader;
 use CodeIgniter\Shield\Authentication\Passwords\ValidationRules as PasswordRules;
 use CodeIgniter\Shield\Filters\ChainAuth;
 use CodeIgniter\Shield\Filters\SessionAuth;
@@ -96,6 +95,4 @@ class Registrar
             ],
         ];
     }
-
-
 }

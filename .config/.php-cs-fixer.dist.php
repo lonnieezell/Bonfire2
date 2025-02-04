@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\CodingStandard\CodeIgniter4;
+use Nexus\CsConfig\Factory;
 use PhpCsFixer\Finder;
 
 $finder = Finder::create()
@@ -12,22 +14,19 @@ $finder = Finder::create()
         'build',
         'Views',
     ])
-;
+    ->append([
+        __FILE__,
+        __DIR__ . '/rector.php',
+    ]);
 
-// $overrides = [
-//     'yoda_style' => ['identical' => false],
-// ];
+$overrides = [
+    // 'declare_strict_types' => true,
+    // 'void_return'          => true,
+];
 
-return (new PhpCsFixer\Config())
-    ->setRules([
-        '@PSR12'                 => true,
-        'array_syntax'           => ['syntax' => 'short'],
-        'binary_operator_spaces' => [
-            'operators' => [
-                '=>' => 'align_single_space_minimal',
-            ],
-        ],
-    ])
-    ->setCacheFile(__DIR__ . '/../build/.php-cs-fixer.cache')
-    ->setFinder($finder)
-;
+$options = [
+    'finder'      => $finder,
+    'cacheFile'   => '../build/.php-cs-fixer.cache',
+];
+
+return Factory::create(new CodeIgniter4(), $overrides, $options)->forProjects();

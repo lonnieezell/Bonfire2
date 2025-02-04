@@ -71,7 +71,7 @@ class ResourceTab
 
         $url = $this->url;
 
-        if (strpos($this->url, '(id)') !== false) {
+        if (str_contains($this->url, '(id)')) {
             $url = $this->fillPlaceholder($url);
         }
 

@@ -10,5 +10,5 @@
  */
 
 return [
-    'groupsModTitle'     => 'Ruoli',
+    'groupsModTitle' => 'Ruoli',
 ];

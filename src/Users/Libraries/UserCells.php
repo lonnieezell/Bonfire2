@@ -16,8 +16,7 @@ namespace Bonfire\Users\Libraries;
  */
 class UserCells
 {
-    protected $viewPrefix = 'Bonfire\Users\Views\\';
-
+    protected $viewPrefix         = 'Bonfire\Users\Views\\';
     protected string $configClass = 'Users';
 
     /**

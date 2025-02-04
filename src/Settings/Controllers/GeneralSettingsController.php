@@ -11,8 +11,8 @@
 
 namespace Bonfire\Settings\Controllers;
 
-use CodeIgniter\HTTP\RedirectResponse;
 use Bonfire\Core\AdminController;
+use CodeIgniter\HTTP\RedirectResponse;
 use DateTimeZone;
 
 /**
@@ -41,7 +41,7 @@ class GeneralSettingsController extends AdminController
         $timezoneAreas = [];
 
         foreach (timezone_identifiers_list() as $timezone) {
-            if (strpos($timezone, '/') === false) {
+            if (! str_contains($timezone, '/')) {
                 $timezoneAreas[] = $timezone;
 
                 continue;
@@ -54,7 +54,7 @@ class GeneralSettingsController extends AdminController
         }
 
         $currentTZ     = setting('App.appTimezone');
-        $currentTZArea = strpos($currentTZ, '/') === false
+        $currentTZArea = ! str_contains($currentTZ, '/')
             ? $currentTZ
             : substr($currentTZ, 0, strpos($currentTZ, '/'));
 

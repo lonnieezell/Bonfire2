@@ -10,5 +10,5 @@
  */
 
 return [
-    'groupsModTitle'     => 'Vartotojų grupės',
+    'groupsModTitle' => 'Vartotojų grupės',
 ];

@@ -6,10 +6,9 @@ use CodeIgniter\Config\Factories;
 use Tests\Support\TestCase;
 
 /**
- * @backupGlobals disabled
- *
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\BackupGlobals(false)]
 final class ConsentHelperTest extends TestCase
 {
     protected function setUp(): void

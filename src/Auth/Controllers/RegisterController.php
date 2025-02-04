@@ -36,7 +36,7 @@ class RegisterController extends ShieldRegister
     {
         $url = setting('Auth.redirects')['register'];
 
-        return strpos($url, 'http') === 0
+        return str_starts_with($url, 'http')
             ? $url
             : rtrim(site_url($url), '/ ');
     }

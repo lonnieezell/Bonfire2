@@ -63,9 +63,9 @@ class Publisher
         $content = file_get_contents($file);
 
         $replace = [
-            $namespace                           => 'Config',
-            'BaseConfig'                         => 'Bonfire' . $rawClassName,
-            'use CodeIgniter\Config\BaseConfig;' => "use {$className} as Bonfire{$rawClassName};",
+            $namespace                                            => 'Config',
+            'BaseConfig'                                          => 'Bonfire' . $rawClassName,
+            'use CodeIgniter\Config\BaseConfig;'                  => "use {$className} as Bonfire{$rawClassName};",
             "class {$rawClassName} extends Shield{$rawClassName}" => "class {$rawClassName} extends Bonfire{$rawClassName}",
         ];
 

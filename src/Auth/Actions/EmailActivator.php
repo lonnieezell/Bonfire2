@@ -53,7 +53,7 @@ class EmailActivator extends ShieldEmailActivator
         $userEmail = $user->email;
         if ($userEmail === null) {
             throw new LogicException(
-                'Email Activation needs user email address. user_id: ' . $user->id
+                'Email Activation needs user email address. user_id: ' . $user->id,
             );
         }
 
@@ -141,7 +141,7 @@ class EmailActivator extends ShieldEmailActivator
 
         return $identityModel->getIdentityByType(
             $user,
-            $this->type
+            $this->type,
         );
     }
 }

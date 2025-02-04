@@ -11,6 +11,8 @@
 
 namespace Bonfire\Tools\Libraries;
 
+use DateTime;
+
 /**
  * Provides view cells for Users
  */
@@ -111,7 +113,7 @@ class Logs
         $fileContent = file_get_contents($filePath);
 
         if ($fileContent === false) {
-            throw new Exception("Unable to read the file: $filePath");
+            throw new Exception("Unable to read the file: {$filePath}");
         }
 
         // Count occurrences of each level
@@ -120,23 +122,20 @@ class Logs
         }
 
         // Remove entries with value 0
-        $counts = array_filter($counts, function ($value) {
-            return $value > 0;
-        });
+        $counts = array_filter($counts, static fn ($value) => $value > 0);
 
         $counts = array_reverse($counts);
 
-
         // Transform the array into a string with color codes
         $result = [];
+
         foreach ($counts as $level => $count) {
-            $class = self::$levelClasses[$level];
+            $class    = self::$levelClasses[$level];
             $result[] = '<span class="text-' . $class . '">' . $level . '</span>: ' . $count;
         }
 
         return strtolower(implode(', ', $result));
     }
-
 
     /**
      * returns an array of the file contents
@@ -181,15 +180,18 @@ class Logs
     /**
      * Retrieves the adjacent log files (previous and next) relative to the given log file.
      *
-     * @param string $currentFile The current log file name.
-     * @param array $logFiles An array of all log file names.
+     * @param string $currentFile            The current log file name.
+     * @param array  $logFiles               An array of all log file names.
+     * @param mixed  $currentLogFileBasename
+     * @param mixed  $logsPath
+     *
      * @return array An associative array with 'previous' and 'next' keys containing the respective log file names, or null if not available.
      */
     public function getAdjacentLogFiles($currentLogFileBasename, $logsPath): array
     {
         // Extract the date from the current log file name
         preg_match('/log-(\d{4}-\d{2}-\d{2})/', $currentLogFileBasename, $matches);
-        $currentDate = new \DateTime($matches[1]);
+        $currentDate = new DateTime($matches[1]);
 
         // Retrieve the list of log files in the directory
         $logFiles = glob($logsPath . '/log-*.log');
@@ -216,14 +218,14 @@ class Logs
 
         return [
             'prev' => [
-                'link' => $previousLogFileBasename,
+                'link'  => $previousLogFileBasename,
                 'label' => substr($previousLogFileBasename ?? '', 4, 10),
             ],
-           'curr' => [
+            'curr' => [
                 'label' => substr($currentLogFileBasename, 4, 10),
             ],
             'next' => [
-                'link' => $nextLogFileBasename,
+                'link'  => $nextLogFileBasename,
                 'label' => substr($nextLogFileBasename ?? '', 4, 10),
             ],
         ];

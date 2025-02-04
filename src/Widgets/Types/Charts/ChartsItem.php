@@ -26,7 +26,7 @@ class ChartsItem implements Item
     protected $weight;
 
     /**
-     * @var array|string[]
+     * @var array|list<string>
      */
     protected array $bgColor = [
         'rgba(255,  99, 132, 0.2)',
@@ -39,7 +39,7 @@ class ChartsItem implements Item
     ];
 
     /**
-     * @var array|string[]
+     * @var array|list<string>
      */
     protected array $borderColor = [
         'rgb(255,  99, 132)',
@@ -56,7 +56,7 @@ class ChartsItem implements Item
     protected int $overOffset  = 20;
 
     /**
-     * @var array|string[]
+     * @var array|list<string>
      */
     protected array $supportedTypes = [
         'line',

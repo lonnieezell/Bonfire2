@@ -10,5 +10,5 @@
  */
 
 return [
-    'consentModTitle'     => 'Consenso',
+    'consentModTitle' => 'Consenso',
 ];

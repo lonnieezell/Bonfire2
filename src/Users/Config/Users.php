@@ -55,7 +55,6 @@ class Users extends BaseConfig
      * --------------------------------------------------------------------------
      * relative to FCPATH and base_url
      */
-
     public $avatarDirectory = 'uploads/avatars';
 
     /**
@@ -70,7 +69,8 @@ class Users extends BaseConfig
      * toolbar avatar size)
      */
     public $avatarResize = false;
-    public $avatarSize = 140;
+
+    public $avatarSize        = 140;
     public $avatarResizeFloor = 32;
 
     /**
@@ -141,7 +141,6 @@ class Users extends BaseConfig
      *     ],
      * ],
      */
-
     public $metaFields = [
         'Example Fields' => [
             'blog' => ['label' => 'Blog', 'type' => 'text', 'validation' => 'permit_empty|valid_url_strict'],
@@ -149,13 +148,12 @@ class Users extends BaseConfig
     ];
 
     /**
-      * --------------------------------------------------------------------------
-      * Search in additional fields
-      * --------------------------------------------------------------------------
-      * To enable search in additional user fields, add the field names to this array.
-      *
-      */
+     * --------------------------------------------------------------------------
+     * Search in additional fields
+     * --------------------------------------------------------------------------
+     * To enable search in additional user fields, add the field names to this array.
+     */
     public $includeMetaFieldsInSearech = [
-     'blog',
+        'blog',
     ];
 }

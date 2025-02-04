@@ -10,5 +10,5 @@
  */
 
 return [
-    'consentModTitle'     => 'Sutikimas (BDAR)',
+    'consentModTitle' => 'Sutikimas (BDAR)',
 ];

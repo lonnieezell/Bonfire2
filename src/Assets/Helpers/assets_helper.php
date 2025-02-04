@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  */
-if (!defined('asset_link')) {
+if (! defined('asset_link')) {
     /**
      * Generates the URL to serve an asset to the client
      *
@@ -56,7 +56,7 @@ if (!defined('asset_link')) {
     }
 }
 
-if (!defined('asset')) {
+if (! defined('asset')) {
     function asset(string $location, string $type): string
     {
         $config   = config('Assets');
@@ -93,12 +93,12 @@ if (!defined('asset')) {
             array_shift($tempSegments);
             $path = rtrim($config->folders[current($segments)], ' /') . '/' . implode(
                 '/',
-                $tempSegments
+                $tempSegments,
             ) . '/' . $filename;
 
             $filetime = filemtime($path);
 
-            if (!$filetime) {
+            if (! $filetime) {
                 throw new RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
             $fingerprint = $separator . $filetime;

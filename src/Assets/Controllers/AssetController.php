@@ -61,9 +61,9 @@ class AssetController extends Controller
         } else {
             $filename = $origFilename;
         }
-        $baseAssetFolders = config('Assets')->folders; // get list of folders with assets
+        $baseAssetFolders      = config('Assets')->folders; // get list of folders with assets
         $targetBaseAssetFolder = array_shift($segments); // from segments choose the first one as main folder
-        $folder = $baseAssetFolders[$targetBaseAssetFolder] ?? ROOTPATH . '/somer^3andomWhatever'; // point to folder in the website or a non-existent folder within root path
+        $folder                = $baseAssetFolders[$targetBaseAssetFolder] ?? ROOTPATH . '/somer^3andomWhatever'; // point to folder in the website or a non-existent folder within root path
 
         $path = $folder . '/' . implode('/', $segments) . '/' . $filename;
         if (! is_file($path) || empty($folder)) {

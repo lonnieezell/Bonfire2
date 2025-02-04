@@ -41,7 +41,7 @@ class Services extends BaseService
     /**
      * Returns the system menu manager
      *
-     * @return \Bonfire\Menus\Manager
+     * @return MenuManager
      */
     public static function menus(bool $getShared = true)
     {
@@ -56,7 +56,7 @@ class Services extends BaseService
      * Returns the Resource Tab manager that integrates
      * extra tabs into resources like Users, User Groups, etc.
      *
-     * @return ResourceTabs|mixed
+     * @return mixed|ResourceTabs
      */
     public static function resourceTabs(bool $getShared = true)
     {

@@ -112,7 +112,7 @@ trait HasMenuIcons
     {
         $class = empty($class) ? '' : "class=\"{$class}\" ";
 
-        $iconUrl = strpos($this->iconUrl, '://') !== false
+        $iconUrl = str_contains($this->iconUrl, '://')
             ? $this->iconUrl
             : '/' . ltrim($this->iconUrl, '/ ');
 

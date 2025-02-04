@@ -11,13 +11,14 @@
 
 namespace Bonfire\Users;
 
+use Bonfire\Core\Traits\SearchInMeta;
 use Bonfire\Search\Interfaces\SearchProviderInterface;
 use Bonfire\Users\Models\UserModel;
-use Bonfire\Core\Traits\SearchInMeta;
 
 class SearchProvider extends UserModel implements SearchProviderInterface
 {
     use SearchInMeta;
+
     /**
      * Performs a primary search for just this resource.
      */
@@ -31,7 +32,7 @@ class SearchProvider extends UserModel implements SearchProviderInterface
 
         $searchInMeta = setting('Users.includeMetaFieldsInSearech');
 
-        if (!empty($searchInMeta)) {
+        if (! empty($searchInMeta)) {
             // TODO: find a better way to access both of these variables -
             // Entity to which the data is assigned and table name to join meta_info with
             $query->joinMetaInfo('Bonfire\Users\User', 'users');
@@ -42,7 +43,7 @@ class SearchProvider extends UserModel implements SearchProviderInterface
             ->orLike('username', $term, 'right', true, true)
             ->orLike('secret', $term, 'both', true, true);
 
-        if (!empty($searchInMeta)) {
+        if (! empty($searchInMeta)) {
             foreach ($searchInMeta as $metaField) {
                 $query->orLikeInMetaInfo($metaField, $term, 'both', true, true);
             }
