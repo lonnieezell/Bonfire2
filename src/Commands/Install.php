@@ -176,7 +176,7 @@ class Install extends BaseCommand
     private function removeIndexDotPhp()
     {
         $envFile = ROOTPATH . '.env';
-        $lines = file($envFile, FILE_IGNORE_NEW_LINES);
+        $lines   = file($envFile, FILE_IGNORE_NEW_LINES);
 
         $newLines = [];
         foreach ($lines as $line) {
