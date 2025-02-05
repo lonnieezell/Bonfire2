@@ -39,11 +39,10 @@ final class AssetHelperTest extends TestCase
         asset_link('foo', 'css');
     }
 
-    public function testAssetThrowsNoFilename(): void
+    public function testAssetLinkContainsMissingSubstring()
     {
-        $this->expectException(RuntimeException::class);
-
-        asset_link('/admin/css/admin_missing.css', 'css');
+        $result = asset_link('/admin/css/admin_missing.css', 'css');
+        $this->assertStringContainsString('asset-is-missing', $result);
     }
 
     public function testAssetThrowsEmptyLocation(): void
