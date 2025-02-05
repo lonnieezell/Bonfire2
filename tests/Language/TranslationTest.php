@@ -6,7 +6,7 @@ use CodeIgniter\Test\CIUnitTestCase;
 
 class TranslationTest extends CIUnitTestCase
 {
-    protected $englishFiles = [];
+    protected $englishFiles  = [];
     protected $languageFiles = [];
 
     protected function setUp(): void
@@ -18,7 +18,7 @@ class TranslationTest extends CIUnitTestCase
 
         // Get all language files for the main app
         foreach (glob($languageDir . '/*/Bonfire.php') as $file) {
-            $lang = basename(dirname($file));
+            $lang                                    = basename(dirname($file));
             $this->languageFiles['Bonfire'][$lang][] = $file;
 
             if ($lang === 'en') {
@@ -57,8 +57,8 @@ class TranslationTest extends CIUnitTestCase
 
             if (is_dir($languageDir)) {
                 foreach (glob($languageDir . '/*/*.php') as $file) {
-                    $lang = basename(dirname($file));
-                    $module = basename($dir);
+                    $lang                                  = basename(dirname($file));
+                    $module                                = basename($dir);
                     $this->languageFiles[$module][$lang][] = $file;
 
                     if ($lang === 'en') {
@@ -85,7 +85,7 @@ class TranslationTest extends CIUnitTestCase
     public function testLanguageFilesHaveSameKeysAsEnglish()
     {
         $allMissingKeys = [];
-        $allExtraKeys = [];
+        $allExtraKeys   = [];
 
         foreach ($this->englishFiles as $module => $englishFile) {
             if (!is_string($englishFile) || !file_exists($englishFile)) {
@@ -110,7 +110,7 @@ class TranslationTest extends CIUnitTestCase
                 $translations = $this->includeTodoTranslations($files[0], $translations);
 
                 $missingKeys = array_diff_key($englishTranslations, $translations);
-                $extraKeys = array_diff_key($translations, $englishTranslations);
+                $extraKeys   = array_diff_key($translations, $englishTranslations);
 
                 if (!empty($missingKeys)) {
                     $allMissingKeys[] = "Module '$module' in language '$lang': The file {$files[0]} is missing keys: " . implode(', ', array_keys($missingKeys)) . PHP_EOL . ' You may run "composer lang-update" to initiate missing keys' ;
