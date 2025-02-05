@@ -88,11 +88,21 @@ if (!defined('asset')) {
             throw new RuntimeException('You must provide a valid filename and extension to the asset() helper.');
         }
 
-        // VERSION cache-busting
-        $fingerprint = '';
-        $separator   = $config->separator ?? '~~';
+        $fingerprint  = '';
+        $separator    = $config->separator ?? '~~';
+        $tempSegments = $segments;
+        array_shift($tempSegments);
+        $path = rtrim($config->folders[current($segments)], ' /') . '/' . implode(
+            '/',
+            $tempSegments
+        ) . '/' . $filename;
 
-        if ($config->bustingType === 'version') {
+        if (! file_exists($path)) { // Possible case of missing asset
+
+            $fingerprint = $separator . 'asset-is-missing';
+
+        } elseif ($config->bustingType === 'version') { // Asset version-based cache-busting
+
             switch (ENVIRONMENT) {
                 case 'testing':
                 case 'development':
@@ -102,23 +112,13 @@ if (!defined('asset')) {
                 default:
                     $fingerprint = $separator . $config->versions[$type];
             }
-        }
 
-        // FILE cache-busting
-        if ($config->bustingType === 'file') {
-            $tempSegments = $segments;
-            array_shift($tempSegments);
-            $path = rtrim($config->folders[current($segments)], ' /') . '/' . implode(
-                '/',
-                $tempSegments
-            ) . '/' . $filename;
+        } elseif ($config->bustingType === 'file') { // Mod time-based cache-busting
 
             $filetime = filemtime($path);
-
             if (!$filetime) {
                 throw new RuntimeException('Unable to get modification time of asset file: ' . $filename);
             }
-
             $fingerprint = $separator . $filetime;
         }
 
