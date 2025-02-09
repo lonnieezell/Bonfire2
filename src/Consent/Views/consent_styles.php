@@ -9,7 +9,7 @@
         background-color: cadetblue;
         border: 1px solid lightgray;
         padding:20px;
-        z-index:2;
+        z-index:2000;
         font-size: 0.85rem;
         line-height: 1.2;
     }
