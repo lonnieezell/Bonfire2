@@ -14,7 +14,7 @@
             <?php if (isset($filter['type']) && $filter['type'] === 'radio'): ?>
                 <?php foreach ($filter['options'] as $value => $name): ?>
                     <li class="form-check">
-                        <input class="form-check-input filter-check" type="radio" name="filters[<?= $key ?>]" value="<?= $value ?>" id="<?= $key . ':' . $value ?>>" <?= $key === 'all' ?: ' checked' ?>>
+                        <input class="form-check-input filter-check" type="radio" name="filters[<?= $key ?>]" value="<?= $value ?>" id="<?= $key . ':' . $value ?>" <?= $key === 'all' ?: ' checked' ?>>
                         <label class="form-check-label" for="<?= $key . ':' . $value ?>">
                             <?= $name ?>
                         </label>
@@ -23,7 +23,7 @@
             <?php else :  ?>
                 <?php foreach ($filter['options'] as $value => $name) : ?>
                     <li class="form-check">
-                        <input class="form-check-input filter-check" type="checkbox" name="filters[<?= $key ?>][<?= $value ?>]" value="<?= $value ?>" id="<?= $key . ':' . $value ?>>">
+                        <input class="form-check-input filter-check" type="checkbox" name="filters[<?= $key ?>][<?= $value ?>]" value="<?= $value ?>" id="<?= $key . ':' . $value ?>">
                         <label class="form-check-label" for="<?= $key . ':' . $value ?>">
                             <?= $name ?>
                         </label>
