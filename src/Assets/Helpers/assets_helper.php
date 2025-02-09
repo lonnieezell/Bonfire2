@@ -100,6 +100,7 @@ if (!defined('asset')) {
         if (! file_exists($path)) { // Possible case of missing asset
 
             $fingerprint = $separator . 'asset-is-missing';
+            log_message('warning', 'Missing asset: ' . $path);
 
         } elseif ($config->bustingType === 'version') { // Asset version-based cache-busting
 
