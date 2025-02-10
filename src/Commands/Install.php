@@ -111,7 +111,6 @@ class Install extends BaseCommand
             $this->publishThemes();
             $this->publishSampleAppContent();
             $this->updateComposerJson();
-            $this->publishSampleAppContent();
 
             CLI::newLine();
             CLI::write('If you need to create your database, you may run:', 'yellow');
