@@ -1313,6 +1313,9 @@ other bit of module CodeIgniter code, except for a new <code>Module.php</code> f
 into the admin area. Other than that you will be able to take advantage of solutions that allow your code to integrate
 directly into settings pages, be part of the global search results, automatically display and manage filtering of
 a resource list, or show up in the Recycler.</p>
+<p>A good module to look at when creating your own is the Bonfire's own Users module (<code>src/Users</code>). You can also look at an
+example module <a href="https://github.com/dgvirtual/bonfire2-pages-module">Pages</a>, which is an implementation of a module of 
+Bonfire 2 admin panel for administration of pages on a website.</p>
 <h2 id="configuring-module-locations">Configuring Module Locations</h2>
 <p>In order for Bonfire to discover your modules, you need to specify one or more locations that you plan on storing the modules. By default, the system will look within <code>app/Modules</code> for directories. As an example, we could create a Blog folder to store our new blog package. You would then need to create the standard directories, <code>Config</code>, <code>Controllers</code>, <code>Models</code> and <code>Views</code> at the very least. A <code>Module.php</code> file is also expected to live here, which we will look at in more detail a little later. The directory structure would look like:</p>
 <pre class="highlight"><code>app/
