@@ -93,11 +93,26 @@ trait HasMeta
     }
 
     /**
-     * Does the user have this meta information?
+     * Returns  meta info for this entity in simplified key => value form
      *
-     * @return bool
+     * @return array
      */
-    public function hasMeta(string $key)
+    public function allMetaKeyValue()
+    {
+        $meta = $this->allMeta();
+        $data = [];
+
+        foreach ($meta as $key => $value) {
+            $data[$key] = $value->value;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Does the entry have this meta information?
+     */
+    public function hasMeta(string $key): bool
     {
         $this->hydrateMeta();
 
@@ -168,6 +183,26 @@ trait HasMeta
 
         if ($result) {
             unset($this->meta[$key]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Deletes all meta values for an entity, usually on its deletion.
+     *
+     * @return mixed
+     */
+    public function deleteResourceMeta()
+    {
+        // Delete stuff
+        $result = model(MetaModel::class)
+            ->where('class', static::class)
+            ->where('resource_id', $this->id)
+            ->delete();
+
+        if ($result) {
+            unset($this->meta);
         }
 
         return $result;
