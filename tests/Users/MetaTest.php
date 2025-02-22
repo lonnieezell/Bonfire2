@@ -97,7 +97,7 @@ final class MetaTest extends TestCase
         $this->user->saveMeta('bar', 'Some other piece of info');
         $result = $this->user->allMetaKeyValue();
 
-        $this->assertSame($result['bar'], 'Some other piece of info');
+        $this->assertSame('Some other piece of info', $result['bar']);
     }
 
     public function testSyncMeta()
