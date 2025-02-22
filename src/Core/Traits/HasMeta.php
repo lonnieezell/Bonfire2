@@ -198,10 +198,14 @@ trait HasMeta
             $inserts = [];
             $updates = [];
             $deletes = [];
+            // Keep only these fields
+            $legal = [];
 
             foreach (array_keys($fields) as $field) {
                 $field    = strtolower($field);
                 $existing = array_key_exists($field, $this->meta);
+                // add to keep list
+                $legal[] = $field;
 
                 // Not existing and no value?
                 if (! $existing && ! array_key_exists($field, $post)) {
@@ -236,22 +240,30 @@ trait HasMeta
                     ];
                 }
             }
-
-            $model = model(MetaModel::class);
-            if ($deletes !== []) {
-                $model->whereIn('id', $deletes)->delete();
-            }
-
-            if ($inserts !== []) {
-                $model->insertBatch($inserts);
-            }
-
-            if ($updates !== []) {
-                $model->updateBatch($updates, 'id');
-            }
-
-            $this->hydrateMeta(true);
         }
+
+        // check if meta in db is in keep list, if not, mark for deletion
+        foreach ($this->meta as $key => $value) {
+            if (! in_array($key, $legal, true)) {
+                $deletes[] = $value->id;
+            }
+        }
+
+        $model = model(MetaModel::class);
+
+        if ($deletes !== []) {
+            $model->whereIn('id', $deletes)->delete();
+        }
+
+        if ($inserts !== []) {
+            $model->insertBatch($inserts);
+        }
+
+        if ($updates !== []) {
+            $model->updateBatch($updates, 'id');
+        }
+
+        $this->hydrateMeta(true);
     }
 
     /**
