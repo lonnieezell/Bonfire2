@@ -71,6 +71,35 @@ final class MetaTest extends TestCase
         $this->user->deleteMeta('abcdefg');
     }
 
+    public function testDeleteResourceMeta()
+    {
+        // Setup
+        $this->user->saveMeta('foo', 'Some great foo here');
+        $this->user->saveMeta('bar', 'Some great bar there');
+        $this->assertTrue($this->user->hasMeta('foo'));
+        $this->assertTrue($this->user->hasMeta('bar'));
+
+        // Teardown
+        $this->user->deleteResourceMeta();
+        $this->assertFalse($this->user->hasMeta('bar'));
+        $this->dontSeeInDatabase('meta_info', [
+            'class'       => User::class,
+            'resource_id' => $this->user->id,
+        ]);
+
+        // Shouldn't crash when meta doesn't exist
+        $this->user->deleteResourceMeta();
+    }
+
+    public function testAllMetaKeyValue()
+    {
+        $this->user->saveMeta('foo', 'First piece of info');
+        $this->user->saveMeta('bar', 'Some other piece of info');
+        $result = $this->user->allMetaKeyValue();
+
+        $this->assertSame($result['bar'], 'Some other piece of info');
+    }
+
     public function testSyncMeta()
     {
         $this->assertFalse($this->user->hasMeta('foo'));

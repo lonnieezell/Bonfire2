@@ -116,7 +116,7 @@ trait HasMeta
     {
         $this->hydrateMeta();
 
-        return array_key_exists(strtolower($key), $this->meta);
+        return array_key_exists(strtolower($key), $this->meta ?? []);
     }
 
     /**
