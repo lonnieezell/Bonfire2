@@ -123,14 +123,13 @@ trait HasMeta
                 ->where('class', static::class)
                 ->where('resource_id', $this->id)
                 ->where('key', $key)
-                ->update(['value' => $value]);
+                ->set(['value' => $value])
+                ->update();
         }
 
         // Insert
         else {
             $result = $model
-                ->where('class', static::class)
-                ->where('resource_id', $this->id)
                 ->insert([
                     'class'       => static::class,
                     'resource_id' => $this->id,
