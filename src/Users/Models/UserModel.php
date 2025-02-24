@@ -19,7 +19,7 @@ class UserModel extends ShieldUsers
         'avatar', 'first_name', 'last_name',
     ];
     protected $allowCallbacks = true;
-    protected $beforeDelete   = ['deleteAvatar'];
+    protected $beforeDelete   = ['deleteAvatar', 'deleteMeta'];
 
     /**
      * Performs additional setup when finding objects
@@ -77,6 +77,30 @@ class UserModel extends ShieldUsers
             && file_exists($avatarDir . '/' . $userAvatar)
         ) {
             @unlink($avatarDir . '/' . $userAvatar);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Event-triggered method to delete user meta info if the user is being purged
+     * from the system
+     */
+    public function deleteMeta(array $data): array
+    {
+        // if it is a soft delete, return at once
+        if (! $data['purge']) {
+            return $data;
+        }
+
+        $user = $this->withDeleted()->find($data['id'][0]); // Retrieve the entity
+
+        if (! $user) {
+            return $data;
+        }
+
+        if (! empty($user->allMeta())) {
+            $user->deleteResourceMeta();
         }
 
         return $data;
