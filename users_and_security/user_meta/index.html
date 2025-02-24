@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -1374,6 +1374,9 @@ $user-&gt;saveMeta('website_url', $url);</code></pre>
 <p><strong>deleteMeta(string $key)</strong></p>
 <p>Deletes a single meta value from the user. This is immediately deleted. There is no need to save the User through the UserModel.</p>
 <pre class="highlight"><code class="language-php">$user-&gt;deleteMeta('website_url');</code></pre>
+<p><strong>deleteResourceMeta()</strong></p>
+<p>Deletes all meta info associated with an entity. To be used when purging a record.</p>
+<pre class="highlight"><code class="language-php">$user-&gt;deletResouceMeta();</code></pre>
 <p><strong>syncMeta(array $post)</strong></p>
 <p>Given an array of key/value pairs representing the name of the meta field and it's value, this will update existing
 meta values, insert new ones, and delete any ones that were not passed in. Useful when grabbing the information from
@@ -1383,6 +1386,9 @@ a form and updating all the values at once.</p>
     'facebook_name' =&gt; 'johnny.rose'
 ];
 $user-&gt;syncMeta($post);</code></pre>
+<p><code>syncMeta()</code> will also delete meta data for the resource that is present in <code>meta_info</code> but not
+present in the corresponding config file's <code>$metaFields</code> property, and therefore not used (usually
+happens if you change <code>$metaFields</code> at some point, thus orphaning some data).</p>
 <p><strong>metaValidationRules(string $prefix=null)</strong></p>
 <p>This examines the specified config file and returns an array with the names of each field and their validation rules,
 ready to be used within CodeIgniter's validation library. If your form groups the name as an array, (like <code>meta[website_url]</code>)
