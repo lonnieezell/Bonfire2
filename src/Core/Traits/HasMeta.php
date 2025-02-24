@@ -93,15 +93,30 @@ trait HasMeta
     }
 
     /**
-     * Does the user have this meta information?
+     * Returns  meta info for this entity in simplified key => value form
      *
-     * @return bool
+     * @return array
      */
-    public function hasMeta(string $key)
+    public function allMetaKeyValue()
+    {
+        $meta = $this->allMeta();
+        $data = [];
+
+        foreach ($meta as $key => $value) {
+            $data[$key] = $value->value;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Does the entry have this meta information?
+     */
+    public function hasMeta(string $key): bool
     {
         $this->hydrateMeta();
 
-        return array_key_exists(strtolower($key), $this->meta);
+        return array_key_exists(strtolower($key), $this->meta ?? []);
     }
 
     /**
@@ -123,14 +138,13 @@ trait HasMeta
                 ->where('class', static::class)
                 ->where('resource_id', $this->id)
                 ->where('key', $key)
-                ->update(['value' => $value]);
+                ->set(['value' => $value])
+                ->update();
         }
 
         // Insert
         else {
             $result = $model
-                ->where('class', static::class)
-                ->where('resource_id', $this->id)
                 ->insert([
                     'class'       => static::class,
                     'resource_id' => $this->id,
@@ -175,6 +189,26 @@ trait HasMeta
     }
 
     /**
+     * Deletes all meta values for an entity, usually on its deletion.
+     *
+     * @return mixed
+     */
+    public function deleteResourceMeta()
+    {
+        // Delete stuff
+        $result = model(MetaModel::class)
+            ->where('class', static::class)
+            ->where('resource_id', $this->id)
+            ->delete();
+
+        if ($result) {
+            unset($this->meta);
+        }
+
+        return $result;
+    }
+
+    /**
      * Ensures our meta info for this resource is up
      * to date with what is given in $post. If a key
      * doesn't exist, it's deleted, otherwise it is
@@ -198,10 +232,14 @@ trait HasMeta
             $inserts = [];
             $updates = [];
             $deletes = [];
+            // Keep only these fields
+            $legal = [];
 
             foreach (array_keys($fields) as $field) {
                 $field    = strtolower($field);
                 $existing = array_key_exists($field, $this->meta);
+                // add to keep list
+                $legal[] = $field;
 
                 // Not existing and no value?
                 if (! $existing && ! array_key_exists($field, $post)) {
@@ -236,22 +274,30 @@ trait HasMeta
                     ];
                 }
             }
-
-            $model = model(MetaModel::class);
-            if ($deletes !== []) {
-                $model->whereIn('id', $deletes)->delete();
-            }
-
-            if ($inserts !== []) {
-                $model->insertBatch($inserts);
-            }
-
-            if ($updates !== []) {
-                $model->updateBatch($updates, 'id');
-            }
-
-            $this->hydrateMeta(true);
         }
+
+        // check if meta in db is in keep list, if not, mark for deletion
+        foreach ($this->meta as $key => $value) {
+            if (! in_array($key, $legal, true)) {
+                $deletes[] = $value->id;
+            }
+        }
+
+        $model = model(MetaModel::class);
+
+        if ($deletes !== []) {
+            $model->whereIn('id', $deletes)->delete();
+        }
+
+        if ($inserts !== []) {
+            $model->insertBatch($inserts);
+        }
+
+        if ($updates !== []) {
+            $model->updateBatch($updates, 'id');
+        }
+
+        $this->hydrateMeta(true);
     }
 
     /**

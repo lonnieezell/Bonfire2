@@ -111,6 +111,14 @@ Deletes a single meta value from the user. This is immediately deleted. There is
 $user->deleteMeta('website_url');
 ```
 
+**deleteResourceMeta()**
+
+Deletes all meta info associated with an entity. To be used when purging a record.
+
+```php
+$user->deletResouceMeta();
+```
+
 **syncMeta(array $post)**
 
 Given an array of key/value pairs representing the name of the meta field and it's value, this will update existing
@@ -124,6 +132,10 @@ $post = [
 ];
 $user->syncMeta($post);
 ```
+
+`syncMeta()` will also delete meta data for the resource that is present in `meta_info` but not
+present in the corresponding config file's `$metaFields` property, and therefore not used (usually
+happens if you change `$metaFields` at some point, thus orphaning some data).
 
 **metaValidationRules(string $prefix=null)**
 
