@@ -1,6 +1,6 @@
 # View Metadata
 
-Bonfire provides a `Metadata` service that simplifies working with the meta infomration, scripts, and styles in your application.
+Bonfire provides a `Metadata` service that simplifies working with the meta information, scripts, and styles in your application.
 
 ```php
 $viewMeta = service('viewMeta');
