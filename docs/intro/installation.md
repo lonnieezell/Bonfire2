@@ -16,6 +16,13 @@ You need to add the following setting to composer.json:
     "minimum-stability": "dev",
     "prefer-stable": true
 
+or execute the following commands:
+
+```console
+composer config minimum-stability dev
+composer config prefer-stable true
+```
+
 This creates a new CodeIgniter 4 project in the `my-app` directory. Finish any required setup as per
 the [CodeIgniter User Guide](https://codeigniter.com/user_guide/installation/installing_composer.html#installation-set-up). You do not need to do the `initial configuration` step at first, as Bonfire will handle much of that for you.
 
