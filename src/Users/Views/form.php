@@ -163,7 +163,7 @@ $this->extend('master') ?>
                 <?= view_cell('\Bonfire\Users\Libraries\UserCells::metaFormFields') ?>
 
             <x-button-container>
-                    <x-button><?= lang('Users.saveUser') ?></x-button>
+                <x-button><?= lang('Users.saveUser') ?></x-button>
             </x-button-container>
 
             </form>

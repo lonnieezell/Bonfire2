@@ -64,9 +64,8 @@ $this->section('main') ?>
             <?= csrf_field() ?>
 
             <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
-            <input type="submit" name="delete" class="btn btn-outline-danger btn-sm" value="<?= lang('Tools.deleteFile'); ?>"
-                onclick="return confirm('<?= lang('Tools.deleteConfirm') ?>')"
-            />
+
+            <x-button name="delete" color="danger" onclick="return confirm('<?= lang('Tools.deleteConfirm'); ?>')"><?= lang('Tools.deleteFile'); ?></x-button>
 
         </form>
 

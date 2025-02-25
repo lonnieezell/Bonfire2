@@ -55,16 +55,11 @@
         <?= $pager->links('default', 'bonfire_full') ?>
 
         <?php if (auth()->user()->can('logs.manage')) : ?>
-            <input type="submit" name="delete" id="delete-me" class="btn btn-sm btn-outline-danger"
-                value="<?= lang('Tools.deleteSelected'); ?>"
-                onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm'); ?>')"
-            />
-
-            <input type="submit" value='<?= lang('Tools.deleteAll'); ?>' name="delete_all"
-                class="btn btn-sm btn-outline-danger" onclick="return confirm('<?= lang('Tools.deleteAllConfirm'); ?>')"
-            />
+            <div class="btn-group">
+                <x-button name="delete" id="delete-me" color="outline-danger" onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm'); ?>')"><?= lang('Tools.deleteSelected'); ?></x-button>
+                <x-button name="delete_all" color="danger" onclick="return confirm('<?= lang('Tools.deleteAllConfirm'); ?>')"><?= lang('Tools.deleteAll'); ?></x-button>
+            </div>
         <?php endif ?>
-
     </form>
     <?php else : ?>
         <div class="text-center">
