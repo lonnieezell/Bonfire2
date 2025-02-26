@@ -9,11 +9,11 @@
             <button class="btn btn-default btn-sm dropdown-toggle btn-3-dots" type="button"  data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu">
                 <?php if (auth()->user()->can('users.edit')) : ?>
-                    <li><a href="<?= $user->adminLink() ?>" class="dropdown-item"><?= lang('Bonfire.edit') ?></a></li>
+                    <li class="text-end"><a href="<?= $user->adminLink() ?>" class="dropdown-item"><?= lang('Bonfire.edit') ?></a></li>
                 <?php endif ?>
                 <?php if (auth()->user()->can('users.delete')): ?>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a href="<?= $user->adminLink('delete') ?>" class="dropdown-item"
+                    <li class="text-end"><a href="<?= $user->adminLink('delete') ?>" class="dropdown-item"
                         onclick="return confirm('<?= lang('Bonfire.deleteResource', [lang('Users.userAccusative')]) ?>')">
                             <?= lang('Bonfire.delete') ?>
                         </a>
