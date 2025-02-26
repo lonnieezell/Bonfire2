@@ -93,7 +93,7 @@ class LogsController extends AdminController
         $filePagerData = $this->logsHandler->getAdjacentLogFiles($file, $this->logsPath);
 
         return $this->render($this->viewPrefix . 'view_log', [
-            'logFile'       => $file . $this->ext,
+            'logFile'       => $file,
             'canDelete'     => 1,
             'logContent'    => $result['logs'],
             'pager'         => $result['pager'],
@@ -109,23 +109,26 @@ class LogsController extends AdminController
      */
     public function delete()
     {
-        $delete    = $this->request->getPost('delete');
-        $deleteAll = $this->request->getPost('delete_all');
-
-        if (empty($delete) && empty($deleteAll)) {
+        if (
+            $this->request->getPost('checked') === null
+            && $this->request->getPost('delete_all') === null
+        ) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with(
                 'error',
-                lang('Bonfire.resourcesNotFound', ['logs']),
+                lang('Tools.noLogsSelected'),
             );
         }
 
-        if (! empty($delete) && isset($_POST['checked'])) {
+        if (
+            $this->request->getPost('delete') !== null
+            && is_array($this->request->getPost('checked'))
+        ) {
             helper('security');
 
-            $checked    = $_POST['checked'];
+            $checked    = $this->request->getPost('checked');
             $numChecked = count($checked);
 
-            if (is_array($checked) && $numChecked) {
+            if ($numChecked) {
                 foreach ($checked as $file) {
                     @unlink($this->logsPath . sanitize_filename($file . $this->ext));
                 }
@@ -134,7 +137,7 @@ class LogsController extends AdminController
             }
         }
 
-        if (! empty($deleteAll)) {
+        if ($this->request->getPost('delete_all') !== null) {
             if (delete_files($this->logsPath)) {
                 // Restore the index.html file.
                 @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
