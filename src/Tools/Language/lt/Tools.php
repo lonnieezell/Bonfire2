@@ -28,4 +28,5 @@ return [
     'deleteSuccess'         => 'Failas(-ai) sėkmingai ištrintas(-i).',
     'deleteAllSuccess'      => 'Visi failai buvo sėkmingai ištrinti.',
     'deleteError'           => 'Nepavyksta ištrinti.',
+    'noLogsSelected'        => 'Nepasirinkote failų ištrynimui.',
 ];
