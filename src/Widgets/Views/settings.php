@@ -32,16 +32,16 @@
 
 			<?php endforeach; ?>
         </fieldset>
-        <div class="text-end px-5 py-3">
-            <input type="submit" value="Save Widget Settings" class="btn btn-primary btn-lg">
-        </div>
+        <x-button-container>
+            <x-button>Save Widget Settings</x-button>
+        </x-button-container>
     </form>
 
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post">
 		<?= csrf_field() ?>
-        <div class="text-end px-5 py-3">
-            <input type="submit" value="Reset all settings of all widgets to their default values" class="btn btn-danger btn-lg">
-        </div>
+        <x-button-container>
+            <x-button>Reset all settings of all widgets to their default values</x-button>
+        </x-button-container>
     </form>
 </x-admin-box>
 <?php $this->endSection() ?>

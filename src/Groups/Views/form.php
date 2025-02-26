@@ -44,9 +44,9 @@
 
         </fieldset>
 
-        <div class="text-end">
-            <input type="submit" class="btn btn-primary" value="Save Group">
-        </div>
+        <x-button-container>
+            <x-button>Save Group</x-button>
+        </x-button-container>
 
     </form>
 

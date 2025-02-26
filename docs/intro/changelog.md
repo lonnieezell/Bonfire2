@@ -4,6 +4,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 26 February 2025 (breaking change)
+
+Finished implementation of **<x-button\>** component in the Admin theme. Users need to update the
+Admin theme (updated the component definition).
+
 ## 19 January 2025
 
 Resource Meta Info (if you have configured such) can now be included in the Admin area search (see docs page

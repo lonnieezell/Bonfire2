@@ -68,9 +68,9 @@
 
         </fieldset>
 
-        <div class="text-end px-5 py-3">
-            <input type="submit" value="Save Line Chart Settings" class="btn btn-primary btn-lg">
-        </div>
+        <x-button-container>
+            <x-button>Save Chart Settings</x-button>
+        </x-button-container>
     </form>
 
 

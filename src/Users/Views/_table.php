@@ -25,7 +25,7 @@
     </div>
 
     <?php if (auth()->user()->can('users.delete')) : ?>
-        <input type="submit" onclick="return confirm('<?= lang('Bonfire.deleteSelectedConfirm', [lang('Users.usersAccusative')]) ?>')" value="<?= lang('Bonfire.deleteSelected') ?>" class="btn btn-sm btn-outline-danger" />
+        <x-button name="delete" id="delete-me" color="outline-danger" onclick="return confirm('<?= lang('Bonfire.deleteSelectedConfirm', [lang('Users.usersAccusative')]) ?>')" value="<?= lang('Bonfire.deleteSelected') ?>"><?= lang('Tools.deleteSelected'); ?></x-button>
     <?php endif ?>
 </form>
 
