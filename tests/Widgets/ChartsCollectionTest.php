@@ -28,7 +28,7 @@ final class ChartsCollectionTest extends TestCase
             'cssClass' => 'col-3',
         ]);
 
-        $this->assertSame('Item A', $item->title());
+        $this->assertSame('ITEM A', $item->title());
         $this->assertSame('line', $item->type());
         $this->assertSame('col-3', $item->cssClass());
     }
@@ -39,11 +39,11 @@ final class ChartsCollectionTest extends TestCase
         $this->assertNull($collection->title());
 
         $collection = new ChartsCollection(['title' => 'Foo']);
-        $this->assertSame('Foo', $collection->title());
+        $this->assertSame('FOO', $collection->title());
 
         $collection = new ChartsCollection();
         $collection->setTitle('Foo');
-        $this->assertSame('Foo', $collection->title());
+        $this->assertSame('FOO', $collection->title());
     }
 
     public function testWithItem()
@@ -58,15 +58,15 @@ final class ChartsCollectionTest extends TestCase
         $items = $chart_collection->items();
 
         $this->assertCount(2, $items);
-        $this->assertSame('Item 1', $items[0]->title());
-        $this->assertSame('Item 2', $items[1]->title());
+        $this->assertSame('ITEM 1', $items[0]->title());
+        $this->assertSame('ITEM 2', $items[1]->title());
 
-        $chart_collection->removeItem('Item 1');
+        $chart_collection->removeItem('ITEM 1');
 
         $items = $chart_collection->items();
 
         $this->assertCount(1, $items);
-        $this->assertSame('Item 2', $items[0]->title());
+        $this->assertSame('ITEM 2', $items[0]->title());
 
         $chart_collection->removeAllItems();
 
@@ -85,7 +85,7 @@ final class ChartsCollectionTest extends TestCase
         $items = $chart_collection->items();
 
         $this->assertCount(2, $items);
-        $this->assertSame('Item 1', $items[0]->title());
-        $this->assertSame('Item 2', $items[1]->title());
+        $this->assertSame('ITEM 1', $items[0]->title());
+        $this->assertSame('ITEM 2', $items[1]->title());
     }
 }
