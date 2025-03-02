@@ -24,10 +24,10 @@
 			<?php foreach ($manager as $elem): ?>
 
                 <div class="form-check form-switch mt-6 mb-3">
-                    <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['index'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['index'] ?>"
-						<?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['index'])) : ?> checked <?php endif ?>
+                    <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['id'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['id'] ?>"
+                        <?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['id'])) : ?> checked <?php endif ?>
                     >
-                    <label class="form-check-label" for="<?= $elem['widget'] ?>_<?= $elem['index'] ?>">Enable <?= rtrim((string) $elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
+                    <label class="form-check-label" for="<?= $elem['widget'] ?>_<?= $elem['id'] ?>">Enable <?= rtrim((string) $elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
                 </div>
 
 			<?php endforeach; ?>

@@ -61,7 +61,6 @@ class Manager
                     $pos = substr($items[0]::class, $pos + 1);
                 }
                 $pos = str_replace('Item', '', $pos);
-                $i   = 0;
 
                 switch ($pos) {
                     case 'Stats':
@@ -69,21 +68,20 @@ class Manager
                             $results[] = [
                                 'widget' => $pos,
                                 'title'  => $item->title(),
-                                'index'  => $i,
+                                'id'     => $item->id(),
                             ];
-                            $i++;
                         }
                         break;
 
                     case 'Charts':
+                        // dd($items);
                         foreach ($items as $item) {
                             $results[] = [
                                 'widget' => $pos,
                                 'type'   => $item->type(),
                                 'title'  => $item->title(),
-                                'index'  => $i,
+                                'id'     => $item->id(),
                             ];
-                            $i++;
                         }
                         break;
                 }

@@ -9,7 +9,7 @@
             );
 		    ?>
 
-			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $index)) : ?>
+			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['id'])) : ?>
                 <div class="<?= $widget->cssClass() ?>">
                     <canvas id="<?= $widget->chartName() ?>" class="chart-border"></canvas>
                 </div>

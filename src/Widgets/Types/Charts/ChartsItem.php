@@ -72,6 +72,13 @@ class ChartsItem implements Item
     protected $title;
 
     /**
+     * Unique identifier for the widget, used for storage in settings.
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
      * @var array|string|null
      */
     protected $data;
@@ -96,6 +103,11 @@ class ChartsItem implements Item
      */
     protected $chartName;
 
+    /**
+     * @var bool
+     */
+    protected $dashboardRoute = false;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -109,16 +121,31 @@ class ChartsItem implements Item
             }
         }
         $this->setChartName('');
+
+        // true if we are on Dashboard page
+        $this->dashboardRoute = current_url() === config('App')->baseURL . '/' . ADMIN_AREA;
     }
 
     public function title(): ?string
     {
-        return $this->title;
+        return mb_strtoupper((string) $this->title);
     }
 
     public function setTitle(?string $title): ChartsItem
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function id(): ?string
+    {
+        return $this->id;
+    }
+
+    public function setId(?string $id): ChartsItem
+    {
+        $this->id = $id;
 
         return $this;
     }
@@ -266,6 +293,14 @@ class ChartsItem implements Item
 
     public function addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count'): ChartsItem
     {
+        // Check if we are on Dashboard page and the chart is enabled, only proceed if both true
+        if (
+            current_url() !== config('App')->baseURL . '/' . ADMIN_AREA
+            || setting('Stats.Charts_' . $this->id) !== 'on'
+        ) {
+            return $this;
+        }
+
         // Chart Section Begin
         $groupsData = db_connect()->table($tableName)
             ->select($groupField);
