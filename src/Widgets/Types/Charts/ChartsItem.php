@@ -129,7 +129,7 @@ class ChartsItem implements Item
     public function title(): ?string
     {
         // Outputing null seems to be demanded by the tests: chartCollectionTest::testTitles()
-        return $this->title ? mb_strtoupper($this->title): null;
+        return $this->title ? mb_strtoupper($this->title) : null;
     }
 
     public function setTitle(?string $title): ChartsItem
