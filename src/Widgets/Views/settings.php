@@ -13,15 +13,15 @@
 <x-admin-box>
 
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
-		<?= csrf_field() ?>
+        <?= csrf_field() ?>
         <fieldset class="first">
 
             <legend><i class="fas fa-object-group"></i> Widgets Settings</legend>
 
             <p>In this section you can manage widgets on the dashboard.</p>
-            <br/>
+            <br>
 
-			<?php foreach ($manager as $elem): ?>
+            <?php foreach ($manager as $elem): ?>
 
                 <div class="form-check form-switch mt-6 mb-3">
                     <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['id'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['id'] ?>"
@@ -30,19 +30,19 @@
                     <label class="form-check-label" for="<?= $elem['widget'] ?>_<?= $elem['id'] ?>">Enable <?= rtrim((string) $elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
                 </div>
 
-			<?php endforeach; ?>
+            <?php endforeach; ?>
         </fieldset>
-        <x-button-container>
+        <div class="text-end px-0 px-md-5">
             <x-button>Save Widget Settings</x-button>
-        </x-button-container>
+        </div>
     </form>
 
-    <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post">
-		<?= csrf_field() ?>
-        <x-button-container>
+    <x-button-container>
+        <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post">
+            <?= csrf_field() ?>
             <x-button>Reset all settings of all widgets to their default values</x-button>
-        </x-button-container>
-    </form>
+        </form>
+    </x-button-container>
 </x-admin-box>
 <?php $this->endSection() ?>
 
