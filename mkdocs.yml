@@ -83,23 +83,22 @@ nav:
       - intro/app_structure.md
       - intro/changelog.md
   - Modules:
+      - modules/index.md
       - modules/assets.md
       - modules/auth.md
+      - modules/meta_info.md
       - modules/consent.md
       - modules/dashboard.md
-  - Users and Security:
-      - users_and_security/index.md
-      - users_and_security/user_meta.md
   - Building Sites:
       - building_sites/index.md
-      - building_sites/overview.md
       - building_sites/alerts.md
       - building_sites/assets.md
-      - building_sites/common_functions.md
       - building_sites/components.md
       - building_sites/consent.md
       - building_sites/metadata.md
       - building_sites/settings.md
+      - building_sites/meta_info.md
+      - building_sites/common_functions.md
   - Building Admin Modules:
       - building_admin_modules/index.md
       - building_admin_modules/creating_an_admin_module.md

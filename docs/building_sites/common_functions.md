@@ -1,6 +1,6 @@
 # Common functions
 
-Bonfire provides a few helper functions that are always available for your use.
+Bonfire provides a helper function that is always available for your use.
 
 **app_date($date)**
 
@@ -32,4 +32,3 @@ You can further include the timezone by passing `true` as the third argument.
 echo app_date($date, true, true);
 // outputs: 01/15/2021 3:35 PM CST
 ```
-

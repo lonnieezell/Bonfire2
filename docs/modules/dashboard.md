@@ -1,6 +1,6 @@
 # The Dashboard
 
-The Dashboard is the first page you seen when you log into the admin area. It provides a place to put widgets that provide a quick overview of the site's status, or other information that is important to the user.
+The Dashboard is the first page you seen when you log into the admin area. It provides a place to put the widgets that provide a quick overview of the site's status, or other information that is important to the user.
 
 ## Configuration
 
@@ -20,7 +20,7 @@ public array $cells = [
 ];
 ```
 
-### Quick Links
+## Quick Links
 
 The Quick Links cell is a simple list of links that have been added to the `Content` section of the sidebar menu. It is automatically generated and displayed.
 
@@ -28,15 +28,16 @@ The Quick Links cell is a simple list of links that have been added to the `Cont
 
 The `stats` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
 
-### Configuration
+### Settings
 
 Each of the widget types has some basic settings in the administration settings area. Each type of widget has its own specific settings, which can be used to specify which information is displayed for the widget, as well as whether it's animated, where labels are displayed, etc.
 
 ### Statistics
 
-The first widget is the statistics widget. This is a counter with a shortcut that allows the user to open the
+The first type of widget is the statistics widget. This is a counter with a shortcut that allows the user to open the
 list of elements of a module. It could be used to display a year-to-day revenue at a glance, total number of users
-in the system, new users this month, or any other simple statistic.
+in the system, new users this month, or any other simple statistic. It can also show tables or other types of data
+passed to it's parameter `value` as a string.
 
 Adding a new widget is done by editing the `initAdmin` method of your `Module.php` file, similar to adding a menu. To display the total number of users in the system, you could use the following code:
 
@@ -84,11 +85,11 @@ The title of the widget displayed at the top left
 
 **value**
 
-The value of the widget displayed under the title: typically the total number of records
+The value of the widget displayed under the title: typically the total number of records. It can also any string, like a table with data.
 
 **url**
 
-The address that displays the list of objects on your module. It will be associated with the word "view detail"
+The address that displays the list of objects on your module. It will be associated with the word "view detail".
 
 **faIcon**
 
@@ -145,13 +146,11 @@ Currently, only one dataset can be added to the chart. The required parameters a
 
 It is possible to indicate a fourth parameter to choose the counting mode; the possible values are:
 
-```php
 - count
 - avg
 - max
 - min
 - sum
-```
 
 - if indicate **count** then **selectCount($field)** is executed
 - if indicate **avg** then **selectAvg($field)** is executed

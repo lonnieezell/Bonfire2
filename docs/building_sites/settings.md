@@ -9,13 +9,14 @@ and still allows your users to override those settings once the site is live.
 
 ## Setup
 
-A migration is provided that will create the required `settings` table. No other setup is needed. 
+A migration is provided that will create the required `settings` table. It was run during by the Bonfire [installation
+script](../intro/installation.md#run-the-install-script). No other setup is needed. 
 
 ## Usage
 
 To retrieve a config value use the `settings()` helper method that is always loaded. 
 
-```
+```php
 // The same as config('App')->siteName;
 $siteName = setting('App', 'siteName');
 // or
@@ -32,6 +33,6 @@ Note that boolean `true`/`false` will be converted to strings `:true` and `:fals
 will be converted back into a boolean when retrieved. Arrays and objects are serialized when saved, and unserialized
 when retrieved. 
 
-```
+```php
 setting()->set('App', 'siteName', 'My Great Site');
 ```

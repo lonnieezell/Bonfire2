@@ -3,7 +3,7 @@
 Bonfire uses [Tatter\Alerts](https://github.com/tattersoftware/codeigniter4-alerts) to provide support for
 simple alerts. The usage is simple: 
 
-```
+```php
 alert('success', 'Your message goes here.');
 ```
 
@@ -15,7 +15,7 @@ and can be a single string or an array of strings to apply multiple alerts.
 Additionally, you can use flash messages in the session to trigger alerts. 
 This would typically be used during a redirect: 
 
-```
+```php
 return redirect()->back()->with('message', 'It worked!');
 return redirect()->back()->with('error', 'Did not work');
 return redirect()->back()->with('error', ['not good', 'nope', 'cannot do it']);

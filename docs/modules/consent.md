@@ -3,14 +3,7 @@
 With the [Global Data Protection Regulation](https://gdpr.eu/) and other data privacy regulations being put in place
 across the globe, you have various requirements as web developers that you didn't use to. The Consent module helps
 you manage collecting consent from the user before storing any cookies through an opt-in system for all non-required
-cookies. It provides the mechanism for displaying the consent form, and recording the user's preferences. A helper
-method, `has_consent`, is provided so that you can easily meet the consent requirements when building your site.
-
-The helper is loaded automatically by the BaseController. As long as you extend the BaseController (or one of its
-children, like the AuthController) then you do not need to explicitly load the helper.
-
-The helper can be used both within the views and the controllers to limit which services are called (like ad-tracking
-or analytics) and which cookies you set.
+cookies. It provides the mechanism for displaying the consent form, and recording the user's preferences.
 
 ## Defining the Consent Types
 
@@ -18,25 +11,27 @@ The Consent module allows you to define the types of consent that you would like
 
 ```php
 public array $consents = [
-        'required' => [
-            'name' => 'Functionality',
-            'desc' => 'These cookies are required for the normal operation of this website.',
-        ],
-        'performance' => [
-            'name' => 'Performance',
-            'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are,
-                and which pages are popular. This helps to improve the website for everyone. If you reject these
-                we will be unable to use your visits to make site improvements.',
-        ],
-        'targeting' => [
-            'name' => 'Targeting',
-            'desc' => 'These are usually placed by third-party advertising networks, which may use information about
-                your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.',
-        ],
-    ];
+    'required' => [
+        'name' => 'Functionality',
+        'desc' => 'These cookies are required for the normal operation of this website.',
+    ],
+    'performance' => [
+        'name' => 'Performance',
+        'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are,
+            and which pages are popular. This helps to improve the website for everyone. If you reject these
+            we will be unable to use your visits to make site improvements.',
+    ],
+    'targeting' => [
+        'name' => 'Targeting',
+        'desc' => 'These are usually placed by third-party advertising networks, which may use information about
+            your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.',
+    ],
+];
 ```
 
 ## Using the Helper
+
+A helper method, `has_consent`, is provided so that you can easily meet the consent requirements when building your site.
 
 The helper is loaded automatically by the BaseController. As long as you extend the BaseController (or one of its
 children, like the AuthController) then you do not need to explicitly load the helper.
@@ -106,6 +101,6 @@ included in the Privacy Policy or Terms of Service pages, or similar.
 This is an array of the initial consents that will be asked for in the Consent Form. Each array item includes
 the alias the consent can be checked with, and the following items:
 
-- name: The name as it is displayed to the visitors.
-- desc: The description of the consent that describes the purpose of the cookies/services and what might be
+- **name**: The name as it is displayed to the visitors.
+- **desc**: The description of the consent that describes the purpose of the cookies/services and what might be
   no longer functional if the consent is rejected.
