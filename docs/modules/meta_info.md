@@ -1,4 +1,9 @@
-# User Meta Info
+# Meta Info
+
+Bonfire provides Entity-Attribute-Value style storage for additional data of entities without modifying the underlying models and database tables. By default it can be used
+to add meta information to users, and it can be adapted to store meta information for the entities managed by your own admin modules.
+
+We will explore an example of using Meta Info on users resource.
 
 By default, Bonfire comes with a pretty limited amount of data saved to a user. Most applications will likely require
 additional information available to the user, whether this is a bio, a website URL, the name of the school they
@@ -32,8 +37,6 @@ public $metaFields = [
         ],
     ];
 ```
-
-
 
 Each major grouping within the `$metaFields` array specifies a fieldset legend name. This provides logical grouping
 of fields within the Edit User form.

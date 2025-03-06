@@ -36,8 +36,6 @@ You can change the main layout that is used for the authentication pages by chan
 When you need to modify the behavior of the authentication system, you should create a new controller and extend the existing controller. You should then override only the methods that you need to modify. If possible, you should do your changes and call the parent method to ensure that any security fixes that are discovered later are not lost to your application due to your overrides.
 
 ```php
-<?php
-
 namespace App\Controllers\Auth;
 
 use Bonfire\Auth\Controllers\LoginController as BonfireLoginController;
