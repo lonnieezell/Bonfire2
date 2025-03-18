@@ -20,10 +20,10 @@ composer config prefer-stable true
 
 ## Install Bonfire
 
-Next you need to install Bonfire as a dependency in your project. From your command line type the following:
+Next you need to install Bonfire as a dependency in your project. From your command line type the following (omit `:dev-develop` if you want the current stable version):
 
 ```bash
-composer require lonnieezell/bonfire
+composer require lonnieezell/bonfire:dev-develop
 ```
 
 This will download the latest version and all dependencies.
