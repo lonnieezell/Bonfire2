@@ -1154,6 +1154,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#charts-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts widget
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1223,6 +1256,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#charts-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts widget
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Charts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1265,10 +1331,11 @@ $widgets = service('widgets');
 $users = new UserModel();
 $statsItem = new StatsItem([
     'bgColor' =&gt; 'bg-blue',
-    'title' =&gt; 'Users',
-    'value' =&gt; $users-&gt;countAll(),
-    'url' =&gt; ADMIN_AREA . '/users',
-    'faIcon' =&gt; 'fa fa-user',
+    'title'   =&gt; 'Users',
+    'value'   =&gt; $users-&gt;countAll(),
+    'id'      =&gt; 'countAllUsers643',
+    'url'     =&gt; ADMIN_AREA . '/users',
+    'faIcon'  =&gt; 'fa fa-user',
 ]);
 $widgets-&gt;widget("stats")-&gt;collection('stats')-&gt;addItem($statsItem);</code></pre>
 <p><strong>bgColor</strong></p>
@@ -1294,22 +1361,26 @@ The available options are:</p>
 <p><strong>title</strong></p>
 <p>The title of the widget displayed at the top left</p>
 <p><strong>value</strong></p>
-<p>The value of the widget displayed under the title: typically the total number of records</p>
+<p>The value of the widget displayed under the title: typically the total number of records.</p>
+<p>However, more elaborate data can be passed as a string, like an html table with tabulated data. See how that is done in <code>src/Users/Module.php</code> with a private method <code>buildTableUsersByGroup()</code>. <strong>value</strong> can also be passed to the stats item by a standard <code>addValue()</code> method, see the same file for an example.</p>
+<p><strong>id</strong></p>
+<p>A uniwue widget ID throughout application (make it descriptive and add extra symbols to make sure the uniqueness).</p>
 <p><strong>url</strong></p>
 <p>The address that displays the list of objects on your module. It will be associated with the word "view detail"</p>
 <p><strong>faIcon</strong></p>
 <p>The FontAwesome icon</p>
 <h2 id="configuration_1">Configuration</h2>
 <p>All settings are available in the <code>Bonfire\Widgets\Config\Stats</code> class, or in the admin settings area.</p>
-<p>In the administration settings area, you can choose to:
+<p>In the administration settings area, you can also choose to:
 - Display the "View Detail" link</p>
 <hr />
-<h1 id="charts-widget">Charts widget</h1>
+<h2 id="charts-widget">Charts widget</h2>
 <p>Adding a new chart widget is done in the <code>initAdmin</code> method of your <code>Module.php</code> file, similar to adding a menu:</p>
 <pre class="highlight"><code class="language-php">$statsItem = new ChartsItem([
-    'title'   =&gt; 'User classification by group',
-    'type'   =&gt; 'line',
-    'cssClass'   =&gt; 'col-6',
+    'title'    =&gt; 'User classification by group',
+    'type'     =&gt; 'line',
+    'id'       =&gt; 'usersByGroupLine123',
+    'cssClass' =&gt; 'col-6',
 ]);
 $statsItem-&gt;addDataset('auth_groups_users', 'group', 'user_id');
 $widgets-&gt;widget('charts')-&gt;collection('charts')-&gt;addItem($statsItem);</code></pre>
@@ -1323,6 +1394,8 @@ The available options are:
 - doughnut
 - pie
 - polarArea</code></pre></p>
+<p><strong>id</strong></p>
+<p>A uniwue widget ID throughout application (make it descriptive and add extra symbols to make sure the uniqueness).</p>
 <p><strong>cssClass</strong></p>
 <p>Set the width of the chart.
 Examples options are:
@@ -1358,12 +1431,14 @@ Examples options are:
 <h3 id="charts">Charts</h3>
 <p><strong><em>Line Chart</em></strong></p>
 <p>You can set the default values in the <code>Bonfire\Widgets\Config\LineChart</code> Class</p>
-<p>In the administration settings area, you can choose to:
-- Display the title
-- View the legend
-- Choose the location of the legend
-- Enable animation
-- You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.</p>
+<p>In the administration settings area, you can choose to:</p>
+<ul>
+<li>Display the title</li>
+<li>View the legend</li>
+<li>Choose the location of the legend</li>
+<li>Enable animation</li>
+<li>You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.</li>
+</ul>
 <p>Advanced settings:</p>
 <ul>
 <li>You can set Line color</li>
@@ -1372,39 +1447,47 @@ Examples options are:
 <hr />
 <p><strong><em>Bar Chart</em></strong></p>
 <p>You can set the default values in the <code>Bonfire\Widgets\Config\BarChart</code> Class</p>
-<p>In the administration settings area, you can choose to:
-- Display the title
-- View the legend
-- Choose the location of the legend
-- Enable animation
-- Assign a predefined color scheme to fill the chart</p>
+<p>In the administration settings area, you can choose to:</p>
+<ul>
+<li>Display the title</li>
+<li>View the legend</li>
+<li>Choose the location of the legend</li>
+<li>Enable animation</li>
+<li>Assign a predefined color scheme to fill the chart</li>
+</ul>
 <hr />
 <p><strong><em>Doughnut Chart</em></strong></p>
 <p>You can set the default values in the <code>Bonfire\Widgets\Config\DoughnutChart</code> Class</p>
-<p>In the administration settings area, you can choose to:
-- Display the title
-- View the legend
-- Choose the location of the legend
-- Enable animation
-- Assign a predefined color scheme to fill the chart</p>
+<p>In the administration settings area, you can choose to:</p>
+<ul>
+<li>Display the title</li>
+<li>View the legend</li>
+<li>Choose the location of the legend</li>
+<li>Enable animation</li>
+<li>Assign a predefined color scheme to fill the chart</li>
+</ul>
 <hr />
 <p><strong><em>Pie Chart</em></strong></p>
 <p>You can set the default values in the <code>Bonfire\Widgets\Config\PieChart</code> Class</p>
-<p>In the administration settings area, you can choose to:
-- Display the title
-- View the legend
-- Choose the location of the legend
-- Enable animation
-- Assign a predefined color scheme to fill the chart</p>
+<p>In the administration settings area, you can choose to:</p>
+<ul>
+<li>Display the title</li>
+<li>View the legend</li>
+<li>Choose the location of the legend</li>
+<li>Enable animation</li>
+<li>Assign a predefined color scheme to fill the chart</li>
+</ul>
 <hr />
 <p><strong><em>Polar Area Chart</em></strong></p>
 <p>You can set the default values in the <code>Bonfire\Widgets\Config\PolarAreaChart</code> Class</p>
-<p>In the administration settings area, you can choose to:
-- Display the title
-- View the legend
-- Choose the location of the legend
-- Enable animation
-- Assign a predefined color scheme to fill the chart</p>
+<p>In the administration settings area, you can choose to:</p>
+<ul>
+<li>Display the title</li>
+<li>View the legend</li>
+<li>Choose the location of the legend</li>
+<li>Enable animation</li>
+<li>Assign a predefined color scheme to fill the chart</li>
+</ul>
 
 
 
