@@ -63,10 +63,13 @@ class Publisher
         $content = file_get_contents($file);
 
         $replace = [
-            $namespace                                            => 'Config',
-            'BaseConfig'                                          => 'Bonfire' . $rawClassName,
-            'use CodeIgniter\Config\BaseConfig;'                  => "use {$className} as Bonfire{$rawClassName};",
-            "class {$rawClassName} extends Shield{$rawClassName}" => "class {$rawClassName} extends Bonfire{$rawClassName}",
+            $namespace                                                      => 'Config',
+            'BaseConfig'                                                    => 'Bonfire' . $rawClassName,
+            'use CodeIgniter\Config\BaseConfig;'                            => "use {$className} as Bonfire{$rawClassName};",
+            'use CodeIgniter\Shield\Config\Auth as ShieldAuth;'             => 'use Bonfire\Auth\Config\Auth as BonfireAuth;',
+            'use CodeIgniter\Shield\Config\AuthGroups as ShieldAuthGroups;' => 'use Bonfire\Auth\Config\AuthGroups as BonfireAuthGroups;',
+            'use CodeIgniter\Shield\Config\AuthToken as ShieldAuthToken;'   => 'use Bonfire\Auth\Config\AuthToken as BonfireAuthToken;',
+            "class {$rawClassName} extends Shield{$rawClassName}"           => "class {$rawClassName} extends Bonfire{$rawClassName}",
         ];
 
         if ($className === Assets::class) {
