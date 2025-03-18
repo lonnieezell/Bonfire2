@@ -25,10 +25,11 @@ $widgets = service('widgets');
 $users = new UserModel();
 $statsItem = new StatsItem([
     'bgColor' => 'bg-blue',
-    'title' => 'Users',
-    'value' => $users->countAll(),
-    'url' => ADMIN_AREA . '/users',
-    'faIcon' => 'fa fa-user',
+    'title'   => 'Users',
+    'value'   => $users->countAll(),
+    'id'      => 'countAllUsers643',
+    'url'     => ADMIN_AREA . '/users',
+    'faIcon'  => 'fa fa-user',
 ]);
 $widgets->widget("stats")->collection('stats')->addItem($statsItem);
 ```
@@ -64,7 +65,13 @@ The title of the widget displayed at the top left
 
 **value**
 
-The value of the widget displayed under the title: typically the total number of records
+The value of the widget displayed under the title: typically the total number of records.
+
+However, more elaborate data can be passed as a string, like an html table with tabulated data. See how that is done in `src/Users/Module.php` with a private method `buildTableUsersByGroup()`. **value** can also be passed to the stats item by a standard `addValue()` method, see the same file for an example.
+
+**id**
+
+A uniwue widget ID throughout application (make it descriptive and add extra symbols to make sure the uniqueness).
 
 **url**
 
@@ -74,26 +81,25 @@ The address that displays the list of objects on your module. It will be associa
 
 The FontAwesome icon
 
-
-
 ## Configuration
 
 All settings are available in the `Bonfire\Widgets\Config\Stats` class, or in the admin settings area.
 
-In the administration settings area, you can choose to:
+In the administration settings area, you can also choose to:
 - Display the "View Detail" link
 
 ---
 
-# Charts widget
+## Charts widget
 
 Adding a new chart widget is done in the `initAdmin` method of your `Module.php` file, similar to adding a menu:
 
 ```php
 $statsItem = new ChartsItem([
-    'title'   => 'User classification by group',
-    'type'   => 'line',
-    'cssClass'   => 'col-6',
+    'title'    => 'User classification by group',
+    'type'     => 'line',
+    'id'       => 'usersByGroupLine123',
+    'cssClass' => 'col-6',
 ]);
 $statsItem->addDataset('auth_groups_users', 'group', 'user_id');
 $widgets->widget('charts')->collection('charts')->addItem($statsItem);
@@ -114,6 +120,10 @@ The available options are:
 - pie
 - polarArea
 ```
+
+**id**
+
+A uniwue widget ID throughout application (make it descriptive and add extra symbols to make sure the uniqueness).
 
 **cssClass**
 
@@ -167,6 +177,7 @@ Each type of widget has its own specific settings.
 You can set the default values in the `Bonfire\Widgets\Config\LineChart` Class
 
 In the administration settings area, you can choose to:
+
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -185,6 +196,7 @@ Advanced settings:
 You can set the default values in the `Bonfire\Widgets\Config\BarChart` Class
 
 In the administration settings area, you can choose to:
+
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -198,6 +210,7 @@ In the administration settings area, you can choose to:
 You can set the default values in the `Bonfire\Widgets\Config\DoughnutChart` Class
 
 In the administration settings area, you can choose to:
+
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -211,6 +224,7 @@ In the administration settings area, you can choose to:
 You can set the default values in the `Bonfire\Widgets\Config\PieChart` Class
 
 In the administration settings area, you can choose to:
+
 - Display the title
 - View the legend
 - Choose the location of the legend
@@ -224,6 +238,7 @@ In the administration settings area, you can choose to:
 You can set the default values in the `Bonfire\Widgets\Config\PolarAreaChart` Class
 
 In the administration settings area, you can choose to:
+
 - Display the title
 - View the legend
 - Choose the location of the legend

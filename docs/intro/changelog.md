@@ -4,6 +4,18 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 18 March 2025 (breaking change)
+
+The way widgets are enabled has changed in the database, so if you had widgets enabled before, they will
+all be disabled. To clear the database of the orphaned data about enabled widgets run this in your DB:
+
+```sql
+DELETE FROM `settings`
+WHERE `class` = 'Bonfire\Widgets\Config\Stats' AND `key` LIKE 'Stats_%';
+DELETE FROM `settings`
+WHERE `class` = 'Bonfire\Widgets\Config\Stats' AND `key` LIKE 'Charts_%';
+```
+
 ## 26 February 2025 (breaking change)
 
 Finished implementation of **<x-button\>** component in the Admin theme. Users need to update the
