@@ -33,8 +33,8 @@ final class ChartsTest extends TestCase
         $items = $widget->items();
 
         $this->assertCount(2, $items);
-        $this->assertSame('Item 1', $items[0]->title());
-        $this->assertSame('Item 2', $items[1]->title());
+        $this->assertSame('ITEM 1', $items[0]->title());
+        $this->assertSame('ITEM 2', $items[1]->title());
     }
 
     public function testCreateCollection()

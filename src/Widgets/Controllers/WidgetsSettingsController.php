@@ -113,7 +113,7 @@ class WidgetsSettingsController extends AdminController
         $manager = service('widgets')->manager();
 
         foreach ($manager as $elem) {
-            setting('Stats.' . $elem['widget'] . '_' . $elem['index'], $this->request->getPost($elem['widget'] . '_' . $elem['index']) ?? false);
+            setting('Stats.' . $elem['widget'] . '_' . $elem['id'], $this->request->getPost($elem['widget'] . '_' . $elem['id']) ?? false);
         }
     }
 
@@ -232,7 +232,7 @@ class WidgetsSettingsController extends AdminController
         $manager = service('widgets')->manager();
 
         foreach ($manager as $elem) {
-            setting()->forget('Stats.' . $elem['widget'] . '_' . $elem['index']);
+            setting()->forget('Stats.' . $elem['widget'] . '_' . $elem['id']);
         }
 
         setting()->forget('Stats.stats_showLink');

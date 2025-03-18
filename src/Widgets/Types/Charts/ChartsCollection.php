@@ -41,7 +41,7 @@ class ChartsCollection extends ChartsItem
     }
 
     /**
-     * Adds a single item to the menu.
+     * Adds a single item to collection.
      */
     public function addItem(ChartsItem $item): ChartsCollection
     {

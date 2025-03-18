@@ -6,7 +6,7 @@
             $_widgets = array_filter($manager, static fn ($k) => $k['widget'] === 'Stats', ARRAY_FILTER_USE_BOTH);
 		    ?>
 
-			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['index'])) : ?>
+			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['id'])) : ?>
                 <div class="col-3">
                     <div class="widget-stats <?= $widget->bgColor() ?>">
                         <div class="widget-stats-icon"><i class="<?= $widget->faIcon() ?>"></i></div>

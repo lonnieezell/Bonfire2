@@ -38,20 +38,22 @@ class Module extends BaseModule
 
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');
-        $groups    = setting('AuthGroups.groups');
         $statsItem = new StatsItem([
             'bgColor' => 'bg-teal',
             'title'   => 'User Groups',
-            'value'   => count($groups),
+            'value'   => count(setting('AuthGroups.groups')),
+            'id'      => 'userGroups643',
             'url'     => ADMIN_AREA . '/settings/groups',
             'faIcon'  => 'fa fa-users',
         ]);
+        // alternative way of retrieving group number (groups "in use"):
+        // $statsItem->addValueByFreeQuery('SELECT COUNT(DISTINCT "group") AS groups FROM auth_groups_users;');
         $widgets->widget('stats')->collection('stats')->addItem($statsItem);
 
-        // Chart Section Begin
         $statsItem = new ChartsItem([
             'title'    => 'User classification by group',
             'type'     => 'line',
+            'id'       => 'usersByGroupLine123',
             'cssClass' => 'col-6',
         ]);
         $statsItem->addDataset('auth_groups_users', 'group', 'user_id');
@@ -60,6 +62,7 @@ class Module extends BaseModule
         $statsItem1 = new ChartsItem([
             'title'    => 'User classification by group',
             'type'     => 'bar',
+            'id'       => 'usersByGroupBar345',
             'cssClass' => 'col-6',
         ]);
         $statsItem1->addDataset('auth_groups_users', 'group', 'user_id');
@@ -68,6 +71,7 @@ class Module extends BaseModule
         $statsItem2 = new ChartsItem([
             'title'    => 'User classification by group',
             'type'     => 'doughnut',
+            'id'       => 'usersByGroupDou654',
             'cssClass' => 'col-3',
         ]);
         $statsItem2->addDataset('auth_groups_users', 'group', 'user_id');
@@ -76,6 +80,7 @@ class Module extends BaseModule
         $statsItem3 = new ChartsItem([
             'title'    => 'User classification by group',
             'type'     => 'pie',
+            'id'       => 'usersByGroupPie223',
             'cssClass' => 'col-3',
         ]);
         $statsItem3->addDataset('auth_groups_users', 'group', 'user_id');
@@ -84,6 +89,7 @@ class Module extends BaseModule
         $statsItem4 = new ChartsItem([
             'title'    => 'User classification by group',
             'type'     => 'polarArea',
+            'id'       => 'usersByGroupPiePolar645',
             'cssClass' => 'col-3',
         ]);
         $statsItem4->addDataset('auth_groups_users', 'group', 'user_id');

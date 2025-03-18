@@ -36,7 +36,7 @@ class User extends ShieldUser
             }
         }
 
-        $idString = strtoupper($idString);
+        $idString = mb_strtoupper($idString);
 
         $idValue = str_split($idString);
         array_walk($idValue, static function (&$char) {

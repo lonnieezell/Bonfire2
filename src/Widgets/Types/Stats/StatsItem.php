@@ -18,6 +18,7 @@ use Bonfire\Widgets\Interfaces\Item;
  *
  * @property string $bgColor
  * @property string $faIcon
+ * @property string $id
  * @property string $title
  * @property string $url
  * @property string $value
@@ -28,6 +29,13 @@ class StatsItem implements Item
      * @var string|null
      */
     protected $title;
+
+    /**
+     * Unique identifier for the widget, used for storage in settings.
+     *
+     * @var string
+     */
+    protected $id;
 
     /**
      * @var string|null
@@ -70,6 +78,11 @@ class StatsItem implements Item
      */
     protected $bgColor;
 
+    /**
+     * @var bool
+     */
+    protected $dashboardRoute = false;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -82,11 +95,21 @@ class StatsItem implements Item
                 $this->{$method}($value);
             }
         }
+
+        // true if we are on Dashboard page
+        $this->dashboardRoute = current_url() === config('App')->baseURL . '/' . ADMIN_AREA;
     }
 
     public function setTitle(?string $title): StatsItem
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function setId(?string $id): StatsItem
+    {
+        $this->id = $id;
 
         return $this;
     }
@@ -152,7 +175,12 @@ class StatsItem implements Item
 
     public function title(): ?string
     {
-        return strtoupper($this->title);
+        return mb_strtoupper((string) $this->title);
+    }
+
+    public function id(): ?string
+    {
+        return $this->id;
     }
 
     public function value(): ?string
@@ -173,5 +201,62 @@ class StatsItem implements Item
     public function bgColor(): ?string
     {
         return $this->bgColor;
+    }
+
+    public function addValue(string $tableName, ?string $whereString = null, string $selectMode = 'count'): StatsItem
+    {
+        // Check if we are on Dashboard page and the chart is enabled
+        if (! $this->dashboardRoute || setting('Stats.Stats_' . $this->id) !== 'on') {
+            return $this;
+        }
+
+        // Chart Section Begin
+        $query = db_connect()->table($tableName);
+        $query->where('deleted_at', null);
+        if ($whereString) {
+            $query->where($whereString);
+        }
+
+        $query = match ($selectMode) {
+            'count' => $query->countAllResults(),
+            'avg'   => $query->selectAvg('value')->get()->getRow()->value,
+            'max'   => $query->selectMax('value')->get()->getRow()->value,
+            'min'   => $query->selectMin('value')->get()->getRow()->value,
+            'sum'   => $query->selectSum('value')->get()->getRow()->value,
+            default => $query->countAllResults(),
+        };
+
+        // Check if the result is a float and format accordingly
+        if (is_float($query)) {
+            // todo: format the value dynamically based on locale
+            $this->setValue(number_format($query, 2, '.', ''));
+        } else {
+            $this->setValue((string) $query);
+        }
+
+        return $this;
+    }
+
+    public function addValueByFreeQuery(string $query): StatsItem
+    {
+        // Check if we are on Dashboard page and the chart is enabled
+        if (! $this->dashboardRoute || setting('Stats.Stats_' . $this->id) !== 'on') {
+            return $this;
+        }
+
+        // Execute the query
+        $result = db_connect()->query($query)->getRow();
+
+        // Assuming the query returns a single value in the first column
+        $value = reset($result);
+
+        // Check if the result is a float and format accordingly
+        if (is_float($value)) {
+            $this->setValue(number_format($value, 2, '.', ''));
+        } else {
+            $this->setValue((string) $value);
+        }
+
+        return $this;
     }
 }

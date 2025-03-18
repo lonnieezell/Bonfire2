@@ -26,7 +26,7 @@ final class ChartsItemTest extends TestCase
             ->setType('line')
             ->setCssclass('col-3');
 
-        $this->assertSame('Item A', $item->title());
+        $this->assertSame('ITEM A', $item->title());
         $this->assertSame('line', $item->type());
         $this->assertSame('col-3', $item->cssClass());
     }
@@ -39,7 +39,7 @@ final class ChartsItemTest extends TestCase
             'cssClass' => 'col-3',
         ]);
 
-        $this->assertSame('Item A', $item->title());
+        $this->assertSame('ITEM A', $item->title());
         $this->assertSame('line', $item->type());
         $this->assertSame('col-3', $item->cssClass());
     }

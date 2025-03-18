@@ -44,7 +44,7 @@ class StatsCollection extends StatsItem
     }
 
     /**
-     * Adds a single item to the menu.
+     * Adds a single item to collection.
      */
     public function addItem(StatsItem $item): StatsCollection
     {
