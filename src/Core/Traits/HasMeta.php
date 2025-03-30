@@ -224,16 +224,16 @@ trait HasMeta
             return;
         }
 
+        $inserts = [];
+        $updates = [];
+        $deletes = [];
+        // Keep only these fields = delete orphaned
+        $legal = [];
+
         foreach ($metaInfo as $fields) {
             if (! is_array($fields) || $fields === []) {
                 continue;
             }
-
-            $inserts = [];
-            $updates = [];
-            $deletes = [];
-            // Keep only these fields
-            $legal = [];
 
             foreach (array_keys($fields) as $field) {
                 $field    = strtolower($field);
