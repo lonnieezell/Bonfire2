@@ -4,6 +4,7 @@ namespace Tests\Groups;
 
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Authorization\Groups;
+use CodeIgniter\Shield\Entities\Group;
 use Tests\Support\TestCase;
 
 /**
@@ -70,6 +71,7 @@ final class GroupsTest extends TestCase
     {
         $groups = new Groups();
         $group  = $groups->info('admin');
+        $this->assertInstanceof(Group::class, $group);
 
         $this->assertTrue($group->can('beta.access'));
 
@@ -85,9 +87,11 @@ final class GroupsTest extends TestCase
 
         // Page title
         $result->assertRedirect();
+        $this->assertInstanceof(Group::class, $group);
 
         // Refresh the group
         $group = $groups->info('admin');
+        $this->assertInstanceof(Group::class, $group);
 
         $this->assertFalse($group->can('beta.access'));
     }
