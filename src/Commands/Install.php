@@ -16,6 +16,7 @@ use Bonfire\Auth\Config\Auth;
 use Bonfire\Auth\Config\AuthGroups;
 use Bonfire\Auth\Config\AuthToken;
 use Bonfire\Commands\Install\Publisher;
+use Bonfire\Config\Alerts;
 use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
 use Bonfire\Config\Themes;
@@ -85,6 +86,7 @@ class Install extends BaseCommand
     ];
 
     private array $configFiles = [
+        Alerts::class,
         Assets::class,
         Auth::class,
         AuthGroups::class,

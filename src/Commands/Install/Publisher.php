@@ -69,6 +69,8 @@ class Publisher
             'use CodeIgniter\Shield\Config\Auth as ShieldAuth;'             => 'use Bonfire\Auth\Config\Auth as BonfireAuth;',
             'use CodeIgniter\Shield\Config\AuthGroups as ShieldAuthGroups;' => 'use Bonfire\Auth\Config\AuthGroups as BonfireAuthGroups;',
             'use CodeIgniter\Shield\Config\AuthToken as ShieldAuthToken;'   => 'use Bonfire\Auth\Config\AuthToken as BonfireAuthToken;',
+            'use Tatter\Alerts\Config\Alerts as AlertsConfig;'              => 'use Bonfire\Config\Alerts as BonfireAlerts;',
+            'class Alerts extends AlertsConfig'                             => 'class Alerts extends BonfireAlerts',
             "class {$rawClassName} extends Shield{$rawClassName}"           => "class {$rawClassName} extends Bonfire{$rawClassName}",
         ];
 
