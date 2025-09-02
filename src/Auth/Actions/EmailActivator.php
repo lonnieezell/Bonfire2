@@ -88,10 +88,8 @@ class EmailActivator extends ShieldEmailActivator
 
     /**
      * This method is unused.
-     *
-     * @return Response|string
      */
-    public function handle(IncomingRequest $request)
+    public function handle(IncomingRequest $request): never
     {
         throw new PageNotFoundException();
     }
