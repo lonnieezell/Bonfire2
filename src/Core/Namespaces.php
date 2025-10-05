@@ -52,7 +52,6 @@ class Namespaces
         // Insert the namespaces into the psr4 array in the autoloader
         // to ensure that Bonfire's files get loader prior to vendor files
         $rp = new ReflectionProperty($autoloader, 'prefixes');
-        $rp->setAccessible(true);
 
         $prefixes = $rp->getValue($autoloader);
         $keys     = array_keys($prefixes);

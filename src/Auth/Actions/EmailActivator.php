@@ -8,7 +8,6 @@ use Bonfire\View\Themeable;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator as ShieldEmailActivator;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;

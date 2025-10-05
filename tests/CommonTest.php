@@ -18,17 +18,6 @@ final class CommonTest extends TestCase
         helper('setting');
     }
 
-    public static function provideAppDate(): iterable
-    {
-        return [
-            ['m/d/Y', 'g:i A', false, '01/15/2021'],
-            ['m/d/Y', 'g:i A', true, '01/15/2021 3:32 PM'],
-            ['m/d/Y', 'H:i', true, '01/15/2021 15:32'],
-            ['d/m/Y', 'g:i A', false, '15/01/2021'],
-            ['M j, Y', 'g:i A', false, 'Jan 15, 2021'],
-        ];
-    }
-
     #[DataProvider('provideAppDate')]
     public function testAppDate(string $format, string $timeFormat, bool $includeTime, string $expected)
     {
@@ -39,5 +28,16 @@ final class CommonTest extends TestCase
         setting('App.timeFormat', $timeFormat);
 
         $this->assertSame($expected, \app_date($time, $includeTime));
+    }
+
+    public static function provideAppDate(): iterable
+    {
+        return [
+            ['m/d/Y', 'g:i A', false, '01/15/2021'],
+            ['m/d/Y', 'g:i A', true, '01/15/2021 3:32 PM'],
+            ['m/d/Y', 'H:i', true, '01/15/2021 15:32'],
+            ['d/m/Y', 'g:i A', false, '15/01/2021'],
+            ['M j, Y', 'g:i A', false, 'Jan 15, 2021'],
+        ];
     }
 }

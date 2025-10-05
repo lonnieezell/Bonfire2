@@ -84,7 +84,7 @@ class MenuItem
         }
 
         foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
+            $method = 'set' . ucfirst((string) $key);
             if (method_exists($this, $method)) {
                 $this->{$method}($value);
             }
