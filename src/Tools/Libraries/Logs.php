@@ -118,7 +118,7 @@ class Logs
 
         // Count occurrences of each level
         foreach ($levels as $level) {
-            $counts[$level] = substr_count($fileContent, $level);
+            $counts[$level] = substr_count($fileContent, (string) $level);
         }
 
         // Remove entries with value 0

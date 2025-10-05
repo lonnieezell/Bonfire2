@@ -236,7 +236,7 @@ trait HasMeta
             }
 
             foreach (array_keys($fields) as $field) {
-                $field    = strtolower($field);
+                $field    = strtolower((string) $field);
                 $existing = array_key_exists($field, $this->meta);
                 // add to keep list
                 $legal[] = $field;
