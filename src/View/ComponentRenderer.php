@@ -96,7 +96,7 @@ class ComponentRenderer
             $component  = $this->factory($match['name'], $view);
 
             return $component instanceof Component
-                ? $component->withView($view)->render()
+                ? $component->withView($view)->withData($attributes)->render()
                 : $this->renderView($view, $attributes);
         }, $output);
     }
