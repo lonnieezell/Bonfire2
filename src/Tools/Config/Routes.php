@@ -2,9 +2,7 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
+/** @var RouteCollection $routes */
 $routes->group(ADMIN_AREA . '/tools', ['namespace' => '\Bonfire\Tools\Controllers'], static function ($routes) {
     $routes->get('system-info', '\Bonfire\Tools\Controllers\SystemInfoController::index', ['as' => 'sys-info']);
     $routes->get('php-info', '\Bonfire\Tools\Controllers\SystemInfoController::phpInfo');

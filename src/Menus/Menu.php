@@ -28,14 +28,14 @@ class Menu
      * Holds all Menu items or Menu collections that appear at
      * top level in this menu.
      *
-     * @var list<(MenuCollection | MenuItem)>
+     * @var list<(MenuCollection|MenuItem)>
      */
     protected array $items = [];
 
     /**
      * Returns all Menu items or Menu collections in the menu.
      *
-     * @return list<(MenuCollection | MenuItem)>
+     * @return list<(MenuCollection|MenuItem)>
      */
     public function items(): array
     {

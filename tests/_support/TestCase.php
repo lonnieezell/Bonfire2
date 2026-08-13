@@ -73,9 +73,7 @@ abstract class TestCase extends CIUnitTestCase
 
         unset($params['email'], $params['password']);
 
-        /**
-         * @var User $user
-         */
+        /** @var User $user */
         $user = fake(UserModel::class, $params);
         $user->createEmailIdentity([
             'email'    => $email,

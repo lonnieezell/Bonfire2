@@ -103,7 +103,5 @@ helper('url');
 $routes = service('routes');
 require_once APPPATH . 'Config/Routes.php';
 
-/**
- * @var RouteCollection $routes
- */
+/** @var RouteCollection $routes */
 $routes->getRoutes('*');

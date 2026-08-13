@@ -102,7 +102,7 @@ if (! defined('asset')) {
         } elseif ($config->bustingType === 'version') { // Asset version-based cache-busting
             $fingerprint = match (ENVIRONMENT) {
                 'testing', 'development' => $separator . time(),
-                default => $separator . $config->versions[$type],
+                default                  => $separator . $config->versions[$type],
             };
         } elseif ($config->bustingType === 'file') { // Mod time-based cache-busting
             $filetime = filemtime($path);

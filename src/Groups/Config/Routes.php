@@ -2,9 +2,7 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
+/** @var RouteCollection $routes */
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Groups\Controllers'], static function ($routes) {
     $routes->get('settings/groups', 'GroupSettingsController::list', ['as' => 'user-group-settings']);
     $routes->post('settings/groups', 'GroupSettingsController::save');

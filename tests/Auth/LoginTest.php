@@ -31,9 +31,7 @@ final class LoginTest extends TestCase
 
     public function testLoginSuccess()
     {
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = fake(UserModel::class);
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
 
@@ -50,9 +48,7 @@ final class LoginTest extends TestCase
 
     public function testLoginSuccessAdmin()
     {
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = fake(UserModel::class);
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
         $user->addGroup('superadmin');
@@ -105,9 +101,7 @@ final class LoginTest extends TestCase
             'register' => null,
         ]);
 
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = fake(UserModel::class);
         $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
 

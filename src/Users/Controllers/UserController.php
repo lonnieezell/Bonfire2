@@ -130,9 +130,7 @@ class UserController extends AdminController
         }
 
         $users = new UserModel();
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = $userId !== null
             ? $users->find($userId)
             : new User();
@@ -293,9 +291,7 @@ class UserController extends AdminController
         }
 
         $users = new UserModel();
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = $userId !== null
             ? $users->find($userId)
             : new User();
@@ -489,9 +485,7 @@ class UserController extends AdminController
         // check if the user should be permitted access
 
         $users = new UserModel();
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = $users->find($userId);
 
         if (auth()->user()->can('users.edit') || $itsMe) {

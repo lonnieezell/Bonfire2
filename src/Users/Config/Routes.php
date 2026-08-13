@@ -2,9 +2,7 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
+/** @var RouteCollection $routes */
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static function ($routes) {
     // User Settings
     $routes->get('settings/users', 'UserSettingsController::index', ['as' => 'user-settings']);
