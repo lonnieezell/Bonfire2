@@ -91,7 +91,7 @@ class UserFilter extends UserModel
         if (isset($params['banned']) && count($params['banned'])) {
             $this->groupStart();
             if (isset($params['banned'][0])) {
-                $this->where('users.status', null);
+                $this->where('users.status');
             }
             if (isset($params['banned'][1])) {
                 $this->orWhere('users.status', 'banned');
@@ -102,9 +102,9 @@ class UserFilter extends UserModel
         if (isset($params['last_active']) && is_numeric($params['last_active'])) {
             $this->where('last_active >=', Time::now()->subDays($params['last_active'])->toDateTimeString());
         } elseif (isset($params['last_active']) && $params['last_active'] === 'any') {
-            $this->where('last_active !=', null);
+            $this->where('last_active !=');
         } elseif (isset($params['last_active']) && $params['last_active'] === 'never') {
-            $this->where('last_active', null);
+            $this->where('last_active');
         }
         // omitting 'where' for $params['last_active'] == 'all'
 

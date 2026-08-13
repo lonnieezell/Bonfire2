@@ -6,7 +6,7 @@ use RuntimeException;
 
 class Metadata
 {
-    private string $title     = '';
+    private string $title;
     private array $meta       = [];
     private array $link       = [];
     private array $script     = [];

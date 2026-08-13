@@ -212,7 +212,7 @@ class StatsItem implements Item
 
         // Chart Section Begin
         $query = db_connect()->table($tableName);
-        $query->where('deleted_at', null);
+        $query->where('deleted_at');
         if ($whereString) {
             $query->where($whereString);
         }
