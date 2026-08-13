@@ -30,8 +30,8 @@ class WidgetCells
         $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-interpolate@3']);
         $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3']);
         $meta->addScript([
-            'src'            => 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js',
-            'integrity'      => 'sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==',
+            'src'            => 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js',
+            'integrity'      => 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ',
             'crossorigin'    => 'anonymous',
             'referrerpolicy' => 'no-referrer',
         ]);
