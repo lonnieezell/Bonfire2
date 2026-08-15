@@ -91,10 +91,10 @@
                             <div class="form-group col-12 col-sm-3">
                                 <label for="SMTPPort" class="form-label">Port</label>
                                 <select name="SMTPPort" class="form-select">
-                                    <option value="25" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '25') : ?> selected <?php endif?>>25</option>
-                                    <option value="587" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '587') : ?> selected <?php endif?>>587</option>
-                                    <option value="465" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '465') : ?> selected <?php endif?>>465</option>
-                                    <option value="2525" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '2525') : ?> selected <?php endif?>>2525</option>
+                                    <option value="25" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 25) : ?> selected <?php endif?>>25</option>
+                                    <option value="587" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 587) : ?> selected <?php endif?>>587</option>
+                                    <option value="465" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 465) : ?> selected <?php endif?>>465</option>
+                                    <option value="2525" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 2525) : ?> selected <?php endif?>>2525</option>
                                     <option value="other" @click="open = ! open" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 'other') : ?> selected <?php endif?>>other</option>
                                 </select>
                                 <?php if (has_error('SMTPPort')) : ?>
