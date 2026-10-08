@@ -4,6 +4,16 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 8 October 2026
+
+The rules for who may edit, ban, delete or assign groups and permissions to whom in the Users admin now live in one
+place (`Bonfire\Users\Libraries\UserAccess`), and the views and the controller both use it. If you have published
+your own copy of the Users views `form.php`, `permissions.php` or `_table.php`, they now receive an `$access` variable
+(a `UserAccess` instance) instead of working out these rules themselves. Avatar storage moved to `AvatarStorage`.
+
+Fixes: purging several users at once now removes the avatar and meta info of every purged user, not only the first.
+A user with `users.edit` but without `me.edit` can no longer ban themselves.
+
 ## 18 March 2025 (breaking change)
 
 The way widgets are enabled has changed in the database, so if you had widgets enabled before, they will

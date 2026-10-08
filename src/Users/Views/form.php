@@ -100,13 +100,7 @@ $this->extend('master') ?>
                 <div x-data="{ isChecked: <?= $user->isBanned() ? 'true' : 'false' ?> }">
                     <input type="hidden" name="ban" value="0">
                     <input class="form-check-input" type="checkbox" name="ban" id="ban" value="1" x-model="isChecked"
-                        <?php if (
-                            $itsMe
-                            || (
-                                ! auth()->user()->can('users.manage-admins')
-                                && $user->inGroup('admin', 'superadmin')
-                            )
-                        ) : ?>
+                        <?php if (! $access->canBan($user)) : ?>
                     disabled
                     <?php endif; ?>
                     >
@@ -123,9 +117,9 @@ $this->extend('master') ?>
             <fieldset>
                 <legend><?= lang('Users.groups') ?></legend>
 
-                <?php if (auth()->user()->can('users.edit')) : ?>
+                <?php if ($access->canEditUsers()) : ?>
                 <p><?= lang('Users.selectGroups') ?>
-                    <?php if(! auth()->user()->can('users.manage-admins')) : ?>
+                    <?php if(! $access->canManageAdmins()) : ?>
                         <?= lang('Users.cannotAddAdminGroups') ?>.
                     <?php endif; ?>
                 </p>
@@ -143,10 +137,7 @@ $this->extend('master') ?>
                                     <?php if (in_array($group, $oldGroups)) : ?>
                                         checked
                                     <?php endif ?>
-                                    <?php if (
-                                        ! auth()->user()->can('users.manage-admins')
-                                        && in_array($group, ['admin','superadmin'])
-                                    ) : ?> disabled
+                                    <?php if (! $access->canAssignGroup($group)) : ?> disabled
                                     <?php endif ?>
                                 >
                                 <label for="group_<?= $group ?>" class="form-check-label">

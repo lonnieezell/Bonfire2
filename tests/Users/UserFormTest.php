@@ -37,37 +37,44 @@ final class UserFormTest extends TestCase
         $result->assertSee($this->user->email);
     }
 
-    /*
-     * Will have to revisit later. SQLite is
-     * being dumb, even though manual testing
-     * shows this works.
-     */
-    //    public function testCanEditUser()
-    //    {
-    //        // Open the Edit User page
-    //        $result = $this->actingAs($this->user)
-    //            ->get('/admin/users/'. $this->user->id);
-    //
-    //        $result->assertOK();
-    //        $result->assertSee('Edit User');
-    //        $result->assertSee($this->user->email);
-    //
-    //        // Save the form
-    //        $result = $this->actingAs($this->user)
-    //            ->post("/admin/users/{$this->user->id}/save", [
-    //                'email' => $this->user->email,
-    //                'username' => 'Freddy',
-    //                'first_name' => 'Fred',
-    //                'last_name' => 'Flintstone',
-    //                'groups' => ['beta']
-    //            ]);
-    //
-    //        $result->assertRedirect();
-    //
-    //        $this->seeInDatabase('users', [
-    //            'id' => $this->user->id,
-    //            'first_name' => 'Fred',
-    //            'last_name' => 'Flintstone'
-    //        ]);
-    //    }
+    public function testCanEditUser()
+    {
+        // Open the Edit User page
+        $result = $this->actingAs($this->user)
+            ->get('/admin/users/' . $this->user->id);
+
+        $result->assertOK();
+        $result->assertSee('Edit User');
+        $result->assertSee($this->user->email);
+
+        // Save the form
+        $result = $this->actingAs($this->user)
+            ->post("/admin/users/{$this->user->id}/save", [
+                'id'         => $this->user->id,
+                'email'      => $this->user->email,
+                'username'   => 'Freddy',
+                'first_name' => 'Fred',
+                'last_name'  => 'Flintstone',
+                'groups'     => ['beta'],
+            ]);
+
+        $result->assertRedirect();
+
+        $this->seeInDatabase('users', [
+            'id'         => $this->user->id,
+            'first_name' => 'Fred',
+            'last_name'  => 'Flintstone',
+        ]);
+    }
+
+    public function testCanChangePassword()
+    {
+        $result = $this->actingAs($this->user)
+            ->post("/admin/users/{$this->user->id}/changePassword", [
+                'password'     => 'a-Very-Long-Passw0rd-42!',
+                'pass_confirm' => 'a-Very-Long-Passw0rd-42!',
+            ]);
+
+        $result->assertRedirectTo(site_url("admin/users/{$this->user->id}/security"));
+    }
 }

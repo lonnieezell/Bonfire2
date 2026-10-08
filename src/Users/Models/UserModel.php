@@ -2,6 +2,7 @@
 
 namespace Bonfire\Users\Models;
 
+use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Models\UserModel as ShieldUsers;
 use Faker\Generator;
@@ -52,7 +53,7 @@ class UserModel extends ShieldUsers
     }
 
     /**
-     * Event-triggered method to delete user avatar if the user is being purged
+     * Event-triggered method to delete user avatars if the users are being purged
      * from the system
      */
     public function deleteAvatar(array $data): array
@@ -62,28 +63,18 @@ class UserModel extends ShieldUsers
             return $data;
         }
 
-        $user = $this->withDeleted()->find($data['id'][0]); // Retrieve the entity
+        $storage = new AvatarStorage();
 
-        if (! $user) {
-            return $data;
-        }
-
-        /** @phpstan-ignore-next-line  TODO: any better way of accessing $avatar on user objet? It works, but phpstan complains */
-        $userAvatar = $user->avatar;
-
-        $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
-        if (
-            ! empty($userAvatar)
-            && file_exists($avatarDir . '/' . $userAvatar)
-        ) {
-            @unlink($avatarDir . '/' . $userAvatar);
+        foreach ($this->purgedUsers($data) as $user) {
+            /** @phpstan-ignore-next-line  TODO: any better way of accessing $avatar on user objet? It works, but phpstan complains */
+            $storage->delete($user->avatar);
         }
 
         return $data;
     }
 
     /**
-     * Event-triggered method to delete user meta info if the user is being purged
+     * Event-triggered method to delete user meta info if the users are being purged
      * from the system
      */
     public function deleteMeta(array $data): array
@@ -93,16 +84,24 @@ class UserModel extends ShieldUsers
             return $data;
         }
 
-        $user = $this->withDeleted()->find($data['id'][0]); // Retrieve the entity
-
-        if (! $user) {
-            return $data;
-        }
-
-        if (! empty($user->allMeta())) {
-            $user->deleteResourceMeta();
+        foreach ($this->purgedUsers($data) as $user) {
+            if (! empty($user->allMeta())) {
+                $user->deleteResourceMeta();
+            }
         }
 
         return $data;
+    }
+
+    /**
+     * @return list<User>
+     */
+    private function purgedUsers(array $data): array
+    {
+        if (empty($data['id'])) {
+            return [];
+        }
+
+        return $this->withDeleted()->find($data['id']);
     }
 }
