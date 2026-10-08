@@ -96,8 +96,20 @@ if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'co
 }
 ```
 
-In your own tests you can make that answer yes or no without faking the URL by injecting the service:
-`Services::injectMock('dashboardContext', $yourDashboardContext)`.
+In your own tests you can make that answer yes or no without faking the URL by injecting a subclass of
+`Bonfire\Widgets\DashboardContext` that overrides `isDashboard()`:
+
+```php
+use Bonfire\Widgets\DashboardContext;
+use Config\Services;
+
+Services::injectMock('dashboardContext', new class () extends DashboardContext {
+    public function isDashboard(): bool
+    {
+        return true;
+    }
+});
+```
 
 ## Configuration
 

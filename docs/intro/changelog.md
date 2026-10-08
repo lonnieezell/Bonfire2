@@ -4,7 +4,7 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 8 October 2026
+## 8 October 2026 (breaking change)
 
 Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
 `Bonfire\Widgets`: `ItemSettings` (the enabled flag of an item), `DashboardContext` (are we on the dashboard, and does
@@ -16,7 +16,8 @@ or the widgets `settings.php` view, note that they no longer receive `$manager` 
 been replaced by `Manager::items()`. Ask each item for `$item->settings()->enabled()` instead.
 
 Widget items now also report an item's settings through `settings()`, which is part of the `Item` interface. If you
-wrote your own item class, add it. `StatsItem::addValue()`, `addValueByFreeQuery()` and `ChartsItem::addDataset()` still
+wrote your own item class implementing `Bonfire\Widgets\Interfaces\Item`, add `settings(): ItemSettings` to it. The
+protected `$dashboardRoute` property of `StatsItem` and `ChartsItem` is gone. `StatsItem::addValue()`, `addValueByFreeQuery()` and `ChartsItem::addDataset()` still
 only run their query on the dashboard when the item is enabled, and the check can now be swapped in tests through
 `service('dashboardContext')`.
 
