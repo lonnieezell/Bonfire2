@@ -512,6 +512,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#8-october-2026-breaking-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1479,6 +1490,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#8-october-2026-breaking-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1632,6 +1654,25 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="8-october-2026-breaking-change">8 October 2026 (breaking change)</h2>
+<p>The Recycler no longer guesses at what a model can do by checking <code>method_exists()</code>. A model that customizes the
+Recycler must now implement the matching interface from <code>Bonfire\Recycler\Interfaces</code>: <code>CustomRecyclerQuery</code>
+(<code>setupRecycler(): Model</code>), <code>CustomRecyclerRestore</code> (<code>recyclerRestore(int $id): bool</code>) and <code>CustomRecyclerPurge</code>
+(<code>recyclerPurge(int $id): bool</code>). Methods with those names on a model that does not implement the interface are no
+longer called. Without a custom hook, the Recycler now uses the model's own primary key and soft delete field instead of
+assuming <code>id</code> and <code>deleted_at</code>, and refuses to restore or purge a record that is not in the Recycler.</p>
+<p>Modules now register their recyclable resources with <code>service('recycler')-&gt;register()</code> from <code>initAdmin()</code>, instead of
+editing <code>Config\Recycler::$resources</code>. The Users module registers <code>users</code> this way, so <code>$resources</code> is empty by default;
+entries you already have in your own <code>Config\Recycler</code> keep working and take precedence over a module's. If you publish
+the Recycler <code>listResource</code> view, it now receives <code>RecyclableResource</code> objects as <code>$resources</code> and <code>$currentResource</code>
+(use <code>-&gt;label()</code>, <code>-&gt;columns()</code>, <code>-&gt;localizedColumns()</code>, <code>-&gt;alias()</code>) and no longer receives <code>$currentAlias</code>.</p>
+<p>The logs in the Tools area are now read and deleted through <code>Bonfire\Tools\Libraries\LogStore</code>, which only accepts
+file names like <code>log-2024-01-31</code>. <code>Logs::getAdjacentLogFiles()</code> moved to <code>LogStore::neighbours()</code> and
+<code>Logs::paginateLogs()</code> takes the page as its third argument instead of reading <code>$_GET</code>. If you publish the logs list
+view, each log now has a <code>name</code> (without extension) instead of a <code>filename</code>.</p>
+<p>Fixes: viewing and deleting logs now requires the <code>logs.view</code> and <code>logs.manage</code> permissions; before, any user with
+<code>admin.access</code> could read and delete the logs by calling the URLs directly. "Delete all" now removes only the log
+files. The levels count in the logs list counts entries instead of every occurrence of a level's name in a message.</p>
+<h2 id="8-october-2026-breaking-change_1">8 October 2026 (breaking change)</h2>
 <p>Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
 <code>Bonfire\Widgets</code>: <code>ItemSettings</code> (the enabled flag of an item), <code>DashboardContext</code> (are we on the dashboard, and does
 this item show) and <code>WidgetOptions</code> (the options of the Stats widget and of each chart type). The settings keys stored

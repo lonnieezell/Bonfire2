@@ -1248,6 +1248,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changing-how-a-model-is-recycled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing How A Model Is Recycled
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changing How A Model Is Recycled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#modifying-the-recycler-query" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1257,8 +1269,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#overriding-the-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1268,8 +1280,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#overriding-the-purge" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1277,6 +1289,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1457,6 +1474,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changing-how-a-model-is-recycled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing How A Model Is Recycled
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changing How A Model Is Recycled">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#modifying-the-recycler-query" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1466,8 +1495,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#overriding-the-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1477,8 +1506,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#overriding-the-purge" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1486,6 +1515,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1569,7 +1603,22 @@ The models for these resources must have <strong>soft deletes</strong> enabled. 
 protected $useSoftDeletes = true;</code></pre>
 <h2 id="registering-a-resource">Registering A Resource</h2>
 <p>The Recycler must be told which models it should display. You do not need to do anything special with a model
-before registering. You can specify models within <code>app/Config/Recycler.php</code>: </p>
+before registering. A module registers its resources in the <code>initAdmin()</code> method of its <code>Module.php</code>: </p>
+<pre class="highlight"><code class="language-php">public function initAdmin()
+{
+    service('recycler')-&gt;register('photos', 'Photos', PhotoModel::class, [
+        'title', 'caption',
+    ]);
+}</code></pre>
+<p>The arguments are, in order:</p>
+<p><strong>alias</strong> is what you would use to specify the default resource to show when visiting the Recycler, and is part of
+the URLs for restoring and purging.</p>
+<p><strong>label</strong> is the name as it should be displayed to the users. </p>
+<p><strong>model</strong> is the fully qualified classname of the model to get this resource's data from.</p>
+<p><strong>columns</strong> is an array of database column names for this resource that will be displayed on the Recycler table. 
+This information should only be what is needed to allow someone to find the correct record. </p>
+<p>An app can also add a resource, or replace how a module's resource is displayed, within <code>app/Config/Recycler.php</code>. 
+An entry here wins over a module's registration with the same alias:</p>
 <pre class="highlight"><code class="language-php">public $resources = [
     'users' =&gt; [
         'label' =&gt; 'Users',
@@ -1579,12 +1628,6 @@ before registering. You can specify models within <code>app/Config/Recycler.php<
         ]
     ],
 ];</code></pre>
-<p>The key of the array is the alias that you would use to specify the default resource to show when visiting the
-Recycler. Each entry must contain an array that gives additional information that allows it to be displayed. </p>
-<p><strong>label</strong> is the name as it should be displayed to the users. </p>
-<p><strong>model</strong> is the fully qualified classname of the model to get this resource's data from.</p>
-<p><strong>columns</strong> is an array of database column names for this resource that will be displayed on the Recycler table. 
-This information should only be what is needed to allow someone to find the correct record. </p>
 <h2 id="localization-of-column-names-in-recycler">Localization of Column names in Recycler</h2>
 <p>To localize the column names, an array <code>recycler</code> should be created in the module's language file, named after the <code>$resource['label']</code> value (with the <code>.php</code> extension (in case of label 'Users' – Users.php). The array should have sub-keys <code>label</code> and <code>columns</code>, with each column name corresponding <code>$resource['columns']</code> array value. Example for module Users:</p>
 <pre class="highlight"><code class="language-php">    'recycler' =&gt; [
@@ -1598,43 +1641,52 @@ This information should only be what is needed to allow someone to find the corr
         ],
     ],</code></pre>
 <p>If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.</p>
-<h2 id="modifying-the-recycler-query">Modifying the Recycler Query</h2>
-<p>When the Recycler displays its records, it does a paginated search of deleted resources on the table specified
-within the model. The results are ordered by the deteted at date and returned as arrays.</p>
-<p>There will be times when you need to modify this query. While the basics mentioned above cannot be changed without
-breaking functionality, you can add requirements, or specify the fields to select, etc. This can be achieved by
-creating a new method on the model, <code>setupRecycler</code>. This doesn't take any arguments, and should return the modified
-model. </p>
+<h2 id="changing-how-a-model-is-recycled">Changing How A Model Is Recycled</h2>
+<p>The Recycler does three things with a resource: it lists the deleted records, restores one, and purges one. 
+By default it lists the records through the model's soft delete field, ordered by the date they were deleted and
+returned as arrays; restores by setting that field to <code>null</code>; and purges by deleting the record through the model. It 
+uses the primary key and soft delete field of the model, whatever they are called. It will only restore or purge a 
+record that is in the Recycler.</p>
+<p>To change any of the three, have the model implement the matching interface from <code>Bonfire\Recycler\Interfaces</code>.
+Implement only the ones you need. A method with the right name on a model that does not implement the interface is not
+called.</p>
+<h3 id="modifying-the-recycler-query">Modifying the Recycler Query</h3>
+<p>While the basics mentioned above cannot be changed without breaking functionality, you can add requirements, or 
+specify the fields to select, etc. Implement <code>CustomRecyclerQuery</code> and its <code>setupRecycler()</code> method. It doesn't take
+any arguments, and should return the modified model. </p>
 <p>Here is an example from the <code>UserModel</code> that pulls in the <code>email</code> field from the <code>auth_identities</code> table.  </p>
-<pre class="highlight"><code class="language-php">public function setupRecycler()
+<pre class="highlight"><code class="language-php">class UserModel extends ShieldUsers implements CustomRecyclerQuery
 {
-    return $this-&gt;select("users.*, 
-        (SELECT secret 
-            from auth_identities 
-            where user_id = users.id
-                and type = 'email_password'
-            order by last_used_at desc 
-            limit 1
-        ) as email
-   ");
+    public function setupRecycler(): static
+    {
+        return $this-&gt;select("users.*, 
+            (SELECT secret 
+                from auth_identities 
+                where user_id = users.id
+                    and type = 'email_password'
+                order by last_used_at desc 
+                limit 1
+            ) as email
+       ");
+    }
 }</code></pre>
-<h2 id="overriding-the-restore">Overriding the Restore</h2>
+<h3 id="overriding-the-restore">Overriding the Restore</h3>
 <p>You may override the default handling of the restore process if you have needs outside simply setting the 
-<code>deleted_at</code> date to <code>null</code>. You can do this by providing a method named <code>recyclerRestore()</code> to the model. 
-This method only accepts a single argument: the record primary key. </p>
-<pre class="highlight"><code class="language-php">public function recyclerRestore(int $id) 
+<code>deleted_at</code> date to <code>null</code>. Implement <code>CustomRecyclerRestore</code> and its <code>recyclerRestore()</code> method. 
+It only accepts a single argument, the record primary key, and returns whether the record was restored. </p>
+<pre class="highlight"><code class="language-php">public function recyclerRestore(int $id): bool
 {
     return $this-&gt;where('id', $id)
         -&gt;set('deleted_at', null)
         -&gt;update();
 }</code></pre>
-<h2 id="overriding-the-purge">Overriding the Purge</h2>
-<p>You may override the default handling of the purge process if you have needs outside simply setting the
-deleting the record. You can do this by providing a method named <code>recyclerPurge()</code> to the model.
-This method only accepts a single argument: the record primary key.</p>
-<pre class="highlight"><code class="language-php">public function recyclerPurge(int $id) 
+<h3 id="overriding-the-purge">Overriding the Purge</h3>
+<p>You may override the default handling of the purge process if you have needs outside simply deleting the record. 
+Implement <code>CustomRecyclerPurge</code> and its <code>recyclerPurge()</code> method.
+It only accepts a single argument, the record primary key, and returns whether the record was purged.</p>
+<pre class="highlight"><code class="language-php">public function recyclerPurge(int $id): bool
 {
-    return $this-&gt;delete($id, true);
+    return (bool) $this-&gt;delete($id, true);
 }</code></pre>
 
 
