@@ -1672,6 +1672,18 @@ view, each log now has a <code>name</code> (without extension) instead of a <cod
 <p>Fixes: viewing and deleting logs now requires the <code>logs.view</code> and <code>logs.manage</code> permissions; before, any user with
 <code>admin.access</code> could read and delete the logs by calling the URLs directly. "Delete all" now removes only the log
 files. The levels count in the logs list counts entries instead of every occurrence of a level's name in a message.</p>
+<p>View Components now render self-closing (<code>&lt;x-foo /&gt;</code>) and paired (<code>&lt;x-foo&gt;…&lt;/x-foo&gt;</code>) tags through the same code, so the
+two forms no longer differ by accident. Two behaviours change:</p>
+<ul>
+<li>A self-closing tag now passes its attributes to a component class, as the docs always said. Before, <code>&lt;x-foo attr="bar" /&gt;</code>
+  lost <code>attr</code> whenever a <code>FooComponent</code> class existed, so the class' <code>$this-&gt;data</code> was empty. If your class worked around
+  that, it now receives the attributes.</li>
+<li>A tag whose view can't be found now always throws a <code>RuntimeException</code> (<code>View not found for component: foo</code>). Before,
+  a paired tag with a missing view (or any error while rendering one) was swallowed and the raw <code>&lt;x-foo&gt;</code> tag stayed in
+  the page. A regex failure while rendering components also throws now, instead of returning a number as the page.</li>
+</ul>
+<p>What a component view sees (the attributes as variables, <code>$slot</code>), the lookup order (theme first, then
+<code>componentsLookupPaths</code>) and the <code>Components/&lt;name&gt;.php</code> + <code>&lt;Name&gt;Component.php</code> convention are unchanged.</p>
 <h2 id="8-october-2026-breaking-change_1">8 October 2026 (breaking change)</h2>
 <p>Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
 <code>Bonfire\Widgets</code>: <code>ItemSettings</code> (the enabled flag of an item), <code>DashboardContext</code> (are we on the dashboard, and does
