@@ -14,7 +14,9 @@ namespace Bonfire\Users;
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Users\Models\UserModel;
+use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\Types\Stats\StatsItem;
+use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\View\Table;
 
 class Module extends BaseModule
@@ -80,7 +82,7 @@ class Module extends BaseModule
     private function buildTableUsersByGroup($statsId): string
     {
         // Check if we are on Dashboard page and the chart is enabled, return empty string if not
-        if (current_url() !== config('App')->baseURL . '/' . ADMIN_AREA || setting('Stats.Stats_' . $statsId) !== 'on') {
+        if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, $statsId))) {
             return '';
         }
         $users = new UserModel();

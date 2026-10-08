@@ -6,6 +6,7 @@ use Bonfire\Bonfire;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\View\Metadata;
+use Bonfire\Widgets\DashboardContext;
 use Bonfire\Widgets\Manager as WidgetManager;
 use CodeIgniter\Config\BaseService;
 
@@ -93,5 +94,17 @@ class Services extends BaseService
         }
 
         return new WidgetManager();
+    }
+
+    /**
+     * Decides whether a widget item fetches its data on this request.
+     */
+    public static function dashboardContext(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('dashboardContext');
+        }
+
+        return new DashboardContext();
     }
 }

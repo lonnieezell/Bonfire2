@@ -1,12 +1,9 @@
 <div class="dashboard-cell-container row">
 	<?php foreach ($stats  as $elem) : ?>
 
-		<?php foreach ($elem->items() as $index => $widget) : ?>
-			<?php
-            $_widgets = array_filter($manager, static fn ($k) => $k['widget'] === 'Stats', ARRAY_FILTER_USE_BOTH);
-		    ?>
+		<?php foreach ($elem->items() as $widget) : ?>
 
-			<?php if (setting('Stats.' . $_widgets[$index]['widget'] . '_' . $_widgets[$index]['id'])) : ?>
+			<?php if ($widget->settings()->enabled()) : ?>
                 <div class="col-3">
                     <div class="widget-stats <?= $widget->bgColor() ?>">
                         <div class="widget-stats-icon"><i class="<?= $widget->faIcon() ?>"></i></div>

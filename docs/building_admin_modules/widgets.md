@@ -81,6 +81,36 @@ The address that displays the list of objects on your module. It will be associa
 
 The FontAwesome icon
 
+### Fetching data only when it is shown
+
+`addValue()` and `addValueByFreeQuery()` only run their query when the dashboard is being displayed and the widget is
+enabled in the widgets settings. When you build a value yourself, as `buildTableUsersByGroup()` does, ask the same
+question before doing the work:
+
+```php
+use Bonfire\Widgets\ItemSettings;
+use Bonfire\Widgets\WidgetKind;
+
+if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'countAllUsers643'))) {
+    return '';
+}
+```
+
+In your own tests you can make that answer yes or no without faking the URL by injecting a subclass of
+`Bonfire\Widgets\DashboardContext` that overrides `isDashboard()`:
+
+```php
+use Bonfire\Widgets\DashboardContext;
+use Config\Services;
+
+Services::injectMock('dashboardContext', new class () extends DashboardContext {
+    public function isDashboard(): bool
+    {
+        return true;
+    }
+});
+```
+
 ## Configuration
 
 All settings are available in the `Bonfire\Widgets\Config\Stats` class, or in the admin settings area.

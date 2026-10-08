@@ -12,6 +12,8 @@
 namespace Bonfire\Widgets\Types\Stats;
 
 use Bonfire\Widgets\Interfaces\Item;
+use Bonfire\Widgets\ItemSettings;
+use Bonfire\Widgets\WidgetKind;
 
 /**
  * Represents an individual widget stats.
@@ -78,11 +80,6 @@ class StatsItem implements Item
      */
     protected $bgColor;
 
-    /**
-     * @var bool
-     */
-    protected $dashboardRoute = false;
-
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -95,9 +92,6 @@ class StatsItem implements Item
                 $this->{$method}($value);
             }
         }
-
-        // true if we are on Dashboard page
-        $this->dashboardRoute = current_url() === config('App')->baseURL . '/' . ADMIN_AREA;
     }
 
     public function setTitle(?string $title): StatsItem
@@ -203,10 +197,15 @@ class StatsItem implements Item
         return $this->bgColor;
     }
 
+    public function settings(): ItemSettings
+    {
+        return new ItemSettings(WidgetKind::Stats, $this->id);
+    }
+
     public function addValue(string $tableName, ?string $whereString = null, string $selectMode = 'count'): StatsItem
     {
-        // Check if we are on Dashboard page and the chart is enabled
-        if (! $this->dashboardRoute || setting('Stats.Stats_' . $this->id) !== 'on') {
+        // Only fetch the value on the dashboard, and when this item is enabled
+        if (! service('dashboardContext')->shows($this->settings())) {
             return $this;
         }
 
@@ -239,8 +238,8 @@ class StatsItem implements Item
 
     public function addValueByFreeQuery(string $query): StatsItem
     {
-        // Check if we are on Dashboard page and the chart is enabled
-        if (! $this->dashboardRoute || setting('Stats.Stats_' . $this->id) !== 'on') {
+        // Only fetch the value on the dashboard, and when this item is enabled
+        if (! service('dashboardContext')->shows($this->settings())) {
             return $this;
         }
 
