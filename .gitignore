@@ -2,6 +2,7 @@
 # Operating Specific Junk Files
 #-------------------------
 
+docs/agents/
 
 # OS X
 .DS_Store
