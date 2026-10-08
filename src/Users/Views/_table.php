@@ -10,7 +10,7 @@
                         <?php if (auth()->user()->can('users.delete')) : ?>
                             <td>
                                 <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check" 
-                                    <?php if ($user->id === auth()->user()->id || ($user->can('users.manage-admins') && !auth()->user()->can('users.manage-admins'))) : ?>
+                                    <?php if (! $access->canSelectForDeletion($user)) : ?>
                                         disabled
                                     <?php endif; ?>
                                 >
