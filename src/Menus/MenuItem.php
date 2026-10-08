@@ -79,9 +79,7 @@ class MenuItem
             $this->_namedRoute = $data['namedRoute'];
         }
 
-        if (! isset($data['weight'])) {
-            $data['weight'] = 0;
-        }
+        $data['weight'] ??= 0;
 
         foreach ($data as $key => $value) {
             $method = 'set' . ucfirst((string) $key);

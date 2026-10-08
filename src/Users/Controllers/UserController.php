@@ -190,9 +190,7 @@ class UserController extends AdminController
         $users->save($user);
 
         // We need an ID to on the entity to save groups.
-        if ($user->id === null) {
-            $user->id = $users->getInsertID();
-        }
+        $user->id ??= $users->getInsertID();
 
         // Check for an avatar to upload
         if (($file = $this->request->getFile('avatar')) && $file->isValid()) {

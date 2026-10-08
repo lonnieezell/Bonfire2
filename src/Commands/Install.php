@@ -458,14 +458,10 @@ class Install extends BaseCommand
         }
 
         // Ensure the scripts section exists
-        if (! isset($composerJson['scripts'])) {
-            $composerJson['scripts'] = [];
-        }
+        $composerJson['scripts'] ??= [];
 
         // Ensure the post-update-cmd section exists
-        if (! isset($composerJson['scripts']['post-update-cmd'])) {
-            $composerJson['scripts']['post-update-cmd'] = [];
-        }
+        $composerJson['scripts']['post-update-cmd'] ??= [];
 
         // Add the Bonfire update script if it's not already present
         $bonfireUpdateScript = 'php spark notify:breaking-changes';
