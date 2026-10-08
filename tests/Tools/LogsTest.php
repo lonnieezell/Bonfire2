@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Logs;
+namespace Tests\Tools;
 
 use Bonfire\Tools\Libraries\Logs;
 use Tests\Support\TestCase;
@@ -10,64 +10,147 @@ use Tests\Support\TestCase;
  */
 final class LogsTest extends TestCase
 {
-    private string $logFileName;
-    private string $logsPath = WRITEPATH . 'logs/';
+    private const LOG_NAME = 'log-2000-01-01';
+
+    protected $refresh      = true;
+    private string $logFile = WRITEPATH . 'logs/' . self::LOG_NAME . '.log';
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        log_message('error', 'Log error test');
+        // Other tests may leave the site in offline mode, which redirects users without site.viewOffline
+        setting('Site.siteOnline', true);
 
-        $this->logFileName = 'log-' . date('Y-m-d') . '.log';
+        file_put_contents($this->logFile, "ERROR - 2000-01-01 10:00:00 --> Log error test\n");
+    }
+
+    protected function tearDown(): void
+    {
+        @unlink($this->logFile);
+
+        parent::tearDown();
+    }
+
+    private function userWith(string $group)
+    {
+        $user = $this->createUser();
+        $user->addGroup($group);
+
+        return $user;
+    }
+
+    public function testListShowsLogFiles()
+    {
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->get(route_to('sys-logs'));
+
+        $response->assertOK();
+        $response->assertSee(self::LOG_NAME . '.log');
     }
 
     public function testViewLogFile()
     {
-        $user = $this->createUser();
-        $user->addGroup('superadmin');
-
-        $response = $this->actingAs($user)
-            ->get(ADMIN_AREA . '/tools/view-log/' . str_replace('.log', '', $this->logFileName));
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->get(route_to('view-log', self::LOG_NAME));
 
         $response->assertOK();
-        $response->assertSee(lang('Tools.log') . ': '
-            . app_date(str_replace('.log', '', str_replace('log-', '', $this->logFileName))));
+        $response->assertSee(lang('Tools.log') . ': ' . app_date('2000-01-01'));
+        $response->assertSee('Log error test');
     }
 
-    public function testListLogsFiles()
+    public function testViewUnknownLogFileRedirectsToList()
     {
-        $logs = get_filenames($this->logsPath . $this->logFileName);
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->get(route_to('view-log', 'log-1999-01-01'));
 
-        unset($logs[0]);
-
-        $this->assertIsArray($logs);
-        $this->assertEmpty($logs);
+        $response->assertRedirectTo(ADMIN_AREA . '/tools/logs');
     }
 
-    public function testListFileLogs()
+    public function testListNeedsLogsViewPermission()
     {
-        $logHandler = new Logs();
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
 
-        $logs = $logHandler->processFileLogs($this->logsPath . $this->logFileName);
+        $response = $this->actingAs($user)->get(route_to('sys-logs'));
 
-        $this->assertIsArray($logs);
+        $response->assertRedirectTo(ADMIN_AREA);
+        $response->assertDontSee(self::LOG_NAME);
     }
 
-    public function testDeleteLog()
+    public function testViewNeedsLogsViewPermission()
     {
-        $this->assertTrue(@unlink($this->logsPath . $this->logFileName));
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $response = $this->actingAs($user)->get(route_to('view-log', self::LOG_NAME));
+
+        $response->assertRedirectTo(ADMIN_AREA);
+        $response->assertDontSee('Log error test');
+    }
+
+    public function testDeleteNeedsLogsManagePermission()
+    {
+        // The admin group may view logs but not manage them
+        $response = $this->actingAs($this->userWith('admin'))
+            ->post(route_to('log-delete'), ['delete' => '1', 'checked' => [self::LOG_NAME]]);
+
+        $response->assertRedirectTo(ADMIN_AREA);
+        $this->assertFileExists($this->logFile);
+    }
+
+    public function testDeleteSelectedLogs()
+    {
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->post(route_to('log-delete'), ['delete' => '1', 'checked' => [self::LOG_NAME]]);
+
+        $response->assertRedirectTo(ADMIN_AREA . '/tools/logs');
+        $this->assertFileDoesNotExist($this->logFile);
     }
 
     public function testDeleteAllLogs()
     {
-        log_message('error', 'Log error test1');
-        log_message('error', 'Log error test2');
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->post(route_to('log-delete'), ['delete_all' => '1']);
 
-        helper('filesystem');
+        $response->assertRedirectTo(ADMIN_AREA . '/tools/logs');
+        $this->assertFileDoesNotExist($this->logFile);
+    }
 
-        $this->assertTrue(delete_files($this->logsPath));
+    public function testDeleteWithNothingSelectedChangesNothing()
+    {
+        $response = $this->actingAs($this->userWith('superadmin'))
+            ->post(route_to('log-delete'), ['delete' => '1']);
 
-        @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
+        $response->assertRedirectTo(ADMIN_AREA . '/tools/logs');
+        $this->assertFileExists($this->logFile);
+    }
+
+    public function testDeleteIgnoresNamesThatAreNotLogs()
+    {
+        $this->actingAs($this->userWith('superadmin'))
+            ->post(route_to('log-delete'), ['delete' => '1', 'checked' => ['../../index']]);
+
+        $this->assertFileExists(WRITEPATH . 'logs/index.html');
+    }
+
+    public function testParserIgnoresLogLevelWordsInsideMessages()
+    {
+        file_put_contents($this->logFile, "INFO - 2000-01-01 10:00:00 --> an ERROR is only mentioned\n");
+
+        $this->assertSame(
+            '<span class="text-info">info</span>: 1',
+            (new Logs())->countLogLevels($this->logFile),
+        );
+    }
+
+    public function testParserHandlesAnEmptyFile()
+    {
+        file_put_contents($this->logFile, '');
+
+        $logs = new Logs();
+
+        $this->assertSame([], $logs->processFileLogs($this->logFile));
+        $this->assertSame('', $logs->countLogLevels($this->logFile));
     }
 }

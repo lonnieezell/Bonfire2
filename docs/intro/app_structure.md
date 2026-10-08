@@ -13,7 +13,7 @@ Once installed, Bonfire will have copied several configuration files into your `
 - `Themes` - Determines which themes are available to the system, and some view component settings.
 - `Consent` - Defines how the Cookie Consent library should behave.
 - `Dashboard` - Allows you to define the widgets that should be displayed on the dashboard.
-- `Recycler` - Defines how the Recycler library should behave.
+- `Recycler` - Defines how the Recycler library should behave, and lets an app add or override its resources.
 - `Users` - Contains avatar settings, custom user fields, and more.
 
 ## /themes

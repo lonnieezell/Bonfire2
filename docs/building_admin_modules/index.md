@@ -22,7 +22,7 @@ Filtering allows you to specify which columns can be filtered and then pass your
 
 ## Recycler
 
-The Recycler provides an area where users can browse objects that have been deleted and either restore or purge them. The models for these resources must have soft deletes enabled. This section covers registering a resource, localizing column names, and modifying the Recycler query.
+The Recycler provides an area where users can browse objects that have been deleted and either restore or purge them. The models for these resources must have soft deletes enabled. This section covers registering a resource, localizing column names, and changing how a model is listed, restored and purged.
 
 [Read more about the Recycler](recycler.md)
 

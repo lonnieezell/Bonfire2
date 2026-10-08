@@ -4,6 +4,7 @@ namespace Bonfire\Config;
 
 use Bonfire\Bonfire;
 use Bonfire\Menus\Manager as MenuManager;
+use Bonfire\Recycler\Libraries\Recycler;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\DashboardContext;
@@ -51,6 +52,18 @@ class Services extends BaseService
         }
 
         return new MenuManager();
+    }
+
+    /**
+     * The resources the Recycler can list, restore and purge
+     */
+    public static function recycler(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('recycler');
+        }
+
+        return new Recycler();
     }
 
     /**
