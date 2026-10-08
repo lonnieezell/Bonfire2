@@ -62,14 +62,19 @@ final readonly class WidgetOptions
     ];
 
     /**
-     * @param array<string, mixed> $options
-     * @param array<string, mixed> $custom
+     * @var array<string, mixed>
      */
-    private function __construct(
-        private string $type,
-        private array $options,
-        private array $custom,
-    ) {
+    private array $options;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $custom;
+
+    private function __construct(private string $type)
+    {
+        $this->options = self::SETS[$type];
+        $this->custom  = isset($this->options[self::SWITCH]) ? self::CUSTOM : [];
     }
 
     /**
@@ -77,7 +82,7 @@ final readonly class WidgetOptions
      */
     public static function all(): array
     {
-        return array_map(self::of(...), array_keys(self::SETS));
+        return array_map(static fn (string $type) => new self($type), array_keys(self::SETS));
     }
 
     /**
@@ -99,14 +104,7 @@ final readonly class WidgetOptions
      */
     public static function forChartType(?string $type): ?self
     {
-        return $type !== 'stats' && isset(self::SETS[$type]) ? self::of($type) : null;
-    }
-
-    private static function of(string $type): self
-    {
-        $options = self::SETS[$type];
-
-        return new self($type, $options, isset($options[self::SWITCH]) ? self::CUSTOM : []);
+        return $type !== 'stats' && isset(self::SETS[$type]) ? new self($type) : null;
     }
 
     public function alias(): string
@@ -140,24 +138,29 @@ final readonly class WidgetOptions
      */
     public function get(string $option): mixed
     {
-        return in_array($option, $this->optionNames(), true) ? setting()->get($this->key($option)) : null;
+        return array_key_exists($option, $this->options + $this->custom) ? setting()->get($this->key($option)) : null;
     }
 
     public function save(IncomingRequest $request): void
     {
         foreach ($this->options as $option => $whenAbsent) {
-            setting($this->key($option), $request->getPost($this->fieldName($option)) ?? $whenAbsent);
+            $this->store($request, $option, $whenAbsent);
         }
 
         $keepCustom = (bool) setting($this->key(self::SWITCH));
 
         foreach ($this->custom as $option => $whenAbsent) {
             if ($keepCustom) {
-                setting($this->key($option), $request->getPost($this->fieldName($option)) ?? $whenAbsent);
+                $this->store($request, $option, $whenAbsent);
             } else {
                 setting()->forget($this->key($option));
             }
         }
+    }
+
+    private function store(IncomingRequest $request, string $option, mixed $whenAbsent): void
+    {
+        setting($this->key($option), $request->getPost($this->fieldName($option)) ?? $whenAbsent);
     }
 
     public function reset(): void

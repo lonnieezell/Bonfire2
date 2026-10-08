@@ -30,8 +30,7 @@ class WidgetsSettingsController extends AdminController
         }
 
         return $this->render($this->viewPrefix . 'settings', [
-            'widgets' => setting('LineChart.widgets'),
-            'items'   => service('widgets')->items(),
+            'items' => service('widgets')->items(),
         ]);
     }
 
@@ -42,8 +41,7 @@ class WidgetsSettingsController extends AdminController
         }
 
         return $this->render($this->viewPrefix . '_' . $alias, [
-            'widgets' => setting('LineChart.widgets'),
-            'tab'     => $alias,
+            'tab' => $alias,
         ]);
     }
 
