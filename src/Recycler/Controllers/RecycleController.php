@@ -12,8 +12,8 @@
 namespace Bonfire\Recycler\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Recycler\Libraries\RecyclableResource;
 use CodeIgniter\HTTP\RedirectResponse;
-use ReflectionException;
 
 class RecycleController extends AdminController
 {
@@ -27,41 +27,19 @@ class RecycleController extends AdminController
      */
     public function viewResource()
     {
-        if (! auth()->user()->can('recycler.view')) {
-            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        $resource = $this->authorizedResource($this->request->getVar('r'));
+
+        if ($resource instanceof RedirectResponse) {
+            return $resource;
         }
 
-        $resources    = setting('Recycler.resources');
-        $resourceType = $this->request->getVar('r') ?: setting('Recycler.defaultResource');
-
-        if (empty($resourceType) || ! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
-        }
-
-        $currentResource = $resources[$resourceType];
-
-        $model = model($currentResource['model']);
-
-        // Any special setup for this model?
-        if (method_exists($model, 'setupRecycler')) {
-            $model = $model->setupRecycler();
-        }
-
-        $items = $model
-            ->asArray()
-            ->onlyDeleted()
-            ->orderBy('deleted_at', 'desc')
-            ->paginate(setting('Site.perPage'));
-
-        // localize resources if possible
-        $resources = array_map($this->localizeResource(...), $resources);
+        $deleted = $resource->deleted((int) setting('Site.perPage'));
 
         return $this->render($this->viewPrefix . 'listResource', [
-            'resources'       => $resources,
-            'currentResource' => $this->localizeResource($currentResource),
-            'currentAlias'    => $resourceType,
-            'items'           => $items,
-            'pager'           => $model->pager,
+            'resources'       => service('recycler')->resources(),
+            'currentResource' => $resource,
+            'items'           => $deleted['items'],
+            'pager'           => $deleted['pager'],
         ]);
     }
 
@@ -69,32 +47,17 @@ class RecycleController extends AdminController
      * Restores a single record.
      *
      * @return RedirectResponse
-     *
-     * @throws ReflectionException
      */
     public function restore(string $resourceType, int $resourceId)
     {
-        if (! auth()->user()->can('recycler.view')) {
-            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        $resource = $this->authorizedResource($resourceType);
+
+        if ($resource instanceof RedirectResponse) {
+            return $resource;
         }
 
-        $resources = setting('Recycler.resources');
-
-        if (! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
-        }
-        $currentResource = $resources[$resourceType];
-        $model           = model($currentResource['model']);
-
-        // Is there custom handling?
-        $result = method_exists($model, 'recyclerRestore')
-            ? $model->recyclerRestore($resourceId)
-            : $model->where('id', $resourceId)
-                ->set(['deleted_at' => null])
-                ->update();
-
-        if (! $result) {
-            return redirect()->back()->with('error', $model->errors());
+        if (! $resource->restore($resourceId)) {
+            return $this->failed($resource);
         }
 
         return redirect()->back()->with('message', lang('Bonfire.resourceRestored', [$resourceType]));
@@ -107,48 +70,38 @@ class RecycleController extends AdminController
      */
     public function purge(string $resourceType, int $resourceId)
     {
-        if (! auth()->user()->can('recycler.view')) {
-            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        $resource = $this->authorizedResource($resourceType);
+
+        if ($resource instanceof RedirectResponse) {
+            return $resource;
         }
 
-        $resources = setting('Recycler.resources');
-
-        if (! array_key_exists($resourceType, $resources)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
-        }
-
-        $currentResource = $resources[$resourceType];
-        $model           = model($currentResource['model']);
-
-        // Is there custom handling?
-        $result = method_exists($model, 'recyclerPurge')
-            ? $model->recyclerPurge($resourceId)
-            : $model->delete($resourceId, true);
-
-        if (! $result) {
-            return redirect()->back()->with('error', $model->errors());
+        if (! $resource->purge($resourceId)) {
+            return $this->failed($resource);
         }
 
         return redirect()->back()->with('message', lang('Bonfire.resourcesDeleted', [$resourceType]));
     }
 
     /**
-     * Checks if there is localization available for resource label and columns
-     * and uses them if it finds the strings defined in localization files
+     * The resource to act on, or the redirect to send when the user
+     * may not use the Recycler or the resource does not exist.
      */
-    public function localizeResource(array $resource): array
+    private function authorizedResource(?string $alias): RecyclableResource|RedirectResponse
     {
-        // dd($resource);
-        foreach ($resource['columns'] as $colKey => $colName) {
-            $key                                   = $resource['label'] . '.recycler.columns.' . $colName;
-            $value                                 = lang($key);
-            $resource['localizedColumns'][$colKey] = $key === $value ? $resource['columns'][$colKey] : $value;
+        if (! auth()->user()->can('recycler.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        $key               = $resource['label'] . '.recycler.label';
-        $value             = lang($key);
-        $resource['label'] = $key === $value ? $resource['label'] : $value;
+        return service('recycler')->find($alias)
+            ?? redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Recycler.resourceType')]));
+    }
 
-        return $resource;
+    private function failed(RecyclableResource $resource): RedirectResponse
+    {
+        return redirect()->back()->with(
+            'error',
+            $resource->errors() ?: lang('Bonfire.resourceNotFound', [$resource->label()]),
+        );
     }
 }

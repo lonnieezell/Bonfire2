@@ -11,7 +11,7 @@
             <div class="col-auto">
                 <select name="r" class="form-select" x-on:change="sendRecyclerGetRequest($event.target.value)">
                     <?php foreach ($resources as $alias => $details) : ?>
-                        <option value="<?= strtolower((string) $alias) ?>" <?= (strtolower((string) $currentAlias) === strtolower((string) $alias)) ? 'selected' : ''?>><?= $details['label'] ?></option>
+                        <option value="<?= strtolower((string) $alias) ?>" <?= $currentResource->alias() === (string) $alias ? 'selected' : ''?>><?= $details->label() ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -22,7 +22,7 @@
 <x-admin-box>
 
     <fieldset id="resource" class="first">
-        <legend><?= $currentResource['label'] ?></legend>
+        <legend><?= $currentResource->label() ?></legend>
 
         <?php if (isset($items) && count($items)) : ?>
             <p><?=lang('Recycler.resultLabel', [$pager->getTotal()])?></p>
@@ -30,7 +30,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr class="text-uppercase">
-                    <?php foreach ($currentResource['localizedColumns'] as $column) : ?>
+                    <?php foreach ($currentResource->localizedColumns() as $column) : ?>
                         <th><?= esc(str_replace('_', ' ', $column)) ?></th>
                     <?php endforeach ?>
                         <th class="text-end"><?= lang('Recycler.actions') ?></th>
@@ -39,19 +39,19 @@
                     <tbody>
                         <?php foreach ($items as $item) : ?>
                             <tr>
-                            <?php foreach ($currentResource['columns'] as $column) : ?>
+                            <?php foreach ($currentResource->columns() as $column) : ?>
                                 <td><?= esc($item[$column] ?? '') ?></td>
                             <?php endforeach ?>
                                 <td class="text-end">
                                     <div class="btn-group">
-                                            <a href="<?= url_to('recycler-restore', $currentAlias, $item['id']) ?>"
+                                            <a href="<?= url_to('recycler-restore', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>"
                                         class="text-success" title="<?= lang('Recycler.restoreMsgTitle') ?>"
                                         onclick="return confirm('<?= lang('Recycler.restoreMsgContent') ?>');"
                                             >
                                                 <i class="fas fa-trash-restore"></i>
                                             </a>
                                             &nbsp;
-                                            <a href="<?= url_to('recycler-purge', $currentAlias, $item['id']) ?>"
+                                            <a href="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>"
                                         class="text-danger" title="<?= lang('Recycler.purgeMsgTitle') ?>"
                                         onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"
                                             >
@@ -66,7 +66,7 @@
             </div>
         <?php else : ?>
             <div class="alert alert-info">
-            <?= lang('Recycler.notFound', [$currentAlias]) ?>
+            <?= lang('Recycler.notFound', [$currentResource->alias()]) ?>
             </div>
         <?php endif ?>
 

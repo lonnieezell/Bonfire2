@@ -2,6 +2,7 @@
 
 namespace Bonfire\Users\Models;
 
+use Bonfire\Recycler\Interfaces\CustomRecyclerQuery;
 use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Models\UserModel as ShieldUsers;
@@ -12,7 +13,7 @@ use Faker\Generator;
  * It extends Shield's UserModel, providing many auth
  * features built right in.
  */
-class UserModel extends ShieldUsers
+class UserModel extends ShieldUsers implements CustomRecyclerQuery
 {
     protected $returnType    = User::class;
     protected $allowedFields = [
@@ -27,7 +28,7 @@ class UserModel extends ShieldUsers
      * for the recycler. This might pull in additional
      * fields.
      */
-    public function setupRecycler()
+    public function setupRecycler(): static
     {
         $dbPrefix = $this->db->getPrefix();
 

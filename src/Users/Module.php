@@ -45,6 +45,10 @@ class Module extends BaseModule
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
 
+        service('recycler')->register('users', 'Users', UserModel::class, [
+            'username', 'first_name', 'last_name', 'email',
+        ]);
+
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');
         $statsItem = new StatsItem([

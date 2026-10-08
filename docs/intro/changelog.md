@@ -6,6 +6,30 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 8 October 2026 (breaking change)
 
+The Recycler no longer guesses at what a model can do by checking `method_exists()`. A model that customizes the
+Recycler must now implement the matching interface from `Bonfire\Recycler\Interfaces`: `CustomRecyclerQuery`
+(`setupRecycler(): Model`), `CustomRecyclerRestore` (`recyclerRestore(int $id): bool`) and `CustomRecyclerPurge`
+(`recyclerPurge(int $id): bool`). Methods with those names on a model that does not implement the interface are no
+longer called. Without a custom hook, the Recycler now uses the model's own primary key and soft delete field instead of
+assuming `id` and `deleted_at`, and refuses to restore or purge a record that is not in the Recycler.
+
+Modules now register their recyclable resources with `service('recycler')->register()` from `initAdmin()`, instead of
+editing `Config\Recycler::$resources`. The Users module registers `users` this way, so `$resources` is empty by default;
+entries you already have in your own `Config\Recycler` keep working and take precedence over a module's. If you publish
+the Recycler `listResource` view, it now receives `RecyclableResource` objects as `$resources` and `$currentResource`
+(use `->label()`, `->columns()`, `->localizedColumns()`, `->alias()`) and no longer receives `$currentAlias`.
+
+The logs in the Tools area are now read and deleted through `Bonfire\Tools\Libraries\LogStore`, which only accepts
+file names like `log-2024-01-31`. `Logs::getAdjacentLogFiles()` moved to `LogStore::neighbours()` and
+`Logs::paginateLogs()` takes the page as its third argument instead of reading `$_GET`. If you publish the logs list
+view, each log now has a `name` (without extension) instead of a `filename`.
+
+Fixes: viewing and deleting logs now requires the `logs.view` and `logs.manage` permissions; before, any user with
+`admin.access` could read and delete the logs by calling the URLs directly. "Delete all" now removes only the log
+files. The levels count in the logs list counts entries instead of every occurrence of a level's name in a message.
+
+## 8 October 2026 (breaking change)
+
 Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
 `Bonfire\Widgets`: `ItemSettings` (the enabled flag of an item), `DashboardContext` (are we on the dashboard, and does
 this item show) and `WidgetOptions` (the options of the Stats widget and of each chart type). The settings keys stored

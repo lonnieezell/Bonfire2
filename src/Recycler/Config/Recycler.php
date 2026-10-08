@@ -11,7 +11,6 @@
 
 namespace Bonfire\Recycler\Config;
 
-use Bonfire\Users\Models\UserModel;
 use CodeIgniter\Config\BaseConfig;
 
 class Recycler extends BaseConfig
@@ -33,16 +32,16 @@ class Recycler extends BaseConfig
      * Available Resources
      * --------------------------------------------------------------------------
      *
-     * Provides a list of the available resources that can be recycled,
-     * along with some basic information about how to display that data.
+     * Modules register the resources they make recyclable themselves, with
+     * `service('recycler')->register()`. Add a resource here to register one from
+     * the app, or to replace how a module's resource is displayed. Each one is
+     * keyed by its alias:
+     *
+     *     'users' => [
+     *         'label'   => 'Users',
+     *         'model'   => UserModel::class,
+     *         'columns' => ['username', 'email'],
+     *     ],
      */
-    public $resources = [
-        'users' => [
-            'label'   => 'Users',
-            'model'   => UserModel::class,
-            'columns' => [
-                'username', 'first_name', 'last_name', 'email',
-            ],
-        ],
-    ];
+    public $resources = [];
 }
