@@ -12,7 +12,6 @@
 namespace Bonfire\View;
 
 use RuntimeException;
-use Throwable;
 
 class ComponentRenderer
 {
@@ -90,15 +89,11 @@ class ComponentRenderer
             $matches[name] = tag name (minus the 'x-')
             $matches[attributes] = array of attribute string (class="foo")
          */
-        return preg_replace_callback($pattern, function ($match) {
-            $view       = $this->locateView($match['name']);
-            $attributes = $this->parseAttributes($match['attributes']);
-            $component  = $this->factory($match['name'], $view);
-
-            return $component instanceof Component
-                ? $component->withView($view)->render()
-                : $this->renderView($view, $attributes);
-        }, $output);
+        return $this->replaceTags(
+            $pattern,
+            fn ($match) => $this->renderComponent($match['name'], $this->parseAttributes($match['attributes'])),
+            $output,
+        );
     }
 
     private function renderPairedTags(string $output): string
@@ -119,23 +114,49 @@ class ComponentRenderer
         */
 
         do {
-            try {
-                $output = preg_replace_callback($pattern, function ($match) {
-                    $view               = $this->locateView($match['name']);
-                    $attributes         = $this->parseAttributes($match['attributes']);
-                    $attributes['slot'] = $match['slot'];
-                    $component          = $this->factory($match['name'], $view);
+            $output = $this->replaceTags($pattern, function ($match) {
+                $attributes         = $this->parseAttributes($match['attributes']);
+                $attributes['slot'] = $match['slot'];
 
-                    return $component instanceof Component
-                        ? $component->withView($view)->withData($attributes)->render()
-                        : $this->renderView($view, $attributes);
-                }, (string) $output, -1, $replaceCount);
-            } catch (Throwable) {
-                break;
-            }
+                return $this->renderComponent($match['name'], $attributes);
+            }, $output, $replaceCount);
         } while ($replaceCount !== 0);
 
-        return $output ?? preg_last_error();
+        return $output;
+    }
+
+    /**
+     * Replaces every tag matching the pattern with the callback's result,
+     * throwing if the regex engine fails instead of returning null.
+     *
+     * @throws RuntimeException
+     */
+    private function replaceTags(string $pattern, callable $callback, string $output, ?int &$count = null): string
+    {
+        $result = preg_replace_callback($pattern, $callback, $output, -1, $count);
+
+        if ($result === null) {
+            throw new RuntimeException('Unable to render components: ' . preg_last_error_msg());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Renders one component, whichever tag form it was written in:
+     * locates its view, uses its class when it has one, and
+     * hands it the tag's attributes (and slot, if any).
+     *
+     * @throws RuntimeException when the component's view can't be found.
+     */
+    private function renderComponent(string $name, array $attributes): string
+    {
+        $view      = $this->locateView($name);
+        $component = $this->factory($name, $view);
+
+        return $component instanceof Component
+            ? $component->withData($attributes)->render()
+            : $this->renderView($view, $attributes);
     }
 
     /**
