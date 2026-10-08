@@ -11,6 +11,7 @@
 
 namespace Bonfire\Widgets;
 
+use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\Interfaces\Widgets;
 
 /**
@@ -47,47 +48,21 @@ class Manager
         return $this->widgets[$name];
     }
 
-    public function manager(): array
+    /**
+     * Every item of every collection of every widget.
+     *
+     * @return list<Item>
+     */
+    public function items(): array
     {
-        $results = [];
+        $items = [];
 
-        $widgets = service('widgets');
-
-        foreach ($widgets as $widget) {
-            foreach ($widget as $element) {
-                $items = $element->items()[0]->items();
-
-                if ($pos = strrpos($items[0]::class, '\\')) {
-                    $pos = substr($items[0]::class, $pos + 1);
-                }
-                $pos = str_replace('Item', '', $pos);
-
-                switch ($pos) {
-                    case 'Stats':
-                        foreach ($items as $item) {
-                            $results[] = [
-                                'widget' => $pos,
-                                'title'  => $item->title(),
-                                'id'     => $item->id(),
-                            ];
-                        }
-                        break;
-
-                    case 'Charts':
-                        // dd($items);
-                        foreach ($items as $item) {
-                            $results[] = [
-                                'widget' => $pos,
-                                'type'   => $item->type(),
-                                'title'  => $item->title(),
-                                'id'     => $item->id(),
-                            ];
-                        }
-                        break;
-                }
+        foreach ($this->widgets as $widget) {
+            foreach ($widget->items() as $collection) {
+                array_push($items, ...$collection->items());
             }
         }
 
-        return $results;
+        return $items;
     }
 }

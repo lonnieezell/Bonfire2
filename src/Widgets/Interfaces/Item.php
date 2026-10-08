@@ -11,7 +11,11 @@
 
 namespace Bonfire\Widgets\Interfaces;
 
+use Bonfire\Widgets\ItemSettings;
+
 interface Item
 {
     public function setTitle(?string $title): Item;
+
+    public function settings(): ItemSettings;
 }

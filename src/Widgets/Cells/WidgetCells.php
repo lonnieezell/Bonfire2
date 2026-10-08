@@ -14,8 +14,7 @@ class WidgetCells
         $widgets = service('widgets');
 
         return view('Bonfire\Widgets\Views\Cells\stats', [
-            'stats'   => $widgets->widget('stats')->items(),
-            'manager' => $widgets->manager(),
+            'stats' => $widgets->widget('stats')->items(),
         ]);
     }
 
@@ -37,15 +36,13 @@ class WidgetCells
         ]);
         $meta->addScript(['src' => asset('admin/js/chart.js', 'js')]);
         $meta->addRawScript(view('Bonfire\Widgets\Views\Cells\scripts', [
-            'charts'  => service('widgets')->widget('charts')->items(),
-            'manager' => service('widgets')->manager(),
+            'charts' => service('widgets')->widget('charts')->items(),
         ]));
 
         $widgets = service('widgets');
 
         return view('Bonfire\Widgets\Views\Cells\charts', [
-            'charts'  => $widgets->widget('charts')->items(),
-            'manager' => $widgets->manager(),
+            'charts' => $widgets->widget('charts')->items(),
         ]);
     }
 }

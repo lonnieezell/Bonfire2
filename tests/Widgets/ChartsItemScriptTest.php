@@ -25,7 +25,7 @@ final class ChartsItemScriptTest extends TestCase
     /**
      * @param array<string, mixed> $settings
      */
-    #[DataProvider('provideScripts')]
+    #[DataProvider('provideScriptReflectsTheTypesSettings')]
     public function testScriptReflectsTheTypesSettings(string $type, array $settings, string $expected)
     {
         foreach ($settings as $key => $value) {
@@ -37,7 +37,7 @@ final class ChartsItemScriptTest extends TestCase
         $this->assertStringContainsString($expected, $script);
     }
 
-    public static function provideScripts(): iterable
+    public static function provideScriptReflectsTheTypesSettings(): iterable
     {
         yield 'line, config defaults' => [
             'line', [],

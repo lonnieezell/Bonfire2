@@ -12,6 +12,7 @@
 namespace Tests\Widgets;
 
 use CodeIgniter\Shield\Entities\User;
+use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -47,6 +48,16 @@ final class DashboardWidgetsTest extends TestCase
 
         $response->assertSee('USERS IN RECYCLER');
         $response->assertDontSee('USERS BY GROUP');
+    }
+
+    public function testStatsValueIsFilledInOnTheDashboard()
+    {
+        StubDashboard::inject(true);
+        setting('Stats.Stats_usersInRecycler693', 'on');
+
+        $response = $this->actingAs($this->user)->get(ADMIN_AREA);
+
+        $response->assertSee('0', 'p');
     }
 
     public function testEnabledChartShowsItsCanvasAndScript()

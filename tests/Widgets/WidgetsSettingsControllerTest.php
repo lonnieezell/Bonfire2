@@ -70,13 +70,13 @@ final class WidgetsSettingsControllerTest extends TestCase
     public function testSavingLineChartOptions()
     {
         $this->actingAs($this->user)->post('/admin/settings/widgets', [
-            'widget'             => 'linechart',
-            'line_showTitle'     => 'on',
+            'widget'              => 'linechart',
+            'line_showTitle'      => 'on',
             'line_legendPosition' => 'top',
-            'line_tension'       => '0.5',
-            'useCustomSettings'  => 'on',
-            'line_borderColor'   => '#ff0000',
-            'line_borderWidth'   => '3',
+            'line_tension'        => '0.5',
+            'useCustomSettings'   => 'on',
+            'line_borderColor'    => '#ff0000',
+            'line_borderWidth'    => '3',
         ]);
 
         $this->assertSame('on', setting('LineChart.line_showTitle'));
@@ -104,14 +104,14 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertNotSame('3', setting('LineChart.line_borderWidth'));
     }
 
-    #[DataProvider('provideSchemedCharts')]
+    #[DataProvider('provideSavingSchemedChartOptions')]
     public function testSavingSchemedChartOptions(string $alias, string $class, string $prefix)
     {
         $this->actingAs($this->user)->post('/admin/settings/widgets', [
-            'widget'                     => $alias,
-            $prefix . '_showLegend'      => 'on',
-            $prefix . '_legendPosition'  => 'left',
-            $prefix . '_colorScheme'     => 'Blues',
+            'widget'                    => $alias,
+            $prefix . '_showLegend'     => 'on',
+            $prefix . '_legendPosition' => 'left',
+            $prefix . '_colorScheme'    => 'Blues',
         ]);
 
         $this->assertSame('on', setting("{$class}.{$prefix}_showLegend"));
@@ -125,7 +125,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertSame('null', setting("{$class}.{$prefix}_colorScheme"));
     }
 
-    public static function provideSchemedCharts(): iterable
+    public static function provideSavingSchemedChartOptions(): iterable
     {
         yield 'bar' => ['barchart', 'BarChart', 'bar'];
 
@@ -154,7 +154,7 @@ final class WidgetsSettingsControllerTest extends TestCase
 
         $this->assertEmpty(setting('Stats.Stats_usersInRecycler693'));
         $this->assertTrue(setting('Stats.stats_showLink'));
-        $this->assertSame(0.1, setting('LineChart.line_tension'));
+        $this->assertEqualsWithDelta(0.1, setting('LineChart.line_tension'), PHP_FLOAT_EPSILON);
         $this->assertEmpty(setting('LineChart.useCustomSettings'));
         $this->assertEmpty(setting('LineChart.line_borderColor'));
         $this->assertSame('null', setting('BarChart.bar_colorScheme'));

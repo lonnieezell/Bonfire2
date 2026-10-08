@@ -4,6 +4,24 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 8 October 2026
+
+Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
+`Bonfire\Widgets`: `ItemSettings` (the enabled flag of an item), `DashboardContext` (are we on the dashboard, and does
+this item show) and `WidgetOptions` (the options of the Stats widget and of each chart type). The settings keys stored
+in your database are unchanged.
+
+If you publish your own copy of the dashboard cell views (`Cells/stats.php`, `Cells/charts.php`, `Cells/scripts.php`)
+or the widgets `settings.php` view, note that they no longer receive `$manager` from `Manager::manager()`, which has
+been replaced by `Manager::items()`. Ask each item for `$item->settings()->enabled()` instead.
+
+Widget items now also report an item's settings through `settings()`, which is part of the `Item` interface. If you
+wrote your own item class, add it. `StatsItem::addValue()`, `addValueByFreeQuery()` and `ChartsItem::addDataset()` still
+only run their query on the dashboard when the item is enabled, and the check can now be swapped in tests through
+`service('dashboardContext')`.
+
+Items in a second collection of a widget now show up on the widgets settings page and on the dashboard.
+
 ## 18 March 2025 (breaking change)
 
 The way widgets are enabled has changed in the database, so if you had widgets enabled before, they will

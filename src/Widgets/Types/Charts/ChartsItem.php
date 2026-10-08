@@ -12,6 +12,9 @@
 namespace Bonfire\Widgets\Types\Charts;
 
 use Bonfire\Widgets\Interfaces\Item;
+use Bonfire\Widgets\ItemSettings;
+use Bonfire\Widgets\WidgetKind;
+use Bonfire\Widgets\WidgetOptions;
 
 /**
  * Represents an individual widget Charts.
@@ -103,11 +106,6 @@ class ChartsItem implements Item
      */
     protected $chartName;
 
-    /**
-     * @var bool
-     */
-    protected $dashboardRoute = false;
-
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -121,9 +119,6 @@ class ChartsItem implements Item
             }
         }
         $this->setChartName('');
-
-        // true if we are on Dashboard page
-        $this->dashboardRoute = current_url() === config('App')->baseURL . '/' . ADMIN_AREA;
     }
 
     public function title(): ?string
@@ -211,67 +206,34 @@ class ChartsItem implements Item
         return $this;
     }
 
+    public function settings(): ItemSettings
+    {
+        return new ItemSettings(WidgetKind::Charts, $this->id);
+    }
+
     public function getScript(): string
     {
-        $line_tension    = 'null';
-        $backgroundColor = 'null';
-        $borderColor     = 'null';
-        $borderWidth     = 'null';
-        $enableAnimation = 'null';
-        $showTitle       = 'null';
-        $showSubTitle    = 'null';
-        $showLegend      = 'null';
-        $legendPosition  = 'null';
+        $options = WidgetOptions::forChartType($this->type());
 
-        switch ($this->type()) {
-            case 'line':
-                $line_tension    = setting()->get('LineChart.' . $this->type() . '_tension') ?: 'null';
-                $borderColor     = setting()->get('LineChart.' . $this->type() . '_borderColor') ? "'" . setting()->get('LineChart.' . $this->type() . '_borderColor') . "'" : 'null';
-                $backgroundColor = $borderColor;
-                $borderWidth     = setting()->get('LineChart.' . $this->type() . '_borderWidth') ?: 'null';
-                $enableAnimation = setting()->get('LineChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
-                $showTitle       = setting()->get('LineChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
-                $showSubTitle    = setting()->get('LineChart.' . $this->type() . '_showSubTitle') ? 'true' : 'null';
-                $showLegend      = setting()->get('LineChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
-                $legendPosition  = setting()->get('LineChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('LineChart.' . $this->type() . '_legendPosition') . "'" : 'null';
-                break;
+        $flag = static fn (string $name): string => $options?->get($name) ? 'true' : 'null';
+        $text = static function (string $name) use ($options): string {
+            $value = $options?->get($name);
 
-            case 'bar':
-                $enableAnimation = setting()->get('BarChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
-                $showTitle       = setting()->get('BarChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
-                $showLegend      = setting()->get('BarChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
-                $legendPosition  = setting()->get('BarChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('BarChart.' . $this->type() . '_legendPosition') . "'" : 'null';
-                $backgroundColor = setting()->get('BarChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('BarChart.' . $this->type() . '_colorScheme') . "'" : 'null';
-                $borderColor     = strtolower(rtrim($backgroundColor, 's'));
-                break;
+            return $value ? "'" . $value . "'" : 'null';
+        };
 
-            case 'doughnut':
-                $enableAnimation = setting()->get('DoughnutChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
-                $showTitle       = setting()->get('DoughnutChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
-                $showLegend      = setting()->get('DoughnutChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
-                $legendPosition  = setting()->get('DoughnutChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('DoughnutChart.' . $this->type() . '_legendPosition') . "'" : 'null';
-                $backgroundColor = setting()->get('DoughnutChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('DoughnutChart.' . $this->type() . '_colorScheme') . "'" : 'null';
-                $borderColor     = $backgroundColor;
-                break;
+        $line_tension    = $options?->get('tension') ?: 'null';
+        $borderWidth     = $options?->get('borderWidth') ?: 'null';
+        $enableAnimation = $flag('enableAnimation');
+        $showTitle       = $flag('showTitle');
+        $showSubTitle    = $flag('showSubTitle');
+        $showLegend      = $flag('showLegend');
+        $legendPosition  = $text('legendPosition');
 
-            case 'pie':
-                $enableAnimation = setting()->get('PieChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
-                $showTitle       = setting()->get('PieChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
-                $showLegend      = setting()->get('PieChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
-                $legendPosition  = setting()->get('PieChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('PieChart.' . $this->type() . '_legendPosition') . "'" : 'null';
-                $backgroundColor = setting()->get('PieChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('PieChart.' . $this->type() . '_colorScheme') . "'" : 'null';
-                $borderColor     = $backgroundColor;
-                break;
-
-            case 'polarArea':
-                $enableAnimation = setting()->get('PolarAreaChart.' . $this->type() . '_enableAnimation') ? 'true' : 'null';
-                $showTitle       = setting()->get('PolarAreaChart.' . $this->type() . '_showTitle') ? 'true' : 'null';
-                $showLegend      = setting()->get('PolarAreaChart.' . $this->type() . '_showLegend') ? 'true' : 'null';
-                $legendPosition  = setting()->get('PolarAreaChart.' . $this->type() . '_legendPosition') ? "'" . setting()->get('PolarAreaChart.' . $this->type() . '_legendPosition') . "'" : 'null';
-                $backgroundColor = setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') ? "'" . setting()->get('PolarAreaChart.' . $this->type() . '_colorScheme') . "'" : 'null';
-                $borderColor     = $backgroundColor;
-                break;
-        }
+        $scheme          = $text('colorScheme');
+        $backgroundColor = $scheme !== 'null' ? $scheme : $text('borderColor');
+        // A bar chart has always taken a lowercase border colour from the scheme name
+        $borderColor = $this->type() === 'bar' ? strtolower(rtrim($backgroundColor, 's')) : $backgroundColor;
 
         if (str_replace("'", '', $backgroundColor) !== 'null') {
             $backgroundColor = 'const backgroundColor_' . $this->chartName() . ' = d3.scheme' . str_replace("'", '', $backgroundColor) . '[9];';
@@ -294,11 +256,8 @@ class ChartsItem implements Item
 
     public function addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count'): ChartsItem
     {
-        // Check if we are on Dashboard page and the chart is enabled, only proceed if both true
-        if (
-            current_url() !== config('App')->baseURL . '/' . ADMIN_AREA
-            || setting('Stats.Charts_' . $this->id) !== 'on'
-        ) {
+        // Only fetch the data on the dashboard, and when this chart is enabled
+        if (! service('dashboardContext')->shows($this->settings())) {
             return $this;
         }
 

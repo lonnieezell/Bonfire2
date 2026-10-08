@@ -21,13 +21,14 @@
             <p>In this section you can manage widgets on the dashboard.</p>
             <br>
 
-            <?php foreach ($manager as $elem): ?>
+            <?php foreach ($items as $item): ?>
+                <?php $settings = $item->settings() ?>
 
                 <div class="form-check form-switch mt-6 mb-3">
-                    <input class="form-check-input" type="checkbox" name="<?= $elem['widget'] ?>_<?= $elem['id'] ?>" role="switch" id="<?= $elem['widget'] ?>_<?= $elem['id'] ?>"
-                        <?php if (setting('Stats.' . $elem['widget'] . '_' . $elem['id'])) : ?> checked <?php endif ?>
+                    <input class="form-check-input" type="checkbox" name="<?= $settings->fieldName() ?>" role="switch" id="<?= $settings->fieldName() ?>"
+                        <?php if ($settings->enabled()) : ?> checked <?php endif ?>
                     >
-                    <label class="form-check-label" for="<?= $elem['widget'] ?>_<?= $elem['id'] ?>">Enable <?= rtrim((string) $elem['widget'], 's') ?> <?= $elem['type'] ?? '' ?> widget "<?= $elem['title'] ?>"</label>
+                    <label class="form-check-label" for="<?= $settings->fieldName() ?>">Enable <?= rtrim($settings->kind->value, 's') ?> <?= method_exists($item, 'type') ? $item->type() : '' ?> widget "<?= $item->title() ?>"</label>
                 </div>
 
             <?php endforeach; ?>
