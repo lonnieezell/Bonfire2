@@ -28,6 +28,19 @@ Fixes: viewing and deleting logs now requires the `logs.view` and `logs.manage` 
 `admin.access` could read and delete the logs by calling the URLs directly. "Delete all" now removes only the log
 files. The levels count in the logs list counts entries instead of every occurrence of a level's name in a message.
 
+View Components now render self-closing (`<x-foo />`) and paired (`<x-foo>…</x-foo>`) tags through the same code, so the
+two forms no longer differ by accident. Two behaviours change:
+
+- A self-closing tag now passes its attributes to a component class, as the docs always said. Before, `<x-foo attr="bar" />`
+  lost `attr` whenever a `FooComponent` class existed, so the class' `$this->data` was empty. If your class worked around
+  that, it now receives the attributes.
+- A tag whose view can't be found now always throws a `RuntimeException` (`View not found for component: foo`). Before,
+  a paired tag with a missing view (or any error while rendering one) was swallowed and the raw `<x-foo>` tag stayed in
+  the page. A regex failure while rendering components also throws now, instead of returning a number as the page.
+
+What a component view sees (the attributes as variables, `$slot`), the lookup order (theme first, then
+`componentsLookupPaths`) and the `Components/<name>.php` + `<Name>Component.php` convention are unchanged.
+
 ## 8 October 2026 (breaking change)
 
 Everything about whether a dashboard widget is enabled, and what its display options are, now has one owner in
