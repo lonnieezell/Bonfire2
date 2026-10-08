@@ -34,16 +34,16 @@
                     <tr>
                         <?php if (auth()->user()->can('logs.manage')) : ?>
                             <td class="column-check text-center">
-                                <input type="checkbox" value="<?= esc(str_replace('.log', '', $log['filename'])); ?>" name="checked[]" />
+                                <input type="checkbox" value="<?= esc($log['name']) ?>" name="checked[]" />
                             </td>
                         <?php endif ?>
                         <td class='date no-wrap'>
-                            <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/" . str_replace('.log', '', $log['filename'])); ?>'>
-                                <?= app_date(str_replace('.log', '', str_replace('log-', '', $log['filename']))); ?>
+                            <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/" . $log['name']); ?>'>
+                                <?= app_date(str_replace('log-', '', $log['name'])); ?>
                             </a>
                         </td>
                         <td><?= $log['content'] ?></td>
-                        <td class="d-none d-lg-table-cell"><?= esc($log['filename']) ?></td>
+                        <td class="d-none d-lg-table-cell"><?= esc($log['name'] . '.log') ?></td>
                     </tr>
                         <?php
                     endforeach;

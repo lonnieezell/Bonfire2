@@ -13,59 +13,40 @@ namespace Bonfire\Tools\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Tools\Libraries\Logs;
+use Bonfire\Tools\Libraries\LogStore;
 use CodeIgniter\HTTP\RedirectResponse;
 
 class LogsController extends AdminController
 {
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Tools\Views\\';
-    protected $logsPath   = WRITEPATH . 'logs/';
-    protected $ext        = '.log';
-    protected $logsLimit;
-    protected $logsHandler;
+    protected LogStore $store;
+    protected Logs $logsHandler;
 
     public function __construct()
     {
-        helper('filesystem');
-        $this->logsLimit   = setting('Site.perPage');
         $this->logsHandler = new Logs();
+        $this->store       = new LogStore(parser: $this->logsHandler);
     }
 
     /**
      * Displays all logs.
      *
-     * @return string
+     * @return RedirectResponse|string
      */
     public function index()
     {
-        // Load the Log Files.
-        $logs = array_reverse(get_filenames($this->logsPath));
-
-        // Define the regular expression pattern for log files
-        $logPattern = '/^log-\d{4}-\d{2}-\d{2}\.log$/';
-        // Filter the array removing index.html and other files that do not match
-        $logs = array_filter($logs, static fn ($filename) => preg_match($logPattern, (string) $filename));
-
-        $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
-        // Cycle through the $result array and attach the content property
-        $counter = count($result['logs']);
-
-        // Cycle through the $result array and attach the content property
-        for ($i = 0; $i < $counter; $i++) {
-            if ($result['logs'][$i] === 'index.html') {
-                unset($result['logs'][$i]);
-
-                continue;
-            }
-            $logFilePath        = $this->logsPath . $result['logs'][$i];
-            $result['logs'][$i] = [
-                'filename' => $result['logs'][$i],
-                'content'  => $this->logsHandler->countLogLevels($logFilePath),
-            ];
+        if (! auth()->user()->can('logs.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
+        $result = $this->paginate($this->store->names());
+
         return $this->render($this->viewPrefix . 'logs', [
-            'logs'  => $result['logs'],
+            'logs' => array_map(
+                fn (string $name) => ['name' => $name, 'content' => $this->store->summary($name)],
+                $result['logs'],
+            ),
             'pager' => $result['pager'],
         ]);
     }
@@ -73,31 +54,28 @@ class LogsController extends AdminController
     /**
      * Show the contents of a single log file.
      *
-     * @param string $file The full name of the file to view (including extension).
+     * @param string $file The name of the file to view, without extension.
      *
      * @return RedirectResponse|string
      */
     public function view(string $file = '')
     {
-        helper('security');
-        $file = sanitize_filename($file);
+        if (! auth()->user()->can('logs.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
 
-        if (empty($file) || ! file_exists($this->logsPath . $file . $this->ext)) {
+        if (! $this->store->has($file)) {
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
         }
 
-        $logs = $this->logsHandler->processFileLogs($this->logsPath . $file . $this->ext);
-
-        $result = $this->logsHandler->paginateLogs($logs, $this->logsLimit);
-
-        $filePagerData = $this->logsHandler->getAdjacentLogFiles($file, $this->logsPath);
+        $result = $this->paginate($this->store->entries($file));
 
         return $this->render($this->viewPrefix . 'view_log', [
             'logFile'       => $file,
-            'canDelete'     => 1,
+            'canDelete'     => auth()->user()->can('logs.manage'),
             'logContent'    => $result['logs'],
             'pager'         => $result['pager'],
-            'filesPager'    => view($this->viewPrefix . '_pager', $filePagerData),
+            'filesPager'    => view($this->viewPrefix . '_pager', $this->store->neighbours($file)),
             'logFilePretty' => app_date(str_replace('log-', '', $file)),
         ]);
     }
@@ -109,45 +87,46 @@ class LogsController extends AdminController
      */
     public function delete()
     {
-        if (
-            $this->request->getPost('checked') === null
-            && $this->request->getPost('delete_all') === null
-        ) {
-            return redirect()->to(ADMIN_AREA . '/tools/logs')->with(
-                'error',
-                lang('Tools.noLogsSelected'),
-            );
+        if (! auth()->user()->can('logs.manage')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        if (
-            $this->request->getPost('delete') !== null
-            && is_array($this->request->getPost('checked'))
-        ) {
-            helper('security');
+        $checked   = $this->request->getPost('checked');
+        $deleteAll = $this->request->getPost('delete_all') !== null;
 
-            $checked    = $this->request->getPost('checked');
-            $numChecked = count($checked);
-
-            if ($numChecked) {
-                foreach ($checked as $file) {
-                    @unlink($this->logsPath . sanitize_filename($file . $this->ext));
-                }
-
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteSuccess'));
-            }
+        if ($checked === null && ! $deleteAll) {
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Tools.noLogsSelected'));
         }
 
-        if ($this->request->getPost('delete_all') !== null) {
-            if (delete_files($this->logsPath)) {
-                // Restore the index.html file.
-                @copy(APPPATH . '/index.html', "{$this->logsPath}index.html");
+        if ($this->request->getPost('delete') !== null && is_array($checked)) {
+            $deleted = $this->store->delete($checked);
 
-                return redirect()->to(ADMIN_AREA . '/tools/logs')->with('message', lang('Tools.deleteAllSuccess'));
-            }
+            return $this->deleteResult($deleted, 'Tools.deleteSuccess');
+        }
 
-            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Tools.deleteError'));
+        if ($deleteAll) {
+            return $this->deleteResult($this->store->deleteAll(), 'Tools.deleteAllSuccess');
         }
 
         return redirect()->to(ADMIN_AREA . '/tools/logs')->with('error', lang('Bonfire.unknownAction'));
+    }
+
+    private function deleteResult(int $deleted, string $successMessage): RedirectResponse
+    {
+        $redirect = redirect()->to(ADMIN_AREA . '/tools/logs');
+
+        return $deleted > 0
+            ? $redirect->with('message', lang($successMessage))
+            : $redirect->with('error', lang('Tools.deleteError'));
+    }
+
+    /**
+     * @return array{pager: mixed, logs: array}
+     */
+    private function paginate(array $items): array
+    {
+        $page = max(1, (int) $this->request->getGet('page'));
+
+        return $this->logsHandler->paginateLogs($items, (int) setting('Site.perPage'), $page);
     }
 }

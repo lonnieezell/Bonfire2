@@ -11,8 +11,6 @@
 
 namespace Bonfire\Tools\Libraries;
 
-use DateTime;
-
 /**
  * Provides view cells for Users
  */
@@ -57,10 +55,6 @@ class Logs
      * */
     public function processFileLogs($file)
     {
-        if ($file === null) {
-            return [];
-        }
-
         $logs = $this->getLogs($file);
 
         $superLog = [];
@@ -109,16 +103,13 @@ class Logs
         // Initialize the counts array
         $counts = array_fill_keys($levels, 0);
 
-        // Read the file content
-        $fileContent = file_get_contents($filePath);
+        // Count each entry once, by the level that starts it
+        foreach ($this->getLogs($filePath) as $line) {
+            $logLineStart = $this->getLogLineStart($line);
 
-        if ($fileContent === false) {
-            throw new Exception("Unable to read the file: {$filePath}");
-        }
-
-        // Count occurrences of each level
-        foreach ($levels as $level) {
-            $counts[$level] = substr_count($fileContent, (string) $level);
+            if ($logLineStart !== '') {
+                $counts[$this->getLogLevel($logLineStart)]++;
+            }
         }
 
         // Remove entries with value 0
@@ -143,19 +134,20 @@ class Logs
      * in the underlying log file
      *
      * @returns array | each line of file contents is an entry in the returned array.
+     *                 Empty when the file is empty or too large to read.
      *
      * @params complete fileName
      *
      * @param mixed $fileName
      * */
-    public function getLogs($fileName)
+    public function getLogs($fileName): array
     {
         $size = filesize($fileName);
         if (! $size || $size > self::MAX_LOG_SIZE) {
-            return null;
+            return [];
         }
 
-        return file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        return file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
     }
 
     /**
@@ -163,72 +155,18 @@ class Logs
      *
      * @param array $logs.  The raw logs as read from the log file or log files.
      * @param int   $limit. Number of results per page.
+     * @param int   $page.  The page to return, starting at 1.
      *
      * @return array with pager object and filtered array.
      */
-    public function paginateLogs(array $logs, int $limit)
+    public function paginateLogs(array $logs, int $limit, int $page = 1)
     {
         $pager  = service('pager');
-        $page   = $_GET['page'] ?? 1;
         $offset = ($page > 1) ? ($page - 1) * $limit : 0;
 
         $pager->makeLinks($page, $limit, count($logs));
 
         return ['pager' => $pager, 'logs' => array_slice($logs, $offset, $limit)];
-    }
-
-    /**
-     * Retrieves the adjacent log files (previous and next) relative to the given log file.
-     *
-     * @param string $currentFile            The current log file name.
-     * @param array  $logFiles               An array of all log file names.
-     * @param mixed  $currentLogFileBasename
-     * @param mixed  $logsPath
-     *
-     * @return array An associative array with 'previous' and 'next' keys containing the respective log file names, or null if not available.
-     */
-    public function getAdjacentLogFiles($currentLogFileBasename, $logsPath): array
-    {
-        // Extract the date from the current log file name
-        preg_match('/log-(\d{4}-\d{2}-\d{2})/', (string) $currentLogFileBasename, $matches);
-        new DateTime($matches[1]);
-
-        // Retrieve the list of log files in the directory
-        $logFiles = glob($logsPath . '/log-*.log');
-
-        // Extract dates from the filtered log file names
-        $logDates = array_map(static fn ($filePath) => basename($filePath, '.log'), $logFiles);
-
-        // Sort the log files by date
-        usort($logDates, static function ($a, $b) {
-            // Extract the date part of the log file names for comparison
-            $dateA = str_replace('log-', '', $a);
-            $dateB = str_replace('log-', '', $b);
-
-            return strcmp($dateA, $dateB);
-        });
-
-        // Find the index of the current log file
-        $currentLogFileName = basename((string) $currentLogFileBasename, '.log');
-        $currentIndex       = array_search($currentLogFileName, $logDates, true);
-
-        // Determine the next and previous log files based on the index
-        $previousLogFileBasename = $currentIndex > 0 ? $logDates[$currentIndex - 1] : null;
-        $nextLogFileBasename     = $currentIndex < count($logDates) - 1 ? $logDates[$currentIndex + 1] : null;
-
-        return [
-            'prev' => [
-                'link'  => $previousLogFileBasename,
-                'label' => substr($previousLogFileBasename ?? '', 4, 10),
-            ],
-            'curr' => [
-                'label' => substr((string) $currentLogFileBasename, 4, 10),
-            ],
-            'next' => [
-                'link'  => $nextLogFileBasename,
-                'label' => substr($nextLogFileBasename ?? '', 4, 10),
-            ],
-        ];
     }
 
     /**
