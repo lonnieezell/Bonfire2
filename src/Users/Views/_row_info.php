@@ -1,7 +1,7 @@
 <td><a href="<?= $user->adminLink() ?>"><?= esc($user->email) ?></a></td>
 <td><a href="<?= $user->adminLink() ?>"><?= esc($user->username) ?></a></td>
 <td><?= $user->groupsList() ?></td>
-<td><?= $user->last_active !== null ? $user->last_active->humanize() : lang('Users.never') ?></td>
+<td><?= $user->last_active?->humanize() ?? lang('Users.never') ?></td>
 <td class="text-end">
     <?php if (auth()->user()->can('users.edit') || auth()->user()->can('users.delete')): ?>
         <!-- Action Menu -->
