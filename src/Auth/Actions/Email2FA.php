@@ -92,7 +92,7 @@ class Email2FA extends ShieldEmail2FA
         $email->setSubject(lang('Auth.email2FASubject'));
         $email->setMessage($this->view(
             setting('Auth.views')['action_email_2fa_email'],
-            ['code'  => $identity->secret, 'ipAddress' => $ipAddress, 'userAgent' => $userAgent, 'date' => $date],
+            ['code' => $identity->secret, 'ipAddress' => $ipAddress, 'userAgent' => $userAgent, 'date' => $date],
             ['debug' => false],
         ));
 

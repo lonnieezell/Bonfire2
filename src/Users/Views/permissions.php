@@ -39,12 +39,7 @@
                                     <?php if ($user->hasPermission($permission)) : ?>
                                 checked
                                 <?php endif ?>
-                                <?php if (
-                                    ! $user->hasPermission($permission)
-                                    && ! auth()->user()->can('users.manage-admins')
-                                    && explode('.', (string) $permission)[0] === 'users'
-                                ) :
-                                    ?>
+                                <?php if (! $access->canAssignPermission($user, $permission)) : ?>
                                 disabled
                                 <?php endif ?>
                                 >

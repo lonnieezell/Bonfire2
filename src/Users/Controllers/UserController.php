@@ -12,6 +12,9 @@
 namespace Bonfire\Users\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Users\Libraries\AvatarStorage;
+use Bonfire\Users\Libraries\SaveUser;
+use Bonfire\Users\Libraries\UserAccess;
 use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
@@ -58,6 +61,7 @@ class UserController extends AdminController
             'showSelectAll' => true,
             'users'         => $userModel->paginate(setting('Site.perPage')),
             'pager'         => $userModel->pager,
+            'access'        => UserAccess::forCurrentUser(),
         ]);
     }
 
@@ -77,6 +81,7 @@ class UserController extends AdminController
 
         return $this->render($this->viewPrefix . 'form', [
             'groups' => $groups,
+            'access' => UserAccess::forCurrentUser(),
         ]);
     }
 
@@ -87,10 +92,8 @@ class UserController extends AdminController
      */
     public function edit(int $userId)
     {
-        // check if it's the current user
-        $itsMe = (auth()->user()->can('me.edit') || auth()->user()->can('me.security')) && auth()->id() === $userId;
-        // check if the user should be granted access
-        if (! auth()->user()->can('users.edit') && ! $itsMe) {
+        $access = UserAccess::forCurrentUser();
+        if (! $access->canOpenEditForm($userId)) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -109,7 +112,7 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix . 'form', [
             'user'   => $user,
             'groups' => $groups,
-            'itsMe'  => $itsMe,
+            'access' => $access,
         ]);
     }
 
@@ -122,10 +125,8 @@ class UserController extends AdminController
      */
     public function save(?int $userId = null)
     {
-        // check if it's the current user
-        $itsMe = auth()->user()->can('me.edit') && auth()->id() === $userId;
-        // check if the user should be permitted access
-        if (! auth()->user()->can('users.edit') && ! $itsMe) {
+        $access = UserAccess::forCurrentUser();
+        if (! $access->canSave($userId)) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -153,125 +154,8 @@ class UserController extends AdminController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Fill in basic details
-        $user->fill($this->request->getPost());
-
-        // Mark the user active if it is created by admin, or if it is marked active by admin
-        if (
-            $userId === null
-            || (
-                $user->isNotActivated()
-                && auth()->user()->can('users.edit')
-                && (int) $this->request->getPost('activate') === 1
-            )
-        ) {
-            $user->active = 1;
-        }
-
-        // Limits on banning:
-        // (1) Cannot ban oneself
-        // (2) Only users who can manage admins can ban admins
-        if (
-            auth()->user()->can('users.edit')
-            && ! $itsMe
-            && (
-                ! $user->inGroup('admin', 'superadmin')
-                || auth()->user()->can('users.manage-admins')
-            )
-        ) {
-            if ((int) $this->request->getPost('ban') === 1) {
-                $user->ban($this->request->getPost('ban_reason'));
-            } elseif ($user->isBanned() && (int) $this->request->getPost('ban') === 0) {
-                $user->unBan();
-            }
-        }
-
-        // Save basic details
-        $users->save($user);
-
-        // We need an ID to on the entity to save groups.
-        if ($user->id === null) {
-            $user->id = $users->getInsertID();
-        }
-
-        // Check for an avatar to upload
-        if (($file = $this->request->getFile('avatar')) && $file->isValid()) {
-            // Check if the avatar is to be resized
-            $avatarResize     = setting('Users.avatarResize') ?? false;
-            $maxDimension     = setting('Users.avatarSize') ?? 140;
-            [$width, $height] = getimagesize($file->getPathname());
-            if ($avatarResize && ($width > (int) $maxDimension || $height > (int) $maxDimension)) {
-                $image = service('image')->withFile($file->getPathname());
-                $image->resize($maxDimension, $maxDimension, true);
-                $image->save();
-            }
-            $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
-            helper('text');
-            $randomString = random_string('alnum', 5);
-            $filename     = $user->id . '_' . $randomString . '.jpg';
-            // Create if uploads/avatar directories not exist
-            if (! is_dir($avatarDir)) {
-                mkdir($avatarDir, 0755, true);
-            }
-            // delete the previous file if there is one in db & filesystem
-            if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
-                @unlink($avatarDir . '/' . $user->avatar);
-            }
-            // move the uploaded file and update user object
-            if ($file->move($avatarDir, $filename, true)) {
-                $users->update($user->id, ['avatar' => $filename]);
-            }
-        }
-
-        // Save the new user's email/password
-        $password = $this->request->getPost('password');
-        $identity = $user->getEmailIdentity();
-        if ($identity === null) {
-            helper('text');
-            $user->createEmailIdentity([
-                'email'    => $this->request->getPost('email'),
-                'password' => empty($password) ? random_string('alnum', 12) : $password,
-            ]);
-        }
-        // Update existing user's email identity
-        else {
-            $identity->secret = $this->request->getPost('email');
-            if ($password !== null) {
-                $identity->secret2 = service('passwords')->hash($password);
-            }
-            if ($identity->hasChanged()) {
-                model(UserIdentityModel::class)->save($identity);
-            }
-        }
-
-        // Save the user's groups if the user has right permissions
-        if (auth()->user()->can('users.edit')) {
-            $groups = $this->request->getPost('groups') ?? [];
-            // omit previously unset admin groups if user performing changes
-            // should not manage admins
-            if (! auth()->user()->can('users.manage-admins')) {
-                // prevent adding
-                foreach ($groups as $key => $group) {
-                    if (
-                        ! $user->inGroup($group)
-                        && in_array($group, ['admin', 'superadmin'], true)
-                    ) {
-                        unset($groups[$key]);
-                    }
-                }
-
-                // prevent removing: return any removed admin role
-                foreach ($user->getGroups() as $group) {
-                    if (in_array($group, ['admin', 'superadmin'], true) && ! in_array($group, $groups, true)) {
-                        $groups[] = $group;
-                    }
-                }
-            }
-            $user->syncGroups(...$groups);
-        }
-
-        // Save the user's meta fields
-        $user->syncMeta($this->request->getPost('meta') ?? []);
+        $user = (new SaveUser($access, new AvatarStorage(), $users))
+            ->handle($user, $this->request->getPost(), $this->request->getFile('avatar'));
 
         return redirect()->to($user->adminLink())->with('message', lang('Bonfire.resourceSaved', [lang('Users.user')]));
     }
@@ -285,8 +169,7 @@ class UserController extends AdminController
      */
     public function changePassword(?int $userId = null)
     {
-        $itsMe = auth()->user()->can('me.security') && auth()->id() === $userId;
-        if (! auth()->user()->can('users.edit') && ! $itsMe) {
+        if (! UserAccess::forCurrentUser()->canManageSecurity($userId)) {
             return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -384,8 +267,7 @@ class UserController extends AdminController
      */
     public function security(int $userId)
     {
-        $itsMe = auth()->user()->can('me.security') && auth()->id() === $userId;
-        if (! auth()->user()->can('users.edit') && ! $itsMe) {
+        if (! UserAccess::forCurrentUser()->canManageSecurity($userId)) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -432,6 +314,7 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix . 'permissions', [
             'user'        => $user,
             'permissions' => $permissions,
+            'access'      => UserAccess::forCurrentUser(),
         ]);
     }
 
@@ -442,7 +325,8 @@ class UserController extends AdminController
      */
     public function savePermissions(int $userId)
     {
-        if (! auth()->user()->can('users.edit')) {
+        $access = UserAccess::forCurrentUser();
+        if (! $access->canEditUsers()) {
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
@@ -453,20 +337,7 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
         }
 
-        $permissions = $this->request->getPost('permissions') ?? [];
-
-        // if the administrator cannot manage admins, remove all user-management related permissions
-        // unless they have been set previously
-        if (! auth()->user()->can('users.manage-admins')) {
-            foreach ($permissions as $key => $permission) {
-                if (
-                    ! $user->hasPermission($permission)
-                    && explode('.', (string) $permission)[0] === 'users'
-                ) {
-                    unset($permissions[$key]);
-                }
-            }
-        }
+        $permissions = $access->allowedPermissions($user, $this->request->getPost('permissions') ?? []);
 
         $user->syncPermissions(...$permissions);
 
@@ -480,18 +351,12 @@ class UserController extends AdminController
      */
     public function deleteAvatar(int $userId)
     {
-        // check if it's the current user
-        $itsMe = auth()->user()->can('me.edit') && auth()->id() === $userId;
-        // check if the user should be permitted access
-
         $users = new UserModel();
         /** @var User */
         $user = $users->find($userId);
 
-        if (auth()->user()->can('users.edit') || $itsMe) {
-            $avatarDir = FCPATH . (setting('Users.avatarDirectory') ?? 'uploads/avatars');
-            if ($user->avatar && file_exists($avatarDir . '/' . $user->avatar)) {
-                @unlink($avatarDir . '/' . $user->avatar);
+        if (UserAccess::forCurrentUser()->canSave($userId)) {
+            if ((new AvatarStorage())->delete($user->avatar)) {
                 $user->avatar = null;
                 $users->save($user);
             }
