@@ -1355,6 +1355,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Statistic widget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-data-only-when-it-is-shown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetching data only when it is shown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1468,6 +1485,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Statistic widget">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-data-only-when-it-is-shown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetching data only when it is shown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1650,6 +1684,27 @@ The available options are:</p>
 <p>The address that displays the list of objects on your module. It will be associated with the word "view detail"</p>
 <p><strong>faIcon</strong></p>
 <p>The FontAwesome icon</p>
+<h3 id="fetching-data-only-when-it-is-shown">Fetching data only when it is shown</h3>
+<p><code>addValue()</code> and <code>addValueByFreeQuery()</code> only run their query when the dashboard is being displayed and the widget is
+enabled in the widgets settings. When you build a value yourself, as <code>buildTableUsersByGroup()</code> does, ask the same
+question before doing the work:</p>
+<pre class="highlight"><code class="language-php">use Bonfire\Widgets\ItemSettings;
+use Bonfire\Widgets\WidgetKind;
+
+if (! service('dashboardContext')-&gt;shows(new ItemSettings(WidgetKind::Stats, 'countAllUsers643'))) {
+    return '';
+}</code></pre>
+<p>In your own tests you can make that answer yes or no without faking the URL by injecting a subclass of
+<code>Bonfire\Widgets\DashboardContext</code> that overrides <code>isDashboard()</code>:</p>
+<pre class="highlight"><code class="language-php">use Bonfire\Widgets\DashboardContext;
+use Config\Services;
+
+Services::injectMock('dashboardContext', new class () extends DashboardContext {
+    public function isDashboard(): bool
+    {
+        return true;
+    }
+});</code></pre>
 <h2 id="configuration_1">Configuration</h2>
 <p>All settings are available in the <code>Bonfire\Widgets\Config\Stats</code> class, or in the admin settings area.</p>
 <p>In the administration settings area, you can also choose to:
