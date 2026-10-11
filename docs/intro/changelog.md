@@ -13,6 +13,10 @@ The rules for the user form live in `Bonfire\Users\Config\Users::$validation`. I
 you already declare `$users` there, Bonfire no longer merges its `email`, `username`, `first_name` and `last_name` rules
 into it, so add any of those you rely on.
 
+Fixes: Bonfire found no themes under CodeIgniter 4.7.5, so every admin and auth page failed with "`Admin` is not a
+valid theme folder". `Theme::available()` now lists theme folders itself instead of using `get_dir_file_info()`, which
+no longer returns folders.
+
 ## 8 October 2026 (breaking change)
 
 The Recycler no longer guesses at what a model can do by checking `method_exists()`. A model that customizes the
