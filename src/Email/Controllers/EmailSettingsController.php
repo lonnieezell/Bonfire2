@@ -65,11 +65,11 @@ class EmailSettingsController extends AdminController
         setting('Email.protocol', $this->request->getPost('protocol'));
         setting('Email.mailPath', $this->request->getPost('mailPath'));
         setting('Email.SMTPHost', $this->request->getPost('SMTPHost'));
-        setting('Email.SMTPPort', $port);
+        setting('Email.SMTPPort', intval($port));
         setting('Email.SMTPUser', $this->request->getPost('SMTPUser'));
         setting('Email.SMTPPass', $this->request->getPost('SMTPPass'));
         setting('Email.SMTPCrypto', $this->request->getPost('SMTPCrypto'));
-        setting('Email.SMTPTimeout', $this->request->getPost('SMTPTimeout'));
+        setting('Email.SMTPTimeout', floatval($this->request->getPost('SMTPTimeout')));
         setting('Email.SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
 
         alert('success', 'The settings have been saved.');
