@@ -501,6 +501,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#11-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1479,6 +1490,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#11-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1653,6 +1675,16 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="11-october-2026-breaking-change">11 October 2026 (breaking change)</h2>
+<p>Bonfire no longer adds a <code>users</code> rule group to <code>Config\Validation</code>. Nothing in Bonfire used it, and because
+<code>Config\Validation</code> does not declare <code>$users</code>, it raised a "Creation of dynamic property" deprecation under PHP 8.2+.
+The rules for the user form live in <code>Bonfire\Users\Config\Users::$validation</code>. If your app calls
+<code>$this-&gt;validate('users')</code>, add the rules you need to your own <code>app/Config/Validation.php</code> as <code>public array $users</code>. If
+you already declare <code>$users</code> there, Bonfire no longer merges its <code>email</code>, <code>username</code>, <code>first_name</code> and <code>last_name</code> rules
+into it, so add any of those you rely on.</p>
+<p>Fixes: Bonfire found no themes under CodeIgniter 4.7.5, so every admin and auth page failed with "<code>Admin</code> is not a
+valid theme folder". <code>Theme::available()</code> now lists theme folders itself instead of using <code>get_dir_file_info()</code>, which
+no longer returns folders.</p>
 <h2 id="8-october-2026-breaking-change">8 October 2026 (breaking change)</h2>
 <p>The Recycler no longer guesses at what a model can do by checking <code>method_exists()</code>. A model that customizes the
 Recycler must now implement the matching interface from <code>Bonfire\Recycler\Interfaces</code>: <code>CustomRecyclerQuery</code>
