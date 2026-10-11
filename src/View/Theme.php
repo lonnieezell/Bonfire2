@@ -86,20 +86,23 @@ class Theme
     public static function available(): array
     {
         $themes = [];
-        helper('filesystem');
 
         foreach (config('Themes')->collections as $collection) {
-            $info = get_dir_file_info($collection, true);
+            $collection = rtrim($collection, '/\\') . '/';
 
-            if ($info === []) {
+            if (! is_dir($collection)) {
                 continue;
             }
 
-            foreach ($info as $name => $row) {
+            foreach (scandir($collection) as $name) {
+                if ($name[0] === '.' || ! is_dir($collection . $name)) {
+                    continue;
+                }
+
                 $themes[] = [
                     'name'          => $name,
-                    'path'          => $row['relative_path'] . $name . '/',
-                    'hasComponents' => is_dir($row['relative_path'] . $name . '/Components'),
+                    'path'          => $collection . $name . '/',
+                    'hasComponents' => is_dir($collection . $name . '/Components'),
                 ];
             }
         }
