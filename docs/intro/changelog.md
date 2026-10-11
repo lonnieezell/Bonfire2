@@ -4,6 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 11 October 2026 (breaking change)
+
+Bonfire no longer adds a `users` rule group to `Config\Validation`. Nothing in Bonfire used it, and because
+`Config\Validation` does not declare `$users`, it raised a "Creation of dynamic property" deprecation under PHP 8.2+.
+The rules for the user form live in `Bonfire\Users\Config\Users::$validation`. If your app calls
+`$this->validate('users')`, add the rules you need to your own `app/Config/Validation.php` as `public array $users`. If
+you already declare `$users` there, Bonfire no longer merges its `email`, `username`, `first_name` and `last_name` rules
+into it, so add any of those you rely on.
+
 ## 8 October 2026 (breaking change)
 
 The Recycler no longer guesses at what a model can do by checking `method_exists()`. A model that customizes the
