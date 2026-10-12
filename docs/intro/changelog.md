@@ -4,6 +4,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 12 October 2026
+
+Fixes: with Bonfire's `EmailActivator` or `Email2FA` turned on, sending the email failed with "Undefined variable
+$user". Shield's email views print the username, but Bonfire's actions did not pass `$user` to them. Both actions now
+do.
+
 ## 11 October 2026 (breaking change)
 
 Bonfire no longer adds a `users` rule group to `Config\Validation`. Nothing in Bonfire used it, and because
