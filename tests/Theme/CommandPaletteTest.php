@@ -15,9 +15,9 @@ final class CommandPaletteTest extends TestCase
 
     public function testPaletteOffersOnlyTheMenuItemsTheUserMaySee(): void
     {
-        // The admin group may view logs but not system info.
+        // May view logs but not system info.
         $user = $this->createUser();
-        $user->addGroup('admin');
+        $user->addPermission('admin.access', 'logs.view');
 
         $urls = array_column($this->paletteItems($user), 'url');
 
