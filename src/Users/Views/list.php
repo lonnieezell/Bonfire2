@@ -1,14 +1,14 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head title="<?= lang('Users.usersModTitle') ?>" count="<?= $total ?>">
+<x-page-head title="<?= esc(lang('Users.usersModTitle')) ?>" count="<?= $total ?>">
 	<?php if (auth()->user()->can('users.create')): ?>
 		<a href="<?= url_to('user-new') ?>" class="btn btn-primary"><i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Users.newUser')?></a>
 	<?php endif ?>
 </x-page-head>
 
 <x-admin-box>
-	<div x-data="{filtered: false}" hx-target="#content-list" hx-include=".bf-toolbar-form, .filters form">
+	<div x-data="{filtered: false}" hx-target="#content-list" hx-include=".bf-toolbar-form, .filters .filter-check">
 		<div class="bf-toolbar">
 			<form class="bf-toolbar-form" action="<?= current_url() ?>" method="get"
 				hx-get="<?= current_url() ?>"
@@ -19,7 +19,7 @@
 						placeholder="<?= lang('Users.searchUsers') ?>" aria-label="<?= lang('Users.searchUsers') ?>">
 				</div>
 				<div class="bf-chips" role="radiogroup" aria-label="<?= lang('Users.headers.groups') ?>">
-					<x-chip name="role" value="" label="<?= lang('Users.allGroups') ?>" count="<?= $total ?>" active="<?= $role === '' ? '1' : '' ?>" />
+					<x-chip name="role" value="" label="<?= esc(lang('Users.allGroups')) ?>" count="<?= $total ?>" active="<?= $role === '' ? '1' : '' ?>" />
 					<?php foreach ($roles as $alias => $title) : ?>
 						<x-chip name="role" value="<?= esc($alias) ?>" label="<?= esc($title) ?>" count="<?= $groupCounts[$alias] ?? 0 ?>" active="<?= $role === $alias ? '1' : '' ?>" />
 					<?php endforeach ?>

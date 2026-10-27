@@ -24,7 +24,7 @@
             </table>
         </div>
     <?php else : ?>
-        <x-empty-state title="<?= lang('Users.noUsersMatch') ?>" hint="<?= lang('Users.noUsersHint') ?>" />
+        <x-empty-state title="<?= esc(lang('Users.noUsersMatch')) ?>" hint="<?= esc(lang('Users.noUsersHint')) ?>" />
     <?php endif ?>
 
     <?php if (auth()->user()->can('users.delete')) : ?>
