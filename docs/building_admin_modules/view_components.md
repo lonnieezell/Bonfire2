@@ -20,7 +20,7 @@ The page header. Give it a `title` and it renders the design's head: an `<h1>`, 
     <a href="<?= url_to('user-new') ?>" class="btn btn-primary">New user</a>
 </x-page-head>
 
-<x-page-head title="<?= esc($user->displayName()) ?>" back="<?= site_url(ADMIN_AREA . '/users') ?>" backLabel="Users" />
+<x-page-head title="<?= esc($user->displayName()) ?>" back="<?= esc(site_url(ADMIN_AREA . '/users')) ?>" backLabel="<?= esc(lang('Users.usersModTitle')) ?>" />
 ```
 
 Without a `title` it wraps the slot as before, so existing `<x-page-head><h2>…</h2></x-page-head>` headers keep working.
