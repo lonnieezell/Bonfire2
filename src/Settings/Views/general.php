@@ -1,193 +1,83 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head>
-    <h2>Settings</h2>
-</x-page-head>
-
-<x-admin-box>
+<x-settings-layout>
     <form action="<?= site_url(ADMIN_AREA . '/settings/general') ?>" method="post">
         <?= csrf_field() ?>
 
-        <fieldset class="first">
-            <legend>General</legend>
+        <x-admin-box title="General">
+            <x-setting-row label="Site Name" for="siteName" description="Appears in admin, and is available throughout the site.">
+                <input type="text" class="form-control" name="siteName" id="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
+            </x-setting-row>
+            <x-setting-row label="Site Online" for="siteOnline" description="When off, only Superadmin and user groups with permission can access the site.">
+                <x-switch name="siteOnline" id="siteOnline" checked="<?= old('siteOnline', setting('Site.siteOnline') ?? false) ? '1' : '0' ?>" />
+            </x-setting-row>
+        </x-admin-box>
 
-            <!-- Site Name -->
-            <div class="row">
-                <div class="col-12 col-sm-4">
-                    <label class="form-label" for="siteName">Site Name</label>
-                    <input type="text"  class="form-control" name="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
-                </div>
-                <div class="col px-5 pt-2">
-                    <p class="text-muted small">Appears in admin, and is available throughout the site.</p>
-                </div>
-            </div>
-
-            <!-- Site Online? -->
-            <div class="row mt-3">
-                <div class="col-12 col-sm-4">
-                    <input class="form-check-input" type="checkbox" name="siteOnline"
-                            value="1"
-                        <?php if (old('siteOnline', setting('Site.siteOnline') ?? false)) : ?> checked <?php endif ?> />
-                    <label class="form-check-label" for="siteOnline">
-                        Site Online?
-                    </label>
-                </div>
-                <div class="col px-5">
-                    <p class="text-muted small">If unchecked, only Superadmin and user groups with permission can access the site.</p>
-                </div>
-            </div>
-
-        </fieldset>
-
-        <fieldset x-data="{ accent: '<?= admin_accent() ?>' }"
-                  x-effect="document.documentElement.style.setProperty('--bf-accent', accent)">
-            <legend>Appearance</legend>
-
-            <!-- Accent Color -->
-            <div class="row">
-                <div class="col-12 col-sm-4">
-                    <label class="form-label" for="adminAccent">Accent Color</label>
+        <x-admin-box title="Appearance">
+            <div x-data="{ accent: '<?= admin_accent() ?>' }"
+                 x-effect="document.documentElement.style.setProperty('--bf-accent', accent)">
+                <x-setting-row label="Accent Color" for="adminAccent" description="The highlight color used for buttons, links and active items throughout the admin.">
                     <div class="d-flex align-items-center gap-2">
                         <?php foreach (['#D9622B', '#2F6FEB', '#0F9F6E', '#7C5CE0'] as $preset) : ?>
-                            <button type="button" class="btn p-0 rounded-circle border"
-                                    style="width: 28px; height: 28px; background: <?= $preset ?>"
-                                    x-bind:class="accent.toLowerCase() === '<?= strtolower($preset) ?>' && 'border-3'"
+                            <button type="button" class="bf-swatch" style="background: <?= $preset ?>"
+                                    x-bind:class="accent.toLowerCase() === '<?= strtolower($preset) ?>' && 'active'"
                                     x-on:click="accent = '<?= $preset ?>'"
                                     aria-label="<?= $preset ?>"></button>
                         <?php endforeach ?>
-                        <input type="color" class="form-control form-control-color" name="adminAccent" id="adminAccent" x-model="accent" />
+                        <input type="color" class="form-control form-control-color" name="adminAccent" id="adminAccent" value="<?= admin_accent() ?>" x-model="accent" />
                     </div>
                     <?php if (has_error('adminAccent')) : ?>
                         <p class="text-danger small mb-0"><?= error('adminAccent') ?></p>
                     <?php endif ?>
-                </div>
-                <div class="col px-5 pt-2">
-                    <p class="text-muted small">The highlight color used for buttons, links and active items throughout the admin.</p>
-                </div>
+                </x-setting-row>
             </div>
-        </fieldset>
+        </x-admin-box>
 
-        <fieldset>
-            <legend>Date and Time Settings</legend>
+        <x-admin-box title="Date and Time">
+            <x-setting-row label="Timezone" for="timezone">
+                <div class="d-flex gap-2">
+                    <select name="timezoneArea" class="form-select" aria-label="Timezone area"
+                            hx-get="/<?= ADMIN_AREA ?>/settings/timezones"
+                            hx-target="#timezone"
+                            hx-include="[name='timezoneArea']"
+                    >
+                        <option>Select timezone...</option>
+                        <?php foreach ($timezones as $timezone) : ?>
+                            <option value="<?= $timezone ?>" <?php if ($currentTZArea === $timezone) : ?> selected <?php endif ?>>
+                                <?= $timezone ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                    <select name="timezone" id="timezone" class="form-select">
+                        <?php if (isset($timezoneOptions) && ! empty($timezoneOptions)) : ?>
+                            <?= $timezoneOptions ?>
+                        <?php else : ?>
+                            <option value="0">No timezones</option>
+                        <?php endif ?>
+                    </select>
+                </div>
+            </x-setting-row>
 
-            <!-- Timezone -->
-            <div class="row">
-                <div class="col-12 col-sm-4">
-                    <label for="timezone" class="form-label">Timezone</label>
-                    <div class="row">
-                        <div class="col-7 form-group">
-                            <select name="timezoneArea" class="form-control"
-                                    hx-get="/<?= ADMIN_AREA ?>/settings/timezones"
-                                    hx-target="#timezone"
-                                    hx-include="[name='timezoneArea']"
-                            >
-                                <option>Select timezone...</option>
-                                <?php foreach ($timezones as $timezone) : ?>
-                                    <option value="<?= $timezone ?>" <?php if ($currentTZArea === $timezone) : ?> selected <?php endif ?>>
-                                        <?= $timezone ?>
-                                    </option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-
-                        <div class="col-5 form-group">
-                            <select name="timezone" id="timezone" class="form-control">
-                                <?php if (isset($timezoneOptions) && ! empty($timezoneOptions)) : ?>
-                                    <?= $timezoneOptions ?>
-                                <?php else : ?>
-                                    <option value="0">No timezones</option>
-                                <?php endif ?>
-                            </select>
-                        </div>
-                    </div>
-
+            <div class="bf-setting-block">
+                <div class="bf-setting-label">Date Format</div>
+                <div class="bf-choice-cards" role="radiogroup" aria-label="Date Format">
+                    <?php foreach (['m/d/Y' => 'mm/dd/yyyy', 'd/m/Y' => 'dd/mm/yyyy', 'd-m-Y' => 'dd-mm-yyyy', 'Y-m-d' => 'yyyy-mm-dd', 'M j, Y' => 'mmm dd, yyyy', 'd.m.Y' => 'dd.mm.yyyy'] as $format => $pattern) : ?>
+                        <label class="bf-choice-card">
+                            <input type="radio" name="dateFormat" value="<?= $format ?>"<?= old('dateFormat', $dateFormat) === $format ? ' checked' : '' ?>>
+                            <span class="bf-choice-card-title"><?= date($format) ?></span>
+                            <span class="bf-choice-card-desc bf-mono"><?= $pattern ?></span>
+                        </label>
+                    <?php endforeach ?>
                 </div>
             </div>
 
-            <!-- Date Format -->
-            <div class="row mt-4">
-                <div class="col-12 col-sm-4">
-                    <label for="timezone" class="form-label">Date &amp; Time Format</label>
+            <x-setting-row label="Time Format">
+                <x-segmented name="timeFormat" label="Time Format" value="<?= esc(old('timeFormat', $timeFormat)) ?>" options='{"g:i A":"12-hour","H:i":"24-hour"}' />
+            </x-setting-row>
+        </x-admin-box>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="m/d/Y"
-                            <?php if (old('dateFormat', $dateFormat) === 'm/d/Y') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            mm/dd/yyyy
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="d/m/Y"
-                            <?php if (old('dateFormat', $dateFormat) === 'd/m/Y') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            dd/mm/yyyy
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="d-m-Y"
-                            <?php if (old('dateFormat', $dateFormat) === 'd-m-Y') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            dd-mm-yyyy
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="Y-m-d"
-                            <?php if (old('dateFormat', $dateFormat) === 'Y-m-d') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            yyyy-mm-dd
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="M j, Y"
-                            <?php if (old('dateFormat', $dateFormat) === 'M j, Y') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            mmm dd, yyyy
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="dateFormat" value="d.m.Y"
-                            <?php if (old('dateFormat', $dateFormat) === 'd.m.Y') : ?> checked <?php endif ?>>
-                        <label class="form-check-label" for="dateFormat">
-                            dd.mm.YYYY
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Time Format -->
-                <div class="row mt-4">
-                    <div class="col-12 col-sm-4">
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="timeFormat" value="g:i A"
-                                <?php if (old('timeFormat', $timeFormat) === 'g:i A') : ?> checked <?php endif ?>>
-                            <label class="form-check-label" for="timeFormat">
-                                12 hour with AM/PM
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="timeFormat" value="H:i"
-                                <?php if (old('timeFormat', $timeFormat) === 'H:i') : ?> checked <?php endif ?>>
-                            <label class="form-check-label" for="timeFormat">
-                                24 hour
-                            </label>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </fieldset>
-
-        <x-button-container>
-            <x-button>Save Settings</x-button>
-        </x-button-container>
+        <x-save-bar save="Save Settings" />
     </form>
-</x-admin-box>
+</x-settings-layout>
 <?php $this->endSection() ?>

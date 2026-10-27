@@ -1,363 +1,129 @@
-<?php 
-use Bonfire\Auth\Actions\EmailActivator;
+<?php
 use Bonfire\Auth\Actions\Email2FA;
+use Bonfire\Auth\Actions\EmailActivator;
 use CodeIgniter\Shield\Authentication\Passwords\CompositionValidator;
-use CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator;
 use CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator;
+use CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator;
 use CodeIgniter\Shield\Authentication\Passwords\PwnedValidator;
-$this->extend('master') ?>
+
+$this->extend('master');
+
+$validators = [
+    CompositionValidator::class     => ['Composition Validator', 'Primarily checks the password length requirements.'],
+    NothingPersonalValidator::class => ['Nothing Personal Validator', 'Checks the password for similarities with the email, username and other personal fields.'],
+    DictionaryValidator::class      => ['Dictionary Validator', 'Checks the password against nearly 600,000 leaked passwords.'],
+    PwnedValidator::class           => ['Pwned Validator', 'Uses a third-party site (haveibeenpwned.com) to check the password against millions of leaked passwords.'],
+];
+$activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
+?>
 
 <?php $this->section('main') ?>
-    <x-page-head>
-        <x-module-title><i class="fas fa-user"></i> Users</x-module-title>
-        <h2>Settings</h2>
-    </x-page-head>
+<x-settings-layout>
+    <form action="<?= site_url(ADMIN_AREA . '/settings/users') ?>" method="post">
+        <?= csrf_field() ?>
 
-    <x-admin-box>
-        <form action="<?= site_url(ADMIN_AREA . '/settings/users') ?>" method="post">
-            <?= csrf_field() ?>
-
-            <fieldset class="first">
-                <legend>Registration</legend>
-
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="allowRegistration"
-                                   value="1" id="allow-registration"
-                                <?php if (old('allowRegistration', setting('Auth.allowRegistration'))) : ?> checked <?php endif ?>
-                            >
-                            <label class="form-check-label" for="allow-registration">
-                                Allow users to register themselves on the site
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">If unchecked, an admin will need to create users.</p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="emailActivation"
-                                   value='Bonfire\Auth\Actions\EmailActivator' id="email-activation"
-                                <?php if (old('emailActivation', setting('Auth.actions')['register']) === EmailActivator::class) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label" for="email-activation">
-                                Force email verification after registration?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">If checked, will send a code via email for them to confirm.</p>
-                    </div>
-                </div>
-
-                <?php if (isset($groups) && count($groups)) : ?>
-                <!-- Default Group -->
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-
-                        <label class="form-label">Default User Group:</label>
-
+        <x-admin-box title="Registration">
+            <x-setting-row label="Allow registration" for="allow-registration" description="Let users register themselves on the site. When off, an admin needs to create users.">
+                <x-switch name="allowRegistration" id="allow-registration" checked="<?= old('allowRegistration', setting('Auth.allowRegistration')) ? '1' : '0' ?>" />
+            </x-setting-row>
+            <x-setting-row label="Force email verification" for="email-activation" description="Send new users a code by email to confirm their address.">
+                <x-switch name="emailActivation" id="email-activation" value="<?= esc(EmailActivator::class) ?>"
+                    checked="<?= old('emailActivation', setting('Auth.actions')['register']) === EmailActivator::class ? '1' : '0' ?>" />
+            </x-setting-row>
+            <?php if (isset($groups) && count($groups)) : ?>
+                <x-setting-row label="Default user group" for="defaultGroup" description="The group newly registered users join.">
+                    <select name="defaultGroup" id="defaultGroup" class="form-select">
                         <?php foreach ($groups as $group => $info) : ?>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="defaultGroup"
-                                   value="<?= $group ?>"
-                                    <?php if ($group === $defaultGroup) : ?> checked <?php endif ?>>
-                            <label class="form-check-label" for="defaultGroup">
-                                <?= esc($info['title']) ?>
-                            </label>
-                        </div>
+                            <option value="<?= esc($group) ?>"<?= $group === $defaultGroup ? ' selected' : '' ?>><?= esc($info['title']) ?></option>
                         <?php endforeach ?>
+                    </select>
+                </x-setting-row>
+            <?php endif ?>
+        </x-admin-box>
 
-                    </div>
-                    <div class="col px-5 py-4">
-                        <p class="text-muted small">The user group newly registered users are members of.</p>
-                    </div>
-                </div>
-                <?php endif ?>
-
-            </fieldset>
-
-            <fieldset x-data="{remember: <?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? 1 : 0 ?>}">
-                <legend>Login</legend>
-
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="allowRemember"
-                                   value="1" id="allow-remember"
-                                <?php if (old('allowRemember', setting('Auth.sessionConfig')['allowRemembering'])) : ?> checked <?php endif ?>
-                                   x-on:click="remember = ! remember"
-                            >
-                            <label class="form-check-label" for="allow-remember">
-                                Allow users to be "remembered"
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">This makes it so users do not have to login every visit.</p>
-                    </div>
-                </div>
-                <div class="row mb-4" x-show="remember">
-                    <div class="form-group col-12 col-sm-4">
-                        <label for="rememberLength" class="form-label">Remember Users for how long?</label>
-                        <select name="rememberLength" class="form-select">
+        <x-admin-box title="Login">
+            <div x-data="{ remember: <?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? 'true' : 'false' ?> }">
+                <x-setting-row label="Remember users" for="allow-remember" description="Users don't have to log in on every visit.">
+                    <x-switch name="allowRemember" id="allow-remember" x-model="remember"
+                        checked="<?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? '1' : '0' ?>" />
+                </x-setting-row>
+                <div x-show="remember">
+                    <x-setting-row label="Remember for" for="rememberLength">
+                        <select name="rememberLength" id="rememberLength" class="form-select">
                             <option value="0">How long to remember...</option>
-                            <?php if (isset($rememberOptions) && count($rememberOptions)) : ?>
-                                <?php foreach ($rememberOptions as $title => $seconds) : ?>
-                                    <option value="<?= $seconds ?>"
-                                        <?php if (old('rememberLength', setting('Auth.sessionConfig')['rememberLength']) === (string) $seconds) : ?> selected <?php endif?>
-                                    >
-                                        <?= $title ?>
-                                    </option>
-                                <?php endforeach ?>
-                            <?php endif ?>
+                            <?php foreach ($rememberOptions ?? [] as $title => $seconds) : ?>
+                                <option value="<?= $seconds ?>"<?= old('rememberLength', setting('Auth.sessionConfig')['rememberLength']) === (string) $seconds ? ' selected' : '' ?>><?= $title ?></option>
+                            <?php endforeach ?>
                         </select>
-                    </div>
+                    </x-setting-row>
                 </div>
+            </div>
+            <x-setting-row label="Force 2FA after login" for="email-2fa" description="Send users a code by email to confirm each login.">
+                <x-switch name="email2FA" id="email-2fa" value="<?= esc(Email2FA::class) ?>"
+                    checked="<?= old('email2FA', setting('Auth.actions')['login']) === Email2FA::class ? '1' : '0' ?>" />
+            </x-setting-row>
+        </x-admin-box>
 
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="email2FA"
-                                   value="Bonfire\Auth\Actions\Email2FA" id="email-2fa"
-                                <?php if (old('email2FA', setting('Auth.actions')['login']) === Email2FA::class) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label" for="email-2fa">
-                                Force 2FA check after login?
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">If checked, will send a code via email for them to confirm.</p>
-                    </div>
+        <x-admin-box title="Passwords" description="These rules determine how secure a password must be.">
+            <x-setting-row label="Minimum length" for="minimumPasswordLength" description="A minimum of 8 is suggested. 10 is recommended.">
+                <input type="number" name="minimumPasswordLength" id="minimumPasswordLength" class="form-control bf-input-narrow" min="8" step="1"
+                       value="<?= old('minimumPasswordLength', setting('Auth.minimumPasswordLength')) ?>">
+                <?php if (has_error('minimumPasswordLength')) : ?>
+                    <p class="text-danger small mb-0"><?= error('minimumPasswordLength') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <div x-data="{ validators: <?= esc(json_encode(array_values($activeValidators)), 'attr') ?>, get overlap() { return this.validators.includes(<?= esc(json_encode(DictionaryValidator::class), 'attr') ?>) && this.validators.includes(<?= esc(json_encode(PwnedValidator::class), 'attr') ?>) } }">
+                <?php foreach ($validators as $class => [$title, $description]) : ?>
+                    <?php $id = 'validator-' . strtolower(substr(strrchr($class, '\\'), 1)) ?>
+                    <x-setting-row label="<?= $title ?>" for="<?= $id ?>" description="<?= esc($description) ?>">
+                        <x-switch name="validators[]" offValue id="<?= $id ?>" value="<?= esc($class) ?>" x-model="validators"
+                            checked="<?= in_array($class, $activeValidators, true) ? '1' : '0' ?>" />
+                    </x-setting-row>
+                <?php endforeach ?>
+                <div class="bf-callout bf-callout-warn" x-show="validators.length === 0" x-cloak>
+                    No validators are on: passwords only need to meet the minimum length.
                 </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Passwords</legend>
-
-                <div class="row">
-                    <div class="form-group col-12 col-sm-4">
-                        <label for="minimumPasswordLength" class="form-label">Minimum Password Length</label>
-                        <input type="number" name="minimumPasswordLength" class="form-control" min="8" step="1"
-                               value="<?= old('minimumPasswordLength', setting('Auth.minimumPasswordLength')) ?>">
-                        <?php if (has_error('minimumPasswordLength')) : ?>
-                            <p class="text-danger"><?= error('minimumPasswordLength') ?></p>
-                        <?php endif ?>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small mt-5">A minimum value of 8 is suggested. 10 is recommended.</p>
-                    </div>
+                <div class="bf-callout bf-callout-warn" x-show="overlap" x-cloak>
+                    The Dictionary and Pwned validators overlap. You only need one of them.
                 </div>
+            </div>
+        </x-admin-box>
 
-                <br>
-
-                <label for="passwordValidators" class="form-label">Password Validators</label>
-                <p class="text-muted">These rules determine how secure a password must be.</p>
-
-                <div class="row">
-                    <!-- Password Validators -->
-                    <div class="form-group col-6 col-sm-4">
-
-                        <!-- Composition Validator -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="validators[]"
-                                   value="CodeIgniter\Shield\Authentication\Passwords\CompositionValidator"
-                                <?php if (in_array(
-                                    CompositionValidator::class,
-                                    old('validators', setting('Auth.passwordValidators')),
-                                    true
-                                )) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label">
-                                Composition Validator
-                            </label>
-                        </div>
-
-                        <!-- Nothing Personal Validator -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="validators[]"
-                                   value="CodeIgniter\Shield\Authentication\Passwords\NothingPersonalValidator"
-                                <?php if (in_array(
-                                    NothingPersonalValidator::class,
-                                    old('validators', setting('Auth.passwordValidators')),
-                                    true
-                                )) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label">
-                                Nothing Personal Validator
-                            </label>
-                        </div>
-
-                        <!-- Dictionary Validator -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="validators[]"
-                                   value="CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator"
-                                <?php if (in_array(
-                                    DictionaryValidator::class,
-                                    old('validators', setting('Auth.passwordValidators')),
-                                    true
-                                )) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label">
-                                Dictionary Validator
-                            </label>
-                        </div>
-
-                        <!-- Pwned Validator -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="validators[]"
-                                   value="CodeIgniter\Shield\Authentication\Passwords\PwnedValidator"
-                                <?php if (in_array(
-                                    PwnedValidator::class,
-                                    old('validators', setting('Auth.passwordValidators')),
-                                    true
-                                )) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                            <label class="form-check-label">
-                                Pwned Validator
-                            </label>
-                        </div>
-
-                        <p class="text-muted small mt-4">Note: Unchecking these will reduce the password security requirements.</p>
-                    </div>
-                    <div class="col-6 px-4">
-                        <ul class="text-muted small">
-                            <li>Composition Validator primarily checks the password length requirements.</li>
-                            <li>Nothing Personal Validator checks the password for similarities between the password,
-                                the email, username, and other personal fields to ensure they are not too similar and easy to guess.</li>
-                            <li>Dictionary Validator checks the password against nearly 600,000 leaked passwords.</li>
-                            <li>Pwned Validator uses a <a href="https://haveibeenpwned.com/Passwords" target="_blank">third-party site</a>
-                                to check the password against millions of leaked passwords.</li>
-                            <li>NOTE: You only need to select only one of Dictionary and Pwned Validators.</li>
-                        </ul>
-                    </div>
-                </div>
-            </fieldset>
-
-
-
-            <fieldset x-data="{
-                        useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? 'true' : 'false' ?>, 
-                        avatarResize: <?= old('avatarResize', setting('Users.avatarResize')) ? 'true' : 'false' ?>
-                        }">
-                <legend>Avatars</legend>
-
-                <!-- Name Basis -->
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-4">
-                        <label class="form-label" for="avatarNameBasis">Display initials based on:</label>
-                        <select name="avatarNameBasis" class="form-select">
-                            <option value="name" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'name' ? 'selected' : '' ?>>Full Name</option>
-                            <option value="username" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'username' ? 'selected' : '' ?>>Username</option>
-                        </select>
-                    </div>
-                    <div class="col px-5 pt-2">
-                        <p class="text-muted small">Will use either the user's full name or their username to display the
-                            initials within their avatar if no image exists.</p>
-                    </div>
-                </div>
-
-                <!-- Use Gravatar -->
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="useGravatar"
-                                   value="1" id="use-gravatar"
-                                   @change="useGravatar = ! useGravatar"
-                                <?php if (old('useGravatar', setting('Users.useGravatar'))) : ?> checked <?php endif ?>
-                            >
-                            <label class="form-check-label fw-bold" for="use-gravatar">
-                                Use Gravatar for avatars
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">Will use <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
-                            to provide portable use avatars. This would be used if a user has not uploaded an avatar locally.</p>
-                    </div>
-                </div>
-
-                <!-- Gravatar Default -->
-                <div class="row mb-3" x-show="useGravatar">
-                    <div class="col-12 col-sm-4">
-                        <label for="gravatarDefault" class="form-label">Gravatar default style</label>
-                        <select name="gravatarDefault" class="form-select">
+        <x-admin-box title="Avatars">
+            <div x-data="{ useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? 'true' : 'false' ?>, avatarResize: <?= old('avatarResize', setting('Users.avatarResize')) ? 'true' : 'false' ?> }">
+                <x-setting-row label="Initials from" for="avatarNameBasis" description="Used for the initials in an avatar when there is no image.">
+                    <select name="avatarNameBasis" id="avatarNameBasis" class="form-select">
+                        <option value="name" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'name' ? 'selected' : '' ?>>Full Name</option>
+                        <option value="username" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'username' ? 'selected' : '' ?>>Username</option>
+                    </select>
+                </x-setting-row>
+                <x-setting-row label="Use Gravatar" for="use-gravatar" description="Use Gravatar (gravatar.com) when a user has not uploaded an avatar.">
+                    <x-switch name="useGravatar" id="use-gravatar" x-model="useGravatar"
+                        checked="<?= old('useGravatar', setting('Users.useGravatar')) ? '1' : '0' ?>" />
+                </x-setting-row>
+                <div x-show="useGravatar">
+                    <x-setting-row label="Gravatar default style" for="gravatarDefault" description="See gravatar.com for examples of each style.">
+                        <select name="gravatarDefault" id="gravatarDefault" class="form-select">
                             <option value="">Select default style....</option>
-                            <option value="mp" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'mp' ? 'selected' : '' ?>>mystery person</option>
-                            <option value="identicon" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'identicon' ? 'selected' : '' ?>>identicon</option>
-                            <option value="monsterid"  <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'monsterid' ? 'selected' : '' ?>>monsterid</option>
-                            <option value="wavatar" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'wavatar' ? 'selected' : '' ?>>wavatar</option>
-                            <option value="retro" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'retro' ? 'selected' : '' ?>>retro</option>
-                            <option value="robohash" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'robohash' ? 'selected' : '' ?>>robohash</option>
-                            <option value="blank" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === 'blank' ? 'selected' : '' ?>>blank</option>
+                            <?php foreach (['mp' => 'mystery person', 'identicon' => 'identicon', 'monsterid' => 'monsterid', 'wavatar' => 'wavatar', 'retro' => 'retro', 'robohash' => 'robohash', 'blank' => 'blank'] as $style => $label) : ?>
+                                <option value="<?= $style ?>" <?= old('gravatarDefault', setting('Users.gravatarDefault')) === $style ? 'selected' : '' ?>><?= $label ?></option>
+                            <?php endforeach ?>
                         </select>
-                    </div>
-                    <div class="col px-5 pt-2">
-                        <p class="text-muted small">
-                            Visit <a href="http://en.gravatar.com/site/implement/images/" target="_blank">gravatar.com</a> for image examples.
-                        </p>
-                    </div>
+                    </x-setting-row>
                 </div>
-
-                <!-- Avatar downsize -->
-                <div class="row">
-                    <div class="col-12 col-sm-4">
-                        <div class="form-check">
-                            <input type="hidden" name="avatarResize" value="0">
-                            <input class="form-check-input" type="checkbox" name="avatarResize"
-                                   value="1" id="avatar-resize"
-                                   @change="avatarResize = ! avatarResize"
-                                <?php if (old('avatarResize', setting('Users.avatarResize'))) : ?> checked <?php endif ?>
-                            >
-                            <label class="form-check-label" for="avatar-resize">
-                                Downsize avatar on upload
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col px-5">
-                        <p class="text-muted small">Should the user-uploaded avatar image be downsized?</p>
-                    </div>
+                <x-setting-row label="Downsize on upload" for="avatar-resize" description="Downsize user-uploaded avatar images.">
+                    <x-switch name="avatarResize" id="avatar-resize" x-model="avatarResize"
+                        checked="<?= old('avatarResize', setting('Users.avatarResize')) ? '1' : '0' ?>" />
+                </x-setting-row>
+                <div x-show="avatarResize">
+                    <x-setting-row label="Max dimensions" for="avatar-size" description="In pixels; no less than <?= setting('User.avatarSizeFloor') ?? 32 ?>.">
+                        <input placeholder="<?= setting('User.avatarSizeFloor') ?? 32 ?>" name="avatarSize" type="number" min="<?= setting('User.avatarSizeFloor') ?? 32 ?>" class="form-control bf-input-narrow" value="<?= old('avatarSize', setting('Users.avatarSize')) ?>" id="avatar-size">
+                    </x-setting-row>
                 </div>
+            </div>
+        </x-admin-box>
 
-                <!-- Gravatar Default -->
-                <div class="row" x-show="avatarResize">
-                    <div class="col-12 col-sm-4">
-                        <label for="avatar-size" class="form-label">Avatar max dimensions</label>
-
-                        <div class="input-group">
-                            <span class="input-group-text" id="px-notation">px</span>
-                            <input placeholder="<?= setting('User.avatarSizeFloor') ?? 32 ?>" name="avatarSize" type="number" min="<?= setting('User.avatarSizeFloor') ?? 32 ?>" class="form-control" value="<?= old('avatarSize', setting('Users.avatarSize')) ?>" id="avatar-size">
-                        </div>
-                    </div>
-                    <div class="col px-5 pt-2">
-                        <p class="text-muted small">
-                            The smallest dimension should not be less than <?= setting('User.avatarSizeFloor') ?? 32 ?> px.
-                        </p>
-                    </div>
-                </div>
-
-            </fieldset>
-
-            <x-button-container>
-                <x-button>Save Settings</x-button>
-            </x-button-container>
-        </form>
-    </x-admin-box>
+        <x-save-bar save="Save Settings" />
+    </form>
+</x-settings-layout>
 <?php $this->endSection() ?>

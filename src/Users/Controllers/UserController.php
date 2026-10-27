@@ -12,6 +12,7 @@
 namespace Bonfire\Users\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Groups\Libraries\GroupPermissions;
 use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\Libraries\SaveUser;
 use Bonfire\Users\Libraries\UserAccess;
@@ -19,7 +20,6 @@ use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\HTTP\RedirectResponse;
-use CodeIgniter\Shield\Authorization\Groups;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use ReflectionException;
@@ -98,7 +98,7 @@ class UserController extends AdminController
 
         return $this->render($this->viewPrefix . 'form', [
             'groups'           => $groups,
-            'permissionCounts' => $this->groupPermissionCounts($groups),
+            'permissionCounts' => GroupPermissions::counts(array_keys($groups)),
             'access'           => UserAccess::forCurrentUser(),
         ]);
     }
@@ -130,28 +130,9 @@ class UserController extends AdminController
         return $this->render($this->viewPrefix . 'form', [
             'user'             => $user,
             'groups'           => $groups,
-            'permissionCounts' => $this->groupPermissionCounts($groups),
+            'permissionCounts' => GroupPermissions::counts(array_keys($groups)),
             'access'           => $access,
         ]);
-    }
-
-    /**
-     * How many of the defined permissions each group grants.
-     *
-     * @return array<string, int>
-     */
-    private function groupPermissionCounts(array $groups): array
-    {
-        $permissions = array_keys(setting('AuthGroups.permissions') ?? []);
-        $service     = new Groups();
-        $counts      = [];
-
-        foreach (array_keys($groups) as $group) {
-            $info           = $service->info($group);
-            $counts[$group] = $info === null ? 0 : count(array_filter($permissions, $info->can(...)));
-        }
-
-        return $counts;
     }
 
     /**

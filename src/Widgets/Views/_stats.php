@@ -1,46 +1,20 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
+<x-settings-layout>
+    <?= view('Bonfire\Widgets\Views\_tabs', ['tab' => $tab]) ?>
 
+    <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
+        <?= csrf_field() ?>
+        <input type="hidden" id="widget" name="widget" value="<?= esc($tab) ?>">
 
-<x-page-head>
-	<x-module-title><i class="far fa-object-group"></i> Widgets</x-module-title>
-	<h2>Settings</h2>
-</x-page-head>
+        <x-admin-box title="Statistics widgets">
+            <x-setting-row label='Show the "View Detail" link' for="stats_showLink">
+                <x-switch name="stats_showLink" value="on" offValue id="stats_showLink" checked="<?= setting('Stats.stats_showLink') ? '1' : '0' ?>" />
+            </x-setting-row>
+        </x-admin-box>
 
-<?= view('Bonfire\Widgets\Views\_tabs', ['tab' => $tab]) ?>
-
-<x-admin-box>
-
-	<form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
-		<?= csrf_field() ?>
-        <input type="hidden" id="widget" name="widget" value="<?=$tab?>">
-
-        <fieldset class="first">
-
-            <legend><i class="fas fa-chart-bar"></i> Stats General Settings</legend>
-
-            <p>In this section you can customize the general parameters concerning the Stats widget.</p>
-
-            <div class="form-check form-switch mt-6 mb-3">
-                <input class="form-check-input" type="checkbox" name="stats_showLink" role="switch" id="stats_showLink"
-					<?php if (setting('Stats.stats_showLink')) : ?> checked <?php endif ?>
-                >
-                <label class="form-check-label" for="stats_showLink">Show the Link "View Detail"?</label>
-            </div>
-
-
-        </fieldset>
-
-        <x-button-container>
-            <x-button>Save Chart Settings</x-button>
-        </x-button-container>
-	</form>
-
-
-</x-admin-box>
-<?php $this->endSection() ?>
-
-<?php $this->section('scripts') ?>
-
+        <x-save-bar save="Save Settings" />
+    </form>
+</x-settings-layout>
 <?php $this->endSection() ?>

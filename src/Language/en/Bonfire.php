@@ -36,6 +36,7 @@ return [
     // collections:
     'contentModTitle'  => 'Content',
     'settingsModTitle' => 'Settings',
+    'settingsSubtitle' => 'Configure your site, its users and the admin.',
     'toolsModTitle'    => 'Tools',
     'generalModTitle'  => 'General',
 

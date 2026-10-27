@@ -13,6 +13,7 @@ namespace Tests\Widgets;
 
 use CodeIgniter\Shield\Entities\User;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
 /**
@@ -20,6 +21,8 @@ use Tests\Support\TestCase;
  */
 final class WidgetsSettingsControllerTest extends TestCase
 {
+    use SubmitsForms;
+
     protected $refresh = true;
     private User $user;
 
@@ -173,5 +176,66 @@ final class WidgetsSettingsControllerTest extends TestCase
 
         $this->assertTrue(setting('Stats.stats_showLink'));
         $this->assertNotSame('on', setting('Stats.stats_showLink'));
+    }
+
+    public function testEnabledFlagsRoundTripThroughTheForm(): void
+    {
+        setting('Stats.Stats_usersInRecycler693', 'on');
+        setting('Stats.Stats_usersExpTable693', false);
+
+        $this->submitTheForm('/admin/settings/widgets');
+
+        $this->assertSame('on', setting('Stats.Stats_usersInRecycler693'));
+        $this->assertEmpty(setting('Stats.Stats_usersExpTable693'));
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    #[DataProvider('provideOptionsRoundTrip')]
+    public function testOptionsRoundTripThroughTheForm(string $alias, array $settings): void
+    {
+        foreach ($settings as $key => $value) {
+            setting($key, $value);
+        }
+
+        $this->submitTheForm('/admin/settings/widgets/' . $alias);
+
+        foreach ($settings as $key => $value) {
+            $this->assertEquals($value, setting($key), $key);
+        }
+    }
+
+    public static function provideOptionsRoundTrip(): iterable
+    {
+        yield 'stats on' => ['stats', ['Stats.stats_showLink' => 'on']];
+
+        yield 'stats off' => ['stats', ['Stats.stats_showLink' => false]];
+
+        yield 'line' => ['linechart', [
+            'LineChart.line_showTitle'       => 'on',
+            'LineChart.line_showLegend'      => false,
+            'LineChart.line_legendPosition'  => 'right',
+            'LineChart.line_enableAnimation' => 'on',
+            'LineChart.line_tension'         => '0.4',
+        ]];
+
+        foreach (self::provideSavingSchemedChartOptions() as $name => [$alias, $class, $prefix]) {
+            yield $name => [$alias, [
+                "{$class}.{$prefix}_showTitle"       => false,
+                "{$class}.{$prefix}_showLegend"      => 'on',
+                "{$class}.{$prefix}_legendPosition"  => 'left',
+                "{$class}.{$prefix}_enableAnimation" => 'on',
+                "{$class}.{$prefix}_colorScheme"     => 'Greens',
+            ]];
+        }
+    }
+
+    private function submitTheForm(string $path): void
+    {
+        $html   = $this->actingAs($this->user)->get($path)->getBody();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/widgets'));
+
+        $this->actingAs($this->user)->post('/admin/settings/widgets', $fields)->assertRedirect();
     }
 }

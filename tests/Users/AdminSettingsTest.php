@@ -2,7 +2,12 @@
 
 namespace Tests\Users;
 
+use Bonfire\Auth\Actions\Email2FA;
+use Bonfire\Auth\Actions\EmailActivator;
 use Bonfire\Users\User;
+use CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator;
+use CodeIgniter\Shield\Authentication\Passwords\PwnedValidator;
+use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
 /**
@@ -10,6 +15,8 @@ use Tests\Support\TestCase;
  */
 final class AdminSettingsTest extends TestCase
 {
+    use SubmitsForms;
+
     protected $refresh = true;
     private User $user;
 
@@ -54,6 +61,65 @@ final class AdminSettingsTest extends TestCase
         $this->assertSame(10, setting('Auth.minimumPasswordLength'));
         $this->assertSame('developer', setting('AuthGroups.defaultGroup'));
         $this->assertSame(['CodeIgniter\Shield\Authentication\Passwords\CompositionValidator'], setting('Auth.passwordValidators'));
-        $this->assertSame(['login' => '1', 'register' => '1'], setting('Auth.actions'));
+        // The key order depends on what earlier tests left in the settings cache.
+        $this->assertEquals(['login' => '1', 'register' => '1'], setting('Auth.actions'));
+    }
+
+    public function testEverySettingRoundTripsThroughTheForm(): void
+    {
+        $settings = [
+            'Auth.allowRegistration'     => true,
+            'Auth.minimumPasswordLength' => 12,
+            'Auth.passwordValidators'    => [DictionaryValidator::class, PwnedValidator::class],
+            'AuthGroups.defaultGroup'    => 'beta',
+            'Auth.actions'               => ['register' => EmailActivator::class, 'login' => Email2FA::class],
+            'Users.useGravatar'          => '1',
+            'Users.gravatarDefault'      => 'retro',
+            'Users.avatarNameBasis'      => 'username',
+            'Users.avatarResize'         => true,
+            'Users.avatarSize'           => 200,
+        ];
+        foreach ($settings as $key => $value) {
+            setting($key, $value);
+        }
+        setting('Auth.sessionConfig', ['allowRemembering' => '1', 'rememberLength'   => (string) WEEK] + setting('Auth.sessionConfig'));
+
+        $this->submitTheForm();
+
+        foreach ($settings as $key => $value) {
+            $this->assertEquals($value, setting($key), $key);
+        }
+        $this->assertTrue((bool) setting('Auth.sessionConfig')['allowRemembering']);
+        $this->assertSame((string) WEEK, setting('Auth.sessionConfig')['rememberLength']);
+    }
+
+    public function testSwitchedOffActionsAreSavedAsNone(): void
+    {
+        setting('Auth.actions', ['register' => null, 'login' => null]);
+        setting('Users.useGravatar', false);
+        setting('Auth.allowRegistration', false);
+
+        $this->submitTheForm();
+
+        $this->assertEquals(['register' => null, 'login' => null], setting('Auth.actions'));
+        $this->assertFalse((bool) setting('Users.useGravatar'));
+        $this->assertFalse(setting('Auth.allowRegistration'));
+    }
+
+    public function testPasswordValidatorsUseSwitchesAndWarnAboutOverlapAndNone(): void
+    {
+        $html = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();
+
+        $this->assertMatchesRegularExpression('#role="switch" class="bf-switch-input" name="validators\[\]" value="CodeIgniter\\\\Shield\\\\Authentication\\\\Passwords\\\\PwnedValidator"#', $html);
+        $this->assertStringContainsString('x-show="validators.length === 0"', $html);
+        $this->assertStringContainsString('x-show="overlap"', $html);
+    }
+
+    private function submitTheForm(): void
+    {
+        $html   = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/users'));
+
+        $this->actingAs($this->user)->post('/admin/settings/users', $fields)->assertSessionMissing('errors');
     }
 }

@@ -1,55 +1,34 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/settings/groups/') ?>" class="back">&larr; Groups</a>
-    <h2>Edit Groups &amp; Permissions</h2>
-</x-page-head>
+<x-settings-layout>
+    <?= view('Bonfire\Groups\Views\_tabs', ['tab' => 'permissions', 'group' => $group->alias, 'title' => $group->title]) ?>
 
-<?= view('Bonfire\Groups\Views\_tabs', ['tab' => 'permissions', 'group' => $group->alias]) ?>
+    <?php
+    $byPrefix = [];
 
-<x-admin-box>
+    foreach ($permissions as $permission => $description) {
+        $byPrefix[explode('.', $permission)[0]][$permission] = $description;
+    }
+    ?>
+
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
-        <fieldset>
-            <legend><?= esc($group->title) ?></legend>
+        <p class="bf-muted">Select the permissions this group should have.</p>
 
-            <p>Select the permissions this group should have access to.</p>
-
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th style="width: 3rem"></th>
-                    <th>Permission</th>
-                    <th>Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($permissions as $permission => $description) : ?>
-                    <tr>
-                        <td>
-                            <input class="form-check-input" type="checkbox" name="permissions[]" value="<?= $permission ?>"
-                                <?php if ($group->can($permission)) : ?>
-                                    checked
-                                <?php endif ?>
-                            >
-                        </td>
-                        <td><?= $permission ?></td>
-                        <td><?= $description ?></td>
-                    </tr>
+        <?php foreach ($byPrefix as $prefix => $set) : ?>
+            <x-admin-box title="<?= esc(ucfirst($prefix)) ?>">
+                <?php foreach ($set as $permission => $description) : ?>
+                    <?php $id = 'perm-' . str_replace('.', '-', $permission) ?>
+                    <x-setting-row label="<?= esc($permission) ?>" for="<?= $id ?>" description="<?= esc($description) ?>">
+                        <x-switch name="permissions[]" offValue value="<?= esc($permission) ?>" id="<?= $id ?>" checked="<?= $group->can($permission) ? '1' : '0' ?>" />
+                    </x-setting-row>
                 <?php endforeach ?>
-                </tbody>
-            </table>
+            </x-admin-box>
+        <?php endforeach ?>
 
-        </fieldset>
-
-        <x-button-container>
-            <x-button>Save Permissions</x-button>
-        </x-button-container>
-
+        <x-save-bar save="Save Permissions" />
     </form>
-
-</x-admin-box>
-
+</x-settings-layout>
 <?php $this->endSection() ?>

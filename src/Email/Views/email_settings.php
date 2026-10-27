@@ -1,190 +1,106 @@
-<?php $this->extend('master') ?>
+<?php
+$this->extend('master');
+
+$ports = ['25', '587', '465', '2525'];
+$port  = (string) old('SMTPPort', setting('Email.SMTPPort'));
+$other = $port === 'other' || ($port !== '' && ! in_array($port, $ports, true));
+?>
 
 <?php $this->section('main') ?>
-    <x-page-head>
-        <x-module-title><i class="fas fa-envelope"></i> Email</x-module-title>
-        <h2>Settings</h2>
-    </x-page-head>
+<x-settings-layout>
+    <form action="<?= site_url(ADMIN_AREA . '/settings/email') ?>" method="post">
+        <?= csrf_field() ?>
 
-    <x-admin-box>
-        <form action="<?= site_url(ADMIN_AREA . '/settings/email') ?>" method="post">
-            <?= csrf_field() ?>
+        <x-admin-box title="From" description="The default name and address emails are sent from.">
+            <x-setting-row label="Name" for="fromName">
+                <input type="text" class="form-control" name="fromName" id="fromName" value="<?= esc(old('fromName', setting('Email.fromName'))) ?>">
+                <?php if (has_error('fromName')) : ?>
+                    <p class="text-danger small mb-0"><?= error('fromName') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <x-setting-row label="Email" for="fromEmail">
+                <input type="email" class="form-control" name="fromEmail" id="fromEmail" value="<?= esc(old('fromEmail', setting('Email.fromEmail'))) ?>" />
+                <?php if (has_error('fromEmail')) : ?>
+                    <p class="text-danger small mb-0"><?= error('fromEmail') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+        </x-admin-box>
 
-            <fieldset class="first">
-                <legend>From</legend>
+        <x-admin-box title="Delivery" description="How mail is sent. The most common choice is SMTP.">
+            <div x-data="{ protocol: '<?= esc($activeTab, 'js') ?>', otherPort: <?= $other ? 'true' : 'false' ?> }">
+                <x-setting-row label="Protocol">
+                    <div @change="protocol = $event.target.value">
+                        <x-segmented name="protocol" label="Protocol" value="<?= esc(old('protocol', setting('Email.protocol'))) ?>" options='{"smtp":"SMTP","mail":"Mail","sendmail":"Sendmail"}' />
+                    </div>
+                </x-setting-row>
 
-                <p>This specifies the default email address and name that will be used when sending an email.</p>
+                <div x-show="protocol === 'mail'" x-cloak>
+                    <div class="bf-callout bf-callout-info">Mail is only available on Linux servers. It has no options.</div>
+                </div>
 
-                <div class="row">
-                    <!-- Name -->
-                    <div class="form-group col">
-                        <label class="form-label" for="fromName">Name</label>
-                        <input type="text" class="form-control" name="fromName" value="<?= old('fromName', setting('Email.fromName')) ?>">
-                        <?php if (has_error('fromName')) : ?>
-                            <p class="text-danger"><?= error('fromName') ?></p>
+                <div x-show="protocol === 'sendmail'" x-cloak>
+                    <x-setting-row label="Sendmail path" for="mailPath" description="Path to the sendmail executable.">
+                        <input type="text" name="mailPath" id="mailPath" class="form-control" value="<?= esc(old('mailPath', setting('Email.mailPath'))) ?>">
+                        <?php if (has_error('mailPath')) : ?>
+                            <p class="text-danger small mb-0"><?= error('mailPath') ?></p>
                         <?php endif ?>
-                    </div>
+                    </x-setting-row>
+                </div>
 
-                    <!-- Email -->
-                    <div class="form-group col">
-                        <label class="form-label" for="fromName">Email</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            <input type="text" class="form-control" name="fromEmail" value="<?= old('fromEmail', setting('Email.fromEmail')) ?>" />
-                        </div>
-                        <?php if (has_error('fromEmail')) : ?>
-                            <p class="text-danger"><?= error('fromEmail') ?></p>
+                <div x-show="protocol === 'smtp'">
+                    <x-setting-row label="Host" for="SMTPHost">
+                        <input type="text" name="SMTPHost" id="SMTPHost" class="form-control" value="<?= esc(old('SMTPHost', setting('Email.SMTPHost'))) ?>">
+                        <?php if (has_error('SMTPHost')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPHost') ?></p>
                         <?php endif ?>
-                    </div>
+                    </x-setting-row>
+                    <x-setting-row label="Port" for="SMTPPort">
+                        <div class="d-flex gap-2">
+                            <select name="SMTPPort" id="SMTPPort" class="form-select bf-input-narrow" @change="otherPort = $event.target.value === 'other'">
+                                <?php foreach ($ports as $option) : ?>
+                                    <option value="<?= $option ?>"<?= ! $other && $port === $option ? ' selected' : '' ?>><?= $option ?></option>
+                                <?php endforeach ?>
+                                <option value="other"<?= $other ? ' selected' : '' ?>>other</option>
+                            </select>
+                            <input type="text" name="SMTPPortOther" class="form-control bf-input-narrow" aria-label="Other port" x-show="otherPort"
+                                   value="<?= esc(old('SMTPPortOther', $other && $port !== 'other' ? $port : '')) ?>">
+                        </div>
+                        <?php if (has_error('SMTPPort') || has_error('SMTPPortOther')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPPort') ?: error('SMTPPortOther') ?></p>
+                        <?php endif ?>
+                    </x-setting-row>
+                    <x-setting-row label="Username" for="SMTPUser">
+                        <input type="text" name="SMTPUser" id="SMTPUser" class="form-control" value="<?= esc(old('SMTPUser', setting('Email.SMTPUser'))) ?>">
+                        <?php if (has_error('SMTPUser')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPUser') ?></p>
+                        <?php endif ?>
+                    </x-setting-row>
+                    <x-setting-row label="Password" for="SMTPPass">
+                        <input type="password" name="SMTPPass" id="SMTPPass" class="form-control" value="<?= esc(old('SMTPPass', setting('Email.SMTPPass'))) ?>">
+                        <?php if (has_error('SMTPPass')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPPass') ?></p>
+                        <?php endif ?>
+                    </x-setting-row>
+                    <x-setting-row label="Encryption">
+                        <x-segmented name="SMTPCrypto" label="Encryption" value="<?= esc((string) old('SMTPCrypto', setting('Email.SMTPCrypto'))) ?>" options='{"":"None","tls":"TLS","ssl":"SSL"}' />
+                        <?php if (has_error('SMTPCrypto')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPCrypto') ?></p>
+                        <?php endif ?>
+                    </x-setting-row>
+                    <x-setting-row label="Timeout" for="SMTPTimeout" description="In seconds.">
+                        <input type="number" name="SMTPTimeout" id="SMTPTimeout" class="form-control bf-input-narrow" value="<?= esc(old('SMTPTimeout', setting('Email.SMTPTimeout'))) ?>">
+                        <?php if (has_error('SMTPTimeout')) : ?>
+                            <p class="text-danger small mb-0"><?= error('SMTPTimeout') ?></p>
+                        <?php endif ?>
+                    </x-setting-row>
+                    <x-setting-row label="Persistent connection" for="SMTPKeepAlive">
+                        <x-switch name="SMTPKeepAlive" id="SMTPKeepAlive" checked="<?= old('SMTPKeepAlive', setting('Email.SMTPKeepAlive')) ? '1' : '0' ?>" />
+                    </x-setting-row>
                 </div>
-            </fieldset>
+            </div>
+        </x-admin-box>
 
-
-            <fieldset x-data="{openTab: '<?= $activeTab ?>'}">
-                <legend>Mail Settings</legend>
-
-                <p>Select the protocol used when sending mail. The most common scenario is using SMTP.</p>
-
-                <div class="row">
-                    <div class="form-group col-12 col-sm-6 col-md-3">
-                        <label class="form-label" for="protocol">Protocol</label>
-                        <select name="protocol" id="protocol" class="form-select" @change="openTab = event.target.value">
-                            <option value="smtp" <?php if (old('protocol', setting('Email.protocol')) === 'smtp') : ?> selected <?php endif?>>smtp</option>
-                            <option value="mail" <?php if (old('protocol', setting('Email.protocol')) === 'mail') : ?> selected <?php endif?>>mail</option>
-                            <option value="sendmail" <?php if (old('protocol', setting('Email.protocol')) === 'sendmail') : ?> selected <?php endif?>>sendmail</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="tab-content mx-5 mt-3">
-                    <!-- Mail Settings -->
-                    <div id="mail-settings" x-show="openTab === 'mail'" x-transition>
-                        <p class="alert alert-info">Mail is only available on Linux servers. There are no options.</p>
-                    </div>
-
-                    <!-- SendMail Settings -->
-                    <div id="mail-settings" x-show="openTab === 'sendmail'" x-transition>
-
-                        <div class="row">
-                            <div class="form-group col-12 col-sm-6 col-md-4">
-                                <label for="mailPath" class="form-label">Path the the <b>sendmail</b> executable.</label>
-                                <input type="text" name="mailPath" class="form-control" value="<?= old('mailPath', setting('Email.mailPath')) ?>">
-                                <?php if (has_error('mailPath')) : ?>
-                                    <p class="text-danger"><?= error('mailPath') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SMTP Settings -->
-                    <div id="mail-settings" x-show="openTab === 'smtp'" x-transition>
-                        <!-- Host -->
-                        <div class="row" x-data="{open: 0}">
-                            <div class="form-group col-12 col-sm-6">
-                                <label for="SMTPHost" class="form-label">Host</label>
-                                <input type="text" name="SMTPHost" class="form-control" value="<?= old('SMTPHost', setting('Email.SMTPHost')) ?>">
-                                <?php if (has_error('SMTPHost')) : ?>
-                                    <p class="text-danger"><?= error('SMTPHost') ?></p>
-                                <?php endif ?>
-                            </div>
-                            <!-- Port -->
-                            <div class="form-group col-12 col-sm-3">
-                                <label for="SMTPPort" class="form-label">Port</label>
-                                <select name="SMTPPort" class="form-select">
-                                    <option value="25" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '25') : ?> selected <?php endif?>>25</option>
-                                    <option value="587" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '587') : ?> selected <?php endif?>>587</option>
-                                    <option value="465" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '465') : ?> selected <?php endif?>>465</option>
-                                    <option value="2525" @click="open = false" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === '2525') : ?> selected <?php endif?>>2525</option>
-                                    <option value="other" @click="open = ! open" <?php if (old('SMTPPort', setting('Email.SMTPPort')) === 'other') : ?> selected <?php endif?>>other</option>
-                                </select>
-                                <?php if (has_error('SMTPPort')) : ?>
-                                    <p class="text-danger"><?= error('SMTPPort') ?></p>
-                                <?php endif ?>
-                            </div>
-                            <!-- Custom Port -->
-                            <div class="form-group col-12 col-sm-3" x-show="open">
-                                <label for="SMTPPortOther" class="form-label">Other</label>
-                                <input type="text" name="SMTPHostOther" class="form-control" value="<?= old('SMTPHostOther') ?>">
-                                <?php if (has_error('SMTPPortOther')) : ?>
-                                    <p class="text-danger"><?= error('SMTPPortOther') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Username -->
-                            <div class="form-group col-12 col-sm-6">
-                                <label for="SMTPUser" class="form-label">Username</label>
-                                <input type="text" name="SMTPUser" class="form-control" value="<?= old('SMTPUser', setting('Email.SMTPUser')) ?>">
-                                <?php if (has_error('SMTPUser')) : ?>
-                                    <p class="text-danger"><?= error('SMTPUser') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Password -->
-                            <div class="form-group col-12 col-sm-6">
-                                <label for="SMTPPass" class="form-label">Password</label>
-                                <input type="password" name="SMTPPass" class="form-control" value="<?= old('SMTPPass', setting('Email.SMTPPass')) ?>">
-                                <?php if (has_error('SMTPPass')) : ?>
-                                    <p class="text-danger"><?= error('SMTPPass') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Crypto -->
-                            <div class="form-group col-12 col-sm-6">
-                                <label for="SMTPCrypto" class="form-label">Encryption</label>
-                                <select name="SMTPCrypto" class="form-select">
-                                    <option value="" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === '') : ?> selected <?php endif?>>None</option>
-                                    <option value="tls" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'tls') : ?> selected <?php endif?>>TLS</option>
-                                    <option value="ssl" <?php if (old('SMTPCrypto', setting('Email.SMTPCrypto')) === 'ssl') : ?> selected <?php endif?>>SSL</option>
-                                </select>
-                                <?php if (has_error('SMTPCrypto')) : ?>
-                                    <p class="text-danger"><?= error('SMTPCrypto') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Timeout -->
-                            <div class="form-group col-12 col-sm-3">
-                                <label for="SMTPTimeout" class="form-label">Timeout (in seconds)</label>
-                                <input type="number" name="SMTPTimeout" class="form-control" value="<?= old('SMTPTimeout', setting('Email.SMTPTimeout')) ?>">
-                                <?php if (has_error('SMTPTimeout')) : ?>
-                                    <p class="text-danger"><?= error('SMTPTimeout') ?></p>
-                                <?php endif ?>
-                            </div>
-
-                            <!-- Timeout -->
-                            <div class="form-group col-12 col-sm-3">
-                                <label for="SMTPKeepAlive" class="form-label">Persistant Connection?</label>
-                                <select name="SMTPKeepAlive" class="form-select">
-                                    <option value="0" <?php if (old('SMTPKeepAlive', ! setting('Email.SMTPKeepAlive'))) : ?> selected <?php endif?>>No</option>
-                                    <option value="1" <?php if (old('SMTPKeepAlive', setting('Email.SMTPKeepAlive'))) : ?> selected <?php endif?>>Yes</option>
-                                </select>
-                                <?php if (has_error('SMTPKeepAlive')) : ?>
-                                    <p class="text-danger"><?= error('SMTPKeepAlive') ?></p>
-                                <?php endif ?>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </fieldset>
-
-            <x-button-container>
-                <x-button>Save Settings</x-button>
-            </x-button-container>
-        </form>
-    </x-admin-box>
-<?php $this->endSection() ?>
-
-<?php $this->section('scripts') ?>
-<script>
-
-</script>
+        <x-save-bar save="Save Settings" />
+    </form>
+</x-settings-layout>
 <?php $this->endSection() ?>

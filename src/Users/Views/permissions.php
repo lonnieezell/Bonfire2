@@ -29,7 +29,7 @@ foreach ($permissions as $permission => $description) {
                     <?php if ($via !== null) : ?>
                         <span class="bf-locked"><i class="fas fa-lock" aria-hidden="true"></i> <?= lang('Users.viaGroup', [esc($via)]) ?></span>
                     <?php else : ?>
-                        <x-switch name="permissions[]" value="<?= esc($permission) ?>" id="<?= $id ?>"
+                        <x-switch name="permissions[]" offValue value="<?= esc($permission) ?>" id="<?= $id ?>"
                             checked="<?= $user->hasPermission($permission) ? '1' : '0' ?>"
                             <?= $access->canAssignPermission($user, $permission) ? '' : 'disabled' ?> />
                     <?php endif ?>

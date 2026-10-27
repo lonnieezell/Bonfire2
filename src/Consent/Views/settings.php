@@ -1,130 +1,85 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-    <x-page-head>
-        <x-module-title><i class="fas fa-handshake"></i> Consent</x-module-title>
-        <h2>Settings</h2>
-    </x-page-head>
+<x-settings-layout>
+    <form action="<?= site_url(ADMIN_AREA . '/settings/consent') ?>" method="post"
+          x-data="{
+              message: <?= esc(json_encode((string) old('consentMessage', setting('Consent.consentMessage'))), 'attr') ?>,
+              title: <?= esc(json_encode((string) old('policyTitle', setting('Consent.policyTitle'))), 'attr') ?>,
+              url: <?= esc(json_encode((string) old('policyUrl', setting('Consent.policyUrl'))), 'attr') ?>,
+              part(i) { return this.message.split('{policy_url}')[i] ?? '' },
+          }">
+        <?= csrf_field() ?>
 
-    <x-admin-box>
-        <form action="<?= site_url(ADMIN_AREA . '/settings/consent') ?>" method="post">
-            <?= csrf_field() ?>
-
-            <fieldset class="first">
-                <legend>Basic Details</legend>
-
-                <p>The Consent module asks users to provide consent before you set various cookies.</p>
-
-                <div class="form-check form-switch mt-6  mb-3">
-                    <input class="form-check-input" type="checkbox" name="requireConsent" role="switch" id="requireConsent"
-                        <?php if (setting('Consent.requireConsent')) : ?> checked <?php endif ?>
-                    >
-                    <label class="form-check-label" for="requireConsent">Require consent from visitors?</label>
-                </div>
-
-                <!-- Consent Length -->
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-6">
-                        <label class="form-label" for="consentLength">Days consent is valid</label>
-                        <div class="row">
-                            <div class="col-3">
-                                <input type="number" min="0" step="1" class="form-control col-2" name="consentLength"
-                                       value="<?= old('consentLength', setting('Consent.consentLength')) ?>">
-                            </div>
-                        </div>
-                        <?php if (has_error('consentLength')) : ?>
-                            <p class="text-danger"><?= error('consentLength') ?></p>
-                        <?php endif ?>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted small pt-3">After days are up, will ask the user for consent again.</p>
-                    </div>
-                </div>
-
-                <!-- Policy URL -->
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-6">
-                        <label class="form-label" for="policyUrl">URL to the Cookie Policy</label>
-                        <input type="text" class="form-control" name="policyUrl" value="<?= old('policyUrl', setting('Consent.policyUrl')) ?>">
-                        <?php if (has_error('policyUrl')) : ?>
-                            <p class="text-danger"><?= error('policyUrl') ?></p>
-                        <?php endif ?>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted small pt-5">May be either a full or relative URL</p>
-                    </div>
-                </div>
-                <!-- Cookie Policy Document Title-->
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-6">
-                        <label class="form-label" for="policyTitle">Title of Cookie Policy document</label>
-                        <input type="text" class="form-control" name="policyTitle" value="<?= old('policyTitle', setting('Consent.policyTitle')) ?>">
-                        <?php if (has_error('policyTitle')) : ?>
-                            <p class="text-danger"><?= error('policyTitle') ?></p>
-                        <?php endif ?>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted small pt-5">Will be shown in the Cookies Consent dialog instead of {policy_url}</p>
-                    </div>
-                </div>
-                <!-- Consent Message -->
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-6">
-                        <label class="form-label" for="consentMessage">Initial Message on Consent Form</label>
-                        <textarea name="consentMessage" rows="4" class="form-control"><?= old('consentMessage', setting('Consent.consentMessage')) ?></textarea>
-                        <?php if (has_error('consentMessage')) : ?>
-                            <p class="text-danger"><?= error('consentMessage') ?></p>
-                        <?php endif ?>
-                    </div>
-                    <div class="col">
-                        <p class="text-muted small pt-5">May be either a full or relative URL. Will replace {policy_url} with the correct URL and Cookie Policy document title</p>
-                    </div>
-                </div>
-            </fieldset>
-
-
-
-            <fieldset>
-                <legend>Consents</legend>
-
-                <p>The available Consents that the user may agree to.</p>
-
-                <?php if (isset($consents) && count($consents)) : ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="col-3">Alias</th>
-                            <th class="col-3">Name</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach (setting('Consent.consents') as $alias => $info) : ?>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" disabled readonly value="<?= esc($alias) ?>">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="consents[<?= $alias ?>][name]" value="<?= old("consents[{$alias}][name]", $info['name']) ?>">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="consents[<?= $alias ?>][desc]" value="<?= old("consents[{$alias}][desc]", $info['desc']) ?>">
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                    </tbody>
-                </table>
+        <x-admin-box title="Consent" description="Ask visitors for consent before setting cookies.">
+            <x-setting-row label="Require consent" for="requireConsent" description="Show the consent banner to visitors.">
+                <x-switch name="requireConsent" id="requireConsent" checked="<?= setting('Consent.requireConsent') ? '1' : '0' ?>" />
+            </x-setting-row>
+            <x-setting-row label="Days consent is valid" for="consentLength" description="After this, visitors are asked again.">
+                <input type="number" min="0" step="1" class="form-control bf-input-narrow" name="consentLength" id="consentLength"
+                       value="<?= esc(old('consentLength', setting('Consent.consentLength'))) ?>">
+                <?php if (has_error('consentLength')) : ?>
+                    <p class="text-danger small mb-0"><?= error('consentLength') ?></p>
                 <?php endif ?>
-            </fieldset>
-            <x-button-container>
-                <x-button>Save Settings</x-button>
-            </x-button-container>
-        </form>
-    </x-admin-box>
-<?php $this->endSection() ?>
+            </x-setting-row>
+            <x-setting-row label="Cookie policy URL" for="policyUrl" description="A full or relative URL.">
+                <input type="text" class="form-control" name="policyUrl" id="policyUrl" x-model="url"
+                       value="<?= esc(old('policyUrl', setting('Consent.policyUrl'))) ?>">
+                <?php if (has_error('policyUrl')) : ?>
+                    <p class="text-danger small mb-0"><?= error('policyUrl') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <x-setting-row label="Cookie policy title" for="policyTitle" description="Shown in the banner in place of {policy_url}.">
+                <input type="text" class="form-control" name="policyTitle" id="policyTitle" x-model="title"
+                       value="<?= esc(old('policyTitle', setting('Consent.policyTitle'))) ?>">
+                <?php if (has_error('policyTitle')) : ?>
+                    <p class="text-danger small mb-0"><?= error('policyTitle') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <div class="bf-setting-block">
+                <label class="bf-setting-label" for="consentMessage">Banner message</label>
+                <div class="bf-setting-desc">{policy_url} becomes a link to the cookie policy.</div>
+                <textarea name="consentMessage" id="consentMessage" rows="3" class="form-control mt-2" x-model="message"><?= esc(old('consentMessage', setting('Consent.consentMessage'))) ?></textarea>
+                <?php if (has_error('consentMessage')) : ?>
+                    <p class="text-danger small mb-0"><?= error('consentMessage') ?></p>
+                <?php endif ?>
+                <div class="bf-setting-label mt-3">Preview</div>
+                <div class="bf-consent-preview" x-cloak>
+                    <span x-text="part(0)"></span><template x-if="message.includes('{policy_url}')"><a :href="url" x-text="title || url" target="_blank"></a></template><span x-text="part(1)"></span>
+                </div>
+            </div>
+        </x-admin-box>
 
-<?php $this->section('scripts') ?>
-<script>
+        <?php if (isset($consents) && count($consents)) : ?>
+            <x-admin-box title="Consents" description="The consents a visitor may agree to.">
+                <div class="table-responsive">
+                    <table class="table bf-table">
+                        <thead>
+                            <tr>
+                                <th>Alias</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($consents as $alias => $info) : ?>
+                                <tr>
+                                    <td class="bf-mono"><?= esc($alias) ?></td>
+                                    <td>
+                                        <input type="text" class="form-control" aria-label="<?= esc($alias) ?> name" name="consents[<?= esc($alias) ?>][name]" value="<?= esc(old("consents.{$alias}.name", $info['name'])) ?>">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" aria-label="<?= esc($alias) ?> description" name="consents[<?= esc($alias) ?>][desc]" value="<?= esc(old("consents.{$alias}.desc", $info['desc'])) ?>">
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
+            </x-admin-box>
+        <?php endif ?>
 
-</script>
+        <x-save-bar save="Save Settings" />
+    </form>
+</x-settings-layout>
 <?php $this->endSection() ?>
