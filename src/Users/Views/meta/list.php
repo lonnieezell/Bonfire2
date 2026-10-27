@@ -1,9 +1,7 @@
 <?php if (isset($fieldGroups) && count($fieldGroups)) : ?>
     <?php foreach ($fieldGroups as $group => $fields) : ?>
-        <fieldset>
-    <div class="row">
-        <div class="col">
-            <legend><?= esc($group) ?></legend>
+        <x-admin-box title="<?= esc($group) ?>">
+        <div class="row">
 
             <?php foreach ($fields as $field => $info) : ?>
                 <?php if ($info['type'] === 'checkbox') : ?>
@@ -47,7 +45,6 @@
                 <?php endif ?>
             <?php endforeach ?>
         </div>
-    </div>
-        </fieldset>
+        </x-admin-box>
     <?php endforeach ?>
 <?php endif ?>

@@ -15,14 +15,20 @@ return [
     'deleteImage'        => 'Delete uploaded image',
     // row_info
     'never' => 'never',
+    // edit head
+    'lastActive' => 'Last active {0}',
+    'viaGroup'   => 'via {0}',
     // cards
-    'cardDetails'     => 'User Details',
+    'cardDetails'     => 'Details',
     'cardPermissions' => 'Permissions',
     'cardSecurity'    => 'Security',
     // details
     'userDeletedOn'        => 'This user was deleted on {0}.',
     'restoreUser'          => 'Restore user',
     'basicInfo'            => 'Basic Info',
+    'profile'              => 'Profile',
+    'access'               => 'Access',
+    'groupPermissions'     => '{0, plural, =1{# permission} other{# permissions}}',
     'email'                => 'Email Address',
     'username'             => 'Username',
     'firstName'            => 'First Name',

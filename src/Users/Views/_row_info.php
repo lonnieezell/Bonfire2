@@ -1,10 +1,4 @@
-<?php
-[$statusTone, $statusLabel] = match (true) {
-    $user->isBanned()       => ['danger', lang('Users.statusBanned')],
-    ! $user->isActivated()  => ['warn', lang('Users.statusPending')],
-    default                 => ['ok', lang('Users.statusActive')],
-};
-?>
+<?php [$statusTone, $statusLabel] = $user->status() ?>
 <td>
     <div class="bf-user-cell">
         <?= $user->renderAvatar(30) ?>
