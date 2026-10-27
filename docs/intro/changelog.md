@@ -11,7 +11,8 @@ Bonfire's admin views now use new View Components (`<x-setting-row>`, `<x-switch
 `<x-status>`, `<x-empty-state>`, `<x-selection-bar>`, `<x-tabs>`, `<x-save-bar>`) that an older copy doesn't have,
 and the shell (`master.php`, `_header.php`, `Components/sidebar.php`) has a new layout. `<x-page-head>` and
 `<x-admin-box>` gained optional attributes and keep working as before without them; `<x-button>` no longer adds
-`btn-lg`. Component attributes are now escaped by the component, so pass them unescaped. See
+`btn-lg`. Escape component attribute values with `esc()`: the renderer now decodes HTML entities in attribute
+values before handing them to the component, so a custom component that prints an attribute must escape it. See
 [View Components](../building_admin_modules/view_components.md).
 
 The admin shell has a collapsible sidebar (remembered per viewer), a breadcrumb, a dark-mode toggle and a ⌘K / Ctrl+K

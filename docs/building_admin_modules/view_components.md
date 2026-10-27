@@ -4,9 +4,9 @@ View Components (or just Components) allow you to create custom HTML elements to
 description of their use and creating new ones is described within the `Building Sites` section of the guide. This
 page lists the components that are available within the default `Admin` theme. 
 
-Attributes are plain text: the components escape them, so pass values unescaped (`title="<?= $user->name() ?>"`, not
-`esc()`'d). An attribute value can't contain the quote character that wraps it, and on a paired tag
-(`<x-…>…</x-…>`) it can't contain `>`. Slots are HTML and are output as given.
+Escape attribute values with `esc()` (`title="<?= esc($user->name()) ?>"`), as you would any HTML attribute. The
+renderer decodes them and the component escapes them again on output, so a quote in the data can't end the attribute
+early. On a paired tag (`<x-…>…</x-…>`) a value can't contain `>`. Slots are HTML and are output as given.
 
 ## Page structure
 
@@ -20,7 +20,7 @@ The page header. Give it a `title` and it renders the design's head: an `<h1>`, 
     <a href="<?= url_to('user-new') ?>" class="btn btn-primary">New user</a>
 </x-page-head>
 
-<x-page-head title="<?= $user->name() ?>" back="<?= site_url(ADMIN_AREA . '/users') ?>" backLabel="Users" />
+<x-page-head title="<?= esc($user->displayName()) ?>" back="<?= site_url(ADMIN_AREA . '/users') ?>" backLabel="Users" />
 ```
 
 Without a `title` it wraps the slot as before, so existing `<x-page-head><h2>…</h2></x-page-head>` headers keep working.

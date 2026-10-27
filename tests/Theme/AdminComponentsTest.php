@@ -99,6 +99,14 @@ final class AdminComponentsTest extends TestCase
         $this->assertStringContainsString('aria-label="Say &quot;hi&quot; now"', $html);
     }
 
+    public function testDisabledSwitchDoesNotPostZero(): void
+    {
+        $html = $this->render('<x-switch name="active" disabled />');
+
+        $this->assertMatchesRegularExpression('#<input type="hidden" name="active" value="0" disabled>#', $html);
+        $this->assertMatchesRegularExpression('#<input type="checkbox"[^>]* disabled=""#', $html);
+    }
+
     public function testSwitchStaysUncheckedForAnEmptyCheckedAttribute(): void
     {
         $this->assertStringNotContainsString(' checked', $this->render('<x-switch name="a" checked="" />'));

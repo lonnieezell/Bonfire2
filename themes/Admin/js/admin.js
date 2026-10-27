@@ -162,7 +162,8 @@ document.addEventListener('alpine:init', () => {
         init() {
             this.form = this.$root.closest('form');
             const recount = () => {
-                this.count = this.form.querySelectorAll('tbody input[type="checkbox"]:checked').length;
+                // Select-all also ticks disabled rows, which never post.
+                this.count = this.form.querySelectorAll('tbody input[type="checkbox"]:checked:not(:disabled)').length;
             };
             // An htmx swap replaces the bar along with the rows, so the new bar counts afresh.
             this.form.addEventListener('change', recount);
@@ -200,12 +201,20 @@ document.addEventListener('alpine:init', () => {
         },
 
         discard() {
+            const fields = [...this.form.querySelectorAll('input, select, textarea')];
+            const state = (field) => field.value + '|' + field.checked;
+            const before = fields.map(state);
             this.form.reset();
-            // Let x-model and other listeners see the restored values (this also clears `dirty`).
-            this.form.querySelectorAll('input, select, textarea').forEach((field) => {
+            // Let x-model and other listeners see the restored values. Only changed fields,
+            // so change-triggered requests (hx-trigger) don't fire for every field.
+            fields.forEach((field, i) => {
+                if (state(field) === before[i]) {
+                    return;
+                }
                 field.dispatchEvent(new Event('input', { bubbles: true }));
                 field.dispatchEvent(new Event('change', { bubbles: true }));
             });
+            this.dirty = this.snapshot() !== this.initial;
         },
     }));
 });
