@@ -13,7 +13,7 @@ $current = array_pop($crumbs) ?? lang('Bonfire.dashboard');
 $crumbs  = array_filter(array_slice($crumbs, -1));
 ?>
 <header class="bf-header">
-    <nav class="bf-crumbs" aria-label="Breadcrumb">
+    <nav class="bf-crumbs" aria-label="<?= lang('Bonfire.breadcrumb') ?>">
         <ol>
             <?php foreach ($crumbs as $crumb) : ?>
                 <li><?= $crumb ?></li>

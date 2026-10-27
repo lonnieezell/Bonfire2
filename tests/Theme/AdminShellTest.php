@@ -31,6 +31,14 @@ final class AdminShellTest extends TestCase
         $this->assertBreadcrumb($response->response()->getBody(), 'Settings', 'General');
     }
 
+    public function testBreadcrumbOnAnotherSettingsTabNamesThatTab(): void
+    {
+        $response = $this->actingAs($this->admin)->get(ADMIN_AREA . '/settings/users');
+
+        $response->assertOK();
+        $this->assertBreadcrumb($response->response()->getBody(), 'Settings', 'Users');
+    }
+
     public function testBreadcrumbOnUserEditNamesTheUser(): void
     {
         $response = $this->actingAs($this->admin)->get(ADMIN_AREA . '/users/' . $this->admin->id);

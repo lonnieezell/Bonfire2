@@ -50,6 +50,7 @@ return [
     'signOut'         => 'Cerrar sesión',
     'toggleTheme'     => 'Cambiar modo oscuro',
     'userMenu'        => 'Menú de usuario',
+    'breadcrumb'      => 'Ruta de navegación',
     'commandPalette'  => 'Paleta de comandos',
     'paletteHint'     => 'Ir a una página…',
     'searchFor'       => 'Buscar “{0}”',

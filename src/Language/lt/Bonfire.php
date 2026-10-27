@@ -50,6 +50,7 @@ return [
     'signOut'         => 'Išsiregistruoti',
     'toggleTheme'     => 'Perjungti tamsų režimą',
     'userMenu'        => 'Vartotojo meniu',
+    'breadcrumb'      => 'Naršymo kelias',
     'commandPalette'  => 'Komandų paletė',
     'paletteHint'     => 'Pereiti į puslapį…',
     'searchFor'       => 'Ieškoti „{0}“',

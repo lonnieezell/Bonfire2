@@ -50,6 +50,7 @@ return [
     'signOut'         => 'Выход',
     'toggleTheme'     => 'Переключить тёмную тему',
     'userMenu'        => 'Меню пользователя',
+    'breadcrumb'      => 'Навигационная цепочка',
     'commandPalette'  => 'Палитра команд',
     'paletteHint'     => 'Перейти к странице…',
     'searchFor'       => 'Искать «{0}»',

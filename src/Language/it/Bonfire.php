@@ -50,6 +50,7 @@ return [
     'signOut'         => 'Esci',
     'toggleTheme'     => 'Attiva/disattiva modalità scura',
     'userMenu'        => 'Menu utente',
+    'breadcrumb'      => 'Percorso di navigazione',
     'commandPalette'  => 'Tavolozza dei comandi',
     'paletteHint'     => 'Vai a una pagina…',
     'searchFor'       => 'Cerca “{0}”',

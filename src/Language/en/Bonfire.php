@@ -50,6 +50,7 @@ return [
     'signOut'         => 'Sign out',
     'toggleTheme'     => 'Toggle dark mode',
     'userMenu'        => 'User menu',
+    'breadcrumb'      => 'Breadcrumb',
     'commandPalette'  => 'Command palette',
     'paletteHint'     => 'Jump to a page…',
     'searchFor'       => 'Search for “{0}”',
