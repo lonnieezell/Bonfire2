@@ -54,6 +54,17 @@ final class AdminShellTest extends TestCase
         $this->assertBreadcrumb($response->response()->getBody(), 'Logs', '2000-01-01');
     }
 
+    public function testBreadcrumbOnSearchResultsNamesThePage(): void
+    {
+        $response = $this->actingAs($this->admin)->post(ADMIN_AREA . '/search', ['search_term' => 'ada']);
+
+        $response->assertOK();
+        $this->assertMatchesRegularExpression(
+            '#<nav class="bf-crumbs" aria-label="Breadcrumb">\s*<ol>\s*<li aria-current="page">' . lang('Bonfire.searchResults') . '</li>#',
+            $response->response()->getBody(),
+        );
+    }
+
     public function testHeaderKeepsTheSearchFormWorkingWithoutJavaScript(): void
     {
         $html = $this->actingAs($this->admin)->get(ADMIN_AREA)->response()->getBody();

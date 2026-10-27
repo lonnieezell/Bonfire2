@@ -1,5 +1,7 @@
 <?= $this->extend('master') ?>
 
+<?php $this->section('crumb') ?><?= lang('Bonfire.searchResults') ?><?php $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
     <x-page-head>

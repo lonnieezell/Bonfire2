@@ -71,3 +71,68 @@ window.bfSidebar = {
         } catch (e) {}
     },
 };
+
+// The ⌘K command palette (_palette.php): jump to a menu page, or search.
+document.addEventListener('alpine:init', () => {
+    Alpine.data('bfPalette', () => ({
+        open: false,
+        query: '',
+        index: 0,
+        items: [],
+
+        init() {
+            this.items = JSON.parse(document.getElementById('bf-palette-items').textContent);
+
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    this.show();
+                }
+            });
+
+            // With JavaScript on, the header's search box opens the palette.
+            document.querySelector('.bf-search [name="search_term"]')?.addEventListener('focus', (e) => {
+                e.target.blur();
+                this.show();
+            });
+        },
+
+        get results() {
+            const term = this.query.trim();
+            const needle = term.toLowerCase();
+            const matches = this.items
+                .filter((item) => !needle || (item.label + ' ' + item.hint).toLowerCase().includes(needle))
+                .slice(0, 8);
+
+            if (term) {
+                matches.push({ label: this.$root.dataset.searchLabel.replace('%s', term), hint: '', search: true });
+            }
+
+            return matches;
+        },
+
+        show() {
+            this.query = '';
+            this.index = 0;
+            this.open = true;
+            this.$nextTick(() => this.$refs.input.focus());
+        },
+
+        move(step) {
+            this.index = Math.max(0, Math.min(this.index + step, this.results.length - 1));
+        },
+
+        choose(result) {
+            if (!result) {
+                return;
+            }
+            if (result.search) {
+                const form = document.querySelector('.bf-search');
+                form.elements.search_term.value = this.query.trim();
+                form.submit();
+                return;
+            }
+            window.location.href = result.url;
+        },
+    }));
+});

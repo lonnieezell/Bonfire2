@@ -497,7 +497,7 @@ a:hover {
 .bf-search input {
     width: 100%;
     height: 34px;
-    padding: 0 10px 0 32px;
+    padding: 0 44px 0 32px;
     border: 1px solid var(--bf-border);
     border-radius: 8px;
     background: var(--bf-surface);
@@ -597,6 +597,122 @@ a:hover {
     background: var(--bf-surface-2);
     color: var(--bf-text);
     text-decoration: none;
+}
+
+.bf-kbd {
+    padding: 1px 6px;
+    border: 1px solid var(--bf-border);
+    border-radius: 5px;
+    background: var(--bf-surface-2);
+    color: var(--bf-muted);
+    font-family: var(--bf-mono);
+    font-size: 11px;
+    box-shadow: none;
+}
+
+.bf-search .bf-kbd {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* Command palette */
+.bf-palette {
+    position: fixed;
+    inset: 0;
+    z-index: 1090;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 12vh 16px 16px;
+}
+
+.bf-palette-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 10, 5, .35);
+}
+
+.bf-palette-box {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    overflow: hidden;
+    border: 1px solid var(--bf-border);
+    border-radius: 14px;
+    background: var(--bf-surface);
+    box-shadow: var(--bf-pop);
+    animation: bf-pop .14s ease;
+}
+
+.bf-palette-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--bf-border);
+    color: var(--bf-muted);
+}
+
+.bf-palette-input input {
+    flex: 1;
+    height: 52px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--bf-text);
+    font-size: 15px;
+}
+
+.bf-palette-results {
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 6px;
+}
+
+.bf-palette-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--bf-text);
+    text-align: left;
+}
+
+.bf-palette-row.active {
+    background: var(--bf-surface-2);
+}
+
+.bf-palette-row i {
+    width: 16px;
+    color: var(--bf-muted);
+    font-size: 13px;
+}
+
+.bf-palette-label {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.bf-palette-hint {
+    color: var(--bf-muted);
+    font-size: 12px;
+}
+
+.bf-palette-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--bf-muted);
+    font-size: 13px;
 }
 
 @media (max-width: 575.98px) {

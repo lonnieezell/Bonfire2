@@ -29,6 +29,7 @@ $current = array_pop($crumbs);
         <i class="fas fa-search" aria-hidden="true"></i>
         <input type="text" name="search_term" placeholder="<?= lang('Bonfire.search') ?>" aria-label="<?= lang('Bonfire.search') ?>"
             value="<?= esc(old('search_term', $searchTerm ?? '')) ?>">
+        <kbd class="bf-kbd" aria-hidden="true">⌘K</kbd>
     </form>
 
     <button type="button" class="bf-icon-btn" onclick="bfTheme.toggle()" title="<?= lang('Bonfire.toggleTheme') ?>" aria-label="<?= lang('Bonfire.toggleTheme') ?>">
