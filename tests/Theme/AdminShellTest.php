@@ -21,6 +21,9 @@ final class AdminShellTest extends TestCase
 
         $this->admin = $this->createUser(['first_name' => 'Ada', 'last_name' => 'Lovelace']);
         $this->admin->addGroup('superadmin');
+
+        // Other tests may leave the site offline, which redirects users without site.viewOffline.
+        setting('Site.siteOnline', true);
     }
 
     public function testBreadcrumbNamesTheCollectionAndThePage(): void
@@ -49,6 +52,8 @@ final class AdminShellTest extends TestCase
 
     public function testBreadcrumbOnLogViewNamesTheLogsPageAndTheFile(): void
     {
+        // Other tests may leave a different date format behind.
+        setting('App.dateFormat', 'Y-m-d');
         $logFile = WRITEPATH . 'logs/log-2000-01-01.log';
         file_put_contents($logFile, "ERROR - 2000-01-01 10:00:00 --> Log error test\n");
 
@@ -81,7 +86,7 @@ final class AdminShellTest extends TestCase
             '#<form[^>]*action="' . preg_quote(url_to('search'), '#') . '"[^>]*method="post"#',
             $html,
         );
-        $this->assertStringContainsString('name="search_term"', $html);
+        $this->assertStringContainsString('name="search_term"', (string) $html);
     }
 
     public function testUserMenuShowsWhoIsSignedInAndTheirActions(): void
@@ -92,7 +97,7 @@ final class AdminShellTest extends TestCase
         $response->assertSee($this->admin->email, '#user-menu');
         $response->assertSeeLink(lang('Bonfire.myAccount'));
         $response->assertSeeLink(lang('Bonfire.signOut'));
-        $this->assertStringContainsString('onclick="bfTheme.toggle()"', $response->response()->getBody());
+        $this->assertStringContainsString('onclick="bfTheme.toggle()"', (string) $response->response()->getBody());
     }
 
     public function testSidebarShowsOnlyTheItemsTheUserMaySee(): void
@@ -121,7 +126,7 @@ final class AdminShellTest extends TestCase
 
         $response->assertSee('Saved the thing', '#alerts-wrapper');
         $this->assertMatchesRegularExpression('#<aside id="alerts-wrapper"[^>]*aria-live="polite"#', $response->response()->getBody());
-        $this->assertStringContainsString('data-bs-dismiss="alert"', $response->response()->getBody());
+        $this->assertStringContainsString('data-bs-dismiss="alert"', (string) $response->response()->getBody());
     }
 
     public function testOfflineBannerLinksToTheSettingThatTurnsItOff(): void
@@ -135,7 +140,7 @@ final class AdminShellTest extends TestCase
         }
 
         $response->assertSee(lang('Bonfire.offlineNotice'));
-        $this->assertStringContainsString('href="' . site_url(ADMIN_AREA . '/settings/general') . '"', $response->response()->getBody());
+        $this->assertStringContainsString('href="' . site_url(ADMIN_AREA . '/settings/general') . '"', (string) $response->response()->getBody());
     }
 
     private function sidebarOf(string $html): string
