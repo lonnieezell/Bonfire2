@@ -275,8 +275,15 @@ class ComponentRenderer
     /**
      * Removes surrounding quotes from a string.
      */
+    /**
+     * Removes the quotes around a value, keeping any quotes that end the value itself.
+     */
     private function stripQuotes(string $string): string
     {
-        return trim($string, "\\'\"");
+        $quote = $string[0] ?? '';
+
+        return ($quote === '"' || $quote === "'") && strlen($string) > 1 && str_ends_with($string, $quote)
+            ? substr($string, 1, -1)
+            : $string;
     }
 }

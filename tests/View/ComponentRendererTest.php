@@ -52,6 +52,8 @@ final class ComponentRendererTest extends TestCase
             'class-based paired with attr'       => ['<x-badge label="new">x</x-badge>', '<b>new</b>'],
             'escaped attribute is decoded'       => ['<x-greeting name="A &amp; &quot;B&quot;" />', 'Hello A & "B"'],
             'empty paired'                       => ['<x-wrapper></x-wrapper>', '[]'],
+            'value ending in a quote keeps it'   => ['<x-greeting name="say \'hi\'" />', "Hello say 'hi'"],
+            'single-quoted value ending in "'    => ['<x-greeting name=\'say "hi"\' />', 'Hello say "hi"'],
             'self-closing inside a component'    => ['<x-framed>hi</x-framed>', 'Hello Ada|hi'],
         ];
     }
