@@ -4,7 +4,7 @@ $this->extend('master') ?>
 
 <?php $this->section('main') ?>
 <?php $canManage = auth()->user()->can('logs.manage') ?>
-<x-page-head title="<?= lang('Tools.logsModTitle') ?>" count="<?= $total ?>"></x-page-head>
+<x-page-head title="<?= lang('Tools.logsModTitle') ?>" count="<?= $pager->getTotal() ?>"></x-page-head>
 
 <x-admin-box>
 <?php if (count($logs)) : ?>
@@ -48,7 +48,7 @@ $this->extend('master') ?>
                     <?php foreach ($logs as $log) : ?>
                         <?php
                         $date  = str_replace('log-', '', $log['name']);
-                        $total = array_sum($log['counts']);
+                        $entries = array_sum($log['counts']);
                         ?>
                         <tr data-levels="<?= esc(strtolower(implode(' ', array_keys($log['counts'])))) ?>" x-show="shows($el.dataset.levels)">
                             <?php if ($canManage) : ?>
@@ -62,7 +62,7 @@ $this->extend('master') ?>
                             </td>
                             <td>
                                 <div class="bf-level-bar" aria-hidden="true">
-                                    <?php foreach ($log['counts'] as $level => $count) : ?><span class="bf-level-bar-segment bf-level-<?= Logs::levelClass($level) ?>" style="width: <?= $count / $total * 100 ?>%"></span><?php endforeach ?>
+                                    <?php foreach ($log['counts'] as $level => $count) : ?><span class="bf-level-bar-segment bf-level-<?= Logs::levelClass($level) ?>" style="width: <?= $count / $entries * 100 ?>%"></span><?php endforeach ?>
                                 </div>
                                 <div class="bf-level-tags">
                                     <?php foreach ($log['counts'] as $level => $count) : ?>
@@ -70,7 +70,7 @@ $this->extend('master') ?>
                                     <?php endforeach ?>
                                 </div>
                             </td>
-                            <td class="text-end"><?= $total ?></td>
+                            <td class="text-end"><?= $entries ?></td>
                             <td class="bf-mono bf-muted"><?= esc($log['name'] . '.log') ?></td>
                         </tr>
                     <?php endforeach ?>

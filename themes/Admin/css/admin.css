@@ -1844,20 +1844,9 @@ input[type="checkbox"]:indeterminate {
     gap: 10px;
 }
 
-.bf-group-card {
+.bf-group-cards > .bf-group-card {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
     padding: 12px 14px 12px 40px;
-    border: 1px solid var(--bf-border);
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.bf-group-card:has(input:checked) {
-    border-color: var(--bf-accent);
-    background: var(--bf-accent-soft);
 }
 
 .bf-group-card:has(input:disabled) {
@@ -1872,11 +1861,6 @@ input[type="checkbox"]:indeterminate {
     margin: 0;
 }
 
-.bf-group-card-title {
-    font-weight: 600;
-}
-
-.bf-group-card-desc,
 .bf-group-card-meta {
     color: var(--bf-muted);
     font-size: 12.5px;
@@ -1972,7 +1956,9 @@ input[type="checkbox"]:indeterminate {
     margin-top: 10px;
 }
 
-.bf-choice-card {
+/* Selectable cards: .bf-choice-card hides its radio, .bf-group-card shows its checkbox. */
+.bf-choice-card,
+.bf-group-card {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -1988,7 +1974,8 @@ input[type="checkbox"]:indeterminate {
     pointer-events: none;
 }
 
-.bf-choice-card:has(input:checked) {
+.bf-choice-card:has(input:checked),
+.bf-group-card:has(input:checked) {
     border-color: var(--bf-accent);
     background: var(--bf-accent-soft);
 }
@@ -1997,11 +1984,13 @@ input[type="checkbox"]:indeterminate {
     box-shadow: 0 0 0 3px var(--bf-accent-soft);
 }
 
-.bf-choice-card-title {
+.bf-choice-card-title,
+.bf-group-card-title {
     font-weight: 500;
 }
 
-.bf-choice-card-desc {
+.bf-choice-card-desc,
+.bf-group-card-desc {
     color: var(--bf-muted);
     font-size: 12px;
 }

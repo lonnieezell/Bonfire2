@@ -1,23 +1,17 @@
-<?php $this->extend('master') ?>
+<?php use Bonfire\Groups\Libraries\GroupPermissions;
+
+$this->extend('master') ?>
 
 <?php $this->section('main') ?>
 <x-settings-layout>
     <?= view('Bonfire\Groups\Views\_tabs', ['tab' => 'permissions', 'group' => $group->alias, 'title' => $group->title]) ?>
-
-    <?php
-    $byPrefix = [];
-
-    foreach ($permissions as $permission => $description) {
-        $byPrefix[explode('.', $permission)[0]][$permission] = $description;
-    }
-    ?>
 
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
         <p class="bf-muted">Select the permissions this group should have.</p>
 
-        <?php foreach ($byPrefix as $prefix => $set) : ?>
+        <?php foreach (GroupPermissions::byPrefix($permissions) as $prefix => $set) : ?>
             <x-admin-box title="<?= esc(ucfirst($prefix)) ?>">
                 <?php foreach ($set as $permission => $description) : ?>
                     <?php $id = 'perm-' . str_replace('.', '-', $permission) ?>

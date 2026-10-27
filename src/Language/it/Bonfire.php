@@ -31,7 +31,6 @@ return [
     'magicLinkInfo' => 'Ti sarà inviata un email con un link per effettuare l\'accesso.',
 
     'lastModified' => 'Ultima modifica',
-    'fileSize'     => 'Dimensione del file',
 
     // collections:
     'contentModTitle'  => 'Contenuto',

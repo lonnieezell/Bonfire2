@@ -22,6 +22,8 @@ final class LogsTest extends TestCase
 
         // Other tests may leave the site in offline mode, which redirects users without site.viewOffline
         setting('Site.siteOnline', true);
+        // ...and a page size too small to reach this test's log.
+        setting('Site.perPage', 20);
 
         file_put_contents($this->logFile, "ERROR - 2000-01-01 10:00:00 --> Log error test\n");
     }

@@ -49,7 +49,6 @@ class LogsController extends AdminController
                 $result['logs'],
             ),
             'pager' => $result['pager'],
-            'total' => count($this->store->names()),
         ]);
     }
 

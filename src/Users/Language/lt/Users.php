@@ -22,12 +22,10 @@ return [
     // details
     'userDeletedOn'        => 'Šis vartotojas buvo ištrintas {0}.',
     'restoreUser'          => 'Atkurti vartotoją',
-    'basicInfo'            => 'Pagrindinė Informacija',
     'email'                => 'El. pašto adresas',
     'username'             => 'Vartotojo vardas',
     'firstName'            => 'Vardas',
     'lastName'             => 'Pavardė',
-    'status'               => 'Vartotojo statusas',
     'activated'            => 'Vartotojas yra aktyvuotas',
     'banned'               => 'Vartotojas yra užblokuotas',
     'enterBanReason'       => 'įrašykite užblokavimo priežastį (bus rodoma prisijungimo metu)',
@@ -37,13 +35,9 @@ return [
     'groupListDisabled'    => 'Grupės, kurioms vartotojas priklauso (jūs neturite teisės keisti sąrašo)',
     'saveUser'             => 'Įrašyti vartotoją',
     // permissions
-    'perms'       => 'Vartotojo leidimai',
     'permsDetail' => 'Šie leidimai taikomi papildomai prie bet kokių leidimų, kuriuos leidžia vartotojo grupės.
                 Jei neturite <em>{0}</em> leidimo, su vartotojų valdymu susiję leidimai nebus pasirenkami (nebent jie buvo
                 suteikti anksčiau).',
-    'permsIndeterminate' => 'Neapibrėžti žymimieji langeliai rodo, kad leidimas jau yra prieinamas iš vienos ar daugiau grupių, kurioms vartotojas priklauso.',
-    'permission'         => 'Leidimas',
-    'description'        => 'Aprašymas',
     'savePerms'          => 'Išsaugoti leidimus',
     // security
     'changePass'     => 'Keisti slaptažodį',

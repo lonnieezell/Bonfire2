@@ -7,7 +7,6 @@ return [
     // view
     'notFound'          => 'No {0} found.',
     'restoreMsgTitle'   => 'Restore',
-    'restoreMsgContent' => 'Restore this record?',
     'purgeMsgTitle'     => 'Purge forever',
     'purgeMsgContent'   => 'Permanently delete this record?',
     'purgeConfirm'      => 'Yes, purge',

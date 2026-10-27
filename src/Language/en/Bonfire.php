@@ -31,7 +31,6 @@ return [
     'magicLinkInfo' => 'We will send an email with a link to click to sign you in.',
 
     'lastModified' => 'Last Modified',
-    'fileSize'     => 'File Size',
 
     // collections:
     'contentModTitle'  => 'Content',

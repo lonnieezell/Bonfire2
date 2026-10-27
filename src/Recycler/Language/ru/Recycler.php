@@ -17,7 +17,6 @@ return [
     // view
     'notFound'          => '{0} не найдено.',
     'restoreMsgTitle'   => 'Восстановить',
-    'restoreMsgContent' => 'Восстановить эту запись?',
     'purgeMsgTitle'     => 'Очистить навсегда',
     'purgeMsgContent'   => 'Окончательно удалить эту запись?',
     'resultLabel'       => '{0, plural,

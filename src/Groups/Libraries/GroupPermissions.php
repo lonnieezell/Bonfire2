@@ -36,4 +36,22 @@ class GroupPermissions
 
         return $counts;
     }
+
+    /**
+     * Permissions grouped by their prefix: `users.edit` goes under `users`.
+     *
+     * @param array<string, string> $permissions name => description
+     *
+     * @return array<string, array<string, string>>
+     */
+    public static function byPrefix(array $permissions): array
+    {
+        $grouped = [];
+
+        foreach ($permissions as $permission => $description) {
+            $grouped[explode('.', $permission)[0]][$permission] = $description;
+        }
+
+        return $grouped;
+    }
 }

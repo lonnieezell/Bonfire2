@@ -15,6 +15,10 @@ $validators = [
     PwnedValidator::class           => ['Pwned Validator', 'Uses a third-party site (haveibeenpwned.com) to check the password against millions of leaked passwords.'],
 ];
 $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
+$remember         = (bool) old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']);
+$useGravatar      = (bool) old('useGravatar', setting('Users.useGravatar'));
+$avatarResize     = (bool) old('avatarResize', setting('Users.avatarResize'));
+$avatarSizeFloor  = setting('User.avatarSizeFloor') ?? 32;
 ?>
 
 <?php $this->section('main') ?>
@@ -27,7 +31,7 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
                 <x-switch name="allowRegistration" id="allow-registration" checked="<?= old('allowRegistration', setting('Auth.allowRegistration')) ? '1' : '0' ?>" />
             </x-setting-row>
             <x-setting-row label="Force email verification" for="email-activation" description="Send new users a code by email to confirm their address.">
-                <x-switch name="emailActivation" id="email-activation" value="<?= esc(EmailActivator::class) ?>"
+                <x-switch name="emailActivation" offValue id="email-activation" value="<?= esc(EmailActivator::class) ?>"
                     checked="<?= old('emailActivation', setting('Auth.actions')['register']) === EmailActivator::class ? '1' : '0' ?>" />
             </x-setting-row>
             <?php if (isset($groups) && count($groups)) : ?>
@@ -42,10 +46,10 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
         </x-admin-box>
 
         <x-admin-box title="Login">
-            <div x-data="{ remember: <?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? 'true' : 'false' ?> }">
+            <div x-data="{ remember: <?= $remember ? 'true' : 'false' ?> }">
                 <x-setting-row label="Remember users" for="allow-remember" description="Users don't have to log in on every visit.">
                     <x-switch name="allowRemember" id="allow-remember" x-model="remember"
-                        checked="<?= old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']) ? '1' : '0' ?>" />
+                        checked="<?= $remember ? '1' : '0' ?>" />
                 </x-setting-row>
                 <div x-show="remember">
                     <x-setting-row label="Remember for" for="rememberLength">
@@ -59,7 +63,7 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
                 </div>
             </div>
             <x-setting-row label="Force 2FA after login" for="email-2fa" description="Send users a code by email to confirm each login.">
-                <x-switch name="email2FA" id="email-2fa" value="<?= esc(Email2FA::class) ?>"
+                <x-switch name="email2FA" offValue id="email-2fa" value="<?= esc(Email2FA::class) ?>"
                     checked="<?= old('email2FA', setting('Auth.actions')['login']) === Email2FA::class ? '1' : '0' ?>" />
             </x-setting-row>
         </x-admin-box>
@@ -90,7 +94,7 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
         </x-admin-box>
 
         <x-admin-box title="Avatars">
-            <div x-data="{ useGravatar: <?= old('useGravatar', setting('Users.useGravatar')) ? 'true' : 'false' ?>, avatarResize: <?= old('avatarResize', setting('Users.avatarResize')) ? 'true' : 'false' ?> }">
+            <div x-data="{ useGravatar: <?= $useGravatar ? 'true' : 'false' ?>, avatarResize: <?= $avatarResize ? 'true' : 'false' ?> }">
                 <x-setting-row label="Initials from" for="avatarNameBasis" description="Used for the initials in an avatar when there is no image.">
                     <select name="avatarNameBasis" id="avatarNameBasis" class="form-select">
                         <option value="name" <?= old('avatarNameBasis', setting('Users.avatarNameBasis')) === 'name' ? 'selected' : '' ?>>Full Name</option>
@@ -99,7 +103,7 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
                 </x-setting-row>
                 <x-setting-row label="Use Gravatar" for="use-gravatar" description="Use Gravatar (gravatar.com) when a user has not uploaded an avatar.">
                     <x-switch name="useGravatar" id="use-gravatar" x-model="useGravatar"
-                        checked="<?= old('useGravatar', setting('Users.useGravatar')) ? '1' : '0' ?>" />
+                        checked="<?= $useGravatar ? '1' : '0' ?>" />
                 </x-setting-row>
                 <div x-show="useGravatar">
                     <x-setting-row label="Gravatar default style" for="gravatarDefault" description="See gravatar.com for examples of each style.">
@@ -113,11 +117,11 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
                 </div>
                 <x-setting-row label="Downsize on upload" for="avatar-resize" description="Downsize user-uploaded avatar images.">
                     <x-switch name="avatarResize" id="avatar-resize" x-model="avatarResize"
-                        checked="<?= old('avatarResize', setting('Users.avatarResize')) ? '1' : '0' ?>" />
+                        checked="<?= $avatarResize ? '1' : '0' ?>" />
                 </x-setting-row>
                 <div x-show="avatarResize">
-                    <x-setting-row label="Max dimensions" for="avatar-size" description="In pixels; no less than <?= setting('User.avatarSizeFloor') ?? 32 ?>.">
-                        <input placeholder="<?= setting('User.avatarSizeFloor') ?? 32 ?>" name="avatarSize" type="number" min="<?= setting('User.avatarSizeFloor') ?? 32 ?>" class="form-control bf-input-narrow" value="<?= old('avatarSize', setting('Users.avatarSize')) ?>" id="avatar-size">
+                    <x-setting-row label="Max dimensions" for="avatar-size" description="In pixels; no less than <?= $avatarSizeFloor ?>.">
+                        <input placeholder="<?= $avatarSizeFloor ?>" name="avatarSize" type="number" min="<?= $avatarSizeFloor ?>" class="form-control bf-input-narrow" value="<?= old('avatarSize', setting('Users.avatarSize')) ?>" id="avatar-size">
                     </x-setting-row>
                 </div>
             </div>
