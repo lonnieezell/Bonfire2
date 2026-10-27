@@ -175,15 +175,6 @@ body {
     vertical-align: text-bottom;
 }
 
-.page-head a.back {
-    color: var(--bf-grey);
-    text-decoration: none;
-}
-
-.page-head a.back:hover {
-    text-decoration: underline;
-}
-
 a {
     text-decoration: none;
 }
@@ -736,6 +727,488 @@ a:hover {
 
 /*
  * --------------------------------------------------------------------------
+ * COMPONENTS (themes/Admin/Components)
+ * --------------------------------------------------------------------------
+ */
+
+/* <x-page-head> */
+.bf-page-head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bf-page-head h1,
+.bf-page-head h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.bf-page-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.bf-page-head-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bf-page-head-subtitle {
+    margin: 2px 0 0;
+    color: var(--bf-muted);
+    font-size: 13.5px;
+}
+
+.bf-page-head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bf-page-head-actions:empty {
+    display: none;
+}
+
+.bf-count {
+    padding: 1px 8px;
+    border: 1px solid var(--bf-border);
+    border-radius: 99px;
+    background: var(--bf-surface-2);
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.bf-back,
+.page-head a.back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    margin-left: -4px;
+    padding: 0 8px 0 4px;
+    border-radius: 6px;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.bf-back:hover,
+.page-head a.back:hover {
+    background: var(--bf-surface-2);
+    color: var(--bf-text);
+    text-decoration: none;
+}
+
+/* <x-admin-box> */
+.bf-card {
+    margin-bottom: 16px;
+    border: 1px solid var(--bf-border);
+    border-radius: 12px;
+    background: var(--bf-surface);
+    box-shadow: var(--bf-shadow);
+}
+
+.bf-card-head {
+    padding: 16px 20px 14px;
+}
+
+.bf-card-head h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.bf-card-head p {
+    margin: 2px 0 0;
+    color: var(--bf-muted);
+    font-size: 13px;
+}
+
+.bf-card-body {
+    padding: 16px 20px;
+}
+
+/* Rows and tables run edge to edge. */
+.bf-card-body:has(> .bf-setting-row:first-child),
+.bf-card-body:has(> .table-responsive:first-child),
+.bf-card-body:has(> table:first-child) {
+    padding: 0;
+}
+
+.bf-card-head + .bf-card-body:has(> .bf-setting-row:first-child) {
+    padding-top: 0;
+}
+
+.bf-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin: 16px -20px -16px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--bf-border);
+}
+
+/* <x-setting-row> */
+.bf-setting-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 32px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-setting-text {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+.bf-setting-label {
+    margin: 0;
+    font-weight: 500;
+}
+
+.bf-setting-desc {
+    color: var(--bf-muted);
+    font-size: 13px;
+    text-wrap: pretty;
+}
+
+.bf-setting-control {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.bf-setting-control:has(> input:not([type="checkbox"]):not([type="radio"]), > select, > textarea) {
+    flex: 1 1 260px;
+}
+
+/* <x-switch> */
+.bf-switch {
+    display: inline-flex;
+}
+
+.bf-switch-input {
+    appearance: none;
+    position: relative;
+    width: 36px;
+    height: 20px;
+    margin: 0;
+    border-radius: 99px;
+    background: var(--bf-border-strong);
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.bf-switch-input::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+    transition: transform .15s;
+}
+
+.bf-switch-input:checked {
+    background: var(--bf-accent);
+}
+
+.bf-switch-input:checked::after {
+    transform: translateX(16px);
+}
+
+.bf-switch-input:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.bf-switch-input:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* <x-segmented> */
+.bf-segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--bf-border);
+    border-radius: 9px;
+    background: var(--bf-surface-2);
+}
+
+.bf-segment {
+    margin: 0;
+}
+
+.bf-segment input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bf-segment span {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 7px;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.bf-segment input:checked + span {
+    background: var(--bf-surface);
+    color: var(--bf-text);
+    box-shadow: var(--bf-shadow), 0 0 0 1px var(--bf-border);
+}
+
+.bf-segment input:focus-visible + span {
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+/* <x-chip> */
+.bf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--bf-border);
+    border-radius: 99px;
+    background: var(--bf-surface);
+    color: var(--bf-text);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bf-chip:hover {
+    border-color: var(--bf-border-strong);
+    text-decoration: none;
+}
+
+.bf-chip.active {
+    border-color: var(--bf-accent);
+    background: var(--bf-accent-soft);
+    color: var(--bf-accent-text);
+}
+
+.bf-chip-count {
+    color: var(--bf-muted);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+}
+
+/* <x-status> */
+.bf-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+}
+
+.bf-dot {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--bf-accent);
+}
+
+.bf-status-ok .bf-dot { background: var(--bf-ok); }
+.bf-status-warn .bf-dot { background: var(--bf-warn-bar); }
+.bf-status-danger .bf-dot { background: var(--bf-danger); }
+.bf-status-info .bf-dot { background: var(--bf-info); }
+.bf-status-muted .bf-dot { background: var(--bf-debug); }
+
+/* <x-empty-state> */
+.bf-empty {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--bf-muted);
+}
+
+.bf-empty-title {
+    color: var(--bf-text);
+    font-weight: 500;
+}
+
+.bf-empty-hint {
+    margin-top: 2px;
+    font-size: 13px;
+}
+
+/* <x-selection-bar> and <x-save-bar> float at the bottom of the page. */
+.bf-floating-bar {
+    position: sticky;
+    bottom: 20px;
+    z-index: 35;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    pointer-events: none;
+}
+
+.bf-floating-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 16px;
+    border-radius: 12px;
+    box-shadow: var(--bf-pop);
+    pointer-events: auto;
+    animation: bf-pop .16s ease;
+}
+
+.bf-floating-bar .btn {
+    height: 32px;
+    padding: 0 12px;
+    font-weight: 500;
+}
+
+.bf-selection-bar {
+    background: var(--bf-text);
+    color: var(--bf-bg);
+}
+
+.bf-selection-count {
+    margin-right: 10px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.bf-selection-bar .bf-icon-btn {
+    width: 32px;
+    height: 32px;
+    color: inherit;
+}
+
+.bf-selection-bar .bf-icon-btn:hover {
+    background: color-mix(in oklch, var(--bf-bg) 14%, transparent);
+    color: inherit;
+}
+
+.bf-save-bar {
+    border: 1px solid var(--bf-border);
+    background: var(--bf-surface);
+}
+
+.bf-save-bar-text {
+    margin-right: 12px;
+    font-weight: 500;
+}
+
+/* <x-tabs> */
+.bf-tabs {
+    flex-wrap: nowrap;
+    gap: 4px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--bf-border);
+}
+
+.bf-tabs .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 12px;
+    border: 0;
+    color: var(--bf-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bf-tabs .nav-link:hover {
+    color: var(--bf-text);
+    text-decoration: none;
+}
+
+.bf-tabs .nav-link.active {
+    color: var(--bf-text);
+    box-shadow: inset 0 -2px 0 var(--bf-accent);
+}
+
+/* <x-module-title>, <x-button-container>, <x-filter-link> */
+.bf-module-title {
+    margin: 0;
+    color: var(--bf-muted);
+    font-size: 13px;
+}
+
+.bf-button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 20px 0 4px;
+}
+
+.bf-filter-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.bf-filter-link:hover {
+    color: var(--bf-text);
+    text-decoration: none;
+}
+
+/* Bootstrap pieces inside cards */
+.bf-card .table {
+    --bs-table-bg: transparent;
+    margin: 0;
+}
+
+.bf-card .table > :not(caption) > * > * {
+    padding: 10px 14px;
+    border-color: var(--bf-border);
+}
+
+.bf-card .table > thead th {
+    background: var(--bf-surface-2);
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+.btn {
+    --bs-btn-font-size: 14px;
+    --bs-btn-font-weight: 500;
+    --bs-btn-border-radius: 8px;
+    --bs-btn-padding-y: 6px;
+    --bs-btn-padding-x: 14px;
+}
+
+.form-control,
+.form-select {
+    border-color: var(--bf-border-strong);
+    border-radius: 8px;
+}
+
+/*
+ * --------------------------------------------------------------------------
  * FORMS
  * --------------------------------------------------------------------------
  */
@@ -756,7 +1229,7 @@ label.form-label {
 }
 
 fieldset {
-    border-top: solid 1px var(--bf-light-grey);
+    border-top: solid 1px var(--bf-border);
     padding-bottom: 1rem;
     padding-top:0.5rem;
     margin-bottom: 1rem;
@@ -784,12 +1257,12 @@ input[type="checkbox"]:indeterminate {
 }
 
 .nav-tabs .nav-item .nav-link:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--bf-surface-2);
 }
 
 .nav-tabs .nav-item .nav-link.active {
-    background: #fff !important;
-    color: var(--bf-black) !important;
+    background: var(--bf-surface) !important;
+    color: var(--bf-text) !important;
 }
 
 .nav-tabs .nav-item .nav-link.active:hover {

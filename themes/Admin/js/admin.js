@@ -135,4 +135,59 @@ document.addEventListener('alpine:init', () => {
             window.location.href = result.url;
         },
     }));
+
+    // <x-selection-bar>: counts the checked row checkboxes in its form.
+    Alpine.data('bfSelectionBar', () => ({
+        count: 0,
+
+        init() {
+            this.form = this.$root.closest('form');
+            const recount = () => {
+                this.count = this.form.querySelectorAll('tbody input[type="checkbox"]:checked').length;
+            };
+            this.form.addEventListener('change', recount);
+            document.body.addEventListener('htmx:afterSettle', recount);
+            recount();
+        },
+
+        get label() {
+            return this.$root.dataset.label.replace('%s', this.count);
+        },
+
+        clear() {
+            this.form.querySelectorAll('input[type="checkbox"]').forEach((box) => {
+                box.checked = false;
+            });
+            this.count = 0;
+        },
+    }));
+
+    // <x-save-bar>: shows once its form differs from how it loaded.
+    Alpine.data('bfSaveBar', () => ({
+        dirty: false,
+
+        init() {
+            this.form = this.$root.closest('form');
+            this.initial = this.snapshot();
+            const check = () => {
+                this.dirty = this.snapshot() !== this.initial;
+            };
+            this.form.addEventListener('input', check);
+            this.form.addEventListener('change', check);
+        },
+
+        snapshot() {
+            return JSON.stringify([...new FormData(this.form)].map(([key, value]) => [key, value.name ?? value]));
+        },
+
+        discard() {
+            this.form.reset();
+            // Let x-model and other listeners see the restored values.
+            this.form.querySelectorAll('input, select, textarea').forEach((field) => {
+                field.dispatchEvent(new Event('input', { bubbles: true }));
+                field.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            this.dirty = false;
+        },
+    }));
 });

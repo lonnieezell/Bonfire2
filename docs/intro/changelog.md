@@ -4,7 +4,19 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 27 October 2026
+## 27 October 2026 (breaking change)
+
+The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:
+Bonfire's admin views now use new View Components (`<x-setting-row>`, `<x-switch>`, `<x-segmented>`, `<x-chip>`,
+`<x-status>`, `<x-empty-state>`, `<x-selection-bar>`, `<x-tabs>`, `<x-save-bar>`) that an older copy doesn't have,
+and the shell (`master.php`, `_header.php`, `Components/sidebar.php`) has a new layout. `<x-page-head>` and
+`<x-admin-box>` gained optional attributes and keep working as before without them; `<x-button>` no longer adds
+`btn-lg`. Component attributes are now escaped by the component, so pass them unescaped. See
+[View Components](../building_admin_modules/view_components.md).
+
+The admin shell has a collapsible sidebar (remembered per viewer), a breadcrumb, a dark-mode toggle and a ⌘K / Ctrl+K
+command palette that jumps to any admin page or runs a search. Admin pages below a menu item can name themselves in the
+breadcrumb with a `crumb` view section (and `crumbParent`, when the page isn't under the active menu item).
 
 The admin theme has an accent color. Change it under **Settings → General → Appearance**, or set it from code
 with `setting('Site.adminAccent', '#2F6FEB')`. It must be a `#rrggbb` hex color. Buttons, links, focus rings and checked

@@ -78,7 +78,7 @@ final class ComponentRendererTest extends TestCase
         // The Admin theme's own button, not the fixture's `button.php`.
         $html = $this->renderer->render('<x-button>Save</x-button>');
 
-        $this->assertStringContainsString('class="btn btn-primary btn-lg"', $html);
+        $this->assertStringContainsString('class="btn btn-primary"', $html);
         $this->assertStringNotContainsString('<i>', $html);
     }
 

@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs nav-fill" style="margin-bottom: -2px;">
+<x-tabs>
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'basics') : ?> active <?php endif ?>"
            href="<?= isset($group) ? site_url(ADMIN_AREA . '/settings/groups/' . $group) : '#' ?>">
@@ -14,4 +14,4 @@
         </li>
         <?= service('resourceTabs')->renderTabsFor('group') ?>
     <?php endif ?>
-</ul>
+</x-tabs>
