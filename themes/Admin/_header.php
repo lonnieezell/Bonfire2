@@ -1,31 +1,64 @@
-<header class="navbar navbar-light flex-md-nowrap p-0 shadow-sm d-flex">
 <?php
-/** disable button untill a more elegant solution is
- * found. The menu can be toggled using the bottom-left expand button anyway
- * <button class="navbar-toggler d-sm-none collapsed mx-2 border-none" type="button" @click="open = ! open">
- *     <span class="navbar-toggler-icon"></span>
- * </button>
- */
-?>
-    <!-- Search Form -->
-    <form action="<?= url_to('search') ?>" method="post" class="flex-grow-1">
-        <?= csrf_field() ?>
+// Breadcrumb: the sidebar's active trail, plus the page's own `crumb`
+// section (and optional `crumbParent`) for pages below a menu item.
+$crumbs     = service('menus')->menu('sidebar')->activeTrail();
+$pageCrumb  = trim($this->renderSection('crumb'));
+$pageParent = trim($this->renderSection('crumbParent'));
 
-        <input class="form-control form-control bg-light w-100" type="text" name="search_term" placeholder="<?= lang('Bonfire.search') ?>" aria-label="<?= lang('Bonfire.search'); ?>"
-            value="<?= old('search_term', $searchTerm ?? '') ?>">
+if ($pageCrumb !== '') {
+    $crumbs = [...($pageParent !== '' ? [$pageParent] : array_slice($crumbs, -1)), $pageCrumb];
+}
+if ($crumbs === []) {
+    $crumbs = [lang('Bonfire.dashboard')];
+}
+$crumbs  = array_slice($crumbs, -2);
+$current = array_pop($crumbs);
+?>
+<header class="bf-header">
+    <nav class="bf-crumbs" aria-label="Breadcrumb">
+        <ol>
+            <?php foreach ($crumbs as $crumb) : ?>
+                <li><?= $crumb ?></li>
+            <?php endforeach ?>
+            <li aria-current="page"><?= $current ?></li>
+        </ol>
+    </nav>
+
+    <form action="<?= url_to('search') ?>" method="post" class="bf-search" role="search">
+        <?= csrf_field() ?>
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input type="text" name="search_term" placeholder="<?= lang('Bonfire.search') ?>" aria-label="<?= lang('Bonfire.search') ?>"
+            value="<?= esc(old('search_term', $searchTerm ?? '')) ?>">
     </form>
 
-    <!-- User Menu -->
-    <?php if (auth()->user()) :?>
-        <div class="dropdown text-end mx-4">
-            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <?= auth()->user()->renderAvatar(32) ?>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1" style="">
-                <li><a class="dropdown-item" href="<?= site_url(ADMIN_AREA . '/users/' . auth()->id()) ?>"><?= lang('Bonfire.myAccount') ?></a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="<?= site_url('logout') ?>"><?= lang('Bonfire.signOut') ?></a></li>
-            </ul>
+    <button type="button" class="bf-icon-btn" onclick="bfTheme.toggle()" title="<?= lang('Bonfire.toggleTheme') ?>" aria-label="<?= lang('Bonfire.toggleTheme') ?>">
+        <i class="fas fa-moon bf-when-light" aria-hidden="true"></i>
+        <i class="fas fa-sun bf-when-dark" aria-hidden="true"></i>
+    </button>
+
+    <?php if (auth()->user()) : ?>
+        <div class="dropdown">
+            <button type="button" class="bf-avatar-btn" data-bs-toggle="dropdown" aria-expanded="false" aria-label="<?= lang('Bonfire.userMenu') ?>">
+                <?= auth()->user()->renderAvatar(28) ?>
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end bf-user-menu" id="user-menu">
+                <div class="bf-user-menu-who">
+                    <div class="fw-semibold"><?= esc(auth()->user()->name() ?: auth()->user()->username) ?></div>
+                    <div class="bf-muted"><?= esc(auth()->user()->email) ?></div>
+                </div>
+                <a class="dropdown-item" href="<?= site_url(ADMIN_AREA . '/users/' . auth()->id()) ?>">
+                    <i class="fas fa-user" aria-hidden="true"></i><?= lang('Bonfire.myAccount') ?>
+                </a>
+                <button type="button" class="dropdown-item" onclick="bfTheme.toggle()">
+                    <i class="fas fa-moon bf-when-light" aria-hidden="true"></i>
+                    <i class="fas fa-sun bf-when-dark" aria-hidden="true"></i>
+                    <?= lang('Bonfire.toggleTheme') ?>
+                </button>
+                <a class="dropdown-item" href="<?= site_url('logout') ?>">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i><?= lang('Bonfire.signOut') ?>
+                </a>
+            </div>
         </div>
     <?php endif ?>
 </header>

@@ -48,6 +48,8 @@ return [
     'search'          => 'Buscar',
     'myAccount'       => 'Mi cuenta',
     'signOut'         => 'Cerrar sesión',
+    'toggleTheme'     => 'Cambiar modo oscuro',
+    'userMenu'        => 'Menú de usuario',
     'offlineNotice'   => 'El sitio está actualmente fuera de línea. Habilítalo',
     'here'            => 'aquí',
     'collapseSidebar' => 'Colapsar barra lateral',

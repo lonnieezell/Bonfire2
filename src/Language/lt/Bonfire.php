@@ -48,6 +48,8 @@ return [
     'search'          => 'Ieškoti',
     'myAccount'       => 'Mano paskyra',
     'signOut'         => 'Išsiregistruoti',
+    'toggleTheme'     => 'Perjungti tamsų režimą',
+    'userMenu'        => 'Vartotojo meniu',
     'offlineNotice'   => 'Svetainė išjungta. Įjunkite ją',
     'here'            => 'čia',
     'collapseSidebar' => 'Susiaurinti',

@@ -48,6 +48,8 @@ return [
     'search'          => 'Search',
     'myAccount'       => 'My Account',
     'signOut'         => 'Sign out',
+    'toggleTheme'     => 'Toggle dark mode',
+    'userMenu'        => 'User menu',
     'offlineNotice'   => 'Site is currently offline. Enable it',
     'here'            => 'here',
     'collapseSidebar' => 'Collapse Sidebar',

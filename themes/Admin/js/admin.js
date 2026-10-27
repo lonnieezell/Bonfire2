@@ -61,3 +61,13 @@ window.bfTheme = {
         this.set(document.documentElement.dataset.bsTheme === 'dark' ? 'light' : 'dark');
     },
 };
+
+// Sidebar collapse, remembered per viewer. master.php applies it before first paint.
+window.bfSidebar = {
+    toggle() {
+        const collapsed = document.documentElement.classList.toggle('bf-sidebar-collapsed');
+        try {
+            localStorage.setItem('bf-sidebar', collapsed ? 'collapsed' : 'expanded');
+        } catch (e) {}
+    },
+};

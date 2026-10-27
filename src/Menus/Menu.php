@@ -135,4 +135,34 @@ class Menu
 
         return $collections;
     }
+
+    /**
+     * Titles leading to the current page: the collection title (for
+     * collapsible collections) and the title of the visible item whose
+     * URL best matches the current URL. Empty when no item matches.
+     *
+     * @return list<string>
+     */
+    public function activeTrail(): array
+    {
+        $trail   = [];
+        $longest = -1;
+
+        foreach ($this->collections() as $collection) {
+            foreach ($collection->items() as $item) {
+                $url = rtrim($item->url(), '/');
+
+                if (strlen($url) <= $longest || ! url_is($url . '*') || ! $item->userCanSee()) {
+                    continue;
+                }
+
+                $longest = strlen($url);
+                $trail   = $collection->isCollapsible()
+                    ? [$collection->title, $item->title()]
+                    : [$item->title()];
+            }
+        }
+
+        return $trail;
+    }
 }
