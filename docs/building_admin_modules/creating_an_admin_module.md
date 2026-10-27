@@ -110,3 +110,19 @@ settings available to you:
   leave it blank.
 
 One the MenuItem has been created, you add it to the appropriate menu/collection.
+
+Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
+the active item (and its collection, when that collection is collapsible).
+
+### Naming a page in the breadcrumb
+
+A page below a menu item, like a single record's edit form, can add itself to the breadcrumb with a `crumb` view
+section. The breadcrumb then reads "active menu item › crumb". When the page's URL doesn't sit under any menu item,
+name the parent too with `crumbParent`:
+
+```php
+<?php $this->extend('master') ?>
+
+<?php $this->section('crumbParent') ?><?= lang('Tools.logsModTitle') ?><?php $this->endSection() ?>
+<?php $this->section('crumb') ?><?= esc($logFilePretty) ?><?php $this->endSection() ?>
+```

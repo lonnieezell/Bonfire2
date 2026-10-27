@@ -165,3 +165,7 @@ Here's how this is used for the list of users within Bonfire.
 
 Note that the id of the eleent that contains the included table should be with `id="content-list"` as it this `id` is
 the default target for content replacements by the pager and the filter.
+
+For the admin design's list footer ("Showing X of Y · Previous / Next", loaded through htmx), render the pager with
+the `bonfire_list_hx` template inside the replaced element: `<?= $pager->links('default', 'bonfire_list_hx') ?>`. It
+takes its `hx-target` from an ancestor, so put `hx-target="#content-list"` on an element that wraps the list.
