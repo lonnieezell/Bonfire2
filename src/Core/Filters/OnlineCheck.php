@@ -31,7 +31,7 @@ class OnlineCheck implements FilterInterface
     {
         helper(['setting', 'auth']);
 
-        if (setting('Site.siteOnline') === null) {
+        if (site_offline()) {
             $user = auth()->user();
 
             if ($user === null || (

@@ -7,7 +7,7 @@ $active = $menu->activeItem();
 <x-page-head title="<?= lang('Bonfire.settingsModTitle') ?>" subtitle="<?= lang('Bonfire.settingsSubtitle') ?>" />
 <div class="bf-settings">
     <nav class="bf-settings-nav" aria-label="<?= lang('Bonfire.settingsModTitle') ?>">
-        <?php foreach ($menu->collection('settings')->items() as $item) : ?>
+        <?php foreach ($menu->collection('settings')?->items() ?? [] as $item) : ?>
             <?php if (! $item->userCanSee()) {
                 continue;
             } ?>

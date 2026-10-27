@@ -11,8 +11,8 @@
 
 namespace Bonfire\Groups\Controllers;
 
-use Bonfire\Groups\Libraries\GroupPermissions;
 use Bonfire\Core\AdminController;
+use Bonfire\Groups\Libraries\GroupPermissions;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Shield\Authorization\Groups;
 

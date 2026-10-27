@@ -11,6 +11,10 @@ An empty `offValue` posts nothing, which Bonfire's own views now use for array n
 that published their own copy of the Admin theme must re-publish it; an older copy posts `0` for every switch that is
 off in those lists. The user edit screens (details, permissions and security) use the new admin layout.
 
+The settings pages share a new `<x-settings-layout>` component (the Settings head and a sub-nav of the settings
+pages). An older published copy of the Admin theme doesn't have it, so re-publish the theme or those pages fail to
+render. Turning **Site Online** off now saves `0`; the offline check treats any empty value as offline.
+
 ## 27 October 2026 (breaking change)
 
 The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:

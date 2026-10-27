@@ -40,6 +40,16 @@ final class SiteOfflineTest extends TestCase
             ->assertRedirectTo('site-offline');
     }
 
+    public function testOffWhenTheSwitchPostsZero()
+    {
+        // The settings form's switch posts "0" when it is off.
+        setting('Site.siteOnline', '0');
+
+        $this->actingAs($this->nonAdmin)
+            ->get(ADMIN_AREA)
+            ->assertRedirectTo('site-offline');
+    }
+
     public function testAllWhenOn()
     {
         setting('Site.siteOnline', true);

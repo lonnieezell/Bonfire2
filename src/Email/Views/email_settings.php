@@ -27,7 +27,7 @@ $other = $port === 'other' || ($port !== '' && ! in_array($port, $ports, true));
         </x-admin-box>
 
         <x-admin-box title="Delivery" description="How mail is sent. The most common choice is SMTP.">
-            <div x-data="{ protocol: '<?= esc($activeTab, 'js') ?>', otherPort: <?= $other ? 'true' : 'false' ?> }">
+            <div x-data="{ protocol: '<?= esc(old('protocol', $activeTab), 'js') ?>', otherPort: <?= $other ? 'true' : 'false' ?> }">
                 <x-setting-row label="Protocol">
                     <div @change="protocol = $event.target.value">
                         <x-segmented name="protocol" label="Protocol" value="<?= esc(old('protocol', setting('Email.protocol'))) ?>" options='{"smtp":"SMTP","mail":"Mail","sendmail":"Sendmail"}' />
