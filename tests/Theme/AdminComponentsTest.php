@@ -133,6 +133,15 @@ final class AdminComponentsTest extends TestCase
         $this->assertStringNotContainsString('bf-chip-count', $html);
     }
 
+    public function testChipWithANameIsARadioInAForm(): void
+    {
+        $plain   = $this->render('<x-chip name="role" value="user" label="User" count="2" />');
+        $checked = $this->render('<x-chip name="role" value="" label="All" active="1" />');
+
+        $this->assertMatchesRegularExpression('#<label class="bf-chip">\s*<input type="radio" name="role" value="user"\s*>\s*User\s*<span class="bf-chip-count">2</span>\s*</label>#', $plain);
+        $this->assertMatchesRegularExpression('#<input type="radio" name="role" value="" checked>#', $checked);
+    }
+
     public function testStatusShowsADotInItsTone(): void
     {
         $this->assertMatchesRegularExpression(

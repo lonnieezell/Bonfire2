@@ -101,11 +101,14 @@ shown, so the form can still be submitted.
 
 **<x-chip\>**
 
-A pill filter with an optional `count`. With an `href` it is a link (`active` marks the current one); without, a toggle
-button. Other attributes (`hx-get`, `hx-target`, …) pass through.
+A pill filter with an optional `count`. With an `href` it is a link (`active` marks the current one). With a `name` it
+is a radio input for a filter form, checked when `active`; give the chips one `name` and each its own `value`. With
+neither it is a toggle button. Other attributes (`hx-get`, `hx-target`, …) pass through.
 
 ```php
 <x-chip label="Admins" count="3" href="?group=admin" active="<?= $group === 'admin' ? '1' : '' ?>" />
+
+<x-chip name="role" value="admin" label="Admins" count="3" active="<?= $role === 'admin' ? '1' : '' ?>" />
 ```
 
 **<x-status\>**

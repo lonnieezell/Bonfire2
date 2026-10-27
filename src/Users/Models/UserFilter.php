@@ -12,7 +12,9 @@
 namespace Bonfire\Users\Models;
 
 use Bonfire\Core\Traits\Filterable;
+use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\I18n\Time;
+use CodeIgniter\Shield\Authentication\Authenticators\Session;
 
 class UserFilter extends UserModel
 {
@@ -108,7 +110,40 @@ class UserFilter extends UserModel
         }
         // omitting 'where' for $params['last_active'] == 'all'
 
+        if (isset($params['search']) && trim($params['search']) !== '') {
+            $term = trim($params['search']);
+
+            $this->groupStart()
+                ->like('users.username', $term)
+                ->orLike('users.first_name', $term)
+                ->orLike('users.last_name', $term)
+                ->orWhereIn('users.id', static fn (BaseBuilder $builder) => $builder
+                    ->select('user_id')
+                    ->from(config('Auth')->tables['identities'])
+                    ->where('type', Session::ID_TYPE_EMAIL_PASSWORD)
+                    ->like('secret', $term))
+                ->groupEnd();
+        }
+
         return $this;
+    }
+
+    /**
+     * How many (not deleted) users are in each group, keyed by group alias.
+     *
+     * @return array<string, int>
+     */
+    public function groupCounts(): array
+    {
+        $rows = $this->db->table('auth_groups_users agu')
+            ->select('agu.group, COUNT(DISTINCT agu.user_id) AS total')
+            ->join('users', 'users.id = agu.user_id')
+            ->where('users.deleted_at', null)
+            ->groupBy('agu.group')
+            ->get()
+            ->getResultArray();
+
+        return array_map('intval', array_column($rows, 'total', 'group'));
     }
 
     /**

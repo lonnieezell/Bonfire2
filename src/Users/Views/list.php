@@ -1,43 +1,45 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head>
-	<div class="row">
-		<div class="col">
-			<h2><?= lang('Users.usersModTitle') ?>
-			</h2>
-		</div>
-		<?php if (auth()->user()->can('users.create')): ?>
-		<div class="col-auto">
-			<a href="<?= url_to('user-new') ?>"
-				class="btn btn-primary"><?= lang('Users.newUser')?></a>
-		</div>
-		<?php endif ?>
-	</div>
+<x-page-head title="<?= lang('Users.usersModTitle') ?>" count="<?= $total ?>">
+	<?php if (auth()->user()->can('users.create')): ?>
+		<a href="<?= url_to('user-new') ?>" class="btn btn-primary"><i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Users.newUser')?></a>
+	<?php endif ?>
 </x-page-head>
 
 <x-admin-box>
 	<div x-data="{filtered: false}">
-		<x-filter-link />
+		<div class="bf-toolbar">
+			<form class="bf-toolbar-form" action="<?= current_url() ?>" method="get"
+				hx-get="<?= current_url() ?>" hx-target="#content-list" hx-include=".filters form"
+				hx-trigger="input delay:300ms from:[name=search], change from:[name=role]">
+				<div class="bf-toolbar-search">
+					<i class="fas fa-search" aria-hidden="true"></i>
+					<input type="search" name="search" class="form-control" value="<?= esc($search) ?>"
+						placeholder="<?= lang('Users.searchUsers') ?>" aria-label="<?= lang('Users.searchUsers') ?>">
+				</div>
+				<div class="bf-chips" role="radiogroup" aria-label="<?= lang('Users.headers.groups') ?>">
+					<x-chip name="role" value="" label="<?= lang('Users.allGroups') ?>" count="<?= $total ?>" active="<?= $role === '' ? '1' : '' ?>" />
+					<?php foreach ($roles as $alias => $title) : ?>
+						<x-chip name="role" value="<?= $alias ?>" label="<?= $title ?>" count="<?= $groupCounts[$alias] ?? 0 ?>" active="<?= $role === $alias ? '1' : '' ?>" />
+					<?php endforeach ?>
+				</div>
+			</form>
+			<x-filter-link />
+		</div>
 
-		<div class="row">
+		<div class="bf-list-with-filters">
 			<!-- List Users -->
-			<div class="col order-2 order-md-1" id="content-list">
+			<div id="content-list">
 				<?= $this->include('Bonfire\Users\Views\_table') ?>
 			</div>
 
 			<!-- Filters -->
-			<div class="col-auto order-1 order-md-2" x-show="filtered" x-transition.duration.240ms>
+			<div class="bf-filter-panel" x-cloak x-show="filtered" x-transition.duration.240ms>
 				<?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=UserFilter target=#content-list') ?>
 			</div>
 		</div>
 	</div>
 
 </x-admin-box>
-<?php $this->endSection() ?>
-
-<?php $this->section('scripts') ?>
-<script>
-
-</script>
 <?php $this->endSection() ?>

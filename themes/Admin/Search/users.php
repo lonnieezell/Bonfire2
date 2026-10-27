@@ -1,9 +1,10 @@
 <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover bf-table">
         <?= $this->setData(['headers' => [
-            'email'       => lang('Bonfire.email'),
+            'user'        => lang('Users.headers.user'),
             'username'    => lang('Bonfire.username'),
             'groups'      => lang('Bonfire.groups'),
+            'status'      => lang('Users.headers.status'),
             'last_active' => lang('Bonfire.lastActive'),
         ]])->include('_table_head') ?>
         <tbody>
