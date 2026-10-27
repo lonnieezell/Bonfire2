@@ -28,6 +28,7 @@ class Registrar
                 'bonfire_simple'    => 'Bonfire\Views\_pager_simple',
                 'bonfire_simple_hx' => 'Bonfire\Views\_pager_simple_htmx',
                 'bonfire_head'      => 'Bonfire\Views\_pager_head',
+                'bonfire_list_hx'   => 'Bonfire\Views\_pager_list_htmx',
             ],
         ];
     }

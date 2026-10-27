@@ -1,5 +1,7 @@
 <?php $this->extend('master') ?>
 
+<?php $this->section('crumb') ?><?= esc($user->displayName()) ?><?php $this->endSection() ?>
+
 <?php $this->section('main') ?>
 <x-page-head>
     <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">

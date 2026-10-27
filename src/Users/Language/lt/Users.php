@@ -85,7 +85,18 @@ return [
             'email'      => 'El. p. adresas',
         ],
     ],
+    'searchUsers'   => 'Ieškoti vardo, el. pašto, vartotojo vardo',
+    'allGroups'     => 'Visi',
+    'noUsersMatch'  => 'Vartotojų nerasta',
+    'noUsersHint'   => 'Pabandykite kitą paiešką ar grupę.',
+    'selectUser'    => 'Pasirinkti {0}',
+    'statusActive'  => 'Aktyvus',
+    'statusPending' => 'Laukiama',
+    'statusBanned'  => 'Užblokuotas',
+
     'headers' => [
+        'user'        => 'Vartotojas',
+        'status'      => 'Būsena',
         'id'          => 'ID',
         'username'    => 'Vartotojas',
         'first_name'  => 'Vardas',

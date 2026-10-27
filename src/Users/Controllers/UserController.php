@@ -42,26 +42,42 @@ class UserController extends AdminController
         /** @var UserFilter $userModel */
         $userModel = model(UserFilter::class);
 
-        $userModel->filter($this->request->getGet('filters'))
+        // The toolbar's search box and group chips sit beside the filter panel's filters.
+        $filters = $this->request->getGet('filters') ?? [];
+        $search  = trim((string) $this->request->getGet('search'));
+        $role    = (string) $this->request->getGet('role');
+
+        if ($search !== '') {
+            $filters['search'] = $search;
+        }
+        if ($role !== '') {
+            $filters['role'] = [$role];
+        }
+
+        $userModel->filter($filters)
             ->withPermissions()
             ->withIdentities()
             ->withGroups();
 
-        $view = $this->request->hasHeader('HX-Request')
-            ? $this->viewPrefix . '_table'
-            : $this->viewPrefix . 'list';
+        $isHtmx = $this->request->hasHeader('HX-Request');
 
-        return $this->render($view, [
+        return $this->render($this->viewPrefix . ($isHtmx ? '_table' : 'list'), [
             'headers' => [
-                'email'       => lang('Users.headers.email'),
+                'user'        => lang('Users.headers.user'),
                 'username'    => lang('Users.headers.username'),
                 'groups'      => lang('Users.headers.groups'),
+                'status'      => lang('Users.headers.status'),
                 'last_active' => lang('Users.headers.last_active'),
             ],
             'showSelectAll' => true,
             'users'         => $userModel->paginate(setting('Site.perPage')),
             'pager'         => $userModel->pager,
             'access'        => UserAccess::forCurrentUser(),
+            'search'        => $search,
+            'role'          => $role,
+            'roles'         => $isHtmx ? [] : $userModel->getRoleFilters(),
+            'groupCounts'   => $isHtmx ? [] : $userModel->groupCounts(),
+            'total'         => $isHtmx ? null : model(UserModel::class)->countAllResults(),
         ]);
     }
 

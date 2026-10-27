@@ -1,3 +1,11 @@
-<div class="bg-white p-2 p-sm-4 mb-4 border rounded-3 shadow-sm">
-    <?= $slot ?>
-</div>
+<section class="bf-card">
+    <?php if (isset($title)) : ?>
+        <header class="bf-card-head">
+            <h2><?= esc($title) ?></h2>
+            <?php if (isset($description)) : ?><p><?= esc($description) ?></p><?php endif ?>
+        </header>
+    <?php endif ?>
+    <div class="bf-card-body">
+        <?= $slot ?>
+    </div>
+</section>

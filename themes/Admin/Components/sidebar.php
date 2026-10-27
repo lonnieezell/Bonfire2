@@ -1,59 +1,57 @@
-<a class="px-3 d-block fs-3 text-light text-decoration-none me-0" href="<?= site_url(ADMIN_AREA) ?>">
-    <div class="site-stamp rounded d-inline-flex align-content-center justify-content-center">
-        <?= substr(setting('Site.siteName') ?? 'bonfire', 0, 1) ?>
-    </div>
-    <span class="site-name"><?= setting('Site.siteName') ?? 'bonfire' ?></span>
+<?php
+$siteName    = setting('Site.siteName') ?? 'bonfire';
+$onDashboard = url_is(ADMIN_AREA);
+$activeItem  = isset($menu) ? $menu->activeItem() : null;
+?>
+<a class="bf-brand" href="<?= site_url(ADMIN_AREA) ?>">
+    <span class="bf-stamp"><?= esc(mb_substr($siteName, 0, 1)) ?></span>
+    <span class="bf-label"><?= esc($siteName) ?></span>
 </a>
-<div class="pt-3">
 
-    <!-- Dashboard -->
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link <?= url_is(ADMIN_AREA) ? 'active' : '' ?>" href="<?= site_url(ADMIN_AREA) ?>" title="<?= lang('Bonfire.dashboard') ?>">
-                <i class="fas fa-home"></i>
-                <span><?= lang('Bonfire.dashboard') ?></span>
-            </a>
-        </li>
-    </ul>
+<nav class="bf-nav">
+    <a class="bf-nav-link <?= $onDashboard ? 'active' : '' ?>" href="<?= site_url(ADMIN_AREA) ?>" title="<?= lang('Bonfire.dashboard') ?>"
+        <?= $onDashboard ? 'aria-current="page"' : '' ?>>
+        <i class="fas fa-home"></i>
+        <span class="bf-label"><?= lang('Bonfire.dashboard') ?></span>
+    </a>
 
     <?php if (isset($menu)) : ?>
         <?php foreach ($menu->collections() as $collection) : ?>
-            <?php if ($collection->hasVisibleItems()) : ?>
-                <div>
-                    <ul class="nav flex-column px-0">
-                        <?php if ($collection->isCollapsible()) : ?>
-                            <li class="nav-item">
-                                <a class="nav-link <?= $collection->isActive() ? 'active' : '' ?>" href="#">
-                                    <?= $collection->icon ?>
-                                    <span><?= $collection->title ?></span>
-                                </a>
-                            </li>
-                            <ul class="nav subnav flex-column mb-2  <?= $collection->isActive() ? 'active' : 'flyout' ?>">
-                                <li class="nav-item nav-title">
-                                    <a class="nav-link">
-                                        <?= $collection->title ?>
-                                    </a>
-                                </li>
-                        <?php endif ?>
+            <?php if (! $collection->hasVisibleItems()) {
+                continue;
+            } ?>
 
+            <?php if ($collection->isCollapsible()) : ?>
+                <?php $open = $collection->isActive() || in_array($activeItem, $collection->items(), true) ?>
+                <div class="bf-nav-group <?= $open ? 'open' : '' ?>" x-data="{ open: <?= $open ? 'true' : 'false' ?> }" :class="{ open }">
+                    <button type="button" class="bf-nav-link <?= $open ? 'active' : '' ?>" @click="open = ! open" :aria-expanded="open" title="<?= esc(strip_tags($collection->title), 'attr') ?>">
+                        <?= $collection->icon ?>
+                        <span class="bf-label"><?= $collection->title ?></span>
+                        <i class="fas fa-angle-down bf-caret"></i>
+                    </button>
+                    <div class="bf-subnav">
+                        <div class="bf-subnav-title"><?= $collection->title ?></div>
                         <?php foreach ($collection->items() as $item) : ?>
-                            <?php if ($item->userCanSee()): ?>
-                                <li class="nav-item">
-                                    <a class="nav-link <?= url_is($item->url . '*') ? 'active' : '' ?>" href="<?= site_url($item->url) ?>">
-                                        <?php if (! $collection->isCollapsible()) : ?>
-                                            <?= $item->icon ?>
-                                        <?php endif ?>
-                                        <span><?= $item->title ?></span>
-                                    </a>
-                                </li>
+                            <?php if ($item->userCanSee()) : ?>
+                                <?php $active = $item === $activeItem ?>
+                                <a class="bf-subnav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" <?= $active ? 'aria-current="page"' : '' ?>>
+                                    <?= $item->title ?>
+                                </a>
                             <?php endif ?>
                         <?php endforeach ?>
-                        <?php if ($collection->isCollapsible()) : ?>
-                            </ul>
-                        <?php endif ?>
-                    </ul>
+                    </div>
                 </div>
+            <?php else : ?>
+                <?php foreach ($collection->items() as $item) : ?>
+                    <?php if ($item->userCanSee()) : ?>
+                        <?php $active = $item === $activeItem ?>
+                        <a class="bf-nav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" title="<?= esc(strip_tags($item->title), 'attr') ?>" <?= $active ? 'aria-current="page"' : '' ?>>
+                            <?= $item->icon ?>
+                            <span class="bf-label"><?= $item->title ?></span>
+                        </a>
+                    <?php endif ?>
+                <?php endforeach ?>
             <?php endif ?>
         <?php endforeach ?>
     <?php endif ?>
-</div>
+</nav>

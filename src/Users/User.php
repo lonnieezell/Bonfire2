@@ -86,6 +86,14 @@ class User extends ShieldUser
     }
 
     /**
+     * The name to show for the user: their full name, or their username when they have none.
+     */
+    public function displayName(): string
+    {
+        return $this->name() ?: (string) $this->username;
+    }
+
+    /**
      * @return string
      */
     public function adminLink(?string $postfix = null)
@@ -104,16 +112,19 @@ class User extends ShieldUser
      */
     public function groupsList(): string
     {
+        return implode(', ', $this->groupTitles());
+    }
+
+    /**
+     * Returns the titles of the groups the user is involved in.
+     *
+     * @return list<string>
+     */
+    public function groupTitles(): array
+    {
         $config = setting('AuthGroups.groups');
-        $groups = $this->getGroups();
 
-        $out = [];
-
-        foreach ($groups as $group) {
-            $out[] = $config[$group]['title'];
-        }
-
-        return implode(', ', $out);
+        return array_map(static fn (string $group): string => $config[$group]['title'] ?? $group, $this->getGroups());
     }
 
     /**

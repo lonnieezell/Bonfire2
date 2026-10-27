@@ -1,5 +1,7 @@
 <?php $this->extend('master') ?>
 
+<?php $this->section('crumb') ?><?= esc($user->displayName()) ?><?php $this->endSection() ?>
+
 <?php $this->section('styles') ?>
   <?= asset_link('auth/css/auth.css', 'css') ?>
 <?php $this->endSection() ?>

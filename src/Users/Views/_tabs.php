@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs nav-fill" style="margin-bottom: -2px;">
+<x-tabs>
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'details') : ?> active <?php endif ?>"
            href="<?= isset($user) ? $user->adminLink() : '#' ?>">
@@ -24,4 +24,4 @@
         <?php endif ?>
     </li>
     <?= service('resourceTabs')->renderTabsFor('user') ?>
-</ul>
+</x-tabs>

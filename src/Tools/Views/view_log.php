@@ -1,6 +1,9 @@
 <?php
 $this->extend('master') ?>
 
+<?php $this->section('crumbParent') ?><?= lang('Tools.logsModTitle') ?><?php $this->endSection() ?>
+<?php $this->section('crumb') ?><?= esc($logFilePretty) ?><?php $this->endSection() ?>
+
 <?php
 $this->section('main') ?>
 <x-page-head>

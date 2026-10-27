@@ -85,7 +85,18 @@ return [
             'email'      => 'Indirizzo Email',
         ],
     ],
+    'searchUsers'   => 'Cerca nome, email, username',
+    'allGroups'     => 'Tutti',
+    'noUsersMatch'  => 'Nessun utente trovato',
+    'noUsersHint'   => 'Prova una ricerca o un gruppo diverso.',
+    'selectUser'    => 'Seleziona {0}',
+    'statusActive'  => 'Attivo',
+    'statusPending' => 'In attesa',
+    'statusBanned'  => 'Bannato',
+
     'headers' => [
+        'user'        => 'Utente',
+        'status'      => 'Stato',
         'id'          => 'ID',
         'username'    => 'Nome Utente',
         'first_name'  => 'Nome',

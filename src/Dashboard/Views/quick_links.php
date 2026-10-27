@@ -1,16 +1,19 @@
-<div class="dashboard-cell-container">
-    <h2 class="text-start"><?= lang('Bonfire.quickLinks') ?></h2>
-
-    <div class="text-start">
-    <?php foreach ($menu->items() as $item) : ?>
-        <?php if ($item->userCanSee()): ?>
-            <div class="quick-link">
-                <a href="<?= site_url($item->url) ?>">
-                    <?= $item->icon ?>
-                    <span><?= $item->title ?></span>
-                </a>
-            </div>
-        <?php endif ?>
-    <?php endforeach ?>
+<div class="page-head bf-page-head">
+    <div class="bf-page-head-row">
+        <div class="bf-page-head-text">
+            <div class="bf-page-head-date"><?= esc($today) ?></div>
+            <h1><?= esc($greeting) ?></h1>
+        </div>
+        <div class="bf-page-head-actions">
+            <h2 class="visually-hidden"><?= lang('Bonfire.quickLinks') ?></h2>
+            <?php foreach ($menu->items() as $item) : ?>
+                <?php if ($item->userCanSee()): ?>
+                    <a class="btn btn-outline-secondary" href="<?= site_url($item->url) ?>">
+                        <?= $item->icon ?>
+                        <?= $item->title ?>
+                    </a>
+                <?php endif ?>
+            <?php endforeach ?>
+        </div>
     </div>
 </div>

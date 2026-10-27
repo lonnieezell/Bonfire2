@@ -188,7 +188,9 @@ class ComponentRenderer
         $attributes = [];
 
         foreach ($matches as $match) {
-            $attributes[$match['attribute']] = $this->stripQuotes($match['value']);
+            // A bare attribute (`disabled`) has no value. Values arrive HTML-escaped from the view
+            // (so a quote can't end the attribute early); components get the plain text back.
+            $attributes[$match['attribute']] = html_entity_decode($this->stripQuotes($match['value'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
 
         return $attributes;

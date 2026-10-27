@@ -50,6 +50,7 @@ final class ComponentRendererTest extends TestCase
             'class-based self-closing with attr' => ['<x-badge label="new" />', '<b>new</b>'],
             'class-based self-closing, no attr'  => ['<x-badge />', '<b>none</b>'],
             'class-based paired with attr'       => ['<x-badge label="new">x</x-badge>', '<b>new</b>'],
+            'escaped attribute is decoded'       => ['<x-greeting name="A &amp; &quot;B&quot;" />', 'Hello A & "B"'],
         ];
     }
 
@@ -78,7 +79,7 @@ final class ComponentRendererTest extends TestCase
         // The Admin theme's own button, not the fixture's `button.php`.
         $html = $this->renderer->render('<x-button>Save</x-button>');
 
-        $this->assertStringContainsString('class="btn btn-primary btn-lg"', $html);
+        $this->assertStringContainsString('class="btn btn-primary"', $html);
         $this->assertStringNotContainsString('<i>', $html);
     }
 

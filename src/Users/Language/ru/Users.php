@@ -103,7 +103,18 @@ return [
             'email'      => 'Эл. почта',
         ],
     ],
+    'searchUsers'   => 'Поиск по имени, email, логину',
+    'allGroups'     => 'Все',
+    'noUsersMatch'  => 'Пользователи не найдены',
+    'noUsersHint'   => 'Попробуйте другой запрос или группу.',
+    'selectUser'    => 'Выбрать {0}',
+    'statusActive'  => 'Активен',
+    'statusPending' => 'Ожидает',
+    'statusBanned'  => 'Заблокирован',
+
     'headers' => [
+        'user'        => 'Пользователь',
+        'status'      => 'Статус',
         'id'          => 'ID',
         'username'    => 'Логин',
         'first_name'  => 'Имя',

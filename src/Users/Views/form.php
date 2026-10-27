@@ -1,6 +1,8 @@
 <?php use Bonfire\Users\User;
 $this->extend('master') ?>
 
+<?php $this->section('crumb') ?><?= isset($user) ? esc($user->displayName()) : lang('Users.newUser') ?><?php $this->endSection() ?>
+
 <?php $this->section('main') ?>
 <x-page-head>
     <a href="<?= site_url(ADMIN_AREA . '/users') ?>" class="back">
