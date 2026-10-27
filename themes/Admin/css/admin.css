@@ -1,6 +1,4 @@
 :root {
-    --bs-primary: #0275d8;
-    --bf-body-bg: #F1F5F9;
     --bf-sidebar-bg: #252535;
     --bf-sidebar-bg-active: #353555;
     --bf-sidebar-subnav-bg-active: #454565;
@@ -18,12 +16,161 @@
 
 /*
  * --------------------------------------------------------------------------
+ * DESIGN TOKENS
+ * --------------------------------------------------------------------------
+ * --bf-accent is set from the Site.adminAccent setting in master.php.
+ * The color mode comes from data-bs-theme on <html>.
+ */
+:root {
+    --bf-accent: #D9622B;
+    --bf-accent-ink: #fff;
+    --bf-accent-soft: color-mix(in oklch, var(--bf-accent) 13%, var(--bf-surface));
+    --bf-font: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --bf-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-bs-theme="light"] {
+    --bf-bg: oklch(0.982 0.003 75);
+    --bf-surface: #fff;
+    --bf-surface-2: oklch(0.965 0.004 75);
+    --bf-sidebar: oklch(0.972 0.004 75);
+    --bf-border: oklch(0.915 0.005 75);
+    --bf-border-strong: oklch(0.86 0.006 75);
+    --bf-text: oklch(0.21 0.012 60);
+    --bf-muted: oklch(0.47 0.012 60);
+    --bf-accent-text: color-mix(in oklch, var(--bf-accent) 78%, black);
+    --bf-danger: oklch(0.54 0.2 27);
+    --bf-warn: oklch(0.55 0.13 70);
+    --bf-warn-bar: oklch(0.8 0.15 80);
+    --bf-info: oklch(0.6 0.13 245);
+    --bf-ok: oklch(0.55 0.13 155);
+    --bf-debug: oklch(0.82 0.008 70);
+    --bf-shadow: 0 1px 2px rgba(30, 20, 10, .05);
+    --bf-pop: 0 16px 40px -12px rgba(30, 20, 10, .22), 0 2px 6px rgba(30, 20, 10, .06);
+}
+
+[data-bs-theme="dark"] {
+    --bf-bg: oklch(0.165 0.006 60);
+    --bf-surface: oklch(0.2 0.006 60);
+    --bf-surface-2: oklch(0.245 0.006 60);
+    --bf-sidebar: oklch(0.18 0.006 60);
+    --bf-border: oklch(0.285 0.007 60);
+    --bf-border-strong: oklch(0.36 0.008 60);
+    --bf-text: oklch(0.95 0.004 80);
+    --bf-muted: oklch(0.72 0.01 70);
+    --bf-accent-text: color-mix(in oklch, var(--bf-accent) 80%, white);
+    --bf-danger: oklch(0.7 0.17 25);
+    --bf-warn: oklch(0.82 0.13 80);
+    --bf-warn-bar: oklch(0.78 0.14 80);
+    --bf-info: oklch(0.7 0.12 245);
+    --bf-ok: oklch(0.74 0.13 155);
+    --bf-debug: oklch(0.45 0.008 70);
+    --bf-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+    --bf-pop: 0 20px 48px -12px rgba(0, 0, 0, .6), 0 2px 6px rgba(0, 0, 0, .3);
+}
+
+/* Point Bootstrap's own variables at the tokens so stock markup follows them. */
+[data-bs-theme] {
+    --bs-body-font-family: var(--bf-font);
+    --bs-font-monospace: var(--bf-mono);
+    --bs-body-bg: var(--bf-surface);
+    --bs-body-color: var(--bf-text);
+    --bs-emphasis-color: var(--bf-text);
+    --bs-secondary-color: var(--bf-muted);
+    --bs-secondary-bg: var(--bf-surface-2);
+    --bs-tertiary-bg: var(--bf-surface-2);
+    --bs-border-color: var(--bf-border);
+    --bs-primary: var(--bf-accent);
+    --bs-focus-ring-color: var(--bf-accent-soft);
+}
+
+a {
+    color: var(--bf-accent-text);
+}
+
+.btn-primary {
+    --bs-btn-color: var(--bf-accent-ink);
+    --bs-btn-bg: var(--bf-accent);
+    --bs-btn-border-color: var(--bf-accent);
+    --bs-btn-hover-color: var(--bf-accent-ink);
+    --bs-btn-hover-bg: color-mix(in oklch, var(--bf-accent) 90%, black);
+    --bs-btn-hover-border-color: color-mix(in oklch, var(--bf-accent) 90%, black);
+    --bs-btn-active-color: var(--bf-accent-ink);
+    --bs-btn-active-bg: color-mix(in oklch, var(--bf-accent) 82%, black);
+    --bs-btn-active-border-color: color-mix(in oklch, var(--bf-accent) 82%, black);
+    --bs-btn-disabled-color: var(--bf-accent-ink);
+    --bs-btn-disabled-bg: var(--bf-accent);
+    --bs-btn-disabled-border-color: var(--bf-accent);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--bf-accent-text);
+    --bs-btn-border-color: var(--bf-accent);
+    --bs-btn-hover-color: var(--bf-accent-ink);
+    --bs-btn-hover-bg: var(--bf-accent);
+    --bs-btn-hover-border-color: var(--bf-accent);
+    --bs-btn-active-color: var(--bf-accent-ink);
+    --bs-btn-active-bg: var(--bf-accent);
+    --bs-btn-active-border-color: var(--bf-accent);
+}
+
+.btn:focus-visible,
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--bf-accent);
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.form-check-input:checked,
+.form-check-input:indeterminate {
+    background-color: var(--bf-accent);
+    border-color: var(--bf-accent);
+}
+
+.text-primary {
+    color: var(--bf-accent-text) !important;
+}
+
+.bg-primary {
+    background-color: var(--bf-accent) !important;
+}
+
+.border-primary {
+    border-color: var(--bf-accent) !important;
+}
+
+.pagination {
+    --bs-pagination-color: var(--bf-accent-text);
+    --bs-pagination-hover-color: var(--bf-accent-text);
+    --bs-pagination-active-bg: var(--bf-accent);
+    --bs-pagination-active-border-color: var(--bf-accent);
+    --bs-pagination-focus-box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--bf-accent);
+    --bs-nav-pills-link-active-color: var(--bf-accent-ink);
+}
+
+.dropdown-menu {
+    --bs-dropdown-link-active-bg: var(--bf-accent);
+    --bs-dropdown-link-active-color: var(--bf-accent-ink);
+}
+
+.progress,
+.progress-stacked {
+    --bs-progress-bar-bg: var(--bf-accent);
+}
+
+/*
+ * --------------------------------------------------------------------------
  * LAYOUT
  * --------------------------------------------------------------------------
  */
 body {
     font-size: 1rem;
-    background: var(--bf-body-bg);
+    background: var(--bf-bg);
 }
 
 .feather {

@@ -4,6 +4,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 27 October 2026
+
+The admin theme has an accent color. Change it under **Settings → General → Appearance**, or set it from code
+with `setting('Site.adminAccent', '#2F6FEB')`. It must be a `#rrggbb` hex color. Buttons, links, focus rings and checked
+inputs follow it. The admin also gains a dark mode that follows the operating system until a viewer picks one, and it
+now uses the Geist font. Installs that published their own copy of the Admin theme need to re-publish it to get the
+new tokens; until then the accent setting saves but has no visible effect.
+
 ## 11 October 2026 (breaking change)
 
 Bonfire no longer adds a `users` rule group to `Config\Validation`. Nothing in Bonfire used it, and because

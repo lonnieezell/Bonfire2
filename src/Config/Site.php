@@ -42,4 +42,14 @@ class Site extends BaseConfig
      * The view file that is displayed when the site is offline.
      */
     public $siteOfflineView = 'Bonfire\Views\site_offline';
+
+    /**
+     * --------------------------------------------------------------------------
+     * Admin Accent Color
+     * --------------------------------------------------------------------------
+     *
+     * The highlight color of the admin theme, as a #rrggbb hex string.
+     * Editable in Settings > General.
+     */
+    public $adminAccent = '#D9622B';
 }

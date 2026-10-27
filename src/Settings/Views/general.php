@@ -40,6 +40,34 @@
 
         </fieldset>
 
+        <fieldset x-data="{ accent: '<?= admin_accent() ?>' }"
+                  x-effect="document.documentElement.style.setProperty('--bf-accent', accent)">
+            <legend>Appearance</legend>
+
+            <!-- Accent Color -->
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <label class="form-label" for="adminAccent">Accent Color</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <?php foreach (['#D9622B', '#2F6FEB', '#0F9F6E', '#7C5CE0'] as $preset) : ?>
+                            <button type="button" class="btn p-0 rounded-circle border"
+                                    style="width: 28px; height: 28px; background: <?= $preset ?>"
+                                    x-bind:class="accent.toLowerCase() === '<?= strtolower($preset) ?>' && 'border-3'"
+                                    x-on:click="accent = '<?= $preset ?>'"
+                                    aria-label="<?= $preset ?>"></button>
+                        <?php endforeach ?>
+                        <input type="color" class="form-control form-control-color" name="adminAccent" id="adminAccent" x-model="accent" />
+                    </div>
+                    <?php if (has_error('adminAccent')) : ?>
+                        <p class="text-danger small mb-0"><?= error('adminAccent') ?></p>
+                    <?php endif ?>
+                </div>
+                <div class="col px-5 pt-2">
+                    <p class="text-muted small">The highlight color used for buttons, links and active items throughout the admin.</p>
+                </div>
+            </div>
+        </fieldset>
+
         <fieldset>
             <legend>Date and Time Settings</legend>
 

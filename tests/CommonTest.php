@@ -40,4 +40,23 @@ final class CommonTest extends TestCase
             ['M j, Y', 'g:i A', false, 'Jan 15, 2021'],
         ];
     }
+
+    #[DataProvider('provideAdminAccent')]
+    public function testAdminAccent(?string $stored, string $expected)
+    {
+        setting('Site.adminAccent', $stored);
+
+        $this->assertSame($expected, \admin_accent());
+    }
+
+    public static function provideAdminAccent(): iterable
+    {
+        return [
+            'valid'     => ['#2F6FEB', '#2F6FEB'],
+            'lowercase' => ['#0f9f6e', '#0f9f6e'],
+            'unset'     => [null, '#D9622B'],
+            'not a hex' => ['red', '#D9622B'],
+            'injection' => ['#fff;}body{display:none', '#D9622B'],
+        ];
+    }
 }
