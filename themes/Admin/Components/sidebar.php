@@ -22,7 +22,7 @@ $activeItem  = isset($menu) ? $menu->activeItem() : null;
             } ?>
 
             <?php if ($collection->isCollapsible()) : ?>
-                <?php $open = $collection->isActive() ?>
+                <?php $open = $collection->isActive() || in_array($activeItem, $collection->items(), true) ?>
                 <div class="bf-nav-group <?= $open ? 'open' : '' ?>" x-data="{ open: <?= $open ? 'true' : 'false' ?> }" :class="{ open }">
                     <button type="button" class="bf-nav-link <?= $open ? 'active' : '' ?>" @click="open = ! open" :aria-expanded="open" title="<?= esc(strip_tags($collection->title), 'attr') ?>">
                         <?= $collection->icon ?>
