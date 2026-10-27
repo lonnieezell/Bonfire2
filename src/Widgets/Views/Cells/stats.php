@@ -6,8 +6,8 @@
 			<?php if ($widget->settings()->enabled()) : ?>
                 <div class="bf-stat">
                     <div class="bf-stat-label">
-                        <i class="<?= $widget->faIcon() ?>" aria-hidden="true"></i>
-                        <h3><?= $widget->title() ?></h3>
+                        <i class="<?= esc($widget->faIcon()) ?>" aria-hidden="true"></i>
+                        <h3><?= esc($widget->title()) ?></h3>
                     </div>
                     <p class="bf-stat-value"><?= $widget->value() ?></p>
 					<?php if (setting('Stats.stats_showLink')) : ?>

@@ -157,6 +157,10 @@ function applyThemeToCharts() {
         chart.options.scales && Object.values(chart.options.scales).forEach((scale) => {
             scale.ticks.color = Chart.defaults.color;
             scale.grid.color = Chart.defaults.borderColor;
+            scale.border && (scale.border.color = Chart.defaults.borderColor);
+            scale.title && (scale.title.color = Chart.defaults.color);
+            scale.angleLines && (scale.angleLines.color = Chart.defaults.borderColor); // polarArea
+            scale.pointLabels && (scale.pointLabels.color = Chart.defaults.color); // polarArea
         });
         chart.update();
     });

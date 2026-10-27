@@ -3,6 +3,7 @@
 namespace Bonfire\Dashboard;
 
 use CodeIgniter\I18n\Time;
+use IntlDatePatternGenerator;
 
 class DashboardCells
 {
@@ -20,7 +21,7 @@ class DashboardCells
 
         return view('Bonfire\Dashboard\Views\quick_links', [
             'menu'     => service('menus')->menu('sidebar')->collection('content'),
-            'today'    => $now->toLocalizedString('EEEE, MMMM d'),
+            'today'    => $now->toLocalizedString((new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('EEEEMMMMd')),
             'greeting' => lang('Bonfire.' . $greeting, [$name]),
         ]);
     }
