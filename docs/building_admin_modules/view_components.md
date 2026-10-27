@@ -48,6 +48,22 @@ fits in it.
 </x-tabs>
 ```
 
+**<x-settings-layout\>**
+
+The frame of a settings page: a "Settings" page head, a sub-nav of the sidebar's `settings` collection (only the pages
+the user may open, the current one marked), and the slot beside it. Register your module's settings page in that
+collection and wrap the page in it.
+
+```php
+<x-settings-layout>
+    <form action="<?= site_url(ADMIN_AREA . '/settings/blog') ?>" method="post">
+        <?= csrf_field() ?>
+        <x-admin-box title="Posts">…</x-admin-box>
+        <x-save-bar />
+    </form>
+</x-settings-layout>
+```
+
 **<x-sidebar\>**
 
 This is the main view that renders the sidebar and all links within it.

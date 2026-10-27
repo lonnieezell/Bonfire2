@@ -18,6 +18,10 @@ render. Turning **Site Online** off now saves `0`; the offline check treats any 
 The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
 
+Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
+escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks in
+two steps.
+
 ## 27 October 2026 (breaking change)
 
 The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:
