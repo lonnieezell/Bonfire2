@@ -34,28 +34,28 @@ $this->extend('master') ?>
             <div class="bf-profile-fields">
                 <div class="form-group">
                     <label for="email" class="form-label"><?= lang('Users.email') ?></label>
-                    <input type="text" name="email" id="email" class="form-control" autocomplete="email" value="<?= old('email', $user->email ?? '') ?>">
+                    <input type="text" name="email" id="email" class="form-control" autocomplete="email" value="<?= esc(old('email', $user->email ?? '')) ?>">
                     <?php if (has_error('email')) : ?>
                         <p class="text-danger"><?= error('email') ?></p>
                     <?php endif ?>
                 </div>
                 <div class="form-group">
                     <label for="username" class="form-label"><?= lang('Users.username') ?></label>
-                    <input type="text" name="username" id="username" class="form-control" autocomplete="username" value="<?= old('username', $user->username ?? '') ?>">
+                    <input type="text" name="username" id="username" class="form-control" autocomplete="username" value="<?= esc(old('username', $user->username ?? '')) ?>">
                     <?php if (has_error('username')) : ?>
                         <p class="text-danger"><?= error('username') ?></p>
                     <?php endif ?>
                 </div>
                 <div class="form-group">
                     <label for="first_name" class="form-label"><?= lang('Users.firstName') ?></label>
-                    <input type="text" name="first_name" id="first_name" class="form-control" autocomplete="given-name" value="<?= old('first_name', $user->first_name ?? '') ?>">
+                    <input type="text" name="first_name" id="first_name" class="form-control" autocomplete="given-name" value="<?= esc(old('first_name', $user->first_name ?? '')) ?>">
                     <?php if (has_error('first_name')) : ?>
                         <p class="text-danger"><?= error('first_name') ?></p>
                     <?php endif ?>
                 </div>
                 <div class="form-group">
                     <label for="last_name" class="form-label"><?= lang('Users.lastName') ?></label>
-                    <input type="text" name="last_name" id="last_name" class="form-control" autocomplete="family-name" value="<?= old('last_name', $user->last_name ?? '') ?>">
+                    <input type="text" name="last_name" id="last_name" class="form-control" autocomplete="family-name" value="<?= esc(old('last_name', $user->last_name ?? '')) ?>">
                     <?php if (has_error('last_name')) : ?>
                         <p class="text-danger"><?= error('last_name') ?></p>
                     <?php endif ?>
