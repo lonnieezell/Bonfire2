@@ -36,3 +36,16 @@ when retrieved.
 ```php
 setting()->set('App', 'siteName', 'My Great Site');
 ```
+
+## Admin accent color
+
+The admin theme's highlight color is the `Site.adminAccent` setting, a `#rrggbb` hex string that defaults to
+`#D9622B`. Admins change it under **Settings → General**. To set it from code:
+
+```php
+setting('Site.adminAccent', '#2F6FEB');
+```
+
+Use the `admin_accent()` helper to read it. The helper always returns a valid hex color and falls back to the default
+when the stored value isn't one.
+

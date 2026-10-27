@@ -79,10 +79,11 @@ class GeneralSettingsController extends AdminController
         }
 
         $rules = [
-            'siteName'   => 'required|string',
-            'timezone'   => 'required|string',
-            'dateFormat' => 'required|string',
-            'timeFormat' => 'required|string',
+            'siteName'    => 'required|string',
+            'timezone'    => 'required|string',
+            'dateFormat'  => 'required|string',
+            'timeFormat'  => 'required|string',
+            'adminAccent' => 'permit_empty|regex_match[/^#[0-9a-fA-F]{6}$/]',
         ];
 
         if (! $this->validate($rules)) {
@@ -95,6 +96,10 @@ class GeneralSettingsController extends AdminController
 
         setting('App.dateFormat', $this->request->getPost('dateFormat'));
         setting('App.timeFormat', $this->request->getPost('timeFormat'));
+
+        if ($this->request->getPost('adminAccent')) {
+            setting('Site.adminAccent', $this->request->getPost('adminAccent'));
+        }
 
         return redirect()->to(ADMIN_AREA . '/settings/general')->with('message', lang('Bonfire.resourcesSaved', ['settings']));
     }

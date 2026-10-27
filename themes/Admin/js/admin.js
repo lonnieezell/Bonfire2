@@ -49,3 +49,15 @@ function sendRecyclerGetRequest(selectedValue) {
         console.error('Error fetching data:', error);
     });
 }
+// Color mode, remembered per viewer. master.php applies it before first paint.
+window.bfTheme = {
+    set(mode) {
+        document.documentElement.dataset.bsTheme = mode;
+        try {
+            localStorage.setItem('bf-theme', mode);
+        } catch (e) {}
+    },
+    toggle() {
+        this.set(document.documentElement.dataset.bsTheme === 'dark' ? 'light' : 'dark');
+    },
+};

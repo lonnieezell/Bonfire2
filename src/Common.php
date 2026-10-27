@@ -102,3 +102,18 @@ if (! function_exists('site_offline')) {
         return empty(setting('Site.siteOnline'));
     }
 }
+
+if (! function_exists('admin_accent')) {
+    /**
+     * The admin theme's accent color as a #rrggbb hex string,
+     * falling back to the default when the stored value isn't one.
+     */
+    function admin_accent(): string
+    {
+        $accent = setting('Site.adminAccent');
+
+        return is_string($accent) && preg_match('/^#[0-9a-fA-F]{6}$/', $accent) === 1
+            ? $accent
+            : '#D9622B';
+    }
+}
