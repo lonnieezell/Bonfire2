@@ -15,6 +15,8 @@ and the shell (`master.php`, `_header.php`, `Components/sidebar.php`) has a new 
 values before handing them to the component, so a custom component that prints an attribute must escape it. See
 [View Components](../building_admin_modules/view_components.md).
 
+Dashboard stats widgets are now neutral cards, so a `StatsItem`'s `bgColor` no longer has a visible effect.
+
 The admin shell has a collapsible sidebar (remembered per viewer), a breadcrumb, a dark-mode toggle and a ⌘K / Ctrl+K
 command palette that jumps to any admin page or runs a search. Admin pages below a menu item can name themselves in the
 breadcrumb with a `crumb` view section (and `crumbParent`, when the page isn't under the active menu item).
