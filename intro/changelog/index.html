@@ -501,6 +501,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#28-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        28 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#27-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1501,6 +1512,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#28-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        28 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#27-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1697,6 +1719,19 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p><code>&lt;x-switch&gt;</code> gained an <code>offValue</code> attribute: the value its hidden input posts when the switch is off (<code>0</code> by default).
+An empty <code>offValue</code> posts nothing, which Bonfire's own views now use for array names like <code>permissions[]</code>. Installs
+that published their own copy of the Admin theme must re-publish it; an older copy posts <code>0</code> for every switch that is
+off in those lists. The user edit screens (details, permissions and security) use the new admin layout.</p>
+<p>The settings pages share a new <code>&lt;x-settings-layout&gt;</code> component (the Settings head and a sub-nav of the settings
+pages). An older published copy of the Admin theme doesn't have it, so re-publish the theme or those pages fail to
+render. Turning <strong>Site Online</strong> off now saves <code>0</code>; the offline check treats any empty value as offline.</p>
+<p>The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
+the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.</p>
+<p>Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
+escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks in
+two steps.</p>
 <h2 id="27-october-2026-breaking-change">27 October 2026 (breaking change)</h2>
 <p>The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:
 Bonfire's admin views now use new View Components (<code>&lt;x-setting-row&gt;</code>, <code>&lt;x-switch&gt;</code>, <code>&lt;x-segmented&gt;</code>, <code>&lt;x-chip&gt;</code>,

@@ -1570,6 +1570,17 @@ fits in it.</p>
     &lt;li class="nav-item"&gt;&lt;a class="nav-link active" href="&lt;?= $user-&gt;adminLink() ?&gt;"&gt;Details&lt;/a&gt;&lt;/li&gt;
     &lt;?= service('resourceTabs')-&gt;renderTabsFor('user') ?&gt;
 &lt;/x-tabs&gt;</code></pre>
+<p><strong>&lt;x-settings-layout&gt;</strong></p>
+<p>The frame of a settings page: a "Settings" page head, a sub-nav of the sidebar's <code>settings</code> collection (only the pages
+the user may open, the current one marked), and the slot beside it. Register your module's settings page in that
+collection and wrap the page in it.</p>
+<pre class="highlight"><code class="language-php">&lt;x-settings-layout&gt;
+    &lt;form action="&lt;?= site_url(ADMIN_AREA . '/settings/blog') ?&gt;" method="post"&gt;
+        &lt;?= csrf_field() ?&gt;
+        &lt;x-admin-box title="Posts"&gt;…&lt;/x-admin-box&gt;
+        &lt;x-save-bar /&gt;
+    &lt;/form&gt;
+&lt;/x-settings-layout&gt;</code></pre>
 <p><strong>&lt;x-sidebar&gt;</strong></p>
 <p>This is the main view that renders the sidebar and all links within it.</p>
 <h2 id="settings-forms">Settings forms</h2>
@@ -1580,10 +1591,12 @@ label at the control's <code>id</code>.</p>
     &lt;input type="text" class="form-control" id="siteName" name="siteName" value="&lt;?= esc($siteName) ?&gt;"&gt;
 &lt;/x-setting-row&gt;</code></pre>
 <p><strong>&lt;x-switch&gt;</strong></p>
-<p>An accessible <code>role="switch"</code> checkbox. A hidden input posts <code>0</code> when it is off; <code>value</code> (default <code>1</code>) posts when it is
-on. <code>checked</code> turns it on unless it is empty, <code>0</code> or <code>false</code>; <code>label</code> becomes its <code>aria-label</code>. Any other attribute
-(<code>id</code>, <code>x-model</code>, <code>disabled</code>, …) goes on the checkbox.</p>
-<pre class="highlight"><code class="language-php">&lt;x-switch name="siteOnline" label="Site online" checked="&lt;?= setting('Site.siteOnline') ? '1' : '' ?&gt;" /&gt;</code></pre>
+<p>An accessible <code>role="switch"</code> checkbox. A hidden input posts <code>offValue</code> (default <code>0</code>) when it is off; <code>value</code> (default
+<code>1</code>) posts when it is on. Give it an empty <code>offValue</code> to post nothing when off, as for an array name like
+<code>permissions[]</code> that should hold only the checked values. <code>checked</code> turns it on unless it is empty, <code>0</code> or <code>false</code>;
+<code>label</code> becomes its <code>aria-label</code>. Any other attribute (<code>id</code>, <code>x-model</code>, <code>disabled</code>, …) goes on the checkbox.</p>
+<pre class="highlight"><code class="language-php">&lt;x-switch name="siteOnline" label="Site online" checked="&lt;?= setting('Site.siteOnline') ? '1' : '' ?&gt;" /&gt;
+&lt;x-switch name="permissions[]" offValue value="users.edit" checked="&lt;?= $canEdit ? '1' : '' ?&gt;" /&gt;</code></pre>
 <p><strong>&lt;x-segmented&gt;</strong></p>
 <p>A radio group styled as a segmented control. <code>options</code> is a JSON object of value =&gt; label; wrap it in single quotes.</p>
 <pre class="highlight"><code class="language-php">&lt;x-segmented name="timeFormat" label="Time format" value="&lt;?= $timeFormat ?&gt;"
