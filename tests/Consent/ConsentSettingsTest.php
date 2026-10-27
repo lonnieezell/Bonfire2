@@ -74,7 +74,7 @@ final class ConsentSettingsTest extends TestCase
         $this->actingAs($this->user)->post('/admin/settings/consent', $fields)->assertSessionMissing('errors');
 
         foreach ($settings as $key => $value) {
-            $this->assertEquals($value, setting($key), $key);
+            $this->assertSame($value, setting($key), $key);
         }
     }
 }

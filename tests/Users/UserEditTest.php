@@ -64,7 +64,7 @@ final class UserEditTest extends TestCase
         $user = $this->createUser(['first_name' => '"><script>x</script>', 'username' => 'grace', 'active' => 1]);
         $user->saveMeta('blog', '"><b>meta</b>');
 
-        $html = $this->actingAs($this->admin)->get('/admin/users/' . $user->id)->response()->getBody();
+        $html = (string) $this->actingAs($this->admin)->get('/admin/users/' . $user->id)->response()->getBody();
 
         $this->assertStringNotContainsString('"><script>x</script>', $html);
         $this->assertStringContainsString('value="&quot;&gt;&lt;script&gt;x&lt;/script&gt;"', $html);

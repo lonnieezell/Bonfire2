@@ -37,7 +37,7 @@ final class SystemInfoTest extends TestCase
     public function testShowsServerAndFilesystemCardsWithCopyButton(): void
     {
         // The raw body: the DOM-parsed getBody() drops Alpine's @-attributes.
-        $html = $this->actingAs($this->admin)->get(route_to('sys-info'))->response()->getBody();
+        $html = (string) $this->actingAs($this->admin)->get(route_to('sys-info'))->response()->getBody();
 
         $this->assertStringContainsString('<h2>Server</h2>', $html);
         $this->assertMatchesRegularExpression('#<div class="bf-kv-key">PHP Version</div>\s*<div class="bf-kv-value bf-mono">' . preg_quote(PHP_VERSION, '#') . '</div>#', $html);

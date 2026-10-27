@@ -28,10 +28,23 @@ final class SettingsLayoutTest extends TestCase
         setting('Site.siteOnline', true);
     }
 
+    #[DataProvider('providePageSitsInTheSettingsFrameWithItsNavItemActive')]
+    public function testPageSitsInTheSettingsFrameWithItsNavItemActive(string $path, string $navTitle): void
+    {
+        $result = $this->actingAs($this->admin)->get($path);
+        $result->assertOK();
+        $html = $result->getBody();
+
+        $this->assertMatchesRegularExpression('#<h1>Settings</h1>#', $html);
+        $this->assertMatchesRegularExpression('#<nav class="bf-settings-nav"[^>]*>.*?</nav>\s*<div class="bf-settings-body">#s', $html);
+        $this->assertMatchesRegularExpression('#<a class="bf-settings-nav-link active" href="[^"]+" aria-current="page">\s*(<i[^>]*></i>\s*)?' . preg_quote($navTitle, '#') . '\s*</a>#', $html);
+        $this->assertSame(1, substr_count($html, 'bf-settings-nav-link active'));
+    }
+
     /**
      * @return array<string, array{string, string}>
      */
-    public static function settingsPages(): array
+    public static function providePageSitsInTheSettingsFrameWithItsNavItemActive(): iterable
     {
         return [
             'general'     => ['admin/settings/general', 'General'],
@@ -43,19 +56,6 @@ final class SettingsLayoutTest extends TestCase
             'consent'     => ['admin/settings/consent', 'Consent'],
             'widgets'     => ['admin/settings/widgets', 'Widgets'],
         ];
-    }
-
-    #[DataProvider('settingsPages')]
-    public function testPageSitsInTheSettingsFrameWithItsNavItemActive(string $path, string $navTitle): void
-    {
-        $result = $this->actingAs($this->admin)->get($path);
-        $result->assertOK();
-        $html = $result->getBody();
-
-        $this->assertMatchesRegularExpression('#<h1>Settings</h1>#', $html);
-        $this->assertMatchesRegularExpression('#<nav class="bf-settings-nav"[^>]*>.*?</nav>\s*<div class="bf-settings-body">#s', $html);
-        $this->assertMatchesRegularExpression('#<a class="bf-settings-nav-link active" href="[^"]+" aria-current="page">\s*(<i[^>]*></i>\s*)?' . preg_quote($navTitle, '#') . '\s*</a>#', $html);
-        $this->assertSame(1, substr_count($html, 'bf-settings-nav-link active'));
     }
 
     public function testSubNavOnlyListsPagesTheUserMayOpen(): void

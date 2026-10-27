@@ -192,7 +192,7 @@ final class WidgetsSettingsControllerTest extends TestCase
     /**
      * @param array<string, mixed> $settings
      */
-    #[DataProvider('provideOptionsRoundTrip')]
+    #[DataProvider('provideOptionsRoundTripThroughTheForm')]
     public function testOptionsRoundTripThroughTheForm(string $alias, array $settings): void
     {
         foreach ($settings as $key => $value) {
@@ -202,11 +202,11 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->submitTheForm('/admin/settings/widgets/' . $alias);
 
         foreach ($settings as $key => $value) {
-            $this->assertEquals($value, setting($key), $key);
+            $this->assertSame($value, setting($key), $key);
         }
     }
 
-    public static function provideOptionsRoundTrip(): iterable
+    public static function provideOptionsRoundTripThroughTheForm(): iterable
     {
         yield 'stats on' => ['stats', ['Stats.stats_showLink' => 'on']];
 

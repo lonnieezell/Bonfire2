@@ -170,7 +170,7 @@ final class RecyclerTest extends TestCase
         $this->users->delete($user->id);
 
         // The raw body: the DOM-parsed getBody() drops Alpine's @-attributes.
-        $html = $this->actingAs($this->admin)->get(route_to('recycler'))->response()->getBody();
+        $html = (string) $this->actingAs($this->admin)->get(route_to('recycler'))->response()->getBody();
 
         $this->assertMatchesRegularExpression('#<h1>Recycler</h1>\s*<span class="bf-count">1</span>#', $html);
         $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-restore', 'users', $user->id), '#') . '" class="btn btn-sm btn-outline-secondary">#', $html);

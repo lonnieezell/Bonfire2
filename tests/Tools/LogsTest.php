@@ -180,7 +180,7 @@ final class LogsTest extends TestCase
     public function testListHasFilterChipsSelectionAndATwoStepDeleteAll(): void
     {
         // The raw body: the DOM-parsed getBody() drops Alpine's @-attributes.
-        $html = $this->actingAs($this->userWith('superadmin'))->get(route_to('sys-logs'))->response()->getBody();
+        $html = (string) $this->actingAs($this->userWith('superadmin'))->get(route_to('sys-logs'))->response()->getBody();
 
         foreach (['All files', 'With errors', 'With warnings'] as $chip) {
             $this->assertMatchesRegularExpression('#<button type="button" class="bf-chip[^"]*"[^>]*>\s*' . $chip . '#', $html);

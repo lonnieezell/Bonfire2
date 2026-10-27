@@ -61,8 +61,9 @@ final class AdminSettingsTest extends TestCase
         $this->assertSame(10, setting('Auth.minimumPasswordLength'));
         $this->assertSame('developer', setting('AuthGroups.defaultGroup'));
         $this->assertSame(['CodeIgniter\Shield\Authentication\Passwords\CompositionValidator'], setting('Auth.passwordValidators'));
-        // The key order depends on what earlier tests left in the settings cache.
-        $this->assertEquals(['login' => '1', 'register' => '1'], setting('Auth.actions'));
+        // Compared per key: the order depends on what earlier tests left in the settings cache.
+        $this->assertSame('1', setting('Auth.actions')['login']);
+        $this->assertSame('1', setting('Auth.actions')['register']);
     }
 
     public function testEverySettingRoundTripsThroughTheForm(): void
@@ -79,15 +80,16 @@ final class AdminSettingsTest extends TestCase
             'Users.avatarResize'         => true,
             'Users.avatarSize'           => 200,
         ];
+
         foreach ($settings as $key => $value) {
             setting($key, $value);
         }
-        setting('Auth.sessionConfig', ['allowRemembering' => '1', 'rememberLength'   => (string) WEEK] + setting('Auth.sessionConfig'));
+        setting('Auth.sessionConfig', ['allowRemembering' => '1', 'rememberLength' => (string) WEEK] + setting('Auth.sessionConfig'));
 
         $this->submitTheForm();
 
         foreach ($settings as $key => $value) {
-            $this->assertEquals($value, setting($key), $key);
+            $this->assertSame($value, setting($key), $key);
         }
         $this->assertTrue((bool) setting('Auth.sessionConfig')['allowRemembering']);
         $this->assertSame((string) WEEK, setting('Auth.sessionConfig')['rememberLength']);
@@ -101,7 +103,7 @@ final class AdminSettingsTest extends TestCase
 
         $this->submitTheForm();
 
-        $this->assertEquals(['register' => null, 'login' => null], setting('Auth.actions'));
+        $this->assertSame(['register' => null, 'login' => null], setting('Auth.actions'));
         $this->assertFalse((bool) setting('Users.useGravatar'));
         $this->assertFalse(setting('Auth.allowRegistration'));
     }
