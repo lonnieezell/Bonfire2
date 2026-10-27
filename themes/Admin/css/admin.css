@@ -607,6 +607,7 @@ a:hover {
     right: 8px;
     transform: translateY(-50%);
     pointer-events: none;
+    white-space: nowrap;
 }
 
 /* Command palette */

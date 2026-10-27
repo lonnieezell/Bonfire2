@@ -7,8 +7,8 @@ foreach (service('menus')->menu('sidebar')->collections() as $collection) {
     foreach ($collection->items() as $item) {
         if ($item->userCanSee()) {
             $paletteItems[] = [
-                'label' => strip_tags($item->title),
-                'hint'  => strip_tags($collection->title),
+                'label' => html_entity_decode(strip_tags($item->title)),
+                'hint'  => html_entity_decode(strip_tags($collection->title)),
                 'url'   => site_url($item->url),
             ];
         }
@@ -17,10 +17,10 @@ foreach (service('menus')->menu('sidebar')->collections() as $collection) {
 ?>
 <script type="application/json" id="bf-palette-items"><?= json_encode($paletteItems, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
 
-<div class="bf-palette" x-data="bfPalette" x-show="open" x-cloak @keydown.escape.window="open = false"
+<div class="bf-palette" x-data="bfPalette" x-show="open" x-cloak @keydown.escape.window="close()"
     data-search-label="<?= esc(lang('Bonfire.searchFor', ['%s']), 'attr') ?>"
     role="dialog" aria-modal="true" aria-label="<?= lang('Bonfire.commandPalette') ?>">
-    <div class="bf-palette-backdrop" @click="open = false"></div>
+    <div class="bf-palette-backdrop" @click="close()"></div>
     <div class="bf-palette-box">
         <div class="bf-palette-input">
             <i class="fas fa-search" aria-hidden="true"></i>

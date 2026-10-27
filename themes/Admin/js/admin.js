@@ -91,11 +91,18 @@ document.addEventListener('alpine:init', () => {
                 }
             });
 
-            // With JavaScript on, the header's search box opens the palette.
-            document.querySelector('.bf-search [name="search_term"]')?.addEventListener('focus', (e) => {
-                e.target.blur();
+            // Clicking the header's search box opens the palette. Tabbing into it keeps it a plain search field.
+            const search = document.querySelector('.bf-search [name="search_term"]');
+            search?.addEventListener('mousedown', (e) => {
+                e.preventDefault();
                 this.show();
             });
+
+            // The shortcut hint reads Ctrl K off macOS.
+            const hint = document.querySelector('.bf-search .bf-kbd');
+            if (hint && !/Mac|iPhone|iPad/.test(navigator.platform)) {
+                hint.textContent = 'Ctrl K';
+            }
         },
 
         get results() {
@@ -106,17 +113,28 @@ document.addEventListener('alpine:init', () => {
                 .slice(0, 8);
 
             if (term) {
-                matches.push({ label: this.$root.dataset.searchLabel.replace('%s', term), hint: '', search: true });
+                matches.push({ label: this.$root.dataset.searchLabel.replace('%s', () => term), hint: '', search: true });
             }
 
             return matches;
         },
 
         show() {
+            if (!this.open) {
+                this.returnFocus = document.activeElement;
+            }
             this.query = '';
             this.index = 0;
             this.open = true;
             this.$nextTick(() => this.$refs.input.focus());
+        },
+
+        close() {
+            if (!this.open) {
+                return;
+            }
+            this.open = false;
+            this.returnFocus?.focus?.();
         },
 
         move(step) {
