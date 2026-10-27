@@ -96,7 +96,7 @@ $this->extend('master') ?>
                 <label class="bf-group-card">
                     <input type="checkbox" name="groups[]" value="<?= esc($group) ?>" class="form-check-input"
                         <?= in_array($group, $oldGroups, true) ? 'checked' : '' ?>
-                        <?= $access->canAssignGroup($group) ? '' : 'disabled' ?>
+                        <?= $access->canEditUsers() && $access->canAssignGroup($group) ? '' : 'disabled' ?>
                     >
                     <span class="bf-group-card-title"><?= esc($info['title'] ?? $group) ?></span>
                     <span class="bf-group-card-desc"><?= esc($info['description'] ?? '') ?></span>

@@ -71,6 +71,19 @@ final class UserEditTest extends TestCase
         $this->assertStringContainsString('<h2>Profile</h2>', $html);
     }
 
+    public function testSelfEditorWithoutUsersEditCannotTickGroups(): void
+    {
+        $me = $this->createUser(['username' => 'self', 'active' => 1]);
+        $me->addGroup('user');
+        $me->addPermission('admin.access', 'me.edit');
+
+        $result = $this->actingAs($me)->get('/admin/users/' . $me->id);
+        $result->assertOK();
+
+        $this->assertStringContainsString('name="groups[]"', $result->getBody());
+        $this->assertDoesNotMatchRegularExpression('#name="groups\[\]" value="[^"]*"(?:(?!disabled)[^>])*>#', $result->getBody());
+    }
+
     public function testPermissionsTabCountsEffectivePermissions(): void
     {
         $html = $this->page($this->betaUserWithLogsView());
@@ -107,6 +120,19 @@ final class UserEditTest extends TestCase
 
         $this->actingAs($this->admin)->post('/admin/users/' . $user->id . '/permissions', ['permissions' => ['logs.manage']]);
 
+        $user = model(UserModel::class)->find($user->id);
+        $this->assertTrue($user->hasPermission('logs.manage'));
+        $this->assertFalse($user->hasPermission('logs.view'));
+    }
+
+    public function testSavingPermissionsIgnoresUnknownValues(): void
+    {
+        $user = $this->betaUserWithLogsView();
+
+        // An Admin theme copy published before `offValue` posts "0" for each switch that is off.
+        $result = $this->actingAs($this->admin)->post('/admin/users/' . $user->id . '/permissions', ['permissions' => ['0', 'logs.manage', '0']]);
+
+        $result->assertRedirect();
         $user = model(UserModel::class)->find($user->id);
         $this->assertTrue($user->hasPermission('logs.manage'));
         $this->assertFalse($user->hasPermission('logs.view'));

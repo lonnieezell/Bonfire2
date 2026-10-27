@@ -1,5 +1,4 @@
-<?php if (isset($user) && $user !== null) : ?>
-<?php $permissionCount = count(array_filter(array_keys(setting('AuthGroups.permissions') ?? []), static fn (string $permission): bool => $user->can($permission))) ?>
+<?php if (isset($user)) : ?>
 <x-tabs>
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'details') : ?> active <?php endif ?>" href="<?= $user->adminLink() ?>">
@@ -7,6 +6,7 @@
         </a>
     </li>
     <?php if (auth()->user()->can('users.edit')) : ?>
+        <?php $permissionCount = count(array_filter(array_keys(setting('AuthGroups.permissions') ?? []), static fn (string $permission): bool => $user->can($permission))) ?>
         <li class="nav-item">
             <a class="nav-link <?php if ($tab === 'permissions') : ?> active <?php endif ?>" href="<?= $user->adminLink('permissions') ?>">
                 <?= lang('Users.cardPermissions') ?>

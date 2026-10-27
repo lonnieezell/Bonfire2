@@ -4,6 +4,13 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 28 October 2026 (breaking change)
+
+`<x-switch>` gained an `offValue` attribute: the value its hidden input posts when the switch is off (`0` by default).
+An empty `offValue` posts nothing, which Bonfire's own views now use for array names like `permissions[]`. Installs
+that published their own copy of the Admin theme must re-publish it; an older copy posts `0` for every switch that is
+off in those lists. The user edit screens (details, permissions and security) use the new admin layout.
+
 ## 27 October 2026 (breaking change)
 
 The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:

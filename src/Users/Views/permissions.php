@@ -17,14 +17,15 @@ $this->extend('master') ?>
     <?php foreach (GroupPermissions::byPrefix($permissions) as $prefix => $group) : ?>
         <x-admin-box title="<?= esc(ucfirst($prefix)) ?>">
             <?php foreach ($group as $permission => $description) : ?>
-                <?php $via = $user->hasPermission($permission) ? null : $user->groupGranting($permission) ?>
+                <?php $direct = $user->hasPermission($permission) ?>
+                <?php $via = $direct ? null : $user->groupGranting($permission) ?>
                 <?php $id = 'perm-' . str_replace('.', '-', $permission) ?>
                 <x-setting-row label="<?= esc($permission) ?>" for="<?= $id ?>" description="<?= esc($description) ?>">
                     <?php if ($via !== null) : ?>
                         <span class="bf-locked"><i class="fas fa-lock" aria-hidden="true"></i> <?= lang('Users.viaGroup', [esc($via)]) ?></span>
                     <?php else : ?>
                         <x-switch name="permissions[]" offValue value="<?= esc($permission) ?>" id="<?= $id ?>"
-                            checked="<?= $user->hasPermission($permission) ? '1' : '0' ?>"
+                            checked="<?= $direct ? '1' : '0' ?>"
                             <?= $access->canAssignPermission($user, $permission) ? '' : 'disabled' ?> />
                     <?php endif ?>
                 </x-setting-row>

@@ -67,12 +67,14 @@ label at the control's `id`.
 
 **<x-switch\>**
 
-An accessible `role="switch"` checkbox. A hidden input posts `0` when it is off; `value` (default `1`) posts when it is
-on. `checked` turns it on unless it is empty, `0` or `false`; `label` becomes its `aria-label`. Any other attribute
-(`id`, `x-model`, `disabled`, …) goes on the checkbox.
+An accessible `role="switch"` checkbox. A hidden input posts `offValue` (default `0`) when it is off; `value` (default
+`1`) posts when it is on. Give it an empty `offValue` to post nothing when off, as for an array name like
+`permissions[]` that should hold only the checked values. `checked` turns it on unless it is empty, `0` or `false`;
+`label` becomes its `aria-label`. Any other attribute (`id`, `x-model`, `disabled`, …) goes on the checkbox.
 
 ```php
 <x-switch name="siteOnline" label="Site online" checked="<?= setting('Site.siteOnline') ? '1' : '' ?>" />
+<x-switch name="permissions[]" offValue value="users.edit" checked="<?= $canEdit ? '1' : '' ?>" />
 ```
 
 **<x-segmented\>**

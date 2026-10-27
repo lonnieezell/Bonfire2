@@ -356,7 +356,9 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
         }
 
-        $permissions = $access->allowedPermissions($user, $this->request->getPost('permissions') ?? []);
+        // Drop values that aren't defined permissions, like the "0" an older x-switch posts when off.
+        $requested   = array_intersect((array) ($this->request->getPost('permissions') ?? []), array_keys(setting('AuthGroups.permissions') ?? []));
+        $permissions = $access->allowedPermissions($user, array_values($requested));
 
         $user->syncPermissions(...$permissions);
 
