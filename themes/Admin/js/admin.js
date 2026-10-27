@@ -110,7 +110,7 @@ document.addEventListener('alpine:init', () => {
             const needle = term.toLowerCase();
             const matches = this.items
                 .filter((item) => !needle || (item.label + ' ' + item.hint).toLowerCase().includes(needle))
-                .slice(0, 8);
+                .slice(0, needle ? 8 : undefined);
 
             if (term) {
                 matches.push({ label: this.$root.dataset.searchLabel.replace('%s', () => term), hint: '', search: true });
