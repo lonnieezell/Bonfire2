@@ -174,7 +174,7 @@ final class RecyclerTest extends TestCase
 
         $this->assertMatchesRegularExpression('#<h1>Recycler</h1>\s*<span class="bf-count">1</span>#', $html);
         $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-restore', 'users', $user->id), '#') . '" class="btn btn-sm btn-outline-secondary">#', $html);
-        $this->assertMatchesRegularExpression('#<button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" @click="confirming = true">#', $html);
+        $this->assertMatchesRegularExpression('#<button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" x-cloak @click="confirming = true">#', $html);
         $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-purge', 'users', $user->id), '#') . '" class="btn btn-sm btn-danger" x-show="confirming" x-cloak>#', $html);
     }
 

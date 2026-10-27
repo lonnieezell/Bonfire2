@@ -40,7 +40,7 @@ $this->extend('master') ?>
         <div class="bf-toolbar">
             <div @change="level = $event.target.value">
                 <x-segmented name="level" label="<?= lang('Tools.level') ?>" value="all"
-                    options='{"all":"<?= lang('Tools.allLevels') ?>","errors":"Errors","warnings":"Warnings","info":"Info","debug":"Debug"}' />
+                    options="<?= esc(json_encode(['all' => lang('Tools.allLevels'), 'errors' => 'Errors', 'warnings' => 'Warnings', 'info' => 'Info', 'debug' => 'Debug'])) ?>" />
             </div>
             <div class="bf-toolbar-search">
                 <i class="fas fa-search" aria-hidden="true"></i>

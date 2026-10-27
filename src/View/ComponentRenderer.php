@@ -273,9 +273,6 @@ class ComponentRenderer
     }
 
     /**
-     * Removes surrounding quotes from a string.
-     */
-    /**
      * Removes the quotes around a value, keeping any quotes that end the value itself.
      */
     private function stripQuotes(string $string): string

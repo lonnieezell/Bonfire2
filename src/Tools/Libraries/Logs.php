@@ -99,6 +99,8 @@ class Logs
     /**
      * The number of entries per level, most severe level first, levels without entries left out.
      *
+     * @param mixed $filePath
+     *
      * @return array<string, int>
      */
     public function levelCounts($filePath): array

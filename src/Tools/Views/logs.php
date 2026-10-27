@@ -14,9 +14,9 @@ $this->extend('master') ?>
 
         <div class="bf-toolbar">
             <div class="bf-chips">
-                <x-chip label="<?= lang('Tools.allFiles') ?>" active="1" @click="filter = 'all'" :class="{ active: filter === 'all' }" />
-                <x-chip label="<?= lang('Tools.withErrors') ?>" @click="filter = 'errors'" :class="{ active: filter === 'errors' }" />
-                <x-chip label="<?= lang('Tools.withWarnings') ?>" @click="filter = 'warnings'" :class="{ active: filter === 'warnings' }" />
+                <x-chip label="<?= lang('Tools.allFiles') ?>" active="1" @click="filter = 'all'" :aria-pressed="filter === 'all'" :class="{ active: filter === 'all' }" />
+                <x-chip label="<?= lang('Tools.withErrors') ?>" @click="filter = 'errors'" :aria-pressed="filter === 'errors'" :class="{ active: filter === 'errors' }" />
+                <x-chip label="<?= lang('Tools.withWarnings') ?>" @click="filter = 'warnings'" :aria-pressed="filter === 'warnings'" :class="{ active: filter === 'warnings' }" />
             </div>
             <?php if ($canManage) : ?>
                 <div class="d-flex gap-2">

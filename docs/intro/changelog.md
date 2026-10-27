@@ -15,6 +15,9 @@ The settings pages share a new `<x-settings-layout>` component (the Settings hea
 pages). An older published copy of the Admin theme doesn't have it, so re-publish the theme or those pages fail to
 render. Turning **Site Online** off now saves `0`; the offline check treats any empty value as offline.
 
+The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
+the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
+
 ## 27 October 2026 (breaking change)
 
 The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:

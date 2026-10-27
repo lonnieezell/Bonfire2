@@ -1,7 +1,7 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<div x-data="{ copied: false, copy() { navigator.clipboard.writeText(this.$refs.info.innerText); this.copied = true; setTimeout(() => this.copied = false, 1500) } }">
+<div x-data="{ copied: false, copy() { navigator.clipboard?.writeText(this.$refs.info.innerText).then(() => { this.copied = true; setTimeout(() => this.copied = false, 1500) }) } }">
     <x-page-head title="System Info">
         <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-outline-secondary" target="_blank">View PHP Info</a>
         <button type="button" class="btn btn-outline-secondary" @click="copy()">

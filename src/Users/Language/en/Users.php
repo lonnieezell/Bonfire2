@@ -45,7 +45,7 @@ return [
                 If you do not have the <em>{0}</em> permission, permissions
                 related to user management will not be selectable (unless they have been
                 granted previously).',
-    'savePerms'   => 'Save Permissions',
+    'savePerms' => 'Save Permissions',
     // security
     'changePass'     => 'Change Password',
     'updatePass'     => 'Update Password',

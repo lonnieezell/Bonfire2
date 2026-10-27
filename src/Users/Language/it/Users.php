@@ -38,7 +38,7 @@ return [
     'permsDetail' => 'Questi permessi si applicano in aggiunta a qualsiasi permesso concesso dai gruppi dell\'utente.
                 Se non hai il permesso <em>{0}</em>, i permessi relativi alla gestione degli utenti non saranno selezionabili (a meno che non siano stati
                 concessi in precedenza).',
-    'savePerms'          => 'Salva Permessi',
+    'savePerms' => 'Salva Permessi',
     // security
     'changePass'     => 'Cambia Password',
     'updatePass'     => 'Aggiorna Password',

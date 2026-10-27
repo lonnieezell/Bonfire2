@@ -38,7 +38,7 @@ return [
     'permsDetail' => 'Šie leidimai taikomi papildomai prie bet kokių leidimų, kuriuos leidžia vartotojo grupės.
                 Jei neturite <em>{0}</em> leidimo, su vartotojų valdymu susiję leidimai nebus pasirenkami (nebent jie buvo
                 suteikti anksčiau).',
-    'savePerms'          => 'Išsaugoti leidimus',
+    'savePerms' => 'Išsaugoti leidimus',
     // security
     'changePass'     => 'Keisti slaptažodį',
     'updatePass'     => 'Atnaujinti slaptažodį',

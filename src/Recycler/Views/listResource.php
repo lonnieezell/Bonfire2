@@ -34,7 +34,7 @@
                                     <a href="<?= url_to('recycler-restore', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-outline-secondary">
                                         <i class="fas fa-trash-restore" aria-hidden="true"></i> <?= lang('Recycler.restoreMsgTitle') ?>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" @click="confirming = true">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" x-cloak @click="confirming = true">
                                         <?= lang('Recycler.purgeMsgTitle') ?>
                                     </button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" x-show="confirming" x-cloak @click="confirming = false">
