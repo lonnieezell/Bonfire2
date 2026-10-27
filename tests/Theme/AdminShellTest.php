@@ -89,9 +89,9 @@ final class AdminShellTest extends TestCase
 
     public function testSidebarShowsOnlyTheItemsTheUserMaySee(): void
     {
-        // The admin group may view logs but not system info.
+        // May view logs but not system info.
         $user = $this->createUser();
-        $user->addGroup('admin');
+        $user->addPermission('admin.access', 'logs.view');
 
         $sidebar = $this->sidebarOf($this->actingAs($user)->get(ADMIN_AREA . '/tools/logs')->response()->getBody());
 
