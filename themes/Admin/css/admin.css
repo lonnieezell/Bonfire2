@@ -955,7 +955,8 @@ a:hover {
     margin: 0;
 }
 
-.bf-segment input {
+.bf-segment input,
+label.bf-chip input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
@@ -1005,7 +1006,17 @@ a:hover {
     text-decoration: none;
 }
 
-.bf-chip.active {
+label.bf-chip {
+    margin: 0;
+    cursor: pointer;
+}
+
+label.bf-chip:has(input:focus-visible) {
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.bf-chip.active,
+label.bf-chip:has(input:checked) {
     border-color: var(--bf-accent);
     background: var(--bf-accent-soft);
     color: var(--bf-accent-text);
@@ -1258,33 +1269,6 @@ a:hover {
     padding-left: 32px;
 }
 
-.bf-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-}
-
-label.bf-chip {
-    margin: 0;
-    cursor: pointer;
-}
-
-label.bf-chip input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-}
-
-label.bf-chip:has(input:checked) {
-    border-color: var(--bf-accent);
-    background: var(--bf-accent-soft);
-    color: var(--bf-accent-text);
-}
-
-label.bf-chip:has(input:focus-visible) {
-    box-shadow: 0 0 0 3px var(--bf-accent-soft);
-}
-
 .bf-list-with-filters {
     display: flex;
     align-items: flex-start;
@@ -1308,7 +1292,6 @@ label.bf-chip:has(input:focus-visible) {
 .bf-table > thead th {
     height: 38px;
     border-top: 1px solid var(--bf-border);
-    text-transform: none;
     vertical-align: middle;
 }
 
@@ -1376,6 +1359,7 @@ label.bf-chip:has(input:focus-visible) {
     font-size: 12.5px;
 }
 
+.bf-chips,
 .bf-pills {
     display: flex;
     flex-wrap: wrap;
@@ -1513,14 +1497,6 @@ input[type="checkbox"]:indeterminate {
 
 .btn-primary {
     color: var(--bf-white);
-}
-
-.btn-3-dots:after {
-    content: '\2026';
-    border: none !important;
-    font-size: 36px;
-    margin-top: -10px;
-    line-height: 0;
 }
 
 /*

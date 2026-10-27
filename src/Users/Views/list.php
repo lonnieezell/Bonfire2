@@ -8,10 +8,10 @@
 </x-page-head>
 
 <x-admin-box>
-	<div x-data="{filtered: false}">
+	<div x-data="{filtered: false}" hx-target="#content-list" hx-include=".bf-toolbar-form, .filters form">
 		<div class="bf-toolbar">
 			<form class="bf-toolbar-form" action="<?= current_url() ?>" method="get"
-				hx-get="<?= current_url() ?>" hx-target="#content-list" hx-include=".filters form"
+				hx-get="<?= current_url() ?>"
 				hx-trigger="input delay:300ms from:[name=search], change from:[name=role]">
 				<div class="bf-toolbar-search">
 					<i class="fas fa-search" aria-hidden="true"></i>

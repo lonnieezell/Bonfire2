@@ -2,11 +2,7 @@
 // A pill filter: a link when given an href, a radio when given a name (for filter forms), otherwise a toggle button.
 // Attributes other than label, count, href, name, value and active (hx-get, …) pass through.
 $isActive    = isset($active) && ! in_array($active, ['', '0', 'false'], true);
-$passThrough = '';
-
-foreach (array_diff_key($data, array_flip(['label', 'count', 'href', 'name', 'value', 'active', 'slot'])) as $attribute => $attributeValue) {
-    $passThrough .= ' ' . esc($attribute) . '="' . esc($attributeValue) . '"';
-}
+$passThrough = stringify_attributes(array_diff_key($data, array_flip(['label', 'count', 'href', 'name', 'value', 'active', 'slot'])));
 ?>
 <?php if (isset($href)) : ?>
 <a class="bf-chip<?= $isActive ? ' active' : '' ?>" href="<?= esc($href) ?>"<?= $isActive ? ' aria-current="true"' : '' ?><?= $passThrough ?>>

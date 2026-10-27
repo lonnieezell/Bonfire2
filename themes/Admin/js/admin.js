@@ -146,8 +146,8 @@ document.addEventListener('alpine:init', () => {
             const recount = () => {
                 this.count = this.form.querySelectorAll('tbody input[type="checkbox"]:checked').length;
             };
+            // An htmx swap replaces the bar along with the rows, so the new bar counts afresh.
             this.form.addEventListener('change', recount);
-            document.body.addEventListener('htmx:afterSettle', recount);
             recount();
         },
 
@@ -183,12 +183,11 @@ document.addEventListener('alpine:init', () => {
 
         discard() {
             this.form.reset();
-            // Let x-model and other listeners see the restored values.
+            // Let x-model and other listeners see the restored values (this also clears `dirty`).
             this.form.querySelectorAll('input, select, textarea').forEach((field) => {
                 field.dispatchEvent(new Event('input', { bubbles: true }));
                 field.dispatchEvent(new Event('change', { bubbles: true }));
             });
-            this.dirty = false;
         },
     }));
 });

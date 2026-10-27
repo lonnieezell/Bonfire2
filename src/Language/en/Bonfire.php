@@ -60,6 +60,7 @@ return [
     'unsavedChanges'  => 'Unsaved changes',
     'selectedCount'   => '{0} selected',
     'clearSelection'  => 'Clear selection',
+    'showingOf'       => 'Showing {0} of {1}',
     'offlineNotice'   => 'Site is currently offline. Enable it',
     'here'            => 'here',
     'collapseSidebar' => 'Collapse Sidebar',

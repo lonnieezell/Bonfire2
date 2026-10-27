@@ -4,7 +4,6 @@
           hx-get="<?= current_url() ?>"
           hx-trigger="change delay:400ms from:.filter-check"
           hx-target="<?= $target ?>"
-          hx-include=".bf-toolbar-form"
     >
         <?= csrf_field() ?>
 

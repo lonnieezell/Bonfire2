@@ -135,7 +135,7 @@ class UserFilter extends UserModel
      */
     public function groupCounts(): array
     {
-        $rows = $this->db->table('auth_groups_users agu')
+        $rows = $this->db->table(config('Auth')->tables['groups_users'] . ' agu')
             ->select('agu.group, COUNT(DISTINCT agu.user_id) AS total')
             ->join('users', 'users.id = agu.user_id')
             ->where('users.deleted_at', null)

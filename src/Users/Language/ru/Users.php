@@ -107,7 +107,6 @@ return [
     'allGroups'     => 'Все',
     'noUsersMatch'  => 'Пользователи не найдены',
     'noUsersHint'   => 'Попробуйте другой запрос или группу.',
-    'showingOf'     => 'Показано {0} из {1}',
     'selectUser'    => 'Выбрать {0}',
     'statusActive'  => 'Активен',
     'statusPending' => 'Ожидает',

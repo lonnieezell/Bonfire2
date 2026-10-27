@@ -92,7 +92,6 @@ return [
     'allGroups'     => 'All',
     'noUsersMatch'  => 'No users match',
     'noUsersHint'   => 'Try a different search or group.',
-    'showingOf'     => 'Showing {0} of {1}',
     'selectUser'    => 'Select {0}',
     'statusActive'  => 'Active',
     'statusPending' => 'Pending',

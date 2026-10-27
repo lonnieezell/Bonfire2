@@ -60,6 +60,7 @@ return [
     'unsavedChanges'  => 'Neišsaugoti pakeitimai',
     'selectedCount'   => 'Pasirinkta: {0}',
     'clearSelection'  => 'Išvalyti pasirinkimą',
+    'showingOf'       => 'Rodoma {0} iš {1}',
     'offlineNotice'   => 'Svetainė išjungta. Įjunkite ją',
     'here'            => 'čia',
     'collapseSidebar' => 'Susiaurinti',

@@ -89,7 +89,6 @@ return [
     'allGroups'     => 'Visi',
     'noUsersMatch'  => 'Vartotojų nerasta',
     'noUsersHint'   => 'Pabandykite kitą paiešką ar grupę.',
-    'showingOf'     => 'Rodoma {0} iš {1}',
     'selectUser'    => 'Pasirinkti {0}',
     'statusActive'  => 'Aktyvus',
     'statusPending' => 'Laukiama',

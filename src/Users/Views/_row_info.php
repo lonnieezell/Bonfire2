@@ -9,7 +9,7 @@
     <div class="bf-user-cell">
         <?= $user->renderAvatar(30) ?>
         <div class="bf-user-cell-text">
-            <a href="<?= $user->adminLink() ?>" class="bf-user-cell-name"><?= esc($user->name() ?: $user->username) ?></a>
+            <a href="<?= $user->adminLink() ?>" class="bf-user-cell-name"><?= esc($user->displayName()) ?></a>
             <div class="bf-user-cell-email"><?= esc($user->email) ?></div>
         </div>
     </div>
@@ -17,8 +17,8 @@
 <td class="bf-mono"><?= esc($user->username) ?></td>
 <td>
     <div class="bf-pills">
-        <?php foreach ($user->getGroups() as $group) : ?>
-            <span class="bf-pill"><?= esc(setting('AuthGroups.groups')[$group]['title'] ?? $group) ?></span>
+        <?php foreach ($user->groupTitles() as $title) : ?>
+            <span class="bf-pill"><?= esc($title) ?></span>
         <?php endforeach ?>
     </div>
 </td>

@@ -60,6 +60,7 @@ return [
     'unsavedChanges'  => 'Несохранённые изменения',
     'selectedCount'   => 'Выбрано: {0}',
     'clearSelection'  => 'Снять выделение',
+    'showingOf'       => 'Показано {0} из {1}',
     'offlineNotice'   => 'В данный момент сайт отключен. Включите его',
     'here'            => 'здесь',
     'collapseSidebar' => 'Свернуть боковую панель',

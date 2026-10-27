@@ -89,7 +89,6 @@ return [
     'allGroups'     => 'Tutti',
     'noUsersMatch'  => 'Nessun utente trovato',
     'noUsersHint'   => 'Prova una ricerca o un gruppo diverso.',
-    'showingOf'     => 'Mostrati {0} di {1}',
     'selectUser'    => 'Seleziona {0}',
     'statusActive'  => 'Attivo',
     'statusPending' => 'In attesa',

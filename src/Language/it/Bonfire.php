@@ -60,6 +60,7 @@ return [
     'unsavedChanges'  => 'Modifiche non salvate',
     'selectedCount'   => '{0} selezionati',
     'clearSelection'  => 'Cancella selezione',
+    'showingOf'       => 'Mostrati {0} di {1}',
     'offlineNotice'   => 'Il sito è attualmente non in linea. Attivalo.',
     'here'            => 'qui',
     'collapseSidebar' => 'Minimizza la barra laterale',

@@ -1,6 +1,7 @@
+<?php $hasUsers = isset($users) && count($users) > 0 ?>
 <form action="<?= site_url(ADMIN_AREA . '/users/delete-batch') ?>" method="post">
     <?= csrf_field() ?>
-    <?php if (isset($users) && count($users)) : ?>
+    <?php if ($hasUsers) : ?>
         <div class="table-responsive">
             <table class="table table-hover bf-table">
                 <?= $this->include('_table_head') ?>
@@ -35,27 +36,6 @@
     <?php endif ?>
 </form>
 
-<?php if (isset($users) && count($users)) : ?>
-    <div class="bf-list-footer" hx-target="#content-list" hx-include=".bf-toolbar-form, .filters form">
-        <span><?= lang('Users.showingOf', [count($users), $pager->getTotal()]) ?></span>
-        <?php if ($pager->getPageCount() > 1) : ?>
-            <?php
-            $page     = $pager->getCurrentPage();
-            $previous = $page > 1 ? $pager->getPageURI($page - 1) : null;
-            $next     = $page < $pager->getPageCount() ? $pager->getPageURI($page + 1) : null;
-            ?>
-            <div class="bf-list-pager">
-                <?php if ($previous !== null) : ?>
-                    <a class="btn btn-outline-secondary btn-sm" href="<?= $previous ?>" hx-get="<?= $previous ?>"><?= lang('Pager.previous') ?></a>
-                <?php else : ?>
-                    <span class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true"><?= lang('Pager.previous') ?></span>
-                <?php endif ?>
-                <?php if ($next !== null) : ?>
-                    <a class="btn btn-outline-secondary btn-sm" href="<?= $next ?>" hx-get="<?= $next ?>"><?= lang('Pager.next') ?></a>
-                <?php else : ?>
-                    <span class="btn btn-outline-secondary btn-sm disabled" aria-disabled="true"><?= lang('Pager.next') ?></span>
-                <?php endif ?>
-            </div>
-        <?php endif ?>
-    </div>
+<?php if ($hasUsers) : ?>
+    <?= $pager->links('default', 'bonfire_list_hx') ?>
 <?php endif ?>

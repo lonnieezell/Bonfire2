@@ -1,6 +1,6 @@
 <thead>
 <?php if (isset($headers) && count($headers)) : ?>
-    <tr class="text-uppercase">
+    <tr>
         <?php if (isset($showSelectAll) && auth()->user()->can('users.delete')) : ?>
             <th style="width: 3em">
                 <input type="checkbox" class="form-check select-all">

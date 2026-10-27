@@ -1,7 +1,7 @@
 <?php use Bonfire\Users\User;
 $this->extend('master') ?>
 
-<?php $this->section('crumb') ?><?= isset($user) ? esc($user->name() ?: $user->username) : lang('Users.newUser') ?><?php $this->endSection() ?>
+<?php $this->section('crumb') ?><?= isset($user) ? esc($user->displayName()) : lang('Users.newUser') ?><?php $this->endSection() ?>
 
 <?php $this->section('main') ?>
 <x-page-head>

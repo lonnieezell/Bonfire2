@@ -137,32 +137,52 @@ class Menu
     }
 
     /**
+     * The visible item whose URL best (longest) matches the current URL, if any.
+     */
+    public function activeItem(): ?MenuItem
+    {
+        return $this->findActive()[1] ?? null;
+    }
+
+    /**
      * Titles leading to the current page: the collection title (for
-     * collapsible collections) and the title of the visible item whose
-     * URL best matches the current URL. Empty when no item matches.
+     * collapsible collections) and the title of the active item.
+     * Empty when no item matches.
      *
      * @return list<string>
      */
     public function activeTrail(): array
     {
-        $trail   = [];
+        [$collection, $item] = $this->findActive() + [null, null];
+
+        if ($item === null) {
+            return [];
+        }
+
+        return $collection->isCollapsible()
+            ? [$collection->title, $item->title()]
+            : [$item->title()];
+    }
+
+    /**
+     * @return array{0: MenuCollection, 1: MenuItem}|array{}
+     */
+    private function findActive(): array
+    {
+        $active  = [];
         $longest = -1;
 
         foreach ($this->collections() as $collection) {
             foreach ($collection->items() as $item) {
                 $url = rtrim($item->url(), '/');
 
-                if (strlen($url) <= $longest || ! url_is($url . '*') || ! $item->userCanSee()) {
-                    continue;
+                if (strlen($url) > $longest && url_is($url . '*') && $item->userCanSee()) {
+                    $longest = strlen($url);
+                    $active  = [$collection, $item];
                 }
-
-                $longest = strlen($url);
-                $trail   = $collection->isCollapsible()
-                    ? [$collection->title, $item->title()]
-                    : [$item->title()];
             }
         }
 
-        return $trail;
+        return $active;
     }
 }

@@ -6,13 +6,11 @@ $pageCrumb  = trim($this->renderSection('crumb'));
 $pageParent = trim($this->renderSection('crumbParent'));
 
 if ($pageCrumb !== '') {
-    $crumbs = [...($pageParent !== '' ? [$pageParent] : array_slice($crumbs, -1)), $pageCrumb];
+    $crumbs = [$pageParent ?: end($crumbs), $pageCrumb];
 }
-if ($crumbs === []) {
-    $crumbs = [lang('Bonfire.dashboard')];
-}
-$crumbs  = array_slice($crumbs, -2);
-$current = array_pop($crumbs);
+
+$current = array_pop($crumbs) ?? lang('Bonfire.dashboard');
+$crumbs  = array_filter(array_slice($crumbs, -1));
 ?>
 <header class="bf-header">
     <nav class="bf-crumbs" aria-label="Breadcrumb">
@@ -45,7 +43,7 @@ $current = array_pop($crumbs);
             </button>
             <div class="dropdown-menu dropdown-menu-end bf-user-menu" id="user-menu">
                 <div class="bf-user-menu-who">
-                    <div class="fw-semibold"><?= esc(auth()->user()->name() ?: auth()->user()->username) ?></div>
+                    <div class="fw-semibold"><?= esc(auth()->user()->displayName()) ?></div>
                     <div class="bf-muted"><?= esc(auth()->user()->email) ?></div>
                 </div>
                 <a class="dropdown-item" href="<?= site_url(ADMIN_AREA . '/users/' . auth()->id()) ?>">
