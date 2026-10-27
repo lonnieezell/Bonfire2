@@ -40,7 +40,7 @@ final class DashboardTest extends TestCase
         $response->assertSee('Quick Links');
     }
 
-    #[DataProvider('provideGreetsByTimeOfDay')]
+    #[DataProvider('provideGreetsTheUserByTimeOfDay')]
     public function testGreetsTheUserByTimeOfDay(string $now, string $greeting): void
     {
         Time::setTestNow($now);
@@ -51,7 +51,7 @@ final class DashboardTest extends TestCase
         $response->assertSee('Thursday, October 8');
     }
 
-    public static function provideGreetsByTimeOfDay(): iterable
+    public static function provideGreetsTheUserByTimeOfDay(): iterable
     {
         return [
             'morning'   => ['2026-10-08 09:00:00', 'Good morning'],

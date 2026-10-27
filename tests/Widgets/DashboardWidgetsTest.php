@@ -69,7 +69,7 @@ final class DashboardWidgetsTest extends TestCase
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
         $this->assertMatchesRegularExpression('#<div class="bf-stat">.*USERS IN RECYCLER.*<p class="bf-stat-value">0</p>#s', $html);
-        $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', $html);
+        $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', (string) $html);
     }
 
     public function testEnabledChartSitsInACard()

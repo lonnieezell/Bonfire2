@@ -68,10 +68,10 @@ return [
     'actionsCol'      => 'Veiksmai',
 
     // Dashboard:
-    'quickLinks' => 'Patogios nuorodos',
-    'goodMorning'  => 'Labas rytas, {0}',
-    'goodAfternoon'=> 'Laba diena, {0}',
-    'goodEvening'  => 'Labas vakaras, {0}',
+    'quickLinks'    => 'Patogios nuorodos',
+    'goodMorning'   => 'Labas rytas, {0}',
+    'goodAfternoon' => 'Laba diena, {0}',
+    'goodEvening'   => 'Labas vakaras, {0}',
 
     // users module Search template:
     'email'      => 'El. adresas',

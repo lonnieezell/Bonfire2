@@ -138,12 +138,12 @@ class UserFilter extends UserModel
         $rows = $this->db->table(config('Auth')->tables['groups_users'] . ' agu')
             ->select('agu.group, COUNT(DISTINCT agu.user_id) AS total')
             ->join('users', 'users.id = agu.user_id')
-            ->where('users.deleted_at', null)
+            ->where('users.deleted_at')
             ->groupBy('agu.group')
             ->get()
             ->getResultArray();
 
-        return array_map('intval', array_column($rows, 'total', 'group'));
+        return array_map(intval(...), array_column($rows, 'total', 'group'));
     }
 
     /**

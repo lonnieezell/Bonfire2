@@ -68,10 +68,10 @@ return [
     'actionsCol'      => 'Действия',
 
     // Dashboard:
-    'quickLinks' => 'Быстрые ссылки',
-    'goodMorning'  => 'Доброе утро, {0}',
-    'goodAfternoon'=> 'Добрый день, {0}',
-    'goodEvening'  => 'Добрый вечер, {0}',
+    'quickLinks'    => 'Быстрые ссылки',
+    'goodMorning'   => 'Доброе утро, {0}',
+    'goodAfternoon' => 'Добрый день, {0}',
+    'goodEvening'   => 'Добрый вечер, {0}',
 
     // users module Search template:
     'email'      => 'Эл. почта',
