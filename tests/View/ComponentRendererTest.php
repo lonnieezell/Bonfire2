@@ -51,6 +51,8 @@ final class ComponentRendererTest extends TestCase
             'class-based self-closing, no attr'  => ['<x-badge />', '<b>none</b>'],
             'class-based paired with attr'       => ['<x-badge label="new">x</x-badge>', '<b>new</b>'],
             'escaped attribute is decoded'       => ['<x-greeting name="A &amp; &quot;B&quot;" />', 'Hello A & "B"'],
+            'empty paired'                       => ['<x-wrapper></x-wrapper>', '[]'],
+            'self-closing inside a component'    => ['<x-framed>hi</x-framed>', 'Hello Ada|hi'],
         ];
     }
 

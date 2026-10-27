@@ -115,8 +115,9 @@ class ComponentRenderer
 
         do {
             $output = $this->replaceTags($pattern, function ($match) {
-                $attributes         = $this->parseAttributes($match['attributes']);
-                $attributes['slot'] = $match['slot'];
+                // Groups that matched nothing (no attributes, an empty slot) are left out of $match.
+                $attributes         = $this->parseAttributes($match['attributes'] ?? '');
+                $attributes['slot'] = $match['slot'] ?? '';
 
                 return $this->renderComponent($match['name'], $attributes);
             }, $output, $replaceCount);
