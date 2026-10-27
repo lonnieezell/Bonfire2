@@ -115,8 +115,9 @@ class ComponentRenderer
 
         do {
             $output = $this->replaceTags($pattern, function ($match) {
-                $attributes         = $this->parseAttributes($match['attributes']);
-                $attributes['slot'] = $match['slot'];
+                // Groups that matched nothing (no attributes, an empty slot) are left out of $match.
+                $attributes         = $this->parseAttributes($match['attributes'] ?? '');
+                $attributes['slot'] = $match['slot'] ?? '';
 
                 return $this->renderComponent($match['name'], $attributes);
             }, $output, $replaceCount);
@@ -272,10 +273,14 @@ class ComponentRenderer
     }
 
     /**
-     * Removes surrounding quotes from a string.
+     * Removes the quotes around a value, keeping any quotes that end the value itself.
      */
     private function stripQuotes(string $string): string
     {
-        return trim($string, "\\'\"");
+        $quote = $string[0] ?? '';
+
+        return ($quote === '"' || $quote === "'") && strlen($string) > 1 && str_ends_with($string, $quote)
+            ? substr($string, 1, -1)
+            : $string;
     }
 }

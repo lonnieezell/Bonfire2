@@ -1,55 +1,29 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/settings/groups') ?>" class="back">&larr; Groups</a>
-    <h2>Edit Groups &amp; Permissions</h2>
-</x-page-head>
-
-<?= view('Bonfire\Groups\Views\_tabs', ['tab' => 'basics', 'group' => $groupAlias]) ?>
-
-<x-admin-box>
+<x-settings-layout>
+    <?= view('Bonfire\Groups\Views\_tabs', ['tab' => 'basics', 'group' => $groupAlias, 'title' => $group['title']]) ?>
 
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
-        <fieldset>
-            <legend><?= $group['title'] ?></legend>
+        <x-admin-box title="Details">
+            <x-setting-row label="Title" for="title">
+                <input type="text" name="title" id="title" class="form-control" autocomplete="off"
+                       value="<?= esc(old('title', $group['title'] ?? '')) ?>">
+                <?php if (has_error('title')) : ?>
+                    <p class="text-danger small mb-0"><?= error('title') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <x-setting-row label="Description" for="description">
+                <textarea name="description" id="description" rows="3" class="form-control"><?= esc(old('description', $group['description'] ?? '')) ?></textarea>
+                <?php if (has_error('description')) : ?>
+                    <p class="text-danger small mb-0"><?= error('description') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+        </x-admin-box>
 
-            <p>Tell us about the group.</p>
-
-            <div class="row">
-                <div class="col-12 col-sm-6">
-
-                    <!-- First Name -->
-                    <div class="form-group">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" name="title" class="form-control" autocomplete="title"
-                               value="<?= old('title', $group['title'] ?? '') ?>">
-                        <?php if (has_error('title')) : ?>
-                            <p class="text-danger"><?= error('title') ?></p>
-                        <?php endif ?>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" rows="3" class="form-control"><?= old('description', $group['description'] ?? '') ?></textarea>
-                        <?php if (has_error('description')) : ?>
-                            <p class="text-danger"><?= error('description') ?></p>
-                        <?php endif ?>
-                    </div>
-                </div>
-            </div>
-
-        </fieldset>
-
-        <x-button-container>
-            <x-button>Save Group</x-button>
-        </x-button-container>
-
+        <x-save-bar save="Save Group" />
     </form>
-
-</x-admin-box>
-
+</x-settings-layout>
 <?php $this->endSection() ?>

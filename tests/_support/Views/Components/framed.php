@@ -1,0 +1,1 @@
+<x-greeting name="Ada" />|<?= $slot ?>

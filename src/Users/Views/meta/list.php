@@ -1,9 +1,7 @@
 <?php if (isset($fieldGroups) && count($fieldGroups)) : ?>
     <?php foreach ($fieldGroups as $group => $fields) : ?>
-        <fieldset>
-    <div class="row">
-        <div class="col">
-            <legend><?= esc($group) ?></legend>
+        <x-admin-box title="<?= esc($group) ?>">
+        <div class="row">
 
             <?php foreach ($fields as $field => $info) : ?>
                 <?php if ($info['type'] === 'checkbox') : ?>
@@ -26,7 +24,7 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                         <textarea class="form-control" rows="3" name="meta[<?= strtolower((string) $field) ?>]"
-                            ><?= old('meta.' . strtolower((string) $field), $user->meta(strtolower((string) $field)) ?? '') ?></textarea>
+                            ><?= esc(old('meta.' . strtolower((string) $field), $user->meta(strtolower((string) $field)) ?? '')) ?></textarea>
                         <?php if (has_error('meta.' . $field)) : ?>
                             <p class="text-danger"><?= error('meta.' . $field) ?></p>
                         <?php endif ?>
@@ -39,7 +37,7 @@
                             <label for="meta[<?= $field ?>]" class="form-label"><?= esc($info['label']) ?></label>
                         <?php endif ?>
                             <input type="<?= $info['type'] ?>" name="meta[<?= strtolower((string) $field) ?>]" class="form-control" autocomplete="<?= strtolower((string) $field) ?>"
-                                value="<?= old('meta.' . strtolower((string) $field), $user->meta(strtolower((string) $field)) ?? '') ?>">
+                                value="<?= esc(old('meta.' . strtolower((string) $field), $user->meta(strtolower((string) $field)) ?? '')) ?>">
                         <?php if (has_error('meta.' . $field)) : ?>
                             <p class="text-danger"><?= error('meta.' . $field) ?></p>
                         <?php endif ?>
@@ -47,7 +45,6 @@
                 <?php endif ?>
             <?php endforeach ?>
         </div>
-    </div>
-        </fieldset>
+        </x-admin-box>
     <?php endforeach ?>
 <?php endif ?>

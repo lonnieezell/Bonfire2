@@ -107,6 +107,14 @@ final class AdminComponentsTest extends TestCase
         $this->assertMatchesRegularExpression('#<input type="checkbox"[^>]* disabled=""#', $html);
     }
 
+    public function testSwitchWithAnEmptyOffValuePostsNothingWhenOff(): void
+    {
+        $html = $this->render('<x-switch name="line_showTitle" offValue />');
+
+        $this->assertStringNotContainsString('type="hidden"', $html);
+        $this->assertStringNotContainsString('offValue', $html);
+    }
+
     public function testSwitchStaysUncheckedForAnEmptyCheckedAttribute(): void
     {
         $this->assertStringNotContainsString(' checked', $this->render('<x-switch name="a" checked="" />'));

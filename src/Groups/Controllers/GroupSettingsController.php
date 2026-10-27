@@ -12,6 +12,7 @@
 namespace Bonfire\Groups\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Groups\Libraries\GroupPermissions;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Shield\Authorization\Groups;
 
@@ -41,7 +42,9 @@ class GroupSettingsController extends AdminController
         }
 
         return $this->render($this->viewPrefix . 'list', [
-            'groups' => $groups,
+            'groups'           => $groups,
+            'permissionCounts' => GroupPermissions::counts(array_keys($groups)),
+            'defaultGroup'     => setting('AuthGroups.defaultGroup'),
         ]);
     }
 

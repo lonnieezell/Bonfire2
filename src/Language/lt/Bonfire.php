@@ -31,7 +31,6 @@ return [
     'magicLinkInfo' => 'Mes išsiųsime el. laišką su nuoroda, kurią paspaudę galėsite prisijungti.',
 
     'lastModified' => 'Vėliausiai keista',
-    'fileSize'     => 'Failo dydis',
 
     // collections:
     'contentModTitle'  => 'Turinys',

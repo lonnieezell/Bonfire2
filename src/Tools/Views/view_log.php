@@ -1,80 +1,75 @@
-<?php
+<?php use Bonfire\Tools\Libraries\Logs;
+
 $this->extend('master') ?>
 
 <?php $this->section('crumbParent') ?><?= lang('Tools.logsModTitle') ?><?php $this->endSection() ?>
 <?php $this->section('crumb') ?><?= esc($logFilePretty) ?><?php $this->endSection() ?>
 
-<?php
-$this->section('main') ?>
-<x-page-head>
-    <a href="<?= site_url(ADMIN_AREA . '/tools/logs') ?>" class="back">&larr; <?= lang('Tools.logsModTitle')?></a>
-    <h2><?= lang('Tools.log') ?>: <?= $logFilePretty ?></h2>
+<?php $this->section('main') ?>
+<x-page-head back="<?= site_url(ADMIN_AREA . '/tools/logs') ?>" backLabel="<?= lang('Tools.logsModTitle') ?>"
+    title="<?= lang('Tools.log') ?>: <?= esc($logFilePretty) ?>"
+    subtitle="<?= esc($logFile) ?>.log · <?= lang('Tools.entries', [$entryCount]) ?>">
+    <a href="<?= url_to('log-download', $logFile) ?>" class="btn btn-outline-secondary">
+        <i class="fas fa-download" aria-hidden="true"></i> <?= lang('Tools.download') ?>
+    </a>
+    <?php if ($canDelete) : ?>
+        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" method="post" class="d-flex gap-2" x-data="{ confirming: false }">
+            <?= csrf_field() ?>
+            <input type="hidden" name="checked[]" value="<?= esc($logFile) ?>"/>
+            <button type="button" class="btn btn-outline-danger" x-show="! confirming" @click="confirming = true">
+                <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Tools.deleteFile') ?>
+            </button>
+            <span class="d-flex gap-2" x-show="confirming" x-cloak>
+                <button type="button" class="btn btn-outline-secondary" @click="confirming = false"><?= lang('Tools.cancel') ?></button>
+                <button type="submit" name="delete" value="1" class="btn btn-danger"><?= lang('Tools.confirmDelete') ?></button>
+            </span>
+        </form>
+    <?php endif ?>
 </x-page-head>
 
 <x-admin-box>
+    <div x-data="{
+            level: 'all',
+            search: '',
+            groups: { errors: ['error', 'critical', 'alert', 'emergency'], warnings: ['warning'], info: ['info', 'notice'], debug: ['debug'] },
+            shows(el) {
+                return (this.level === 'all' || this.groups[this.level].includes(el.dataset.level))
+                    && el.querySelector('.bf-log-text').textContent.toLowerCase().includes(this.search.toLowerCase());
+            },
+        }">
+        <div class="bf-toolbar">
+            <div @change="level = $event.target.value">
+                <x-segmented name="level" label="<?= lang('Tools.level') ?>" value="all"
+                    options="<?= esc(json_encode(['all' => lang('Tools.allLevels'), 'errors' => 'Errors', 'warnings' => 'Warnings', 'info' => 'Info', 'debug' => 'Debug'])) ?>" />
+            </div>
+            <div class="bf-toolbar-search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="search" class="form-control" x-model="search" placeholder="<?= lang('Tools.searchMessages') ?>" aria-label="<?= lang('Tools.searchMessages') ?>">
+            </div>
+            <div class="ms-auto"><?= $filesPager ?? '' ?></div>
+        </div>
 
-    <div class="d-flex justify-content-end"><?= $filesPager  ?? '' ?></div>
+        <div class="bf-log-entries">
+            <?php foreach ($logContent as $log) : ?>
+                <div class="bf-log-entry" data-level="<?= strtolower($log['level']) ?>" x-show="shows($el)">
+                    <span class="bf-level-tag bf-level-<?= Logs::levelClass($log['level']) ?>"><?= strtolower($log['level']) ?></span>
+                    <span class="bf-log-time bf-mono"><?= app_date($log['date'], true) ?></span>
+                    <div class="bf-log-message">
+                        <span class="bf-log-text"><?= esc($log['content']) ?></span>
+                        <?php if (array_key_exists('extra', $log)) : ?>
+                            <details class="bf-log-trace">
+                                <summary>Stack trace</summary>
+                                <pre><?= esc(trim($log['extra'], " \n")) ?></pre>
+                            </details>
+                        <?php endif ?>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover nowrap" id="log">
-            <tr>
-                <th><?= lang('Tools.level'); ?></th>
-                <th><?= lang('Tools.time'); ?></th>
-                <th><?= lang('Tools.content'); ?></th>
-
-            </tr>
-            <tbody>
-            <?php
-            foreach ($logContent as $key => $log): ?>
-                <tr <?php if (array_key_exists('extra', $log)) : ?> style="cursor:pointer"
-                    data-bs-toggle="collapse" data-bs-target="#stack<?= $key ?>" aria-controls="stack<?= $key ?>" aria-expanded="false"
-                    <?php endif ?>
-                >
-                    <td class="text-<?= $log['class']; ?>">
-                        <span class="<?= $log['icon']; ?> d-inline" aria-hidden="true"></span>&nbsp;<span class="d-inline"><?= $log['level'] ?></span>
-                    </td>
-                    <td class="date"><?= app_date($log['date'], true) ?></td>
-                    <td class="text">
-                        <?= esc($log['content']) ?>
-                        <?= (array_key_exists('extra', $log)) ? '...' : ''; ?>
-                    </td>
-                </tr>
-
-                <?php
-                if (array_key_exists('extra', $log)): ?>
-
-                    <tr class="collapse bg-light" id="stack<?= $key ?>">
-                        <td colspan="3">
-                            <pre class="text-wrap">
-                                <?= nl2br(trim(esc($log['extra']), " \n")) ?>
-                            </pre>
-                        </td>
-                    </tr>
-                <?php
-                endif; ?>
-            <?php
-            endforeach; ?>
-            </tbody>
-        </table>
-
-        <?= $pager->links('default', 'bonfire_full') ?>
-
+        <div class="bf-list-footer">
+            <?= $pager->links('default', 'bonfire_full') ?>
+        </div>
     </div>
-
-    <?php if ($canDelete) : ?>
-
-        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" class='form-horizontal' method="post">
-            <?= csrf_field() ?>
-
-            <input type="hidden" name="checked[]" value="<?= $logFile; ?>"/>
-
-            <x-button name="delete" color="danger" onclick="return confirm('<?= lang('Tools.deleteConfirm'); ?>')"><?= lang('Tools.deleteFile'); ?></x-button>
-
-        </form>
-
-    <?php endif ?>
-
 </x-admin-box>
-
-<?php
-$this->endSection() ?>
+<?php $this->endSection() ?>

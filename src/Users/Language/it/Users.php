@@ -22,12 +22,10 @@ return [
     // details
     'userDeletedOn'        => 'Questo utente è stato eliminato il {0}.',
     'restoreUser'          => 'Ripristina utente',
-    'basicInfo'            => 'Informazioni di Base',
     'email'                => 'Indirizzo Email',
     'username'             => 'Nome Utente',
     'firstName'            => 'Nome',
     'lastName'             => 'Cognome',
-    'status'               => 'Stato Utente',
     'activated'            => 'Utente è attivato',
     'banned'               => 'Utente è bannato',
     'enterBanReason'       => 'inserisci il motivo del ban (verrà mostrato al momento del login)',
@@ -37,14 +35,10 @@ return [
     'groupListDisabled'    => "Gruppi a cui l'utente appartiene (non hai il permesso di modificare l'elenco)",
     'saveUser'             => 'Salva Utente',
     // permissions
-    'perms'       => 'Permessi Utente',
     'permsDetail' => 'Questi permessi si applicano in aggiunta a qualsiasi permesso concesso dai gruppi dell\'utente.
                 Se non hai il permesso <em>{0}</em>, i permessi relativi alla gestione degli utenti non saranno selezionabili (a meno che non siano stati
                 concessi in precedenza).',
-    'permsIndeterminate' => 'Le caselle di controllo indeterminate indicano che il permesso è già disponibile da uno o più gruppi a cui l\'utente appartiene.',
-    'permission'         => 'Permesso',
-    'description'        => 'Descrizione',
-    'savePerms'          => 'Salva Permessi',
+    'savePerms' => 'Salva Permessi',
     // security
     'changePass'     => 'Cambia Password',
     'updatePass'     => 'Aggiorna Password',

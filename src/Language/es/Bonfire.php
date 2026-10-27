@@ -31,7 +31,6 @@ return [
     'magicLinkInfo' => 'Enviaremos un correo electrónico con un enlace para que inicies sesión.',
 
     'lastModified' => 'Última modificación',
-    'fileSize'     => 'Tamaño del archivo',
 
     // Colecciones:
     'contentModTitle'  => 'Contenido',

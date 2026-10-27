@@ -3,6 +3,7 @@
 namespace Tests\Settings;
 
 use Bonfire\Users\User;
+use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
 /**
@@ -10,6 +11,8 @@ use Tests\Support\TestCase;
  */
 final class GeneralSettingsTest extends TestCase
 {
+    use SubmitsForms;
+
     protected $refresh = true;
     private User $user;
 
@@ -48,6 +51,42 @@ final class GeneralSettingsTest extends TestCase
 
         $this->assertSame('My Great Site', setting('Site.siteName'));
         $this->assertSame('1', setting('Site.siteOnline'));
+    }
+
+    public function testEverySettingRoundTripsThroughTheForm(): void
+    {
+        setting('Site.siteName', 'Round Trip');
+        setting('Site.siteOnline', '1');
+        setting('App.appTimezone', 'Europe/Paris');
+        setting('App.dateFormat', 'd.m.Y');
+        setting('App.timeFormat', 'H:i');
+        setting('Site.adminAccent', '#0F9F6E');
+
+        $html   = $this->actingAs($this->user)->get('/admin/settings/general')->getBody();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/general'));
+
+        $this->actingAs($this->user)->post('/admin/settings/general', $fields)->assertSessionMissing('errors');
+
+        $this->assertSame('Round Trip', setting('Site.siteName'));
+        $this->assertSame('1', setting('Site.siteOnline'));
+        $this->assertSame('Europe/Paris', setting('App.appTimezone'));
+        $this->assertSame('d.m.Y', setting('App.dateFormat'));
+        $this->assertSame('H:i', setting('App.timeFormat'));
+        $this->assertSame('#0F9F6E', setting('Site.adminAccent'));
+    }
+
+    public function testSwitchingTheSiteOffline(): void
+    {
+        setting('Site.siteOnline', '1');
+
+        $html   = $this->actingAs($this->user)->get('/admin/settings/general')->getBody();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/general'));
+        $this->assertSame('1', $fields['siteOnline']);
+
+        $fields['siteOnline'] = '0'; // only the switch's hidden input posts when it is off
+        $this->actingAs($this->user)->post('/admin/settings/general', $fields);
+
+        $this->assertFalse((bool) setting('Site.siteOnline'));
     }
 
     public function testSavesAdminAccent()

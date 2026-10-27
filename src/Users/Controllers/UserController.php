@@ -12,6 +12,7 @@
 namespace Bonfire\Users\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Groups\Libraries\GroupPermissions;
 use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\Libraries\SaveUser;
 use Bonfire\Users\Libraries\UserAccess;
@@ -96,8 +97,9 @@ class UserController extends AdminController
         helper('form');
 
         return $this->render($this->viewPrefix . 'form', [
-            'groups' => $groups,
-            'access' => UserAccess::forCurrentUser(),
+            'groups'           => $groups,
+            'permissionCounts' => GroupPermissions::counts(array_keys($groups)),
+            'access'           => UserAccess::forCurrentUser(),
         ]);
     }
 
@@ -126,9 +128,10 @@ class UserController extends AdminController
         helper('form');
 
         return $this->render($this->viewPrefix . 'form', [
-            'user'   => $user,
-            'groups' => $groups,
-            'access' => $access,
+            'user'             => $user,
+            'groups'           => $groups,
+            'permissionCounts' => GroupPermissions::counts(array_keys($groups)),
+            'access'           => $access,
         ]);
     }
 
@@ -353,7 +356,9 @@ class UserController extends AdminController
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
         }
 
-        $permissions = $access->allowedPermissions($user, $this->request->getPost('permissions') ?? []);
+        // Drop values that aren't defined permissions, like the "0" an older x-switch posts when off.
+        $requested   = array_intersect((array) ($this->request->getPost('permissions') ?? []), array_keys(setting('AuthGroups.permissions') ?? []));
+        $permissions = $access->allowedPermissions($user, array_values($requested));
 
         $user->syncPermissions(...$permissions);
 

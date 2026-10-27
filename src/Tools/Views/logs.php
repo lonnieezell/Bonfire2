@@ -1,71 +1,97 @@
-<?php $this->extend('master') ?>
+<?php use Bonfire\Tools\Libraries\Logs;
+
+$this->extend('master') ?>
 
 <?php $this->section('main') ?>
-    <x-page-head>
-        <h2><?= lang('Tools.logsModTitle')?></h2>
-    </x-page-head>
+<?php $canManage = auth()->user()->can('logs.manage') ?>
+<x-page-head title="<?= lang('Tools.logsModTitle') ?>" count="<?= $pager->getTotal() ?>"></x-page-head>
 
-    <x-admin-box>
+<x-admin-box>
+<?php if (count($logs)) : ?>
+    <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" method="post"
+          x-data="{ filter: 'all', confirmAll: false, shows(levels) { return this.filter === 'all' || (this.filter === 'errors' ? /error|critical|alert|emergency/.test(levels) : levels.includes('warning')) } }">
+        <?= csrf_field() ?>
 
-    <?php if (count($logs)) : ?>
-
-        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log'); ?>" method="post">
-            <?= csrf_field() ?>
+        <div class="bf-toolbar">
+            <div class="bf-chips">
+                <x-chip label="<?= lang('Tools.allFiles') ?>" @click="filter = 'all'" :aria-pressed="filter === 'all'" :class="{ active: filter === 'all' }" />
+                <x-chip label="<?= lang('Tools.withErrors') ?>" @click="filter = 'errors'" :aria-pressed="filter === 'errors'" :class="{ active: filter === 'errors' }" />
+                <x-chip label="<?= lang('Tools.withWarnings') ?>" @click="filter = 'warnings'" :aria-pressed="filter === 'warnings'" :class="{ active: filter === 'warnings' }" />
+            </div>
+            <?php if ($canManage) : ?>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-danger" x-show="! confirmAll" @click="confirmAll = true">
+                        <?= lang('Tools.deleteAll') ?>
+                    </button>
+                    <span class="d-flex gap-2" x-show="confirmAll" x-cloak>
+                        <button type="button" class="btn btn-outline-secondary" @click="confirmAll = false"><?= lang('Tools.cancel') ?></button>
+                        <button type="submit" name="delete_all" value="1" class="btn btn-danger"><?= lang('Tools.confirmDelete') ?></button>
+                    </span>
+                </div>
+            <?php endif ?>
+        </div>
 
         <div class="table-responsive">
-            <table class="table table-hover logs" cellspacing="0" width="100%" >
+            <table class="table bf-table">
                 <thead>
                     <tr>
-                        <?php if (auth()->user()->can('logs.manage')) : ?>
-                            <th class="column-check text-center" style="width: 2rem">
-                                <input class="select-all" type="checkbox" />
-                            </th>
+                        <?php if ($canManage) : ?>
+                            <th><input class="select-all form-check-input" type="checkbox" aria-label="<?= lang('Tools.deleteSelected') ?>" /></th>
                         <?php endif ?>
-                        <th class='date no-wrap'><?= lang('Tools.date'); ?></th>
-                        <th><?= lang('Tools.content'); ?></th>
-                        <th class="d-none d-lg-table-cell"><?= lang('Tools.file'); ?></th>
+                        <th><?= lang('Tools.date') ?></th>
+                        <th><?= lang('Tools.levels') ?></th>
+                        <th class="text-end"><?= lang('Tools.entriesCol') ?></th>
+                        <th class="d-none d-lg-table-cell"><?= lang('Tools.file') ?></th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    <?php
-                    foreach ($logs as $log) :
-                        ?>
-                    <tr>
-                        <?php if (auth()->user()->can('logs.manage')) : ?>
-                            <td class="column-check text-center">
-                                <input type="checkbox" value="<?= esc($log['name']) ?>" name="checked[]" />
-                            </td>
-                        <?php endif ?>
-                        <td class='date no-wrap'>
-                            <a href='<?= site_url(ADMIN_AREA . "/tools/view-log/" . $log['name']); ?>'>
-                                <?= app_date(str_replace('log-', '', $log['name'])); ?>
-                            </a>
-                        </td>
-                        <td><?= $log['content'] ?></td>
-                        <td class="d-none d-lg-table-cell"><?= esc($log['name'] . '.log') ?></td>
-                    </tr>
+                    <?php foreach ($logs as $log) : ?>
                         <?php
-                    endforeach;
-        ?>
+                        $date  = str_replace('log-', '', $log['name']);
+                        $entries = array_sum($log['counts']);
+                        ?>
+                        <tr data-levels="<?= esc(strtolower(implode(' ', array_keys($log['counts'])))) ?>" x-show="shows($el.dataset.levels)">
+                            <?php if ($canManage) : ?>
+                                <td class="bf-select-cell">
+                                    <input type="checkbox" class="form-check-input" value="<?= esc($log['name']) ?>" name="checked[]" aria-label="<?= esc($log['name']) ?>" />
+                                </td>
+                            <?php endif ?>
+                            <td>
+                                <a href="<?= site_url(ADMIN_AREA . '/tools/view-log/' . $log['name']) ?>" class="bf-log-date"><?= app_date($date) ?></a>
+                                <div class="bf-log-weekday"><?= date('l', strtotime($date)) ?></div>
+                            </td>
+                            <td>
+                                <div class="bf-level-bar" aria-hidden="true">
+                                    <?php foreach ($log['counts'] as $level => $count) : ?><span class="bf-level-bar-segment bf-level-<?= Logs::levelClass($level) ?>" style="width: <?= $count / $entries * 100 ?>%"></span><?php endforeach ?>
+                                </div>
+                                <div class="bf-level-tags">
+                                    <?php foreach ($log['counts'] as $level => $count) : ?>
+                                        <span class="bf-level-tag bf-level-<?= Logs::levelClass($level) ?>"><?= strtolower($level) ?> <?= $count ?></span>
+                                    <?php endforeach ?>
+                                </div>
+                            </td>
+                            <td class="text-end"><?= $entries ?></td>
+                            <td class="bf-mono bf-muted"><?= esc($log['name'] . '.log') ?></td>
+                        </tr>
+                    <?php endforeach ?>
                 </tbody>
             </table>
         </div>
 
-        <?= $pager->links('default', 'bonfire_full') ?>
+        <div class="bf-list-footer">
+            <?= $pager->links('default', 'bonfire_full') ?>
+        </div>
 
-        <?php if (auth()->user()->can('logs.manage')) : ?>
-            <div class="btn-group">
-                <x-button name="delete" id="delete-me" color="outline-danger" onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm'); ?>')"><?= lang('Tools.deleteSelected'); ?></x-button>
-                <x-button name="delete_all" color="danger" onclick="return confirm('<?= lang('Tools.deleteAllConfirm'); ?>')"><?= lang('Tools.deleteAll'); ?></x-button>
-            </div>
+        <?php if ($canManage) : ?>
+            <x-selection-bar>
+                <button type="submit" name="delete" value="1" class="btn btn-danger" onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm') ?>')">
+                    <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Tools.deleteSelected') ?>
+                </button>
+            </x-selection-bar>
         <?php endif ?>
     </form>
-    <?php else : ?>
-        <div class="text-center">
-            <i class="fas fa-clipboard-list fa-3x my-3"></i><br/> <?= lang('Tools.empty'); ?>
-        </div>
-    <?php endif ?>
-
-        </x-admin-box>
-    <?php $this->endSection() ?>
+<?php else : ?>
+    <x-empty-state title="<?= lang('Tools.empty') ?>" />
+<?php endif ?>
+</x-admin-box>
+<?php $this->endSection() ?>

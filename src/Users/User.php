@@ -3,6 +3,7 @@
 namespace Bonfire\Users;
 
 use Bonfire\Core\Traits\HasMeta;
+use CodeIgniter\Shield\Authorization\Groups;
 use CodeIgniter\Shield\Entities\User as ShieldUser;
 
 class User extends ShieldUser
@@ -125,6 +126,38 @@ class User extends ShieldUser
         $config = setting('AuthGroups.groups');
 
         return array_map(static fn (string $group): string => $config[$group]['title'] ?? $group, $this->getGroups());
+    }
+
+    /**
+     * The title of the first of the user's groups that grants the permission, or null when none does.
+     */
+    public function groupGranting(string $permission): ?string
+    {
+        $groups = new Groups();
+
+        foreach ($this->getGroups() ?? [] as $group) {
+            $info = $groups->info($group);
+
+            if ($info !== null && $info->can($permission)) {
+                return $info->title;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The user's status as an `<x-status>` tone and label: banned, pending activation or active.
+     *
+     * @return array{0: string, 1: string}
+     */
+    public function status(): array
+    {
+        return match (true) {
+            $this->isBanned()      => ['danger', lang('Users.statusBanned')],
+            ! $this->isActivated() => ['warn', lang('Users.statusPending')],
+            default                => ['ok', lang('Users.statusActive')],
+        };
     }
 
     /**

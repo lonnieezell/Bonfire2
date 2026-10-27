@@ -8,6 +8,7 @@ $routes->group(ADMIN_AREA . '/tools', ['namespace' => '\Bonfire\Tools\Controller
     $routes->get('php-info', '\Bonfire\Tools\Controllers\SystemInfoController::phpInfo');
     $routes->match(['GET', 'POST'], 'logs', '\Bonfire\Tools\Controllers\LogsController::index', ['as' => 'sys-logs']);
     $routes->get('view-log/(:segment)', '\Bonfire\Tools\Controllers\LogsController::view/$1', ['as' => 'view-log']);
+    $routes->get('download-log/(:segment)', '\Bonfire\Tools\Controllers\LogsController::download/$1', ['as' => 'log-download']);
     $routes->post('delete-log', '\Bonfire\Tools\Controllers\LogsController::delete', ['as' => 'log-delete']);
 });
 

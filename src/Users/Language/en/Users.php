@@ -15,19 +15,23 @@ return [
     'deleteImage'        => 'Delete uploaded image',
     // row_info
     'never' => 'never',
+    // edit head
+    'lastActive' => 'Last active {0}',
+    'viaGroup'   => 'via {0}',
     // cards
-    'cardDetails'     => 'User Details',
+    'cardDetails'     => 'Details',
     'cardPermissions' => 'Permissions',
     'cardSecurity'    => 'Security',
     // details
     'userDeletedOn'        => 'This user was deleted on {0}.',
     'restoreUser'          => 'Restore user',
-    'basicInfo'            => 'Basic Info',
+    'profile'              => 'Profile',
+    'access'               => 'Access',
+    'groupPermissions'     => '{0, plural, =1{# permission} other{# permissions}}',
     'email'                => 'Email Address',
     'username'             => 'Username',
     'firstName'            => 'First Name',
     'lastName'             => 'Last Name',
-    'status'               => 'User Status',
     'activated'            => 'User is activated',
     'banned'               => 'User is banned',
     'enterBanReason'       => 'enter reason for the ban (will be shown at login attempt)',
@@ -37,16 +41,11 @@ return [
     'groupListDisabled'    => 'Groups that the user belongs to (you do not have permission to modify the list)',
     'saveUser'             => 'Save User',
     // permissions
-    'perms'       => 'User Permissions',
     'permsDetail' => 'These permissions are applied in addition to any allowed by the user\'s groups.
                 If you do not have the <em>{0}</em> permission, permissions
                 related to user management will not be selectable (unless they have been
                 granted previously).',
-    'permsIndeterminate' => 'Indeterminate checkboxes indicate the permission is already available from one or more groups the user is
-                a part of.',
-    'permission'  => 'Permission',
-    'description' => 'Description',
-    'savePerms'   => 'Save Permissions',
+    'savePerms' => 'Save Permissions',
     // security
     'changePass'     => 'Change Password',
     'updatePass'     => 'Update Password',

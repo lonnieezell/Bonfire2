@@ -48,6 +48,22 @@ fits in it.
 </x-tabs>
 ```
 
+**<x-settings-layout\>**
+
+The frame of a settings page: a "Settings" page head, a sub-nav of the sidebar's `settings` collection (only the pages
+the user may open, the current one marked), and the slot beside it. Register your module's settings page in that
+collection and wrap the page in it.
+
+```php
+<x-settings-layout>
+    <form action="<?= site_url(ADMIN_AREA . '/settings/blog') ?>" method="post">
+        <?= csrf_field() ?>
+        <x-admin-box title="Posts">…</x-admin-box>
+        <x-save-bar />
+    </form>
+</x-settings-layout>
+```
+
 **<x-sidebar\>**
 
 This is the main view that renders the sidebar and all links within it.
@@ -67,12 +83,14 @@ label at the control's `id`.
 
 **<x-switch\>**
 
-An accessible `role="switch"` checkbox. A hidden input posts `0` when it is off; `value` (default `1`) posts when it is
-on. `checked` turns it on unless it is empty, `0` or `false`; `label` becomes its `aria-label`. Any other attribute
-(`id`, `x-model`, `disabled`, …) goes on the checkbox.
+An accessible `role="switch"` checkbox. A hidden input posts `offValue` (default `0`) when it is off; `value` (default
+`1`) posts when it is on. Give it an empty `offValue` to post nothing when off, as for an array name like
+`permissions[]` that should hold only the checked values. `checked` turns it on unless it is empty, `0` or `false`;
+`label` becomes its `aria-label`. Any other attribute (`id`, `x-model`, `disabled`, …) goes on the checkbox.
 
 ```php
 <x-switch name="siteOnline" label="Site online" checked="<?= setting('Site.siteOnline') ? '1' : '' ?>" />
+<x-switch name="permissions[]" offValue value="users.edit" checked="<?= $canEdit ? '1' : '' ?>" />
 ```
 
 **<x-segmented\>**

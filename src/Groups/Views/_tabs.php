@@ -1,7 +1,8 @@
+<x-page-head back="<?= site_url(ADMIN_AREA . '/settings/groups') ?>" backLabel="User Groups" title="<?= esc($title) ?>"></x-page-head>
 <x-tabs>
     <li class="nav-item">
         <a class="nav-link <?php if ($tab === 'basics') : ?> active <?php endif ?>"
-           href="<?= isset($group) ? site_url(ADMIN_AREA . '/settings/groups/' . $group) : '#' ?>">
+           href="<?= site_url(ADMIN_AREA . '/settings/groups/' . $group) ?>">
             Group Details
         </a>
     </li>

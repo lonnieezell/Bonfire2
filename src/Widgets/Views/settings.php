@@ -1,52 +1,36 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-
-
-<x-page-head>
-    <x-module-title><i class="far fa-object-group"></i> Widgets</x-module-title>
-    <h2>Settings</h2>
-</x-page-head>
-
-<?= view('Bonfire\Widgets\Views\_tabs', ['tab' => 'basics']) ?>
-
-<x-admin-box>
+<x-settings-layout>
+    <?= view('Bonfire\Widgets\Views\_tabs', ['tab' => 'basics']) ?>
 
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
         <?= csrf_field() ?>
-        <fieldset class="first">
 
-            <legend><i class="fas fa-object-group"></i> Widgets Settings</legend>
-
-            <p>In this section you can manage widgets on the dashboard.</p>
-            <br>
-
+        <x-admin-box title="Dashboard widgets" description="Choose which widgets show on the dashboard.">
             <?php foreach ($items as $item): ?>
                 <?php $settings = $item->settings() ?>
+                <x-setting-row label="<?= esc('Enable ' . rtrim($settings->kind->value, 's') . ' ' . (method_exists($item, 'type') ? $item->type() . ' ' : '') . 'widget "' . $item->title() . '"') ?>" for="<?= $settings->fieldName() ?>">
+                    <x-switch name="<?= $settings->fieldName() ?>" value="on" offValue id="<?= $settings->fieldName() ?>" checked="<?= $settings->enabled() ? '1' : '0' ?>" />
+                </x-setting-row>
+            <?php endforeach ?>
+        </x-admin-box>
 
-                <div class="form-check form-switch mt-6 mb-3">
-                    <input class="form-check-input" type="checkbox" name="<?= $settings->fieldName() ?>" role="switch" id="<?= $settings->fieldName() ?>"
-                        <?php if ($settings->enabled()) : ?> checked <?php endif ?>
-                    >
-                    <label class="form-check-label" for="<?= $settings->fieldName() ?>">Enable <?= rtrim($settings->kind->value, 's') ?> <?= method_exists($item, 'type') ? $item->type() : '' ?> widget "<?= $item->title() ?>"</label>
-                </div>
-
-            <?php endforeach; ?>
-        </fieldset>
-        <div class="text-end px-0 px-md-5">
-            <x-button>Save Widget Settings</x-button>
-        </div>
+        <x-save-bar save="Save Widget Settings" />
     </form>
 
-    <x-button-container>
-        <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post">
+    <x-admin-box title="Reset">
+        <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post" x-data="{ confirming: false }">
             <?= csrf_field() ?>
-            <x-button>Reset all settings of all widgets to their default values</x-button>
+            <x-setting-row label="Reset all widget settings" description="Every widget goes back to its default settings.">
+                <button type="button" class="btn btn-outline-danger" x-show="! confirming" @click="confirming = true">Reset…</button>
+                <noscript><button type="submit" class="btn btn-outline-danger">Reset</button></noscript>
+                <span x-show="confirming" x-cloak class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" @click="confirming = false">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Reset everything</button>
+                </span>
+            </x-setting-row>
         </form>
-    </x-button-container>
-</x-admin-box>
-<?php $this->endSection() ?>
-
-<?php $this->section('scripts') ?>
-
+    </x-admin-box>
+</x-settings-layout>
 <?php $this->endSection() ?>

@@ -4,6 +4,24 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 28 October 2026 (breaking change)
+
+`<x-switch>` gained an `offValue` attribute: the value its hidden input posts when the switch is off (`0` by default).
+An empty `offValue` posts nothing, which Bonfire's own views now use for array names like `permissions[]`. Installs
+that published their own copy of the Admin theme must re-publish it; an older copy posts `0` for every switch that is
+off in those lists. The user edit screens (details, permissions and security) use the new admin layout.
+
+The settings pages share a new `<x-settings-layout>` component (the Settings head and a sub-nav of the settings
+pages). An older published copy of the Admin theme doesn't have it, so re-publish the theme or those pages fail to
+render. Turning **Site Online** off now saves `0`; the offline check treats any empty value as offline.
+
+The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
+the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
+
+Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
+escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks in
+two steps.
+
 ## 27 October 2026 (breaking change)
 
 The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:

@@ -850,6 +850,11 @@ a:hover {
     padding-top: 0;
 }
 
+/* …also when an Alpine wrapper holds the rows. */
+.bf-card-body:has(> div:first-child > .bf-setting-row:first-child) {
+    padding: 0;
+}
+
 .bf-card-footer {
     display: flex;
     justify-content: flex-end;
@@ -1785,6 +1790,265 @@ input[type="checkbox"]:indeterminate {
 
 /*
  * --------------------------------------------------------------------------
+ * USER EDIT
+ * --------------------------------------------------------------------------
+ */
+.bf-user-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.bf-user-head .avatar {
+    flex: none;
+    border-radius: 50%;
+}
+
+.bf-user-head-eyebrow {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+.bf-tabs .nav-link .bf-count {
+    padding: 0 7px;
+    font-size: 12px;
+}
+
+.bf-profile {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+}
+
+.bf-profile-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+}
+
+@media (max-width: 767.98px) {
+    .bf-profile,
+    .bf-profile-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bf-setting-extra {
+    padding: 0 18px 16px;
+}
+
+.bf-group-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.bf-group-cards > .bf-group-card {
+    position: relative;
+    padding: 12px 14px 12px 40px;
+}
+
+.bf-group-card:has(input:disabled) {
+    cursor: default;
+    opacity: .6;
+}
+
+.bf-group-card .form-check-input {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    margin: 0;
+}
+
+.bf-group-card-meta {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+}
+
+.bf-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    white-space: nowrap;
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * SETTINGS (<x-settings-layout> and the settings pages)
+ * --------------------------------------------------------------------------
+ */
+.bf-settings {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+}
+
+.bf-settings-nav {
+    position: sticky;
+    top: 76px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.bf-settings-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 8px;
+    color: var(--bf-muted);
+    font-weight: 500;
+}
+
+.bf-settings-nav-link i {
+    width: 16px;
+    text-align: center;
+}
+
+.bf-settings-nav-link:hover {
+    background: var(--bf-surface-2);
+    color: var(--bf-text);
+    text-decoration: none;
+}
+
+.bf-settings-nav-link.active {
+    background: var(--bf-surface);
+    color: var(--bf-text);
+    box-shadow: var(--bf-shadow), 0 0 0 1px var(--bf-border);
+}
+
+@media (max-width: 991.98px) {
+    .bf-settings {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .bf-settings-nav {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .bf-settings-nav-link {
+        white-space: nowrap;
+    }
+}
+
+.bf-setting-block {
+    padding: 16px 20px;
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-input-narrow {
+    max-width: 140px;
+}
+
+.bf-choice-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Selectable cards: .bf-choice-card hides its radio, .bf-group-card shows its checkbox. */
+.bf-choice-card,
+.bf-group-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    border: 1px solid var(--bf-border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.bf-choice-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bf-choice-card:has(input:checked),
+.bf-group-card:has(input:checked) {
+    border-color: var(--bf-accent);
+    background: var(--bf-accent-soft);
+}
+
+.bf-choice-card:has(input:focus-visible) {
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.bf-choice-card-title,
+.bf-group-card-title {
+    font-weight: 500;
+}
+
+.bf-choice-card-desc,
+.bf-group-card-desc {
+    color: var(--bf-muted);
+    font-size: 12px;
+}
+
+.bf-swatch {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 2px solid var(--bf-surface);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--bf-border-strong);
+}
+
+.bf-swatch.active {
+    box-shadow: 0 0 0 2px var(--bf-text);
+}
+
+.bf-callout {
+    margin: 0 20px 16px;
+    padding: 10px 12px;
+    border: 1px solid;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.bf-callout-warn {
+    border-color: color-mix(in oklch, var(--bf-warn) 35%, transparent);
+    background: color-mix(in oklch, var(--bf-warn) 10%, var(--bf-surface));
+}
+
+.bf-callout-info {
+    border-color: color-mix(in oklch, var(--bf-info) 35%, transparent);
+    background: color-mix(in oklch, var(--bf-info) 10%, var(--bf-surface));
+}
+
+.bf-consent-preview {
+    margin-top: 6px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--bf-text);
+    color: var(--bf-surface);
+    font-size: 13.5px;
+}
+
+.bf-consent-preview a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.bf-group-row-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+/*
+ * --------------------------------------------------------------------------
  * OFFLINE
  * --------------------------------------------------------------------------
  */
@@ -1817,4 +2081,131 @@ input[type="checkbox"]:indeterminate {
 
 .no-wrap {
     white-space: nowrap;
+}
+.bf-log-date {
+    font-weight: 500;
+}
+
+.bf-log-weekday {
+    color: var(--bf-muted);
+    font-size: 12px;
+}
+
+.bf-level-bar {
+    display: flex;
+    width: 160px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--bf-surface-2);
+}
+
+.bf-level-bar-segment.bf-level-danger { background: var(--bf-danger); }
+.bf-level-bar-segment.bf-level-warning { background: var(--bf-warn-bar); }
+.bf-level-bar-segment.bf-level-info { background: var(--bf-info); }
+
+.bf-level-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-top: 5px;
+}
+
+.bf-level-tag {
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.bf-level-tag.bf-level-danger { color: var(--bf-danger); }
+.bf-level-tag.bf-level-warning { color: var(--bf-warn); }
+.bf-level-tag.bf-level-info { color: var(--bf-info); }
+
+.bf-log-entries {
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-log-entry {
+    display: grid;
+    grid-template-columns: 80px 150px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--bf-border);
+}
+
+.bf-log-time {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+}
+
+.bf-log-message {
+    overflow-wrap: anywhere;
+}
+
+.bf-log-trace summary {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    cursor: pointer;
+}
+
+.bf-log-trace pre {
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--bf-surface-2);
+    font-size: 12px;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 767.98px) {
+    .bf-log-entry {
+        grid-template-columns: auto 1fr;
+    }
+
+    .bf-log-message {
+        grid-column: 1 / -1;
+    }
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * SYSTEM INFO
+ * --------------------------------------------------------------------------
+ */
+.bf-sysinfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.bf-sysinfo .bf-card {
+    margin-bottom: 0;
+}
+
+.bf-card-body:has(> .bf-kv:first-child),
+.bf-card-body:has(> .bf-callout-flush:first-child) {
+    padding: 0;
+}
+
+.bf-kv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-kv-key {
+    color: var(--bf-muted);
+    min-width: 0;
+}
+
+.bf-kv-value {
+    text-align: right;
+}
+
+.bf-callout-flush {
+    margin: 0 20px 12px;
 }
