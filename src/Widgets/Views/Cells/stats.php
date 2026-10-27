@@ -1,22 +1,18 @@
-<div class="dashboard-cell-container row">
+<div class="bf-stats-grid">
 	<?php foreach ($stats  as $elem) : ?>
 
 		<?php foreach ($elem->items() as $widget) : ?>
 
 			<?php if ($widget->settings()->enabled()) : ?>
-                <div class="col-3">
-                    <div class="widget-stats <?= $widget->bgColor() ?>">
-                        <div class="widget-stats-icon"><i class="<?= $widget->faIcon() ?>"></i></div>
-                        <div class="widget-stats-info">
-                            <h4><?= $widget->title() ?></h4>
-                            <p><?= $widget->value() ?></p>
-                        </div>
-						<?php if (setting('Stats.stats_showLink')) : ?>
-                            <div class="widget-stats-link">
-                                <a href="<?= site_url($widget->url()) ?>"><?= lang('Widgets.viewDetail') ?> <i class="fa fa-arrow-alt-circle-right"></i></a>
-                            </div>
-						<?php endif?>
+                <div class="bf-stat">
+                    <div class="bf-stat-label">
+                        <i class="<?= $widget->faIcon() ?>" aria-hidden="true"></i>
+                        <h3><?= $widget->title() ?></h3>
                     </div>
+                    <p class="bf-stat-value"><?= $widget->value() ?></p>
+					<?php if (setting('Stats.stats_showLink')) : ?>
+                        <a class="bf-stat-link" href="<?= site_url($widget->url()) ?>"><?= lang('Widgets.viewDetail') ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+					<?php endif?>
                 </div>
 			<?php endif?>
 

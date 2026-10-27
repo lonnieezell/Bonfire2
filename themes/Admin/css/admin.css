@@ -1437,38 +1437,137 @@ input[type="checkbox"]:indeterminate {
  * DASHBOARD
  * --------------------------------------------------------------------------
  */
-.dashboard-cell-container {
-    padding: 1rem;
-    margin-bottom: 1rem;
+.bf-page-head-date {
+    color: var(--bf-muted);
+    font-size: 13px;
 }
 
-.quick-link {
-    display: inline-block;
-    height: 100px;
-    margin: 0.3em 1em 1em 0em;
+.bf-page-head-actions .btn-outline-secondary {
+    --bs-btn-color: var(--bf-text);
+    --bs-btn-border-color: var(--bf-border-strong);
+    --bs-btn-bg: var(--bf-surface);
+    --bs-btn-hover-color: var(--bf-text);
+    --bs-btn-hover-bg: var(--bf-surface-2);
+    --bs-btn-hover-border-color: var(--bf-border-strong);
+    --bs-btn-active-color: var(--bf-text);
+    --bs-btn-active-bg: var(--bf-surface-2);
+    --bs-btn-active-border-color: var(--bf-border-strong);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 12px;
 }
 
-.quick-link a {
-    color: var(--bf-black);
-    text-decoration: none;
-    font-size: 24px;
-    height: 100%;
+.bf-page-head-actions .btn-outline-secondary i {
+    color: var(--bf-muted);
+}
+
+/* Stats widgets */
+.bf-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bf-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 18px 14px;
+    border: 1px solid var(--bf-border);
+    border-radius: 12px;
+    background: var(--bf-surface);
+    box-shadow: var(--bf-shadow);
+}
+
+.bf-stat-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--bf-muted);
+}
+
+.bf-stat-label i {
+    font-size: 15px;
+}
+
+/* Widget titles arrive upper-cased; show them in sentence case. */
+.bf-stat-label h3,
+.bf-chart .bf-card-head h2 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: lowercase;
+}
+
+.bf-chart .bf-card-head h2 {
+    color: var(--bf-text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.bf-stat-label h3::first-letter,
+.bf-chart .bf-card-head h2::first-letter {
+    text-transform: uppercase;
+}
+
+.bf-stat-value {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+}
+
+.bf-stat-value:has(table) {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+.bf-stat-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--bf-accent-text);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Chart widgets: a chart's col-N class sets its span of a 12-column grid. */
+.bf-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bf-chart-grid > .bf-chart {
+    grid-column: span 12;
     width: auto;
-    padding: 1rem;
-    text-align: center;
-    border: 1px solid var(--bf-grey);
-    border-radius: 0.5rem;
-    display: inline-block;
-    opacity: 0.5;
+    margin: 0;
+    padding: 0;
 }
 
-.quick-link a:hover {
-    opacity: 1.0;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, .1);
+.bf-chart > .bf-card {
+    height: 100%;
+    margin: 0;
 }
 
-.quick-link a i {
-    display: block;
+@media (min-width: 768px) {
+    .bf-chart-grid > .col-3 {
+        grid-column: span 6;
+    }
+}
+
+@media (min-width: 1200px) {
+    .bf-chart-grid > .col-3 { grid-column: span 3; }
+    .bf-chart-grid > .col-4 { grid-column: span 4; }
+    .bf-chart-grid > .col-6 { grid-column: span 6; }
+    .bf-chart-grid > .col-8 { grid-column: span 8; }
+    .bf-chart-grid > .col-9 { grid-column: span 9; }
 }
 
 /*

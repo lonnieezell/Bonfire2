@@ -67,6 +67,9 @@ return [
 
     // Dashboard:
     'quickLinks' => 'Quick Links',
+    'goodMorning'  => 'Good morning, {0}',
+    'goodAfternoon'=> 'Good afternoon, {0}',
+    'goodEvening'  => 'Good evening, {0}',
 
     // users module Search template:
     'email'      => 'Email',

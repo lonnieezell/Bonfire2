@@ -67,6 +67,9 @@ return [
 
     // Dashboard:
     'quickLinks' => 'Collegamenti veloci',
+    'goodMorning'  => 'Buongiorno, {0}',
+    'goodAfternoon'=> 'Buon pomeriggio, {0}',
+    'goodEvening'  => 'Buonasera, {0}',
 
     // users module Search template:
     'email'      => 'Email',

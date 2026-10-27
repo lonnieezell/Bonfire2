@@ -212,69 +212,9 @@ div {
 
 /*
  * --------------------------------------------------------------------------
- * WIDGET STATS
- * --------------------------------------------------------------------------
- */
-.widget-stats {
-    position: relative;
-    color: #fff;
-    padding: .9375rem;
-    border-radius: 4px;
-}
-
-.widget-stats-link a {
-    display: block;
-    margin: .9375rem -.9375rem -.9375rem;
-    padding: .46875rem .9375rem;
-    background: rgba(0, 0, 0, .4);
-    text-align: right;
-    color: rgba(255, 255, 255, .7);
-    text-decoration: none;
-}
-
-.widget-stats-icon {
-    font-size: 42px;
-    height: 56px;
-    width: 56px;
-    text-align: center;
-    line-height: 56px;
-    color: rgba(0, 0, 0, .15);
-    position: absolute;
-    top: .9375rem;
-    margin-left: .9375rem;
-    right: .9375rem;
-}
-
-/** Icon animation */
-.col-3 .widget-stats-icon i {
-    transition: all .5s ease-in-out; /* vendorless fallback */
-    -o-transition: all .5s ease-in-out; /* opera */
-    -ms-transition: all .5s ease-in-out; /* IE 10 */
-    -moz-transition: all .5s ease-in-out; /* Firefox */
-    -webkit-transition: all .5s ease-in-out; /*safari and chrome */
-}
-.col-3:hover .widget-stats-icon i {
-    transform: scale(1.3);
-}
-
-.widget-stats-info h4 {
-    font-size: 12px;
-    margin: 5px 0;
-    color: rgba(255, 255, 255, .7);
-}
-
-.widget-stats-info p {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 0;
-}
-
-/*
- * --------------------------------------------------------------------------
  * WIDGET CHARTS
  * --------------------------------------------------------------------------
  */
 .chart-border {
-    border: 1px solid #ccc;
-    padding: 3%;
+    max-width: 100%;
 }

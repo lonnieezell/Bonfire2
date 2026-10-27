@@ -142,3 +142,25 @@ function drawChart(
     }
 
 }
+/*********************
+ *   Theme colours
+ *********************/
+// Axis labels, grid lines and fonts follow the admin theme, and follow it again when the viewer toggles dark mode.
+function applyThemeToCharts() {
+    const css = getComputedStyle(document.documentElement);
+
+    Chart.defaults.color = css.getPropertyValue('--bf-muted').trim();
+    Chart.defaults.borderColor = css.getPropertyValue('--bf-border').trim();
+    Chart.defaults.font.family = css.getPropertyValue('--bf-font').trim();
+
+    Object.values(Chart.instances).forEach((chart) => {
+        chart.options.scales && Object.values(chart.options.scales).forEach((scale) => {
+            scale.ticks.color = Chart.defaults.color;
+            scale.grid.color = Chart.defaults.borderColor;
+        });
+        chart.update();
+    });
+}
+
+applyThemeToCharts();
+document.addEventListener('bf-theme', applyThemeToCharts);

@@ -67,6 +67,9 @@ return [
 
     // Tablero:
     'quickLinks' => 'Enlaces rápidos',
+    'goodMorning'  => 'Buenos días, {0}',
+    'goodAfternoon'=> 'Buenas tardes, {0}',
+    'goodEvening'  => 'Buenas noches, {0}',
 
     // Plantilla de búsqueda del módulo de usuarios:
     'email'      => 'Correo electrónico',

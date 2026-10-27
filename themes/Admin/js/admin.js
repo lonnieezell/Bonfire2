@@ -56,6 +56,7 @@ window.bfTheme = {
         try {
             localStorage.setItem('bf-theme', mode);
         } catch (e) {}
+        document.dispatchEvent(new CustomEvent('bf-theme', { detail: mode }));
     },
     toggle() {
         this.set(document.documentElement.dataset.bsTheme === 'dark' ? 'light' : 'dark');
