@@ -21,7 +21,7 @@
 				<div class="bf-chips" role="radiogroup" aria-label="<?= lang('Users.headers.groups') ?>">
 					<x-chip name="role" value="" label="<?= lang('Users.allGroups') ?>" count="<?= $total ?>" active="<?= $role === '' ? '1' : '' ?>" />
 					<?php foreach ($roles as $alias => $title) : ?>
-						<x-chip name="role" value="<?= $alias ?>" label="<?= $title ?>" count="<?= $groupCounts[$alias] ?? 0 ?>" active="<?= $role === $alias ? '1' : '' ?>" />
+						<x-chip name="role" value="<?= esc($alias) ?>" label="<?= esc($title) ?>" count="<?= $groupCounts[$alias] ?? 0 ?>" active="<?= $role === $alias ? '1' : '' ?>" />
 					<?php endforeach ?>
 				</div>
 			</form>

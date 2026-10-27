@@ -22,7 +22,7 @@
         <?php endforeach ?>
     </div>
 </td>
-<td><x-status tone="<?= $statusTone ?>" label="<?= $statusLabel ?>" /></td>
+<td><x-status tone="<?= $statusTone ?>" label="<?= esc($statusLabel) ?>" /></td>
 <td class="bf-muted"><?= $user->last_active?->humanize() ?? lang('Users.never') ?></td>
 <td class="text-end">
     <?php if (auth()->user()->can('users.edit') || auth()->user()->can('users.delete')): ?>

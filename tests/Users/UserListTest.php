@@ -78,6 +78,18 @@ final class UserListTest extends TestCase
         $this->assertStringNotContainsString('<td class="bf-mono">ada</td>', $filtered);
     }
 
+    public function testGroupTitlesCannotInjectAttributesIntoTheChips(): void
+    {
+        $groups         = setting('AuthGroups.groups');
+        $groups['evil'] = ['title' => 'x" onfocus="alert(1)', 'description' => ''];
+        setting('AuthGroups.groups', $groups);
+
+        $html = $this->list();
+
+        $this->assertStringNotContainsString('onfocus="alert(1)"', $html);
+        $this->assertStringContainsString('x&quot; onfocus=&quot;alert(1)', $html);
+    }
+
     public function testNoMatchesShowAnEmptyState(): void
     {
         $html = $this->list('?search=nobody-like-this', htmx: true);
