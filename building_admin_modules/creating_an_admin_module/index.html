@@ -1175,6 +1175,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#naming-a-page-in-the-breadcrumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming a page in the breadcrumb
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1452,6 +1463,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#naming-a-page-in-the-breadcrumb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming a page in the breadcrumb
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1615,6 +1637,16 @@ settings available to you:</p>
   leave it blank.</li>
 </ul>
 <p>One the MenuItem has been created, you add it to the appropriate menu/collection.</p>
+<p>Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
+the active item (and its collection, when that collection is collapsible).</p>
+<h3 id="naming-a-page-in-the-breadcrumb">Naming a page in the breadcrumb</h3>
+<p>A page below a menu item, like a single record's edit form, can add itself to the breadcrumb with a <code>crumb</code> view
+section. The breadcrumb then reads "active menu item › crumb". When the page's URL doesn't sit under any menu item,
+name the parent too with <code>crumbParent</code>:</p>
+<pre class="highlight"><code class="language-php">&lt;?php $this-&gt;extend('master') ?&gt;
+
+&lt;?php $this-&gt;section('crumbParent') ?&gt;&lt;?= lang('Tools.logsModTitle') ?&gt;&lt;?php $this-&gt;endSection() ?&gt;
+&lt;?php $this-&gt;section('crumb') ?&gt;&lt;?= esc($logFilePretty) ?&gt;&lt;?php $this-&gt;endSection() ?&gt;</code></pre>
 
 
 

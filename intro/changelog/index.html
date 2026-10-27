@@ -501,10 +501,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#27-october-2026" class="md-nav__link">
+  <a href="#27-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        27 October 2026
+        27 October 2026 (breaking change)
       
     </span>
   </a>
@@ -1501,10 +1501,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#27-october-2026" class="md-nav__link">
+  <a href="#27-october-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        27 October 2026
+        27 October 2026 (breaking change)
       
     </span>
   </a>
@@ -1697,7 +1697,19 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
-<h2 id="27-october-2026">27 October 2026</h2>
+<h2 id="27-october-2026-breaking-change">27 October 2026 (breaking change)</h2>
+<p>The Admin theme is being redesigned. Installs that published their own copy of the Admin theme must re-publish it:
+Bonfire's admin views now use new View Components (<code>&lt;x-setting-row&gt;</code>, <code>&lt;x-switch&gt;</code>, <code>&lt;x-segmented&gt;</code>, <code>&lt;x-chip&gt;</code>,
+<code>&lt;x-status&gt;</code>, <code>&lt;x-empty-state&gt;</code>, <code>&lt;x-selection-bar&gt;</code>, <code>&lt;x-tabs&gt;</code>, <code>&lt;x-save-bar&gt;</code>) that an older copy doesn't have,
+and the shell (<code>master.php</code>, <code>_header.php</code>, <code>Components/sidebar.php</code>) has a new layout. <code>&lt;x-page-head&gt;</code> and
+<code>&lt;x-admin-box&gt;</code> gained optional attributes and keep working as before without them; <code>&lt;x-button&gt;</code> no longer adds
+<code>btn-lg</code>. Escape component attribute values with <code>esc()</code>: the renderer now decodes HTML entities in attribute
+values before handing them to the component, so a custom component that prints an attribute must escape it. See
+<a href="../../building_admin_modules/view_components/">View Components</a>.</p>
+<p>Dashboard stats widgets are now neutral cards, so a <code>StatsItem</code>'s <code>bgColor</code> no longer has a visible effect.</p>
+<p>The admin shell has a collapsible sidebar (remembered per viewer), a breadcrumb, a dark-mode toggle and a ⌘K / Ctrl+K
+command palette that jumps to any admin page or runs a search. Admin pages below a menu item can name themselves in the
+breadcrumb with a <code>crumb</code> view section (and <code>crumbParent</code>, when the page isn't under the active menu item).</p>
 <p>The admin theme has an accent color. Change it under <strong>Settings → General → Appearance</strong>, or set it from code
 with <code>setting('Site.adminAccent', '#2F6FEB')</code>. It must be a <code>#rrggbb</code> hex color. Buttons, links, focus rings and checked
 inputs follow it. The admin also gains a dark mode that follows the operating system until a viewer picks one, and it

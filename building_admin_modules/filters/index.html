@@ -1735,6 +1735,9 @@ results as the <code>target</code>.</p>
 &lt;/div&gt;</code></pre>
 <p>Note that the id of the eleent that contains the included table should be with <code>id="content-list"</code> as it this <code>id</code> is
 the default target for content replacements by the pager and the filter.</p>
+<p>For the admin design's list footer ("Showing X of Y · Previous / Next", loaded through htmx), render the pager with
+the <code>bonfire_list_hx</code> template inside the replaced element: <code>&lt;?= $pager-&gt;links('default', 'bonfire_list_hx') ?&gt;</code>. It
+takes its <code>hx-target</code> from an ancestor, so put <code>hx-target="#content-list"</code> on an element that wraps the list.</p>
 
 
 
