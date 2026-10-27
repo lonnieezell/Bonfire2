@@ -21,7 +21,6 @@ return [
     'deleteSelected'        => 'Trinti pažymėtus',
     'deleteAll'             => 'Trinti visus žurnalų failus',
     'deleteSelectedConfirm' => 'Ar tikrai norite ištrinti visus pažymėtus failus?',
-    'deleteAllConfirm'      => 'Ar tikrai norite ištrinti visus žurnalų failus?',
     'deleteSuccess'         => 'Failas(-ai) sėkmingai ištrintas(-i).',
     'deleteAllSuccess'      => 'Visi failai buvo sėkmingai ištrinti.',
     'deleteError'           => 'Nepavyksta ištrinti.',

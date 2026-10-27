@@ -21,7 +21,6 @@ return [
     'deleteSelected'        => 'Elimina la selezione',
     'deleteAll'             => 'Elimina tutti i registri',
     'deleteSelectedConfirm' => 'Sei sicuro di voler eliminare tutti i file selezionati?',
-    'deleteAllConfirm'      => 'Sei sicuro di voler eliminare tutti i file di registro?',
     'deleteSuccess'         => 'File eliminati con successo.',
     'deleteAllSuccess'      => 'Tutti i file sono stati eliminati con successo.',
     'deleteError'           => 'Impossibile eseguire l\'eliminazione.',

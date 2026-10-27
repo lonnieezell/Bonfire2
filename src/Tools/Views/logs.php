@@ -14,7 +14,7 @@ $this->extend('master') ?>
 
         <div class="bf-toolbar">
             <div class="bf-chips">
-                <x-chip label="<?= lang('Tools.allFiles') ?>" active="1" @click="filter = 'all'" :aria-pressed="filter === 'all'" :class="{ active: filter === 'all' }" />
+                <x-chip label="<?= lang('Tools.allFiles') ?>" @click="filter = 'all'" :aria-pressed="filter === 'all'" :class="{ active: filter === 'all' }" />
                 <x-chip label="<?= lang('Tools.withErrors') ?>" @click="filter = 'errors'" :aria-pressed="filter === 'errors'" :class="{ active: filter === 'errors' }" />
                 <x-chip label="<?= lang('Tools.withWarnings') ?>" @click="filter = 'warnings'" :aria-pressed="filter === 'warnings'" :class="{ active: filter === 'warnings' }" />
             </div>
@@ -25,7 +25,7 @@ $this->extend('master') ?>
                     </button>
                     <span class="d-flex gap-2" x-show="confirmAll" x-cloak>
                         <button type="button" class="btn btn-outline-secondary" @click="confirmAll = false"><?= lang('Tools.cancel') ?></button>
-                        <button type="submit" name="delete_all" value="1" class="btn btn-danger"><?= lang('Tools.deleteAllConfirm') ?></button>
+                        <button type="submit" name="delete_all" value="1" class="btn btn-danger"><?= lang('Tools.confirmDelete') ?></button>
                     </span>
                 </div>
             <?php endif ?>

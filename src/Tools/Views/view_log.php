@@ -34,7 +34,7 @@ $this->extend('master') ?>
             groups: { errors: ['error', 'critical', 'alert', 'emergency'], warnings: ['warning'], info: ['info', 'notice'], debug: ['debug'] },
             shows(el) {
                 return (this.level === 'all' || this.groups[this.level].includes(el.dataset.level))
-                    && el.textContent.toLowerCase().includes(this.search.toLowerCase());
+                    && el.querySelector('.bf-log-text').textContent.toLowerCase().includes(this.search.toLowerCase());
             },
         }">
         <div class="bf-toolbar">
@@ -55,7 +55,7 @@ $this->extend('master') ?>
                     <span class="bf-level-tag bf-level-<?= Logs::levelClass($log['level']) ?>"><?= strtolower($log['level']) ?></span>
                     <span class="bf-log-time bf-mono"><?= app_date($log['date'], true) ?></span>
                     <div class="bf-log-message">
-                        <?= esc($log['content']) ?>
+                        <span class="bf-log-text"><?= esc($log['content']) ?></span>
                         <?php if (array_key_exists('extra', $log)) : ?>
                             <details class="bf-log-trace">
                                 <summary>Stack trace</summary>

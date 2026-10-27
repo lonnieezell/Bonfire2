@@ -21,7 +21,6 @@ return [
     'deleteSelected'        => 'Delete selected',
     'deleteAll'             => 'Delete all log files',
     'deleteSelectedConfirm' => 'Are you sure you want to delete the selected files?',
-    'deleteAllConfirm'      => 'Are you sure you want to delete all log files?',
     'deleteSuccess'         => 'File(s) were successfully deleted.',
     'deleteAllSuccess'      => 'All files were successfully deleted.',
     'deleteError'           => 'Unable to perform deletion.',
