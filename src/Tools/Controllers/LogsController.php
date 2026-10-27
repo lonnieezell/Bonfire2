@@ -14,6 +14,7 @@ namespace Bonfire\Tools\Controllers;
 use Bonfire\Core\AdminController;
 use Bonfire\Tools\Libraries\Logs;
 use Bonfire\Tools\Libraries\LogStore;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\RedirectResponse;
 
 class LogsController extends AdminController
@@ -44,10 +45,11 @@ class LogsController extends AdminController
 
         return $this->render($this->viewPrefix . 'logs', [
             'logs' => array_map(
-                fn (string $name) => ['name' => $name, 'content' => $this->store->summary($name)],
+                fn (string $name) => ['name' => $name, 'counts' => $this->store->levelCounts($name)],
                 $result['logs'],
             ),
             'pager' => $result['pager'],
+            'total' => count($this->store->names()),
         ]);
     }
 
@@ -68,16 +70,40 @@ class LogsController extends AdminController
             return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
         }
 
-        $result = $this->paginate($this->store->entries($file));
+        $entries = $this->store->entries($file);
+        $result  = $this->paginate($entries);
 
         return $this->render($this->viewPrefix . 'view_log', [
             'logFile'       => $file,
             'canDelete'     => auth()->user()->can('logs.manage'),
             'logContent'    => $result['logs'],
+            'entryCount'    => count($entries),
             'pager'         => $result['pager'],
             'filesPager'    => view($this->viewPrefix . '_pager', $this->store->neighbours($file)),
             'logFilePretty' => app_date(str_replace('log-', '', $file)),
         ]);
+    }
+
+    /**
+     * Send a log file as a download.
+     *
+     * @param string $file The name of the file, without extension.
+     *
+     * @return DownloadResponse|RedirectResponse
+     */
+    public function download(string $file = '')
+    {
+        if (! auth()->user()->can('logs.view')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        $path = $this->store->file($file);
+
+        if ($path === null) {
+            return redirect()->to(ADMIN_AREA . '/tools/logs')->with('danger', lang('Tools.empty'));
+        }
+
+        return $this->response->download($path, null);
     }
 
     /**

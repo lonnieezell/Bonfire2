@@ -1,118 +1,50 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-    <x-page-head>
-        <h2>System Info</h2>
+<div x-data="{ copied: false, copy() { navigator.clipboard.writeText(this.$refs.info.innerText); this.copied = true; setTimeout(() => this.copied = false, 1500) } }">
+    <x-page-head title="System Info">
+        <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-outline-secondary" target="_blank">View PHP Info</a>
+        <button type="button" class="btn btn-outline-secondary" @click="copy()">
+            <i class="far fa-copy" aria-hidden="true"></i> <span x-text="copied ? 'Copied' : 'Copy as text'">Copy as text</span>
+        </button>
     </x-page-head>
 
-    <x-admin-box>
+    <div class="bf-sysinfo" x-ref="info">
+        <x-admin-box title="Server">
+            <?php foreach ($server as $key => $value) : ?>
+                <div class="bf-kv">
+                    <div class="bf-kv-key"><?= esc($key) ?></div>
+                    <div class="bf-kv-value bf-mono"><?= esc($value) ?></div>
+                </div>
+            <?php endforeach ?>
+        </x-admin-box>
 
-        <fieldset class="first">
-            <legend>Server Information</legend>
-
-            <div class="col-12 col-sm-6">
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td>PHP Version</td>
-                            <td><?= PHP_VERSION ?></td>
-                        </tr>
-                        <tr>
-                            <td>CodeIgniter Version</td>
-                            <td><?= $ciVersion ?></td>
-                        </tr>
-                        <tr>
-                            <td>SQL Engine</td>
-                            <td><?= $dbDriver . ' ' . $dbVersion ?></td>
-                        </tr>
-                        <tr>
-                            <td>Server OS</td>
-                            <td><?= php_uname('s') ?> <?= php_uname('r') ?> (<?= php_uname('m') ?>)</td>
-                        </tr>
-                        <tr>
-                            <td>Server Load</td>
-                            <td><?= $serverLoad !== null ? number_format($serverLoad, 1) : 'Unknown' ?></td>
-                        </tr>
-                        <tr>
-                            <td>Max Upload</td>
-                            <td><?= (int) (ini_get('upload_max_filesize')) ?>M</td>
-                        </tr>
-                        <tr>
-                            <td>Max POST</td>
-                            <td><?= (int) (ini_get('post_max_size')) ?>M</td>
-                        </tr>
-                        <tr>
-                            <td>Memory Limit</td>
-                            <td><?= (int) (ini_get('memory_limit')) ?>M</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <x-admin-box title="Filesystem">
+            <?php if (! $allWritable) : ?>
+                <div class="bf-callout bf-callout-warn bf-callout-flush">
+                    Some files or folders in /writable are not writable. Bonfire needs to write logs, cache and uploads there.
+                </div>
+            <?php endif ?>
+            <div class="bf-kv">
+                <div class="bf-kv-key"><i class="far fa-file" aria-hidden="true"></i> <span class="bf-mono">.env</span></div>
+                <div class="bf-kv-value">
+                    <x-status tone="<?= $envPresent ? 'ok' : 'warn' ?>" label="<?= $envPresent ? 'Present' : 'Missing' ?>" />
+                </div>
             </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>PHP Info</legend>
-
-            <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-primary" target="_blank">View PHP Info</a>
-        </fieldset>
-
-        <fieldset>
-            <legend>Filesystem</legend>
-
-            <div class="col-12 col-md-10 col-xl-6">
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <td colspan="3"><i class="far fa-file"></i> .env</td>
-                            <td>
-                                <?php if (is_file(ROOTPATH . '.env')) : ?>
-                                    <span class="text-success">present</span>
-                                <?php else : ?>
-                                    <span class="text-danger">missing</span>
-                                <?php endif ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><i class="far fa-folder"></i> /writeable</td>
-                            <td>
-                                <?php if (is_really_writable(WRITEPATH)) : ?>
-                                    <span class="text-success">writeable</span>
-                                <?php else : ?>
-                                    <span class="text-danger">not writeable</span>
-                                <?php endif ?>
-                            </td>
-                        </tr>
-                    <?php foreach (get_dir_file_info(WRITEPATH, true) as $folder => $info) : ?>
-                        <tr>
-                            <?php if (is_dir(WRITEPATH . $folder)) : ?>
-                                <td colspan="3">
-                                    <i class="fas fa-minus"></i>
-                                    <i class="far fa-folder"></i>
-                                    <?= trim($folder, ' /') ?>
-                                </td>
-                            <?php else : ?>
-                                <td>
-                                    <i class="fas fa-minus"></i>
-                                    <i class="far fa-file"></i>
-                                    <?= trim($folder, ' /') ?></td>
-                                <td>
-                                    <?= lang('Bonfire.lastModified') ?>: <?= strftime('%c', $info['date']) ?></td>
-                                <td>
-                                    <?= lang('Bonfire.fileSize') ?>: <?= number_to_size($info['size']) ?>
-                                </td>
-                            <?php endif ?>
-                            <td>
-                                <?php if (is_really_writable(WRITEPATH . $folder)) : ?>
-                                    <span class="text-success">writeable</span>
-                                <?php else : ?>
-                                    <span class="text-danger">not writeable</span>
-                                <?php endif ?>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                    </tbody>
-                </table>
-            </div>
-        </fieldset>
-    </x-admin-box>
+            <?php foreach ($files as $file) : ?>
+                <div class="bf-kv">
+                    <div class="bf-kv-key">
+                        <i class="far <?= $file['dir'] ? 'fa-folder' : 'fa-file' ?>" aria-hidden="true"></i> <span class="bf-mono"><?= esc($file['name']) ?></span>
+                        <?php if (! $file['dir']) : ?>
+                            <div class="bf-muted small"><?= number_to_size($file['size']) ?> &middot; <?= lang('Bonfire.lastModified') ?> <?= date('Y-m-d H:i', $file['modified']) ?></div>
+                        <?php endif ?>
+                    </div>
+                    <div class="bf-kv-value">
+                        <x-status tone="<?= $file['writable'] ? 'ok' : 'danger' ?>" label="<?= $file['writable'] ? 'Writable' : 'Not writable' ?>" />
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </x-admin-box>
+    </div>
+</div>
 <?php $this->endSection() ?>

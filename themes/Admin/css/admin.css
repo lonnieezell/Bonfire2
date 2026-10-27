@@ -2093,3 +2093,130 @@ input[type="checkbox"]:indeterminate {
 .no-wrap {
     white-space: nowrap;
 }
+.bf-log-date {
+    font-weight: 500;
+}
+
+.bf-log-weekday {
+    color: var(--bf-muted);
+    font-size: 12px;
+}
+
+.bf-level-bar {
+    display: flex;
+    width: 160px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--bf-surface-2);
+}
+
+.bf-level-bar-segment.bf-level-danger { background: var(--bf-danger); }
+.bf-level-bar-segment.bf-level-warning { background: var(--bf-warn-bar); }
+.bf-level-bar-segment.bf-level-info { background: var(--bf-info); }
+
+.bf-level-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-top: 5px;
+}
+
+.bf-level-tag {
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.bf-level-tag.bf-level-danger { color: var(--bf-danger); }
+.bf-level-tag.bf-level-warning { color: var(--bf-warn); }
+.bf-level-tag.bf-level-info { color: var(--bf-info); }
+
+.bf-log-entries {
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-log-entry {
+    display: grid;
+    grid-template-columns: 80px 150px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--bf-border);
+}
+
+.bf-log-time {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+}
+
+.bf-log-message {
+    overflow-wrap: anywhere;
+}
+
+.bf-log-trace summary {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    cursor: pointer;
+}
+
+.bf-log-trace pre {
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--bf-surface-2);
+    font-size: 12px;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 767.98px) {
+    .bf-log-entry {
+        grid-template-columns: auto 1fr;
+    }
+
+    .bf-log-message {
+        grid-column: 1 / -1;
+    }
+}
+
+/*
+ * --------------------------------------------------------------------------
+ * SYSTEM INFO
+ * --------------------------------------------------------------------------
+ */
+.bf-sysinfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.bf-sysinfo .bf-card {
+    margin-bottom: 0;
+}
+
+.bf-card-body:has(> .bf-kv:first-child),
+.bf-card-body:has(> .bf-callout-flush:first-child) {
+    padding: 0;
+}
+
+.bf-kv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 20px;
+    border-top: 1px solid var(--bf-border);
+}
+
+.bf-kv-key {
+    color: var(--bf-muted);
+    min-width: 0;
+}
+
+.bf-kv-value {
+    text-align: right;
+}
+
+.bf-callout-flush {
+    margin: 0 20px 12px;
+}

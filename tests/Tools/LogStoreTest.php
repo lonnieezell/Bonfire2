@@ -62,7 +62,7 @@ final class LogStoreTest extends TestCase
         $this->assertFalse($this->store->has(''));
     }
 
-    public function testSummaryCountsLevelsAtTheStartOfALineOnly()
+    public function testLevelCountsCountLevelsAtTheStartOfALineOnly()
     {
         $this->writeLog('log-2024-01-01.log', implode("\n", [
             'INFO - 2024-01-01 10:00:00 --> The ERROR word is just text here',
@@ -71,17 +71,14 @@ final class LogStoreTest extends TestCase
             'ERROR - 2024-01-01 10:00:02 --> Again',
         ]));
 
-        $this->assertSame(
-            '<span class="text-danger">error</span>: 2, <span class="text-info">info</span>: 1',
-            $this->store->summary('log-2024-01-01'),
-        );
+        $this->assertSame(['ERROR' => 2, 'INFO' => 1], $this->store->levelCounts('log-2024-01-01'));
     }
 
-    public function testSummaryOfEmptyFileIsEmpty()
+    public function testLevelCountsOfEmptyFileIsEmpty()
     {
         $this->writeLog('log-2024-01-01.log');
 
-        $this->assertSame('', $this->store->summary('log-2024-01-01'));
+        $this->assertSame([], $this->store->levelCounts('log-2024-01-01'));
     }
 
     public function testEntriesParsesLevelsAndContinuationLines()

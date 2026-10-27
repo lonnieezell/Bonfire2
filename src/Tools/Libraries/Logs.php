@@ -96,12 +96,14 @@ class Logs
         return $superLog;
     }
 
-    public function countLogLevels($filePath): string
+    /**
+     * The number of entries per level, most severe level first, levels without entries left out.
+     *
+     * @return array<string, int>
+     */
+    public function levelCounts($filePath): array
     {
-        $levels = array_keys(self::$levelClasses);
-
-        // Initialize the counts array
-        $counts = array_fill_keys($levels, 0);
+        $counts = array_fill_keys(array_keys(self::$levelClasses), 0);
 
         // Count each entry once, by the level that starts it
         foreach ($this->getLogs($filePath) as $line) {
@@ -112,15 +114,23 @@ class Logs
             }
         }
 
-        // Remove entries with value 0
-        $counts = array_filter($counts, static fn ($value) => $value > 0);
+        return array_reverse(array_filter($counts, static fn ($value) => $value > 0));
+    }
 
-        $counts = array_reverse($counts);
+    /**
+     * The Bootstrap color class ("danger", "info", ...) of a level.
+     */
+    public static function levelClass(string $level): string
+    {
+        return self::$levelClasses[$level];
+    }
 
+    public function countLogLevels($filePath): string
+    {
         // Transform the array into a string with color codes
         $result = [];
 
-        foreach ($counts as $level => $count) {
+        foreach ($this->levelCounts($filePath) as $level => $count) {
             $class    = self::$levelClasses[$level];
             $result[] = '<span class="text-' . $class . '">' . $level . '</span>: ' . $count;
         }

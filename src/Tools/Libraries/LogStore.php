@@ -53,11 +53,21 @@ class LogStore
     }
 
     /**
-     * The count of entries per level, as html for the logs list.
+     * The number of entries per level, most severe level first.
+     *
+     * @return array<string, int>
      */
-    public function summary(string $name): string
+    public function levelCounts(string $name): array
     {
-        return $this->parser->countLogLevels($this->fileFor($name));
+        return $this->parser->levelCounts($this->fileFor($name));
+    }
+
+    /**
+     * The path of a log file, or null when the name is not an existing log.
+     */
+    public function file(string $name): ?string
+    {
+        return $this->has($name) ? $this->fileFor($name) : null;
     }
 
     /**

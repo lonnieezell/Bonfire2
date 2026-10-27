@@ -10,6 +10,8 @@ return [
     'restoreMsgContent' => 'Restore this record?',
     'purgeMsgTitle'     => 'Purge forever',
     'purgeMsgContent'   => 'Permanently delete this record?',
+    'purgeConfirm'      => 'Yes, purge',
+    'cancel'            => 'Cancel',
     'resultLabel'       => '{0, plural,
                             =0 {# records}
                             =1 {# record}
