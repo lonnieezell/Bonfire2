@@ -156,17 +156,13 @@ final class LayoutResolverTest extends TestCase
         $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
     }
 
-    public function testTheContextShowsPlacedItemsThatAreNotSwitchedOff(): void
+    public function testTheContextShowsPlacedItemsWhateverSwitchIsStoredForThem(): void
     {
         StubDashboard::inject(true);
         $this->placeForAUser('stats:usersInRecycler693');
-        $settings = new ItemSettings(WidgetKind::Stats, 'usersInRecycler693');
+        setting('Stats.Stats_usersInRecycler693', false);
 
-        $this->assertTrue(service('dashboardContext')->shows($settings));
-
-        $settings->store(false);
-
-        $this->assertFalse(service('dashboardContext')->shows($settings));
+        $this->assertTrue(service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'usersInRecycler693')));
     }
 
     private function placeForAUser(string $id): void

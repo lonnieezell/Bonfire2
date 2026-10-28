@@ -86,7 +86,6 @@ final class DashboardWidgetsTest extends TestCase
     {
         StubDashboard::inject(true);
         $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
-        setting('Stats.stats_showLink', true);
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
@@ -94,16 +93,13 @@ final class DashboardWidgetsTest extends TestCase
         $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', (string) $html);
     }
 
-    public function testTheStatsCellFollowsTheSiteDefaultForItsLink()
+    public function testTheStatsCellLinksItsItemsWhateverSiteDefaultIsStored()
     {
         $stats = new Stats();
         $stats->addItem(new StatsItem(['title' => 'Item', 'id' => 'item1', 'url' => 'admin/items']));
-        $cell = static fn () => view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]);
-
-        $this->assertStringContainsString('class="bf-stat-link"', $cell());
-
         setting('Stats.stats_showLink', false);
-        $this->assertStringNotContainsString('class="bf-stat-link"', $cell());
+
+        $this->assertStringContainsString('class="bf-stat-link"', view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]));
     }
 
     public function testPlacedChartSitsInACard()
@@ -135,8 +131,9 @@ final class DashboardWidgetsTest extends TestCase
     public function testLogActivityLeavesDebugOutWhenHidden()
     {
         Time::setTestNow('2000-01-01');
-        $this->placeOnDashboard($this->user, 'logs:logActivity');
-        setting('LogActivity.logActivity_hideDebug', 'on');
+        setting()->set('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [
+            ['id' => 'logs:logActivity', 'settings' => ['hideDebug' => true]],
+        ]]]], 'user:' . $this->user->id);
         file_put_contents(self::LOG_FILE, "DEBUG - 2000-01-01 10:00:02 --> Three\n");
 
         $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();

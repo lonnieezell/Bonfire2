@@ -8,4 +8,5 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Dashboard\Controllers'], st
     $routes->get('/', 'DashboardController::index');
     $routes->post('dashboard/layout', 'DashboardController::saveLayout', ['as' => 'dashboard-layout', 'filter' => 'csrf']);
     $routes->post('dashboard/layout/default', 'DashboardController::saveSiteLayout', ['as' => 'dashboard-site-layout', 'filter' => 'csrf']);
+    $routes->post('dashboard/layout/default/reset', 'DashboardController::resetSiteLayout', ['as' => 'dashboard-site-layout-reset', 'filter' => 'csrf']);
 });

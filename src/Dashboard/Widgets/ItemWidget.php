@@ -17,7 +17,6 @@ use Bonfire\Widgets\WidgetKind;
 
 /**
  * Presents an item of service('widgets') as a dashboard widget.
- * Its switch in the Widgets settings decides whether it is available.
  */
 abstract class ItemWidget implements DashboardWidget
 {
@@ -42,11 +41,6 @@ abstract class ItemWidget implements DashboardWidget
     public function id(): string
     {
         return $this->item->settings()->widgetId();
-    }
-
-    public function available(): bool
-    {
-        return $this->item->settings()->enabled();
     }
 
     /**

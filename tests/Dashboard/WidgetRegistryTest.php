@@ -65,8 +65,6 @@ final class WidgetRegistryTest extends TestCase
 
     public function testStatsItemsBecomeWidgetsWithNamespacedIds(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-
         $widget = service('dashboard')->widget('stats:usersInRecycler693');
 
         $this->assertNotNull($widget);
@@ -176,16 +174,13 @@ final class WidgetRegistryTest extends TestCase
         $this->assertArrayHasKey('test:logsOnly', service('dashboard')->available());
     }
 
-    public function testSwitchedOffItemsAreLeftOutOfTheAvailableSet(): void
+    public function testAnItemStaysAvailableWhateverSwitchIsStoredForIt(): void
     {
         $user = $this->createUser();
         $user->addPermission('users.list');
         $this->actingAs($user);
-        setting('Stats.Stats_userGroups643', false);
+        setting('Stats.Stats_usersInRecycler693', false);
 
-        $available = service('dashboard')->available();
-
-        $this->assertArrayHasKey('stats:usersInRecycler693', $available);
-        $this->assertArrayNotHasKey('stats:userGroups643', $available);
+        $this->assertArrayHasKey('stats:usersInRecycler693', service('dashboard')->available());
     }
 }

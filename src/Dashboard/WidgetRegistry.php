@@ -55,7 +55,7 @@ class WidgetRegistry
     }
 
     /**
-     * The widgets a site admin has not switched off and the viewer may see, by id.
+     * The widgets the viewer may see, by id.
      *
      * @return array<string, DashboardWidget>
      */
@@ -63,8 +63,7 @@ class WidgetRegistry
     {
         $user = auth()->user();
 
-        return array_filter($this->all(), static fn (DashboardWidget $widget) => (! $widget instanceof ItemWidget || $widget->available())
-            && ($widget->permission() === null || $user?->can($widget->permission())));
+        return array_filter($this->all(), static fn (DashboardWidget $widget) => $widget->permission() === null || $user?->can($widget->permission()));
     }
 
     /**

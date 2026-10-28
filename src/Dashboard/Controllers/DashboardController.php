@@ -95,6 +95,23 @@ class DashboardController extends AdminController
     }
 
     /**
+     * Forgets the stored site default layout, so users who have not
+     * saved their own see the configured Dashboard::$layout again.
+     */
+    public function resetSiteLayout(): ResponseInterface
+    {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        setting()->forget('Dashboard.layout');
+
+        alert('success', lang('Bonfire.resetSiteDone'));
+
+        return redirect()->to(ADMIN_AREA);
+    }
+
+    /**
      * The posted layout, validated, or null when it does not read.
      */
     private function postedLayout(): ?Layout

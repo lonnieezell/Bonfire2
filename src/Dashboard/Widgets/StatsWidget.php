@@ -51,7 +51,7 @@ class StatsWidget extends ItemWidget
 
     public function fields(): array
     {
-        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true, key: 'Stats.stats_showLink')];
+        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true)];
     }
 
     public function render(WidgetValues $values): string

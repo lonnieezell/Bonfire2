@@ -28,18 +28,14 @@ final class ChartsItemScriptTest extends TestCase
     #[DataProvider('provideScriptReflectsTheTypesSettings')]
     public function testScriptReflectsTheTypesSettings(string $type, array $settings, string $expected)
     {
-        foreach ($settings as $key => $value) {
-            setting($key, $value);
-        }
-
-        $script = $this->normalise($this->chart($type)->getScript());
+        $script = $this->normalise($this->chart($type)->getScript($settings));
 
         $this->assertStringContainsString($expected, $script);
     }
 
     public static function provideScriptReflectsTheTypesSettings(): iterable
     {
-        yield 'line, config defaults' => [
+        yield 'line, defaults' => [
             'line', [],
             'const backgroundColor__ID = null; const borderColor__ID = null;'
             . " const Chart__ID = new Chart( document.getElementById('_ID'),"
@@ -49,14 +45,14 @@ final class ChartsItemScriptTest extends TestCase
         yield 'line, options changed' => [
             'line',
             [
-                'LineChart.line_tension'         => 0.5,
-                'LineChart.line_enableAnimation' => false,
-                'LineChart.line_legendPosition'  => 'top',
+                'tension'         => 0.5,
+                'enableAnimation' => false,
+                'legendPosition'  => 'top',
             ],
             "'line', 0.5, backgroundColor__ID , borderColor__ID, null, null, true, null, true, 'top')",
         ];
 
-        yield 'bar, config defaults' => [
+        yield 'bar, defaults' => [
             'bar', [],
             'const backgroundColor__ID = null; const borderColor__ID = null;'
             . " const Chart__ID = new Chart( document.getElementById('_ID'),"
@@ -64,58 +60,45 @@ final class ChartsItemScriptTest extends TestCase
         ];
 
         yield 'bar, scheme' => [
-            'bar', ['BarChart.bar_colorScheme' => 'Blues'],
+            'bar', ['colorScheme' => 'Blues'],
             "const backgroundColor__ID = d3.schemeBlues[9]; const borderColor__ID = 'blues';",
         ];
 
         yield 'bar, switched off' => [
             'bar',
-            ['BarChart.bar_showTitle' => false, 'BarChart.bar_showLegend' => false, 'BarChart.bar_enableAnimation' => false],
+            ['showTitle' => false, 'showLegend' => false, 'enableAnimation' => false],
             "'bar', null, backgroundColor__ID , borderColor__ID, null, null, null, null, null, 'bottom')",
         ];
 
         yield 'doughnut, scheme' => [
-            'doughnut', ['DoughnutChart.doughnut_colorScheme' => 'Greens', 'DoughnutChart.doughnut_legendPosition' => 'left'],
+            'doughnut', ['colorScheme' => 'Greens', 'legendPosition' => 'left'],
             "const backgroundColor__ID = d3.schemeGreens[9]; const borderColor__ID = 'Greens';",
         ];
 
         yield 'doughnut, legend position' => [
-            'doughnut', ['DoughnutChart.doughnut_legendPosition' => 'left'],
+            'doughnut', ['legendPosition' => 'left'],
             "'doughnut', null, backgroundColor__ID , borderColor__ID, null, true, true, null, true, 'left')",
         ];
 
         yield 'pie, scheme' => [
-            'pie', ['PieChart.pie_colorScheme' => 'Reds', 'PieChart.pie_showTitle' => false],
+            'pie', ['colorScheme' => 'Reds', 'showTitle' => false],
             "const backgroundColor__ID = d3.schemeReds[9]; const borderColor__ID = 'Reds';",
         ];
 
         yield 'pie, title off' => [
-            'pie', ['PieChart.pie_showTitle' => false],
+            'pie', ['showTitle' => false],
             "'pie', null, backgroundColor__ID , borderColor__ID, null, true, null, null, true, 'bottom')",
         ];
 
         yield 'polarArea, scheme' => [
-            'polarArea', ['PolarAreaChart.polarArea_colorScheme' => 'Purples'],
+            'polarArea', ['colorScheme' => 'Purples'],
             "const backgroundColor__ID = d3.schemePurples[9]; const borderColor__ID = 'Purples';",
         ];
 
         yield 'polarArea, legend off' => [
-            'polarArea', ['PolarAreaChart.polarArea_showLegend' => false],
+            'polarArea', ['showLegend' => false],
             "'polarArea', null, backgroundColor__ID , borderColor__ID, null, true, true, null, null, 'bottom')",
         ];
-    }
-
-    public function testOptionsPassedInTakeThePlaceOfTheStoredOnes()
-    {
-        // Options stored by an earlier test stay in the shared settings cache
-        setting()->flush();
-        setting('BarChart.bar_colorScheme', 'Blues');
-        setting('BarChart.bar_showLegend', 'on');
-
-        $script = $this->normalise($this->chart('bar')->getScript(['colorScheme' => 'Reds', 'showLegend' => false]));
-
-        $this->assertStringContainsString("const backgroundColor__ID = d3.schemeReds[9]; const borderColor__ID = 'reds';", $script);
-        $this->assertStringContainsString("'bar', null, backgroundColor__ID , borderColor__ID, null, true, true, null, null, 'bottom')", $script);
     }
 
     public function testDataAndLabelsAreEmbedded()

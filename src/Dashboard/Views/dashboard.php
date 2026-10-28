@@ -70,6 +70,12 @@
                 </button>
                 <button type="button" class="btn btn-outline-secondary btn-sm" @click="cancel()"><?= lang('Actions.cancel') ?></button>
                 <?php if ($canSetDefault) : ?>
+                    <form action="<?= url_to('dashboard-site-layout-reset') ?>" method="post">
+                        <?= csrf_field() ?>
+                        <?php // A page post: it would lose unsaved edits ?>
+                        <button type="submit" class="btn btn-outline-danger btn-sm" :disabled="saving || dirty()"
+                                data-confirm="<?= esc(lang('Bonfire.resetSiteConfirm'), 'attr') ?>" data-confirm-button="<?= esc(lang('Bonfire.resetSiteDefault'), 'attr') ?>" data-confirm-danger="1"><?= lang('Bonfire.resetSiteDefault') ?></button>
+                    </form>
                     <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveSite()" :disabled="saving"><?= lang('Bonfire.saveSiteDefault') ?></button>
                 <?php endif ?>
                 <button type="button" class="btn btn-primary btn-sm" @click="save()" :disabled="saving">

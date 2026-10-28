@@ -119,11 +119,11 @@ final class LogActivityTest extends TestCase
         $this->assertSame(['fileCount' => 7, 'hideDebug' => false], WidgetValues::resolve($this->widget->fields())->all());
     }
 
-    public function testStoredSiteDefaultsStillApply()
+    public function testStoredSiteDefaultsNoLongerApply()
     {
         setting('LogActivity.logActivity_fileCount', 14);
         setting('LogActivity.logActivity_hideDebug', true);
 
-        $this->assertSame(['fileCount' => 14, 'hideDebug' => true], WidgetValues::resolve($this->widget->fields())->all());
+        $this->assertSame(['fileCount' => 7, 'hideDebug' => false], WidgetValues::resolve($this->widget->fields())->all());
     }
 }

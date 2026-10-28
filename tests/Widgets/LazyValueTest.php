@@ -19,7 +19,7 @@ use Tests\Support\TestCase;
 
 /**
  * An item only runs its query on the dashboard, when it is placed on the
- * viewer's dashboard and not switched off.
+ * viewer's dashboard.
  *
  * @internal
  */
@@ -46,29 +46,26 @@ final class LazyValueTest extends TestCase
         parent::tearDown();
     }
 
-    public function testStatsValueIsFetchedOnTheDashboardWhenEnabled()
+    public function testStatsValueIsFetchedOnTheDashboardWhenPlaced()
     {
         StubDashboard::inject(true);
         $item = (new StatsItem())->setId('users1');
-        $item->settings()->store(true);
 
         $this->assertSame('1', $item->addValue('users')->value());
     }
 
-    public function testStatsFreeQueryIsFetchedOnTheDashboardWhenEnabled()
+    public function testStatsFreeQueryIsFetchedOnTheDashboardWhenPlaced()
     {
         StubDashboard::inject(true);
         $item = (new StatsItem())->setId('users1');
-        $item->settings()->store(true);
 
         $this->assertSame('1', $item->addValueByFreeQuery($this->countUsers())->value());
     }
 
-    public function testStatsValueIsSkippedWhenDisabled()
+    public function testStatsValueIsSkippedWhenNotPlaced()
     {
         StubDashboard::inject(true);
-        $item = (new StatsItem())->setId('users1');
-        $item->settings()->store(false);
+        $item = (new StatsItem())->setId('users2');
 
         $this->assertNull($item->addValue('users')->value());
         $this->assertNull($item->addValueByFreeQuery($this->countUsers())->value());
@@ -78,36 +75,32 @@ final class LazyValueTest extends TestCase
     {
         StubDashboard::inject(false);
         $item = (new StatsItem())->setId('users1');
-        $item->settings()->store(true);
 
         $this->assertNull($item->addValue('users')->value());
         $this->assertNull($item->addValueByFreeQuery($this->countUsers())->value());
     }
 
-    public function testChartDataIsFetchedOnTheDashboardWhenEnabled()
+    public function testChartDataIsFetchedOnTheDashboardWhenPlaced()
     {
         StubDashboard::inject(true);
         $item = (new ChartsItem())->setId('chart1');
-        $item->settings()->store(true);
 
         $item->addDataset('users', 'active', 'id');
 
         $this->assertSame([1], $item->data());
     }
 
-    public function testChartDataIsSkippedWhenDisabledOrOffTheDashboard()
+    public function testChartDataIsSkippedWhenNotPlacedOrOffTheDashboard()
     {
         StubDashboard::inject(true);
-        $disabled = (new ChartsItem())->setId('chart1');
-        $disabled->settings()->store(false);
-        $disabled->addDataset('users', 'active', 'id');
+        $unplaced = (new ChartsItem())->setId('chart3');
+        $unplaced->addDataset('users', 'active', 'id');
 
         StubDashboard::inject(false);
         $elsewhere = (new ChartsItem())->setId('chart2');
-        $elsewhere->settings()->store(true);
         $elsewhere->addDataset('users', 'active', 'id');
 
-        $this->assertNull($disabled->data());
+        $this->assertNull($unplaced->data());
         $this->assertNull($elsewhere->data());
     }
 
