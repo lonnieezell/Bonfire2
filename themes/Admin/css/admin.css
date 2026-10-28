@@ -2510,6 +2510,8 @@ input[type="checkbox"]:indeterminate {
 }
 
 .bf-log-stack:empty {
+    min-height: 2px;
+    border-radius: 1px;
     background: var(--bf-border-strong);
 }
 
