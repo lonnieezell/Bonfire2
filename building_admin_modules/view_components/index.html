@@ -1026,6 +1026,8 @@
       
         
       
+        
+      
     
     
     
@@ -1073,6 +1075,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Row and Bulk Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1626,12 +1656,26 @@ neither it is a toggle button. Other attributes (<code>hx-get</code>, <code>hx-t
 <p><strong>&lt;x-selection-bar&gt;</strong></p>
 <p>A sticky bar showing "N selected" while any row checkbox (<code>tbody input[type=checkbox]</code>) in its form is checked. The
 slot holds the bulk actions; the ✕ clears the selection.</p>
-<pre class="highlight"><code class="language-php">&lt;form method="post" action="&lt;?= site_url(ADMIN_AREA . '/users/delete-batch') ?&gt;"&gt;
+<pre class="highlight"><code class="language-php">&lt;form method="post"&gt;
+    &lt;?= csrf_field() ?&gt;
     &lt;table class="table"&gt;…&lt;/table&gt;
     &lt;x-selection-bar&gt;
-        &lt;button type="submit" class="btn btn-danger"&gt;Delete&lt;/button&gt;
+        &lt;x-bulk-actions list="users" /&gt;
     &lt;/x-selection-bar&gt;
 &lt;/form&gt;</code></pre>
+<p><strong>&lt;x-bulk-actions&gt;</strong></p>
+<p>The bulk <a href="../actions/">actions</a> of the <code>list</code>, as buttons that post the form's checked <code>selects[]</code>. Place it inside
+<code>&lt;x-selection-bar&gt;</code>.</p>
+<p><strong>&lt;x-row-actions&gt;</strong></p>
+<p>A row's menu: its slot (links like Edit), then the row <a href="../actions/">actions</a> of the <code>list</code> for the record <code>id</code>.</p>
+<pre class="highlight"><code class="language-php">&lt;x-row-actions list="users" id="&lt;?= $user-&gt;id ?&gt;"&gt;
+    &lt;li&gt;&lt;a href="&lt;?= $user-&gt;adminLink() ?&gt;" class="dropdown-item"&gt;Edit&lt;/a&gt;&lt;/li&gt;
+&lt;/x-row-actions&gt;</code></pre>
+<p><strong>&lt;x-confirm-dialog&gt;</strong> and <strong>&lt;x-action-run&gt;</strong></p>
+<p>Both sit once in the Admin layout (<code>master.php</code>). <code>&lt;x-confirm-dialog&gt;</code> asks before actions, <code>hx-confirm</code> requests and
+<code>data-confirm</code> links and buttons go ahead (see <a href="../actions/#confirmation">Confirmation</a>), and renders the form
+<code>&lt;x-row-actions&gt;</code> submits, so row actions need it even without JavaScript. <code>&lt;x-action-run&gt;</code>, inside the
+toasts, shows the progress of an action run just queued.</p>
 <h2 id="buttons-and-filters">Buttons and filters</h2>
 <p><strong>&lt;x-button&gt;</strong></p>
 <p>This is used within the admin forms to add pre-styled buttons (configurable via attributes <code>color</code> (any pre-defined Bootstrap 5 color, like <code>primary</code>, <code>secondary</code>, <code>success</code>, etc., defaulting to <code>primary</code>) and <code>type</code> (defaults to <code>submit</code>, but can also be <code>reset</code>, <code>button</code>, etc.). <code>id</code>, <code>name</code> and <code>onclick</code> are passed on as well.</p>
