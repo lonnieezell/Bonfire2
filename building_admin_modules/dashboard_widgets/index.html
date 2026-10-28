@@ -1647,7 +1647,7 @@ class OpenOrders implements DashboardWidget
     public function id(): string { return 'shop:openOrders'; }
     public function title(): string { return 'Open orders'; }
     public function icon(): string { return 'fas fa-cart-shopping'; }
-    public function group(): string { return 'stats'; }
+    public function group(): string { return 'Shop'; }
     public function description(): string { return 'Orders waiting to ship'; }
     public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
     public function permission(): ?string { return 'shop.orders'; }
@@ -1670,7 +1670,8 @@ class OpenOrders implements DashboardWidget
 }</code></pre>
 <ul>
 <li><strong>id</strong> is stored in admins' saved layouts, so keep it unique and never change it. Prefix it with your module's name.</li>
-<li><strong>group</strong> is the library heading it is listed under: <code>quickLinks</code>, <code>stats</code>, <code>charts</code> or <code>custom</code>.</li>
+<li><strong>group</strong> is the library heading it is listed under: your module's name. The library lists modules in name order.
+  The older type keys <code>quickLinks</code>, <code>stats</code>, <code>charts</code> and <code>custom</code> still work, each under its own heading.</li>
 <li><strong>sizes</strong> is the width it starts at, then the smallest and largest an admin may pick, from <code>Size::Quarter</code>,
   <code>Third</code>, <code>Half</code>, <code>TwoThirds</code> and <code>Full</code>.</li>
 <li><strong>permission</strong> hides the widget from admins who lack it, in the library and on the dashboard, and drops it from
@@ -1743,19 +1744,19 @@ id:</p>
 <tbody>
 <tr>
 <td>A <code>StatsItem</code> added to <code>service('widgets')-&gt;widget('stats')</code></td>
-<td>A stat card, group <code>stats</code></td>
+<td>A stat card, listed under <code>'module' =&gt; '…'</code>, else Stats</td>
 <td><code>stats:</code> + its <code>id</code></td>
 <td>Pass <code>'permission' =&gt; '…'</code> to hide it from admins who lack it.</td>
 </tr>
 <tr>
 <td>A <code>ChartsItem</code> added to <code>service('widgets')-&gt;widget('charts')</code></td>
-<td>A chart, group <code>charts</code></td>
+<td>A chart, listed under <code>'module' =&gt; '…'</code>, else Charts</td>
 <td><code>charts:</code> + its <code>id</code></td>
 <td>Its <code>cssClass</code> sets its default size. Takes <code>'permission'</code> too.</td>
 </tr>
 <tr>
 <td>A view cell listed in <code>Dashboard.cells</code></td>
-<td>A full-width widget, group <code>custom</code></td>
+<td>A full-width widget, listed under Custom</td>
 <td><code>cell:</code> + its <code>Class::method</code></td>
 <td>No permission. Write a widget for more control.</td>
 </tr>

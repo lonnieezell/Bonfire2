@@ -1832,6 +1832,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="28-october-2026">28 October 2026</h2>
+<p>The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
+A widget's <code>group()</code> gives its module's name; the type keys <code>quickLinks</code>, <code>stats</code>, <code>charts</code> and <code>custom</code> still work,
+each under its own heading. A <code>StatsItem</code> or <code>ChartsItem</code> takes <code>'module' =&gt; '…'</code> (see
+<a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>). With the library open, the page now widens by
+its width instead of narrowing the dashboard, where the screen has room.</p>
 <p>The sidebar now shows <strong>Settings</strong> as a single link to the first settings page you may open, since the settings
 pages list one another in their own nav. A menu collection opts into this with <code>setPageNav()</code>. Installs that
 published the Admin theme keep the old expanding Settings menu until they copy the new
@@ -1856,6 +1861,15 @@ the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire
 in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
 <a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p><strong>Users by group</strong> is now a bar list: each group, a bar scaled to the largest one, and its number of users, with a
+setting to sort by count or by name. It is a new widget, <code>users:byGroup</code>, in place of the <em>Users by Group</em> stat card
+(<code>stats:usersExpTable693</code>), which is gone. Saved dashboards that placed the stat card lose it: re-add Users by group
+from the widget library. Two new widgets: <strong>Newest users</strong> (the latest users to join, linking to each; needs
+<code>users.list</code>) and <strong>Recent errors</strong> (the newest errors, or errors and warnings, across the log files, linking to each
+log file; needs <code>logs.view</code>). The default dashboard now has Users by group and Newest users in its <strong>Users</strong> section, in place of the
+Users in Recycler stat, and Log activity and Recent errors side by side in <strong>Monitoring</strong> (see
+<a href="../../modules/dashboard/#configuration">The Dashboard</a>). Installs that published the Admin theme need
+the new <code>.bf-list-card</code>, <code>.bf-bars</code> and <code>.bf-rows</code> rules of <code>themes/Admin/css/admin.css</code>.</p>
 <p>Lists have a shared system for row and bulk actions (see <a href="../../building_admin_modules/actions/">Row and Bulk Actions</a>):
 an action is one class, registered on a named list, run through <code>POST admin/actions/{list}/{action}</code> with permission,
 CSRF and per-record checks, confirmation (with or without JavaScript), and an optional queue through

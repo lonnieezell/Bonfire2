@@ -1714,8 +1714,8 @@
 <p>By default, the Dashboard displays:</p>
 <ul>
 <li>the quick links;</li>
-<li>a <strong>Users</strong> section with the Users by Group and Users in Recycler stats, each half the width;</li>
-<li>a <strong>Monitoring</strong> section with Log activity.</li>
+<li>a <strong>Users</strong> section with Users by group and Newest users, each half the width;</li>
+<li>a <strong>Monitoring</strong> section with Log activity and Recent errors, each half the width.</li>
 </ul>
 <p>That default is the <code>$layout</code> property of the Dashboard config file, in the same format a saved layout uses. Change
 it to give every admin who hasn't customized their dashboard a different one; set it to <code>null</code> and the default is
@@ -1727,11 +1727,12 @@ the cells below instead, in order:</p>
             ['id' =&gt; 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' =&gt; 'full'],
         ]],
         ['title' =&gt; 'Users', 'widgets' =&gt; [
-            ['id' =&gt; 'stats:usersExpTable693', 'size' =&gt; 'half'],
-            ['id' =&gt; 'stats:usersInRecycler693', 'size' =&gt; 'half'],
+            ['id' =&gt; 'users:byGroup', 'size' =&gt; 'half'],
+            ['id' =&gt; 'users:newest', 'size' =&gt; 'half'],
         ]],
         ['title' =&gt; 'Monitoring', 'widgets' =&gt; [
-            ['id' =&gt; 'logs:logActivity', 'size' =&gt; 'full'],
+            ['id' =&gt; 'logs:logActivity', 'size' =&gt; 'half'],
+            ['id' =&gt; 'tools:recentErrors', 'size' =&gt; 'half'],
         ]],
     ],
 ];</code></pre>

@@ -1772,6 +1772,18 @@ such as Quick Links, have no sliders button.</p>
 <td>Log activity</td>
 <td>Days to show, Hide Debug entries</td>
 </tr>
+<tr>
+<td>Users by group</td>
+<td>Sort by most users first or by group name</td>
+</tr>
+<tr>
+<td>Newest users</td>
+<td>Users to show (1–10)</td>
+</tr>
+<tr>
+<td>Recent errors</td>
+<td>Entries to show (1–20), Show errors only or errors and warnings</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Save as site default</strong> carries each widget's settings into the site default.</p>
@@ -1821,7 +1833,8 @@ they aren't in the saved default either.</p>
 </ol>
 <h2 id="which-widgets-are-available">Which widgets are available</h2>
 <p><strong>Settings → Widgets</strong> decides which widgets are available to everyone. Every widget is available until a site admin
-switches it off. A switched-off widget is left out of every library and every layout.</p>
+switches it off. A switched-off widget is left out of every library and every layout. Quick Links, Users by group,
+Newest users and Recent errors have no switch there: they are always available.</p>
 <p>A widget can also need a permission. Admins who lack it don't see it in their library or on their dashboard, its
 data is never fetched for them, and it is dropped from any layout they save. The built-in widgets need:</p>
 <table>
@@ -1833,7 +1846,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 </thead>
 <tbody>
 <tr>
-<td>Users by Group, Users in Recycler</td>
+<td>Users by group, Newest users, Users in Recycler</td>
 <td><code>users.list</code></td>
 </tr>
 <tr>
@@ -1841,7 +1854,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 <td><code>groups.settings</code></td>
 </tr>
 <tr>
-<td>Log activity</td>
+<td>Log activity, Recent errors</td>
 <td><code>logs.view</code></td>
 </tr>
 <tr>
