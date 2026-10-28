@@ -41,6 +41,17 @@ final class ActionRegistryTest extends TestCase
         $this->assertCount(2, $list->bulk($user));
     }
 
+    public function testRowLeavesOutActionsTheRecordDoesNotAllow(): void
+    {
+        $list = (new ActionRegistry())->for('users')->add(new TouchUsers());
+        $user = $this->createUser();
+        $user->addPermission('users.edit');
+
+        // TouchUsers refuses the actor's own record
+        $this->assertSame([], $list->row($user, $user));
+        $this->assertCount(1, $list->row($user, $this->createUser()));
+    }
+
     public function testUsersModuleRegistersItsDeleteAction(): void
     {
         $user = $this->createUser();

@@ -110,7 +110,8 @@ final class UserListTest extends TestCase
         $this->assertMatchesRegularExpression('#<button type="submit" formaction="' . $delete . '" data-confirm-bulk="1"\s+class="btn btn-danger" data-confirm="[^"]+"#', $html);
         $this->assertMatchesRegularExpression('#<button type="submit" form="bf-action-form" formaction="' . $delete . '" name="selects\[\]" value="' . $grace->id . '"#', $html);
         $this->assertStringNotContainsString('onclick="return confirm(', $html);
-        // You can't select yourself for deletion.
+        // You can't select or delete yourself.
+        $this->assertDoesNotMatchRegularExpression('#name="selects\[\]" value="' . $this->admin->id . '"\s+class="dropdown-item#', $html);
         $this->assertMatchesRegularExpression('#name="selects\[\]" value="' . $this->admin->id . '"[^>]*\s+disabled#', $html);
     }
 

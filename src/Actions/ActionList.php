@@ -55,11 +55,16 @@ class ActionList
     }
 
     /**
+     * @param object|null $record When given, leaves out actions whose `allows()` rejects it
+     *
      * @return list<Action> The actions $user may run from a row
      */
-    public function row(User $user): array
+    public function row(User $user, ?object $record = null): array
     {
-        return $this->permitted($user, static fn (Action $action) => $action->placement->inRow());
+        return $this->permitted(
+            $user,
+            static fn (Action $action) => $action->placement->inRow() && ($record === null || $action->allows($user, $record)),
+        );
     }
 
     /**

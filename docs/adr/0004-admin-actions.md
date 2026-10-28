@@ -145,8 +145,8 @@ the GET delete is removed as part of this work.
   answers with the confirmation page instead. A GET page would put the IDs,
   and the CSRF token of the form it came from, in the URL.
 - **`<x-row-actions>` takes `id`, not `:entity`.** View Components only receive
-  string attributes. The row menu filters by permission only; `allows()` is
-  applied when the action runs, and rejected records are reported as skipped.
+  string attributes, so the component loads the record through the list's
+  record source to leave out actions whose `allows()` rejects it.
 - **`fields()` is deferred** until ADR 0003's field classes exist; actions take
   no input yet.
 - **Row actions submit one form in the layout** (`#bf-action-form`, rendered by

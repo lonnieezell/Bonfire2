@@ -1,15 +1,23 @@
 <?php
 /**
- * A row's menu: the slot (links like Edit) and then the row actions of list $list for record $id.
- * Actions are shown by permission; an action's allows() is checked when it runs.
- * They submit the form <x-confirm-dialog> puts in the layout, so they work inside another form.
+ * A row's menu: the slot (links like Edit) and then the row actions of list $list for record $id
+ * that the admin may run on that record. They submit the form <x-confirm-dialog> puts in the
+ * layout, so they work inside another form.
  */
-$actions = service('actions')->for($list)->row(auth()->user());
+$actionList = service('actions')->for($list);
+$actions    = $actionList->row(auth()->user());
+
+// A component only gets strings, so it loads the record to ask each action's allows().
+if ($actions !== []) {
+    $record  = $actionList->source()->find([$id])[0] ?? null;
+    $actions = $record === null ? [] : $actionList->row(auth()->user(), $record);
+}
 $hasSlot = trim($slot ?? '') !== '';
 ?>
 <?php if ($actions !== [] || $hasSlot) : ?>
 <div class="dropdown">
-    <button class="bf-icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="<?= lang('Bonfire.actionsCol') ?>">
+    <?php // Fixed positioning, so the scrolling .table-responsive around the list doesn't crop the menu. ?>
+    <button class="bf-icon-btn" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false" aria-label="<?= lang('Bonfire.actionsCol') ?>">
         <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
     </button>
     <ul class="dropdown-menu dropdown-menu-end bf-row-menu">

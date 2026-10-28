@@ -146,7 +146,8 @@ comes first:
 </td>
 ```
 
-The row menu shows every row action the admin has the permission for; `allows()` is checked when the action runs.
+The row menu shows only the actions the admin may run on that record: their permission, and their `allows()` for
+it. To ask `allows()`, the component loads the record through the list's record source, one lookup per row.
 
 `<x-bulk-actions>` goes inside `<x-selection-bar>`, in a form whose row checkboxes are named `selects[]` with the
 record's ID as their value:
