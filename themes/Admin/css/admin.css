@@ -1507,6 +1507,39 @@ input[type="checkbox"]:indeterminate {
 
 /*
  * --------------------------------------------------------------------------
+ * CONFIRM DIALOG
+ * --------------------------------------------------------------------------
+ */
+
+.bf-confirm-dialog {
+    width: calc(100vw - 32px);
+    max-width: 440px;
+    padding: 20px;
+    border: 1px solid var(--bf-border);
+    border-radius: 12px;
+    background: var(--bf-surface);
+    color: var(--bf-text);
+    box-shadow: var(--bf-pop);
+}
+
+.bf-confirm-dialog[open] {
+    animation: bf-pop .16s ease;
+}
+
+.bf-confirm-dialog::backdrop {
+    background: rgb(0 0 0 / .4);
+}
+
+.bf-confirm-dialog p {
+    color: var(--bf-muted);
+}
+
+.bf-confirm-page {
+    max-width: 560px;
+}
+
+/*
+ * --------------------------------------------------------------------------
  * ALERTS
  * --------------------------------------------------------------------------
  */

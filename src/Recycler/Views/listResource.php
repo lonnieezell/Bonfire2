@@ -30,23 +30,14 @@
                                 <td><?= esc($item[$column] ?? '') ?></td>
                             <?php endforeach ?>
                             <td class="text-end">
-                                <div class="d-inline-flex gap-2" x-data="{ confirming: false }">
+                                <div class="d-inline-flex gap-2">
                                     <a href="<?= url_to('recycler-restore', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-outline-secondary">
                                         <i class="fas fa-trash-restore" aria-hidden="true"></i> <?= lang('Recycler.restoreMsgTitle') ?>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" x-cloak @click="confirming = true">
+                                    <a href="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-outline-danger"
+                                       data-confirm="<?= esc(lang('Recycler.purgeMsgContent')) ?>" data-confirm-button="<?= esc(lang('Recycler.purgeConfirm')) ?>" data-confirm-danger="1">
                                         <?= lang('Recycler.purgeMsgTitle') ?>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" x-show="confirming" x-cloak @click="confirming = false">
-                                        <?= lang('Recycler.cancel') ?>
-                                    </button>
-                                    <a href="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-danger" x-show="confirming" x-cloak>
-                                        <?= lang('Recycler.purgeConfirm') ?>
                                     </a>
-                                    <noscript>
-                                        <a href="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-danger"
-                                           onclick="return confirm('<?= lang('Recycler.purgeMsgContent') ?>');"><?= lang('Recycler.purgeMsgTitle') ?></a>
-                                    </noscript>
                                 </div>
                             </td>
                         </tr>

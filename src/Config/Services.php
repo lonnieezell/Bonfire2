@@ -2,6 +2,7 @@
 
 namespace Bonfire\Config;
 
+use Bonfire\Actions\ActionRegistry;
 use Bonfire\Bonfire;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Recycler\Libraries\Recycler;
@@ -26,6 +27,18 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
+    /**
+     * The row and bulk actions of the admin lists
+     */
+    public static function actions(bool $getShared = true): ActionRegistry
+    {
+        if ($getShared) {
+            return static::getSharedInstance('actions');
+        }
+
+        return new ActionRegistry();
+    }
+
     /**
      * Core utility class for Bonfire's system.
      *

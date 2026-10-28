@@ -151,13 +151,36 @@ A sticky bar showing "N selected" while any row checkbox (`tbody input[type=chec
 slot holds the bulk actions; the ✕ clears the selection.
 
 ```php
-<form method="post" action="<?= site_url(ADMIN_AREA . '/users/delete-batch') ?>">
+<form method="post">
+    <?= csrf_field() ?>
     <table class="table">…</table>
     <x-selection-bar>
-        <button type="submit" class="btn btn-danger">Delete</button>
+        <x-bulk-actions list="users" />
     </x-selection-bar>
 </form>
 ```
+
+**<x-bulk-actions\>**
+
+The bulk [actions](actions.md) of the `list`, as buttons that post the form's checked `selects[]`. Place it inside
+`<x-selection-bar>`.
+
+**<x-row-actions\>**
+
+A row's menu: its slot (links like Edit), then the row [actions](actions.md) of the `list` for the record `id`.
+
+```php
+<x-row-actions list="users" id="<?= $user->id ?>">
+    <li><a href="<?= $user->adminLink() ?>" class="dropdown-item">Edit</a></li>
+</x-row-actions>
+```
+
+**<x-confirm-dialog\>** and **<x-action-run\>**
+
+Both sit once in the Admin layout (`master.php`). `<x-confirm-dialog>` asks before actions, `hx-confirm` requests and
+`data-confirm` links and buttons go ahead (see [Confirmation](actions.md#confirmation)), and renders the form
+`<x-row-actions>` submits, so row actions need it even without JavaScript. `<x-action-run>`, inside the
+toasts, shows the progress of an action run just queued.
 
 ## Buttons and filters
 

@@ -19,25 +19,9 @@
 <td><x-status tone="<?= $statusTone ?>" label="<?= esc($statusLabel) ?>" /></td>
 <td class="bf-muted"><?= $user->last_active?->humanize() ?? lang('Users.never') ?></td>
 <td class="text-end">
-    <?php if (auth()->user()->can('users.edit') || auth()->user()->can('users.delete')): ?>
-        <!-- Action Menu -->
-        <div class="dropdown">
-            <button class="bf-icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="<?= lang('Bonfire.actionsCol') ?>">
-                <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end bf-row-menu">
-                <?php if (auth()->user()->can('users.edit')) : ?>
-                    <li><a href="<?= $user->adminLink() ?>" class="dropdown-item"><i class="fas fa-pen" aria-hidden="true"></i> <?= lang('Bonfire.edit') ?></a></li>
-                <?php endif ?>
-                <?php if (auth()->user()->can('users.delete')): ?>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a href="<?= $user->adminLink('delete') ?>" class="dropdown-item text-danger"
-                        onclick="return confirm('<?= lang('Bonfire.deleteResource', [lang('Users.userAccusative')]) ?>')">
-                            <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Bonfire.delete') ?>
-                        </a>
-                    </li>
-                <?php endif ?>
-            </ul>
-        </div>
-    <?php endif ?>
+    <x-row-actions list="users" id="<?= $user->id ?>">
+        <?php if (auth()->user()->can('users.edit')) : ?>
+            <li><a href="<?= $user->adminLink() ?>" class="dropdown-item"><i class="fas fa-pen" aria-hidden="true"></i> <?= lang('Bonfire.edit') ?></a></li>
+        <?php endif ?>
+    </x-row-actions>
 </td>

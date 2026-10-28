@@ -2,6 +2,7 @@
 
 namespace Tests\Users;
 
+use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator;
 use Tests\Support\TestCase;
@@ -97,17 +98,41 @@ final class UserListTest extends TestCase
         $this->assertStringContainsString('<div class="bf-empty-title">No users match</div>', $html);
     }
 
-    public function testSelectionBarPostsTheSelectedRowsToBatchDelete(): void
+    public function testRowsAndSelectionBarOfferTheDeleteAction(): void
     {
-        $this->createUser(['username' => 'grace', 'active' => 1])->addGroup('user');
+        $grace = $this->createUser(['username' => 'grace', 'active' => 1]);
+        $grace->addGroup('user');
+        $delete = preg_quote(url_to('action', 'users', 'delete-users'), '#');
 
         $html = $this->list();
 
-        $this->assertMatchesRegularExpression('#<form action="' . preg_quote(site_url(ADMIN_AREA . '/users/delete-batch'), '#') . '" method="post">#', $html);
         $this->assertStringContainsString('x-data="bfSelectionBar"', $html);
-        $this->assertMatchesRegularExpression('#<button[^>]*name="delete"[^>]*onclick="return confirm\(#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" formaction="' . $delete . '" data-confirm-bulk="1"\s+class="btn btn-danger" data-confirm="[^"]+"#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" form="bf-action-form" formaction="' . $delete . '" name="selects\[\]" value="' . $grace->id . '"#', $html);
+        $this->assertStringNotContainsString('onclick="return confirm(', $html);
         // You can't select yourself for deletion.
-        $this->assertMatchesRegularExpression('#name="selects\[' . $this->admin->id . '\]"[^>]*disabled#', $html);
+        $this->assertMatchesRegularExpression('#name="selects\[\]" value="' . $this->admin->id . '"[^>]*\s+disabled#', $html);
+    }
+
+    public function testDeleteActionDeletesTheSelectedUsersButNotYourself(): void
+    {
+        $grace = $this->createUser(['username' => 'grace', 'active' => 1]);
+
+        $response = $this->actingAs($this->admin)->post(route_to('action', 'users', 'delete-users'), [
+            csrf_token() => csrf_hash(),
+            'selects'    => [$grace->id, $this->admin->id],
+            'confirmed'  => '1',
+        ]);
+
+        $response->assertSessionHas('message', lang('Bonfire.resourcesDeleted', [lang('Users.usersAccusative')]) . ' Skipped 1.');
+        $this->assertNull(model(UserModel::class)->find($grace->id));
+        $this->assertNotNull(model(UserModel::class)->find($this->admin->id));
+    }
+
+    public function testTheOldDeleteRoutesAreGone(): void
+    {
+        $this->assertFalse(route_to('user-delete', $this->admin->id));
+        $this->assertNull(service('routes')->getRoutes('POST')[ADMIN_AREA . '/users/delete-batch'] ?? null);
     }
 
     public function testPagerShowsHowManyOfTheTotal(): void

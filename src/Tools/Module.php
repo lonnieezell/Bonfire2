@@ -13,6 +13,8 @@ namespace Bonfire\Tools;
 
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Tools\Actions\DeleteLogs;
+use Bonfire\Tools\Libraries\LogStore;
 
 /**
  * Email Module setup
@@ -41,5 +43,9 @@ class Module extends BaseModule
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
         $sidebar->menu('sidebar')->collection('tools')->addItem($itemLogs);
+
+        service('actions')->for('logs')
+            ->records(new LogStore())
+            ->add(new DeleteLogs());
     }
 }

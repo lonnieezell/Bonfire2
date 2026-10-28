@@ -164,7 +164,7 @@ final class RecyclerTest extends TestCase
         $this->assertSame(['query', "restore {$deleted->id}", "purge {$deleted->id}"], RecyclerHooksModel::$calls);
     }
 
-    public function testListShowsTheCountAndRowsWithRestoreAndATwoStepPurge(): void
+    public function testListShowsTheCountAndRowsWithRestoreAndAConfirmedPurge(): void
     {
         $user = $this->createUser();
         $this->users->delete($user->id);
@@ -174,8 +174,8 @@ final class RecyclerTest extends TestCase
 
         $this->assertMatchesRegularExpression('#<h1>Recycler</h1>\s*<span class="bf-count">1</span>#', $html);
         $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-restore', 'users', $user->id), '#') . '" class="btn btn-sm btn-outline-secondary">#', $html);
-        $this->assertMatchesRegularExpression('#<button type="button" class="btn btn-sm btn-outline-danger" x-show="! confirming" x-cloak @click="confirming = true">#', $html);
-        $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-purge', 'users', $user->id), '#') . '" class="btn btn-sm btn-danger" x-show="confirming" x-cloak>#', $html);
+        $this->assertMatchesRegularExpression('#<a href="' . preg_quote(url_to('recycler-purge', 'users', $user->id), '#') . '" class="btn btn-sm btn-outline-danger"\s+data-confirm="Permanently delete this record\?" data-confirm-button="Yes, purge" data-confirm-danger="1">#', $html);
+        $this->assertStringNotContainsString('confirm(', $html);
     }
 
     public function testEmptyRecyclerShowsAnEmptyState(): void
