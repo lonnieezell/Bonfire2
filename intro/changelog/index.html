@@ -671,6 +671,8 @@
       
         
       
+        
+      
     
     
     
@@ -847,6 +849,34 @@
     
   
     The Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/customizing_the_dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the Dashboard
   
 
     
@@ -1207,6 +1237,8 @@
       
         
       
+        
+      
     
     
     
@@ -1327,6 +1359,34 @@
     
   
     Dashboard Cells
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_admin_modules/dashboard_widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard Widgets
   
 
     
@@ -1791,6 +1851,16 @@ when it is on the viewer's dashboard, so <code>service('dashboardContext')-&gt;s
 layout". The dashboard needs the new <code>admin/js/dashboard.js</code> and new <code>admin.css</code> rules
 from the Admin theme, so installs that published their own copy of the Admin theme must re-publish it; with an older
 copy the dashboard shows its widgets stacked in one column and Customize does nothing.</p>
+<p>Dashboard widgets can need a permission: pass <code>'permission'</code> to a <code>StatsItem</code> or <code>ChartsItem</code>, and admins who lack it
+don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
+need <code>users.list</code> and the Groups widgets <code>groups.settings</code>. Admins with <code>widgets.settings</code> can <strong>Save as site
+default</strong> from the dashboard's edit bar, and <strong>Reset site default</strong> in Settings → Widgets (see
+<a href="../../modules/customizing_the_dashboard/#the-site-default">Customizing the Dashboard</a>). The Settings → Widgets
+switches are now labelled as choosing which widgets are <em>available</em>. Quick Links is now a native widget,
+<code>Bonfire\Dashboard\Widgets\QuickLinksWidget</code>, registered by the Dashboard module under its old id, and no longer in
+the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire\Dashboard\DashboardCells::quickLinks</code> show it once,
+in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
+<a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <p>Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
 escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
 first.</p>

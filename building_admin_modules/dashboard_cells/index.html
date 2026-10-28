@@ -14,7 +14,7 @@
         <link rel="prev" href="../creating_an_admin_module/">
       
       
-        <link rel="next" href="../filters/">
+        <link rel="next" href="../dashboard_widgets/">
       
       
         
@@ -490,6 +490,8 @@
       
         
       
+        
+      
     
     
     
@@ -666,6 +668,34 @@
     
   
     The Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/customizing_the_dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the Dashboard
   
 
     
@@ -1028,6 +1058,8 @@
       
         
       
+        
+      
     
     
     
@@ -1214,6 +1246,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1510,7 +1570,6 @@ You can specify which cells to display by editing the <code>Bonfire\Dashboard\Co
 <pre class="highlight"><code class="language-php">class Dashboard extends BaseConfig
 {
     public array $cells = [
-        'Bonfire\Dashboard\DashboardCells::quickLinks',
         'Bonfire\Widgets\Cells\WidgetCells::stats',
         'Bonfire\Widgets\Cells\WidgetCells::logs',
         'Bonfire\Widgets\Cells\WidgetCells::charts',
@@ -1519,24 +1578,24 @@ You can specify which cells to display by editing the <code>Bonfire\Dashboard\Co
 <p>The cells make up the default layout of the Dashboard, in the order listed. You can comment out any class to have it not show.
 The stats, logs and charts cells that come on by default stand for the stats, log and chart widgets: those are not on the
 default layout, and admins add them from the palette. Every other cell becomes one full-width widget with the id <code>cell:</code> plus its
-<code>Class::method</code>, which admins can move, size or remove when they <a href="../../modules/dashboard/#customizing-the-dashboard">customize their dashboard</a>.
-For more control over a widget's title, icon, sizes or permission, write a <a href="../widgets/#your-own-dashboard-widget">dashboard widget</a> instead.</p>
+<code>Class::method</code>, which admins can move, size or remove when they <a href="../../modules/customizing_the_dashboard/">customize their dashboard</a>.
+For more control over a widget's title, icon, sizes or permission, write a <a href="../dashboard_widgets/">dashboard widget</a> instead,
+as Quick Links now is.</p>
 <h2 id="creating-the-cell">Creating the Cell</h2>
-<p>The cells are very simple class methods that return the HTML or <code>view()</code> results. Here is the Quick Links cell as an example:</p>
-<pre class="highlight"><code class="language-php">class DashboardCells
+<p>The cells are very simple class methods that return the HTML or <code>view()</code> results:</p>
+<pre class="highlight"><code class="language-php">class ShopCells
 {
     /**
-     * Displays a selection of "Quick Links" in the admin dashboard.
-     * This is a view cell that uses the "content" sidebar menu
-     * items to determine the links to show.
+     * Lists the orders waiting to ship.
      */
-    public function quickLinks()
+    public function openOrders()
     {
-        return view('Bonfire\Dashboard\Views\quick_links', [
-            'menu' =&gt; service('menus')-&gt;menu('sidebar')-&gt;collection('content'),
+        return view('Shop\Views\open_orders', [
+            'orders' =&gt; model(OrderModel::class)-&gt;open(),
         ]);
     }
 }</code></pre>
+<p>Add <code>'Shop\Cells\ShopCells::openOrders'</code> to <code>$cells</code> and it becomes the widget <code>cell:Shop\Cells\ShopCells::openOrders</code>.</p>
 
 
 
@@ -1589,13 +1648,13 @@ For more control over a widget's title, icon, sizes or permission, write a <a hr
         
         
           
-          <a href="../filters/" class="md-footer__link md-footer__link--next" aria-label="Next: Filters">
+          <a href="../dashboard_widgets/" class="md-footer__link md-footer__link--next" aria-label="Next: Dashboard Widgets">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Filters
+                Dashboard Widgets
               </div>
             </div>
             <div class="md-footer__button md-icon">

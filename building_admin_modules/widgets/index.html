@@ -488,6 +488,8 @@
       
         
       
+        
+      
     
     
     
@@ -664,6 +666,34 @@
     
   
     The Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/customizing_the_dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the Dashboard
   
 
     
@@ -1026,6 +1056,8 @@
       
         
       
+        
+      
     
     
     
@@ -1146,6 +1178,34 @@
     
   
     Dashboard Cells
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard Widgets
   
 
     
@@ -1733,45 +1793,8 @@ which can be used to specify which information is displayed for the widget, as w
 labels are displayed, etc.</p>
 <hr />
 <h2 id="your-own-dashboard-widget">Your own dashboard widget</h2>
-<p>Anything an admin can place on the dashboard is a widget. Stats, charts, Log activity and the cells in
-<code>Dashboard.cells</code> become widgets on their own; for full control, implement <code>Bonfire\Dashboard\DashboardWidget</code> and
-register it from your module's <code>initAdmin()</code>:</p>
-<pre class="highlight"><code class="language-php">use Bonfire\Dashboard\DashboardWidget;
-use Bonfire\Dashboard\Size;
-use Bonfire\Dashboard\SizeRange;
-
-class OpenOrders implements DashboardWidget
-{
-    public function id(): string { return 'shop:openOrders'; }
-    public function title(): string { return 'Open orders'; }
-    public function icon(): string { return 'fas fa-cart-shopping'; }
-    public function group(): string { return 'stats'; }
-    public function description(): string { return 'Orders waiting to ship'; }
-    public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
-    public function permission(): ?string { return 'shop.orders'; }
-    public function settingsUrl(): ?string { return url_to('shop-dashboard-settings'); }
-
-    public function render(): string
-    {
-        return view('Shop\Views\open_orders', ['orders' =&gt; model(OrderModel::class)-&gt;open()]);
-    }
-}</code></pre>
-<pre class="highlight"><code class="language-php">public function initAdmin()
-{
-    service('dashboard')-&gt;register(new OpenOrders());
-}</code></pre>
-<ul>
-<li><strong>id</strong> is stored in admins' saved layouts, so keep it unique and never change it. Prefix it with your module's name.</li>
-<li><strong>group</strong> is the palette heading it is listed under: <code>quickLinks</code>, <code>stats</code>, <code>charts</code> or <code>custom</code>.</li>
-<li><strong>sizes</strong> is the width it starts at and the smallest and largest an admin may pick, from <code>Size::Quarter</code>,
-  <code>Third</code>, <code>Half</code>, <code>TwoThirds</code> and <code>Full</code>.</li>
-<li><strong>permission</strong> hides the widget from admins who lack it, in the palette and on the dashboard. <code>null</code> shows it to
-  every admin.</li>
-<li><strong>settingsUrl</strong> is where the viewer changes the widget's settings, linked from its tools in edit mode. Return
-  <code>null</code> when it has none, or the viewer may not change them.</li>
-<li><strong>render</strong> is called only when the widget is on the viewer's dashboard, so it may run queries.</li>
-</ul>
-<p>A registered widget is not part of the default layout: admins add it to their dashboard from the palette.</p>
+<p>Implement <code>Bonfire\Dashboard\DashboardWidget</code> and register it with <code>service('dashboard')-&gt;register()</code>. See
+<a href="../dashboard_widgets/">Dashboard Widgets</a>, which also maps the stats, charts and cells below onto widgets.</p>
 <hr />
 <h2 id="statistic-widget">Statistic widget</h2>
 <p>The first widget is the statistics widget, which is just a counter with a shortcut that allows me to open the
