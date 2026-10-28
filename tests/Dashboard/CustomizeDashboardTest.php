@@ -252,16 +252,54 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertMatchesRegularExpression('#<button[^>]*@click="moveSection\(\$el, 1\)"[^>]*:disabled=#', $html);
     }
 
-    public function testOnlyWidgetsWithSettingsLinkToThem(): void
+    public function testOnlyWidgetsWithSettingsOfferThem(): void
     {
-        $this->save($this->user, [['title' => '', 'widgets' => [
-            ['id' => 'stats:usersInRecycler693', 'size' => 'quarter'],
-            ['id' => self::QUICK_LINKS, 'size' => 'full'],
-        ]]]);
         $html = $this->dashboardHtml($this->user);
 
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/stats'), $this->settingsLink($html, 'stats&#x3A;usersInRecycler693'));
-        $this->assertNull($this->settingsLink($html, 'cell&#x3A;Bonfire&#x5C;Dashboard&#x5C;DashboardCells&#x3A;&#x3A;quickLinks'));
+        $this->assertStringContainsString('data-widget-settings', $this->tileTools($html, 'logs&#x3A;logActivity'));
+        $this->assertStringNotContainsString('data-widget-settings', $this->tileTools($html, 'cell&#x3A;Bonfire&#x5C;Dashboard&#x5C;DashboardCells&#x3A;&#x3A;quickLinks'));
+    }
+
+    public function testEachWidgetWithSettingsHasAFormForThem(): void
+    {
+        $html = $this->dashboardHtml($this->user);
+
+        $form = $this->settingsForm($html, 'logs&#x3A;logActivity');
+        $this->assertMatchesRegularExpression('#<input[^>]*name="fileCount"#', $form);
+        $this->assertMatchesRegularExpression('#<input[^>]*name="hideDebug"#', $form);
+        $this->assertSame('', $this->settingsForm($html, 'cell&#x3A;Bonfire&#x5C;Dashboard&#x5C;DashboardCells&#x3A;&#x3A;quickLinks'));
+    }
+
+    public function testAFormKnowsWhatEachFieldInherits(): void
+    {
+        setting('LogActivity.logActivity_fileCount', 10);
+
+        preg_match('#<template data-settings-for="logs&\#x3A;logActivity" data-fields="([^"]+)"#', $this->dashboardHtml($this->user), $match);
+        $fields = array_column(json_decode(html_entity_decode($match[1] ?? ''), true) ?? [], null, 'name');
+
+        $this->assertSame(10, $fields['fileCount']['inherited'] ?? null);
+        $this->assertFalse($fields['hideDebug']['inherited'] ?? null);
+    }
+
+    public function testAWidgetRendersWithTheSettingsSavedForIt(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [
+            ['id' => 'logs:logActivity', 'size' => 'full', 'settings' => ['fileCount' => 3]],
+        ]]])->assertOK();
+
+        $html = $this->placedHtml($this->dashboardHtml($this->user));
+
+        $this->assertSame(3, substr_count($html, 'class="bf-log-label"'));
+        $this->assertStringContainsString('data-settings="' . esc(json_encode(['fileCount' => 3]), 'attr') . '"', $html);
+    }
+
+    public function testTheSiteDefaultKeepsTheSettingsOfItsWidgets(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [
+            ['id' => 'logs:logActivity', 'size' => 'full', 'settings' => ['hideDebug' => true]],
+        ]]], route: 'dashboard-site-layout')->assertOK();
+
+        $this->assertSame(['hideDebug' => true], setting('Dashboard.layout')['sections'][0]['widgets'][0]['settings'] ?? null);
     }
 
     public function testThePaletteAddsToAChosenSection(): void
@@ -420,9 +458,14 @@ final class CustomizeDashboardTest extends TestCase
         return $options[1];
     }
 
-    private function settingsLink(string $html, string $id): ?string
+    /**
+     * The settings form template of the widget with that (escaped) id, or nothing.
+     */
+    private function settingsForm(string $html, string $id): string
     {
-        return preg_match('#<a[^>]*href="([^"]+)"[^>]*data-widget-settings#', $this->tileTools($html, $id), $link) ? html_entity_decode($link[1]) : null;
+        preg_match('#<template data-settings-for="' . preg_quote($id, '#') . '".*?</template>#s', $html, $form);
+
+        return $form[0] ?? '';
     }
 
     private function admin(): User

@@ -130,25 +130,6 @@ final class WidgetRegistryTest extends TestCase
         }
     }
 
-    public function testItemWidgetsLinkToTheirWidgetsSettingsTab(): void
-    {
-        $user = $this->createUser();
-        $user->addPermission('widgets.settings');
-        $this->actingAs($user);
-
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/stats'), service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/barchart'), service('dashboard')->widget('charts:usersByGroupBar345')->settingsUrl());
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/logactivity'), service('dashboard')->widget('logs:logActivity')->settingsUrl());
-        $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->settingsUrl());
-    }
-
-    public function testNoSettingsLinkWithoutThePermissionToChangeThem(): void
-    {
-        $this->actingAs($this->createUser());
-
-        $this->assertNull(service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
-    }
-
     public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void
     {
         service('dashboard')->register(new TestWidget('test:logsOnly', 'logs.view'));

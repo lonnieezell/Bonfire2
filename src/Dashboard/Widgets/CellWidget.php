@@ -14,6 +14,7 @@ namespace Bonfire\Dashboard\Widgets;
 use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetValues;
 
 /**
  * A view cell listed in Dashboard.cells, as "Class::method".
@@ -77,12 +78,12 @@ class CellWidget implements DashboardWidget
         return null;
     }
 
-    public function settingsUrl(): ?string
+    public function fields(): array
     {
-        return null;
+        return [];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         [$class, $method] = explode('::', $this->alias);
 

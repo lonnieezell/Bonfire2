@@ -2386,6 +2386,42 @@ input[type="checkbox"]:indeterminate {
     margin: 0;
 }
 
+/* The tile whose settings are open, and the note on one whose settings change on save. */
+.bf-dashboard.is-editing .bf-widget.is-configuring {
+    box-shadow: 0 0 0 2px var(--bf-accent), var(--bf-shadow);
+}
+
+.bf-widget-pending {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    z-index: 5;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bf-accent-soft);
+    color: var(--bf-accent-text);
+    font-size: 11.5px;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+/* The widget settings panel: its fields, then Reset, Cancel and Apply. */
+.offcanvas-body.bf-widget-settings {
+    padding: 0 18px 18px;
+}
+
+.bf-widget-settings-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 14px;
+}
+
+.bf-widget-settings-actions .btn-link {
+    margin-right: auto;
+    padding-left: 0;
+}
+
 /* The message after a change, with Undo when it can be undone. */
 .bf-dashboard-toast {
     position: fixed;

@@ -14,6 +14,7 @@ namespace Tests\Dashboard;
 use Bonfire\Dashboard\LayoutValidator;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetRegistry;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -36,7 +37,13 @@ final class LayoutValidatorTest extends TestCase
         $registry = (new WidgetRegistry())
             ->register(new TestWidget('test:a'))
             ->register(new TestWidget('test:b'))
-            ->register(new TestWidget('test:narrow', null, new SizeRange(Size::Quarter, Size::Quarter, Size::Half)));
+            ->register(new TestWidget('test:narrow', null, new SizeRange(Size::Quarter, Size::Quarter, Size::Half)))
+            ->register(new TestWidget('test:configurable', null, new SizeRange(Size::Half), [
+                WidgetField::toggle('compact', 'Compact', default: false),
+                WidgetField::number('days', 'Days', default: 7, min: 1, max: 31),
+                WidgetField::choice('order', 'Order', ['asc' => 'Oldest first', 'desc' => 'Newest first'], default: 'desc'),
+                WidgetField::text('caption', 'Caption', default: ''),
+            ]));
         $this->validator = new LayoutValidator($registry);
     }
 
@@ -143,6 +150,67 @@ final class LayoutValidatorTest extends TestCase
             ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'quarter']]]]],
             $layout->toArray(),
         );
+    }
+
+    public function testKeepsDeclaredSettingsThatDifferFromTheirInheritedValue(): void
+    {
+        $settings = ['compact' => true, 'days' => 14, 'order' => 'asc', 'caption' => 'Mine'];
+
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => '', 'widgets' => [['id' => 'test:configurable', 'size' => 'half', 'settings' => $settings]]],
+        ]]);
+
+        $this->assertSame(
+            ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'test:configurable', 'size' => 'half', 'settings' => $settings]]]]],
+            $layout->toArray(),
+        );
+    }
+
+    /**
+     * @param array<string, mixed>|null $stored
+     */
+    #[DataProvider('provideStoresOnlyTheWidgetsOwnSettings')]
+    public function testStoresOnlyTheWidgetsOwnSettings(mixed $posted, ?array $stored, string $id = 'test:configurable'): void
+    {
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => '', 'widgets' => [['id' => $id, 'settings' => $posted]]],
+        ]]);
+
+        $this->assertSame($stored, $layout->toArray()['sections'][0]['widgets'][0]['settings'] ?? null);
+    }
+
+    public static function provideStoresOnlyTheWidgetsOwnSettings(): iterable
+    {
+        return [
+            'undeclared keys'         => [['colour' => 'red', 'days' => 14], ['days' => 14]],
+            'not an object'           => ['days=14', null],
+            'a list'                  => [[14], null],
+            'numbers clamped'         => [['days' => 99], ['days' => 31]],
+            'numeric text cast'       => [['days' => '3'], ['days' => 3]],
+            'not a number'            => [['days' => 'many'], null],
+            'a choice not offered'    => [['order' => 'random'], null],
+            'toggle from form text'   => [['compact' => 'on'], ['compact' => true]],
+            'not a toggle'            => [['compact' => 'perhaps'], null],
+            'text trimmed'            => [['caption' => '  Mine  '], ['caption' => 'Mine']],
+            'text too long'           => [['caption' => str_repeat('x', 300)], ['caption' => str_repeat('x', 255)]],
+            'not text'                => [['caption' => ['Mine']], null],
+            'same as inherited'       => [['days' => 7, 'order' => 'desc', 'compact' => false], null],
+            'a widget without fields' => [['days' => 14], null, 'test:a'],
+        ];
+    }
+
+    public function testASettingEqualToTheSiteWideValueItInheritsIsNotStored(): void
+    {
+        setting('Dashboard.testDays', 14);
+        $registry = (new WidgetRegistry())->register(new TestWidget('test:keyed', null, new SizeRange(Size::Half), [
+            WidgetField::number('days', 'Days', default: 7, key: 'Dashboard.testDays'),
+        ]));
+
+        $layout = (new LayoutValidator($registry))->validate(['version' => 1, 'sections' => [
+            ['title' => '', 'widgets' => [['id' => 'test:keyed', 'settings' => ['days' => 14]]]],
+        ]]);
+
+        $this->assertSame([], $layout->sections[0]->widgets[0]->values);
     }
 
     #[DataProvider('provideRejectsAMalformedPayload')]

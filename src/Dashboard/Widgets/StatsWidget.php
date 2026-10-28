@@ -13,6 +13,7 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Widgets\Types\Stats\StatsItem;
 
 /**
@@ -47,12 +48,12 @@ class StatsWidget extends ItemWidget
         return new SizeRange(Size::Quarter);
     }
 
-    protected function settingsTab(): ?string
+    public function fields(): array
     {
-        return 'stats';
+        return [];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item]);
     }

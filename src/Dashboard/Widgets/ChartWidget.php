@@ -13,6 +13,7 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
 
@@ -63,17 +64,12 @@ class ChartWidget extends ItemWidget
         return new SizeRange(Size::tryFromColumns($columns) ?? Size::Half);
     }
 
-    /**
-     * The tab of its chart type: polarArea is "polarareachart".
-     */
-    protected function settingsTab(): ?string
+    public function fields(): array
     {
-        $type = (string) $this->item->type();
-
-        return in_array($type, ['line', 'bar', 'doughnut', 'pie', 'polarArea'], true) ? strtolower($type) . 'chart' : null;
+        return [];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         /** @var Metadata $meta */
         $meta = service('viewMeta');
