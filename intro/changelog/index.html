@@ -1861,6 +1861,13 @@ the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire
 in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
 <a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p>Log activity is now a dashboard widget of its own, <code>Bonfire\Tools\Widgets\LogActivity</code>, like Recent errors. It
+keeps its id <code>logs:logActivity</code>, so saved layouts keep it in place, and its days and Debug defaults in Settings →
+Widgets keep their saved values. It no longer has a switch under <em>Available widgets</em>: every admin with <code>logs.view</code>
+can add it, even where it was switched off. It is no longer an item of <code>service('widgets')-&gt;widget('logs')</code>, so the
+<code>Bonfire\Widgets\Cells\WidgetCells::logs</code> cell no longer shows it. Code that calls it directly: <code>days()</code> and
+<code>levels()</code> now take the options as arguments, <code>days(int $count, bool $hideDebug)</code> and <code>levels(bool $hideDebug)</code>;
+<code>render()</code> takes a <code>WidgetValues</code>; and <code>setTitle()</code>, <code>withOptions()</code>, <code>module()</code> and <code>settings()</code> are gone.</p>
 <p>List rows are now selectable whenever the admin may run any of the list's bulk actions, not only when they may
 delete: a module's bulk action shows the checkboxes on its own. A row's checkbox is disabled when no bulk action
 <code>allows()</code> that record. <code>ActionList::selectable()</code> answers both, and <code>ActionList::showing()</code> hands a page's records to

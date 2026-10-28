@@ -1925,9 +1925,8 @@ Examples options are:
 Warning, Info and Debug entries. CRITICAL, ALERT and EMERGENCY entries count as Error, and NOTICE entries count as
 Info. Each bar links to that log file, days without a log file show a thin line, and the headline counts the errors
 across the days shown.</p>
-<p>It is built in: turn it on in the widgets settings like any other widget. Only users with the <code>logs.view</code> permission
-see it, and the log files are only read when it is on and the dashboard is shown. It is displayed by the
-<code>Bonfire\Widgets\Cells\WidgetCells::logs</code> cell.</p>
+<p>It is built in (<code>Bonfire\Tools\Widgets\LogActivity</code>, id <code>logs:logActivity</code>). Only users with the <code>logs.view</code>
+permission can add it to their dashboard, and the log files are only read when it is on the dashboard being shown.</p>
 <hr />
 <h2 id="configuration_2">Configuration</h2>
 <p>All settings are available in the administration settings area.</p>
