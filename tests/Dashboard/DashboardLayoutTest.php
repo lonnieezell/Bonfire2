@@ -56,9 +56,9 @@ final class DashboardLayoutTest extends TestCase
 
     public function testAStoredLayoutRendersInItsOrder(): void
     {
-        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345', 'stats:userGroups643', 'logs:logActivity');
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693', 'stats:userGroups643', 'logs:logActivity');
 
-        $this->assertSame(['charts:usersByGroupBar345', 'stats:userGroups643', 'logs:logActivity'], $this->placedIds($this->user));
+        $this->assertSame(['stats:usersInRecycler693', 'stats:userGroups643', 'logs:logActivity'], $this->placedIds($this->user));
     }
 
     public function testWidgetsSpanTheirSizeOnTheGrid(): void

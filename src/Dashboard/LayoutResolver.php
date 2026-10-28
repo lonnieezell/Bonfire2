@@ -12,7 +12,6 @@
 namespace Bonfire\Dashboard;
 
 use Bonfire\Dashboard\Widgets\CellWidget;
-use Bonfire\Widgets\ItemSettings;
 
 /**
  * Decides which widgets the viewer's dashboard shows, and in what order.
@@ -68,7 +67,6 @@ class LayoutResolver
      */
     public function includes(string $id): bool
     {
-        $item   = ItemSettings::fromWidgetId($id);
         $stored = $this->stored() ?? $this->site();
 
         if ($stored !== null) {
@@ -77,10 +75,10 @@ class LayoutResolver
                 array_values($stored['sections']),
             ));
 
-            return in_array($id, $ids, true) && ($item === null || $item->enabled());
+            return in_array($id, $ids, true);
         }
 
-        return $item === null && in_array(CellWidget::aliasOf($id), $this->cells(), true);
+        return in_array(CellWidget::aliasOf($id), $this->cells(), true);
     }
 
     /**

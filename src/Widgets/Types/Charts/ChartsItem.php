@@ -271,7 +271,7 @@ class ChartsItem implements Item
     }
 
     /**
-     * @param array<string, mixed> $overrides Options that take the place of the stored ones, e.g. ['colorScheme' => 'Reds']
+     * @param array<string, mixed> $overrides Options that take the place of the fields' defaults, e.g. ['colorScheme' => 'Reds']
      */
     public function getScript(array $overrides = []): string
     {

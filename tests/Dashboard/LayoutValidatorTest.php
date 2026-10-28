@@ -74,10 +74,8 @@ final class LayoutValidatorTest extends TestCase
         $this->assertSame(['test:a', 'test:b'], $layout->ids());
     }
 
-    public function testDropsUnavailableItems(): void
+    public function testDropsItemsTheViewerMayNotSee(): void
     {
-        setting('Stats.Stats_usersInRecycler693', false);
-
         $layout = (new LayoutValidator(new WidgetRegistry()))->validate(['version' => 1, 'sections' => [
             ['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693']]],
         ]]);
@@ -200,20 +198,6 @@ final class LayoutValidatorTest extends TestCase
             'a fraction of a whole default' => [['ratio' => 0], null],
             'a widget without fields'       => [['days' => 14], null, 'test:a'],
         ];
-    }
-
-    public function testASettingEqualToTheSiteWideValueItInheritsIsNotStored(): void
-    {
-        setting('Dashboard.testDays', 14);
-        $registry = (new WidgetRegistry())->register(new TestWidget('test:keyed', null, new SizeRange(Size::Half), [
-            WidgetField::number('days', 'Days', default: 7, key: 'Dashboard.testDays'),
-        ]));
-
-        $layout = (new LayoutValidator($registry))->validate(['version' => 1, 'sections' => [
-            ['title' => '', 'widgets' => [['id' => 'test:keyed', 'settings' => ['days' => 14]]]],
-        ]]);
-
-        $this->assertSame([], $layout->sections[0]->widgets[0]->values);
     }
 
     #[DataProvider('provideRejectsAMalformedPayload')]

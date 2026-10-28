@@ -20,8 +20,8 @@ use InvalidArgumentException;
  * unavailable and repeated widgets are dropped, then empty sections; an
  * unknown or out-of-range size becomes the widget's default, and titles
  * are trimmed. Of a widget's settings, only those of a field it declares
- * are kept, as that field's type, and only when they differ from what the
- * field inherits.
+ * are kept, as that field's type, and only when they differ from the
+ * field's default.
  */
 class LayoutValidator
 {
@@ -106,7 +106,7 @@ class LayoutValidator
         foreach (is_array($settings) ? $widget->fields() : [] as $field) {
             $value = $field->cast($settings[$field->name] ?? null);
 
-            if ($value !== null && $value !== $field->inherited()) {
+            if ($value !== null && $value !== $field->default) {
                 $own[$field->name] = $value;
             }
         }

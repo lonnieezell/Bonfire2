@@ -54,18 +54,17 @@ final class SettingsLayoutTest extends TestCase
             'permissions' => ['admin/settings/groups/admin/permissions', 'User Groups'],
             'email'       => ['admin/settings/email', 'Email'],
             'consent'     => ['admin/settings/consent', 'Consent'],
-            'widgets'     => ['admin/settings/widgets', 'Widgets'],
         ];
     }
 
     public function testSubNavOnlyListsPagesTheUserMayOpen(): void
     {
         $user = $this->createUser(['active' => 1]);
-        $user->addPermission('admin.access', 'widgets.settings');
+        $user->addPermission('admin.access', 'consent.settings');
 
-        $html = $this->actingAs($user)->get('admin/settings/widgets')->getBody();
+        $html = $this->actingAs($user)->get('admin/settings/consent')->getBody();
 
-        $this->assertStringContainsString('href="' . site_url('admin/settings/widgets') . '"', $html);
+        $this->assertStringContainsString('href="' . site_url('admin/settings/consent') . '"', $html);
         $this->assertStringNotContainsString('href="' . site_url('admin/settings/general') . '"', $html);
         $this->assertStringNotContainsString('href="' . site_url('admin/settings/email') . '"', $html);
     }

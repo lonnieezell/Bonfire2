@@ -18,7 +18,7 @@ namespace Bonfire\Dashboard;
 final readonly class Placement
 {
     /**
-     * @param array<string, bool|float|int|string> $values Settings that differ from what the widget's fields inherit
+     * @param array<string, bool|float|int|string> $values Settings that differ from the widget's fields' defaults
      */
     public function __construct(
         public string $id,

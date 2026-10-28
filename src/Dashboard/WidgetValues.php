@@ -24,7 +24,7 @@ final readonly class WidgetValues
     }
 
     /**
-     * Each field's value: the placement's own, else what it inherits.
+     * Each field's value: the placement's own, else the field's default.
      *
      * @param list<WidgetField>                    $fields
      * @param array<string, bool|float|int|string> $own    The placement's settings, as validated
@@ -34,7 +34,7 @@ final readonly class WidgetValues
         $values = [];
 
         foreach ($fields as $field) {
-            $values[$field->name] = $own[$field->name] ?? $field->inherited();
+            $values[$field->name] = $own[$field->name] ?? $field->default;
         }
 
         return new self($values);

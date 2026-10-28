@@ -26,7 +26,7 @@ use Bonfire\Widgets\Types\Charts\ChartsItem;
 class ChartWidget extends ItemWidget
 {
     /**
-     * The chart types with settings, and so a tab in Settings → Widgets.
+     * The chart types with settings.
      */
     private const TYPES = ['line', 'bar', 'doughnut', 'pie', 'polarArea'];
 
@@ -71,8 +71,7 @@ class ChartWidget extends ItemWidget
     }
 
     /**
-     * Keyed to the defaults of its chart type in Settings → Widgets, e.g.
-     * BarChart.bar_showTitle: a line's tension, the others' color scheme.
+     * A line's tension, the others' color scheme.
      */
     public function fields(): array
     {
@@ -82,16 +81,14 @@ class ChartWidget extends ItemWidget
             return [];
         }
 
-        $key = static fn (string $name): string => ucfirst($type) . 'Chart.' . $type . '_' . $name;
-
         return [
-            WidgetField::toggle('showTitle', lang('Widgets.showTitle'), default: true, key: $key('showTitle')),
-            WidgetField::toggle('showLegend', lang('Widgets.showLegend'), default: true, key: $key('showLegend')),
-            WidgetField::choice('legendPosition', lang('Widgets.legendPosition'), lang('Widgets.legendPositions'), default: 'bottom', key: $key('legendPosition')),
-            WidgetField::toggle('enableAnimation', lang('Widgets.enableAnimation'), default: true, key: $key('enableAnimation')),
+            WidgetField::toggle('showTitle', lang('Widgets.showTitle'), default: true),
+            WidgetField::toggle('showLegend', lang('Widgets.showLegend'), default: true),
+            WidgetField::choice('legendPosition', lang('Widgets.legendPosition'), lang('Widgets.legendPositions'), default: 'bottom'),
+            WidgetField::toggle('enableAnimation', lang('Widgets.enableAnimation'), default: true),
             $type === 'line'
-                ? WidgetField::number('tension', lang('Widgets.lineTension'), default: 0.1, min: 0, step: 0.1, key: $key('tension'), description: lang('Widgets.lineTensionHint'))
-                : WidgetField::choice('colorScheme', lang('Widgets.colorScheme'), lang('Widgets.colorSchemes'), default: 'null', key: $key('colorScheme')),
+                ? WidgetField::number('tension', lang('Widgets.lineTension'), default: 0.1, min: 0, step: 0.1, description: lang('Widgets.lineTensionHint'))
+                : WidgetField::choice('colorScheme', lang('Widgets.colorScheme'), lang('Widgets.colorSchemes'), default: 'null'),
         ];
     }
 

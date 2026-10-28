@@ -15,9 +15,7 @@ namespace Bonfire\Dashboard;
  * One setting a widget declares, which admins change for the widget as
  * placed on their own dashboard.
  *
- * A field with a key inherits that setting's value (the site-wide default
- * of Settings → Widgets), else its default; a placement stores only the
- * values that differ from it.
+ * A placement stores only the values that differ from the field's default.
  */
 final readonly class WidgetField
 {
@@ -31,7 +29,6 @@ final readonly class WidgetField
         public string $name,
         public string $label,
         public bool|float|int|string $default,
-        public ?string $key,
         public ?string $description,
         public float|int|null $min = null,
         public float|int|null $max = null,
@@ -40,33 +37,33 @@ final readonly class WidgetField
     ) {
     }
 
-    public static function toggle(string $name, string $label, bool $default, ?string $key = null, ?string $description = null): self
+    public static function toggle(string $name, string $label, bool $default, ?string $description = null): self
     {
-        return new self('toggle', $name, $label, $default, $key, $description);
+        return new self('toggle', $name, $label, $default, $description);
     }
 
     /**
      * A whole number, unless the step is a fraction.
      */
-    public static function number(string $name, string $label, float|int $default, float|int|null $min = null, float|int|null $max = null, float|int $step = 1, ?string $key = null, ?string $description = null): self
+    public static function number(string $name, string $label, float|int $default, float|int|null $min = null, float|int|null $max = null, float|int $step = 1, ?string $description = null): self
     {
         // Of the same type as a value, so one equal to the default is not stored
         $default = is_int($step) ? (int) round($default) : (float) $default;
 
-        return new self('number', $name, $label, $default, $key, $description, $min, $max, $step);
+        return new self('number', $name, $label, $default, $description, $min, $max, $step);
     }
 
     /**
      * @param array<string, string> $options Value => label
      */
-    public static function choice(string $name, string $label, array $options, string $default, ?string $key = null, ?string $description = null): self
+    public static function choice(string $name, string $label, array $options, string $default, ?string $description = null): self
     {
-        return new self('choice', $name, $label, $default, $key, $description, options: $options);
+        return new self('choice', $name, $label, $default, $description, options: $options);
     }
 
-    public static function text(string $name, string $label, string $default, ?string $key = null, ?string $description = null): self
+    public static function text(string $name, string $label, string $default, ?string $description = null): self
     {
-        return new self('text', $name, $label, $default, $key, $description);
+        return new self('text', $name, $label, $default, $description);
     }
 
     /**
@@ -85,15 +82,6 @@ final readonly class WidgetField
             'choice' => array_key_exists((string) $value, $this->options) ? (string) $value : null,
             'text'   => is_string($value) ? mb_substr(trim($value), 0, self::MAX_TEXT) : null,
         };
-    }
-
-    /**
-     * The value of a placement that does not set its own: the stored
-     * setting the field is keyed to, else its default.
-     */
-    public function inherited(): bool|float|int|string
-    {
-        return ($this->key === null ? null : $this->cast(setting($this->key))) ?? $this->default;
     }
 
     private function clamp(float $value): float|int

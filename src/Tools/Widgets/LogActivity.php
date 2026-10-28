@@ -82,14 +82,11 @@ class LogActivity implements DashboardWidget
         return 'logs.view';
     }
 
-    /**
-     * Keyed to its defaults in Settings → Widgets.
-     */
     public function fields(): array
     {
         return [
-            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: self::MAX_DAYS, key: 'LogActivity.logActivity_fileCount', description: lang('Tools.logActivityDaysHint')),
-            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false, key: 'LogActivity.logActivity_hideDebug'),
+            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: self::MAX_DAYS, description: lang('Tools.logActivityDaysHint')),
+            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false),
         ];
     }
 

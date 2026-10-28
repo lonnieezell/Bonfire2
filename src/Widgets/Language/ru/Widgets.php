@@ -10,6 +10,5 @@
  */
 
 return [
-    'widgetsModTitle' => 'Виджеты',
-    'viewDetail'      => 'Детали',
+    'viewDetail' => 'Детали',
 ];

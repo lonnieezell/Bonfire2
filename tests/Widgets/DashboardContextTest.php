@@ -62,21 +62,9 @@ final class DashboardContextTest extends TestCase
     public function testShowsAPlacedItemOnTheDashboard()
     {
         $this->placeForAUser('stats:users1');
-        $settings = new ItemSettings(WidgetKind::Stats, 'users1');
-        $settings->store(true);
         StubDashboard::inject(true);
 
-        $this->assertTrue(service('dashboardContext')->shows($settings));
-    }
-
-    public function testDoesNotShowADisabledItem()
-    {
-        $this->placeForAUser('stats:users1');
-        $settings = new ItemSettings(WidgetKind::Stats, 'users1');
-        $settings->store(false);
-        StubDashboard::inject(true);
-
-        $this->assertFalse(service('dashboardContext')->shows($settings));
+        $this->assertTrue(service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'users1')));
     }
 
     private function placeForAUser(string $id): void
@@ -86,12 +74,11 @@ final class DashboardContextTest extends TestCase
         $this->placeOnDashboard($user, $id);
     }
 
-    public function testDoesNotShowAnEnabledItemElsewhere()
+    public function testDoesNotShowAPlacedItemElsewhere()
     {
-        $settings = new ItemSettings(WidgetKind::Stats, 'users1');
-        $settings->store(true);
+        $this->placeForAUser('stats:users1');
         StubDashboard::inject(false);
 
-        $this->assertFalse(service('dashboardContext')->shows($settings));
+        $this->assertFalse(service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'users1')));
     }
 }

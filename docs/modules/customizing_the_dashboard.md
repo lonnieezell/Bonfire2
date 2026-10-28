@@ -35,8 +35,8 @@ The settings are your own: they change that widget on your dashboard only. **App
 edit, so undo, **Cancel** and **Save layout** cover them like any other change, and the widget shows *Changes apply on
 save* until you save. A widget you just added can be set up before you save, too.
 
-Until you change a setting, it follows the site-wide value a site admin sets in **Settings → Widgets**. Once you change
-it, yours is kept. **Reset to defaults** fills the panel with the site-wide values again. Widgets without settings,
+Until you change a setting, it uses the widget's default. Once you change it, yours is kept. **Reset to defaults**
+fills the panel with the widget's defaults again. Widgets without settings,
 such as Quick Links, have no sliders button.
 
 | Widget | Settings |
@@ -79,8 +79,8 @@ shown as the site default, which every admin without their own layout then sees,
 they follow it too. Other admins who customized keep theirs. Widgets the saver may not see aren't in their editor, so
 they aren't in the saved default either.
 
-**Settings → Widgets → Reset site default** forgets the stored site default, so it goes back to the configured
-`$layout`. Admins' own layouts are kept.
+**Reset site default**, next to it in the edit bar, forgets the stored site default, so it goes back to the configured
+`$layout`. It asks first. Admins' own layouts are kept.
 
 The dashboard picks the first of these that exists:
 
@@ -90,17 +90,13 @@ The dashboard picks the first of these that exists:
 
 ## Which widgets are available
 
-**Settings → Widgets** decides which widgets are available to everyone. Every widget is available until a site admin
-switches it off. A switched-off widget is left out of every library and every layout. Quick Links, Users by group,
-Newest users and Recent errors have no switch there: they are always available.
-
-A widget can also need a permission. Admins who lack it don't see it in their library or on their dashboard, its
+A widget's permission decides who may use it. Admins who lack it don't see it in their library or on their dashboard, its
 data is never fetched for them, and it is dropped from any layout they save. The built-in widgets need:
 
 | Widget | Permission |
 | --- | --- |
 | Users by group, Newest users, Users in Recycler | `users.list` |
-| User Groups and the group charts | `groups.settings` |
+| User Groups | `groups.settings` |
 | Log activity, Recent errors | `logs.view` |
 | Quick Links | none |
 

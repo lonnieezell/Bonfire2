@@ -6,7 +6,8 @@ use Bonfire\Dashboard\DashboardWidget;
  * The offcanvas where a placed widget's settings are changed in edit mode,
  * in the palette's place, and the form of every widget that has settings.
  * The editor fills a copy of the widget's form from its tile; Apply keeps
- * the values that differ from what each field inherits, on the tile.
+ * the values that differ from each field's default, on the tile. The
+ * "inherited" key is what the published dashboard.js reads.
  *
  * @var array<string, DashboardWidget> $widgets
  */
@@ -34,7 +35,7 @@ use Bonfire\Dashboard\DashboardWidget;
         <template data-settings-for="<?= esc($widget->id(), 'attr') ?>" data-fields="<?= esc(json_encode(array_map(static fn ($field) => [
 		    'name'      => $field->name,
 		    'type'      => $field->type,
-		    'inherited' => $field->inherited(),
+		    'inherited' => $field->default,
 		], $fields)), 'attr') ?>" data-title="<?= esc(lang('Bonfire.widgetSettingsFor', [$widget->title()]), 'attr') ?>" data-icon="<?= esc($widget->icon(), 'attr') ?>">
             <div>
 				<?php foreach ($fields as $field) : ?>

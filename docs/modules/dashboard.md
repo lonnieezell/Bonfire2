@@ -33,8 +33,7 @@ public ?array $layout = [
 ];
 ```
 
-Widgets the viewer may not see, or that are switched off in Settings → Widgets, are left out, and so is a section
-left empty. A site admin can replace this default from the dashboard with **Save as site default** (see
+Widgets the viewer may not see are left out, and so is a section left empty. A site admin can replace this default from the dashboard with **Save as site default** (see
 [The site default](customizing_the_dashboard.md#the-site-default)).
 
 You can create additional [View Cells](https://codeigniter.com/user_guide/outgoing/view_cells.html) and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.

@@ -41,6 +41,25 @@ in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is docu
 
 ## 28 October 2026 (breaking change)
 
+Settings → Widgets is gone. Permissions decide who may see a widget, and each admin's settings for a placed widget
+decide how it looks, so the page's switches and defaults repeated them. Every widget is now offered to anyone who holds
+its `permission()`: a widget switched off there is offered again. A placed widget follows its fields' coded
+`default` until the admin changes a setting, so a site-wide default saved there, such as a chart's color scheme, no
+longer applies. Run `php spark migrate --all`: a migration forgets those stored values. Delete any published copy
+of the removed Config classes below (such as `app/Config/Stats.php`), which extends a class that is gone. This
+replaces what the notes below say about Settings → Widgets. **Reset site default** has moved into the dashboard's edit
+bar, next to **Save as site default**, for admins with `widgets.settings` (see
+[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). Code that used the removed
+API: `WidgetField`'s factories no longer take `key:` (a key passed by position now lands in `description`), and
+`WidgetField::inherited()` is gone (read `default`); `Bonfire\Widgets\WidgetOptions` and the
+`Bonfire\Widgets\Config\Stats`, `LineChart`, `BarChart`, `DoughnutChart`, `PieChart`, `PolarAreaChart` and
+`LogActivity` classes are gone; `ItemSettings` keeps only `widgetId()`; and `ItemWidget::available()` is gone. The
+`widgets-settings` and `widgets-reset-layout` routes are gone; the reset is now `dashboard-site-layout-reset`.
+
+The five *User classification by group* charts (line, bar, doughnut, pie and polar area) are gone: **Users by group**
+shows the same numbers. Saved dashboards that placed one lose it: add Users by group from the widget library. The
+*User Groups* stat card stays. `ChartsItem` is unchanged, so modules can still add charts of their own.
+
 Log activity is now a dashboard widget of its own, `Bonfire\Tools\Widgets\LogActivity`, like Recent errors. It
 keeps its id `logs:logActivity`, so saved layouts keep it in place, and its days and Debug defaults in Settings →
 Widgets keep their saved values. It no longer has a switch under *Available widgets*: every admin with `logs.view`

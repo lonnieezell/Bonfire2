@@ -12,11 +12,10 @@
 namespace Bonfire\Widgets;
 
 /**
- * Owns the stored "enabled" flag of one widget item and the names it is
- * stored and posted under.
+ * Names one widget item on the dashboard.
  *
- * The keys (Stats.Stats_<id>, Stats.Charts_<id>) are already in installs'
- * databases, so they must not change.
+ * Its widget id (stats:<id>, charts:<id>) is in the layouts installs have
+ * saved, so it must not change.
  */
 final readonly class ItemSettings
 {
@@ -27,54 +26,10 @@ final readonly class ItemSettings
     }
 
     /**
-     * The name of the checkbox on the widgets settings form.
-     */
-    public function fieldName(): string
-    {
-        return $this->kind->value . '_' . $this->id;
-    }
-
-    /**
      * The item's id on the dashboard, e.g. "stats:usersInRecycler693".
      */
     public function widgetId(): string
     {
         return strtolower($this->kind->value) . ':' . $this->id;
-    }
-
-    /**
-     * The settings of the item a widget id names, or null for other widgets.
-     */
-    public static function fromWidgetId(string $id): ?self
-    {
-        [$prefix, $itemId] = explode(':', $id, 2) + ['', ''];
-        $kind              = WidgetKind::tryFrom(ucfirst($prefix));
-
-        return $kind === null ? null : new self($kind, $itemId);
-    }
-
-    public function key(): string
-    {
-        return 'Stats.' . $this->fieldName();
-    }
-
-    /**
-     * Whether the item is available on dashboards: on unless switched off.
-     */
-    public function enabled(): bool
-    {
-        $value = setting($this->key());
-
-        return $value === null || (bool) $value;
-    }
-
-    public function store(bool $enabled): void
-    {
-        setting($this->key(), $enabled ? 'on' : false);
-    }
-
-    public function forget(): void
-    {
-        setting()->forget($this->key());
     }
 }
