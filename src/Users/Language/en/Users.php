@@ -10,6 +10,17 @@ return [
     'userAccusative'  => 'user',
     'usersAccusative' => 'users',
     'permissions'     => 'Permissions',
+    // dashboard widgets
+    'usersByGroup'     => 'Users by group',
+    'usersByGroupCard' => 'Users per group, as bars',
+    'sortBy'           => 'Sort by',
+    'sortByCount'      => 'Most users first',
+    'sortByName'       => 'Group name',
+    'newestUsers'      => 'Newest users',
+    'newestUsersCard'  => 'The latest users to join',
+    'newestUsersCount' => 'Users to show',
+    'noUsersYet'       => 'No users yet.',
+    'openUsers'        => 'All users',
     // avatar
     'deleteImageConfirm' => 'Are you sure you wish to remove the image? It cannot be restored',
     'deleteImage'        => 'Delete uploaded image',

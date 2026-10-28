@@ -36,7 +36,7 @@ final class WidgetsSettingsControllerTest extends TestCase
 
     public function testIndexListsEveryWidgetWithItsEnabledState()
     {
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Stats_userGroups643', false);
 
         $response = $this->actingAs($this->user)->get('/admin/settings/widgets');
 
@@ -45,7 +45,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $response->assertSee('Enable Chart line widget');
         $response->assertSee('Enable Log widget "Log activity"');
         $this->assertStringContainsString('id="Stats_usersInRecycler693" checked>', $response->getBody());
-        $this->assertStringContainsString('id="Stats_usersExpTable693">', $response->getBody());
+        $this->assertStringContainsString('id="Stats_userGroups643">', $response->getBody());
     }
 
     public function testResettingTheSiteDefaultForgetsTheStoredLayout()
@@ -82,10 +82,10 @@ final class WidgetsSettingsControllerTest extends TestCase
         setting('Stats.Stats_usersInRecycler693', 'on');
 
         $this->actingAs($this->user)
-            ->post('/admin/settings/widgets', ['Stats_usersExpTable693' => 'on'])
+            ->post('/admin/settings/widgets', ['Stats_userGroups643' => 'on'])
             ->assertRedirect();
 
-        $this->assertSame('on', setting('Stats.Stats_usersExpTable693'));
+        $this->assertSame('on', setting('Stats.Stats_userGroups643'));
         $this->assertEmpty(setting('Stats.Stats_usersInRecycler693'));
     }
 
@@ -217,12 +217,12 @@ final class WidgetsSettingsControllerTest extends TestCase
     public function testEnabledFlagsRoundTripThroughTheForm(): void
     {
         setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Stats_userGroups643', false);
 
         $this->submitTheForm('/admin/settings/widgets');
 
         $this->assertSame('on', setting('Stats.Stats_usersInRecycler693'));
-        $this->assertEmpty(setting('Stats.Stats_usersExpTable693'));
+        $this->assertEmpty(setting('Stats.Stats_userGroups643'));
     }
 
     /**

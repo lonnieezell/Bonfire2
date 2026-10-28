@@ -77,7 +77,7 @@ final class WidgetRegistryTest extends TestCase
     public function testTheBuiltInUsersAndGroupsWidgetsDeclarePermissions(): void
     {
         $this->assertSame('users.list', service('dashboard')->widget('stats:usersInRecycler693')->permission());
-        $this->assertSame('users.list', service('dashboard')->widget('stats:usersExpTable693')->permission());
+        $this->assertSame('users.list', service('dashboard')->widget('users:byGroup')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('charts:usersByGroupBar345')->permission());
         $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
@@ -156,11 +156,11 @@ final class WidgetRegistryTest extends TestCase
         $user = $this->createUser();
         $user->addPermission('users.list');
         $this->actingAs($user);
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Stats_userGroups643', false);
 
         $available = service('dashboard')->available();
 
         $this->assertArrayHasKey('stats:usersInRecycler693', $available);
-        $this->assertArrayNotHasKey('stats:usersExpTable693', $available);
+        $this->assertArrayNotHasKey('stats:userGroups643', $available);
     }
 }

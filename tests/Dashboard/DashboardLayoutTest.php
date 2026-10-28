@@ -47,7 +47,7 @@ final class DashboardLayoutTest extends TestCase
         $html = $this->dashboardHtml($this->user);
 
         $this->assertSame(
-            ['cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'stats:usersExpTable693', 'stats:usersInRecycler693', 'logs:logActivity'],
+            ['cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'users:byGroup', 'users:newest', 'logs:logActivity', 'tools:recentErrors'],
             $this->placedIds($this->user),
         );
         preg_match_all('#<h2 class="bf-dashboard-section-title"[^>]*>([^<]+)</h2>#', $this->placedHtml($html), $titles);

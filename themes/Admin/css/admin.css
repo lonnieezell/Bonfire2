@@ -2567,6 +2567,133 @@ input[type="checkbox"]:indeterminate {
 .bf-log-info { background: var(--bf-info); }
 .bf-log-debug { background: var(--bf-debug); }
 
+/* List widgets (Users by group, Newest users, Recent errors): a head with a link, then rows. */
+.bf-list-card > .bf-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.bf-list-card > .bf-card-head a {
+    color: var(--bf-accent-text);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bf-list-card > .bf-card-body {
+    padding-top: 0;
+}
+
+/* A bar per row, scaled to the largest value. */
+.bf-bars {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(60px, 1fr) auto;
+    align-items: center;
+    gap: 12px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bf-bars li {
+    display: contents;
+}
+
+.bf-bars-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bf-bars-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bf-surface-2);
+}
+
+.bf-bars-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--bf-accent);
+}
+
+.bf-bars-value {
+    color: var(--bf-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* Rows of a link and a date, divided by lines. */
+.bf-rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bf-rows li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    border-bottom: 1px solid var(--bf-border);
+}
+
+.bf-rows-main {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: var(--bf-text);
+}
+
+.bf-rows-main:hover {
+    color: var(--bf-text);
+}
+
+.bf-rows-main:hover .bf-rows-text {
+    text-decoration: underline;
+}
+
+.bf-rows-main .avatar {
+    flex: none;
+    font-size: 11px;
+}
+
+.bf-rows-text {
+    overflow: hidden;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+code.bf-rows-text {
+    font-family: var(--bf-mono);
+    font-size: 12.5px;
+}
+
+.bf-rows-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+}
+
+.bf-rows-meta {
+    flex: none;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.bf-rows-empty {
+    margin: 0;
+    color: var(--bf-muted);
+}
+
 /*
  * --------------------------------------------------------------------------
  * USER EDIT
