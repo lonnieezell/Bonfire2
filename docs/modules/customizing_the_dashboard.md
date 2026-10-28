@@ -12,7 +12,7 @@ dashboard back the way it was. Every change can be undone and redone with the ar
 In edit mode you can:
 
 - drag a widget to reorder it, also into another section;
-- open a widget's settings from its sliders button, when it has settings you may change;
+- change a widget's [settings](#widget-settings) from its sliders button, when it has any;
 - remove a widget with its trash button;
 - reset to the site default with the clock button. Saving the site default as your layout forgets yours, so you
   follow the site default again when a site admin changes it.
@@ -27,6 +27,26 @@ are dropped on save, and a layout holds at most 20 sections.
 
 Size a widget from the tools above it, or drag its bottom-right corner. The sizes are ¼, ⅓, ½, ⅔ and Full width
 (3, 4, 6, 8 or 12 of 12 columns), within the range that widget allows. Quick Links is always full width.
+
+## Widget settings
+
+A widget's sliders button opens its settings in the panel on the right, with the widget outlined on the dashboard.
+The settings are your own: they change that widget on your dashboard only. **Apply** keeps them as part of your
+edit, so undo, **Cancel** and **Save layout** cover them like any other change, and the widget shows *Changes apply on
+save* until you save. A widget you just added can be set up before you save, too.
+
+Until you change a setting, it follows the site-wide value a site admin sets in **Settings → Widgets**. Once you change
+it, yours is kept. **Reset to defaults** fills the panel with the site-wide values again. Widgets without settings,
+such as Quick Links, have no sliders button.
+
+| Widget | Settings |
+| --- | --- |
+| Stat cards | Show the "View Detail" link |
+| Line chart | Show the title, Show the legend, Legend position, Enable animation, Line tension |
+| Bar, doughnut, pie and polar area charts | Show the title, Show the legend, Legend position, Enable animation, Color scheme |
+| Log activity | Days to show, Hide Debug entries |
+
+**Save as site default** carries each widget's settings into the site default.
 
 ## The widget library
 

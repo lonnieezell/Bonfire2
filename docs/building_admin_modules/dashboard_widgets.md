@@ -11,6 +11,8 @@ register it from your module's `initAdmin()`. Bonfire's own Quick Links is built
 use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
+use Bonfire\Dashboard\WidgetValues;
 
 class OpenOrders implements DashboardWidget
 {
@@ -21,11 +23,21 @@ class OpenOrders implements DashboardWidget
     public function description(): string { return 'Orders waiting to ship'; }
     public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
     public function permission(): ?string { return 'shop.orders'; }
-    public function settingsUrl(): ?string { return url_to('shop-dashboard-settings'); }
 
-    public function render(): string
+    public function fields(): array
     {
-        return view('Shop\Views\open_orders', ['orders' => model(OrderModel::class)->open()]);
+        return [
+            WidgetField::number('limit', 'Orders to show', default: 5, min: 1, max: 20),
+            WidgetField::toggle('showTotals', 'Show totals', default: true, key: 'Shop.dashboardTotals'),
+        ];
+    }
+
+    public function render(WidgetValues $values): string
+    {
+        return view('Shop\Views\open_orders', [
+            'orders'     => model(OrderModel::class)->open($values->get('limit')),
+            'showTotals' => $values->get('showTotals'),
+        ]);
     }
 }
 ```
@@ -36,9 +48,29 @@ class OpenOrders implements DashboardWidget
   `Third`, `Half`, `TwoThirds` and `Full`.
 - **permission** hides the widget from admins who lack it, in the library and on the dashboard, and drops it from
   layouts they save. `null` shows it to every admin.
-- **settingsUrl** is where the viewer changes the widget's settings, linked from its tools in edit mode. Return
-  `null` when it has none, or the viewer may not change them.
-- **render** is called only when the widget is on the viewer's dashboard, so it may run queries.
+- **fields** are the [settings](#settings) admins may change for the widget on their own dashboard. Return `[]` when
+  it has none, and its edit-mode tools offer no settings.
+- **render** is called only when the widget is on the viewer's dashboard, so it may run queries. It gets the value
+  of each field as the viewer placed it.
+
+## Settings
+
+Each `WidgetField` is one setting, drawn in the widget's settings panel. Bonfire draws the form, checks what is
+posted, stores each admin's values with their layout, and hands `render()` the result. Read a value with
+`$values->get('name')`, not with `setting()`.
+
+| Field | Input | Value |
+| --- | --- | --- |
+| `WidgetField::toggle($name, $label, default: …)` | A switch | `bool` |
+| `WidgetField::number($name, $label, default: …, min: …, max: …, step: …)` | A number box | `int`, or `float` when `step` is a fraction; kept within `min` and `max` |
+| `WidgetField::choice($name, $label, $options, default: …)` | Segmented buttons, or a select for more than four options | One of the keys of `$options` (value => label) |
+| `WidgetField::text($name, $label, default: …)` | A text box | `string`, trimmed, at most 255 characters |
+
+Every field also takes an optional `description:` shown under its label, and `key:`, the name of a setting
+(`Class.property`) it follows. A field follows that setting's stored value, or its `default` when it has no `key`,
+until an admin changes it. Only values that differ from it are stored, so changing the setting later reaches every
+admin who left the field alone. A value that is not of the field's type, a choice the field does not offer, or the
+name of a field the widget no longer declares is dropped when the layout is saved, and ignored when it is rendered.
 
 ## Registering it
 
