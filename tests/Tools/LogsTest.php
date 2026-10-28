@@ -201,7 +201,7 @@ final class LogsTest extends TestCase
         $this->assertStringContainsString('<td class="bf-mono bf-muted">' . self::LOG_NAME . '.log</td>', $html);
     }
 
-    public function testListHasFilterChipsSelectionAndATwoStepDeleteAll(): void
+    public function testListHasFilterChipsSelectionAndAConfirmedDeleteAll(): void
     {
         // The raw body: the DOM-parsed getBody() drops Alpine's @-attributes.
         $html = (string) $this->actingAs($this->userWith('superadmin'))->get(route_to('sys-logs'))->response()->getBody();
@@ -212,8 +212,8 @@ final class LogsTest extends TestCase
         $this->assertStringContainsString('x-data="bfSelectionBar"', $html);
         $this->assertMatchesRegularExpression('#<button type="submit" formaction="' . preg_quote(url_to('action', 'logs', 'delete-logs'), '#') . '" data-confirm-bulk="1"\s+class="btn btn-danger" data-confirm="#', $html);
         $this->assertStringContainsString('name="selects[]"', $html);
-        $this->assertMatchesRegularExpression('#<button type="button"[^>]*@click="confirmAll = true"[^>]*>\s*Delete all log files#', $html);
-        $this->assertMatchesRegularExpression('#<button type="submit" name="delete_all" value="1"#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" name="delete_all" value="1"[^>]*data-confirm="Delete all log files\?"[^>]*data-confirm-danger="1"[^>]*>\s*Delete all log files#', $html);
+        $this->assertStringNotContainsString('confirmAll', $html);
     }
 
     public function testListHidesManagementWithoutLogsManage(): void
@@ -239,7 +239,8 @@ final class LogsTest extends TestCase
         $this->assertMatchesRegularExpression('#role="radiogroup" aria-label="Level"#', $html);
         $this->assertStringContainsString('x-model="search"', $html);
         $this->assertMatchesRegularExpression('#<details class="bf-log-trace">\s*<summary>#', $html);
-        $this->assertMatchesRegularExpression('#<button type="submit" name="delete" value="1"#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" name="delete" value="1"[^>]*data-confirm="Delete this log file\?"[^>]*data-confirm-danger="1"#', $html);
+        $this->assertStringNotContainsString('confirming', $html);
     }
 
     public function testDownloadSendsTheLogFile(): void

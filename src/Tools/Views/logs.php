@@ -9,7 +9,7 @@ $this->extend('master') ?>
 <x-admin-box>
 <?php if (count($logs)) : ?>
     <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" method="post"
-          x-data="{ filter: 'all', confirmAll: false, shows(levels) { return this.filter === 'all' || (this.filter === 'errors' ? /error|critical|alert|emergency/.test(levels) : levels.includes('warning')) } }">
+          x-data="{ filter: 'all', shows(levels) { return this.filter === 'all' || (this.filter === 'errors' ? /error|critical|alert|emergency/.test(levels) : levels.includes('warning')) } }">
         <?= csrf_field() ?>
 
         <div class="bf-toolbar">
@@ -19,15 +19,10 @@ $this->extend('master') ?>
                 <x-chip label="<?= lang('Tools.withWarnings') ?>" @click="filter = 'warnings'" :aria-pressed="filter === 'warnings'" :class="{ active: filter === 'warnings' }" />
             </div>
             <?php if ($canManage) : ?>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-danger" x-show="! confirmAll" @click="confirmAll = true">
-                        <?= lang('Tools.deleteAll') ?>
-                    </button>
-                    <span class="d-flex gap-2" x-show="confirmAll" x-cloak>
-                        <button type="button" class="btn btn-outline-secondary" @click="confirmAll = false"><?= lang('Tools.cancel') ?></button>
-                        <button type="submit" name="delete_all" value="1" class="btn btn-danger"><?= lang('Tools.confirmDelete') ?></button>
-                    </span>
-                </div>
+                <button type="submit" name="delete_all" value="1" class="btn btn-outline-danger ms-auto"
+                        data-confirm="<?= esc(lang('Tools.deleteAllConfirm')) ?>" data-confirm-button="<?= esc(lang('Tools.confirmDelete')) ?>" data-confirm-danger="1">
+                    <?= lang('Tools.deleteAll') ?>
+                </button>
             <?php endif ?>
         </div>
 
