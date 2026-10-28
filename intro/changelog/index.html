@@ -1861,6 +1861,14 @@ the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire
 in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
 <a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p>List rows are now selectable whenever the admin may run any of the list's bulk actions, not only when they may
+delete: a module's bulk action shows the checkboxes on its own. A row's checkbox is disabled when no bulk action
+<code>allows()</code> that record. <code>ActionList::selectable()</code> answers both, and <code>ActionList::showing()</code> hands a page's records to
+<code>&lt;x-row-actions&gt;</code>, which no longer loads its record with one query per row once the view calling it does so. Installs that published the Admin theme
+should copy the new <code>themes/Admin/Components/row-actions.php</code>, <code>themes/Admin/Search/users.php</code> and
+<code>themes/Admin/_table_head.php</code>; <code>_table_head.php</code>
+now shows the select-all checkbox only when <code>$showSelectAll</code> is true, rather than whenever it is set and the admin
+has <code>users.delete</code>.</p>
 <p>Each widget's <code>fields()</code> is now the only place its settings are declared: the Settings → Widgets tabs are built from
 the fields that have a <code>key</code>, one tab per settings class, and saved through them. Values you saved there keep
 working. The properties of <code>Bonfire\Widgets\Config\Stats</code>, <code>LineChart</code>, <code>BarChart</code>, <code>DoughnutChart</code>, <code>PieChart</code>,

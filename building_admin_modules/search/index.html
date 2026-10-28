@@ -1703,6 +1703,7 @@ Admin theme folder in order to be found. This can be a fairly straight-forward v
         'last_active' =&gt; 'Last Active'
     ]])-&gt;include('_table_head') ?&gt;
     &lt;tbody&gt;
+    &lt;?php service('actions')-&gt;for('users')-&gt;showing($rows) ?&gt;
     &lt;?php foreach($rows as $user) : ?&gt;
         &lt;tr&gt;
             &lt;?= view('Bonfire\Users\Views\_row_info', ['user' =&gt; $user]) ?&gt;

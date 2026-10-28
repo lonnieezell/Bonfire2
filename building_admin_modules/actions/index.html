@@ -1810,22 +1810,33 @@ comes first:</p>
     &lt;/x-row-actions&gt;
 &lt;/td&gt;</code></pre>
 <p>The row menu shows only the actions the admin may run on that record: their permission, and their <code>allows()</code> for
-it. To ask <code>allows()</code>, the component loads the record through the list's record source, one lookup per row.</p>
+it. To ask <code>allows()</code>, the component needs the record. Hand the page's records to the list with <code>showing()</code> before
+the rows render, or the component loads each one through the list's record source, one lookup per row.</p>
 <p><code>&lt;x-bulk-actions&gt;</code> goes inside <code>&lt;x-selection-bar&gt;</code>, in a form whose row checkboxes are named <code>selects[]</code> with the
-record's ID as their value:</p>
-<pre class="highlight"><code class="language-php">&lt;form method="post"&gt;
+record's ID as their value. Ask the list's <code>selectable()</code> whether to show them at all: it is true when the admin may
+run any of its bulk actions. Given a record, it says whether any of those actions <code>allows()</code> it:</p>
+<pre class="highlight"><code class="language-php">&lt;?php
+$actionList = service('actions')-&gt;for('photos')-&gt;showing($photos);
+$selectable = $actionList-&gt;selectable(auth()-&gt;user());
+?&gt;
+&lt;form method="post"&gt;
     &lt;?= csrf_field() ?&gt;
     &lt;table class="table bf-table"&gt;
         &lt;!-- ... --&gt;
-        &lt;td class="bf-select-cell"&gt;
-            &lt;input type="checkbox" name="selects[]" value="&lt;?= $photo-&gt;id ?&gt;" class="form-check-input"&gt;
-        &lt;/td&gt;
+        &lt;?php if ($selectable) : ?&gt;
+            &lt;td class="bf-select-cell"&gt;
+                &lt;input type="checkbox" name="selects[]" value="&lt;?= $photo-&gt;id ?&gt;" class="form-check-input"
+                    &lt;?= $actionList-&gt;selectable(auth()-&gt;user(), $photo) ? '' : 'disabled' ?&gt;&gt;
+            &lt;/td&gt;
+        &lt;?php endif ?&gt;
         &lt;!-- ... --&gt;
     &lt;/table&gt;
 
-    &lt;x-selection-bar&gt;
-        &lt;x-bulk-actions list="photos" /&gt;
-    &lt;/x-selection-bar&gt;
+    &lt;?php if ($selectable) : ?&gt;
+        &lt;x-selection-bar&gt;
+            &lt;x-bulk-actions list="photos" /&gt;
+        &lt;/x-selection-bar&gt;
+    &lt;?php endif ?&gt;
 &lt;/form&gt;</code></pre>
 <h2 id="confirmation">Confirmation</h2>
 <p>With JavaScript, an action that asks first opens <code>&lt;x-confirm-dialog&gt;</code>, a dialog that is in the Admin layout once. It
