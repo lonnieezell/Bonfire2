@@ -4,6 +4,18 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 28 October 2026
+
+`spark notify:breaking-changes` used to keep its marker in a `last-update.txt` file inside the package folder, which
+`composer update` deleted together with the previous version, so it warned on every update. It now remembers the
+breaking change it last reported in `writable/bonfire-breaking-changes.json`: expect one more warning after this
+update, and none for changes you have already been shown.
+
+The check also notices a note added to an existing `(breaking change)` heading, not only a new heading, and a fresh
+install no longer warns about changes that came before it. If `writable/` is recreated on every deploy, move the
+marker with `Config\Bonfire::$breakingChangeStateFile`. See
+[Updating Bonfire](installation.md#updating-bonfire).
+
 ## 28 October 2026 (breaking change)
 
 `<x-switch>` gained an `offValue` attribute: the value its hidden input posts when the switch is off (`0` by default).

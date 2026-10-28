@@ -58,4 +58,19 @@ class Bonfire extends BaseConfig
      * of menus Tools and Settings will not be affected by this setting.
      */
     public $menuWeights = [];
+
+    /**
+     * --------------------------------------------------------------------------
+     * Breaking changes state file
+     * --------------------------------------------------------------------------
+     *
+     * Where `spark notify:breaking-changes` remembers the newest breaking change
+     * it has already reported, so that it does not report it twice.
+     *
+     * The file must live outside the package folder, because `composer update`
+     * replaces everything under `vendor/`. When this is null the marker goes to
+     * `writable/bonfire-breaking-changes.json`; point it elsewhere if your
+     * server recreates `writable/` on every deploy.
+     */
+    public $breakingChangeStateFile;
 }

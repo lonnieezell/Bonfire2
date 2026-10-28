@@ -21,6 +21,7 @@ use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
 use Bonfire\Config\Themes;
 use Bonfire\Consent\Config\Consent;
+use Bonfire\Core\BreakingChanges;
 use Bonfire\Dashboard\Config\Dashboard;
 use Bonfire\Recycler\Config\Recycler;
 use Bonfire\Users\Config\Users;
@@ -136,8 +137,34 @@ class Install extends BaseCommand
         }
 
         $this->updateComposerJson();
+        $this->seedBreakingChangesState();
 
         CLI::newLine();
+    }
+
+    /**
+     * Records the newest breaking change shipped with this version, so that the
+     * first update after a fresh install does not warn about changes that came
+     * before it.
+     */
+    private function seedBreakingChangesState(): void
+    {
+        $breakingChanges = new BreakingChanges();
+
+        // Never overwrite a marker an earlier install already wrote.
+        if ($breakingChanges->acknowledged() !== null) {
+            return;
+        }
+
+        $latest = $breakingChanges->latest();
+
+        if ($latest === null) {
+            return;
+        }
+
+        if (! $breakingChanges->acknowledge($latest)) {
+            CLI::write('Could not save the breaking changes marker to ' . $breakingChanges->statePath(), 'yellow');
+        }
     }
 
     /**
