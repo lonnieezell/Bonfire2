@@ -18,6 +18,7 @@ use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
 use Config\Services;
 use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -25,6 +26,10 @@ use Tests\Support\TestCase;
  */
 final class LayoutResolverTest extends TestCase
 {
+    use RendersDashboard;
+
+    private const QUICK_LINKS = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
+
     protected $refresh = true;
 
     protected function setUp(): void
@@ -51,84 +56,60 @@ final class LayoutResolverTest extends TestCase
         parent::tearDown();
     }
 
-    public function testTheDefaultLayoutIsTheCellsInOrderWithEnabledItemsExpanded(): void
+    public function testTheDefaultLayoutIsThePlainCellsInOrder(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Stats.Logs_logActivity', 'on');
-        setting('Stats.Charts_usersByGroupBar345', 'on');
-        // Log activity needs logs.view
-        auth()->login($this->createUser()->addGroup('superadmin'));
-
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertCount(1, $layout->sections);
         $this->assertSame('', $layout->sections[0]->title);
-        $this->assertSame([
-            'cell:Bonfire\Dashboard\DashboardCells::quickLinks',
-            'stats:usersInRecycler693',
-            'logs:logActivity',
-            'charts:usersByGroupBar345',
-        ], $layout->ids());
+        $this->assertSame([self::QUICK_LINKS], $layout->ids());
+        $this->assertSame(Size::Full, $layout->sections[0]->widgets[0]->size);
     }
 
-    public function testWidgetsTakeTheirDefaultSize(): void
+    public function testItemsAreLeftOutOfTheDefaultLayout(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-
-        $widgets = (new LayoutResolver(service('dashboard')))->resolve()->sections[0]->widgets;
-
-        $this->assertSame(Size::Full, $widgets[0]->size);
-        $this->assertSame(Size::Small, $widgets[1]->size);
-    }
-
-    public function testADisabledItemIsNotInTheDefaultLayout(): void
-    {
-        $layout = (new LayoutResolver(service('dashboard')))->resolve();
-
-        $this->assertNotContains('stats:usersInRecycler693', $layout->ids());
-        $this->assertFalse((new LayoutResolver(service('dashboard')))->includes('stats:usersInRecycler693'));
-    }
-
-    public function testAnEnabledItemIsLeftOutWhenItsCellIsNot(): void
-    {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Dashboard.cells', ['Bonfire\Dashboard\DashboardCells::quickLinks']);
-
         $resolver = new LayoutResolver(service('dashboard'));
 
-        $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $resolver->resolve()->ids());
+        $this->assertNotContains('stats:usersInRecycler693', $resolver->resolve()->ids());
         $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
+        $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 
-    public function testIncludesAnItemBeforeItIsRegistered(): void
+    public function testIncludesAPlacedItemBeforeItIsRegistered(): void
     {
-        setting('Stats.Stats_lateComer', 'on');
+        $this->placeForAUser('stats:lateComer');
 
         $this->assertTrue((new LayoutResolver(service('dashboard')))->includes('stats:lateComer'));
     }
 
-    public function testAMalformedStoredLayoutIncludesWhatTheDefaultShows(): void
+    public function testAMalformedStoredLayoutFallsBackToTheDefault(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
         auth()->login($this->createUser());
-        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'cell:x']]]]], LayoutResolver::userContext());
+        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'stats:usersInRecycler693']]]]], LayoutResolver::userContext());
 
         $resolver = new LayoutResolver(service('dashboard'));
 
-        $this->assertContains('stats:usersInRecycler693', $resolver->resolve()->ids());
-        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
+        $this->assertSame([self::QUICK_LINKS], $resolver->resolve()->ids());
+        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
     }
 
-    public function testTheContextShowsOnlyItemsInTheResolvedLayout(): void
+    public function testTheContextShowsPlacedItemsThatAreNotSwitchedOff(): void
     {
         StubDashboard::inject(true);
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeForAUser('stats:usersInRecycler693');
         $settings = new ItemSettings(WidgetKind::Stats, 'usersInRecycler693');
 
         $this->assertTrue(service('dashboardContext')->shows($settings));
 
-        setting('Dashboard.cells', ['Bonfire\Dashboard\DashboardCells::quickLinks']);
+        $settings->store(false);
 
         $this->assertFalse(service('dashboardContext')->shows($settings));
+    }
+
+    private function placeForAUser(string $id): void
+    {
+        $user = $this->createUser();
+        auth()->login($user);
+        $this->placeOnDashboard($user, $id);
     }
 }

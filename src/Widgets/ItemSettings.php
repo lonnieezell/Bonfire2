@@ -58,9 +58,14 @@ final readonly class ItemSettings
         return 'Stats.' . $this->fieldName();
     }
 
+    /**
+     * Whether the item is available on dashboards: on unless switched off.
+     */
     public function enabled(): bool
     {
-        return (bool) setting($this->key());
+        $value = setting($this->key());
+
+        return $value === null || (bool) $value;
     }
 
     public function store(bool $enabled): void

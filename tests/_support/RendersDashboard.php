@@ -22,6 +22,17 @@ trait RendersDashboard
         setting()->flush();
     }
 
+    /**
+     * Stores a layout of the given widgets, at their default sizes, as the user's own.
+     */
+    protected function placeOnDashboard(User $user, string ...$ids): void
+    {
+        setting()->set('Dashboard.layout', [
+            'version'  => 1,
+            'sections' => [['title' => '', 'widgets' => array_map(static fn (string $id) => ['id' => $id], $ids)]],
+        ], 'user:' . $user->id);
+    }
+
     protected function dashboardHtml(User $user): string
     {
         // Rendered charts leave their scripts on the shared page metadata

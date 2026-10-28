@@ -68,6 +68,8 @@ final class LayoutValidatorTest extends TestCase
 
     public function testDropsUnavailableItems(): void
     {
+        setting('Stats.Stats_usersInRecycler693', false);
+
         $layout = (new LayoutValidator(new WidgetRegistry()))->validate(['version' => 1, 'sections' => [
             ['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693']]],
         ]]);

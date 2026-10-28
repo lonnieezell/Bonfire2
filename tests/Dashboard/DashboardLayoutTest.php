@@ -42,28 +42,21 @@ final class DashboardLayoutTest extends TestCase
         parent::tearDown();
     }
 
-    public function testAFreshInstallShowsTheCellsInOrderWithEnabledItemsExpanded(): void
+    public function testAFreshInstallShowsThePlainCells(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Stats.Stats_usersExpTable693', 'on');
-        setting('Stats.Stats_userGroups643', 'on');
-        setting('Stats.Logs_logActivity', 'on');
-        setting('Stats.Charts_usersByGroupBar345', 'on');
+        $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $this->placedIds($this->user));
+    }
 
-        // Stats keep their collection's order: by title
-        $this->assertSame([
-            'cell:Bonfire\Dashboard\DashboardCells::quickLinks',
-            'stats:userGroups643',
-            'stats:usersExpTable693',
-            'stats:usersInRecycler693',
-            'logs:logActivity',
-            'charts:usersByGroupBar345',
-        ], $this->placedIds($this->user));
+    public function testAStoredLayoutRendersInItsOrder(): void
+    {
+        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345', 'stats:userGroups643', 'logs:logActivity');
+
+        $this->assertSame(['charts:usersByGroupBar345', 'stats:userGroups643', 'logs:logActivity'], $this->placedIds($this->user));
     }
 
     public function testWidgetsSpanTheirSizeOnTheGrid(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeOnDashboard($this->user, 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'stats:usersInRecycler693');
 
         preg_match_all('/class="bf-widget bf-span-(\d+)" data-widget-id="([^"]+)"/', $this->placedHtml($this->dashboardHtml($this->user)), $matches);
         $spans = array_combine(array_map(html_entity_decode(...), $matches[2]), $matches[1]);

@@ -34,8 +34,6 @@ final class CustomizeDashboardTest extends TestCase
         parent::setUp();
 
         $this->forgetDashboardState();
-        setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Stats.Stats_userGroups643', 'on');
         $this->user = $this->admin();
     }
 
@@ -66,11 +64,13 @@ final class CustomizeDashboardTest extends TestCase
         ]]])->assertOK();
 
         $this->assertSame(['stats:usersInRecycler693', self::QUICK_LINKS], $this->placedIds($this->user));
-        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->placedIds($other));
+        $this->assertSame([self::QUICK_LINKS], $this->placedIds($other));
     }
 
     public function testSavingDropsUnknownUnavailableAndDuplicateIds(): void
     {
+        setting('Stats.Stats_usersExpTable693', false);
+
         $this->save($this->user, [['title' => '', 'widgets' => [
             ['id' => 'stats:usersInRecycler693', 'size' => 'sm'],
             ['id' => 'stats:nope', 'size' => 'sm'],
@@ -116,8 +116,24 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['md', 'lg', 'full'], $options[1]);
     }
 
+    public function testAFreshDashboardShowsTheCellsAndOffersEveryWidgetInThePalette(): void
+    {
+        setting()->flush();
+        setting('Stats.Stats_usersExpTable693', false);
+
+        $entries = $this->paletteEntries($this->dashboardHtml($this->user));
+
+        $this->assertSame([self::QUICK_LINKS], $this->placedIds($this->user));
+        $this->assertTrue($entries[self::QUICK_LINKS]['hidden']);
+        $this->assertFalse($entries['stats:usersInRecycler693']['hidden']);
+        $this->assertFalse($entries['charts:usersByGroupBar345']['hidden']);
+        $this->assertFalse($entries['logs:logActivity']['hidden']);
+        $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
+    }
+
     public function testThePaletteListsAvailableWidgetsHidingPlacedOnes(): void
     {
+        setting('Stats.Stats_usersExpTable693', false);
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
 
         $entries = $this->paletteEntries($this->dashboardHtml($this->user));
@@ -147,6 +163,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testAWidgetMadeAvailableLaterOnlyAppearsInACustomizedUsersPalette(): void
     {
+        setting('Stats.Stats_usersExpTable693', false);
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
         setting('Stats.Stats_usersExpTable693', 'on');
 
@@ -218,7 +235,7 @@ final class CustomizeDashboardTest extends TestCase
             ->post(route_to('dashboard-layout-reset'), [csrf_token() => csrf_hash()])
             ->assertRedirectTo(site_url(ADMIN_AREA));
 
-        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->placedIds($this->user));
+        $this->assertSame([self::QUICK_LINKS], $this->placedIds($this->user));
     }
 
     public function testResetGoesThroughTheConfirmDialog(): void

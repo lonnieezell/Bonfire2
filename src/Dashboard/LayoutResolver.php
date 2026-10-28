@@ -12,15 +12,14 @@
 namespace Bonfire\Dashboard;
 
 use Bonfire\Dashboard\Widgets\CellWidget;
-use Bonfire\Dashboard\Widgets\ItemWidget;
 use Bonfire\Widgets\ItemSettings;
 
 /**
  * Decides which widgets the viewer's dashboard shows, and in what order.
  *
  * A user's own Dashboard.layout comes first. Otherwise the default layout
- * is one untitled section holding Dashboard.cells in order, the stats, logs
- * and charts cells expanded into their available items.
+ * is one untitled section holding the plain cells of Dashboard.cells in
+ * order; stats, charts and log items are added from the palette.
  */
 class LayoutResolver
 {
@@ -41,12 +40,9 @@ class LayoutResolver
         $placements = [];
 
         foreach ($this->cells() as $alias) {
-            $kind    = WidgetRegistry::ITEM_CELLS[$alias] ?? null;
-            $widgets = $kind === null
-                ? array_filter([$available[CellWidget::idFor($alias)] ?? null])
-                : array_filter($available, static fn (DashboardWidget $widget) => $widget instanceof ItemWidget && $widget->kind() === $kind);
+            $widget = $available[CellWidget::idFor($alias)] ?? null;
 
-            foreach ($widgets as $widget) {
+            if ($widget !== null) {
                 $placements[] = new Placement($widget->id(), $widget->sizes()->default);
             }
         }
@@ -74,12 +70,7 @@ class LayoutResolver
             return in_array($id, $ids, true) && ($item === null || $item->enabled());
         }
 
-        if ($item === null) {
-            return in_array(CellWidget::aliasOf($id), $this->cells(), true);
-        }
-
-        return in_array(array_search($item->kind, WidgetRegistry::ITEM_CELLS, true), $this->cells(), true)
-            && $item->enabled();
+        return $item === null && in_array(CellWidget::aliasOf($id), $this->cells(), true);
     }
 
     /**

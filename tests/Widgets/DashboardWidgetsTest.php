@@ -13,6 +13,7 @@ namespace Tests\Widgets;
 
 use CodeIgniter\Shield\Entities\User;
 use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -20,6 +21,8 @@ use Tests\Support\TestCase;
  */
 final class DashboardWidgetsTest extends TestCase
 {
+    use RendersDashboard;
+
     private const LOG_FILE = WRITEPATH . 'logs/log-2000-01-01.log';
 
     protected $refresh = true;
@@ -37,33 +40,35 @@ final class DashboardWidgetsTest extends TestCase
     protected function tearDown(): void
     {
         @unlink(self::LOG_FILE);
+        $this->forgetDashboardState();
 
         parent::tearDown();
     }
 
-    public function testNothingShowsUntilWidgetsAreEnabled()
+    public function testNoWidgetShowsUntilPlaced()
     {
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
+        $placed   = $this->placedHtml((string) $response->response()->getBody());
 
         $response->assertOK();
-        $response->assertDontSee('USERS IN RECYCLER');
-        $response->assertDontSee('USER CLASSIFICATION BY GROUP');
+        $this->assertStringNotContainsString('USERS IN RECYCLER', $placed);
+        $this->assertStringNotContainsString('USER CLASSIFICATION BY GROUP', $placed);
     }
 
-    public function testEnabledStatsWidgetShows()
+    public function testPlacedStatsWidgetShows()
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
-        $response = $this->actingAs($this->user)->get(ADMIN_AREA);
+        $placed = $this->placedHtml($this->dashboardHtml($this->user));
 
-        $response->assertSee('USERS IN RECYCLER');
-        $response->assertDontSee('USERS BY GROUP');
+        $this->assertStringContainsString('USERS IN RECYCLER', $placed);
+        $this->assertStringNotContainsString('USERS BY GROUP', $placed);
     }
 
     public function testStatsValueIsFilledInOnTheDashboard()
     {
         StubDashboard::inject(true);
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
 
@@ -73,7 +78,7 @@ final class DashboardWidgetsTest extends TestCase
     public function testStatsCardShowsItsValueAndLinksToItsDetail()
     {
         StubDashboard::inject(true);
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
         setting('Stats.stats_showLink', true);
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
@@ -82,18 +87,18 @@ final class DashboardWidgetsTest extends TestCase
         $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', (string) $html);
     }
 
-    public function testEnabledChartSitsInACard()
+    public function testPlacedChartSitsInACard()
     {
-        setting('Stats.Charts_usersByGroupBar345', 'on');
+        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
         $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>USER CLASSIFICATION BY GROUP</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
     }
 
-    public function testEnabledLogActivityShowsABarPerLogFile()
+    public function testPlacedLogActivityShowsABarPerLogFile()
     {
-        setting('Stats.Logs_logActivity', 'on');
+        $this->placeOnDashboard($this->user, 'logs:logActivity');
         file_put_contents(self::LOG_FILE, "ERROR - 2000-01-01 10:00:00 --> One\nERROR - 2000-01-01 10:00:01 --> Two\nDEBUG - 2000-01-01 10:00:02 --> Three\n");
 
         $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
@@ -108,7 +113,7 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testLogActivityLeavesDebugOutWhenHidden()
     {
-        setting('Stats.Logs_logActivity', 'on');
+        $this->placeOnDashboard($this->user, 'logs:logActivity');
         setting('LogActivity.logActivity_hideDebug', 'on');
         file_put_contents(self::LOG_FILE, "DEBUG - 2000-01-01 10:00:02 --> Three\n");
 
@@ -120,6 +125,7 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testLogActivityIsHiddenWhenDisabled()
     {
+        $this->placeOnDashboard($this->user, 'logs:logActivity');
         setting('Stats.Logs_logActivity', false);
 
         $this->actingAs($this->user)->get(ADMIN_AREA)->assertDontSee('Log activity');
@@ -127,16 +133,16 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testLogActivityIsHiddenFromUsersWhoCannotViewLogs()
     {
-        setting('Stats.Logs_logActivity', 'on');
         $user = $this->createUser();
         $user->addPermission('admin.access');
+        $this->placeOnDashboard($user, 'logs:logActivity');
 
         $this->actingAs($user)->get(ADMIN_AREA)->assertDontSee('Log activity');
     }
 
-    public function testEnabledChartShowsItsCanvasAndScript()
+    public function testPlacedChartShowsItsCanvasAndScript()
     {
-        setting('Stats.Charts_usersByGroupBar345', 'on');
+        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
 

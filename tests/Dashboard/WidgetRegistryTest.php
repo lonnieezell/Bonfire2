@@ -121,9 +121,9 @@ final class WidgetRegistryTest extends TestCase
         $this->assertArrayHasKey('test:logsOnly', service('dashboard')->available());
     }
 
-    public function testUnavailableItemsAreLeftOutOfTheAvailableSet(): void
+    public function testSwitchedOffItemsAreLeftOutOfTheAvailableSet(): void
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        setting('Stats.Stats_usersExpTable693', false);
 
         $available = service('dashboard')->available();
 
