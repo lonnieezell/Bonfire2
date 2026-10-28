@@ -70,15 +70,13 @@ class UserController extends AdminController
                 'status'      => lang('Users.headers.status'),
                 'last_active' => lang('Users.headers.last_active'),
             ],
-            'showSelectAll' => true,
-            'users'         => $userModel->paginate(setting('Site.perPage')),
-            'pager'         => $userModel->pager,
-            'access'        => UserAccess::forCurrentUser(),
-            'search'        => $search,
-            'role'          => $role,
-            'roles'         => $isHtmx ? [] : $userModel->getRoleFilters(),
-            'groupCounts'   => $isHtmx ? [] : $userModel->groupCounts(),
-            'total'         => $isHtmx ? null : model(UserModel::class)->countAllResults(),
+            'users'       => $userModel->paginate(setting('Site.perPage')),
+            'pager'       => $userModel->pager,
+            'search'      => $search,
+            'role'        => $role,
+            'roles'       => $isHtmx ? [] : $userModel->getRoleFilters(),
+            'groupCounts' => $isHtmx ? [] : $userModel->groupCounts(),
+            'total'       => $isHtmx ? null : model(UserModel::class)->countAllResults(),
         ]);
     }
 

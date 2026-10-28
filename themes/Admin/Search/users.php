@@ -8,6 +8,7 @@
             'last_active' => lang('Bonfire.lastActive'),
         ]])->include('_table_head') ?>
         <tbody>
+        <?php service('actions')->for('users')->showing($rows) ?>
         <?php foreach ($rows as $user) : ?>
             <tr>
                 <?= view('Bonfire\Users\Views\_row_info', ['user' => $user]) ?>

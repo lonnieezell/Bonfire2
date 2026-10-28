@@ -3,7 +3,11 @@
 $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<?php $canManage = auth()->user()->can('logs.manage') ?>
+<?php
+$canManage  = auth()->user()->can('logs.manage');
+$actionList = service('actions')->for('logs');
+$selectable = $actionList->selectable(auth()->user());
+?>
 <x-page-head title="<?= lang('Tools.logsModTitle') ?>" count="<?= $pager->getTotal() ?>"></x-page-head>
 
 <x-admin-box>
@@ -30,7 +34,7 @@ $this->extend('master') ?>
             <table class="table bf-table">
                 <thead>
                     <tr>
-                        <?php if ($canManage) : ?>
+                        <?php if ($selectable) : ?>
                             <th><input class="select-all form-check-input" type="checkbox" aria-label="<?= lang('Tools.deleteSelected') ?>" /></th>
                         <?php endif ?>
                         <th><?= lang('Tools.date') ?></th>
@@ -46,9 +50,10 @@ $this->extend('master') ?>
                         $entries = array_sum($log['counts']);
                         ?>
                         <tr data-levels="<?= esc(strtolower(implode(' ', array_keys($log['counts'])))) ?>" x-show="shows($el.dataset.levels)">
-                            <?php if ($canManage) : ?>
+                            <?php if ($selectable) : ?>
                                 <td class="bf-select-cell">
-                                    <input type="checkbox" class="form-check-input" value="<?= esc($log['name']) ?>" name="selects[]" aria-label="<?= esc($log['name']) ?>" />
+                                    <input type="checkbox" class="form-check-input" value="<?= esc($log['name']) ?>" name="selects[]" aria-label="<?= esc($log['name']) ?>"
+                                        <?= $actionList->selectable(auth()->user(), (object) ['id' => $log['name']]) ? '' : 'disabled' ?> />
                                 </td>
                             <?php endif ?>
                             <td>
@@ -77,7 +82,7 @@ $this->extend('master') ?>
             <?= $pager->links('default', 'bonfire_full') ?>
         </div>
 
-        <?php if ($canManage) : ?>
+        <?php if ($selectable) : ?>
             <x-selection-bar>
                 <x-bulk-actions list="logs" />
             </x-selection-bar>

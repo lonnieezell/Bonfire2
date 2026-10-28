@@ -4,7 +4,11 @@ namespace Tests\Users;
 
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
+use CodeIgniter\Database\Query;
+use CodeIgniter\Events\Events;
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator;
+use Config\Services;
+use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
 
 /**
@@ -98,21 +102,40 @@ final class UserListTest extends TestCase
         $this->assertStringContainsString('<div class="bf-empty-title">No users match</div>', $html);
     }
 
-    public function testRowsAndSelectionBarOfferTheDeleteAction(): void
+    public function testRowsAreSelectableForAnyBulkActionTheAdminMayRun(): void
     {
+        $editor = $this->createUser(['username' => 'editor', 'active' => 1]);
+        $editor->addPermission('admin.access', 'users.list', 'users.edit');
         $grace = $this->createUser(['username' => 'grace', 'active' => 1]);
-        $grace->addGroup('user');
-        $delete = preg_quote(url_to('action', 'users', 'delete-users'), '#');
 
-        $html = $this->list();
+        $this->admin = $editor;
+        $this->assertDoesNotMatchRegularExpression('#name="selects\[\]"#', $this->list());
+
+        service('actions')->for('users')->add(new TouchUsers());
+
+        try {
+            $html = $this->list();
+        } finally {
+            Services::resetSingle('actions');
+        }
 
         $this->assertStringContainsString('x-data="bfSelectionBar"', $html);
-        $this->assertMatchesRegularExpression('#<button type="submit" formaction="' . $delete . '" data-confirm-bulk="1"\s+class="btn btn-danger" data-confirm="[^"]+"#', $html);
-        $this->assertMatchesRegularExpression('#<button type="submit" form="bf-action-form" formaction="' . $delete . '" name="selects\[\]" value="' . $grace->id . '"#', $html);
-        $this->assertStringNotContainsString('onclick="return confirm(', $html);
-        // You can't select or delete yourself.
-        $this->assertDoesNotMatchRegularExpression('#name="selects\[\]" value="' . $this->admin->id . '"\s+class="dropdown-item#', $html);
-        $this->assertMatchesRegularExpression('#name="selects\[\]" value="' . $this->admin->id . '"[^>]*\s+disabled#', $html);
+        $this->assertMatchesRegularExpression('#<input type="checkbox" name="selects\[\]" value="' . $grace->id . '"[^>]*\s+>#', $html);
+        // TouchUsers refuses the editor's own record.
+        $this->assertMatchesRegularExpression('#name="selects\[\]" value="' . $editor->id . '"[^>]*\s+disabled#', $html);
+    }
+
+    public function testRowActionsDoNotQueryPerRow(): void
+    {
+        $this->createUser(['username' => 'grace', 'active' => 1]);
+        $this->list(htmx: true); // loads the admin's own permissions once
+        $twoRows = $this->countQueries(fn () => $this->list(htmx: true));
+
+        $this->createUser(['username' => 'linus', 'active' => 1]);
+        $this->createUser(['username' => 'ken', 'active' => 1]);
+        $fourRows = $this->countQueries(fn () => $this->list(htmx: true));
+
+        $this->assertSame($twoRows, $fourRows);
     }
 
     public function testDeleteActionDeletesTheSelectedUsersButNotYourself(): void
@@ -145,6 +168,28 @@ final class UserListTest extends TestCase
 
         $this->assertStringContainsString('Showing 1 of 2', $html);
         $this->assertMatchesRegularExpression('#<a class="btn[^"]*" href="[^"]*page=2[^"]*" hx-get="[^"]*page=2#', $html);
+    }
+
+    /**
+     * Counts the SELECTs, leaving out writes like the session's random expiry purge.
+     */
+    private function countQueries(callable $request): int
+    {
+        $count    = 0;
+        $listener = static function (Query $query) use (&$count): void {
+            if (str_starts_with($query->getQuery(), 'SELECT')) {
+                $count++;
+            }
+        };
+        Events::on('DBQuery', $listener);
+
+        try {
+            $request();
+        } finally {
+            Events::removeListener('DBQuery', $listener);
+        }
+
+        return $count;
     }
 
     private function list(string $query = '', bool $htmx = false): string

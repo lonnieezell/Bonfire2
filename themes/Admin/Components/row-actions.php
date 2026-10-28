@@ -4,14 +4,7 @@
  * that the admin may run on that record. They submit the form <x-confirm-dialog> puts in the
  * layout, so they work inside another form.
  */
-$actionList = service('actions')->for($list);
-$actions    = $actionList->row(auth()->user());
-
-// A component only gets strings, so it loads the record to ask each action's allows().
-if ($actions !== []) {
-    $record  = $actionList->source()->find([$id])[0] ?? null;
-    $actions = $record === null ? [] : $actionList->row(auth()->user(), $record);
-}
+$actions = service('actions')->for($list)->rowFor(auth()->user(), $id);
 $hasSlot = trim($slot ?? '') !== '';
 ?>
 <?php if ($actions !== [] || $hasSlot) : ?>
