@@ -2482,6 +2482,12 @@ input[type="checkbox"]:indeterminate {
     opacity: .8;
 }
 
+.bf-log-none {
+    height: 2px;
+    border-radius: 1px;
+    background: var(--bf-border-strong);
+}
+
 .bf-log-segment {
     flex-basis: 0;
     min-height: 2px;

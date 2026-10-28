@@ -198,7 +198,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertTrue(setting('PieChart.pie_showTitle'));
         $this->assertTrue(setting('PolarAreaChart.polarArea_enableAnimation'));
         $this->assertEmpty(setting('Stats.Logs_logActivity'));
-        $this->assertSame(12, setting('LogActivity.logActivity_fileCount'));
+        $this->assertSame(7, setting('LogActivity.logActivity_fileCount'));
         $this->assertFalse(setting('LogActivity.logActivity_hideDebug'));
     }
 
@@ -258,7 +258,7 @@ final class WidgetsSettingsControllerTest extends TestCase
 
         yield 'log activity' => ['logactivity', [
             'LogActivity.logActivity_hideDebug' => 'on',
-            'LogActivity.logActivity_fileCount' => '7',
+            'LogActivity.logActivity_fileCount' => '14',
         ]];
 
         yield 'log activity, debug shown' => ['logactivity', [

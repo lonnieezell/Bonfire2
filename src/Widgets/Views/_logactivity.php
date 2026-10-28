@@ -9,7 +9,7 @@
         <input type="hidden" id="widget" name="widget" value="<?= esc($tab) ?>">
 
         <x-admin-box title="Log activity widget">
-            <x-setting-row label="Log files to show" description="The newest log files, from 1 to 31." for="logActivity_fileCount">
+            <x-setting-row label="Days to show" description="The last days up to today, from 1 to 31." for="logActivity_fileCount">
                 <input type="number" class="form-control" name="logActivity_fileCount" id="logActivity_fileCount" min="1" max="31" required value="<?= esc(setting('LogActivity.logActivity_fileCount')) ?>">
             </x-setting-row>
             <x-setting-row label="Hide Debug entries" for="logActivity_hideDebug">

@@ -20,8 +20,8 @@ use CodeIgniter\I18n\Time;
 use IntlDatePatternGenerator;
 
 /**
- * The "Log activity" dashboard widget: the entries of the newest log
- * files, per level, as a stacked bar per file.
+ * The "Log activity" dashboard widget: the entries of the last days'
+ * log files, per level, as a stacked bar per day.
  */
 class LogActivity implements Item
 {
@@ -35,7 +35,7 @@ class LogActivity implements Item
         'debug'   => ['DEBUG'],
     ];
 
-    private const MAX_FILES = 31;
+    private const MAX_DAYS = 31;
 
     private ?string $title = null;
 
@@ -81,22 +81,30 @@ class LogActivity implements Item
     }
 
     /**
-     * The newest log files, oldest first, with their entry count per shown level.
+     * The last days up to today, oldest first, with the entry count per shown
+     * level of their log file. Days without a log file have no name or counts.
      *
-     * @return list<array{name: string, label: string, counts: array<string, int>}>
+     * @return list<array{name: string|null, label: string, counts: array<string, int>}>
      */
-    public function files(): array
+    public function days(): array
     {
-        $count = max(1, min(self::MAX_FILES, (int) $this->options()->get('fileCount')));
-        $names = array_reverse(array_slice($this->store->names(), 0, $count));
-
+        $count   = max(1, min(self::MAX_DAYS, (int) $this->options()->get('fileCount')));
         $pattern = (new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('Md');
+        $days    = [];
 
-        return array_map(fn (string $name) => [
-            'name'   => $name,
-            'label'  => Time::parse(substr($name, 4))->toLocalizedString($pattern),
-            'counts' => $this->counts($this->store->levelCounts($name)),
-        ], $names);
+        for ($ago = $count - 1; $ago >= 0; $ago--) {
+            $day  = Time::now()->subDays($ago);
+            $name = 'log-' . $day->toDateString();
+            $has  = $this->store->has($name);
+
+            $days[] = [
+                'name'   => $has ? $name : null,
+                'label'  => $day->toLocalizedString($pattern),
+                'counts' => $has ? $this->counts($this->store->levelCounts($name)) : [],
+            ];
+        }
+
+        return $days;
     }
 
     /**
@@ -108,14 +116,14 @@ class LogActivity implements Item
             return '';
         }
 
-        $files = $this->files();
+        $days = $this->days();
 
         return view('Bonfire\Tools\Views\_log_activity', [
             'title'  => $this->title(),
             'levels' => $this->levels(),
-            'files'  => $files,
-            'errors' => array_sum(array_column(array_column($files, 'counts'), 'error')),
-            'most'   => max([1, ...array_map(static fn (array $file) => array_sum($file['counts']), $files)]),
+            'days'   => $days,
+            'errors' => array_sum(array_column(array_column($days, 'counts'), 'error')),
+            'most'   => max([1, ...array_map(static fn (array $day) => array_sum($day['counts']), $days)]),
         ]);
     }
 

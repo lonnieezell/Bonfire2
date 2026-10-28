@@ -201,9 +201,10 @@ It is possible to indicate a fourth parameter to choose the counting mode; the p
 
 ## Log activity widget
 
-The Log activity widget charts the newest log files, one stacked bar per file, split into Error, Warning, Info and
-Debug entries. CRITICAL, ALERT and EMERGENCY entries count as Error, and NOTICE entries count as Info. Each bar links
-to that log file, and the headline counts the errors across the files shown.
+The Log activity widget charts the last days up to today, one stacked bar per day's log file, split into Error,
+Warning, Info and Debug entries. CRITICAL, ALERT and EMERGENCY entries count as Error, and NOTICE entries count as
+Info. Each bar links to that log file, days without a log file show a thin line, and the headline counts the errors
+across the days shown.
 
 It is built in: turn it on in the widgets settings like any other widget. Only users with the `logs.view` permission
 see it, and the log files are only read when it is on and the dashboard is shown. It is displayed by the
@@ -302,6 +303,6 @@ You can set the default values in the `Bonfire\Widgets\Config\LogActivity` Class
 
 In the administration settings area, you can choose:
 
-- How many of the newest log files to show, from 1 to 31 (12 by default). Every file shown is read on each dashboard
-  load.
+- How many of the last days to show, from 1 to 31 (7 by default). Every log file in those days is read on each
+  dashboard load.
 - To hide Debug entries
