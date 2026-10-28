@@ -4,6 +4,19 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 28 October 2026
+
+Dashboard widgets can need a permission: pass `'permission'` to a `StatsItem` or `ChartsItem`, and admins who lack it
+don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
+need `users.list` and the Groups widgets `groups.settings`. Admins with `widgets.settings` can **Save as site
+default** from the dashboard's edit bar, and **Reset site default** in Settings → Widgets (see
+[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). The Settings → Widgets
+switches are now labelled as choosing which widgets are *available*. Quick Links is now a native widget,
+`Bonfire\Dashboard\Widgets\QuickLinksWidget`, registered by the Dashboard module under its old id, and no longer in
+the default `Dashboard.cells`; installs that still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once,
+in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is documented in
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md).
+
 ## 28 October 2026 (breaking change)
 
 Lists have a shared system for row and bulk actions (see [Row and Bulk Actions](../building_admin_modules/actions.md)):
@@ -52,17 +65,6 @@ when it is on the viewer's dashboard, so `service('dashboardContext')->shows()` 
 layout". The dashboard needs the new `admin/js/dashboard.js` and new `admin.css` rules
 from the Admin theme, so installs that published their own copy of the Admin theme must re-publish it; with an older
 copy the dashboard shows its widgets stacked in one column and Customize does nothing.
-
-Dashboard widgets can need a permission: pass `'permission'` to a `StatsItem` or `ChartsItem`, and admins who lack it
-don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
-need `users.list` and the Groups widgets `groups.settings`. Admins with `widgets.settings` can **Save as site
-default** from the dashboard's edit bar, and **Reset site default** in Settings → Widgets (see
-[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). The Settings → Widgets
-switches are now labelled as choosing which widgets are *available*. Quick Links is now a native widget,
-`Bonfire\Dashboard\Widgets\QuickLinksWidget`, registered by the Dashboard module under its old id, and no longer in
-the default `Dashboard.cells`; installs that still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once,
-in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is documented in
-[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md).
 
 Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
 escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
