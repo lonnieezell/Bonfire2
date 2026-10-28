@@ -145,12 +145,14 @@ final class DashboardWidgetsTest extends TestCase
         $this->assertStringNotContainsString('bf-log-debug', $html);
     }
 
-    public function testLogActivityIsHiddenWhenDisabled()
+    public function testLogActivityIgnoresItsFormerEnableSwitch()
     {
         $this->placeOnDashboard($this->user, 'logs:logActivity');
         setting('Stats.Logs_logActivity', false);
 
-        $this->actingAs($this->user)->get(ADMIN_AREA)->assertDontSee('Log activity');
+        $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
+
+        $this->assertStringContainsString('data-widget-id="logs&#x3A;logActivity"', $html);
     }
 
     public function testLogActivityIsHiddenFromUsersWhoCannotViewLogs()

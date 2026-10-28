@@ -160,17 +160,16 @@ final class CustomizeDashboardTest extends TestCase
     public function testAFreshDashboardShowsTheDefaultLayoutAndOffersEveryWidgetInThePalette(): void
     {
         setting()->flush();
-        setting('Stats.Logs_logActivity', false);
+        setting('Stats.Charts_usersByGroupBar345', false);
 
         $entries = $this->paletteEntries($this->dashboardHtml($this->user));
 
-        $this->assertSame([self::QUICK_LINKS, 'users:byGroup', 'users:newest', 'tools:recentErrors'], $this->placedIds($this->user));
+        $this->assertSame(self::DEFAULT_IDS, $this->placedIds($this->user));
         $this->assertTrue($entries[self::QUICK_LINKS]['placed']);
         $this->assertTrue($entries['users:byGroup']['placed']);
         $this->assertTrue($entries['tools:recentErrors']['placed']);
         $this->assertFalse($entries['stats:usersInRecycler693']['placed']);
-        $this->assertFalse($entries['charts:usersByGroupBar345']['placed']);
-        $this->assertArrayNotHasKey('logs:logActivity', $entries);
+        $this->assertArrayNotHasKey('charts:usersByGroupBar345', $entries);
     }
 
     public function testAnInstallListingTheOldQuickLinksCellRendersItOnce(): void

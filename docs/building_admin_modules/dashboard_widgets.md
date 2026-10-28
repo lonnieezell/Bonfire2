@@ -1,6 +1,6 @@
 # Dashboard Widgets
 
-Anything an admin can place on the dashboard is a widget. Stats, charts, Log activity and the cells in
+Anything an admin can place on the dashboard is a widget. Stats, charts and the cells in
 `Dashboard.cells` become widgets on their own. For full control, implement `Bonfire\Dashboard\DashboardWidget` and
 register it from your module's `initAdmin()`. Bonfire's own Quick Links is built this way
 (`Bonfire\Dashboard\Widgets\QuickLinksWidget`).

@@ -50,7 +50,7 @@ class Module extends BaseModule
             ->records(new LogStore())
             ->add(new DeleteLogs());
 
-        service('widgets')->widget('logs')->addItem(new LogActivity());
+        service('dashboard')->register(new LogActivity());
         service('dashboard')->register(new RecentErrorsWidget());
     }
 }

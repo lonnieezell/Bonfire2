@@ -13,12 +13,10 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
-use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
-use Bonfire\Tools\Widgets\LogActivity;
 
 /**
- * An item of the "logs" widget, such as Log activity, which renders itself.
+ * An item of the "logs" widget, which renders itself.
  */
 class LogWidget extends ItemWidget
 {
@@ -47,27 +45,13 @@ class LogWidget extends ItemWidget
         return new SizeRange(Size::Full, Size::Half);
     }
 
-    /**
-     * For Log activity, keyed to its defaults in Settings → Widgets.
-     */
     public function fields(): array
     {
-        if (! $this->item instanceof LogActivity) {
-            return [];
-        }
-
-        return [
-            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: LogActivity::MAX_DAYS, key: 'LogActivity.logActivity_fileCount', description: lang('Tools.logActivityDaysHint')),
-            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false, key: 'LogActivity.logActivity_hideDebug'),
-        ];
+        return [];
     }
 
     public function render(WidgetValues $values): string
     {
-        if ($this->item instanceof LogActivity) {
-            return $this->item->withOptions($values->all())->render();
-        }
-
         return method_exists($this->item, 'render') ? (string) $this->item->render() : '';
     }
 }

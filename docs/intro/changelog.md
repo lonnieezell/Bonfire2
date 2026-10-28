@@ -41,6 +41,14 @@ in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is docu
 
 ## 28 October 2026 (breaking change)
 
+Log activity is now a dashboard widget of its own, `Bonfire\Tools\Widgets\LogActivity`, like Recent errors. It
+keeps its id `logs:logActivity`, so saved layouts keep it in place, and its days and Debug defaults in Settings →
+Widgets keep their saved values. It no longer has a switch under *Available widgets*: every admin with `logs.view`
+can add it, even where it was switched off. It is no longer an item of `service('widgets')->widget('logs')`, so the
+`Bonfire\Widgets\Cells\WidgetCells::logs` cell no longer shows it. Code that calls it directly: `days()` and
+`levels()` now take the options as arguments, `days(int $count, bool $hideDebug)` and `levels(bool $hideDebug)`;
+`render()` takes a `WidgetValues`; and `setTitle()`, `withOptions()`, `module()` and `settings()` are gone.
+
 List rows are now selectable whenever the admin may run any of the list's bulk actions, not only when they may
 delete: a module's bulk action shows the checkboxes on its own. A row's checkbox is disabled when no bulk action
 `allows()` that record. `ActionList::selectable()` answers both, and `ActionList::showing()` hands a page's records to
