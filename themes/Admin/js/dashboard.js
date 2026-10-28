@@ -97,10 +97,19 @@ document.addEventListener('alpine:init', () => {
                     return;
                 }
 
+                await this.post(root.dataset.saveUrl);
+            },
+
+            // Stores the layout as shown as the default of every user who has not saved their own.
+            async saveSite() {
+                await this.post(root.dataset.siteSaveUrl);
+            },
+
+            async post(url) {
                 this.saving = true;
                 this.failed = false;
 
-                const response = await fetch(root.dataset.saveUrl, {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

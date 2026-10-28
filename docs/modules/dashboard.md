@@ -33,13 +33,13 @@ public ?array $layout = [
 ```
 
 Widgets the viewer may not see, or that are switched off in Settings → Widgets, are left out, and so is a section
-left empty.
+left empty. A site admin can replace this default from the dashboard with **Save as site default** (see
+[The site default](customizing_the_dashboard.md#the-site-default)).
 
 You can create additional [View Cells](https://codeigniter.com/user_guide/outgoing/view_cells.html) and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.
 
 ```php
 public array $cells = [
-    'Bonfire\Dashboard\DashboardCells::quickLinks',
     'Bonfire\Widgets\Cells\WidgetCells::stats',
     'Bonfire\Widgets\Cells\WidgetCells::logs',
     'Bonfire\Widgets\Cells\WidgetCells::charts',
@@ -48,36 +48,15 @@ public array $cells = [
 
 ## Customizing the dashboard
 
-Every admin can arrange their own dashboard without changing anyone else's. Until they do, they see the default
-layout above. Other widgets are added from the widget library.
-
-Click **Customize** to enter edit mode. Nothing is stored until you click **Save layout**; **Cancel** puts the
-dashboard back the way it was. Every change can be undone and redone with the arrows in the edit bar, or Ctrl+Z
-(⌘Z) and Shift+Ctrl+Z, and the message after a removal or deletion has its own **Undo**. In edit mode you can:
-
-- drag a widget to reorder it, also into another section;
-- size a widget from the tools above it: ¼, ⅓, ½, ⅔ or Full width (3, 4, 6, 8 or 12 of 12 columns), within the
-  range that widget allows, or drag its bottom-right corner;
-- open a widget's settings from its sliders button, when it has settings you may change;
-- remove a widget with its trash button, and add widgets from **Add widget**, which lists every widget and marks the
-  ones already on your dashboard. Click **Add**, or drag one straight onto a section. An added widget shows a
-  placeholder until you save;
-- give a section an optional heading, and from its ⋯ menu add a widget to it, move it up or down, insert a section
-  below it or delete it with its widgets;
-- reset to the default layout with the clock button. Saving the default layout forgets yours, so you follow the
-  default again when a site admin changes it.
-
-Everything works from the keyboard, too: with a widget focused, the arrow keys move it (Up and Down, and Left and
-Right past either end, move it to the section before or after), Shift with Left or Right resizes it, and Delete
-removes it. Screen readers hear each change announced.
-
-Settings → Widgets decides which widgets are available to everyone. Every widget is available until a site admin
-switches it off; a switched-off widget is left out of every palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,
-never in their layout. Sections without widgets are dropped on save, and a layout holds at most 20 sections.
+Every admin can arrange their own dashboard, and site admins can set the default everyone else sees. See
+[Customizing the Dashboard](customizing_the_dashboard.md).
 
 ## Quick Links
 
-The Quick Links cell is a simple list of links that have been added to the `Content` section of the sidebar menu. It is automatically generated and displayed.
+The Quick Links widget greets the admin and links to each item of the `Content` section of the sidebar menu they
+may see. It is a [dashboard widget](../building_admin_modules/dashboard_widgets.md) registered by the Dashboard module, not
+a cell any more. It keeps its old id, `cell:Bonfire\Dashboard\DashboardCells::quickLinks`, so installs whose `$cells`
+still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once, in the same place.
 
 ## Widgets
 

@@ -8,6 +8,7 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Widgets\Controllers'], stat
     $routes->get('settings/widgets/(:segment)', 'WidgetsSettingsController::show/$1');
     $routes->post('settings/widgets', 'WidgetsSettingsController::save');
     $routes->post('settings/widgetsReset', 'WidgetsSettingsController::resetSettings');
+    $routes->post('settings/widgets/resetLayout', 'WidgetsSettingsController::resetSiteLayout', ['as' => 'widgets-reset-layout', 'filter' => 'csrf']);
 
     $routes->post('settings/widgets/schemePreview', 'WidgetsSettingsController::getColorSchemePreview');
 });

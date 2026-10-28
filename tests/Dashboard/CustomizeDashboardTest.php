@@ -12,6 +12,7 @@
 namespace Tests\Dashboard;
 
 use Bonfire\Users\User;
+use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\StatsItem;
 use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
@@ -86,6 +87,32 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
     }
 
+    public function testAViewerLackingAWidgetsPermissionSeesItNeitherOnTheDashboardNorInThePalette(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $html = $this->dashboardHtml($user);
+
+        $this->assertSame([self::QUICK_LINKS], $this->placedIds($user));
+        $this->assertArrayNotHasKey('stats:usersInRecycler693', $this->paletteEntries($html));
+        $this->assertArrayNotHasKey('stats:userGroups643', $this->paletteEntries($html));
+        $this->assertArrayHasKey(self::QUICK_LINKS, $this->paletteEntries($html));
+    }
+
+    public function testSavingDropsWidgetsTheUserMayNotSee(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access', 'groups.settings');
+
+        $this->save($user, [['title' => '', 'widgets' => [
+            ['id' => 'stats:usersInRecycler693', 'size' => 'quarter'],
+            ['id' => 'stats:userGroups643', 'size' => 'quarter'],
+        ]]])->assertOK();
+
+        $this->assertSame(['stats:userGroups643'], array_column(setting()->get('Dashboard.layout', 'user:' . $user->id)['sections'][0]['widgets'], 'id'));
+    }
+
     public function testSectionsAndSizesPersistAndRender(): void
     {
         $this->save($this->user, [
@@ -146,6 +173,17 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
     }
 
+    public function testAnInstallListingTheOldQuickLinksCellRendersItOnce(): void
+    {
+        setting('Dashboard.cells', ['Bonfire\Dashboard\DashboardCells::quickLinks', 'Bonfire\Widgets\Cells\WidgetCells::stats']);
+
+        $html = $this->dashboardHtml($this->user);
+
+        $this->assertSame(self::DEFAULT_IDS, $this->placedIds($this->user));
+        $this->assertSame(1, substr_count($this->placedHtml($html), 'class="bf-page-head-date"'));
+        $this->assertSame(1, substr_count($html, 'data-palette-widget="' . esc(self::QUICK_LINKS, 'attr') . '"'));
+    }
+
     public function testThePaletteListsAvailableWidgetsMarkingPlacedOnes(): void
     {
         setting('Stats.Stats_usersExpTable693', false);
@@ -158,7 +196,7 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertFalse($entries[self::QUICK_LINKS]['placed']);
         $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
         $this->assertSame('stats', $entries['stats:userGroups643']['group']);
-        $this->assertSame('custom', $entries[self::QUICK_LINKS]['group']);
+        $this->assertSame('quickLinks', $entries[self::QUICK_LINKS]['group']);
     }
 
     public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void
@@ -266,6 +304,49 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(self::DEFAULT_IDS, $this->placedIds($this->user));
     }
 
+    public function testSavingTheSiteDefaultChangesTheDashboardOfUsersWhoDidNotCustomize(): void
+    {
+        $customized = $this->admin();
+        $fresh      = $this->admin();
+        $this->save($customized, [['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'quarter']]]]);
+
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'quarter']]]], route: 'dashboard-site-layout')
+            ->assertOK();
+
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($fresh));
+        $this->assertSame(['stats:userGroups643'], $this->placedIds($customized));
+    }
+
+    public function testSavingTheSiteDefaultMakesTheSaverFollowIt(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'quarter']]]]);
+
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'quarter']]]], route: 'dashboard-site-layout')
+            ->assertOK();
+
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
+    }
+
+    public function testOnlyWidgetsSettingsHoldersMaySaveTheSiteDefault(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $this->save($user, [['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'quarter']]]], route: 'dashboard-site-layout')
+            ->assertStatus(403);
+
+        $this->assertSame(self::DEFAULT_LAYOUT, setting('Dashboard.layout'));
+    }
+
+    public function testOnlyWidgetsSettingsHoldersAreOfferedSaveAsSiteDefault(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $this->assertStringContainsString('data-site-save-url="' . url_to('dashboard-site-layout') . '"', $this->dashboardHtml($this->user));
+        $this->assertStringNotContainsString('data-site-save-url', $this->dashboardHtml($user));
+    }
+
     public function testLazyQueriesRunOnlyForWidgetsInTheUsersLayout(): void
     {
         StubDashboard::inject(true);
@@ -281,6 +362,22 @@ final class CustomizeDashboardTest extends TestCase
 
         $this->assertNotNull($inLayout->value());
         $this->assertNull($offLayout->value());
+    }
+
+    public function testLazyQueriesDoNotRunForAViewerLackingTheItemsPermission(): void
+    {
+        StubDashboard::inject(true);
+        setting('Stats.Stats_users1', 'on');
+        $viewer = $this->createUser();
+        $this->placeOnDashboard($viewer, 'stats:users1');
+        $this->actingAs($viewer);
+
+        $this->assertNull((new StatsItem(['id' => 'users1', 'permission' => 'users.list']))->addValue('users')->value());
+        $this->assertNull((new ChartsItem(['id' => 'users1', 'permission' => 'users.list']))->addDataset('users', 'active', 'id')->data());
+
+        $viewer->addPermission('users.list');
+
+        $this->assertNotNull((new StatsItem(['id' => 'users1', 'permission' => 'users.list']))->addValue('users')->value());
     }
 
     /**
@@ -339,13 +436,13 @@ final class CustomizeDashboardTest extends TestCase
     /**
      * @param list<array<string, mixed>>|string $sections
      */
-    private function save(User $user, array|string $sections, int $version = 1)
+    private function save(User $user, array|string $sections, int $version = 1, string $route = 'dashboard-layout')
     {
         $body = is_string($sections) ? $sections : json_encode(['version' => $version, 'sections' => $sections]);
 
         return $this->actingAs($user)
             ->withHeaders([config('Security')->headerName => csrf_hash(), 'Content-Type' => 'application/json'])
             ->withBody($body)
-            ->post(route_to('dashboard-layout'));
+            ->post(route_to($route));
     }
 }

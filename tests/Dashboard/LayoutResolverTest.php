@@ -14,6 +14,7 @@ namespace Tests\Dashboard;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\LayoutResolver;
 use Bonfire\Dashboard\Size;
+use Bonfire\Dashboard\Widgets\QuickLinksWidget;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\Config\Factories;
@@ -61,6 +62,10 @@ final class LayoutResolverTest extends TestCase
 
     public function testTheDefaultLayoutIsQuickLinksThenUsersThenMonitoring(): void
     {
+        $user = $this->createUser();
+        $user->addGroup('superadmin');
+        auth()->login($user);
+
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertSame(['', 'Users', 'Monitoring'], array_column($layout->sections, 'title'));
@@ -74,13 +79,26 @@ final class LayoutResolverTest extends TestCase
     public function testWithoutAConfiguredLayoutTheDefaultIsThePlainCellsInOrder(): void
     {
         config('Dashboard')->layout = null;
+        setting('Dashboard.cells', ['App\Cells\Weather::forecast', 'Bonfire\Widgets\Cells\WidgetCells::stats', 'Bonfire\Dashboard\DashboardCells::quickLinks']);
 
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertCount(1, $layout->sections);
         $this->assertSame('', $layout->sections[0]->title);
-        $this->assertSame([self::QUICK_LINKS], $layout->ids());
+        $this->assertSame(['cell:App\Cells\Weather::forecast', self::QUICK_LINKS], $layout->ids());
         $this->assertSame(Size::Full, $layout->sections[0]->widgets[0]->size);
+    }
+
+    public function testAnInstallListingTheOldQuickLinksCellKeepsItInPlaceOnce(): void
+    {
+        config('Dashboard')->layout = null;
+        setting('Dashboard.cells', ['Bonfire\Widgets\Cells\WidgetCells::stats', 'Bonfire\Dashboard\DashboardCells::quickLinks']);
+
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $this->assertSame([self::QUICK_LINKS], $resolver->resolve()->ids());
+        $this->assertInstanceOf(QuickLinksWidget::class, service('dashboard')->widget(self::QUICK_LINKS));
+        $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 
     public function testOnlyItemsInTheDefaultLayoutAreIncluded(): void
@@ -91,6 +109,24 @@ final class LayoutResolverTest extends TestCase
         $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
         $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
         $this->assertTrue($resolver->includes(self::QUICK_LINKS));
+    }
+
+    public function testAUsersLayoutComesFirstThenTheStoredSiteDefaultThenTheConfiguredOne(): void
+    {
+        $resolver = new LayoutResolver(service('dashboard'));
+        $this->placeForAUser('stats:userGroups643');
+        $this->assertSame(['stats:userGroups643'], $resolver->resolve()->ids());
+
+        setting('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693']]]]]);
+        $this->assertSame(['stats:userGroups643'], $resolver->resolve()->ids());
+
+        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->resolve()->ids());
+        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
+        $this->assertFalse($resolver->includes('logs:logActivity'));
+
+        setting()->forget('Dashboard.layout');
+        $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
     }
 
     public function testTheDefaultLayoutIgnoresTheUsersOwn(): void

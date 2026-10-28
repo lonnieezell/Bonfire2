@@ -14,6 +14,7 @@ namespace Bonfire\Widgets\Controllers;
 use Bonfire\Core\AdminController;
 use Bonfire\Widgets\WidgetOptions;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class WidgetsSettingsController extends AdminController
 {
@@ -129,6 +130,23 @@ class WidgetsSettingsController extends AdminController
         }
 
         alert('success', 'The settings have been reset.');
+
+        return redirect()->route('widgets-settings');
+    }
+
+    /**
+     * Forgets the stored site default layout, so users who have not
+     * saved their own see the configured Dashboard::$layout again.
+     */
+    public function resetSiteLayout(): ResponseInterface
+    {
+        if (! auth()->user()->can('widgets.settings')) {
+            return $this->response->setStatusCode(403);
+        }
+
+        setting()->forget('Dashboard.layout');
+
+        alert('success', 'The site default dashboard has been reset.');
 
         return redirect()->route('widgets-settings');
     }
