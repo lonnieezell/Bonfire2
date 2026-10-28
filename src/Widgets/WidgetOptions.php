@@ -14,7 +14,8 @@ namespace Bonfire\Widgets;
 use CodeIgniter\HTTP\IncomingRequest;
 
 /**
- * The display options of Stats widgets and of each chart type, as data.
+ * The display options of Stats widgets, of each chart type and of the
+ * Log activity widget, as data.
  *
  * Every set maps an option to the value stored when the settings form
  * leaves it out. Keys are <Config class>.<type>_<option>, e.g.
@@ -28,6 +29,12 @@ final readonly class WidgetOptions
      * whether CUSTOM options are kept or forgotten.
      */
     private const SWITCH = 'useCustomSettings';
+
+    /**
+     * The sets that are not chart types, and whose Config class is named
+     * after the type alone.
+     */
+    private const NOT_CHARTS = ['stats', 'logActivity'];
 
     private const COMMON = [
         'showTitle'       => false,
@@ -44,10 +51,14 @@ final readonly class WidgetOptions
             'tension'       => null,
             self::SWITCH    => false,
         ],
-        'bar'       => self::SCHEMED,
-        'doughnut'  => self::SCHEMED,
-        'pie'       => self::SCHEMED,
-        'polarArea' => self::SCHEMED,
+        'bar'         => self::SCHEMED,
+        'doughnut'    => self::SCHEMED,
+        'pie'         => self::SCHEMED,
+        'polarArea'   => self::SCHEMED,
+        'logActivity' => [
+            'hideDebug' => false,
+            'fileCount' => null,
+        ],
     ];
 
     /**
@@ -104,7 +115,7 @@ final readonly class WidgetOptions
      */
     public static function forChartType(?string $type): ?self
     {
-        return $type !== 'stats' && isset(self::SETS[$type]) ? new self($type) : null;
+        return ! in_array($type, self::NOT_CHARTS, true) && isset(self::SETS[$type]) ? new self($type) : null;
     }
 
     public function alias(): string
@@ -172,6 +183,6 @@ final readonly class WidgetOptions
 
     private function configClass(): string
     {
-        return $this->type === 'stats' ? 'Stats' : ucfirst($this->type) . 'Chart';
+        return ucfirst($this->type) . (in_array($this->type, self::NOT_CHARTS, true) ? '' : 'Chart');
     }
 }

@@ -19,6 +19,16 @@ class WidgetCells
     }
 
     /**
+     * Displays the log widgets in the admin dashboard.
+     */
+    public function logs()
+    {
+        return view('Bonfire\Widgets\Views\Cells\logs', [
+            'logs' => service('widgets')->widget('logs')->items(),
+        ]);
+    }
+
+    /**
      * Displays the chart blocks in the admin dashboard.
      */
     public function charts()

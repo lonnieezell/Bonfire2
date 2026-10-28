@@ -16,6 +16,7 @@ You can create additional [View Cells](https://codeigniter.com/user_guide/outgoi
 public array $cells = [
     'Bonfire\Dashboard\DashboardCells::quickLinks',
     'Bonfire\Widgets\Cells\WidgetCells::stats',
+    'Bonfire\Widgets\Cells\WidgetCells::logs',
     'Bonfire\Widgets\Cells\WidgetCells::charts',
 ];
 ```
@@ -26,7 +27,7 @@ The Quick Links cell is a simple list of links that have been added to the `Cont
 
 ## Widgets
 
-The `stats` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
+The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
 
 ### Settings
 

@@ -43,6 +43,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $response->assertOK();
         $response->assertSee('widget "USERS IN RECYCLER"');
         $response->assertSee('Enable Chart line widget');
+        $response->assertSee('Enable Log widget "Log activity"');
         $this->assertStringContainsString('id="Stats_usersInRecycler693" checked>', $response->getBody());
         $this->assertStringContainsString('id="Stats_usersExpTable693">', $response->getBody());
     }
@@ -150,6 +151,9 @@ final class WidgetsSettingsControllerTest extends TestCase
         setting('DoughnutChart.doughnut_legendPosition', 'left');
         setting('PieChart.pie_showTitle', false);
         setting('PolarAreaChart.polarArea_enableAnimation', false);
+        setting('Stats.Logs_logActivity', 'on');
+        setting('LogActivity.logActivity_fileCount', '5');
+        setting('LogActivity.logActivity_hideDebug', 'on');
 
         $this->actingAs($this->user)
             ->post('/admin/settings/widgetsReset')
@@ -164,6 +168,9 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertSame('bottom', setting('DoughnutChart.doughnut_legendPosition'));
         $this->assertTrue(setting('PieChart.pie_showTitle'));
         $this->assertTrue(setting('PolarAreaChart.polarArea_enableAnimation'));
+        $this->assertEmpty(setting('Stats.Logs_logActivity'));
+        $this->assertSame(12, setting('LogActivity.logActivity_fileCount'));
+        $this->assertFalse(setting('LogActivity.logActivity_hideDebug'));
     }
 
     public function testAdminWithoutPermissionIsRedirected()
@@ -218,6 +225,16 @@ final class WidgetsSettingsControllerTest extends TestCase
             'LineChart.line_legendPosition'  => 'right',
             'LineChart.line_enableAnimation' => 'on',
             'LineChart.line_tension'         => '0.4',
+        ]];
+
+        yield 'log activity' => ['logactivity', [
+            'LogActivity.logActivity_hideDebug' => 'on',
+            'LogActivity.logActivity_fileCount' => '7',
+        ]];
+
+        yield 'log activity, debug shown' => ['logactivity', [
+            'LogActivity.logActivity_hideDebug' => false,
+            'LogActivity.logActivity_fileCount' => '12',
         ]];
 
         foreach (self::provideSavingSchemedChartOptions() as $name => [$alias, $class, $prefix]) {

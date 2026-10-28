@@ -36,6 +36,7 @@ final class WidgetOptionsTest extends TestCase
     {
         $this->assertNotInstanceOf(WidgetOptions::class, WidgetOptions::forAlias('radarchart'));
         $this->assertNotInstanceOf(WidgetOptions::class, WidgetOptions::forChartType('radar'));
+        $this->assertNotInstanceOf(WidgetOptions::class, WidgetOptions::forChartType('logActivity'));
     }
 
     public function testNamesKeysAfterTheConfigClassAndTypePrefix()
@@ -44,6 +45,7 @@ final class WidgetOptionsTest extends TestCase
         $this->assertSame('LineChart.line_tension', WidgetOptions::forChartType('line')->key('tension'));
         $this->assertSame('LineChart.useCustomSettings', WidgetOptions::forChartType('line')->key('useCustomSettings'));
         $this->assertSame('PolarAreaChart.polarArea_colorScheme', WidgetOptions::forChartType('polarArea')->key('colorScheme'));
+        $this->assertSame('LogActivity.logActivity_fileCount', WidgetOptions::forAlias('logactivity')->key('fileCount'));
     }
 
     public function testReadsStoredValuesAndDefaultsFromConfig()
@@ -92,7 +94,7 @@ final class WidgetOptionsTest extends TestCase
 
     public static function provideSets(): iterable
     {
-        foreach (['stats', 'linechart', 'barchart', 'doughnutchart', 'piechart', 'polarareachart'] as $alias) {
+        foreach (['stats', 'linechart', 'barchart', 'doughnutchart', 'piechart', 'polarareachart', 'logactivity'] as $alias) {
             yield $alias => [$alias];
         }
     }
@@ -116,7 +118,7 @@ final class WidgetOptionsTest extends TestCase
     public function testAllReturnsEverySet()
     {
         $this->assertSame(
-            ['stats', 'linechart', 'barchart', 'doughnutchart', 'piechart', 'polarareachart'],
+            ['stats', 'linechart', 'barchart', 'doughnutchart', 'piechart', 'polarareachart', 'logactivity'],
             array_map(static fn (WidgetOptions $o) => $o->alias(), WidgetOptions::all()),
         );
     }
