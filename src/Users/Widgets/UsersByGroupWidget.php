@@ -43,7 +43,7 @@ class UsersByGroupWidget implements DashboardWidget
 
     public function group(): string
     {
-        return 'stats';
+        return lang('Users.usersModTitle');
     }
 
     public function description(): string

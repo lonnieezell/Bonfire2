@@ -195,8 +195,8 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertFalse($entries['stats:userGroups643']['placed']);
         $this->assertFalse($entries[self::QUICK_LINKS]['placed']);
         $this->assertArrayNotHasKey('charts:usersByGroupPie223', $entries);
-        $this->assertSame('stats', $entries['stats:userGroups643']['group']);
-        $this->assertSame('quickLinks', $entries[self::QUICK_LINKS]['group']);
+        $this->assertSame(esc(lang('Groups.groupsModTitle'), 'attr'), $entries['stats:userGroups643']['group']);
+        $this->assertSame(esc(lang('Bonfire.dashboard'), 'attr'), $entries[self::QUICK_LINKS]['group']);
     }
 
     public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void

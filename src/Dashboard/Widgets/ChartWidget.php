@@ -53,7 +53,7 @@ class ChartWidget extends ItemWidget
 
     public function group(): string
     {
-        return 'charts';
+        return $this->moduleOr('charts');
     }
 
     /**

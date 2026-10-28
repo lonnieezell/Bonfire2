@@ -33,6 +33,11 @@ class WidgetRegistry
     ];
 
     /**
+     * The type keys a widget's group() may give instead of a module name.
+     */
+    public const TYPE_GROUPS = ['quickLinks', 'stats', 'charts', 'custom'];
+
+    /**
      * @var array<string, DashboardWidget>
      */
     private array $registered = [];
@@ -63,19 +68,24 @@ class WidgetRegistry
     }
 
     /**
-     * The available widgets by palette group, in the palette's order.
+     * The available widgets by library heading, in name order.
      *
      * @return array<string, list<DashboardWidget>>
      */
     public function grouped(): array
     {
-        $groups = ['quickLinks' => [], 'stats' => [], 'charts' => [], 'custom' => []];
+        $groups = [];
 
         foreach ($this->available() as $widget) {
-            $groups[isset($groups[$widget->group()]) ? $widget->group() : 'custom'][] = $widget;
+            $group = $widget->group();
+            $group = in_array($group, self::TYPE_GROUPS, true) ? lang('Bonfire.group' . ucfirst($group)) : $group;
+
+            $groups[$group][] = $widget;
         }
 
-        return array_filter($groups);
+        uksort($groups, strnatcasecmp(...));
+
+        return $groups;
     }
 
     /**

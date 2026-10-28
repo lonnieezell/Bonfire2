@@ -47,7 +47,7 @@ class QuickLinksWidget implements DashboardWidget
 
     public function group(): string
     {
-        return 'quickLinks';
+        return lang('Bonfire.dashboard');
     }
 
     public function description(): string

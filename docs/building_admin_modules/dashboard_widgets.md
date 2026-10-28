@@ -19,7 +19,7 @@ class OpenOrders implements DashboardWidget
     public function id(): string { return 'shop:openOrders'; }
     public function title(): string { return 'Open orders'; }
     public function icon(): string { return 'fas fa-cart-shopping'; }
-    public function group(): string { return 'stats'; }
+    public function group(): string { return 'Shop'; }
     public function description(): string { return 'Orders waiting to ship'; }
     public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
     public function permission(): ?string { return 'shop.orders'; }
@@ -43,7 +43,8 @@ class OpenOrders implements DashboardWidget
 ```
 
 - **id** is stored in admins' saved layouts, so keep it unique and never change it. Prefix it with your module's name.
-- **group** is the library heading it is listed under: `quickLinks`, `stats`, `charts` or `custom`.
+- **group** is the library heading it is listed under: your module's name. The library lists modules in name order.
+  The older type keys `quickLinks`, `stats`, `charts` and `custom` still work, each under its own heading.
 - **sizes** is the width it starts at, then the smallest and largest an admin may pick, from `Size::Quarter`,
   `Third`, `Half`, `TwoThirds` and `Full`.
 - **permission** hides the widget from admins who lack it, in the library and on the dashboard, and drops it from
@@ -92,9 +93,9 @@ id:
 
 | You have | It becomes | Id | Notes |
 | --- | --- | --- | --- |
-| A `StatsItem` added to `service('widgets')->widget('stats')` | A stat card, group `stats` | `stats:` + its `id` | Pass `'permission' => '…'` to hide it from admins who lack it. |
-| A `ChartsItem` added to `service('widgets')->widget('charts')` | A chart, group `charts` | `charts:` + its `id` | Its `cssClass` sets its default size. Takes `'permission'` too. |
-| A view cell listed in `Dashboard.cells` | A full-width widget, group `custom` | `cell:` + its `Class::method` | No permission. Write a widget for more control. |
+| A `StatsItem` added to `service('widgets')->widget('stats')` | A stat card, listed under `'module' => '…'`, else Stats | `stats:` + its `id` | Pass `'permission' => '…'` to hide it from admins who lack it. |
+| A `ChartsItem` added to `service('widgets')->widget('charts')` | A chart, listed under `'module' => '…'`, else Charts | `charts:` + its `id` | Its `cssClass` sets its default size. Takes `'permission'` too. |
+| A view cell listed in `Dashboard.cells` | A full-width widget, listed under Custom | `cell:` + its `Class::method` | No permission. Write a widget for more control. |
 
 A stats or chart item fetches its data (`addValue()`, `addValueByFreeQuery()`, `addDataset()`) only when it is on the
 viewer's dashboard and the viewer holds its permission. Code that builds a value by hand can ask the same question:

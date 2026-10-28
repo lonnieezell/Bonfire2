@@ -115,6 +115,11 @@ class ChartsItem implements Item
     protected ?string $permission = null;
 
     /**
+     * The name of the module that adds the item, its heading in the widget library.
+     */
+    protected ?string $module = null;
+
+    /**
      * Adds Chart.js and its helpers to the page, once.
      */
     public static function addAssets(Metadata $meta): void
@@ -178,6 +183,18 @@ class ChartsItem implements Item
     public function permission(): ?string
     {
         return $this->permission;
+    }
+
+    public function module(): ?string
+    {
+        return $this->module;
+    }
+
+    public function setModule(?string $module): ChartsItem
+    {
+        $this->module = $module;
+
+        return $this;
     }
 
     public function setPermission(?string $permission): ChartsItem

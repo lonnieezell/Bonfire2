@@ -85,6 +85,11 @@ class StatsItem implements Item
      */
     protected ?string $permission = null;
 
+    /**
+     * The name of the module that adds the item, its heading in the widget library.
+     */
+    protected ?string $module = null;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -207,6 +212,18 @@ class StatsItem implements Item
     public function permission(): ?string
     {
         return $this->permission;
+    }
+
+    public function module(): ?string
+    {
+        return $this->module;
+    }
+
+    public function setModule(?string $module): StatsItem
+    {
+        $this->module = $module;
+
+        return $this;
     }
 
     public function bgColor(): ?string

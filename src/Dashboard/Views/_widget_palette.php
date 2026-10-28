@@ -1,6 +1,6 @@
 <?php
 /**
- * The offcanvas listing every available widget, grouped, to add in edit
+ * The offcanvas listing every available widget, by module, to add in edit
  * mode. Placed widgets are marked Added and can't be added again. It has
  * no backdrop and the dashboard makes room for it, so an entry can be
  * dragged onto any section.
@@ -32,7 +32,7 @@
     <div class="offcanvas-body">
 		<?php foreach ($groups as $group => $widgets) : ?>
             <div class="bf-palette-group" data-palette-group="<?= esc($group, 'attr') ?>" x-show="groupMatches($el)">
-                <h3><?= lang('Bonfire.group' . ucfirst($group)) ?></h3>
+                <h3><?= esc($group) ?></h3>
                 <ul class="list-unstyled" data-palette-list>
 					<?php foreach ($widgets as $widget) : ?>
 						<?php $size = $widget->sizes()->default ?>

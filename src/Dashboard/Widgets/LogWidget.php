@@ -40,7 +40,7 @@ class LogWidget extends ItemWidget
 
     public function group(): string
     {
-        return 'charts';
+        return $this->moduleOr('charts');
     }
 
     public function sizes(): SizeRange

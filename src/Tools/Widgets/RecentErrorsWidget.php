@@ -57,7 +57,7 @@ class RecentErrorsWidget implements DashboardWidget
 
     public function group(): string
     {
-        return 'custom';
+        return lang('Bonfire.toolsModTitle');
     }
 
     public function description(): string

@@ -45,7 +45,7 @@ class NewestUsersWidget implements DashboardWidget
 
     public function group(): string
     {
-        return 'custom';
+        return lang('Users.usersModTitle');
     }
 
     public function description(): string

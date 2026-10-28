@@ -65,6 +65,7 @@ class Module extends BaseModule
             'url'        => ADMIN_AREA . '/tools/recycler?r=users',
             'faIcon'     => 'fa fa-users',
             'permission' => 'users.list',
+            'module'     => lang('Users.usersModTitle'),
         ]);
         // better way of retrieving deleted users, executes only when widget is displayed:
         $statsItem->addValue('users', 'deleted_at IS NOT NULL');

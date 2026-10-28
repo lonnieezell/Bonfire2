@@ -33,7 +33,9 @@ interface DashboardWidget
     public function icon(): string;
 
     /**
-     * The palette group: quickLinks, stats, charts or custom.
+     * The heading it is listed under in the widget library: the name of the
+     * module that adds it, e.g. lang('Users.usersModTitle'). The type keys
+     * quickLinks, stats, charts and custom are listed under their own headings.
      */
     public function group(): string;
 
