@@ -4,6 +4,7 @@ namespace Bonfire\Config;
 
 use Bonfire\Actions\ActionRegistry;
 use Bonfire\Bonfire;
+use Bonfire\Dashboard\WidgetRegistry;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Recycler\Libraries\Recycler;
 use Bonfire\Resources\ResourceTabs;
@@ -132,5 +133,19 @@ class Services extends BaseService
         }
 
         return new DashboardContext();
+    }
+
+    /**
+     * Returns the registry of dashboard widgets.
+     *
+     * @return WidgetRegistry
+     */
+    public static function dashboard(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('dashboard');
+        }
+
+        return new WidgetRegistry();
     }
 }

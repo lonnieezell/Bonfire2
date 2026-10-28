@@ -34,6 +34,14 @@ final readonly class ItemSettings
         return $this->kind->value . '_' . $this->id;
     }
 
+    /**
+     * The item's id on the dashboard, e.g. "stats:usersInRecycler693".
+     */
+    public function widgetId(): string
+    {
+        return strtolower($this->kind->value) . ':' . $this->id;
+    }
+
     public function key(): string
     {
         return 'Stats.' . $this->fieldName();

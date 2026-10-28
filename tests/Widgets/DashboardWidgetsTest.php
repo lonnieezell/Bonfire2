@@ -29,6 +29,7 @@ final class DashboardWidgetsTest extends TestCase
     {
         parent::setUp();
 
+        setting()->flush();
         $this->user = $this->createUser();
         $this->user->addGroup('superadmin');
     }

@@ -18,6 +18,14 @@ final class AdminAccessTest extends TestCase
     protected $refresh = true;
     protected $namespace;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Dashboard widgets left enabled by other tests would render their ids
+        setting()->flush();
+    }
+
     /**
      * @throws Exception
      * @throws RedirectException

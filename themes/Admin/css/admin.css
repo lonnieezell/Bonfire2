@@ -1821,6 +1821,39 @@ input[type="checkbox"]:indeterminate {
     .bf-chart-grid > .col-9 { grid-column: span 9; }
 }
 
+/* Dashboard layout: sections of widgets on a 12-column grid, one column on phones. */
+.bf-dashboard-section + .bf-dashboard-section {
+    margin-top: 24px;
+}
+
+.bf-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bf-dashboard-grid > .bf-widget {
+    grid-column: span 12;
+    min-width: 0;
+}
+
+.bf-widget > .bf-chart > .bf-card,
+.bf-widget > .bf-card,
+.bf-widget > .bf-stat {
+    height: 100%;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .bf-dashboard-grid > .bf-span-3 { grid-column: span 6; }
+}
+
+@media (min-width: 1200px) {
+    .bf-dashboard-grid > .bf-span-3 { grid-column: span 3; }
+    .bf-dashboard-grid > .bf-span-6 { grid-column: span 6; }
+    .bf-dashboard-grid > .bf-span-9 { grid-column: span 9; }
+}
+
 /* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
 .bf-log-activity > .bf-card-head {
     display: flex;

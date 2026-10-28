@@ -11,9 +11,12 @@
 
 namespace Bonfire\Widgets;
 
+use Bonfire\Dashboard\LayoutResolver;
+
 /**
  * Decides whether a widget item should do the work of fetching its
- * data: only when the dashboard is being shown and the item is enabled.
+ * data: only when the dashboard is being shown and the item is in the
+ * viewer's resolved layout.
  *
  * Reached through service('dashboardContext'), so tests can swap it
  * instead of faking the request URL.
@@ -27,6 +30,6 @@ class DashboardContext
 
     public function shows(ItemSettings $item): bool
     {
-        return $this->isDashboard() && $item->enabled();
+        return $this->isDashboard() && (new LayoutResolver(service('dashboard')))->includes($item->widgetId());
     }
 }

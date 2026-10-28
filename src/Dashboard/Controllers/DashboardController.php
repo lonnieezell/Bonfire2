@@ -12,7 +12,7 @@
 namespace Bonfire\Dashboard\Controllers;
 
 use Bonfire\Core\AdminController;
-use Bonfire\Dashboard\CellManager;
+use Bonfire\Dashboard\LayoutResolver;
 
 /**
  * Class Dashboard
@@ -27,7 +27,8 @@ class DashboardController extends AdminController
     public function index()
     {
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
-            'cells' => new CellManager(),
+            'layout'    => (new LayoutResolver(service('dashboard')))->resolve(),
+            'dashboard' => service('dashboard'),
         ]);
     }
 }
