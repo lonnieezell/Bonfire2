@@ -147,25 +147,36 @@ comes first:
 ```
 
 The row menu shows only the actions the admin may run on that record: their permission, and their `allows()` for
-it. To ask `allows()`, the component loads the record through the list's record source, one lookup per row.
+it. To ask `allows()`, the component needs the record. Hand the page's records to the list with `showing()` before
+the rows render, or the component loads each one through the list's record source, one lookup per row.
 
 `<x-bulk-actions>` goes inside `<x-selection-bar>`, in a form whose row checkboxes are named `selects[]` with the
-record's ID as their value:
+record's ID as their value. Ask the list's `selectable()` whether to show them at all: it is true when the admin may
+run any of its bulk actions. Given a record, it says whether any of those actions `allows()` it:
 
 ```php
+<?php
+$actionList = service('actions')->for('photos')->showing($photos);
+$selectable = $actionList->selectable(auth()->user());
+?>
 <form method="post">
     <?= csrf_field() ?>
     <table class="table bf-table">
         <!-- ... -->
-        <td class="bf-select-cell">
-            <input type="checkbox" name="selects[]" value="<?= $photo->id ?>" class="form-check-input">
-        </td>
+        <?php if ($selectable) : ?>
+            <td class="bf-select-cell">
+                <input type="checkbox" name="selects[]" value="<?= $photo->id ?>" class="form-check-input"
+                    <?= $actionList->selectable(auth()->user(), $photo) ? '' : 'disabled' ?>>
+            </td>
+        <?php endif ?>
         <!-- ... -->
     </table>
 
-    <x-selection-bar>
-        <x-bulk-actions list="photos" />
-    </x-selection-bar>
+    <?php if ($selectable) : ?>
+        <x-selection-bar>
+            <x-bulk-actions list="photos" />
+        </x-selection-bar>
+    <?php endif ?>
 </form>
 ```
 

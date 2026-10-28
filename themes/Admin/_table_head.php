@@ -1,7 +1,7 @@
 <thead>
 <?php if (isset($headers) && count($headers)) : ?>
     <tr>
-        <?php if (isset($showSelectAll) && auth()->user()->can('users.delete')) : ?>
+        <?php if (! empty($showSelectAll)) : ?>
             <th style="width: 3em">
                 <input type="checkbox" class="form-check select-all">
             </th>

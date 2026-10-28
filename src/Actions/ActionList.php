@@ -26,6 +26,11 @@ class ActionList
 
     private ?RecordSource $source = null;
 
+    /**
+     * @var array<int|string, object> The records the page shows, by ID
+     */
+    private array $shown = [];
+
     public function __construct(public readonly string $name)
     {
     }
@@ -65,6 +70,51 @@ class ActionList
             $user,
             static fn (Action $action) => $action->placement->inRow() && ($record === null || $action->allows($user, $record)),
         );
+    }
+
+    /**
+     * Hands over the records a page shows, in place of any handed over before, so their row
+     * actions don't load each one.
+     *
+     * @param iterable<object> $records Each with an `id`
+     */
+    public function showing(iterable $records): static
+    {
+        $this->shown = [];
+
+        foreach ($records as $record) {
+            $this->shown[$record->id] = $record;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return list<Action> The actions $user may run from the row of record $id
+     */
+    public function rowFor(User $user, int|string $id): array
+    {
+        if ($this->row($user) === []) {
+            return [];
+        }
+
+        $record = $this->shown[$id] ?? $this->source()->find([$id])[0] ?? null;
+
+        return $record === null ? [] : $this->row($user, $record);
+    }
+
+    /**
+     * Whether $user may check rows to run bulk actions on them, or, given $record, check its row.
+     */
+    public function selectable(User $user, ?object $record = null): bool
+    {
+        foreach ($this->bulk($user) as $action) {
+            if ($record === null || $action->allows($user, $record)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
