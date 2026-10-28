@@ -9,7 +9,8 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
 A widget's `group()` gives its module's name; the type keys `quickLinks`, `stats`, `charts` and `custom` still work,
 each under its own heading. A `StatsItem` or `ChartsItem` takes `'module' => '…'` (see
-[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)).
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)). With the library open, the page now widens by
+its width instead of narrowing the dashboard, where the screen has room.
 
 The sidebar now shows **Settings** as a single link to the first settings page you may open, since the settings
 pages list one another in their own nav. A menu collection opts into this with `setPageNav()`. Installs that

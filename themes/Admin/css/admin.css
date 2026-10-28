@@ -2230,9 +2230,11 @@ input[type="checkbox"]:indeterminate {
     --bs-offcanvas-width: 360px;
 }
 
+/* The page widens by the palette's width, so the dashboard keeps its own width where the screen has room. */
 @media (min-width: 992px) {
-    .bf-dashboard.has-library {
-        padding-right: 360px;
+    .bf-content:has(.bf-dashboard.has-library) {
+        max-width: calc(1200px + 360px);
+        padding-right: calc(32px + 360px);
     }
 }
 
