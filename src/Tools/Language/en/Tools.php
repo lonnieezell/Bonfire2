@@ -34,6 +34,7 @@ return [
     'allLevels'             => 'All',
     'searchMessages'        => 'Search messages',
     'download'              => 'Download',
-    'cancel'                => 'Cancel',
+    'deleteAllConfirm'      => 'Delete all log files?',
+    'deleteFileConfirm'     => 'Delete this log file?',
     'confirmDelete'         => 'Yes, delete',
 ];
