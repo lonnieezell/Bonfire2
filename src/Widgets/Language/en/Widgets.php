@@ -12,4 +12,5 @@
 return [
     'widgetsModTitle' => 'Widgets',
     'viewDetail'      => 'View Detail',
+    'showDetailLink'  => 'Show the "View Detail" link',
 ];

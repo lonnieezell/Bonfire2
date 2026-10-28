@@ -293,6 +293,19 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertStringContainsString('data-settings="' . esc(json_encode(['fileCount' => 3]), 'attr') . '"', $html);
     }
 
+    public function testAStatCardCanHideItsLink(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [
+            ['id' => 'stats:usersInRecycler693', 'size' => 'quarter', 'settings' => ['showLink' => false]],
+            ['id' => 'stats:userGroups643', 'size' => 'quarter'],
+        ]]])->assertOK();
+
+        $html = $this->placedHtml($this->dashboardHtml($this->user));
+
+        $this->assertSame(1, substr_count($html, 'class="bf-stat-link"'));
+        $this->assertStringContainsString('data-widget-settings', $this->tileTools($html, 'stats&#x3A;usersInRecycler693'));
+    }
+
     public function testTheSiteDefaultKeepsTheSettingsOfItsWidgets(): void
     {
         $this->save($this->user, [['title' => '', 'widgets' => [

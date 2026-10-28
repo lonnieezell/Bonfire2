@@ -13,6 +13,7 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Widgets\Types\Stats\StatsItem;
 
@@ -50,11 +51,11 @@ class StatsWidget extends ItemWidget
 
     public function fields(): array
     {
-        return [];
+        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true, key: 'Stats.stats_showLink')];
     }
 
     public function render(WidgetValues $values): string
     {
-        return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item]);
+        return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item, 'showLink' => $values->get('showLink')]);
     }
 }
