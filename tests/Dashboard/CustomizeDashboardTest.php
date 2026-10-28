@@ -134,7 +134,7 @@ final class CustomizeDashboardTest extends TestCase
         $html = $this->dashboard($this->user);
 
         $this->assertMatchesRegularExpression(
-            '#data-palette-widget="stats&\#x3A;userGroups643".*?<template data-placeholder>\s*(?:<!--.*?-->\s*)*<div class="bf-widget bf-span-3" data-widget-id="stats&\#x3A;userGroups643" data-size="sm">#s',
+            '#data-palette-widget="stats&\#x3A;userGroups643".*?<template data-placeholder>\s*(?:<!--.*?-->\s*)*<div class="bf-widget bf-span-3" data-widget-id="stats&\#x3A;userGroups643" data-size="sm"#s',
             $html,
         );
     }
@@ -151,6 +151,40 @@ final class CustomizeDashboardTest extends TestCase
 
         $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
         $this->assertFalse($this->paletteEntries($this->dashboard($this->user))['stats:usersExpTable693']['hidden']);
+    }
+
+    public function testChangesAreAnnouncedThroughALiveRegion(): void
+    {
+        $html = $this->dashboard($this->user);
+
+        $this->assertMatchesRegularExpression('#<div[^>]*aria-live="polite"[^>]*x-text="announcement"#', $html);
+        $this->assertMatchesRegularExpression('#data-messages="[^"]+"#', $html);
+    }
+
+    public function testTileMenusMoveWidgetsWithoutDragging(): void
+    {
+        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboard($this->user), $tile);
+
+        $this->assertMatchesRegularExpression('#data-title="[^"]+"#', $tile[0]);
+        $this->assertMatchesRegularExpression('#<button[^>]*@click="move\(\$el, -1\)"[^>]*:disabled=#', $tile[0]);
+        $this->assertMatchesRegularExpression('#<button[^>]*@click="move\(\$el, 1\)"[^>]*:disabled=#', $tile[0]);
+        $this->assertMatchesRegularExpression('#<template x-for="\(name, index\) in sectionNames"[^>]*>\s*<li><button[^>]*@click="moveTo\(\$el, index\)"#', $tile[0]);
+    }
+
+    public function testSectionsMoveUpAndDownWithoutDragging(): void
+    {
+        $html = $this->dashboard($this->user);
+
+        $this->assertMatchesRegularExpression('#<button[^>]*@click="moveSection\(\$el, -1\)"[^>]*:disabled=[^>]*aria-label="[^"]+"#', $html);
+        $this->assertMatchesRegularExpression('#<button[^>]*@click="moveSection\(\$el, 1\)"[^>]*:disabled=[^>]*aria-label="[^"]+"#', $html);
+    }
+
+    public function testThePaletteAddsToAChosenSection(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '#<select[^>]*x-model\.number="target"[^>]*>\s*<template x-for="\(name, index\) in sectionNames"#',
+            $this->dashboard($this->user),
+        );
     }
 
     public function testAMalformedPayloadOrWrongVersionIsRejected(): void

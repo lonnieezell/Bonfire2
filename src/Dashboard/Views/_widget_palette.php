@@ -13,6 +13,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="<?= esc(lang('Actions.cancel'), 'attr') ?>"></button>
     </div>
     <div class="offcanvas-body">
+        <label class="form-label" for="bf-palette-target"><?= lang('Bonfire.addTo') ?></label>
+        <select class="form-select mb-3" id="bf-palette-target" x-model.number="target">
+            <template x-for="(name, index) in sectionNames" :key="index">
+                <option :value="index" x-text="name"></option>
+            </template>
+        </select>
         <input type="search" class="form-control mb-3" x-model="search" placeholder="<?= esc(lang('Bonfire.searchWidgets'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.searchWidgets'), 'attr') ?>">
 
 		<?php foreach ($groups as $group => $widgets) : ?>

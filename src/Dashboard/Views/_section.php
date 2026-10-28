@@ -15,7 +15,13 @@
         <button type="button" class="bf-section-handle" aria-label="<?= esc(lang('Bonfire.dragSection'), 'attr') ?>">
             <i class="fas fa-grip-vertical" aria-hidden="true"></i>
         </button>
-        <input type="text" class="form-control form-control-sm" data-section-title maxlength="100"
+        <button type="button" class="bf-widget-tool" @click="moveSection($el, -1)" :disabled="(revision, ! canMoveSection($el, -1))" aria-label="<?= esc(lang('Bonfire.moveUp'), 'attr') ?>">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="bf-widget-tool" @click="moveSection($el, 1)" :disabled="(revision, ! canMoveSection($el, 1))" aria-label="<?= esc(lang('Bonfire.moveDown'), 'attr') ?>">
+            <i class="fas fa-arrow-down" aria-hidden="true"></i>
+        </button>
+        <input type="text" class="form-control form-control-sm" data-section-title maxlength="100" @input="refresh()"
             value="<?= esc($title, 'attr') ?>" placeholder="<?= esc(lang('Bonfire.sectionTitle'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.sectionTitle'), 'attr') ?>">
         <button type="button" class="btn btn-sm btn-outline-danger" @click="removeSection($el)" :disabled="sectionCount < 2"
             aria-label="<?= esc(lang('Bonfire.deleteSection'), 'attr') ?>">
