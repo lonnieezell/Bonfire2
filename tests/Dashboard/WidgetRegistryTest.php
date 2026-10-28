@@ -14,6 +14,7 @@ namespace Tests\Dashboard;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\Widgets\QuickLinksWidget;
+use Bonfire\Tools\Widgets\LogActivity;
 use Config\Services;
 use Tests\Support\Libraries\TestWidget;
 use Tests\Support\TestCase;
@@ -92,11 +93,12 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame(Size::Half, $widget->sizes()->default);
     }
 
-    public function testLogActivityBecomesAWidget(): void
+    public function testLogActivityIsANativeWidgetUnderItsStoredId(): void
     {
         $widget = service('dashboard')->widget('logs:logActivity');
 
-        $this->assertNotNull($widget);
+        $this->assertInstanceOf(LogActivity::class, $widget);
+        $this->assertSame([], service('widgets')->widget('logs')->items());
         $this->assertSame(lang('Bonfire.toolsModTitle'), $widget->group());
         $this->assertSame(Size::Full, $widget->sizes()->default);
     }

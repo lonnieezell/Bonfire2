@@ -11,12 +11,12 @@
 
 namespace Bonfire\Tools\Widgets;
 
-use Bonfire\Dashboard\Widgets\LogWidget;
+use Bonfire\Dashboard\DashboardWidget;
+use Bonfire\Dashboard\Size;
+use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Tools\Libraries\LogStore;
-use Bonfire\Widgets\Interfaces\Item;
-use Bonfire\Widgets\ItemSettings;
-use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\I18n\Time;
 use IntlDatePatternGenerator;
 
@@ -24,8 +24,13 @@ use IntlDatePatternGenerator;
  * The "Log activity" dashboard widget: the entries of the last days'
  * log files, per level, as a stacked bar per day.
  */
-class LogActivity implements Item
+class LogActivity implements DashboardWidget
 {
+    /**
+     * Stored in users' saved layouts since it was a "logs" widget item.
+     */
+    public const ID = 'logs:logActivity';
+
     /**
      * The levels shown, and the log levels each one counts.
      */
@@ -38,64 +43,54 @@ class LogActivity implements Item
 
     public const MAX_DAYS = 31;
 
-    private ?string $title = null;
-
-    /**
-     * Options that take the place of the stored ones, by option name.
-     *
-     * @var array<string, mixed>
-     */
-    private array $options = [];
-
     public function __construct(private readonly LogStore $store = new LogStore())
     {
     }
 
-    public function setTitle(?string $title): Item
+    public function id(): string
     {
-        $this->title = $title;
-
-        return $this;
+        return self::ID;
     }
 
     public function title(): string
     {
-        return $this->title ?? lang('Tools.logActivity');
+        return lang('Tools.logActivity');
     }
 
-    /**
-     * Its heading in the widget library.
-     */
-    public function module(): string
+    public function icon(): string
+    {
+        return 'fas fa-file-lines';
+    }
+
+    public function group(): string
     {
         return lang('Bonfire.toolsModTitle');
     }
 
-    /**
-     * Who may see the widget on their dashboard.
-     */
-    public function permission(): string
+    public function description(): string
+    {
+        return lang('Bonfire.logCard');
+    }
+
+    public function sizes(): SizeRange
+    {
+        return new SizeRange(Size::Full, Size::Half);
+    }
+
+    public function permission(): ?string
     {
         return 'logs.view';
     }
 
     /**
-     * A copy that shows these options in place of the stored ones, such as
-     * the settings of the widget as placed on a dashboard.
-     *
-     * @param array<string, mixed> $options e.g. ['fileCount' => 14]
+     * Keyed to its defaults in Settings → Widgets.
      */
-    public function withOptions(array $options): static
+    public function fields(): array
     {
-        $copy          = clone $this;
-        $copy->options = $options;
-
-        return $copy;
-    }
-
-    public function settings(): ItemSettings
-    {
-        return new ItemSettings(WidgetKind::Logs, 'logActivity');
+        return [
+            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: self::MAX_DAYS, key: 'LogActivity.logActivity_fileCount', description: lang('Tools.logActivityDaysHint')),
+            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false, key: 'LogActivity.logActivity_hideDebug'),
+        ];
     }
 
     /**
@@ -103,11 +98,11 @@ class LogActivity implements Item
      *
      * @return list<string>
      */
-    public function levels(): array
+    public function levels(bool $hideDebug): array
     {
         $levels = array_keys(self::LEVELS);
 
-        return $this->option('hideDebug') ? array_values(array_diff($levels, ['debug'])) : $levels;
+        return $hideDebug ? array_values(array_diff($levels, ['debug'])) : $levels;
     }
 
     /**
@@ -116,10 +111,9 @@ class LogActivity implements Item
      *
      * @return list<array{name: string|null, label: string, counts: array<string, int>}>
      */
-    public function days(): array
+    public function days(int $count, bool $hideDebug): array
     {
-        $count   = (int) $this->option('fileCount');
-        $levels  = $this->levels();
+        $levels  = $this->levels($hideDebug);
         $pattern = (new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('Md');
         $days    = [];
 
@@ -138,20 +132,14 @@ class LogActivity implements Item
         return $days;
     }
 
-    /**
-     * The widget's card, or nothing for users who cannot view the logs.
-     */
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
-        if (! auth()->user()?->can('logs.view')) {
-            return '';
-        }
-
-        $days = $this->days();
+        $hideDebug = (bool) $values->get('hideDebug');
+        $days      = $this->days((int) $values->get('fileCount'), $hideDebug);
 
         return view('Bonfire\Tools\Views\_log_activity', [
             'title'  => $this->title(),
-            'levels' => $this->levels(),
+            'levels' => $this->levels($hideDebug),
             'days'   => $days,
             'errors' => array_sum(array_column(array_column($days, 'counts'), 'error')),
             'most'   => max([1, ...array_map(static fn (array $day) => array_sum($day['counts']), $days)]),
@@ -173,10 +161,5 @@ class LogActivity implements Item
         }
 
         return $counts;
-    }
-
-    private function option(string $name): mixed
-    {
-        return $this->options[$name] ?? WidgetValues::resolve((new LogWidget($this))->fields())->get($name);
     }
 }

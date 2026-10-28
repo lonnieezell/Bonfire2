@@ -47,7 +47,6 @@ final class WidgetsSettingsControllerTest extends TestCase
         $response->assertOK();
         $response->assertSee('widget "USERS IN RECYCLER"');
         $response->assertSee('Enable Chart line widget');
-        $response->assertSee('Enable Log widget "Log activity"');
         $this->assertStringContainsString('id="Stats_usersInRecycler693" checked>', $response->getBody());
         $this->assertStringContainsString('id="Stats_userGroups643">', $response->getBody());
     }
@@ -99,14 +98,13 @@ final class WidgetsSettingsControllerTest extends TestCase
         setting('Stats.stats_showLink', false);
         setting('LineChart.line_tension', 0.9);
         setting('BarChart.bar_colorScheme', 'Blues');
-        setting('Stats.Logs_logActivity', 'on');
         setting('LogActivity.logActivity_fileCount', 5);
 
         $this->actingAs($this->user)
             ->post('/admin/settings/widgetsReset')
             ->assertRedirect();
 
-        foreach (['Stats.Stats_usersInRecycler693', 'Stats.stats_showLink', 'LineChart.line_tension', 'BarChart.bar_colorScheme', 'Stats.Logs_logActivity', 'LogActivity.logActivity_fileCount'] as $key) {
+        foreach (['Stats.Stats_usersInRecycler693', 'Stats.stats_showLink', 'LineChart.line_tension', 'BarChart.bar_colorScheme', 'LogActivity.logActivity_fileCount'] as $key) {
             $this->assertNull(setting($key), $key);
         }
     }

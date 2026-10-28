@@ -2,9 +2,9 @@
 
 namespace Tests\Tools;
 
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Tools\Libraries\LogStore;
 use Bonfire\Tools\Widgets\LogActivity;
-use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\I18n\Time;
 use Tests\Support\TestCase;
 
@@ -51,34 +51,29 @@ final class LogActivityTest extends TestCase
         file_put_contents($this->dir . $name . '.log', implode("\n", $lines));
     }
 
-    public function testIsAnEnableableLogsWidget()
+    public function testKeepsItsStoredIdAndNeedsLogsView()
     {
-        $this->assertSame(WidgetKind::Logs, $this->widget->settings()->kind);
-        $this->assertSame('Stats.Logs_logActivity', $this->widget->settings()->key());
-        $this->assertSame('Log activity', $this->widget->title());
+        $this->assertSame('logs:logActivity', $this->widget->id());
+        $this->assertSame('logs.view', $this->widget->permission());
     }
 
     public function testDaysAreTheLastOnesToTodayOldestFirst()
     {
-        setting('LogActivity.logActivity_fileCount', '2');
-
         $this->writeLog('log-2024-01-01');
         $this->writeLog('log-2024-01-03');
         $this->writeLog('log-2024-01-02');
 
         $this->assertSame(
             ['log-2024-01-02', 'log-2024-01-03'],
-            array_column($this->widget->days(), 'name'),
+            array_column($this->widget->days(2, false), 'name'),
         );
     }
 
     public function testDaysWithoutALogFileHaveNoNameAndNoCounts()
     {
-        setting('LogActivity.logActivity_fileCount', '3');
-
         $this->writeLog('log-2024-01-02', ['ERROR']);
 
-        $days = $this->widget->days();
+        $days = $this->widget->days(3, false);
 
         $this->assertSame([null, 'log-2024-01-02', null], array_column($days, 'name'));
         $this->assertSame([], $days[0]['counts']);
@@ -89,41 +84,46 @@ final class LogActivityTest extends TestCase
     {
         Time::setTestNow('2024-09-10');
 
-        $this->assertSame('9/10', $this->widget->days()[6]['label']);
+        $this->assertSame('9/10', $this->widget->days(7, false)[6]['label']);
     }
 
     public function testLevelsAreGroupedIntoErrorWarningInfoAndDebug()
     {
         $this->writeLog('log-2024-01-03', ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY', 'WARNING', 'NOTICE', 'INFO', 'DEBUG']);
 
-        $this->assertSame(['error', 'warning', 'info', 'debug'], $this->widget->levels());
+        $this->assertSame(['error', 'warning', 'info', 'debug'], $this->widget->levels(false));
         $this->assertSame(
             ['error' => 4, 'warning' => 1, 'info' => 2, 'debug' => 1],
-            $this->widget->days()[6]['counts'],
+            $this->widget->days(7, false)[6]['counts'],
         );
     }
 
     public function testHidingDebugLeavesItOutOfLevelsAndCounts()
     {
-        setting('LogActivity.logActivity_hideDebug', 'on');
-
         $this->writeLog('log-2024-01-03', ['ERROR', 'DEBUG']);
 
-        $this->assertSame(['error', 'warning', 'info'], $this->widget->levels());
-        $this->assertSame(['error' => 1, 'warning' => 0, 'info' => 0], $this->widget->days()[6]['counts']);
+        $this->assertSame(['error', 'warning', 'info'], $this->widget->levels(true));
+        $this->assertSame(['error' => 1, 'warning' => 0, 'info' => 0], $this->widget->days(7, true)[6]['counts']);
     }
 
     public function testDayCountIsKeptBetweenOneAndThirtyOne()
     {
-        setting('LogActivity.logActivity_fileCount', '0');
-        $this->assertCount(1, $this->widget->days());
+        $days = $this->widget->fields()[0];
 
-        setting('LogActivity.logActivity_fileCount', '100');
-        $this->assertCount(31, $this->widget->days());
+        $this->assertSame(1, $days->cast(0));
+        $this->assertSame(31, $days->cast(100));
     }
 
-    public function testDefaultsToSevenDays()
+    public function testDefaultsToSevenDaysWithDebugShown()
     {
-        $this->assertCount(7, $this->widget->days());
+        $this->assertSame(['fileCount' => 7, 'hideDebug' => false], WidgetValues::resolve($this->widget->fields())->all());
+    }
+
+    public function testStoredSiteDefaultsStillApply()
+    {
+        setting('LogActivity.logActivity_fileCount', 14);
+        setting('LogActivity.logActivity_hideDebug', true);
+
+        $this->assertSame(['fileCount' => 14, 'hideDebug' => true], WidgetValues::resolve($this->widget->fields())->all());
     }
 }
