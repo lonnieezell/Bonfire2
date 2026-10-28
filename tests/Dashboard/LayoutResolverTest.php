@@ -17,6 +17,7 @@ use Bonfire\Dashboard\Size;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\Config\Factories;
+use Bonfire\Dashboard\Widgets\QuickLinksWidget;
 use Config\Services;
 use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
@@ -78,13 +79,26 @@ final class LayoutResolverTest extends TestCase
     public function testWithoutAConfiguredLayoutTheDefaultIsThePlainCellsInOrder(): void
     {
         config('Dashboard')->layout = null;
+        setting('Dashboard.cells', ['App\Cells\Weather::forecast', 'Bonfire\Widgets\Cells\WidgetCells::stats', 'Bonfire\Dashboard\DashboardCells::quickLinks']);
 
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertCount(1, $layout->sections);
         $this->assertSame('', $layout->sections[0]->title);
-        $this->assertSame([self::QUICK_LINKS], $layout->ids());
+        $this->assertSame(['cell:App\Cells\Weather::forecast', self::QUICK_LINKS], $layout->ids());
         $this->assertSame(Size::Full, $layout->sections[0]->widgets[0]->size);
+    }
+
+    public function testAnInstallListingTheOldQuickLinksCellKeepsItInPlaceOnce(): void
+    {
+        config('Dashboard')->layout = null;
+        setting('Dashboard.cells', ['Bonfire\Widgets\Cells\WidgetCells::stats', 'Bonfire\Dashboard\DashboardCells::quickLinks']);
+
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $this->assertSame([self::QUICK_LINKS], $resolver->resolve()->ids());
+        $this->assertInstanceOf(QuickLinksWidget::class, service('dashboard')->widget(self::QUICK_LINKS));
+        $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 
     public function testOnlyItemsInTheDefaultLayoutAreIncluded(): void

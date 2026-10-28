@@ -13,6 +13,7 @@ namespace Tests\Dashboard;
 
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\Size;
+use Bonfire\Dashboard\Widgets\QuickLinksWidget;
 use Config\Services;
 use Tests\Support\Libraries\TestWidget;
 use Tests\Support\TestCase;
@@ -100,9 +101,22 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame(Size::Full, $widget->sizes()->default);
     }
 
+    public function testQuickLinksIsANativeWidgetUnderItsCellId(): void
+    {
+        setting('Dashboard.cells', []);
+
+        $widget = service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks');
+
+        $this->assertInstanceOf(QuickLinksWidget::class, $widget);
+        $this->assertSame('quickLinks', $widget->group());
+        $this->assertSame(['quickLinks'], array_keys(array_intersect_key(service('dashboard')->grouped(), ['quickLinks' => 1, 'custom' => 1])));
+    }
+
     public function testCustomCellsBecomeWidgets(): void
     {
-        $widget = service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks');
+        setting('Dashboard.cells', ['App\Cells\Weather::forecast']);
+
+        $widget = service('dashboard')->widget('cell:App\Cells\Weather::forecast');
 
         $this->assertNotNull($widget);
         $this->assertSame('custom', $widget->group());

@@ -111,6 +111,7 @@ return [
     'chartOfType'       => '{0} chart',
     'logCard'           => 'Log entries per level, per log file',
     'customCard'        => 'Custom panel',
+    'quickLinksCard'    => 'A greeting and links to each content area',
     'moveUp'            => 'Move section up',
     'moveDown'          => 'Move section down',
     'addTo'             => 'Add to',

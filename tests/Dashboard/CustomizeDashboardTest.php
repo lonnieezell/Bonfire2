@@ -160,6 +160,17 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
     }
 
+    public function testAnInstallListingTheOldQuickLinksCellRendersItOnce(): void
+    {
+        setting('Dashboard.cells', ['Bonfire\Dashboard\DashboardCells::quickLinks', 'Bonfire\Widgets\Cells\WidgetCells::stats']);
+
+        $html = $this->dashboardHtml($this->user);
+
+        $this->assertSame(self::DEFAULT_IDS, $this->placedIds($this->user));
+        $this->assertSame(1, substr_count($this->placedHtml($html), 'class="bf-page-head-date"'));
+        $this->assertSame(1, substr_count($html, 'data-palette-widget="' . esc(self::QUICK_LINKS, 'attr') . '"'));
+    }
+
     public function testThePaletteListsAvailableWidgetsMarkingPlacedOnes(): void
     {
         setting('Stats.Stats_usersExpTable693', false);
@@ -172,7 +183,7 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertFalse($entries[self::QUICK_LINKS]['placed']);
         $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
         $this->assertSame('stats', $entries['stats:userGroups643']['group']);
-        $this->assertSame('custom', $entries[self::QUICK_LINKS]['group']);
+        $this->assertSame('quickLinks', $entries[self::QUICK_LINKS]['group']);
     }
 
     public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void
