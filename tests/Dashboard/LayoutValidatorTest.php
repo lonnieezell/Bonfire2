@@ -43,6 +43,7 @@ final class LayoutValidatorTest extends TestCase
                 WidgetField::number('days', 'Days', default: 7, min: 1, max: 31),
                 WidgetField::choice('order', 'Order', ['asc' => 'Oldest first', 'desc' => 'Newest first'], default: 'desc'),
                 WidgetField::text('caption', 'Caption', default: ''),
+                WidgetField::number('ratio', 'Ratio', default: 0, step: 0.5),
             ]));
         $this->validator = new LayoutValidator($registry);
     }
@@ -182,20 +183,22 @@ final class LayoutValidatorTest extends TestCase
     public static function provideStoresOnlyTheWidgetsOwnSettings(): iterable
     {
         return [
-            'undeclared keys'         => [['colour' => 'red', 'days' => 14], ['days' => 14]],
-            'not an object'           => ['days=14', null],
-            'a list'                  => [[14], null],
-            'numbers clamped'         => [['days' => 99], ['days' => 31]],
-            'numeric text cast'       => [['days' => '3'], ['days' => 3]],
-            'not a number'            => [['days' => 'many'], null],
-            'a choice not offered'    => [['order' => 'random'], null],
-            'toggle from form text'   => [['compact' => 'on'], ['compact' => true]],
-            'not a toggle'            => [['compact' => 'perhaps'], null],
-            'text trimmed'            => [['caption' => '  Mine  '], ['caption' => 'Mine']],
-            'text too long'           => [['caption' => str_repeat('x', 300)], ['caption' => str_repeat('x', 255)]],
-            'not text'                => [['caption' => ['Mine']], null],
-            'same as inherited'       => [['days' => 7, 'order' => 'desc', 'compact' => false], null],
-            'a widget without fields' => [['days' => 14], null, 'test:a'],
+            'undeclared keys'               => [['colour' => 'red', 'days' => 14], ['days' => 14]],
+            'not an object'                 => ['days=14', null],
+            'a list'                        => [[14], null],
+            'numbers clamped'               => [['days' => 99], ['days' => 31]],
+            'numeric text cast'             => [['days' => '3'], ['days' => 3]],
+            'not a number'                  => [['days' => 'many'], null],
+            'a choice not offered'          => [['order' => 'random'], null],
+            'toggle from form text'         => [['compact' => 'on'], ['compact' => true]],
+            'not a toggle'                  => [['compact' => 'perhaps'], null],
+            'text trimmed'                  => [['caption' => '  Mine  '], ['caption' => 'Mine']],
+            'text too long'                 => [['caption' => str_repeat('x', 300)], ['caption' => str_repeat('x', 255)]],
+            'not text'                      => [['caption' => ['Mine']], null],
+            'same as inherited'             => [['days' => 7, 'order' => 'desc', 'compact' => false], null],
+            'too big to be finite'          => [['ratio' => '1e999'], null],
+            'a fraction of a whole default' => [['ratio' => 0], null],
+            'a widget without fields'       => [['days' => 14], null, 'test:a'],
         ];
     }
 

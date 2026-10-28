@@ -321,10 +321,15 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
 
+                const before = this.current;
+
                 this.setSettings(tile, own);
                 this.closeSettings();
                 this.commit();
-                this.notify(this.message('settings', tile.dataset.title), true);
+                // Applying unchanged values records nothing, so there is nothing to undo
+                if (this.current !== before) {
+                    this.notify(this.message('settings', tile.dataset.title), true);
+                }
                 this.focusTile(tile);
             },
 

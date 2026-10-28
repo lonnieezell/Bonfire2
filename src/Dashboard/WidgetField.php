@@ -50,6 +50,9 @@ final readonly class WidgetField
      */
     public static function number(string $name, string $label, float|int $default, float|int|null $min = null, float|int|null $max = null, float|int $step = 1, ?string $key = null, ?string $description = null): self
     {
+        // Of the same type as a value, so one equal to the default is not stored
+        $default = is_int($step) ? (int) round($default) : (float) $default;
+
         return new self('number', $name, $label, $default, $key, $description, $min, $max, $step);
     }
 
@@ -78,7 +81,7 @@ final readonly class WidgetField
 
         return match ($this->type) {
             'toggle' => is_bool($value) ? $value : filter_var($value, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE),
-            'number' => is_numeric($value) ? $this->clamp((float) $value) : null,
+            'number' => is_numeric($value) && is_finite((float) $value) ? $this->clamp((float) $value) : null,
             'choice' => array_key_exists((string) $value, $this->options) ? (string) $value : null,
             'text'   => is_string($value) ? mb_substr(trim($value), 0, self::MAX_TEXT) : null,
         };

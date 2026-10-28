@@ -13,6 +13,6 @@ class DashboardCells
      */
     public function quickLinks()
     {
-        return (new QuickLinksWidget())->render();
+        return (new QuickLinksWidget())->render(WidgetValues::resolve([]));
     }
 }
