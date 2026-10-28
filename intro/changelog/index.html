@@ -1861,6 +1861,13 @@ the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire
 in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
 <a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p>Each widget's <code>fields()</code> is now the only place its settings are declared: the Settings → Widgets tabs are built from
+the fields that have a <code>key</code>, one tab per settings class, and saved through them. Values you saved there keep
+working. The properties of <code>Bonfire\Widgets\Config\Stats</code>, <code>LineChart</code>, <code>BarChart</code>, <code>DoughnutChart</code>, <code>PieChart</code>,
+<code>PolarAreaChart</code> and <code>LogActivity</code> are gone, so a default overridden in a published copy of those classes or in
+<code>.env</code> no longer applies: set it in Settings → Widgets instead. The line chart's subtitle and custom border
+settings, which had no form, are no longer read. <code>WidgetOptions</code> keeps only <code>all()</code>, <code>forAlias()</code>, <code>save()</code> and
+<code>reset()</code>.</p>
 <p><strong>Users by group</strong> is now a bar list: each group, a bar scaled to the largest one, and its number of users, with a
 setting to sort by count or by name. It is a new widget, <code>users:byGroup</code>, in place of the <em>Users by Group</em> stat card
 (<code>stats:usersExpTable693</code>), which is gone. Saved dashboards that placed the stat card lose it: re-add Users by group
