@@ -13,7 +13,7 @@
 
     <div class="bf-dashboard" x-data="dashboardEditor" :class="{ 'is-editing': editing }"
         data-save-url="<?= url_to('dashboard-layout') ?>"
-        data-csrf-header="<?= esc(config('Security')->headerName, 'attr') ?>" data-csrf-hash="<?= csrf_hash() ?>"
+        data-csrf-header="<?= esc(config('Security')->headerName, 'attr') ?>" data-csrf-hash="<?= csrf_hash() ?>" data-csrf-name="<?= csrf_token() ?>"
         data-messages="<?= esc(json_encode([
             'untitled'       => lang('Bonfire.untitledSection'),
             'moved'          => lang('Bonfire.movedTo'),

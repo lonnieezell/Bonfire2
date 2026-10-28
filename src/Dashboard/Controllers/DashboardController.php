@@ -58,7 +58,8 @@ class DashboardController extends AdminController
             $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
             $layout  = (new LayoutValidator(service('dashboard')))->validate($payload);
         } catch (InvalidArgumentException|JsonException) {
-            return $this->response->setStatusCode(400)->setJSON(['saved' => false]);
+            // The CSRF filter has rotated the token; the editor needs it to try again
+            return $this->response->setStatusCode(400)->setJSON(['saved' => false, 'csrf' => csrf_hash()]);
         }
 
         setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());

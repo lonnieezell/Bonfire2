@@ -1837,9 +1837,11 @@ input[type="checkbox"]:indeterminate {
     min-width: 0;
 }
 
-.bf-widget > .bf-chart > .bf-card,
-.bf-widget > .bf-card,
-.bf-widget > .bf-stat {
+.bf-widget-body,
+.bf-widget-body > .bf-chart,
+.bf-widget-body > .bf-chart > .bf-card,
+.bf-widget-body > .bf-card,
+.bf-widget-body > .bf-stat {
     height: 100%;
     margin: 0;
 }
@@ -1872,6 +1874,11 @@ input[type="checkbox"]:indeterminate {
     z-index: 2;
     display: flex;
     gap: 4px;
+}
+
+/* An open menu above the next tile's tools, which come later in the page. */
+.bf-widget-tools:has(.dropdown-menu.show) {
+    z-index: 3;
 }
 
 .bf-widget-handle,

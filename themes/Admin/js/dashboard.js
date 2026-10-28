@@ -67,9 +67,17 @@ document.addEventListener('alpine:init', () => {
                 body: JSON.stringify(this.read()),
             }).catch(() => null);
 
-            if (response?.ok) {
+            // A redirect (to the login page, when the session expired) saved nothing
+            if (response?.ok && ! response.redirected) {
                 window.location.reload();
                 return;
+            }
+
+            // A rejected layout still rotated the CSRF token: take the new one for the retry and Reset
+            const csrf = (await response?.json().catch(() => null))?.csrf;
+            if (csrf) {
+                this.$root.dataset.csrfHash = csrf;
+                this.$root.querySelectorAll(`input[name="${this.$root.dataset.csrfName}"]`).forEach((input) => { input.value = csrf; });
             }
 
             this.saving = false;
@@ -104,11 +112,13 @@ document.addEventListener('alpine:init', () => {
         },
 
         moveSection(button, step) {
-            const index = this.shift(button.closest('[data-dashboard-section]'), this.sections(), step);
+            const section = button.closest('[data-dashboard-section]');
+            const index = this.shift(section, this.sections(), step);
 
             this.refresh();
             this.announce('sectionMoved', this.sectionNames[index], index + 1);
-            button.focus();
+            // Moved first or last, the button is now disabled and can't hold focus
+            this.$nextTick(() => (button.disabled ? section.querySelector('[data-section-title]') : button).focus());
         },
 
         canMoveSection(button, step) {
@@ -132,13 +142,19 @@ document.addEventListener('alpine:init', () => {
             this.focusTile(tile);
         },
 
+        // Focus goes to the next tile, else the previous one, else the section heading.
         removeWidget(button) {
             const tile = button.closest('.bf-widget');
+            const section = tile.closest('[data-dashboard-section]');
+            const tiles = this.tiles(section);
+            const index = tiles.indexOf(tile);
+            const neighbour = tiles[index + 1] ?? tiles[index - 1];
 
             this.paletteEntry(tile.dataset.widgetId).hidden = false;
             tile.remove();
             this.refresh();
             this.announce('removed', tile.dataset.title);
+            neighbour ? this.focusTile(neighbour) : section.querySelector('[data-section-title]').focus();
         },
 
         // One place earlier or later within its section.
@@ -211,7 +227,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         announce(key, ...values) {
-            const message = values.reduce((text, value, i) => text.replace(`{${i}}`, value), this.messages[key]);
+            // One pass with a function, so a title holding "{1}" or "$&" is read out as typed
+            const message = this.messages[key].replace(/\{(\d+)\}/g, (placeholder, i) => values[i] ?? placeholder);
 
             // Cleared first, so the same message twice is still read out
             this.announcement = '';
