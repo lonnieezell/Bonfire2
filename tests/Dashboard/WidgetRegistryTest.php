@@ -101,6 +101,26 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame(Size::Full, $widget->sizes()->default);
     }
 
+    public function testAdaptersDescribeTheirWidgets(): void
+    {
+        foreach (['stats:usersInRecycler693', 'charts:usersByGroupBar345', 'logs:logActivity', 'cell:Bonfire\Dashboard\DashboardCells::quickLinks'] as $id) {
+            $this->assertNotSame('', service('dashboard')->widget($id)->description(), $id);
+        }
+    }
+
+    public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void
+    {
+        service('dashboard')->register(new TestWidget('test:logsOnly', 'logs.view'));
+        $user = $this->createUser();
+        $this->actingAs($user);
+
+        $this->assertArrayNotHasKey('test:logsOnly', service('dashboard')->available());
+
+        $user->addPermission('logs.view');
+
+        $this->assertArrayHasKey('test:logsOnly', service('dashboard')->available());
+    }
+
     public function testUnavailableItemsAreLeftOutOfTheAvailableSet(): void
     {
         setting('Stats.Stats_usersInRecycler693', 'on');

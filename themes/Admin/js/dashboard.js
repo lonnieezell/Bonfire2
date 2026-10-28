@@ -1,7 +1,8 @@
 /**
  * The dashboard editor: Customize lets the user drag widgets into a new
- * order, group them into sections and size them; Save stores the result
- * as their own layout, Cancel reloads the page as it was.
+ * order, group them into sections, size, remove and add them from the
+ * palette; Save stores the result as their own layout, Cancel reloads
+ * the page as it was.
  *
  * The tiles and sections on the page are the layout being edited:
  * SortableJS and the controls below move them, and Save reads them.
@@ -12,6 +13,8 @@ document.addEventListener('alpine:init', () => {
         saving: false,
         failed: false,
         sectionCount: 0,
+        unplaced: 0,
+        search: '',
         sortables: [],
 
         start() {
@@ -25,6 +28,14 @@ document.addEventListener('alpine:init', () => {
                 animation: 150,
             }));
             this.grids().forEach((grid) => this.sortGrid(grid));
+            this.$root.querySelectorAll('[data-palette-list]').forEach((list) => {
+                this.sortables.push(Sortable.create(list, {
+                    group: { name: 'bf-dashboard', pull: 'clone', put: false },
+                    sort: false,
+                    draggable: '.bf-palette-entry',
+                }));
+            });
+            this.countUnplaced();
         },
 
         cancel() {
@@ -79,6 +90,35 @@ document.addEventListener('alpine:init', () => {
             this.sectionCount = this.sections().length;
         },
 
+        // Appends the entry's placeholder tile to the first section.
+        addWidget(button) {
+            if (this.sections().length === 0) {
+                this.addSection();
+            }
+
+            const entry = button.closest('.bf-palette-entry');
+
+            this.grids()[0].append(this.placeholder(entry));
+            entry.hidden = true;
+            this.countUnplaced();
+        },
+
+        removeWidget(button) {
+            const tile = button.closest('.bf-widget');
+
+            this.paletteEntry(tile.dataset.widgetId).hidden = false;
+            tile.remove();
+            this.countUnplaced();
+        },
+
+        matches(entry) {
+            return entry.dataset.search.includes(this.search.trim().toLowerCase());
+        },
+
+        get allPlaced() {
+            return this.unplaced === 0;
+        },
+
         resize(option) {
             const tile = option.closest('.bf-widget');
 
@@ -92,7 +132,28 @@ document.addEventListener('alpine:init', () => {
                 handle: '.bf-widget-handle',
                 draggable: '.bf-widget',
                 animation: 150,
+                // A palette entry dropped here becomes its placeholder tile
+                onAdd: (event) => {
+                    if (! event.item.matches('.bf-palette-entry')) {
+                        return;
+                    }
+                    event.item.replaceWith(this.placeholder(event.item));
+                    event.clone.hidden = true;
+                    this.countUnplaced();
+                },
             }));
+        },
+
+        placeholder(entry) {
+            return entry.querySelector('template[data-placeholder]').content.firstElementChild.cloneNode(true);
+        },
+
+        paletteEntry(id) {
+            return this.$root.querySelector(`.bf-palette-entry[data-palette-widget="${CSS.escape(id)}"]`);
+        },
+
+        countUnplaced() {
+            this.unplaced = this.$root.querySelectorAll('.bf-palette-entry:not([hidden])').length;
         },
 
         sections() {

@@ -41,6 +41,7 @@ class DashboardController extends AdminController
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
             'layout'    => (new LayoutResolver(service('dashboard')))->resolve(),
             'dashboard' => service('dashboard'),
+            'palette'   => service('dashboard')->grouped(),
         ]);
     }
 

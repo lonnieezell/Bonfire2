@@ -32,6 +32,11 @@ class StatsWidget extends ItemWidget
         return (string) $this->item->faIcon();
     }
 
+    public function description(): string
+    {
+        return lang('Bonfire.statCard');
+    }
+
     public function group(): string
     {
         return 'stats';

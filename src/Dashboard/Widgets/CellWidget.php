@@ -51,7 +51,7 @@ class CellWidget implements DashboardWidget
 
     public function description(): string
     {
-        return '';
+        return lang('Bonfire.customCard');
     }
 
     public function sizes(): SizeRange

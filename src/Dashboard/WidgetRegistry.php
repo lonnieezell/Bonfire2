@@ -50,13 +50,32 @@ class WidgetRegistry
     }
 
     /**
-     * The widgets a site admin has not switched off, by id.
+     * The widgets a site admin has not switched off and the viewer may see, by id.
      *
      * @return array<string, DashboardWidget>
      */
     public function available(): array
     {
-        return array_filter($this->all(), static fn (DashboardWidget $widget) => ! $widget instanceof ItemWidget || $widget->available());
+        $user = auth()->user();
+
+        return array_filter($this->all(), static fn (DashboardWidget $widget) => (! $widget instanceof ItemWidget || $widget->available())
+            && ($widget->permission() === null || $user?->can($widget->permission())));
+    }
+
+    /**
+     * The available widgets by palette group, in the palette's order.
+     *
+     * @return array<string, list<DashboardWidget>>
+     */
+    public function grouped(): array
+    {
+        $groups = ['quickLinks' => [], 'stats' => [], 'charts' => [], 'custom' => []];
+
+        foreach ($this->available() as $widget) {
+            $groups[isset($groups[$widget->group()]) ? $widget->group() : 'custom'][] = $widget;
+        }
+
+        return array_filter($groups);
     }
 
     /**

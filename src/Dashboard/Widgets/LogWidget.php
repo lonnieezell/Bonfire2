@@ -29,6 +29,11 @@ class LogWidget extends ItemWidget
         return 'fas fa-file-lines';
     }
 
+    public function description(): string
+    {
+        return lang('Bonfire.logCard');
+    }
+
     public function group(): string
     {
         return 'charts';

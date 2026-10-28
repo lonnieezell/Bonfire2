@@ -115,6 +115,44 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['md', 'lg', 'full'], $options[1]);
     }
 
+    public function testThePaletteListsAvailableWidgetsHidingPlacedOnes(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
+
+        $entries = $this->paletteEntries($this->dashboard($this->user));
+
+        $this->assertTrue($entries['stats:usersInRecycler693']['hidden']);
+        $this->assertFalse($entries['stats:userGroups643']['hidden']);
+        $this->assertFalse($entries[self::QUICK_LINKS]['hidden']);
+        $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
+        $this->assertSame('stats', $entries['stats:userGroups643']['group']);
+        $this->assertSame('custom', $entries[self::QUICK_LINKS]['group']);
+    }
+
+    public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void
+    {
+        $html = $this->dashboard($this->user);
+
+        $this->assertMatchesRegularExpression(
+            '#data-palette-widget="stats&\#x3A;userGroups643".*?<template data-placeholder>\s*(?:<!--.*?-->\s*)*<div class="bf-widget bf-span-3" data-widget-id="stats&\#x3A;userGroups643" data-size="sm">#s',
+            $html,
+        );
+    }
+
+    public function testTilesCanBeRemoved(): void
+    {
+        $this->assertMatchesRegularExpression('#data-widget-id="stats&\#x3A;usersInRecycler693".*?<button[^>]*@click="removeWidget\(\$el\)"#s', $this->dashboard($this->user));
+    }
+
+    public function testAWidgetMadeAvailableLaterOnlyAppearsInACustomizedUsersPalette(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
+        setting('Stats.Stats_usersExpTable693', 'on');
+
+        $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
+        $this->assertFalse($this->paletteEntries($this->dashboard($this->user))['stats:usersExpTable693']['hidden']);
+    }
+
     public function testAMalformedPayloadOrWrongVersionIsRejected(): void
     {
         $this->save($this->user, 'nonsense')->assertStatus(400);
@@ -171,6 +209,27 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertNull($offLayout->value());
     }
 
+    /**
+     * @return array<string, array{group: string, hidden: bool}>
+     */
+    private function paletteEntries(string $html): array
+    {
+        $entries = [];
+
+        foreach (array_slice(explode('<div class="bf-palette-group" data-palette-group="', $html), 1) as $chunk) {
+            $group = strstr($chunk, '"', true);
+            $list  = $chunk;
+
+            preg_match_all('#<li class="bf-palette-entry" data-palette-widget="([^"]+)"( hidden)?#', $list, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $match) {
+                $entries[html_entity_decode($match[1])] = ['group' => $group, 'hidden' => isset($match[2])];
+            }
+        }
+
+        return $entries;
+    }
+
     private function logViewer(): User
     {
         setting('Stats.Logs_logActivity', 'on');
@@ -210,7 +269,10 @@ final class CustomizeDashboardTest extends TestCase
     private function renderedIds(User $user): array
     {
         Services::resetSingle('viewMeta');
-        preg_match_all('/data-widget-id="([^"]+)"/', $this->dashboard($user), $matches);
+        $html = $this->dashboard($user);
+        // Only the placed tiles, not the palette's placeholders
+        $html = substr($html, 0, (int) strpos($html, '<template x-ref="newSection">'));
+        preg_match_all('/data-widget-id="([^"]+)"/', $html, $matches);
 
         return array_map(html_entity_decode(...), $matches[1]);
     }

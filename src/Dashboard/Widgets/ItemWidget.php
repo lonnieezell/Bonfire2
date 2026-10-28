@@ -44,13 +44,11 @@ abstract class ItemWidget implements DashboardWidget
         return $this->item->settings()->enabled();
     }
 
-    public function description(): string
-    {
-        return '';
-    }
-
+    /**
+     * The item's own permission(), if it declares one.
+     */
     public function permission(): ?string
     {
-        return null;
+        return method_exists($this->item, 'permission') ? $this->item->permission() : null;
     }
 }

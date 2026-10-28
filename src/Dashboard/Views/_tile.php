@@ -12,6 +12,9 @@
         <button type="button" class="bf-widget-handle" aria-label="<?= esc(lang('Bonfire.dragWidget', [$widget->title()]), 'attr') ?>">
             <i class="fas fa-grip-vertical" aria-hidden="true"></i>
         </button>
+        <button type="button" class="bf-widget-tool" @click="removeWidget($el)" aria-label="<?= esc(lang('Bonfire.removeWidget', [$widget->title()]), 'attr') ?>">
+            <i class="fas fa-xmark" aria-hidden="true"></i>
+        </button>
         <div class="dropdown">
             <button type="button" class="bf-widget-tool" data-bs-toggle="dropdown" aria-expanded="false"
                 aria-label="<?= esc(lang('Bonfire.widgetMenu', [$widget->title()]), 'attr') ?>">

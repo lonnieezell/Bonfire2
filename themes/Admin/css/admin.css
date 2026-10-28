@@ -1935,6 +1935,60 @@ input[type="checkbox"]:indeterminate {
     margin-right: auto;
 }
 
+/* Widget palette: available widgets to add, and the placeholder an added one shows until saved. */
+.bf-palette-group + .bf-palette-group {
+    margin-top: 16px;
+}
+
+.bf-palette-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--bf-border);
+    border-radius: 8px;
+    background: var(--bf-surface);
+    cursor: grab;
+}
+
+.bf-palette-entry + .bf-palette-entry {
+    margin-top: 6px;
+}
+
+.bf-palette-entry-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.bf-dashboard-grid > .bf-palette-entry {
+    grid-column: span 12;
+}
+
+.bf-widget-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    margin: 0;
+    padding: 16px 18px;
+}
+
+.bf-widget-placeholder h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.bf-widget-placeholder p {
+    margin: 0;
+}
+
+.bf-widget-placeholder-note {
+    color: var(--bf-muted);
+    font-size: 13px;
+}
+
 /* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
 .bf-log-activity > .bf-card-head {
     display: flex;

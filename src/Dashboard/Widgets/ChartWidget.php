@@ -61,6 +61,16 @@ class ChartWidget extends ItemWidget
         };
     }
 
+    /**
+     * The chart type in words: polarArea becomes "Polar area chart".
+     */
+    public function description(): string
+    {
+        $type = (string) preg_replace('/(?<!^)[A-Z]/', ' $0', (string) $this->item->type());
+
+        return lang('Bonfire.chartOfType', [ucfirst(strtolower($type))]);
+    }
+
     public function group(): string
     {
         return 'charts';

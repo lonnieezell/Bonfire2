@@ -70,7 +70,8 @@ final class DashboardLayoutTest extends TestCase
     {
         setting('Stats.Stats_usersInRecycler693', 'on');
 
-        preg_match_all('/class="bf-widget bf-span-(\d+)" data-widget-id="([^"]+)"/', $this->dashboard(), $matches);
+        $html = $this->dashboard();
+        preg_match_all('/class="bf-widget bf-span-(\d+)" data-widget-id="([^"]+)"/', substr($html, 0, (int) strpos($html, '<template x-ref="newSection">')), $matches);
         $spans = array_combine(array_map(html_entity_decode(...), $matches[2]), $matches[1]);
 
         $this->assertSame('3', $spans['stats:usersInRecycler693']);
@@ -118,7 +119,10 @@ final class DashboardLayoutTest extends TestCase
      */
     private function renderedIds(): array
     {
-        preg_match_all('/data-widget-id="([^"]+)"/', $this->dashboard(), $matches);
+        $html = $this->dashboard();
+        // Only the placed tiles, not the palette's placeholders
+        $html = substr($html, 0, (int) strpos($html, '<template x-ref="newSection">'));
+        preg_match_all('/data-widget-id="([^"]+)"/', $html, $matches);
 
         return array_map(static fn (string $id) => html_entity_decode($id), $matches[1]);
     }

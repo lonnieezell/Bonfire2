@@ -45,10 +45,15 @@
             </button>
         </div>
 
+		<?= $this->setData(['groups' => $palette, 'placed' => $layout->ids()])->include('Bonfire\Dashboard\Views\_widget_palette') ?>
+
         <div class="bf-floating-bar" x-show="editing" x-cloak>
             <div class="bf-floating-bar-inner bf-dashboard-editbar">
                 <span class="bf-dashboard-editbar-text" x-show="! failed"><?= lang('Bonfire.customizing') ?></span>
                 <span class="bf-dashboard-editbar-text text-danger" x-show="failed" role="alert"><?= lang('Bonfire.layoutFailed') ?></span>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="offcanvas" data-bs-target="#bf-widget-palette" aria-controls="bf-widget-palette">
+                    <i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Bonfire.addWidgets') ?>
+                </button>
                 <form method="post" action="<?= url_to('dashboard-layout-reset') ?>">
 					<?= csrf_field() ?>
                     <button type="submit" class="btn btn-link" data-confirm="<?= esc(lang('Bonfire.resetLayoutQ'), 'attr') ?>" data-confirm-button="<?= esc(lang('Bonfire.resetLayout'), 'attr') ?>">
