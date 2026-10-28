@@ -190,7 +190,9 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testAMalformedPayloadOrWrongVersionIsRejected(): void
     {
-        $this->save($this->user, 'nonsense')->assertStatus(400)->assertJSONFragment(['csrf' => csrf_hash()]);
+        $rejected = $this->save($this->user, 'nonsense');
+        $rejected->assertStatus(400);
+        $rejected->assertJSONFragment(['csrf' => csrf_hash()]);
         $this->save($this->user, [], 2)->assertStatus(400);
 
         $this->assertNull(setting()->get('Dashboard.layout', 'user:' . $this->user->id));
