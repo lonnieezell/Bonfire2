@@ -11,8 +11,10 @@
 
 namespace Tests\Widgets;
 
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Shield\Entities\User;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\RendersDashboard;
 use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
@@ -21,6 +23,7 @@ use Tests\Support\TestCase;
  */
 final class WidgetsSettingsControllerTest extends TestCase
 {
+    use RendersDashboard;
     use SubmitsForms;
 
     protected $refresh = true;
@@ -30,6 +33,7 @@ final class WidgetsSettingsControllerTest extends TestCase
     {
         parent::setUp();
 
+        $this->forgetDashboardState();
         $this->user = $this->createUser();
         $this->user->addGroup('superadmin');
     }
@@ -89,117 +93,22 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertEmpty(setting('Stats.Stats_usersInRecycler693'));
     }
 
-    public function testSavingStatsOptions()
-    {
-        $this->actingAs($this->user)
-            ->post('/admin/settings/widgets', ['widget' => 'stats', 'stats_showLink' => 'on']);
-        $this->assertSame('on', setting('Stats.stats_showLink'));
-
-        $this->actingAs($this->user)
-            ->post('/admin/settings/widgets', ['widget' => 'stats']);
-        $this->assertEmpty(setting('Stats.stats_showLink'));
-    }
-
-    public function testSavingLineChartOptions()
-    {
-        $this->actingAs($this->user)->post('/admin/settings/widgets', [
-            'widget'              => 'linechart',
-            'line_showTitle'      => 'on',
-            'line_legendPosition' => 'top',
-            'line_tension'        => '0.5',
-            'useCustomSettings'   => 'on',
-            'line_borderColor'    => '#ff0000',
-            'line_borderWidth'    => '3',
-        ]);
-
-        $this->assertSame('on', setting('LineChart.line_showTitle'));
-        $this->assertEmpty(setting('LineChart.line_showLegend'));
-        $this->assertSame('top', setting('LineChart.line_legendPosition'));
-        $this->assertSame('0.5', setting('LineChart.line_tension'));
-        $this->assertSame('on', setting('LineChart.useCustomSettings'));
-        $this->assertSame('#ff0000', setting('LineChart.line_borderColor'));
-        $this->assertSame('3', setting('LineChart.line_borderWidth'));
-    }
-
-    public function testSavingLineChartWithoutCustomSettingsForgetsTheCustomOnes()
-    {
-        setting('LineChart.line_borderColor', '#ff0000');
-        setting('LineChart.line_borderWidth', '3');
-
-        $this->actingAs($this->user)->post('/admin/settings/widgets', [
-            'widget'           => 'linechart',
-            'line_borderColor' => '#00ff00',
-        ]);
-
-        $this->assertEmpty(setting('LineChart.useCustomSettings'));
-        $this->assertNotSame('#ff0000', setting('LineChart.line_borderColor'));
-        $this->assertNotSame('#00ff00', setting('LineChart.line_borderColor'));
-        $this->assertNotSame('3', setting('LineChart.line_borderWidth'));
-    }
-
-    #[DataProvider('provideSavingSchemedChartOptions')]
-    public function testSavingSchemedChartOptions(string $alias, string $class, string $prefix)
-    {
-        $this->actingAs($this->user)->post('/admin/settings/widgets', [
-            'widget'                    => $alias,
-            $prefix . '_showLegend'     => 'on',
-            $prefix . '_legendPosition' => 'left',
-            $prefix . '_colorScheme'    => 'Blues',
-        ]);
-
-        $this->assertSame('on', setting("{$class}.{$prefix}_showLegend"));
-        $this->assertEmpty(setting("{$class}.{$prefix}_showTitle"));
-        $this->assertEmpty(setting("{$class}.{$prefix}_enableAnimation"));
-        $this->assertSame('left', setting("{$class}.{$prefix}_legendPosition"));
-        $this->assertSame('Blues', setting("{$class}.{$prefix}_colorScheme"));
-
-        $this->actingAs($this->user)->post('/admin/settings/widgets', ['widget' => $alias]);
-
-        $this->assertSame('null', setting("{$class}.{$prefix}_colorScheme"));
-    }
-
-    public static function provideSavingSchemedChartOptions(): iterable
-    {
-        yield 'bar' => ['barchart', 'BarChart', 'bar'];
-
-        yield 'doughnut' => ['doughnutchart', 'DoughnutChart', 'doughnut'];
-
-        yield 'pie' => ['piechart', 'PieChart', 'pie'];
-
-        yield 'polarArea' => ['polarareachart', 'PolarAreaChart', 'polarArea'];
-    }
-
     public function testResetForgetsEverything()
     {
         setting('Stats.Stats_usersInRecycler693', 'on');
         setting('Stats.stats_showLink', false);
-        setting('LineChart.line_tension', '0.9');
-        setting('LineChart.useCustomSettings', 'on');
-        setting('LineChart.line_borderColor', '#ff0000');
+        setting('LineChart.line_tension', 0.9);
         setting('BarChart.bar_colorScheme', 'Blues');
-        setting('DoughnutChart.doughnut_legendPosition', 'left');
-        setting('PieChart.pie_showTitle', false);
-        setting('PolarAreaChart.polarArea_enableAnimation', false);
         setting('Stats.Logs_logActivity', 'on');
-        setting('LogActivity.logActivity_fileCount', '5');
-        setting('LogActivity.logActivity_hideDebug', 'on');
+        setting('LogActivity.logActivity_fileCount', 5);
 
         $this->actingAs($this->user)
             ->post('/admin/settings/widgetsReset')
             ->assertRedirect();
 
-        $this->assertEmpty(setting('Stats.Stats_usersInRecycler693'));
-        $this->assertTrue(setting('Stats.stats_showLink'));
-        $this->assertEqualsWithDelta(0.1, setting('LineChart.line_tension'), PHP_FLOAT_EPSILON);
-        $this->assertEmpty(setting('LineChart.useCustomSettings'));
-        $this->assertEmpty(setting('LineChart.line_borderColor'));
-        $this->assertSame('null', setting('BarChart.bar_colorScheme'));
-        $this->assertSame('bottom', setting('DoughnutChart.doughnut_legendPosition'));
-        $this->assertTrue(setting('PieChart.pie_showTitle'));
-        $this->assertTrue(setting('PolarAreaChart.polarArea_enableAnimation'));
-        $this->assertEmpty(setting('Stats.Logs_logActivity'));
-        $this->assertSame(7, setting('LogActivity.logActivity_fileCount'));
-        $this->assertFalse(setting('LogActivity.logActivity_hideDebug'));
+        foreach (['Stats.Stats_usersInRecycler693', 'Stats.stats_showLink', 'LineChart.line_tension', 'BarChart.bar_colorScheme', 'Stats.Logs_logActivity', 'LogActivity.logActivity_fileCount'] as $key) {
+            $this->assertNull(setting($key), $key);
+        }
     }
 
     public function testAdminWithoutPermissionIsRedirected()
@@ -208,10 +117,9 @@ final class WidgetsSettingsControllerTest extends TestCase
         $user->addGroup('user');
 
         $this->actingAs($user)
-            ->post('/admin/settings/widgets', ['widget' => 'stats', 'stats_showLink' => 'on']);
+            ->post('/admin/settings/widgets', ['widget' => 'stats', 'showLink' => '']);
 
-        $this->assertTrue(setting('Stats.stats_showLink'));
-        $this->assertNotSame('on', setting('Stats.stats_showLink'));
+        $this->assertNull(setting('Stats.stats_showLink'));
     }
 
     public function testEnabledFlagsRoundTripThroughTheForm(): void
@@ -225,62 +133,101 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertEmpty(setting('Stats.Stats_userGroups643'));
     }
 
-    /**
-     * @param array<string, mixed> $settings
-     */
-    #[DataProvider('provideOptionsRoundTripThroughTheForm')]
-    public function testOptionsRoundTripThroughTheForm(string $alias, array $settings): void
+    public function testValuesStoredByEarlierVersionsAreStillRead(): void
     {
-        foreach ($settings as $key => $value) {
-            setting($key, $value);
-        }
+        setting('LogActivity.logActivity_fileCount', '14');
+        setting('LogActivity.logActivity_hideDebug', 'on');
 
-        $this->submitTheForm('/admin/settings/widgets/' . $alias);
+        $shown = $this->shownFields('/admin/settings/widgets/logactivity');
 
-        foreach ($settings as $key => $value) {
-            $this->assertSame($value, setting($key), $key);
-        }
+        $this->assertSame('14', $shown['fileCount'] ?? null);
+        $this->assertSame('1', $shown['hideDebug'] ?? null);
     }
 
-    public static function provideOptionsRoundTripThroughTheForm(): iterable
+    public function testAValueThatIsNotOneKeepsTheStoredDefault(): void
     {
-        yield 'stats on' => ['stats', ['Stats.stats_showLink' => 'on']];
+        setting('BarChart.bar_colorScheme', 'Blues');
 
-        yield 'stats off' => ['stats', ['Stats.stats_showLink' => false]];
+        $this->actingAs($this->user)->post('/admin/settings/widgets', ['widget' => 'barchart', 'colorScheme' => 'Bogus'])->assertRedirect();
 
-        yield 'line' => ['linechart', [
-            'LineChart.line_showTitle'       => 'on',
-            'LineChart.line_showLegend'      => false,
-            'LineChart.line_legendPosition'  => 'right',
-            'LineChart.line_enableAnimation' => 'on',
-            'LineChart.line_tension'         => '0.4',
-        ]];
+        $this->assertSame('Blues', setting('BarChart.bar_colorScheme'));
+    }
 
-        yield 'log activity' => ['logactivity', [
-            'LogActivity.logActivity_hideDebug' => 'on',
-            'LogActivity.logActivity_fileCount' => '14',
-        ]];
+    public function testATabNoWidgetIsKeyedToIsNotFound(): void
+    {
+        $this->expectException(PageNotFoundException::class);
 
-        yield 'log activity, debug shown' => ['logactivity', [
-            'LogActivity.logActivity_hideDebug' => false,
-            'LogActivity.logActivity_fileCount' => '12',
-        ]];
+        $this->actingAs($this->user)->get('/admin/settings/widgets/radarchart');
+    }
 
-        foreach (self::provideSavingSchemedChartOptions() as $name => [$alias, $class, $prefix]) {
-            yield $name => [$alias, [
-                "{$class}.{$prefix}_showTitle"       => false,
-                "{$class}.{$prefix}_showLegend"      => 'on',
-                "{$class}.{$prefix}_legendPosition"  => 'left',
-                "{$class}.{$prefix}_enableAnimation" => 'on',
-                "{$class}.{$prefix}_colorScheme"     => 'Greens',
-            ]];
+    public function testTheSchemePreviewShowsOnlyAKnownScheme(): void
+    {
+        // A GET, so the preview does not use up the form's CSRF token
+        $preview = fn (string $scheme) => $this->actingAs($this->user)->get('/admin/settings/widgets/schemePreview?' . http_build_query(['colorScheme' => $scheme]))->getBody();
+
+        $this->assertStringContainsString('color_scheme/Blues.png', $preview('Blues'));
+        $this->assertStringNotContainsString('<img', $preview('null'));
+        $this->assertStringNotContainsString('<img', $preview('"><script>'));
+    }
+
+    /**
+     * @param string|null $posted What the admin enters; null switches a toggle off
+     */
+    #[DataProvider('provideAFieldRoundTripsThroughTheSiteDefaultAndThePlacement')]
+    public function testAFieldRoundTripsThroughTheSiteDefaultAndThePlacement(string $tab, string $widget, string $field, ?string $posted, bool|float|int|string $inherited): void
+    {
+        $path   = '/admin/settings/widgets/' . $tab;
+        $fields = $this->shownFields($path);
+        $this->assertArrayHasKey('widget', $fields);
+
+        if ($posted === null) {
+            unset($fields[$field]);
+        } else {
+            $fields[$field] = $posted;
         }
+
+        $this->actingAs($this->user)->post('/admin/settings/widgets', $fields)->assertRedirect();
+
+        $shown = $this->shownFields($path);
+        $this->assertSame($posted, $shown[$field] ?? null, 'The tab shows the stored default');
+
+        preg_match('#<template data-settings-for="' . preg_quote(esc($widget, 'attr'), '#') . '" data-fields="([^"]+)"#', $this->dashboardHtml($this->user), $match);
+        $placed = array_column(json_decode(html_entity_decode($match[1] ?? ''), true) ?? [], 'inherited', 'name');
+        $this->assertSame($inherited, $placed[$field] ?? null, 'The placed widget inherits it');
+    }
+
+    public static function provideAFieldRoundTripsThroughTheSiteDefaultAndThePlacement(): iterable
+    {
+        yield 'stats link off' => ['stats', 'stats:usersInRecycler693', 'showLink', null, false];
+
+        yield 'line tension' => ['linechart', 'charts:usersByGroupLine123', 'tension', '0.4', 0.4];
+
+        yield 'bar legend position' => ['barchart', 'charts:usersByGroupBar345', 'legendPosition', 'left', 'left'];
+
+        yield 'doughnut legend off' => ['doughnutchart', 'charts:usersByGroupDou654', 'showLegend', null, false];
+
+        yield 'pie color scheme' => ['piechart', 'charts:usersByGroupPie223', 'colorScheme', 'Greens', 'Greens'];
+
+        yield 'polar area animation off' => ['polarareachart', 'charts:usersByGroupPiePolar645', 'enableAnimation', null, false];
+
+        yield 'log activity days' => ['logactivity', 'logs:logActivity', 'fileCount', '14', 14];
+
+        yield 'log activity debug hidden' => ['logactivity', 'logs:logActivity', 'hideDebug', '1', true];
+    }
+
+    /**
+     * What the form on that page would post.
+     *
+     * @return array<string, mixed>
+     */
+    private function shownFields(string $path): array
+    {
+        return $this->formFields($this->actingAs($this->user)->get($path)->getBody(), site_url(ADMIN_AREA . '/settings/widgets'));
     }
 
     private function submitTheForm(string $path): void
     {
-        $html   = $this->actingAs($this->user)->get($path)->getBody();
-        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/widgets'));
+        $fields = $this->shownFields($path);
 
         $this->actingAs($this->user)->post('/admin/settings/widgets', $fields)->assertRedirect();
     }

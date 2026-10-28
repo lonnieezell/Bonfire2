@@ -1,7 +1,6 @@
 <?php
 
 use Bonfire\Dashboard\DashboardWidget;
-use Bonfire\Dashboard\WidgetField;
 
 /**
  * The offcanvas where a placed widget's settings are changed in edit mode,
@@ -39,25 +38,7 @@ use Bonfire\Dashboard\WidgetField;
 		], $fields)), 'attr') ?>" data-title="<?= esc(lang('Bonfire.widgetSettingsFor', [$widget->title()]), 'attr') ?>" data-icon="<?= esc($widget->icon(), 'attr') ?>">
             <div>
 				<?php foreach ($fields as $field) : ?>
-					<?php $id        = 'bf-widget-setting-' . $field->name ?>
-					<?php $segmented = $field->type === 'choice' && count($field->options) <= 4 ?>
-                    <x-setting-row label="<?= esc($field->label, 'attr') ?>"<?= $segmented ? '' : ' for="' . $id . '"' ?><?= $field->description === null ? '' : ' description="' . esc($field->description, 'attr') . '"' ?>>
-						<?php if ($field->type === 'toggle') : ?>
-                            <x-switch name="<?= esc($field->name, 'attr') ?>" value="1" offValue="" id="<?= $id ?>" />
-						<?php elseif ($segmented) : ?>
-                            <x-segmented name="<?= esc($field->name, 'attr') ?>" label="<?= esc($field->label, 'attr') ?>" options="<?= esc(json_encode($field->options), 'attr') ?>" />
-						<?php elseif ($field->type === 'choice') : ?>
-                            <select class="form-select" name="<?= esc($field->name, 'attr') ?>" id="<?= $id ?>">
-								<?php foreach ($field->options as $value => $label) : ?>
-                                    <option value="<?= esc((string) $value, 'attr') ?>"><?= esc($label) ?></option>
-								<?php endforeach ?>
-                            </select>
-						<?php elseif ($field->type === 'number') : ?>
-                            <input type="number" class="form-control bf-input-narrow" name="<?= esc($field->name, 'attr') ?>" id="<?= $id ?>" step="<?= $field->step ?>"<?= $field->min === null ? '' : ' min="' . $field->min . '"' ?><?= $field->max === null ? '' : ' max="' . $field->max . '"' ?> required>
-						<?php else : ?>
-                            <input type="text" class="form-control" name="<?= esc($field->name, 'attr') ?>" id="<?= $id ?>" maxlength="<?= WidgetField::MAX_TEXT ?>">
-						<?php endif ?>
-                    </x-setting-row>
+					<?= view('Bonfire\Dashboard\Views\_widget_field', ['field' => $field, 'value' => null]) ?>
 				<?php endforeach ?>
             </div>
         </template>

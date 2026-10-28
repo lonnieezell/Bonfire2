@@ -11,11 +11,12 @@
 
 namespace Bonfire\Widgets\Types\Charts;
 
+use Bonfire\Dashboard\Widgets\ChartWidget;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
-use Bonfire\Widgets\WidgetOptions;
 
 /**
  * Represents an individual widget Charts.
@@ -274,8 +275,8 @@ class ChartsItem implements Item
      */
     public function getScript(array $overrides = []): string
     {
-        $options = WidgetOptions::forChartType($this->type());
-        $option  = static fn (string $name): mixed => $overrides[$name] ?? $options?->get($name);
+        $values = WidgetValues::resolve((new ChartWidget($this))->fields(), $overrides);
+        $option = $values->get(...);
 
         $flag = static fn (string $name): string => $option($name) ? 'true' : 'null';
         $text = static function (string $name) use ($option): string {
@@ -285,15 +286,12 @@ class ChartsItem implements Item
         };
 
         $line_tension    = $option('tension') ?: 'null';
-        $borderWidth     = $option('borderWidth') ?: 'null';
         $enableAnimation = $flag('enableAnimation');
         $showTitle       = $flag('showTitle');
-        $showSubTitle    = $flag('showSubTitle');
         $showLegend      = $flag('showLegend');
         $legendPosition  = $text('legendPosition');
 
-        $scheme          = $text('colorScheme');
-        $backgroundColor = $scheme !== 'null' ? $scheme : $text('borderColor');
+        $backgroundColor = $text('colorScheme');
         // A bar chart has always taken a lowercase border colour from the scheme name
         $borderColor = $this->type() === 'bar' ? strtolower(rtrim($backgroundColor, 's')) : $backgroundColor;
 
@@ -312,7 +310,7 @@ class ChartsItem implements Item
             ' . $borderColor . '
             const Chart_' . $this->chartName() . " = new Chart(
                 document.getElementById('" . $this->chartName() . "'),
-                drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
+                drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', null, ' . $enableAnimation . ', ' . $showTitle . ',	null,	' . $showLegend . ',  ' . $legendPosition . ')
             );';
     }
 

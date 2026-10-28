@@ -2,7 +2,7 @@
 
 <?php $this->section('main') ?>
 <x-settings-layout>
-    <?= view('Bonfire\Widgets\Views\_tabs', ['tab' => 'basics']) ?>
+    <?= view('Bonfire\Widgets\Views\_tabs', ['tab' => '', 'tabs' => $tabs]) ?>
 
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
         <?= csrf_field() ?>

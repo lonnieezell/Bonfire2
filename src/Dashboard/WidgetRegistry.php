@@ -89,9 +89,11 @@ class WidgetRegistry
     }
 
     /**
+     * Every widget, whether available or not, by id.
+     *
      * @return array<string, DashboardWidget>
      */
-    private function all(): array
+    public function all(): array
     {
         $widgets = $this->registered;
 

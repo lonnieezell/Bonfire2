@@ -13,19 +13,11 @@ namespace Bonfire\Widgets\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Where the settings library stores the Log activity widget's defaults
+ * (LogActivity.logActivity_fileCount, ...), so it must stay. The defaults
+ * are those of the widgets' fields().
+ */
 class LogActivity extends BaseConfig
 {
-    /**
-     * --------------------------------------------------------------------------
-     * Leave Debug entries out of the chart
-     * --------------------------------------------------------------------------
-     */
-    public bool $logActivity_hideDebug = false;
-
-    /**
-     * --------------------------------------------------------------------------
-     * How many of the last days to chart (1 to 31)
-     * --------------------------------------------------------------------------
-     */
-    public int $logActivity_fileCount = 7;
 }

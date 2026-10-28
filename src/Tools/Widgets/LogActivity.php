@@ -11,11 +11,12 @@
 
 namespace Bonfire\Tools\Widgets;
 
+use Bonfire\Dashboard\Widgets\LogWidget;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Tools\Libraries\LogStore;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
-use Bonfire\Widgets\WidgetOptions;
 use CodeIgniter\I18n\Time;
 use IntlDatePatternGenerator;
 
@@ -117,7 +118,8 @@ class LogActivity implements Item
      */
     public function days(): array
     {
-        $count   = max(1, min(self::MAX_DAYS, (int) $this->option('fileCount')));
+        $count   = (int) $this->option('fileCount');
+        $levels  = $this->levels();
         $pattern = (new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('Md');
         $days    = [];
 
@@ -129,7 +131,7 @@ class LogActivity implements Item
             $days[] = [
                 'name'   => $has ? $name : null,
                 'label'  => $day->toLocalizedString($pattern),
-                'counts' => $has ? $this->counts($this->store->levelCounts($name)) : [],
+                'counts' => $has ? $this->counts($this->store->levelCounts($name), $levels) : [],
             ];
         }
 
@@ -158,14 +160,15 @@ class LogActivity implements Item
 
     /**
      * @param array<string, int> $levelCounts Entries per log level, e.g. ['ERROR' => 2]
+     * @param list<string>       $levels      The levels shown
      *
      * @return array<string, int>
      */
-    private function counts(array $levelCounts): array
+    private function counts(array $levelCounts, array $levels): array
     {
         $counts = [];
 
-        foreach ($this->levels() as $level) {
+        foreach ($levels as $level) {
             $counts[$level] = array_sum(array_intersect_key($levelCounts, array_flip(self::LEVELS[$level])));
         }
 
@@ -174,6 +177,6 @@ class LogActivity implements Item
 
     private function option(string $name): mixed
     {
-        return $this->options[$name] ?? WidgetOptions::forAlias('logactivity')->get($name);
+        return $this->options[$name] ?? WidgetValues::resolve((new LogWidget($this))->fields())->get($name);
     }
 }

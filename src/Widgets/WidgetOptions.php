@@ -11,178 +11,84 @@
 
 namespace Bonfire\Widgets;
 
+use Bonfire\Dashboard\WidgetField;
 use CodeIgniter\HTTP\IncomingRequest;
 
 /**
- * The display options of Stats widgets, of each chart type and of the
- * Log activity widget, as data.
- *
- * Every set maps an option to the value stored when the settings form
- * leaves it out. Keys are <Config class>.<type>_<option>, e.g.
- * BarChart.bar_showTitle, and the defaults come from that Config class.
- * Saving, resetting and reading work the same for every set.
+ * The site defaults of one settings class, e.g. BarChart: the fields of the
+ * registered widgets keyed to it (BarChart.bar_showTitle, ...), each
+ * declared by its widget's fields(). A tab of Settings → Widgets.
  */
 final readonly class WidgetOptions
 {
     /**
-     * The one option that is not prefixed by its type, and that decides
-     * whether CUSTOM options are kept or forgotten.
+     * @param list<WidgetField> $fields
      */
-    private const SWITCH = 'useCustomSettings';
-
-    /**
-     * The sets that are not chart types, and whose Config class is named
-     * after the type alone.
-     */
-    private const NOT_CHARTS = ['stats', 'logActivity'];
-
-    private const COMMON = [
-        'showTitle'       => false,
-        'showLegend'      => false,
-        'legendPosition'  => false,
-        'enableAnimation' => false,
-    ];
-    private const SCHEMED = self::COMMON + ['colorScheme' => 'null'];
-    private const SETS    = [
-        'stats' => ['showLink' => false],
-        'line'  => self::COMMON + [
-            'showSubTitle'  => false,
-            'usePermission' => false,
-            'tension'       => null,
-            self::SWITCH    => false,
-        ],
-        'bar'         => self::SCHEMED,
-        'doughnut'    => self::SCHEMED,
-        'pie'         => self::SCHEMED,
-        'polarArea'   => self::SCHEMED,
-        'logActivity' => [
-            'hideDebug' => false,
-            'fileCount' => null,
-        ],
-    ];
-
-    /**
-     * Options only kept while SWITCH is on.
-     */
-    private const CUSTOM = [
-        'borderColor'          => '#000000',
-        'borderWidth'          => 1,
-        'pointBackgroundColor' => null,
-        'pointBorderColor'     => null,
-        'pointBorderWidth'     => null,
-    ];
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $options;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $custom;
-
-    private function __construct(private string $type)
+    private function __construct(public string $alias, public string $title, public array $fields)
     {
-        $this->options = self::SETS[$type];
-        $this->custom  = isset($this->options[self::SWITCH]) ? self::CUSTOM : [];
     }
 
     /**
-     * @return list<self>
+     * One set per settings class the registered widgets' fields are keyed to, by alias.
+     *
+     * @return array<string, self>
      */
     public static function all(): array
     {
-        return array_map(static fn (string $type) => new self($type), array_keys(self::SETS));
+        $fields = [];
+
+        foreach (service('dashboard')->all() as $widget) {
+            foreach ($widget->fields() as $field) {
+                if ($field->key !== null) {
+                    $fields[strstr($field->key, '.', true)][$field->key] ??= $field;
+                }
+            }
+        }
+
+        helper('inflector');
+        $sets = [];
+
+        foreach ($fields as $class => $keyed) {
+            $sets[strtolower($class)] = new self(strtolower($class), humanize(decamelize($class)), array_values($keyed));
+        }
+
+        return $sets;
     }
 
     /**
-     * The set behind a tab of the widgets settings: "stats", "barchart", ...
+     * The set behind a tab of Settings → Widgets: "stats", "barchart", ...
      */
     public static function forAlias(string $alias): ?self
     {
-        foreach (self::all() as $set) {
-            if ($set->alias() === $alias) {
-                return $set;
-            }
-        }
-
-        return null;
+        return self::all()[$alias] ?? null;
     }
 
     /**
-     * The set of a ChartsItem type: "line", "bar", "polarArea", ...
+     * Stores each posted value, as its field's type. A toggle left out is
+     * off; a value that equals the default is forgotten, and one that is not
+     * a value of the field keeps what is stored.
      */
-    public static function forChartType(?string $type): ?self
-    {
-        return ! in_array($type, self::NOT_CHARTS, true) && isset(self::SETS[$type]) ? new self($type) : null;
-    }
-
-    public function alias(): string
-    {
-        return strtolower($this->configClass());
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function optionNames(): array
-    {
-        return array_keys($this->options + $this->custom);
-    }
-
-    /**
-     * The name of the form input carrying this option.
-     */
-    public function fieldName(string $option): string
-    {
-        return $option === self::SWITCH ? $option : $this->type . '_' . $option;
-    }
-
-    public function key(string $option): string
-    {
-        return $this->configClass() . '.' . $this->fieldName($option);
-    }
-
-    /**
-     * The stored value, or the Config default; null for an option this set does not have.
-     */
-    public function get(string $option): mixed
-    {
-        return array_key_exists($option, $this->options + $this->custom) ? setting()->get($this->key($option)) : null;
-    }
-
     public function save(IncomingRequest $request): void
     {
-        foreach ($this->options as $option => $whenAbsent) {
-            $this->store($request, $option, $whenAbsent);
-        }
+        foreach ($this->fields as $field) {
+            $value = $field->cast($request->getPost($field->name) ?? ($field->type === 'toggle' ? false : null));
 
-        $keepCustom = (bool) setting($this->key(self::SWITCH));
+            if ($value === null) {
+                continue;
+            }
 
-        foreach ($this->custom as $option => $whenAbsent) {
-            if ($keepCustom) {
-                $this->store($request, $option, $whenAbsent);
+            if ($value === $field->default) {
+                setting()->forget($field->key);
             } else {
-                setting()->forget($this->key($option));
+                setting($field->key, $value);
             }
         }
-    }
-
-    private function store(IncomingRequest $request, string $option, mixed $whenAbsent): void
-    {
-        setting($this->key($option), $request->getPost($this->fieldName($option)) ?? $whenAbsent);
     }
 
     public function reset(): void
     {
-        foreach ($this->optionNames() as $option) {
-            setting()->forget($this->key($option));
+        foreach ($this->fields as $field) {
+            setting()->forget($field->key);
         }
-    }
-
-    private function configClass(): string
-    {
-        return ucfirst($this->type) . (in_array($this->type, self::NOT_CHARTS, true) ? '' : 'Chart');
     }
 }

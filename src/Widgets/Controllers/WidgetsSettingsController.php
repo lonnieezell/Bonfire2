@@ -13,6 +13,7 @@ namespace Bonfire\Widgets\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Widgets\WidgetOptions;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -32,6 +33,7 @@ class WidgetsSettingsController extends AdminController
 
         return $this->render($this->viewPrefix . 'settings', [
             'items' => service('widgets')->items(),
+            'tabs'  => WidgetOptions::all(),
         ]);
     }
 
@@ -41,8 +43,15 @@ class WidgetsSettingsController extends AdminController
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        return $this->render($this->viewPrefix . '_' . $alias, [
-            'tab' => $alias,
+        $tabs = WidgetOptions::all();
+
+        if (! isset($tabs[$alias])) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $this->render($this->viewPrefix . 'defaults', [
+            'tabs'    => $tabs,
+            'options' => $tabs[$alias],
         ]);
     }
 
@@ -78,26 +87,13 @@ class WidgetsSettingsController extends AdminController
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        $req = 'null';
+        $scheme = (string) $this->request->getGet('colorScheme');
 
-        if ($this->request->getVar('bar_colorScheme')) {
-            $req = $this->request->getVar('bar_colorScheme');
-        }
-        if ($this->request->getVar('doughnut_colorScheme')) {
-            $req = $this->request->getVar('doughnut_colorScheme');
-        }
-        if ($this->request->getVar('pie_colorScheme')) {
-            $req = $this->request->getVar('pie_colorScheme');
-        }
-        if ($this->request->getVar('polarArea_colorScheme')) {
-            $req = $this->request->getVar('polarArea_colorScheme');
+        if ($scheme === 'null' || ! array_key_exists($scheme, lang('Widgets.colorSchemes'))) {
+            return '';
         }
 
-        if ($req !== 'null') {
-            return '<img src="/assets/admin/img/color_scheme/' . $req . '.png" style="height:40px !important; width:300px; ';
-        }
-
-        return '';
+        return '<img src="/assets/admin/img/color_scheme/' . $scheme . '.png" style="height:40px; width:300px;" alt="">';
     }
 
     /**

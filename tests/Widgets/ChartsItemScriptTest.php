@@ -12,7 +12,6 @@
 namespace Tests\Widgets;
 
 use Bonfire\Widgets\Types\Charts\ChartsItem;
-use Bonfire\Widgets\WidgetOptions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\TestCase;
 
@@ -51,11 +50,10 @@ final class ChartsItemScriptTest extends TestCase
             'line',
             [
                 'LineChart.line_tension'         => 0.5,
-                'LineChart.line_showSubTitle'    => true,
                 'LineChart.line_enableAnimation' => false,
                 'LineChart.line_legendPosition'  => 'top',
             ],
-            "'line', 0.5, backgroundColor__ID , borderColor__ID, null, null, true, true, true, 'top')",
+            "'line', 0.5, backgroundColor__ID , borderColor__ID, null, null, true, null, true, 'top')",
         ];
 
         yield 'bar, config defaults' => [
@@ -110,7 +108,7 @@ final class ChartsItemScriptTest extends TestCase
     public function testOptionsPassedInTakeThePlaceOfTheStoredOnes()
     {
         // Options stored by an earlier test stay in the shared settings cache
-        WidgetOptions::forChartType('bar')->reset();
+        setting()->flush();
         setting('BarChart.bar_colorScheme', 'Blues');
         setting('BarChart.bar_showLegend', 'on');
 

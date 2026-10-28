@@ -16,7 +16,6 @@ use Bonfire\Dashboard\SizeRange;
 use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Tools\Widgets\LogActivity;
-use Bonfire\Widgets\WidgetOptions;
 
 /**
  * An item of the "logs" widget, such as Log activity, which renders itself.
@@ -49,7 +48,7 @@ class LogWidget extends ItemWidget
     }
 
     /**
-     * The options of Settings → Widgets → Log activity, for Log activity.
+     * For Log activity, keyed to its defaults in Settings → Widgets.
      */
     public function fields(): array
     {
@@ -57,11 +56,9 @@ class LogWidget extends ItemWidget
             return [];
         }
 
-        $options = WidgetOptions::forAlias('logactivity');
-
         return [
-            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: LogActivity::MAX_DAYS, key: $options->key('fileCount'), description: lang('Tools.logActivityDaysHint')),
-            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false, key: $options->key('hideDebug')),
+            WidgetField::number('fileCount', lang('Tools.logActivityDays'), default: 7, min: 1, max: LogActivity::MAX_DAYS, key: 'LogActivity.logActivity_fileCount', description: lang('Tools.logActivityDaysHint')),
+            WidgetField::toggle('hideDebug', lang('Tools.logActivityHideDebug'), default: false, key: 'LogActivity.logActivity_hideDebug'),
         ];
     }
 

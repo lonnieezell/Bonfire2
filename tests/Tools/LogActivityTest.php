@@ -5,7 +5,6 @@ namespace Tests\Tools;
 use Bonfire\Tools\Libraries\LogStore;
 use Bonfire\Tools\Widgets\LogActivity;
 use Bonfire\Widgets\WidgetKind;
-use Bonfire\Widgets\WidgetOptions;
 use CodeIgniter\I18n\Time;
 use Tests\Support\TestCase;
 
@@ -28,7 +27,7 @@ final class LogActivityTest extends TestCase
         $this->widget = new LogActivity(new LogStore($this->dir));
 
         // Options stored by an earlier test stay in the shared settings cache
-        WidgetOptions::forAlias('logactivity')->reset();
+        setting()->flush();
 
         Time::setTestNow('2024-01-03');
     }

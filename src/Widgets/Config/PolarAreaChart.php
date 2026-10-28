@@ -13,55 +13,11 @@ namespace Bonfire\Widgets\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Where the settings library stores the polar area chart defaults
+ * (PolarAreaChart.polarArea_showTitle, ...), so it must stay. The defaults
+ * are those of the widgets' fields().
+ */
 class PolarAreaChart extends BaseConfig
 {
-    /**
-     * --------------------------------------------------------------------------
-     * Enable the chart animation
-     * --------------------------------------------------------------------------
-     */
-    public bool $polarArea_enableAnimation = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Show the chart title
-     * --------------------------------------------------------------------------
-     */
-    public bool $polarArea_showTitle = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Show the chart legend
-     * --------------------------------------------------------------------------
-     */
-    public bool $polarArea_showLegend = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Set the legend position
-     *
-     * possible value are:
-     * top
-     * left
-     * bottom
-     * right
-     * --------------------------------------------------------------------------
-     */
-    public string $polarArea_legendPosition = 'bottom';
-
-    /**
-     * --------------------------------------------------------------------------
-     * Set the default color scheme to fill the chart
-     *
-     * possible value are:
-     * null
-     * Blues
-     * Greens
-     * Greys
-     * Oranges
-     * Purples
-     * Reds
-     * --------------------------------------------------------------------------
-     */
-    public string $polarArea_colorScheme = 'null';
 }
