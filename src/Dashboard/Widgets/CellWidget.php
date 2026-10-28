@@ -36,14 +36,6 @@ class CellWidget implements DashboardWidget
     }
 
     /**
-     * The cell alias a widget id names, or null for other widgets.
-     */
-    public static function aliasOf(string $id): ?string
-    {
-        return str_starts_with($id, 'cell:') ? substr($id, 5) : null;
-    }
-
-    /**
      * The method name in words: quickLinks becomes "Quick Links".
      */
     public function title(): string

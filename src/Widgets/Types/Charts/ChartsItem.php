@@ -17,6 +17,7 @@ use Bonfire\View\Metadata;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
+use Closure;
 
 /**
  * Represents an individual widget Charts.
@@ -119,6 +120,11 @@ class ChartsItem implements Item
      * The name of the module that adds the item, its heading in the widget library.
      */
     protected ?string $module = null;
+
+    /**
+     * The query addDataset() stored, run when the data or labels are first read.
+     */
+    private ?Closure $fetch = null;
 
     /**
      * Adds Chart.js and its helpers to the page, once.
@@ -231,11 +237,15 @@ class ChartsItem implements Item
 
     public function data(): ?array
     {
+        $this->runStoredQuery();
+
         return $this->data;
     }
 
     public function setData(array $data): ChartsItem
     {
+        // The stored query fills the labels too, so it runs before its data is replaced
+        $this->runStoredQuery();
         $this->data = $data;
 
         return $this;
@@ -243,11 +253,14 @@ class ChartsItem implements Item
 
     public function label(): ?array
     {
+        $this->runStoredQuery();
+
         return $this->label;
     }
 
     public function setLabel(array $label): ChartsItem
     {
+        $this->runStoredQuery();
         $this->label = $label;
 
         return $this;
@@ -314,43 +327,40 @@ class ChartsItem implements Item
             );';
     }
 
+    /**
+     * Stores the query, run when the data is first read: only a chart the dashboard shows runs it.
+     */
     public function addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count'): ChartsItem
     {
-        // Only fetch the data on the dashboard, and when this chart is enabled
-        if (! service('dashboardContext')->shows($this->settings(), $this->permission)) {
-            return $this;
-        }
+        $this->fetch = static function () use ($tableName, $groupField, $countField, $selectMode): array {
+            $groupsData = db_connect()->table($tableName)
+                ->select($groupField);
 
-        // Chart Section Begin
-        $groupsData = db_connect()->table($tableName)
-            ->select($groupField);
+            $groupsData = match ($selectMode) {
+                'count' => $groupsData->selectCount($countField),
+                'avg'   => $groupsData->selectAvg($countField),
+                'max'   => $groupsData->selectMax($countField),
+                'min'   => $groupsData->selectMin($countField),
+                'sum'   => $groupsData->selectSum($countField),
+                // TODO: return error message
+                default => $groupsData->selectCount($countField),
+            };
 
-        $groupsData = match ($selectMode) {
-            'count' => $groupsData->selectCount($countField),
-            'avg'   => $groupsData->selectAvg($countField),
-            'max'   => $groupsData->selectMax($countField),
-            'min'   => $groupsData->selectMin($countField),
-            'sum'   => $groupsData->selectSum($countField),
-            // TODO: return error message
-            default => $groupsData->selectCount($countField),
+            $groupsData = $groupsData->groupBy($groupField)
+                ->get()
+                ->getResultArray();
+
+            return [array_column($groupsData, $countField), array_column($groupsData, $groupField)];
         };
 
-        $groupsData = $groupsData->groupBy($groupField)
-            ->get()
-            ->getResultArray();
-
-        // Prepare Data
-        $data  = [];
-        $label = [];
-
-        foreach ($groupsData as $el) {
-            $data[]  = $el[$countField];
-            $label[] = $el[$groupField];
-        }
-
-        $this->setData($data);
-        $this->setLabel($label);
-
         return $this;
+    }
+
+    private function runStoredQuery(): void
+    {
+        if ($this->fetch !== null) {
+            [$this->data, $this->label] = ($this->fetch)();
+            $this->fetch                = null;
+        }
     }
 }

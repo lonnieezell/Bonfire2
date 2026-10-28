@@ -11,11 +11,12 @@
 
 namespace Tests\Widgets;
 
+use Bonfire\Widgets\Types\Charts\Charts;
+use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\Stats;
 use Bonfire\Widgets\Types\Stats\StatsItem;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User;
-use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
@@ -75,7 +76,6 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testStatsValueIsFilledInOnTheDashboard()
     {
-        StubDashboard::inject(true);
         $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
@@ -85,7 +85,6 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testStatsCardShowsItsValueAndLinksToItsDetail()
     {
-        StubDashboard::inject(true);
         $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
@@ -101,6 +100,19 @@ final class DashboardWidgetsTest extends TestCase
         setting('Stats.stats_showLink', false);
 
         $this->assertStringContainsString('class="bf-stat-link"', view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]));
+    }
+
+    public function testTheLegacyCellsSkipItemsTheViewerMayNotSee()
+    {
+        $this->actingAs($this->createUser());
+        $stats = new Stats();
+        $stats->addItem((new StatsItem(['id' => 'hidden', 'permission' => 'users.list']))->addValueByFreeQuery('SELECT * FROM no_such_table'));
+        $charts = new Charts();
+        $charts->addItem((new ChartsItem(['id' => 'hidden', 'permission' => 'users.list']))->addDataset('no_such_table', 'a', 'b'));
+
+        $this->assertStringNotContainsString('bf-stat"', view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]));
+        $this->assertStringNotContainsString('<canvas', view('Bonfire\Widgets\Views\Cells\charts', ['charts' => [$charts]]));
+        $this->assertStringNotContainsString('new Chart', view('Bonfire\Widgets\Views\Cells\scripts', ['charts' => [$charts]]));
     }
 
     public function testPlacedChartSitsInACard()

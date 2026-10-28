@@ -96,14 +96,9 @@ id:
 | A `ChartsItem` added to `service('widgets')->widget('charts')` | A chart, listed under `'module' => '…'`, else Charts | `charts:` + its `id` | Its `cssClass` sets its default size. Takes `'permission'` too. |
 | A view cell listed in `Dashboard.cells` | A full-width widget, listed under Custom | `cell:` + its `Class::method` | No permission. Write a widget for more control. |
 
-A stats or chart item fetches its data (`addValue()`, `addValueByFreeQuery()`, `addDataset()`) only when it is on the
-viewer's dashboard and the viewer holds its permission. Code that builds a value by hand can ask the same question:
-
-```php
-if (service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'openOrders'), 'shop.orders')) {
-    // run the query
-}
-```
+A stats or chart item stores the query of `addValue()`, `addValueByFreeQuery()` or `addDataset()` and runs it when
+its value or data is first read: only when the dashboard renders it, for a viewer who holds its permission. A widget
+of your own gets the same for free by doing its work in `render()`.
 
 To move one of these to a widget of your own, give the new widget the id it had (for example
 `stats:openOrders`), so saved layouts keep it in place, and stop adding the old item. Quick Links did the same: it

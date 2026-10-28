@@ -60,28 +60,6 @@ class LayoutResolver
     }
 
     /**
-     * Whether the widget is in the resolved layout.
-     *
-     * Items ask this from initAdmin(), before every module has registered
-     * its items, so it is answered from the settings alone.
-     */
-    public function includes(string $id): bool
-    {
-        $stored = $this->stored() ?? $this->site();
-
-        if ($stored !== null) {
-            $ids = array_merge(...array_map(
-                static fn (array $section) => array_column($section['widgets'], 'id'),
-                array_values($stored['sections']),
-            ));
-
-            return in_array($id, $ids, true);
-        }
-
-        return in_array(CellWidget::aliasOf($id), $this->cells(), true);
-    }
-
-    /**
      * The settings context of the signed-in user's own layout.
      */
     public static function userContext(): ?string

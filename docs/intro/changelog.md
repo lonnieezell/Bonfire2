@@ -41,6 +41,14 @@ in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is docu
 
 ## 28 October 2026 (breaking change)
 
+`StatsItem::addValue()`, `addValueByFreeQuery()` and `ChartsItem::addDataset()` now store their query and run it
+when the item's value or data is first read, which the dashboard does only for the widgets it shows. They keep
+their signatures. `service('dashboardContext')`, `Bonfire\Widgets\DashboardContext`, `LayoutResolver::includes()`
+and `CellWidget::aliasOf()` are gone: a value you build by hand belongs in a widget's `render()` (see
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)), which the dashboard calls only for a widget
+that is placed and permitted. A view that still calls the `WidgetCells::stats` or `::charts` cell directly now runs
+the query of every item it lists. Tests that injected a `DashboardContext` mock no longer need one.
+
 Settings → Widgets is gone. Permissions decide who may see a widget, and each admin's settings for a placed widget
 decide how it looks, so the page's switches and defaults repeated them. Every widget is now offered to anyone who holds
 its `permission()`: a widget switched off there is offered again. A placed widget follows its fields' coded

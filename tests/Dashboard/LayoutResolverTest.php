@@ -15,11 +15,8 @@ use Bonfire\Bonfire;
 use Bonfire\Dashboard\LayoutResolver;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\Widgets\QuickLinksWidget;
-use Bonfire\Widgets\ItemSettings;
-use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\Config\Factories;
 use Config\Services;
-use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
@@ -52,7 +49,6 @@ final class LayoutResolverTest extends TestCase
             Services::resetSingle($service);
         }
 
-        Services::resetSingle('dashboardContext');
         Factories::reset('config');
         auth()->logout();
         setting()->flush();
@@ -98,7 +94,6 @@ final class LayoutResolverTest extends TestCase
 
         $this->assertSame([self::QUICK_LINKS], $resolver->resolve()->ids());
         $this->assertInstanceOf(QuickLinksWidget::class, service('dashboard')->widget(self::QUICK_LINKS));
-        $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 
     public function testOnlyItemsInTheDefaultLayoutAreIncluded(): void
@@ -106,9 +101,6 @@ final class LayoutResolverTest extends TestCase
         $resolver = new LayoutResolver(service('dashboard'));
 
         $this->assertNotContains('stats:usersInRecycler693', $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
-        $this->assertTrue($resolver->includes('logs:logActivity'));
-        $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 
     public function testAUsersLayoutComesFirstThenTheStoredSiteDefaultThenTheConfiguredOne(): void
@@ -122,8 +114,6 @@ final class LayoutResolverTest extends TestCase
 
         setting()->forget('Dashboard.layout', LayoutResolver::userContext());
         $this->assertSame(['stats:usersInRecycler693'], $resolver->resolve()->ids());
-        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
-        $this->assertFalse($resolver->includes('logs:logActivity'));
 
         setting()->forget('Dashboard.layout');
         $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
@@ -136,13 +126,6 @@ final class LayoutResolverTest extends TestCase
         $this->assertSame(self::DEFAULT_IDS, (new LayoutResolver(service('dashboard')))->defaultLayout()->ids());
     }
 
-    public function testIncludesAPlacedItemBeforeItIsRegistered(): void
-    {
-        $this->placeForAUser('stats:lateComer');
-
-        $this->assertTrue((new LayoutResolver(service('dashboard')))->includes('stats:lateComer'));
-    }
-
     public function testAMalformedStoredLayoutFallsBackToTheDefault(): void
     {
         $user = $this->createUser();
@@ -153,16 +136,6 @@ final class LayoutResolverTest extends TestCase
         $resolver = new LayoutResolver(service('dashboard'));
 
         $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
-    }
-
-    public function testTheContextShowsPlacedItemsWhateverSwitchIsStoredForThem(): void
-    {
-        StubDashboard::inject(true);
-        $this->placeForAUser('stats:usersInRecycler693');
-        setting('Stats.Stats_usersInRecycler693', false);
-
-        $this->assertTrue(service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'usersInRecycler693')));
     }
 
     private function placeForAUser(string $id): void
