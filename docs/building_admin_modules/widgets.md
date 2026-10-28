@@ -11,6 +11,56 @@ labels are displayed, etc.
 
 ---
 
+## Your own dashboard widget
+
+Anything an admin can place on the dashboard is a widget. Stats, charts, Log activity and the cells in
+`Dashboard.cells` become widgets on their own; for full control, implement `Bonfire\Dashboard\DashboardWidget` and
+register it from your module's `initAdmin()`:
+
+```php
+use Bonfire\Dashboard\DashboardWidget;
+use Bonfire\Dashboard\Size;
+use Bonfire\Dashboard\SizeRange;
+
+class OpenOrders implements DashboardWidget
+{
+    public function id(): string { return 'shop:openOrders'; }
+    public function title(): string { return 'Open orders'; }
+    public function icon(): string { return 'fas fa-cart-shopping'; }
+    public function group(): string { return 'stats'; }
+    public function description(): string { return 'Orders waiting to ship'; }
+    public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
+    public function permission(): ?string { return 'shop.orders'; }
+    public function settingsUrl(): ?string { return url_to('shop-dashboard-settings'); }
+
+    public function render(): string
+    {
+        return view('Shop\Views\open_orders', ['orders' => model(OrderModel::class)->open()]);
+    }
+}
+```
+
+```php
+public function initAdmin()
+{
+    service('dashboard')->register(new OpenOrders());
+}
+```
+
+- **id** is stored in admins' saved layouts, so keep it unique and never change it. Prefix it with your module's name.
+- **group** is the palette heading it is listed under: `quickLinks`, `stats`, `charts` or `custom`.
+- **sizes** is the width it starts at and the smallest and largest an admin may pick, from `Size::Quarter`,
+  `Third`, `Half`, `TwoThirds` and `Full`.
+- **permission** hides the widget from admins who lack it, in the palette and on the dashboard. `null` shows it to
+  every admin.
+- **settingsUrl** is where the viewer changes the widget's settings, linked from its tools in edit mode. Return
+  `null` when it has none, or the viewer may not change them.
+- **render** is called only when the widget is on the viewer's dashboard, so it may run queries.
+
+A registered widget is not part of the default layout: admins add it to their dashboard from the palette.
+
+---
+
 ## Statistic widget
 
 The first widget is the statistics widget, which is just a counter with a shortcut that allows me to open the
@@ -84,7 +134,7 @@ The FontAwesome icon
 ### Fetching data only when it is shown
 
 `addValue()` and `addValueByFreeQuery()` only run their query when the dashboard is being displayed and the widget is
-enabled in the widgets settings. When you build a value yourself, as `buildTableUsersByGroup()` does, ask the same
+on the viewer's dashboard: in their layout and not switched off in the widgets settings. When you build a value yourself, as `buildTableUsersByGroup()` does, ask the same
 question before doing the work:
 
 ```php

@@ -34,14 +34,38 @@ final readonly class ItemSettings
         return $this->kind->value . '_' . $this->id;
     }
 
+    /**
+     * The item's id on the dashboard, e.g. "stats:usersInRecycler693".
+     */
+    public function widgetId(): string
+    {
+        return strtolower($this->kind->value) . ':' . $this->id;
+    }
+
+    /**
+     * The settings of the item a widget id names, or null for other widgets.
+     */
+    public static function fromWidgetId(string $id): ?self
+    {
+        [$prefix, $itemId] = explode(':', $id, 2) + ['', ''];
+        $kind              = WidgetKind::tryFrom(ucfirst($prefix));
+
+        return $kind === null ? null : new self($kind, $itemId);
+    }
+
     public function key(): string
     {
         return 'Stats.' . $this->fieldName();
     }
 
+    /**
+     * Whether the item is available on dashboards: on unless switched off.
+     */
     public function enabled(): bool
     {
-        return (bool) setting($this->key());
+        $value = setting($this->key());
+
+        return $value === null || (bool) $value;
     }
 
     public function store(bool $enabled): void

@@ -55,6 +55,14 @@ class LogActivity implements Item
         return $this->title ?? lang('Tools.logActivity');
     }
 
+    /**
+     * Who may see the widget on their dashboard.
+     */
+    public function permission(): string
+    {
+        return 'logs.view';
+    }
+
     public function settings(): ItemSettings
     {
         return new ItemSettings(WidgetKind::Logs, 'logActivity');

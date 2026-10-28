@@ -5,9 +5,7 @@
 
 			<?php if ($widget->settings()->enabled()) : ?>
                 <div class="bf-chart <?= esc($widget->cssClass()) ?>">
-                    <x-admin-box title="<?= esc($widget->title()) ?>">
-                        <canvas id="<?= $widget->chartName() ?>" class="chart-border"></canvas>
-                    </x-admin-box>
+					<?= $this->setData(['chart' => $widget])->include('Bonfire\Widgets\Views\Cells\_chart') ?>
                 </div>
 			<?php endif?>
 

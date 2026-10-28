@@ -15,6 +15,7 @@ use Bonfire\Widgets\DashboardContext;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
 use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -22,6 +23,8 @@ use Tests\Support\TestCase;
  */
 final class DashboardContextTest extends TestCase
 {
+    use RendersDashboard;
+
     protected $refresh = true;
 
     protected function setUp(): void
@@ -56,8 +59,9 @@ final class DashboardContextTest extends TestCase
         }
     }
 
-    public function testShowsAnEnabledItemOnTheDashboard()
+    public function testShowsAPlacedItemOnTheDashboard()
     {
+        $this->placeForAUser('stats:users1');
         $settings = new ItemSettings(WidgetKind::Stats, 'users1');
         $settings->store(true);
         StubDashboard::inject(true);
@@ -67,9 +71,19 @@ final class DashboardContextTest extends TestCase
 
     public function testDoesNotShowADisabledItem()
     {
+        $this->placeForAUser('stats:users1');
+        $settings = new ItemSettings(WidgetKind::Stats, 'users1');
+        $settings->store(false);
         StubDashboard::inject(true);
 
-        $this->assertFalse(service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'users1')));
+        $this->assertFalse(service('dashboardContext')->shows($settings));
+    }
+
+    private function placeForAUser(string $id): void
+    {
+        $user = $this->createUser();
+        $this->actingAs($user);
+        $this->placeOnDashboard($user, $id);
     }
 
     public function testDoesNotShowAnEnabledItemElsewhere()

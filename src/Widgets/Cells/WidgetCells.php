@@ -3,6 +3,7 @@
 namespace Bonfire\Widgets\Cells;
 
 use Bonfire\View\Metadata;
+use Bonfire\Widgets\Types\Charts\ChartsItem;
 
 class WidgetCells
 {
@@ -35,16 +36,7 @@ class WidgetCells
     {
         /** @var Metadata */
         $meta = service('viewMeta');
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-color@3']);
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-interpolate@3']);
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3']);
-        $meta->addScript([
-            'src'            => 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js',
-            'integrity'      => 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ',
-            'crossorigin'    => 'anonymous',
-            'referrerpolicy' => 'no-referrer',
-        ]);
-        $meta->addScript(['src' => asset('admin/js/chart.js', 'js')]);
+        ChartsItem::addAssets($meta);
         $meta->addRawScript(view('Bonfire\Widgets\Views\Cells\scripts', [
             'charts' => service('widgets')->widget('charts')->items(),
         ]));

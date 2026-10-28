@@ -14,15 +14,19 @@ namespace Tests\Widgets;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\StatsItem;
 use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
- * An item only runs its query on the dashboard, and only when enabled.
+ * An item only runs its query on the dashboard, when it is placed on the
+ * viewer's dashboard and not switched off.
  *
  * @internal
  */
 final class LazyValueTest extends TestCase
 {
+    use RendersDashboard;
+
     protected $refresh = true;
 
     protected function setUp(): void
@@ -30,7 +34,16 @@ final class LazyValueTest extends TestCase
         parent::setUp();
 
         setting()->flush();
-        $this->createUser();
+        $user = $this->createUser();
+        $this->actingAs($user);
+        $this->placeOnDashboard($user, 'stats:users1', 'charts:chart1', 'charts:chart2');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->forgetDashboardState();
+
+        parent::tearDown();
     }
 
     public function testStatsValueIsFetchedOnTheDashboardWhenEnabled()
@@ -55,6 +68,7 @@ final class LazyValueTest extends TestCase
     {
         StubDashboard::inject(true);
         $item = (new StatsItem())->setId('users1');
+        $item->settings()->store(false);
 
         $this->assertNull($item->addValue('users')->value());
         $this->assertNull($item->addValueByFreeQuery($this->countUsers())->value());
@@ -84,7 +98,9 @@ final class LazyValueTest extends TestCase
     public function testChartDataIsSkippedWhenDisabledOrOffTheDashboard()
     {
         StubDashboard::inject(true);
-        $disabled = (new ChartsItem())->setId('chart1')->addDataset('users', 'active', 'id');
+        $disabled = (new ChartsItem())->setId('chart1');
+        $disabled->settings()->store(false);
+        $disabled->addDataset('users', 'active', 'id');
 
         StubDashboard::inject(false);
         $elsewhere = (new ChartsItem())->setId('chart2');

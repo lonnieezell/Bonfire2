@@ -1821,6 +1821,604 @@ input[type="checkbox"]:indeterminate {
     .bf-chart-grid > .col-9 { grid-column: span 9; }
 }
 
+/* Dashboard layout: sections of widgets on a 12-column grid, one column on phones. */
+.bf-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: padding .18s ease;
+}
+
+.bf-dashboard-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.bf-dashboard-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bf-dashboard-canvas {
+    position: relative;
+}
+
+.bf-dashboard-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bf-dashboard-grid > * {
+    grid-column: span 12;
+    min-width: 0;
+}
+
+.bf-widget-body,
+.bf-widget-body > .bf-chart,
+.bf-widget-body > .bf-chart > .bf-card,
+.bf-widget-body > .bf-card,
+.bf-widget-body > .bf-stat {
+    height: 100%;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .bf-dashboard-grid > .bf-span-3,
+    .bf-dashboard-grid > .bf-span-4 { grid-column: span 6; }
+}
+
+@media (min-width: 1200px) {
+    .bf-dashboard-grid > .bf-span-3 { grid-column: span 3; }
+    .bf-dashboard-grid > .bf-span-4 { grid-column: span 4; }
+    .bf-dashboard-grid > .bf-span-6 { grid-column: span 6; }
+    .bf-dashboard-grid > .bf-span-8 { grid-column: span 8; }
+}
+
+.bf-dashboard-section-title {
+    margin: 4px 0 0;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .01em;
+}
+
+.bf-dashboard-toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Dashboard edit mode: a sticky bar of actions, framed sections, tiles that drag and resize. */
+.bf-dashboard-editbar {
+    position: sticky;
+    top: 68px;
+    z-index: 20;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    padding: 10px 10px 10px 14px;
+    border: 1px solid var(--bf-border);
+    border-radius: 12px;
+    background: var(--bf-surface);
+    box-shadow: var(--bf-pop);
+}
+
+.bf-dashboard-editbar-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--bf-accent-soft);
+    color: var(--bf-accent-text);
+}
+
+.bf-dashboard-editbar-text {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.bf-dashboard-editbar-text small {
+    overflow: hidden;
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.bf-dashboard-editbar-actions {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.bf-dashboard-editbar-actions .bf-icon-btn:disabled {
+    opacity: .4;
+}
+
+.bf-dashboard-editbar-divider {
+    width: 1px;
+    height: 20px;
+    margin: 0 4px;
+    background: var(--bf-border);
+}
+
+.bf-dashboard.is-editing .bf-dashboard-section {
+    padding: 10px 12px 12px;
+    border: 1px dashed var(--bf-border-strong);
+    border-radius: 16px;
+    background: color-mix(in oklch, var(--bf-surface-2) 45%, transparent);
+}
+
+.bf-dashboard-section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+}
+
+.bf-dashboard-section-input {
+    flex: 1;
+    min-width: 0;
+    height: 32px;
+    margin-left: -2px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    outline: none;
+    background: transparent;
+    color: var(--bf-text);
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.bf-dashboard-section-input:hover {
+    background: var(--bf-surface);
+}
+
+.bf-dashboard-section-input:focus {
+    border-color: var(--bf-accent);
+    background: var(--bf-surface);
+    box-shadow: 0 0 0 3px var(--bf-accent-soft);
+}
+
+.bf-dashboard-section-count {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Column guides behind the grid, stronger while a tile is dragged or resized. */
+.bf-dashboard-guides {
+    position: absolute;
+    inset: 0;
+    display: none;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 12px;
+    pointer-events: none;
+}
+
+.bf-dashboard-guides > span {
+    border-radius: 8px;
+    background: color-mix(in oklch, var(--bf-text) 3.5%, transparent);
+    transition: background .15s;
+}
+
+.bf-dashboard.is-arranging .bf-dashboard-guides > span {
+    background: color-mix(in oklch, var(--bf-accent) 9%, transparent);
+}
+
+@media (min-width: 1200px) {
+    .bf-dashboard.is-editing .bf-dashboard-guides {
+        display: grid;
+    }
+}
+
+/* A section with no tiles is a drop target with a hint. */
+.bf-dashboard.is-editing .bf-dashboard-grid:not(:has(> .bf-widget, > .bf-palette-entry)) {
+    min-height: 112px;
+}
+
+.bf-dashboard.is-editing .bf-dashboard-grid:not(:has(> .bf-widget, > .bf-palette-entry))::before {
+    content: attr(data-empty-label);
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--bf-border-strong);
+    border-radius: 12px;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.bf-dashboard-add-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 40px;
+    border: 1px dashed var(--bf-border-strong);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--bf-muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.bf-dashboard-add-bar:hover {
+    border-color: var(--bf-accent);
+    background: var(--bf-accent-soft);
+    color: var(--bf-accent-text);
+}
+
+.bf-dashboard-add-section {
+    align-self: flex-start;
+}
+
+.bf-widget {
+    position: relative;
+    border-radius: 12px;
+}
+
+.bf-dashboard.is-editing .bf-widget {
+    cursor: grab;
+    user-select: none;
+    transition: box-shadow .12s;
+}
+
+.bf-dashboard.is-editing .bf-widget-body {
+    pointer-events: none;
+}
+
+.bf-dashboard.is-editing .bf-widget:hover {
+    box-shadow: 0 0 0 1px var(--bf-border-strong);
+}
+
+.bf-dashboard.is-editing .bf-widget:focus-within,
+.bf-widget.is-resizing {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--bf-accent), var(--bf-shadow);
+}
+
+.bf-widget.is-resizing {
+    box-shadow: 0 0 0 1px var(--bf-accent), var(--bf-pop);
+}
+
+/* The tile's floating tools: its sizes, settings and remove. */
+.bf-widget-tools {
+    position: absolute;
+    top: -15px;
+    right: 10px;
+    z-index: 6;
+    display: none;
+    align-items: center;
+    gap: 2px;
+    height: 30px;
+    padding: 2px;
+    border: 1px solid var(--bf-border-strong);
+    border-radius: 8px;
+    background: var(--bf-surface);
+    box-shadow: var(--bf-pop);
+    cursor: default;
+}
+
+.bf-widget:is(:hover, :focus-within) > .bf-widget-tools {
+    display: flex;
+}
+
+.bf-dashboard.is-arranging .bf-widget-tools {
+    display: none;
+}
+
+.bf-widget-size,
+.bf-widget-tool {
+    display: grid;
+    place-items: center;
+    height: 24px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--bf-muted);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bf-widget-size {
+    min-width: 30px;
+    padding: 0 6px;
+}
+
+.bf-widget-tool {
+    width: 24px;
+}
+
+.bf-widget-size:hover,
+.bf-widget-tool:hover {
+    background: var(--bf-surface-2);
+    color: var(--bf-text);
+}
+
+.bf-widget-remove:hover {
+    color: var(--bf-danger);
+}
+
+.bf-widget-size[aria-pressed="true"] {
+    background: var(--bf-accent-soft);
+    color: var(--bf-accent-text);
+}
+
+.bf-widget-tools-divider {
+    width: 1px;
+    height: 16px;
+    margin: 0 3px;
+    background: var(--bf-border);
+}
+
+/* The corner handle that resizes a tile, and the size it shows while resizing. */
+.bf-widget-resize {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    display: none;
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    cursor: nwse-resize;
+    touch-action: none;
+}
+
+.bf-widget-resize::after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: 4px 0 0 4px;
+    border-right: 2px solid var(--bf-accent);
+    border-bottom: 2px solid var(--bf-accent);
+    border-bottom-right-radius: 5px;
+}
+
+@media (min-width: 1200px) {
+    .bf-widget:is(:hover, :focus-within, .is-resizing) > .bf-widget-resize {
+        display: block;
+    }
+}
+
+.bf-widget.is-resizing::after {
+    content: attr(data-size-label);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 6;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--bf-accent);
+    box-shadow: var(--bf-pop);
+    color: var(--bf-accent-ink);
+    font-family: var(--bf-mono);
+    font-size: 12px;
+    font-weight: 500;
+    transform: translate(-50%, -50%);
+}
+
+/* Where a dragged tile or palette entry will land, at its size. */
+.bf-dashboard-grid > .sortable-ghost {
+    border: 2px dashed var(--bf-accent);
+    border-radius: 12px;
+    background: var(--bf-accent-soft);
+    box-shadow: none;
+}
+
+.bf-dashboard-grid > .sortable-ghost > * {
+    visibility: hidden;
+}
+
+/* Widget palette: available widgets to add, and the placeholder an added one shows until saved. */
+.bf-widget-palette {
+    --bs-offcanvas-width: 360px;
+}
+
+@media (min-width: 992px) {
+    .bf-dashboard.has-library {
+        padding-right: 360px;
+    }
+}
+
+.bf-widget-palette-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 18px 10px;
+}
+
+.bf-widget-palette-target {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--bf-muted);
+    font-size: 13px;
+}
+
+.bf-widget-palette-target select {
+    flex: 1;
+    min-width: 0;
+}
+
+.bf-widget-palette-search {
+    position: relative;
+}
+
+.bf-widget-palette-search > i {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    color: var(--bf-muted);
+    font-size: 13px;
+    transform: translateY(-50%);
+}
+
+.bf-widget-palette-search > input {
+    padding-left: 30px;
+}
+
+.bf-widget-palette-hint,
+.bf-widget-palette-empty {
+    margin: 0;
+    color: var(--bf-muted);
+    font-size: 12.5px;
+}
+
+.bf-widget-palette-empty {
+    padding: 32px 12px;
+    text-align: center;
+}
+
+.bf-widget-palette .offcanvas-body {
+    padding: 0 10px 18px;
+}
+
+.bf-palette-group h3 {
+    margin: 0;
+    padding: 12px 8px 6px;
+    color: var(--bf-muted);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: .02em;
+}
+
+.bf-palette-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 8px;
+    border-radius: 9px;
+    background: var(--bf-surface);
+    cursor: grab;
+}
+
+.bf-palette-entry:hover {
+    background: var(--bf-surface-2);
+}
+
+.bf-palette-entry[data-placed] {
+    cursor: default;
+}
+
+.bf-palette-entry-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--bf-border);
+    border-radius: 8px;
+    background: var(--bf-surface-2);
+    color: var(--bf-muted);
+}
+
+.bf-palette-entry-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.bf-palette-entry-text > small {
+    color: var(--bf-muted);
+    font-size: 12.5px;
+}
+
+.bf-palette-entry-text strong {
+    font-weight: 500;
+}
+
+.bf-palette-entry-size {
+    margin-left: 4px;
+    color: var(--bf-muted);
+    font-size: 12px;
+}
+
+.bf-palette-entry-added {
+    display: none;
+    flex: none;
+    align-items: center;
+    gap: 4px;
+    color: var(--bf-muted);
+    font-size: 12.5px;
+    white-space: nowrap;
+}
+
+.bf-palette-entry[data-placed] > .bf-palette-entry-added {
+    display: inline-flex;
+}
+
+.bf-palette-entry[data-placed] > .bf-palette-entry-add {
+    display: none;
+}
+
+.bf-widget-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    margin: 0;
+    padding: 16px 18px;
+}
+
+.bf-widget-placeholder h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.bf-widget-placeholder p {
+    margin: 0;
+}
+
+/* The message after a change, with Undo when it can be undone. */
+.bf-dashboard-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    z-index: 1060;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px 8px 14px;
+    border-radius: 10px;
+    background: var(--bf-text);
+    box-shadow: var(--bf-pop);
+    color: var(--bf-bg);
+    font-weight: 500;
+    white-space: nowrap;
+    transform: translateX(-50%);
+}
+
+.bf-dashboard-toast > span {
+    padding: 2px 0;
+}
+
+.bf-dashboard-toast > button {
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 7px;
+    background: color-mix(in oklch, var(--bf-bg) 16%, transparent);
+    color: inherit;
+    font-weight: 600;
+}
+
 /* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
 .bf-log-activity > .bf-card-head {
     display: flex;

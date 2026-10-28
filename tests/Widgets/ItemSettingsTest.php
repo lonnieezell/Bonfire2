@@ -40,11 +40,11 @@ final class ItemSettingsTest extends TestCase
         $this->assertSame('Charts_users1', $charts->fieldName());
     }
 
-    public function testIsDisabledUntilStored()
+    public function testIsEnabledUntilSwitchedOff()
     {
         $settings = new ItemSettings(WidgetKind::Stats, 'users1');
 
-        $this->assertFalse($settings->enabled());
+        $this->assertTrue($settings->enabled());
 
         $settings->store(true);
         $this->assertTrue($settings->enabled());
@@ -54,21 +54,21 @@ final class ItemSettingsTest extends TestCase
         $this->assertFalse($settings->enabled());
     }
 
-    public function testForgetDisables()
+    public function testForgetEnablesAgain()
     {
         $settings = new ItemSettings(WidgetKind::Charts, 'users1');
-        $settings->store(true);
+        $settings->store(false);
 
         $settings->forget();
 
-        $this->assertFalse($settings->enabled());
+        $this->assertTrue($settings->enabled());
     }
 
     public function testItemsAreIndependent()
     {
-        (new ItemSettings(WidgetKind::Stats, 'a'))->store(true);
+        (new ItemSettings(WidgetKind::Stats, 'a'))->store(false);
 
-        $this->assertFalse((new ItemSettings(WidgetKind::Stats, 'b'))->enabled());
-        $this->assertFalse((new ItemSettings(WidgetKind::Charts, 'a'))->enabled());
+        $this->assertTrue((new ItemSettings(WidgetKind::Stats, 'b'))->enabled());
+        $this->assertTrue((new ItemSettings(WidgetKind::Charts, 'a'))->enabled());
     }
 }

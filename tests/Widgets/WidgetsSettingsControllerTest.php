@@ -36,7 +36,7 @@ final class WidgetsSettingsControllerTest extends TestCase
 
     public function testIndexListsEveryWidgetWithItsEnabledState()
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        setting('Stats.Stats_usersExpTable693', false);
 
         $response = $this->actingAs($this->user)->get('/admin/settings/widgets');
 

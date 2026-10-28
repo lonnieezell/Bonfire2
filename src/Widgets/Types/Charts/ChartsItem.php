@@ -11,6 +11,7 @@
 
 namespace Bonfire\Widgets\Types\Charts;
 
+use Bonfire\View\Metadata;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
@@ -21,6 +22,8 @@ use Bonfire\Widgets\WidgetOptions;
  */
 class ChartsItem implements Item
 {
+    private const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
+
     /**
      * The 'weight' used for sorting.
      *
@@ -105,6 +108,27 @@ class ChartsItem implements Item
      * @var string
      */
     protected $chartName;
+
+    /**
+     * Adds Chart.js and its helpers to the page, once.
+     */
+    public static function addAssets(Metadata $meta): void
+    {
+        if (in_array(self::CHART_JS, array_column($meta->scripts(), 'src'), true)) {
+            return;
+        }
+
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-color@3']);
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-interpolate@3']);
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3']);
+        $meta->addScript([
+            'src'            => self::CHART_JS,
+            'integrity'      => 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ',
+            'crossorigin'    => 'anonymous',
+            'referrerpolicy' => 'no-referrer',
+        ]);
+        $meta->addScript(['src' => asset('admin/js/chart.js', 'js')]);
+    }
 
     public function __construct(?array $data = null)
     {
