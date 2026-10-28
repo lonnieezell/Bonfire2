@@ -137,6 +137,30 @@ final class LogsTest extends TestCase
         $this->assertFileExists(WRITEPATH . 'logs/index.html');
     }
 
+    public function testDeleteActionDeletesTheSelectedLogs(): void
+    {
+        $response = $this->actingAs($this->userWith('superadmin'))->post(route_to('action', 'logs', 'delete-logs'), [
+            csrf_token() => csrf_hash(),
+            'selects'    => [self::LOG_NAME, '../../index'],
+            'confirmed'  => '1',
+        ]);
+
+        $response->assertSessionHas('message', lang('Tools.deleteSuccess') . ' Skipped 1.');
+        $this->assertFileDoesNotExist($this->logFile);
+        $this->assertFileExists(WRITEPATH . 'logs/index.html');
+    }
+
+    public function testDeleteActionNeedsLogsManage(): void
+    {
+        $this->actingAs($this->userWith('admin'))->post(route_to('action', 'logs', 'delete-logs'), [
+            csrf_token() => csrf_hash(),
+            'selects'    => [self::LOG_NAME],
+            'confirmed'  => '1',
+        ]);
+
+        $this->assertFileExists($this->logFile);
+    }
+
     public function testParserIgnoresLogLevelWordsInsideMessages()
     {
         file_put_contents($this->logFile, "INFO - 2000-01-01 10:00:00 --> an ERROR is only mentioned\n");
@@ -186,6 +210,8 @@ final class LogsTest extends TestCase
             $this->assertMatchesRegularExpression('#<button type="button" class="bf-chip[^"]*"[^>]*>\s*' . $chip . '#', $html);
         }
         $this->assertStringContainsString('x-data="bfSelectionBar"', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" formaction="' . preg_quote(url_to('action', 'logs', 'delete-logs'), '#') . '" data-confirm-bulk="1"\s+class="btn btn-danger" data-confirm="#', $html);
+        $this->assertStringContainsString('name="selects[]"', $html);
         $this->assertMatchesRegularExpression('#<button type="button"[^>]*@click="confirmAll = true"[^>]*>\s*Delete all log files#', $html);
         $this->assertMatchesRegularExpression('#<button type="submit" name="delete_all" value="1"#', $html);
     }
@@ -194,7 +220,7 @@ final class LogsTest extends TestCase
     {
         $html = $this->actingAs($this->userWith('admin'))->get(route_to('sys-logs'))->getBody();
 
-        $this->assertStringNotContainsString('name="checked[]"', $html);
+        $this->assertStringNotContainsString('name="selects[]"', $html);
         $this->assertStringNotContainsString('delete_all', $html);
     }
 

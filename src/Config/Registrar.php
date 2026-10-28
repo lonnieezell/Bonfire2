@@ -2,6 +2,7 @@
 
 namespace Bonfire\Config;
 
+use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Core\Filters\OnlineCheck;
@@ -78,6 +79,18 @@ class Registrar
             'ruleSets' => [
                 PasswordRules::class,
                 UserRules::class,
+            ],
+        ];
+    }
+
+    /**
+     * Runs queued actions, when codeigniter4/queue is installed.
+     */
+    public static function Queue()
+    {
+        return [
+            'jobHandlers' => [
+                RunAction::NAME => RunAction::class,
             ],
         ];
     }

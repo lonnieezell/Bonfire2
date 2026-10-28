@@ -11,8 +11,10 @@
 
 namespace Bonfire\Users;
 
+use Bonfire\Actions\ModelSource;
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Users\Actions\DeleteUsers;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\Types\Stats\StatsItem;
@@ -48,6 +50,10 @@ class Module extends BaseModule
         service('recycler')->register('users', 'Users', UserModel::class, [
             'username', 'first_name', 'last_name', 'email',
         ]);
+
+        service('actions')->for('users')
+            ->records(new ModelSource(UserModel::class))
+            ->add(new DeleteUsers());
 
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');

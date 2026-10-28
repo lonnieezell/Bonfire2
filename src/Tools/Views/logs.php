@@ -53,7 +53,7 @@ $this->extend('master') ?>
                         <tr data-levels="<?= esc(strtolower(implode(' ', array_keys($log['counts'])))) ?>" x-show="shows($el.dataset.levels)">
                             <?php if ($canManage) : ?>
                                 <td class="bf-select-cell">
-                                    <input type="checkbox" class="form-check-input" value="<?= esc($log['name']) ?>" name="checked[]" aria-label="<?= esc($log['name']) ?>" />
+                                    <input type="checkbox" class="form-check-input" value="<?= esc($log['name']) ?>" name="selects[]" aria-label="<?= esc($log['name']) ?>" />
                                 </td>
                             <?php endif ?>
                             <td>
@@ -84,9 +84,7 @@ $this->extend('master') ?>
 
         <?php if ($canManage) : ?>
             <x-selection-bar>
-                <button type="submit" name="delete" value="1" class="btn btn-danger" onclick="return confirm('<?= lang('Tools.deleteSelectedConfirm') ?>')">
-                    <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Tools.deleteSelected') ?>
-                </button>
+                <x-bulk-actions list="logs" />
             </x-selection-bar>
         <?php endif ?>
     </form>

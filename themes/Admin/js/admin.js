@@ -73,6 +73,11 @@ window.bfSidebar = {
     },
 };
 
+// The checked row checkboxes of a list's form. Select-all also ticks disabled rows, which never post.
+function bfCheckedRows(form) {
+    return form.querySelectorAll('tbody input[type="checkbox"]:checked:not(:disabled)').length;
+}
+
 // The ⌘K command palette (_palette.php): jump to a menu page, or search.
 document.addEventListener('alpine:init', () => {
     Alpine.data('bfPalette', () => ({
@@ -162,8 +167,7 @@ document.addEventListener('alpine:init', () => {
         init() {
             this.form = this.$root.closest('form');
             const recount = () => {
-                // Select-all also ticks disabled rows, which never post.
-                this.count = this.form.querySelectorAll('tbody input[type="checkbox"]:checked:not(:disabled)').length;
+                this.count = bfCheckedRows(this.form);
             };
             // An htmx swap replaces the bar along with the rows, so the new bar counts afresh.
             this.form.addEventListener('change', recount);
@@ -179,6 +183,80 @@ document.addEventListener('alpine:init', () => {
                 box.checked = false;
             });
             this.count = 0;
+        },
+    }));
+
+    // <x-confirm-dialog>: asks before a [data-confirm] button or link, or an hx-confirm request, goes ahead.
+    Alpine.data('bfConfirmDialog', () => ({
+        title: '',
+        body: '',
+        button: '',
+        danger: false,
+        typeCount: false,
+        count: 1,
+        typed: '',
+        proceed: null,
+
+        init() {
+            document.addEventListener('click', (event) => {
+                const el = event.target.closest('[data-confirm]');
+                if (! el) {
+                    return;
+                }
+                event.preventDefault();
+                this.ask(el.dataset, this.countFor(el), () => this.go(el));
+            });
+
+            document.addEventListener('htmx:confirm', (event) => {
+                if (! event.detail.question) {
+                    return;
+                }
+                event.preventDefault();
+                this.ask({ confirm: event.detail.question }, 1, () => event.detail.issueRequest(true));
+            });
+        },
+
+        // A bulk button acts on its form's checked rows; anything else on one record.
+        countFor(el) {
+            return el.dataset.confirmBulk ? bfCheckedRows(el.form) : 1;
+        },
+
+        ask(data, count, proceed) {
+            this.count = count;
+            this.title = data.confirm.replaceAll('{count}', count);
+            this.body = data.confirmBody || '';
+            this.button = data.confirmButton || this.$root.dataset.defaultButton;
+            this.danger = data.confirmDanger === '1';
+            this.typeCount = data.confirmType === '1';
+            this.typed = '';
+            this.proceed = proceed;
+            this.$root.showModal();
+        },
+
+        get typeLabel() {
+            return this.$root.dataset.typeLabel.replace('%s', this.count);
+        },
+
+        accept() {
+            this.$root.close();
+            this.proceed();
+        },
+
+        // Submits the button's form the way its click would have, marked as confirmed, or follows the link.
+        go(el) {
+            if (! el.form) {
+                window.location.href = el.href;
+                return;
+            }
+            const fields = { confirmed: '1' };
+            if (this.typeCount) {
+                fields.confirm_count = this.typed;
+            }
+            Object.entries(fields).forEach(([name, value]) => {
+                const input = el.form.querySelector(`input[type="hidden"][name="${name}"]`) || el.form.appendChild(Object.assign(document.createElement('input'), { type: 'hidden', name }));
+                input.value = value;
+            });
+            el.form.requestSubmit(el);
         },
     }));
 

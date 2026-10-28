@@ -43,12 +43,15 @@ class Bonfire
 
     /**
      * Sets up admin menus, initializes modules.
+     *
+     * @param bool $admin Boot for the admin area outside an admin request, like in a queue worker
      */
-    public function boot()
+    public function boot(bool $admin = false)
     {
         helper('filesystem');
 
         $this->saveInAdmin();
+        $this->inAdmin = $admin || $this->inAdmin;
 
         if ($this->inAdmin) {
             $this->setupMenus();

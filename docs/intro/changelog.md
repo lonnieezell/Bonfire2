@@ -6,6 +6,17 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 28 October 2026 (breaking change)
 
+Lists have a shared system for row and bulk actions (see [Row and Bulk Actions](../building_admin_modules/actions.md)):
+an action is one class, registered on a named list, run through `POST admin/actions/{list}/{action}` with permission,
+CSRF and per-record checks, confirmation (with or without JavaScript), and an optional queue through
+`codeigniter4/queue`. Run `php spark migrate --all` for its new `action_runs` table. The Users and Logs deletes use it,
+which removes routes: `GET admin/users/{id}/delete` and `POST admin/users/delete-batch` are gone, as is
+`UserController::delete()` and `deleteBatch()`. Links or forms that used them must post to
+`admin/actions/users/delete-users` instead, with the IDs in `selects[]`. The Users and Logs list checkboxes are now
+named `selects[]` with the ID as their value. Every inline `confirm()` is replaced by `<x-confirm-dialog>`, which also
+handles `hx-confirm`. Installs that published their own copy of the Admin theme must re-publish it: `master.php` gains
+`<x-confirm-dialog />` and `<x-action-run />`, and the lists use the new `<x-row-actions>` and `<x-bulk-actions>`.
+
 `<x-switch>` gained an `offValue` attribute: the value its hidden input posts when the switch is off (`0` by default).
 An empty `offValue` posts nothing, which Bonfire's own views now use for array names like `permissions[]`. Installs
 that published their own copy of the Admin theme must re-publish it; an older copy posts `0` for every switch that is
@@ -19,8 +30,8 @@ The Logs, log view, Recycler and System Info pages use the new admin layout, wit
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
 
 Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
-escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks in
-two steps.
+escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
+first.
 
 ## 27 October 2026 (breaking change)
 

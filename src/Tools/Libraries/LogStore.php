@@ -11,11 +11,14 @@
 
 namespace Bonfire\Tools\Libraries;
 
+use Bonfire\Actions\RecordSource;
+
 /**
  * The log files on disk. Files are only ever addressed by a validated name
  * like `log-2024-01-31` (no path, no extension), so callers never build paths.
+ * They are the records of the 'logs' action list.
  */
-class LogStore
+class LogStore implements RecordSource
 {
     private const NAME_PATTERN = '/^log-\d{4}-\d{2}-\d{2}$/';
     private const EXTENSION    = '.log';
@@ -50,6 +53,17 @@ class LogStore
     public function has(string $name): bool
     {
         return $this->isValidName($name) && is_file($this->fileFor($name));
+    }
+
+    /**
+     * The existing log files among $ids, as records whose `id` is the name.
+     */
+    public function find(array $ids): array
+    {
+        return array_values(array_map(
+            static fn (string $name) => (object) ['id' => $name],
+            array_filter(array_map(strval(...), $ids), $this->has(...)),
+        ));
     }
 
     /**
