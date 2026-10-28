@@ -35,6 +35,18 @@ how many files it shows and whether Debug entries are left out. It is shown by a
 `Bonfire\Widgets\Cells\WidgetCells::logs` cell: installs with their own `Config\Dashboard` must add that cell to
 `$cells` to see it. Its styles are in the Admin theme, so re-publish the theme.
 
+Each admin can customize their own dashboard (see [The Dashboard](../modules/dashboard.md#customizing-the-dashboard)):
+**Customize** lets them drag widgets into a new order, group them into titled sections, size them (S / M / L / Full),
+remove them and add others from a palette, all of it also from the keyboard. **Save** stores the layout as theirs
+alone; **Reset to default** forgets it. Every stat card, chart, Log activity and custom cell in `Dashboard.cells` is now
+one widget, and modules can add their own by implementing `Bonfire\Dashboard\DashboardWidget` and calling
+`service('dashboard')->register()` in `initAdmin()` (see [Widgets](../building_admin_modules/widgets.md#your-own-dashboard-widget)).
+The switches in Settings → Widgets now decide which widgets are *available*; their stored keys are unchanged. A stats or
+chart item now fetches its data only when it is on the viewer's dashboard, so `service('dashboardContext')->shows()`
+answers "is it in the viewer's layout". The dashboard needs the new `admin/js/dashboard.js` and new `admin.css` rules
+from the Admin theme, so installs that published their own copy of the Admin theme must re-publish it; with an older
+copy the dashboard shows its widgets stacked in one column and Customize does nothing.
+
 Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
 escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
 first.

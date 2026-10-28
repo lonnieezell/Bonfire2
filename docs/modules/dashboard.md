@@ -21,6 +21,30 @@ public array $cells = [
 ];
 ```
 
+## Customizing the dashboard
+
+Every admin can arrange their own dashboard without changing anyone else's. Until they do, they see the default
+layout: the cells above in order, with the stats, logs and charts cells expanded into the widgets switched on in
+Settings → Widgets.
+
+Click **Customize** to enter edit mode. Nothing is stored until you click **Save**; **Cancel** puts the dashboard back
+the way it was, and **Reset to default** forgets your layout. In edit mode you can:
+
+- drag a widget by its handle to reorder it, also into another section;
+- add a section, give it an optional heading, reorder or delete it (its widgets move to the section before it);
+- set a widget's width from its menu: Small, Medium, Large or Full width (3, 6, 9 or 12 of 12 columns), within the
+  range that widget allows;
+- remove a widget with ×, and add widgets from **Add widgets**, which lists the ones not on your dashboard. An added
+  widget shows a placeholder until you save.
+
+Everything works without dragging, too: each widget's menu has **Move earlier**, **Move later** and **Move to
+section**, each section has **Move section up** and **Move section down**, and the palette can add to any section.
+Screen readers hear each change announced.
+
+Settings → Widgets decides which widgets are available to everyone: a switched-off widget is left out of every
+palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,
+never in their layout. Sections without widgets are dropped on save, and a layout holds at most 20 sections.
+
 ## Quick Links
 
 The Quick Links cell is a simple list of links that have been added to the `Content` section of the sidebar menu. It is automatically generated and displayed.
