@@ -13,8 +13,8 @@ namespace Tests\Dashboard;
 
 use Bonfire\Users\User;
 use Bonfire\Widgets\Types\Stats\StatsItem;
-use Config\Services;
 use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -22,6 +22,8 @@ use Tests\Support\TestCase;
  */
 final class CustomizeDashboardTest extends TestCase
 {
+    use RendersDashboard;
+
     private const QUICK_LINKS = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
 
     protected $refresh = true;
@@ -31,8 +33,7 @@ final class CustomizeDashboardTest extends TestCase
     {
         parent::setUp();
 
-        setting()->flush();
-        Services::resetSingle('dashboard');
+        $this->forgetDashboardState();
         setting('Stats.Stats_usersInRecycler693', 'on');
         setting('Stats.Stats_userGroups643', 'on');
         $this->user = $this->admin();
@@ -40,16 +41,14 @@ final class CustomizeDashboardTest extends TestCase
 
     protected function tearDown(): void
     {
-        Services::resetSingle('viewMeta');
-        Services::resetSingle('dashboardContext');
-        setting()->flush();
+        $this->forgetDashboardState();
 
         parent::tearDown();
     }
 
     public function testTheDashboardOffersTheEditorItsLayoutAndSaveUrl(): void
     {
-        $html = $this->dashboard($this->user);
+        $html = $this->dashboardHtml($this->user);
 
         $this->assertMatchesRegularExpression('#<div class="bf-dashboard"[^>]*x-data="dashboardEditor"#', $html);
         $this->assertStringContainsString('data-save-url="' . url_to('dashboard-layout') . '"', $html);
@@ -66,8 +65,8 @@ final class CustomizeDashboardTest extends TestCase
             ['id' => self::QUICK_LINKS, 'size' => 'full'],
         ]]])->assertOK();
 
-        $this->assertSame(['stats:usersInRecycler693', self::QUICK_LINKS], $this->renderedIds($this->user));
-        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->renderedIds($other));
+        $this->assertSame(['stats:usersInRecycler693', self::QUICK_LINKS], $this->placedIds($this->user));
+        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->placedIds($other));
     }
 
     public function testSavingDropsUnknownUnavailableAndDuplicateIds(): void
@@ -79,7 +78,7 @@ final class CustomizeDashboardTest extends TestCase
             ['id' => 'stats:usersInRecycler693', 'size' => 'sm'],
         ]]])->assertOK();
 
-        $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
     }
 
     public function testSectionsAndSizesPersistAndRender(): void
@@ -89,7 +88,7 @@ final class CustomizeDashboardTest extends TestCase
             ['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'sm']]],
         ])->assertOK();
 
-        $html = $this->dashboard($this->user);
+        $html = $this->dashboardHtml($this->user);
 
         $this->assertMatchesRegularExpression('#<section class="bf-dashboard-section"[^>]*>\s*<h2 class="bf-dashboard-section-title"[^>]*>People &lt;b&gt;</h2>#', $html);
         $this->assertSame(1, substr_count($html, 'class="bf-dashboard-section-title"'));
@@ -104,12 +103,14 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testTheSizeMenuOffersTheWidgetsPresets(): void
     {
-        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboard($this->user), $tile);
+        setting('Stats.Logs_logActivity', 'on');
+
+        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboardHtml($this->user), $tile);
         preg_match_all('/data-size-option="(\w+)"/', $tile[0], $options);
 
         $this->assertSame(['sm', 'md', 'lg', 'full'], $options[1]);
 
-        preg_match('#data-widget-id="logs&\#x3A;logActivity".*?</ul>#s', $this->dashboard($this->logViewer()), $tile);
+        preg_match('#data-widget-id="logs&\#x3A;logActivity".*?</ul>#s', $this->dashboardHtml($this->user), $tile);
         preg_match_all('/data-size-option="(\w+)"/', $tile[0] ?? '', $options);
 
         $this->assertSame(['md', 'lg', 'full'], $options[1]);
@@ -119,7 +120,7 @@ final class CustomizeDashboardTest extends TestCase
     {
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
 
-        $entries = $this->paletteEntries($this->dashboard($this->user));
+        $entries = $this->paletteEntries($this->dashboardHtml($this->user));
 
         $this->assertTrue($entries['stats:usersInRecycler693']['hidden']);
         $this->assertFalse($entries['stats:userGroups643']['hidden']);
@@ -131,7 +132,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void
     {
-        $html = $this->dashboard($this->user);
+        $html = $this->dashboardHtml($this->user);
 
         $this->assertMatchesRegularExpression(
             '#data-palette-widget="stats&\#x3A;userGroups643".*?<template data-placeholder>\s*(?:<!--.*?-->\s*)*<div class="bf-widget bf-span-3" data-widget-id="stats&\#x3A;userGroups643" data-size="sm"#s',
@@ -141,7 +142,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testTilesCanBeRemoved(): void
     {
-        $this->assertMatchesRegularExpression('#data-widget-id="stats&\#x3A;usersInRecycler693".*?<button[^>]*@click="removeWidget\(\$el\)"#s', $this->dashboard($this->user));
+        $this->assertMatchesRegularExpression('#data-widget-id="stats&\#x3A;usersInRecycler693".*?<button[^>]*@click="removeWidget\(\$el\)"#s', $this->dashboardHtml($this->user));
     }
 
     public function testAWidgetMadeAvailableLaterOnlyAppearsInACustomizedUsersPalette(): void
@@ -149,13 +150,13 @@ final class CustomizeDashboardTest extends TestCase
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'sm']]]]);
         setting('Stats.Stats_usersExpTable693', 'on');
 
-        $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
-        $this->assertFalse($this->paletteEntries($this->dashboard($this->user))['stats:usersExpTable693']['hidden']);
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
+        $this->assertFalse($this->paletteEntries($this->dashboardHtml($this->user))['stats:usersExpTable693']['hidden']);
     }
 
     public function testChangesAreAnnouncedThroughALiveRegion(): void
     {
-        $html = $this->dashboard($this->user);
+        $html = $this->dashboardHtml($this->user);
 
         $this->assertMatchesRegularExpression('#<div[^>]*aria-live="polite"[^>]*x-text="announcement"#', $html);
         $this->assertMatchesRegularExpression('#data-messages="[^"]+"#', $html);
@@ -163,7 +164,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testTileMenusMoveWidgetsWithoutDragging(): void
     {
-        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboard($this->user), $tile);
+        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboardHtml($this->user), $tile);
 
         $this->assertMatchesRegularExpression('#data-title="[^"]+"#', $tile[0]);
         $this->assertMatchesRegularExpression('#<button[^>]*@click="move\(\$el, -1\)"[^>]*:disabled=#', $tile[0]);
@@ -173,7 +174,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testSectionsMoveUpAndDownWithoutDragging(): void
     {
-        $html = $this->dashboard($this->user);
+        $html = $this->dashboardHtml($this->user);
 
         $this->assertMatchesRegularExpression('#<button[^>]*@click="moveSection\(\$el, -1\)"[^>]*:disabled=[^>]*aria-label="[^"]+"#', $html);
         $this->assertMatchesRegularExpression('#<button[^>]*@click="moveSection\(\$el, 1\)"[^>]*:disabled=[^>]*aria-label="[^"]+"#', $html);
@@ -183,7 +184,7 @@ final class CustomizeDashboardTest extends TestCase
     {
         $this->assertMatchesRegularExpression(
             '#<select[^>]*x-model\.number="target"[^>]*>\s*<template x-for="\(name, index\) in sectionNames"#',
-            $this->dashboard($this->user),
+            $this->dashboardHtml($this->user),
         );
     }
 
@@ -204,7 +205,7 @@ final class CustomizeDashboardTest extends TestCase
         ]]]], 'user:' . $this->user->id);
         setting('Stats.Stats_userGroups643', false);
 
-        $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
     }
 
     public function testResetForgetsTheUsersLayout(): void
@@ -215,14 +216,14 @@ final class CustomizeDashboardTest extends TestCase
             ->post(route_to('dashboard-layout-reset'), [csrf_token() => csrf_hash()])
             ->assertRedirectTo(site_url(ADMIN_AREA));
 
-        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->renderedIds($this->user));
+        $this->assertSame([self::QUICK_LINKS, 'stats:userGroups643', 'stats:usersInRecycler693'], $this->placedIds($this->user));
     }
 
     public function testResetGoesThroughTheConfirmDialog(): void
     {
         $this->assertMatchesRegularExpression(
             '#<form[^>]*action="' . preg_quote(url_to('dashboard-layout-reset'), '#') . '"[^>]*>.*?<button[^>]*data-confirm=#s',
-            $this->dashboard($this->user),
+            $this->dashboardHtml($this->user),
         );
     }
 
@@ -252,9 +253,8 @@ final class CustomizeDashboardTest extends TestCase
 
         foreach (array_slice(explode('<div class="bf-palette-group" data-palette-group="', $html), 1) as $chunk) {
             $group = strstr($chunk, '"', true);
-            $list  = $chunk;
 
-            preg_match_all('#<li class="bf-palette-entry" data-palette-widget="([^"]+)"( hidden)?#', $list, $matches, PREG_SET_ORDER);
+            preg_match_all('#<li class="bf-palette-entry" data-palette-widget="([^"]+)"( hidden)?#', $chunk, $matches, PREG_SET_ORDER);
 
             foreach ($matches as $match) {
                 $entries[html_entity_decode($match[1])] = ['group' => $group, 'hidden' => isset($match[2])];
@@ -262,13 +262,6 @@ final class CustomizeDashboardTest extends TestCase
         }
 
         return $entries;
-    }
-
-    private function logViewer(): User
-    {
-        setting('Stats.Logs_logActivity', 'on');
-
-        return $this->user;
     }
 
     private function admin(): User
@@ -290,24 +283,5 @@ final class CustomizeDashboardTest extends TestCase
             ->withHeaders([config('Security')->headerName => csrf_hash(), 'Content-Type' => 'application/json'])
             ->withBody($body)
             ->post(route_to('dashboard-layout'));
-    }
-
-    private function dashboard(User $user): string
-    {
-        return (string) $this->actingAs($user)->get(ADMIN_AREA)->response()->getBody();
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function renderedIds(User $user): array
-    {
-        Services::resetSingle('viewMeta');
-        $html = $this->dashboard($user);
-        // Only the placed tiles, not the palette's placeholders
-        $html = substr($html, 0, (int) strpos($html, '<template x-ref="newSection">'));
-        preg_match_all('/data-widget-id="([^"]+)"/', $html, $matches);
-
-        return array_map(html_entity_decode(...), $matches[1]);
     }
 }

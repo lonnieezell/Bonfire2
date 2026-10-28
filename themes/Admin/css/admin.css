@@ -1984,11 +1984,6 @@ input[type="checkbox"]:indeterminate {
     margin: 0;
 }
 
-.bf-widget-placeholder-note {
-    color: var(--bf-muted);
-    font-size: 13px;
-}
-
 /* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
 .bf-log-activity > .bf-card-head {
     display: flex;

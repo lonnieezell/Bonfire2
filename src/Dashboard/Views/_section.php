@@ -23,7 +23,7 @@
         </button>
         <input type="text" class="form-control form-control-sm" data-section-title maxlength="100" @input="refresh()"
             value="<?= esc($title, 'attr') ?>" placeholder="<?= esc(lang('Bonfire.sectionTitle'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.sectionTitle'), 'attr') ?>">
-        <button type="button" class="btn btn-sm btn-outline-danger" @click="removeSection($el)" :disabled="sectionCount < 2"
+        <button type="button" class="btn btn-sm btn-outline-danger" @click="removeSection($el)" :disabled="sectionNames.length < 2"
             aria-label="<?= esc(lang('Bonfire.deleteSection'), 'attr') ?>">
             <i class="fas fa-trash" aria-hidden="true"></i>
         </button>

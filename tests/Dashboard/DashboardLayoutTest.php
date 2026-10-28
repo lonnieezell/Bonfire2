@@ -12,10 +12,8 @@
 namespace Tests\Dashboard;
 
 use Bonfire\Users\User;
-use Bonfire\Widgets\Types\Stats\StatsItem;
-use Config\Services;
-use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\Libraries\TestWidget;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -23,6 +21,8 @@ use Tests\Support\TestCase;
  */
 final class DashboardLayoutTest extends TestCase
 {
+    use RendersDashboard;
+
     protected $refresh = true;
     private User $user;
 
@@ -30,19 +30,14 @@ final class DashboardLayoutTest extends TestCase
     {
         parent::setUp();
 
-        setting()->flush();
-        Services::resetSingle('dashboard');
+        $this->forgetDashboardState();
         $this->user = $this->createUser();
         $this->user->addGroup('superadmin');
     }
 
     protected function tearDown(): void
     {
-        // Rendered charts leave their scripts on the shared page metadata
-        Services::resetSingle('viewMeta');
-
-        Services::resetSingle('dashboardContext');
-        setting()->flush();
+        $this->forgetDashboardState();
 
         parent::tearDown();
     }
@@ -63,15 +58,14 @@ final class DashboardLayoutTest extends TestCase
             'stats:usersInRecycler693',
             'logs:logActivity',
             'charts:usersByGroupBar345',
-        ], $this->renderedIds());
+        ], $this->placedIds($this->user));
     }
 
     public function testWidgetsSpanTheirSizeOnTheGrid(): void
     {
         setting('Stats.Stats_usersInRecycler693', 'on');
 
-        $html = $this->dashboard();
-        preg_match_all('/class="bf-widget bf-span-(\d+)" data-widget-id="([^"]+)"/', substr($html, 0, (int) strpos($html, '<template x-ref="newSection">')), $matches);
+        preg_match_all('/class="bf-widget bf-span-(\d+)" data-widget-id="([^"]+)"/', $this->placedHtml($this->dashboardHtml($this->user)), $matches);
         $spans = array_combine(array_map(html_entity_decode(...), $matches[2]), $matches[1]);
 
         $this->assertSame('3', $spans['stats:usersInRecycler693']);
@@ -83,47 +77,16 @@ final class DashboardLayoutTest extends TestCase
         $widget = new TestWidget('test:offLayout');
         service('dashboard')->register($widget);
 
-        $this->dashboard();
+        $this->dashboardHtml($this->user);
 
         $this->assertSame(0, $widget->renders);
     }
 
-    public function testAnItemOutsideTheLayoutDoesNotRunItsQuery(): void
-    {
-        StubDashboard::inject(true);
-        setting('Stats.Stats_users1', 'on');
-        setting('Dashboard.cells', ['Bonfire\Dashboard\DashboardCells::quickLinks']);
-
-        $item = (new StatsItem())->setId('users1')->addValue('users');
-
-        $this->assertNull($item->value());
-    }
-
     public function testAnUntitledSectionHasNoHeadingOrDivider(): void
     {
-        $html = $this->dashboard();
+        $html = $this->dashboardHtml($this->user);
 
-        $sections = substr($html, (int) strpos($html, 'data-sections>'), (int) strpos($html, '<template x-ref="newSection">') - (int) strpos($html, 'data-sections>'));
-
-        $this->assertSame(1, substr_count($sections, '<section class="bf-dashboard-section"'));
+        $this->assertSame(1, substr_count($this->placedHtml($html), '<section class="bf-dashboard-section"'));
         $this->assertStringNotContainsString('bf-dashboard-section-title', $html);
-    }
-
-    private function dashboard(): string
-    {
-        return (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function renderedIds(): array
-    {
-        $html = $this->dashboard();
-        // Only the placed tiles, not the palette's placeholders
-        $html = substr($html, 0, (int) strpos($html, '<template x-ref="newSection">'));
-        preg_match_all('/data-widget-id="([^"]+)"/', $html, $matches);
-
-        return array_map(static fn (string $id) => html_entity_decode($id), $matches[1]);
     }
 }

@@ -14,10 +14,16 @@
     <div class="bf-dashboard" x-data="dashboardEditor" :class="{ 'is-editing': editing }"
         data-save-url="<?= url_to('dashboard-layout') ?>"
         data-csrf-header="<?= esc(config('Security')->headerName, 'attr') ?>" data-csrf-hash="<?= csrf_hash() ?>"
-        data-messages="<?= esc(json_encode(array_combine(
-            ['untitled', 'moved', 'added', 'removed', 'resized', 'sectionMoved', 'sectionAdded', 'sectionDeleted'],
-            array_map(lang(...), ['Bonfire.untitledSection', 'Bonfire.movedTo', 'Bonfire.addedTo', 'Bonfire.removed', 'Bonfire.resized', 'Bonfire.sectionMoved', 'Bonfire.sectionAdded', 'Bonfire.sectionDeleted']),
-        )), 'attr') ?>">
+        data-messages="<?= esc(json_encode([
+            'untitled'       => lang('Bonfire.untitledSection'),
+            'moved'          => lang('Bonfire.movedTo'),
+            'added'          => lang('Bonfire.addedTo'),
+            'removed'        => lang('Bonfire.removed'),
+            'resized'        => lang('Bonfire.resized'),
+            'sectionMoved'   => lang('Bonfire.sectionMoved'),
+            'sectionAdded'   => lang('Bonfire.sectionAdded'),
+            'sectionDeleted' => lang('Bonfire.sectionDeleted'),
+        ]), 'attr') ?>">
 
         <div class="visually-hidden" aria-live="polite" x-text="announcement"></div>
 
@@ -31,11 +37,8 @@
 			<?php foreach ($layout->sections as $section) : ?>
 				<?php $tiles = '' ?>
 				<?php foreach ($section->widgets as $placement) : ?>
-					<?php $widget = $dashboard->widget($placement->id) ?>
-					<?php $html = $widget->render() ?>
-					<?php if ($html !== '') {
-					    $tiles .= $this->setData(['widget' => $widget, 'placement' => $placement, 'html' => $html])->include('Bonfire\Dashboard\Views\_tile');
-					} ?>
+					<?php $widget = $widgets[$placement->id] ?>
+					<?php $tiles .= $this->setData(['widget' => $widget, 'placement' => $placement, 'html' => $widget->render()])->include('Bonfire\Dashboard\Views\_tile') ?>
 				<?php endforeach ?>
 				<?= $this->setData(['title' => $section->title, 'tiles' => $tiles])->include('Bonfire\Dashboard\Views\_section') ?>
 			<?php endforeach ?>
@@ -46,7 +49,7 @@
         </template>
 
         <div class="bf-dashboard-add-section" x-show="editing" x-cloak>
-            <button type="button" class="btn btn-outline-secondary btn-sm" @click="addSection()" :disabled="sectionCount >= <?= Bonfire\Dashboard\LayoutValidator::MAX_SECTIONS ?>">
+            <button type="button" class="btn btn-outline-secondary btn-sm" @click="addSection()" :disabled="sectionNames.length >= <?= Bonfire\Dashboard\LayoutValidator::MAX_SECTIONS ?>">
                 <i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Bonfire.addSection') ?>
             </button>
         </div>

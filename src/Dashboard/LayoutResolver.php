@@ -11,8 +11,8 @@
 
 namespace Bonfire\Dashboard;
 
+use Bonfire\Dashboard\Widgets\ItemWidget;
 use Bonfire\Widgets\ItemSettings;
-use Bonfire\Widgets\WidgetKind;
 use InvalidArgumentException;
 
 /**
@@ -49,15 +49,13 @@ class LayoutResolver
         $placements = [];
 
         foreach ($this->cells() as $alias) {
-            $kind = WidgetRegistry::ITEM_CELLS[$alias] ?? null;
-            $ids  = $kind === null
-                ? ['cell:' . $alias]
-                : array_filter(array_keys($available), static fn (string $id) => str_starts_with($id, strtolower($kind->value) . ':'));
+            $kind    = WidgetRegistry::ITEM_CELLS[$alias] ?? null;
+            $widgets = $kind === null
+                ? array_filter([$available['cell:' . $alias] ?? null])
+                : array_filter($available, static fn (DashboardWidget $widget) => $widget instanceof ItemWidget && $widget->kind() === $kind);
 
-            foreach ($ids as $id) {
-                if (isset($available[$id])) {
-                    $placements[] = new Placement($id, $available[$id]->sizes()->default);
-                }
+            foreach ($widgets as $widget) {
+                $placements[] = new Placement($widget->id(), $widget->sizes()->default);
             }
         }
 
@@ -72,27 +70,34 @@ class LayoutResolver
      */
     public function includes(string $id): bool
     {
-        [$prefix, $rest] = explode(':', $id, 2) + ['', ''];
-        $kind            = WidgetKind::tryFrom(ucfirst($prefix));
-        $stored          = $this->stored();
+        $item   = ItemSettings::fromWidgetId($id);
+        $stored = $this->stored();
 
         if ($stored !== null) {
-            $ids = [];
+            $ids = array_merge(...array_map(
+                static fn ($section) => array_column((array) ($section['widgets'] ?? []), 'id'),
+                array_values((array) ($stored['sections'] ?? [])),
+            ));
 
-            foreach ((array) ($stored['sections'] ?? []) as $section) {
-                $ids = [...$ids, ...array_column((array) ($section['widgets'] ?? []), 'id')];
-            }
-
-            return in_array($id, $ids, true) && ($kind === null || (new ItemSettings($kind, $rest))->enabled());
+            return in_array($id, $ids, true) && ($item === null || $item->enabled());
         }
 
-        if ($prefix === 'cell') {
-            return in_array($rest, $this->cells(), true);
+        if ($item === null) {
+            return str_starts_with($id, 'cell:') && in_array(substr($id, 5), $this->cells(), true);
         }
 
-        return $kind !== null
-            && in_array(array_search($kind, WidgetRegistry::ITEM_CELLS, true), $this->cells(), true)
-            && (new ItemSettings($kind, $rest))->enabled();
+        return in_array(array_search($item->kind, WidgetRegistry::ITEM_CELLS, true), $this->cells(), true)
+            && $item->enabled();
+    }
+
+    /**
+     * The settings context of the signed-in user's own layout.
+     */
+    public static function userContext(): ?string
+    {
+        $userId = auth()->id();
+
+        return $userId === null ? null : 'user:' . $userId;
     }
 
     /**
@@ -100,8 +105,8 @@ class LayoutResolver
      */
     private function stored(): ?array
     {
-        $userId = auth()->id();
-        $layout = $userId === null ? null : setting()->get('Dashboard.layout', 'user:' . $userId);
+        $context = self::userContext();
+        $layout  = $context === null ? null : setting()->get('Dashboard.layout', $context);
 
         return is_array($layout) ? $layout : null;
     }

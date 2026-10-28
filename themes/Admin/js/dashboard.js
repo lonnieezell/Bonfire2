@@ -14,33 +14,37 @@ document.addEventListener('alpine:init', () => {
         editing: false,
         saving: false,
         failed: false,
-        sectionCount: 0,
         sectionNames: [],
-        unplaced: 0,
+        allPlaced: false,
         search: '',
         target: 0,
         announcement: '',
+        messages: {},
         // Bumped on every change, so bindings that read the page re-evaluate
         revision: 0,
-        sortables: [],
 
+        init() {
+            this.messages = JSON.parse(this.$root.dataset.messages);
+        },
+
+        // Cancel and Save reload the page, so the Sortable instances are never torn down.
         start() {
             this.failed = false;
             this.editing = true;
 
-            this.sortables.push(Sortable.create(this.$root.querySelector('[data-sections]'), {
+            Sortable.create(this.$root.querySelector('[data-sections]'), {
                 handle: '.bf-section-handle',
                 draggable: '.bf-dashboard-section',
                 animation: 150,
                 onEnd: () => this.refresh(),
-            }));
+            });
             this.grids().forEach((grid) => this.sortGrid(grid));
             this.$root.querySelectorAll('[data-palette-list]').forEach((list) => {
-                this.sortables.push(Sortable.create(list, {
+                Sortable.create(list, {
                     group: { name: 'bf-dashboard', pull: 'clone', put: false },
                     sort: false,
                     draggable: '.bf-palette-entry',
-                }));
+                });
             });
             this.refresh();
         },
@@ -100,15 +104,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         moveSection(button, step) {
-            const section = button.closest('[data-dashboard-section]');
-            const sections = this.sections();
-            const index = sections.indexOf(section) + step;
-
-            if (step < 0) {
-                sections[index].before(section);
-            } else {
-                sections[index].after(section);
-            }
+            const index = this.shift(button.closest('[data-dashboard-section]'), this.sections(), step);
 
             this.refresh();
             this.announce('sectionMoved', this.sectionNames[index], index + 1);
@@ -116,9 +112,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         canMoveSection(button, step) {
-            const index = this.sections().indexOf(button.closest('[data-dashboard-section]')) + step;
-
-            return index >= 0 && index < this.sectionCount;
+            return this.inBounds(button.closest('[data-dashboard-section]'), this.sections(), step);
         },
 
         // Appends the entry's placeholder tile to the chosen section.
@@ -150,24 +144,30 @@ document.addEventListener('alpine:init', () => {
         // One place earlier or later within its section.
         move(item, step) {
             const tile = item.closest('.bf-widget');
-            const tiles = this.tiles(tile.closest('[data-dashboard-section]'));
-            const index = tiles.indexOf(tile) + step;
 
-            if (step < 0) {
-                tiles[index].before(tile);
-            } else {
-                tiles[index].after(tile);
-            }
-
+            this.shift(tile, this.tiles(tile.closest('[data-dashboard-section]')), step);
             this.moved(tile);
         },
 
         canMove(item, step) {
             const tile = item.closest('.bf-widget');
-            const tiles = this.tiles(tile.closest('[data-dashboard-section]'));
-            const index = tiles.indexOf(tile) + step;
 
-            return index >= 0 && index < tiles.length;
+            return this.inBounds(tile, this.tiles(tile.closest('[data-dashboard-section]')), step);
+        },
+
+        // Moves el step places among its siblings and returns its new index.
+        shift(el, siblings, step) {
+            const index = siblings.indexOf(el) + step;
+
+            siblings[index][step < 0 ? 'before' : 'after'](el);
+
+            return index;
+        },
+
+        inBounds(el, siblings, step) {
+            const index = siblings.indexOf(el) + step;
+
+            return index >= 0 && index < siblings.length;
         },
 
         moveTo(item, index) {
@@ -201,40 +201,29 @@ document.addEventListener('alpine:init', () => {
             return entry.dataset.search.includes(this.search.trim().toLowerCase());
         },
 
-        get allPlaced() {
-            return this.unplaced === 0;
-        },
-
         // Brings the controls up to date with the page.
         refresh() {
-            const untitled = this.messages().untitled;
-
             this.sectionNames = this.sections().map((section, i) => section.querySelector('[data-section-title]').value.trim()
-                || untitled.replace('{0}', i + 1));
-            this.sectionCount = this.sectionNames.length;
-            this.target = Math.min(this.target, Math.max(0, this.sectionCount - 1));
-            this.unplaced = this.$root.querySelectorAll('.bf-palette-entry:not([hidden])').length;
+                || this.messages.untitled.replace('{0}', i + 1));
+            this.target = Math.min(this.target, Math.max(0, this.sectionNames.length - 1));
+            this.allPlaced = ! this.$root.querySelector('.bf-palette-entry:not([hidden])');
             this.revision++;
         },
 
         announce(key, ...values) {
-            const message = values.reduce((text, value, i) => text.replace(`{${i}}`, value), this.messages()[key]);
+            const message = values.reduce((text, value, i) => text.replace(`{${i}}`, value), this.messages[key]);
 
             // Cleared first, so the same message twice is still read out
             this.announcement = '';
             this.$nextTick(() => { this.announcement = message; });
         },
 
-        messages() {
-            return JSON.parse(this.$root.dataset.messages);
-        },
-
         focusTile(tile) {
-            this.$nextTick(() => tile.querySelector('.bf-widget-handle').focus());
+            this.$nextTick(() => tile.querySelector('.bf-widget-handle')?.focus());
         },
 
         sortGrid(grid) {
-            this.sortables.push(Sortable.create(grid, {
+            Sortable.create(grid, {
                 group: 'bf-dashboard',
                 handle: '.bf-widget-handle',
                 draggable: '.bf-widget',
@@ -249,7 +238,7 @@ document.addEventListener('alpine:init', () => {
                     event.clone.hidden = true;
                     this.refresh();
                 },
-            }));
+            });
         },
 
         placeholder(entry) {

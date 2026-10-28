@@ -9,5 +9,5 @@
     <i class="<?= esc($widget->icon(), 'attr') ?>" aria-hidden="true"></i>
     <h3><?= esc($widget->title()) ?></h3>
     <p><?= esc($widget->description()) ?></p>
-    <p class="bf-widget-placeholder-note"><?= lang('Bonfire.addedOnSave') ?></p>
+    <p class="text-muted small"><?= lang('Bonfire.addedOnSave') ?></p>
 </section>

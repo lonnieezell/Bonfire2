@@ -34,9 +34,9 @@ class CellWidget implements DashboardWidget
      */
     public function title(): string
     {
-        $method = explode('::', $this->alias)[1] ?? $this->alias;
+        helper('inflector');
 
-        return ucwords((string) preg_replace('/(?<!^)[A-Z]/', ' $0', $method));
+        return humanize(decamelize(explode('::', $this->alias)[1] ?? $this->alias));
     }
 
     public function icon(): string

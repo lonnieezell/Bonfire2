@@ -42,6 +42,17 @@ final readonly class ItemSettings
         return strtolower($this->kind->value) . ':' . $this->id;
     }
 
+    /**
+     * The settings of the item a widget id names, or null for other widgets.
+     */
+    public static function fromWidgetId(string $id): ?self
+    {
+        [$prefix, $itemId] = explode(':', $id, 2) + ['', ''];
+        $kind              = WidgetKind::tryFrom(ucfirst($prefix));
+
+        return $kind === null ? null : new self($kind, $itemId);
+    }
+
     public function key(): string
     {
         return 'Stats.' . $this->fieldName();

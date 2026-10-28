@@ -49,6 +49,6 @@ class StatsWidget extends ItemWidget
 
     public function render(): string
     {
-        return view('Bonfire\Dashboard\Views\widgets\stat', ['stat' => $this->item]);
+        return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item]);
     }
 }

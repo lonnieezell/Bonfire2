@@ -34,6 +34,11 @@ abstract class ItemWidget implements DashboardWidget
         };
     }
 
+    public function kind(): WidgetKind
+    {
+        return $this->item->settings()->kind;
+    }
+
     public function id(): string
     {
         return $this->item->settings()->widgetId();

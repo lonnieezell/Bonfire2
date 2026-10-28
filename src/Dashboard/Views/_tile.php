@@ -8,7 +8,8 @@
  */
 ?>
 <div class="bf-widget bf-span-<?= $placement->size->columns() ?>" data-widget-id="<?= esc($placement->id, 'attr') ?>" data-size="<?= $placement->size->value ?>" data-title="<?= esc($widget->title(), 'attr') ?>">
-    <div class="bf-widget-tools" x-show="editing" x-cloak>
+    <template x-if="editing">
+    <div class="bf-widget-tools">
         <button type="button" class="bf-widget-handle" aria-label="<?= esc(lang('Bonfire.dragWidget', [$widget->title()]), 'attr') ?>">
             <i class="fas fa-grip-vertical" aria-hidden="true"></i>
         </button>
@@ -39,6 +40,7 @@
             </ul>
         </div>
     </div>
+    </template>
     <div class="bf-widget-body" :inert="editing">
 		<?= $html ?>
     </div>

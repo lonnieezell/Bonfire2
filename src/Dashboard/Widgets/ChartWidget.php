@@ -23,29 +23,6 @@ use Bonfire\Widgets\Types\Charts\ChartsItem;
  */
 class ChartWidget extends ItemWidget
 {
-    private const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
-
-    /**
-     * Adds Chart.js and its helpers to the page, once.
-     */
-    public static function addAssets(Metadata $meta): void
-    {
-        if (in_array(self::CHART_JS, array_column($meta->scripts(), 'src'), true)) {
-            return;
-        }
-
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-color@3']);
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-interpolate@3']);
-        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3']);
-        $meta->addScript([
-            'src'            => self::CHART_JS,
-            'integrity'      => 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ',
-            'crossorigin'    => 'anonymous',
-            'referrerpolicy' => 'no-referrer',
-        ]);
-        $meta->addScript(['src' => asset('admin/js/chart.js', 'js')]);
-    }
-
     public function title(): string
     {
         return (string) $this->item->title();
@@ -66,9 +43,9 @@ class ChartWidget extends ItemWidget
      */
     public function description(): string
     {
-        $type = (string) preg_replace('/(?<!^)[A-Z]/', ' $0', (string) $this->item->type());
+        helper('inflector');
 
-        return lang('Bonfire.chartOfType', [ucfirst(strtolower($type))]);
+        return lang('Bonfire.chartOfType', [ucfirst(strtolower(humanize(decamelize((string) $this->item->type()))))]);
     }
 
     public function group(): string
@@ -90,9 +67,9 @@ class ChartWidget extends ItemWidget
     {
         /** @var Metadata $meta */
         $meta = service('viewMeta');
-        self::addAssets($meta);
+        ChartsItem::addAssets($meta);
         $meta->addRawScript($this->item->getScript());
 
-        return view('Bonfire\Dashboard\Views\widgets\chart', ['chart' => $this->item]);
+        return '<div class="bf-chart">' . view('Bonfire\Widgets\Views\Cells\_chart', ['chart' => $this->item]) . '</div>';
     }
 }

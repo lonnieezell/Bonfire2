@@ -38,10 +38,14 @@ class DashboardController extends AdminController
             'referrerpolicy' => 'no-referrer',
         ]);
 
+        $dashboard = service('dashboard');
+        $layout    = (new LayoutResolver($dashboard))->resolve();
+        $widgets   = $dashboard->available();
+
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
-            'layout'    => (new LayoutResolver(service('dashboard')))->resolve(),
-            'dashboard' => service('dashboard'),
-            'palette'   => service('dashboard')->grouped(),
+            'layout'  => $layout,
+            'widgets' => $widgets,
+            'palette' => $dashboard->grouped(),
         ]);
     }
 
@@ -57,7 +61,7 @@ class DashboardController extends AdminController
             return $this->response->setStatusCode(400)->setJSON(['saved' => false]);
         }
 
-        setting()->set('Dashboard.layout', $layout->toArray(), $this->userContext());
+        setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
 
         return $this->response->setJSON(['saved' => true]);
     }
@@ -67,13 +71,8 @@ class DashboardController extends AdminController
      */
     public function resetLayout(): RedirectResponse
     {
-        setting()->forget('Dashboard.layout', $this->userContext());
+        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
 
         return redirect()->to(ADMIN_AREA);
-    }
-
-    private function userContext(): string
-    {
-        return 'user:' . auth()->id();
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Bonfire\Widgets\Cells;
 
-use Bonfire\Dashboard\Widgets\ChartWidget;
 use Bonfire\View\Metadata;
+use Bonfire\Widgets\Types\Charts\ChartsItem;
 
 class WidgetCells
 {
@@ -36,7 +36,7 @@ class WidgetCells
     {
         /** @var Metadata */
         $meta = service('viewMeta');
-        ChartWidget::addAssets($meta);
+        ChartsItem::addAssets($meta);
         $meta->addRawScript(view('Bonfire\Widgets\Views\Cells\scripts', [
             'charts' => service('widgets')->widget('charts')->items(),
         ]));
