@@ -92,7 +92,8 @@ class Bonfire
         $menus->menu('sidebar')
             ->createCollection('settings', lang('Bonfire.settingsModTitle'))
             ->setFontAwesomeIcon('fas fa-cog')
-            ->setCollapsible();
+            ->setCollapsible()
+            ->setPageNav();
         $menus->menu('sidebar')
             ->createCollection('tools', lang('Bonfire.toolsModTitle'))
             ->setFontAwesomeIcon('fas fa-toolbox')
