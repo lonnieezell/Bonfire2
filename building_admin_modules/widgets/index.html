@@ -1427,6 +1427,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#log-activity-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log activity widget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1443,6 +1454,17 @@
     <span class="md-ellipsis">
       
         Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-activity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log activity
       
     </span>
   </a>
@@ -1558,6 +1580,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#log-activity-widget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log activity widget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#configuration_2" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1574,6 +1607,17 @@
     <span class="md-ellipsis">
       
         Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-activity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log activity
       
     </span>
   </a>
@@ -1790,6 +1834,14 @@ Examples options are:
 <li>if indicate <strong>sum</strong> then <strong>selectSum($field)</strong>  is executed</li>
 </ul>
 <hr />
+<h2 id="log-activity-widget">Log activity widget</h2>
+<p>The Log activity widget charts the newest log files, one stacked bar per file, split into Error, Warning, Info and
+Debug entries. CRITICAL, ALERT and EMERGENCY entries count as Error, and NOTICE entries count as Info. Each bar links
+to that log file, and the headline counts the errors across the files shown.</p>
+<p>It is built in: turn it on in the widgets settings like any other widget. Only users with the <code>logs.view</code> permission
+see it, and the log files are only read when it is on and the dashboard is shown. It is displayed by the
+<code>Bonfire\Widgets\Cells\WidgetCells::logs</code> cell.</p>
+<hr />
 <h2 id="configuration_2">Configuration</h2>
 <p>All settings are available in the administration settings area.</p>
 <p>Each type of widget has its own specific settings.</p>
@@ -1853,6 +1905,15 @@ Examples options are:
 <li>Choose the location of the legend</li>
 <li>Enable animation</li>
 <li>Assign a predefined color scheme to fill the chart</li>
+</ul>
+<hr />
+<h3 id="log-activity">Log activity</h3>
+<p>You can set the default values in the <code>Bonfire\Widgets\Config\LogActivity</code> Class</p>
+<p>In the administration settings area, you can choose:</p>
+<ul>
+<li>How many of the newest log files to show, from 1 to 31 (12 by default). Every file shown is read on each dashboard
+  load.</li>
+<li>To hide Debug entries</li>
 </ul>
 
 
