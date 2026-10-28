@@ -1821,6 +1821,110 @@ input[type="checkbox"]:indeterminate {
     .bf-chart-grid > .col-9 { grid-column: span 9; }
 }
 
+/* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
+.bf-log-activity > .bf-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.bf-log-activity > .bf-card-head a {
+    color: var(--bf-accent-text);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.bf-log-activity > .bf-card-head strong {
+    color: var(--bf-danger);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.bf-log-bars {
+    display: grid;
+    grid-auto-columns: minmax(28px, 1fr);
+    grid-auto-flow: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    list-style: none;
+}
+
+.bf-log-bars li {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+    height: 170px;
+}
+
+.bf-log-track {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.bf-log-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1px;
+    min-height: 5px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.bf-log-stack:empty {
+    background: var(--bf-border-strong);
+}
+
+.bf-log-stack:hover,
+.bf-log-stack:focus-visible {
+    opacity: .8;
+}
+
+.bf-log-segment {
+    flex-basis: 0;
+    min-height: 2px;
+}
+
+.bf-log-label {
+    color: var(--bf-muted);
+    font-family: var(--bf-mono);
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.bf-log-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 16px 0 0;
+    padding: 0;
+    color: var(--bf-muted);
+    font-size: 13px;
+    list-style: none;
+}
+
+.bf-log-legend li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.bf-log-legend span {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.bf-log-error { background: var(--bf-danger); }
+.bf-log-warning { background: var(--bf-warn-bar); }
+.bf-log-info { background: var(--bf-info); }
+.bf-log-debug { background: var(--bf-debug); }
+
 /*
  * --------------------------------------------------------------------------
  * USER EDIT

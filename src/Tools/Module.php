@@ -15,6 +15,7 @@ use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Tools\Actions\DeleteLogs;
 use Bonfire\Tools\Libraries\LogStore;
+use Bonfire\Tools\Widgets\LogActivity;
 
 /**
  * Email Module setup
@@ -47,5 +48,7 @@ class Module extends BaseModule
         service('actions')->for('logs')
             ->records(new LogStore())
             ->add(new DeleteLogs());
+
+        service('widgets')->widget('logs')->addItem(new LogActivity());
     }
 }

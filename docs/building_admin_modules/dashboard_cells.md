@@ -9,13 +9,14 @@ class Dashboard extends BaseConfig
     public array $cells = [
         'Bonfire\Dashboard\DashboardCells::quickLinks',
         'Bonfire\Widgets\Cells\WidgetCells::stats',
+        'Bonfire\Widgets\Cells\WidgetCells::logs',
         'Bonfire\Widgets\Cells\WidgetCells::charts',
     ];
 }
 ```
 
 The cells are displayed in the order listed, from top to bottom in the Dashboard. You can comment out any class to have it not show.
-The stats and charts cells that come on by default are used to display the widgets, that can be configured in the admin area.
+The stats, logs and charts cells that come on by default are used to display the widgets, that can be configured in the admin area.
 
 ## Creating the Cell
 

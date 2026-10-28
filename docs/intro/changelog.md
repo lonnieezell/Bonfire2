@@ -29,6 +29,12 @@ render. Turning **Site Online** off now saves `0`; the offline check treats any 
 The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
 
+A new **Log activity** dashboard widget charts the entries of the newest log files per level (see
+[Widgets](../building_admin_modules/widgets.md#log-activity-widget)). Turn it on in Settings → Widgets; its own tab sets
+how many files it shows and whether Debug entries are left out. It is shown by a new
+`Bonfire\Widgets\Cells\WidgetCells::logs` cell: installs with their own `Config\Dashboard` must add that cell to
+`$cells` to see it. Its styles are in the Admin theme, so re-publish the theme.
+
 Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
 escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
 first.

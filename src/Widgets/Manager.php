@@ -49,7 +49,7 @@ class Manager
     }
 
     /**
-     * Every item of every collection of every widget.
+     * Every item of every widget, and of each of its collections.
      *
      * @return list<Item>
      */
@@ -58,6 +58,13 @@ class Manager
         $items = [];
 
         foreach ($this->widgets as $widget) {
+            // A widget without collections holds its items directly
+            if (! $widget instanceof Widgets) {
+                array_push($items, ...$widget->items());
+
+                continue;
+            }
+
             foreach ($widget->items() as $collection) {
                 array_push($items, ...$collection->items());
             }

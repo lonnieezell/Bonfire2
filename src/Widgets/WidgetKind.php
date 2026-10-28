@@ -19,4 +19,5 @@ enum WidgetKind: string
 {
     case Stats  = 'Stats';
     case Charts = 'Charts';
+    case Logs   = 'Logs';
 }

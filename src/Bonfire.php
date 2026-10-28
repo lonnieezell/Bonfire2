@@ -11,6 +11,7 @@
 
 namespace Bonfire;
 
+use Bonfire\Widgets\BaseWidget;
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Stats\Stats;
 
@@ -116,6 +117,8 @@ class Bonfire
         $widgets->createWidget(Charts::class, 'charts');
         $widgets->widget('charts')
             ->createCollection('charts');
+
+        $widgets->createWidget(BaseWidget::class, 'logs');
     }
 
     /**
