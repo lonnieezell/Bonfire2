@@ -31,16 +31,42 @@ class LayoutValidator
     }
 
     /**
+     * Whether the layout has the right shape and version, and at most
+     * MAX_SECTIONS sections. Needs no registry, so it can be asked before
+     * every widget is registered.
+     */
+    public static function wellFormed(mixed $payload): bool
+    {
+        if (! is_array($payload) || ($payload['version'] ?? null) !== 1 || ! is_array($payload['sections'] ?? null)) {
+            return false;
+        }
+
+        if (count($payload['sections']) > self::MAX_SECTIONS) {
+            return false;
+        }
+
+        foreach ($payload['sections'] as $section) {
+            if (! is_array($section) || ! is_array($section['widgets'] ?? null) || ! is_string($section['title'] ?? '')) {
+                return false;
+            }
+
+            foreach ($section['widgets'] as $widget) {
+                if (! is_array($widget) || ! is_string($widget['id'] ?? null)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @throws InvalidArgumentException
      */
     public function validate(mixed $payload): Layout
     {
-        if (! is_array($payload) || ($payload['version'] ?? null) !== 1 || ! is_array($payload['sections'] ?? null)) {
-            throw new InvalidArgumentException('A layout needs version 1 and a list of sections.');
-        }
-
-        if (count($payload['sections']) > self::MAX_SECTIONS) {
-            throw new InvalidArgumentException('A layout holds at most ' . self::MAX_SECTIONS . ' sections.');
+        if (! self::wellFormed($payload)) {
+            throw new InvalidArgumentException('A layout needs version 1 and at most ' . self::MAX_SECTIONS . ' sections, each a list of widgets with ids, and a title if any.');
         }
 
         $available = $this->registry->available();
@@ -48,17 +74,9 @@ class LayoutValidator
         $sections  = [];
 
         foreach ($payload['sections'] as $section) {
-            if (! is_array($section) || ! is_array($section['widgets'] ?? null) || ! is_string($section['title'] ?? '')) {
-                throw new InvalidArgumentException('Each section needs a list of widgets, and a title if any.');
-            }
-
             $placements = [];
 
             foreach ($section['widgets'] as $widget) {
-                if (! is_array($widget) || ! is_string($widget['id'] ?? null)) {
-                    throw new InvalidArgumentException('Each widget needs an id.');
-                }
-
                 $id = $widget['id'];
                 if (! isset($available[$id]) || isset($placed[$id])) {
                     continue;

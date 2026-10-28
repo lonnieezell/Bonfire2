@@ -13,7 +13,6 @@ namespace Bonfire\Dashboard;
 
 use Bonfire\Dashboard\Widgets\ItemWidget;
 use Bonfire\Widgets\ItemSettings;
-use InvalidArgumentException;
 
 /**
  * Decides which widgets the viewer's dashboard shows, and in what order.
@@ -32,15 +31,7 @@ class LayoutResolver
     {
         $stored = $this->stored();
 
-        if ($stored !== null) {
-            try {
-                return (new LayoutValidator($this->registry))->validate($stored);
-            } catch (InvalidArgumentException) {
-                // A layout that no longer reads falls back to the default
-            }
-        }
-
-        return $this->derived();
+        return $stored === null ? $this->derived() : (new LayoutValidator($this->registry))->validate($stored);
     }
 
     private function derived(): Layout
@@ -75,8 +66,8 @@ class LayoutResolver
 
         if ($stored !== null) {
             $ids = array_merge(...array_map(
-                static fn ($section) => array_column((array) ($section['widgets'] ?? []), 'id'),
-                array_values((array) ($stored['sections'] ?? [])),
+                static fn (array $section) => array_column($section['widgets'], 'id'),
+                array_values($stored['sections']),
             ));
 
             return in_array($id, $ids, true) && ($item === null || $item->enabled());
@@ -101,14 +92,15 @@ class LayoutResolver
     }
 
     /**
-     * The viewer's own layout as stored, if they saved one.
+     * The viewer's own layout as stored, if they saved one that still reads.
+     * One that does not falls back to the default.
      */
     private function stored(): ?array
     {
         $context = self::userContext();
         $layout  = $context === null ? null : setting()->get('Dashboard.layout', $context);
 
-        return is_array($layout) ? $layout : null;
+        return LayoutValidator::wellFormed($layout) ? $layout : null;
     }
 
     /**

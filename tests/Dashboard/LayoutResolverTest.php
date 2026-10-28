@@ -45,6 +45,7 @@ final class LayoutResolverTest extends TestCase
         }
 
         Services::resetSingle('dashboardContext');
+        auth()->logout();
         setting()->flush();
 
         parent::tearDown();
@@ -55,6 +56,8 @@ final class LayoutResolverTest extends TestCase
         setting('Stats.Stats_usersInRecycler693', 'on');
         setting('Stats.Logs_logActivity', 'on');
         setting('Stats.Charts_usersByGroupBar345', 'on');
+        // Log activity needs logs.view
+        auth()->login($this->createUser()->addGroup('superadmin'));
 
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
@@ -102,6 +105,18 @@ final class LayoutResolverTest extends TestCase
         setting('Stats.Stats_lateComer', 'on');
 
         $this->assertTrue((new LayoutResolver(service('dashboard')))->includes('stats:lateComer'));
+    }
+
+    public function testAMalformedStoredLayoutIncludesWhatTheDefaultShows(): void
+    {
+        setting('Stats.Stats_usersInRecycler693', 'on');
+        auth()->login($this->createUser());
+        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'cell:x']]]]], LayoutResolver::userContext());
+
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $this->assertContains('stats:usersInRecycler693', $resolver->resolve()->ids());
+        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
     }
 
     public function testTheContextShowsOnlyItemsInTheResolvedLayout(): void
