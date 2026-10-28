@@ -45,14 +45,17 @@ final class DashboardWidgetsTest extends TestCase
         parent::tearDown();
     }
 
-    public function testNoWidgetShowsUntilPlaced()
+    public function testAWidgetOutsideTheDefaultLayoutShowsOnlyOncePlaced()
     {
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
         $placed   = $this->placedHtml((string) $response->response()->getBody());
 
         $response->assertOK();
-        $this->assertStringNotContainsString('USERS IN RECYCLER', $placed);
         $this->assertStringNotContainsString('USER CLASSIFICATION BY GROUP', $placed);
+
+        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
+
+        $this->assertStringContainsString('USER CLASSIFICATION BY GROUP', $this->placedHtml($this->dashboardHtml($this->user)));
     }
 
     public function testPlacedStatsWidgetShows()

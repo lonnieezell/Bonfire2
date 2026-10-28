@@ -18,8 +18,8 @@ use Bonfire\Widgets\ItemSettings;
  * Decides which widgets the viewer's dashboard shows, and in what order.
  *
  * A user's own Dashboard.layout comes first. Otherwise the default layout
- * is one untitled section holding the plain cells of Dashboard.cells in
- * order; stats, charts and log items are added from the palette.
+ * is the site's Dashboard.layout; without one, it is one untitled section
+ * holding the plain cells of Dashboard.cells in order.
  */
 class LayoutResolver
 {
@@ -31,7 +31,17 @@ class LayoutResolver
     {
         $stored = $this->stored();
 
-        return $stored === null ? $this->derived() : (new LayoutValidator($this->registry))->validate($stored);
+        return $stored === null ? $this->defaultLayout() : (new LayoutValidator($this->registry))->validate($stored);
+    }
+
+    /**
+     * The layout of a user who has not saved their own.
+     */
+    public function defaultLayout(): Layout
+    {
+        $site = $this->site();
+
+        return $site === null ? $this->derived() : (new LayoutValidator($this->registry))->validate($site);
     }
 
     private function derived(): Layout
@@ -59,7 +69,7 @@ class LayoutResolver
     public function includes(string $id): bool
     {
         $item   = ItemSettings::fromWidgetId($id);
-        $stored = $this->stored();
+        $stored = $this->stored() ?? $this->site();
 
         if ($stored !== null) {
             $ids = array_merge(...array_map(
@@ -91,6 +101,16 @@ class LayoutResolver
     {
         $context = self::userContext();
         $layout  = $context === null ? null : setting()->get('Dashboard.layout', $context);
+
+        return LayoutValidator::wellFormed($layout) ? $layout : null;
+    }
+
+    /**
+     * The site's default layout as stored or configured, if it reads.
+     */
+    private function site(): ?array
+    {
+        $layout = setting('Dashboard.layout');
 
         return LayoutValidator::wellFormed($layout) ? $layout : null;
     }

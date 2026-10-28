@@ -25,7 +25,7 @@ final class TestWidget implements DashboardWidget
     public function __construct(
         private readonly string $id,
         private readonly ?string $permission = null,
-        private readonly SizeRange $sizes = new SizeRange(Size::Medium),
+        private readonly SizeRange $sizes = new SizeRange(Size::Half),
     ) {
     }
 
@@ -62,6 +62,11 @@ final class TestWidget implements DashboardWidget
     public function permission(): ?string
     {
         return $this->permission;
+    }
+
+    public function settingsUrl(): ?string
+    {
+        return null;
     }
 
     public function render(): string

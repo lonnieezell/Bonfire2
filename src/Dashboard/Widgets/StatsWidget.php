@@ -44,7 +44,12 @@ class StatsWidget extends ItemWidget
 
     public function sizes(): SizeRange
     {
-        return new SizeRange(Size::Small);
+        return new SizeRange(Size::Quarter);
+    }
+
+    protected function settingsTab(): ?string
+    {
+        return 'stats';
     }
 
     public function render(): string

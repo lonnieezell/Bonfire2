@@ -36,7 +36,7 @@ final class LayoutValidatorTest extends TestCase
         $registry = (new WidgetRegistry())
             ->register(new TestWidget('test:a'))
             ->register(new TestWidget('test:b'))
-            ->register(new TestWidget('test:narrow', null, new SizeRange(Size::Small, Size::Small, Size::Medium)));
+            ->register(new TestWidget('test:narrow', null, new SizeRange(Size::Quarter, Size::Quarter, Size::Half)));
         $this->validator = new LayoutValidator($registry);
     }
 
@@ -50,11 +50,11 @@ final class LayoutValidatorTest extends TestCase
     public function testKeepsAValidLayout(): void
     {
         $layout = $this->validator->validate(['version' => 1, 'sections' => [
-            ['title' => '', 'widgets' => [['id' => 'test:b', 'size' => 'lg'], ['id' => 'test:a', 'size' => 'sm']]],
+            ['title' => '', 'widgets' => [['id' => 'test:b', 'size' => 'two-thirds'], ['id' => 'test:a', 'size' => 'quarter']]],
         ]]);
 
         $this->assertSame(['test:b', 'test:a'], $layout->ids());
-        $this->assertSame(Size::Large, $layout->sections[0]->widgets[0]->size);
+        $this->assertSame(Size::TwoThirds, $layout->sections[0]->widgets[0]->size);
     }
 
     public function testDropsUnknownAndDuplicateIds(): void
@@ -83,7 +83,7 @@ final class LayoutValidatorTest extends TestCase
             ['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'huge']]],
         ]]);
 
-        $this->assertSame(Size::Medium, $layout->sections[0]->widgets[0]->size);
+        $this->assertSame(Size::Half, $layout->sections[0]->widgets[0]->size);
     }
 
     public function testASizeOutsideTheWidgetsRangeFallsBackToItsDefault(): void
@@ -92,7 +92,7 @@ final class LayoutValidatorTest extends TestCase
             ['title' => '', 'widgets' => [['id' => 'test:narrow', 'size' => 'full'], ['id' => 'test:a', 'size' => 'full']]],
         ]]);
 
-        $this->assertSame(Size::Small, $layout->sections[0]->widgets[0]->size);
+        $this->assertSame(Size::Quarter, $layout->sections[0]->widgets[0]->size);
         $this->assertSame(Size::Full, $layout->sections[0]->widgets[1]->size);
     }
 
@@ -136,11 +136,11 @@ final class LayoutValidatorTest extends TestCase
     public function testStoresAsTheVersionOneFormat(): void
     {
         $layout = $this->validator->validate(['version' => 1, 'sections' => [
-            ['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'sm']]],
+            ['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'quarter']]],
         ]]);
 
         $this->assertSame(
-            ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'sm']]]]],
+            ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'test:a', 'size' => 'quarter']]]]],
             $layout->toArray(),
         );
     }
@@ -163,7 +163,7 @@ final class LayoutValidatorTest extends TestCase
             'section not list' => [['version' => 1, 'sections' => ['x']]],
             'widgets not list' => [['version' => 1, 'sections' => [['title' => '', 'widgets' => 'x']]]],
             'title not text'   => [['version' => 1, 'sections' => [['title' => ['x'], 'widgets' => []]]]],
-            'widget no id'     => [['version' => 1, 'sections' => [['title' => '', 'widgets' => [['size' => 'sm']]]]]],
+            'widget no id'     => [['version' => 1, 'sections' => [['title' => '', 'widgets' => [['size' => 'quarter']]]]]],
         ];
     }
 }

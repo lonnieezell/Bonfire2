@@ -18,7 +18,7 @@ final readonly class SizeRange
 {
     public function __construct(
         public Size $default,
-        public Size $min = Size::Small,
+        public Size $min = Size::Quarter,
         public Size $max = Size::Full,
     ) {
     }

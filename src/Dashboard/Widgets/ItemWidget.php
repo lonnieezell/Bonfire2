@@ -56,4 +56,19 @@ abstract class ItemWidget implements DashboardWidget
     {
         return method_exists($this->item, 'permission') ? $this->item->permission() : null;
     }
+
+    /**
+     * Its tab of the Widgets settings, for users who may change them.
+     */
+    public function settingsUrl(): ?string
+    {
+        $tab = $this->settingsTab();
+
+        return $tab === null || ! auth()->user()?->can('widgets.settings') ? null : site_url(ADMIN_AREA . '/settings/widgets/' . $tab);
+    }
+
+    /**
+     * The tab of the Widgets settings that configures the item, if any.
+     */
+    abstract protected function settingsTab(): ?string;
 }

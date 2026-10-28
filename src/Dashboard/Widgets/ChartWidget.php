@@ -54,13 +54,23 @@ class ChartWidget extends ItemWidget
     }
 
     /**
-     * The default size follows the chart's CSS class: col-6 is Medium.
+     * The default size follows the chart's CSS class: col-6 is Half.
      */
     public function sizes(): SizeRange
     {
         $columns = preg_match('/^col-(\d+)$/', (string) $this->item->cssClass(), $match) ? (int) $match[1] : 0;
 
-        return new SizeRange(Size::tryFromColumns($columns) ?? Size::Medium);
+        return new SizeRange(Size::tryFromColumns($columns) ?? Size::Half);
+    }
+
+    /**
+     * The tab of its chart type: polarArea is "polarareachart".
+     */
+    protected function settingsTab(): ?string
+    {
+        $type = (string) $this->item->type();
+
+        return in_array($type, ['line', 'bar', 'doughnut', 'pie', 'polarArea'], true) ? strtolower($type) . 'chart' : null;
     }
 
     public function render(): string

@@ -14,7 +14,6 @@ namespace Bonfire\Dashboard\Controllers;
 use Bonfire\Core\AdminController;
 use Bonfire\Dashboard\LayoutResolver;
 use Bonfire\Dashboard\LayoutValidator;
-use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -39,41 +38,38 @@ class DashboardController extends AdminController
         ]);
 
         $dashboard = service('dashboard');
-        $layout    = (new LayoutResolver($dashboard))->resolve();
-        $widgets   = $dashboard->available();
+        $resolver  = new LayoutResolver($dashboard);
 
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
-            'layout'  => $layout,
-            'widgets' => $widgets,
-            'palette' => $dashboard->grouped(),
+            'layout'        => $resolver->resolve(),
+            'defaultLayout' => $resolver->defaultLayout(),
+            'widgets'       => $dashboard->available(),
+            'palette'       => $dashboard->grouped(),
         ]);
     }
 
     /**
-     * Stores the posted layout (JSON) as the current user's own.
+     * Stores the posted layout (JSON) as the current user's own. The
+     * default layout is not stored, so they keep following the default.
      */
     public function saveLayout(): ResponseInterface
     {
+        $dashboard = service('dashboard');
+
         try {
             $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
-            $layout  = (new LayoutValidator(service('dashboard')))->validate($payload);
+            $layout  = (new LayoutValidator($dashboard))->validate($payload);
         } catch (InvalidArgumentException|JsonException) {
             // The CSRF filter has rotated the token; the editor needs it to try again
             return $this->response->setStatusCode(400)->setJSON(['saved' => false, 'csrf' => csrf_hash()]);
         }
 
-        setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
+        if ($layout->toArray() === (new LayoutResolver($dashboard))->defaultLayout()->toArray()) {
+            setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+        } else {
+            setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
+        }
 
         return $this->response->setJSON(['saved' => true]);
-    }
-
-    /**
-     * Forgets the current user's layout, back to the default.
-     */
-    public function resetLayout(): RedirectResponse
-    {
-        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
-
-        return redirect()->to(ADMIN_AREA);
     }
 }

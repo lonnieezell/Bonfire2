@@ -16,10 +16,11 @@ namespace Bonfire\Dashboard;
  */
 enum Size: string
 {
-    case Small  = 'sm';
-    case Medium = 'md';
-    case Large  = 'lg';
-    case Full   = 'full';
+    case Quarter   = 'quarter';
+    case Third     = 'third';
+    case Half      = 'half';
+    case TwoThirds = 'two-thirds';
+    case Full      = 'full';
 
     /**
      * The columns spanned on the dashboard's 12-column grid.
@@ -27,10 +28,11 @@ enum Size: string
     public function columns(): int
     {
         return match ($this) {
-            self::Small  => 3,
-            self::Medium => 6,
-            self::Large  => 9,
-            self::Full   => 12,
+            self::Quarter   => 3,
+            self::Third     => 4,
+            self::Half      => 6,
+            self::TwoThirds => 8,
+            self::Full      => 12,
         };
     }
 

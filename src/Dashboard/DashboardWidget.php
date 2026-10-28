@@ -46,5 +46,11 @@ interface DashboardWidget
      */
     public function permission(): ?string;
 
+    /**
+     * Where the viewer changes the widget's settings, or null when it
+     * has none they may change. Shown as a link in its edit-mode tools.
+     */
+    public function settingsUrl(): ?string;
+
     public function render(): string;
 }

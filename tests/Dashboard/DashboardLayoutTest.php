@@ -42,9 +42,16 @@ final class DashboardLayoutTest extends TestCase
         parent::tearDown();
     }
 
-    public function testAFreshInstallShowsThePlainCells(): void
+    public function testAFreshInstallShowsQuickLinksThenUsersThenMonitoring(): void
     {
-        $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $this->placedIds($this->user));
+        $html = $this->dashboardHtml($this->user);
+
+        $this->assertSame(
+            ['cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'stats:usersExpTable693', 'stats:usersInRecycler693', 'logs:logActivity'],
+            $this->placedIds($this->user),
+        );
+        preg_match_all('#<h2 class="bf-dashboard-section-title"[^>]*>([^<]+)</h2>#', $this->placedHtml($html), $titles);
+        $this->assertSame(['Users', 'Monitoring'], $titles[1]);
     }
 
     public function testAStoredLayoutRendersInItsOrder(): void
@@ -77,6 +84,7 @@ final class DashboardLayoutTest extends TestCase
 
     public function testAnUntitledSectionHasNoHeadingOrDivider(): void
     {
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
         $html = $this->dashboardHtml($this->user);
 
         $this->assertSame(1, substr_count($this->placedHtml($html), '<section class="bf-dashboard-section"'));

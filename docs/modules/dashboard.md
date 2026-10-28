@@ -4,11 +4,36 @@ The Dashboard is the first page you seen when you log into the admin area. It pr
 
 ## Configuration
 
-By default, the Dashboard is setup to display:
+By default, the Dashboard displays:
 
-- a series of quick links
-- any statistics that you have defined
-- any widgets that you have added.
+- the quick links;
+- a **Users** section with the Users by Group and Users in Recycler stats, each half the width;
+- a **Monitoring** section with Log activity.
+
+That default is the `$layout` property of the Dashboard config file, in the same format a saved layout uses. Change
+it to give every admin who hasn't customized their dashboard a different one; set it to `null` and the default is
+the cells below instead, in order:
+
+```php
+public ?array $layout = [
+    'version'  => 1,
+    'sections' => [
+        ['title' => '', 'widgets' => [
+            ['id' => 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' => 'full'],
+        ]],
+        ['title' => 'Users', 'widgets' => [
+            ['id' => 'stats:usersExpTable693', 'size' => 'half'],
+            ['id' => 'stats:usersInRecycler693', 'size' => 'half'],
+        ]],
+        ['title' => 'Monitoring', 'widgets' => [
+            ['id' => 'logs:logActivity', 'size' => 'full'],
+        ]],
+    ],
+];
+```
+
+Widgets the viewer may not see, or that are switched off in Settings → Widgets, are left out, and so is a section
+left empty.
 
 You can create additional [View Cells](https://codeigniter.com/user_guide/outgoing/view_cells.html) and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.
 
@@ -24,22 +49,27 @@ public array $cells = [
 ## Customizing the dashboard
 
 Every admin can arrange their own dashboard without changing anyone else's. Until they do, they see the default
-layout: the cells above in order, except the stats, logs and charts cells. Stats, charts and Log activity are added
-from the palette.
+layout above. Other widgets are added from the widget library.
 
-Click **Customize** to enter edit mode. Nothing is stored until you click **Save**; **Cancel** puts the dashboard back
-the way it was, and **Reset to default** forgets your layout. In edit mode you can:
+Click **Customize** to enter edit mode. Nothing is stored until you click **Save layout**; **Cancel** puts the
+dashboard back the way it was. Every change can be undone and redone with the arrows in the edit bar, or Ctrl+Z
+(⌘Z) and Shift+Ctrl+Z, and the message after a removal or deletion has its own **Undo**. In edit mode you can:
 
-- drag a widget by its handle to reorder it, also into another section;
-- add a section, give it an optional heading, reorder or delete it (its widgets move to the section before it);
-- set a widget's width from its menu: Small, Medium, Large or Full width (3, 6, 9 or 12 of 12 columns), within the
-  range that widget allows;
-- remove a widget with ×, and add widgets from **Add widgets**, which lists the ones not on your dashboard. An added
-  widget shows a placeholder until you save.
+- drag a widget to reorder it, also into another section;
+- size a widget from the tools above it: ¼, ⅓, ½, ⅔ or Full width (3, 4, 6, 8 or 12 of 12 columns), within the
+  range that widget allows, or drag its bottom-right corner;
+- open a widget's settings from its sliders button, when it has settings you may change;
+- remove a widget with its trash button, and add widgets from **Add widget**, which lists every widget and marks the
+  ones already on your dashboard. Click **Add**, or drag one straight onto a section. An added widget shows a
+  placeholder until you save;
+- give a section an optional heading, and from its ⋯ menu add a widget to it, move it up or down, insert a section
+  below it or delete it with its widgets;
+- reset to the default layout with the clock button. Saving the default layout forgets yours, so you follow the
+  default again when a site admin changes it.
 
-Everything works without dragging, too: each widget's menu has **Move earlier**, **Move later** and **Move to
-section**, each section has **Move section up** and **Move section down**, and the palette can add to any section.
-Screen readers hear each change announced.
+Everything works from the keyboard, too: with a widget focused, the arrow keys move it (Up and Down, and Left and
+Right past either end, move it to the section before or after), Shift with Left or Right resizes it, and Delete
+removes it. Screen readers hear each change announced.
 
 Settings → Widgets decides which widgets are available to everyone. Every widget is available until a site admin
 switches it off; a switched-off widget is left out of every palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,

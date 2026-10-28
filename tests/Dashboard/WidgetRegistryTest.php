@@ -70,7 +70,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertNotNull($widget);
         $this->assertSame('stats', $widget->group());
         $this->assertSame('fa fa-users', $widget->icon());
-        $this->assertSame(Size::Small, $widget->sizes()->default);
+        $this->assertSame(Size::Quarter, $widget->sizes()->default);
         $this->assertNull($widget->permission());
     }
 
@@ -80,7 +80,7 @@ final class WidgetRegistryTest extends TestCase
 
         $this->assertNotNull($widget);
         $this->assertSame('charts', $widget->group());
-        $this->assertSame(Size::Medium, $widget->sizes()->default);
+        $this->assertSame(Size::Half, $widget->sizes()->default);
     }
 
     public function testLogActivityBecomesAWidget(): void
@@ -106,6 +106,25 @@ final class WidgetRegistryTest extends TestCase
         foreach (['stats:usersInRecycler693', 'charts:usersByGroupBar345', 'logs:logActivity', 'cell:Bonfire\Dashboard\DashboardCells::quickLinks'] as $id) {
             $this->assertNotSame('', service('dashboard')->widget($id)->description(), $id);
         }
+    }
+
+    public function testItemWidgetsLinkToTheirWidgetsSettingsTab(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('widgets.settings');
+        $this->actingAs($user);
+
+        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/stats'), service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
+        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/barchart'), service('dashboard')->widget('charts:usersByGroupBar345')->settingsUrl());
+        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/logactivity'), service('dashboard')->widget('logs:logActivity')->settingsUrl());
+        $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->settingsUrl());
+    }
+
+    public function testNoSettingsLinkWithoutThePermissionToChangeThem(): void
+    {
+        $this->actingAs($this->createUser());
+
+        $this->assertNull(service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
     }
 
     public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void

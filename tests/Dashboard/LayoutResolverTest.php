@@ -16,6 +16,7 @@ use Bonfire\Dashboard\LayoutResolver;
 use Bonfire\Dashboard\Size;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
+use CodeIgniter\Config\Factories;
 use Config\Services;
 use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
@@ -29,6 +30,7 @@ final class LayoutResolverTest extends TestCase
     use RendersDashboard;
 
     private const QUICK_LINKS = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
+    private const DEFAULT_IDS = [self::QUICK_LINKS, 'stats:usersExpTable693', 'stats:usersInRecycler693', 'logs:logActivity'];
 
     protected $refresh = true;
 
@@ -50,14 +52,29 @@ final class LayoutResolverTest extends TestCase
         }
 
         Services::resetSingle('dashboardContext');
+        Factories::reset('config');
         auth()->logout();
         setting()->flush();
 
         parent::tearDown();
     }
 
-    public function testTheDefaultLayoutIsThePlainCellsInOrder(): void
+    public function testTheDefaultLayoutIsQuickLinksThenUsersThenMonitoring(): void
     {
+        $layout = (new LayoutResolver(service('dashboard')))->resolve();
+
+        $this->assertSame(['', 'Users', 'Monitoring'], array_column($layout->sections, 'title'));
+        $this->assertSame(self::DEFAULT_IDS, $layout->ids());
+        $this->assertSame(
+            [Size::Full, Size::Half, Size::Half, Size::Full],
+            array_merge(...array_map(static fn ($section) => array_column($section->widgets, 'size'), $layout->sections)),
+        );
+    }
+
+    public function testWithoutAConfiguredLayoutTheDefaultIsThePlainCellsInOrder(): void
+    {
+        config('Dashboard')->layout = null;
+
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertCount(1, $layout->sections);
@@ -66,13 +83,21 @@ final class LayoutResolverTest extends TestCase
         $this->assertSame(Size::Full, $layout->sections[0]->widgets[0]->size);
     }
 
-    public function testItemsAreLeftOutOfTheDefaultLayout(): void
+    public function testOnlyItemsInTheDefaultLayoutAreIncluded(): void
     {
         $resolver = new LayoutResolver(service('dashboard'));
 
-        $this->assertNotContains('stats:usersInRecycler693', $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
+        $this->assertNotContains('charts:usersByGroupBar345', $resolver->resolve()->ids());
+        $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
+        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
         $this->assertTrue($resolver->includes(self::QUICK_LINKS));
+    }
+
+    public function testTheDefaultLayoutIgnoresTheUsersOwn(): void
+    {
+        $this->placeForAUser('charts:usersByGroupBar345');
+
+        $this->assertSame(self::DEFAULT_IDS, (new LayoutResolver(service('dashboard')))->defaultLayout()->ids());
     }
 
     public function testIncludesAPlacedItemBeforeItIsRegistered(): void
@@ -84,13 +109,15 @@ final class LayoutResolverTest extends TestCase
 
     public function testAMalformedStoredLayoutFallsBackToTheDefault(): void
     {
-        auth()->login($this->createUser());
-        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'stats:usersInRecycler693']]]]], LayoutResolver::userContext());
+        $user = $this->createUser();
+        $user->addGroup('superadmin');
+        auth()->login($user);
+        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'charts:usersByGroupBar345']]]]], LayoutResolver::userContext());
 
         $resolver = new LayoutResolver(service('dashboard'));
 
-        $this->assertSame([self::QUICK_LINKS], $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
+        $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
+        $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
     }
 
     public function testTheContextShowsPlacedItemsThatAreNotSwitchedOff(): void
@@ -109,6 +136,8 @@ final class LayoutResolverTest extends TestCase
     private function placeForAUser(string $id): void
     {
         $user = $this->createUser();
+        // Log activity, in the default layout, needs logs.view
+        $user->addGroup('superadmin');
         auth()->login($user);
         $this->placeOnDashboard($user, $id);
     }

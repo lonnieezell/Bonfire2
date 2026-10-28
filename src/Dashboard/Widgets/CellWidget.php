@@ -77,6 +77,11 @@ class CellWidget implements DashboardWidget
         return null;
     }
 
+    public function settingsUrl(): ?string
+    {
+        return null;
+    }
+
     public function render(): string
     {
         [$class, $method] = explode('::', $this->alias);

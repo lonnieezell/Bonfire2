@@ -13,6 +13,7 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Tools\Widgets\LogActivity;
 
 /**
  * An item of the "logs" widget, such as Log activity, which renders itself.
@@ -41,7 +42,12 @@ class LogWidget extends ItemWidget
 
     public function sizes(): SizeRange
     {
-        return new SizeRange(Size::Full, Size::Medium);
+        return new SizeRange(Size::Full, Size::Half);
+    }
+
+    protected function settingsTab(): ?string
+    {
+        return $this->item instanceof LogActivity ? 'logactivity' : null;
     }
 
     public function render(): string
