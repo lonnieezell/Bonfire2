@@ -11,6 +11,7 @@
 
 namespace Bonfire\Dashboard;
 
+use Bonfire\Dashboard\Widgets\CellWidget;
 use Bonfire\Dashboard\Widgets\ItemWidget;
 use Bonfire\Widgets\ItemSettings;
 
@@ -42,7 +43,7 @@ class LayoutResolver
         foreach ($this->cells() as $alias) {
             $kind    = WidgetRegistry::ITEM_CELLS[$alias] ?? null;
             $widgets = $kind === null
-                ? array_filter([$available['cell:' . $alias] ?? null])
+                ? array_filter([$available[CellWidget::idFor($alias)] ?? null])
                 : array_filter($available, static fn (DashboardWidget $widget) => $widget instanceof ItemWidget && $widget->kind() === $kind);
 
             foreach ($widgets as $widget) {
@@ -74,7 +75,7 @@ class LayoutResolver
         }
 
         if ($item === null) {
-            return str_starts_with($id, 'cell:') && in_array(substr($id, 5), $this->cells(), true);
+            return in_array(CellWidget::aliasOf($id), $this->cells(), true);
         }
 
         return in_array(array_search($item->kind, WidgetRegistry::ITEM_CELLS, true), $this->cells(), true)

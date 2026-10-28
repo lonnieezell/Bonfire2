@@ -26,7 +26,20 @@ class CellWidget implements DashboardWidget
 
     public function id(): string
     {
-        return 'cell:' . $this->alias;
+        return self::idFor($this->alias);
+    }
+
+    public static function idFor(string $alias): string
+    {
+        return 'cell:' . $alias;
+    }
+
+    /**
+     * The cell alias a widget id names, or null for other widgets.
+     */
+    public static function aliasOf(string $id): ?string
+    {
+        return str_starts_with($id, 'cell:') ? substr($id, 5) : null;
     }
 
     /**
