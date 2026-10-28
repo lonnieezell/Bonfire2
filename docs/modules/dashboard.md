@@ -24,8 +24,8 @@ public array $cells = [
 ## Customizing the dashboard
 
 Every admin can arrange their own dashboard without changing anyone else's. Until they do, they see the default
-layout: the cells above in order, with the stats, logs and charts cells expanded into the widgets switched on in
-Settings → Widgets.
+layout: the cells above in order, except the stats, logs and charts cells. Stats, charts and Log activity are added
+from the palette.
 
 Click **Customize** to enter edit mode. Nothing is stored until you click **Save**; **Cancel** puts the dashboard back
 the way it was, and **Reset to default** forgets your layout. In edit mode you can:
@@ -41,8 +41,8 @@ Everything works without dragging, too: each widget's menu has **Move earlier**,
 section**, each section has **Move section up** and **Move section down**, and the palette can add to any section.
 Screen readers hear each change announced.
 
-Settings → Widgets decides which widgets are available to everyone: a switched-off widget is left out of every
-palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,
+Settings → Widgets decides which widgets are available to everyone. Every widget is available until a site admin
+switches it off; a switched-off widget is left out of every palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,
 never in their layout. Sections without widgets are dropped on save, and a layout holds at most 20 sections.
 
 ## Quick Links
