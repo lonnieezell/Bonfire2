@@ -61,6 +61,10 @@ final class LayoutResolverTest extends TestCase
 
     public function testTheDefaultLayoutIsQuickLinksThenUsersThenMonitoring(): void
     {
+        $user = $this->createUser();
+        $user->addGroup('superadmin');
+        auth()->login($user);
+
         $layout = (new LayoutResolver(service('dashboard')))->resolve();
 
         $this->assertSame(['', 'Users', 'Monitoring'], array_column($layout->sections, 'title'));
@@ -91,6 +95,24 @@ final class LayoutResolverTest extends TestCase
         $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
         $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
         $this->assertTrue($resolver->includes(self::QUICK_LINKS));
+    }
+
+    public function testAUsersLayoutComesFirstThenTheStoredSiteDefaultThenTheConfiguredOne(): void
+    {
+        $resolver = new LayoutResolver(service('dashboard'));
+        $this->placeForAUser('stats:userGroups643');
+        $this->assertSame(['stats:userGroups643'], $resolver->resolve()->ids());
+
+        setting('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693']]]]]);
+        $this->assertSame(['stats:userGroups643'], $resolver->resolve()->ids());
+
+        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->resolve()->ids());
+        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
+        $this->assertFalse($resolver->includes('logs:logActivity'));
+
+        setting()->forget('Dashboard.layout');
+        $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
     }
 
     public function testTheDefaultLayoutIgnoresTheUsersOwn(): void

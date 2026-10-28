@@ -110,6 +110,11 @@ class ChartsItem implements Item
     protected $chartName;
 
     /**
+     * The permission a user needs to see the item on their dashboard.
+     */
+    protected ?string $permission = null;
+
+    /**
      * Adds Chart.js and its helpers to the page, once.
      */
     public static function addAssets(Metadata $meta): void
@@ -166,6 +171,18 @@ class ChartsItem implements Item
     public function setId(?string $id): ChartsItem
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function permission(): ?string
+    {
+        return $this->permission;
+    }
+
+    public function setPermission(?string $permission): ChartsItem
+    {
+        $this->permission = $permission;
 
         return $this;
     }
@@ -281,7 +298,7 @@ class ChartsItem implements Item
     public function addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count'): ChartsItem
     {
         // Only fetch the data on the dashboard, and when this chart is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
+        if (! service('dashboardContext')->shows($this->settings(), $this->permission)) {
             return $this;
         }
 

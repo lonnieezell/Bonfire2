@@ -63,8 +63,9 @@ class Module extends BaseModule
             // assigning param directly possible, but it always executes the query, even if not on dashboard or the stats item not enabled, not optimal
             // 'value'   => (new UserModel())->onlyDeleted()->countAllResults(),
             'id'     => 'usersInRecycler693',
-            'url'    => ADMIN_AREA . '/tools/recycler?r=users',
-            'faIcon' => 'fa fa-users',
+            'url'        => ADMIN_AREA . '/tools/recycler?r=users',
+            'faIcon'     => 'fa fa-users',
+            'permission' => 'users.list',
         ]);
         // better way of retrieving deleted users, executes only when widget is displayed:
         $statsItem->addValue('users', 'deleted_at IS NOT NULL');
@@ -78,8 +79,9 @@ class Module extends BaseModule
             'title'   => 'Users by Group',
             'id'      => 'usersExpTable693',
             'value'   => $this->buildTableUsersByGroup('usersExpTable693'),
-            'url'     => ADMIN_AREA . '/users',
-            'faIcon'  => 'fa fa-users',
+            'url'        => ADMIN_AREA . '/users',
+            'faIcon'     => 'fa fa-users',
+            'permission' => 'users.list',
         ]);
         $widgets->widget('stats')->collection('stats')->addItem($statsItem1);
     }
@@ -92,7 +94,7 @@ class Module extends BaseModule
     private function buildTableUsersByGroup($statsId): string
     {
         // Check if we are on Dashboard page and the chart is enabled, return empty string if not
-        if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, $statsId))) {
+        if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, $statsId), 'users.list')) {
             return '';
         }
         $users = new UserModel();

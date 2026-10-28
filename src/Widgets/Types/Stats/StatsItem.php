@@ -80,6 +80,11 @@ class StatsItem implements Item
      */
     protected $bgColor;
 
+    /**
+     * The permission a user needs to see the item on their dashboard.
+     */
+    protected ?string $permission = null;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -118,6 +123,13 @@ class StatsItem implements Item
     public function setFaIcon(?string $faIcon): StatsItem
     {
         $this->faIcon = $faIcon;
+
+        return $this;
+    }
+
+    public function setPermission(?string $permission): StatsItem
+    {
+        $this->permission = $permission;
 
         return $this;
     }
@@ -192,6 +204,11 @@ class StatsItem implements Item
         return $this->url;
     }
 
+    public function permission(): ?string
+    {
+        return $this->permission;
+    }
+
     public function bgColor(): ?string
     {
         return $this->bgColor;
@@ -205,7 +222,7 @@ class StatsItem implements Item
     public function addValue(string $tableName, ?string $whereString = null, string $selectMode = 'count'): StatsItem
     {
         // Only fetch the value on the dashboard, and when this item is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
+        if (! service('dashboardContext')->shows($this->settings(), $this->permission)) {
             return $this;
         }
 
@@ -239,7 +256,7 @@ class StatsItem implements Item
     public function addValueByFreeQuery(string $query): StatsItem
     {
         // Only fetch the value on the dashboard, and when this item is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
+        if (! service('dashboardContext')->shows($this->settings(), $this->permission)) {
             return $this;
         }
 

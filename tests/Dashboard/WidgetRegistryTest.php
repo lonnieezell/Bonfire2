@@ -71,7 +71,15 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame('stats', $widget->group());
         $this->assertSame('fa fa-users', $widget->icon());
         $this->assertSame(Size::Quarter, $widget->sizes()->default);
-        $this->assertNull($widget->permission());
+    }
+
+    public function testTheBuiltInUsersAndGroupsWidgetsDeclarePermissions(): void
+    {
+        $this->assertSame('users.list', service('dashboard')->widget('stats:usersInRecycler693')->permission());
+        $this->assertSame('users.list', service('dashboard')->widget('stats:usersExpTable693')->permission());
+        $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
+        $this->assertSame('groups.settings', service('dashboard')->widget('charts:usersByGroupBar345')->permission());
+        $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
     }
 
     public function testChartsItemsTakeTheirDefaultSizeFromTheirCssClass(): void
@@ -142,6 +150,9 @@ final class WidgetRegistryTest extends TestCase
 
     public function testSwitchedOffItemsAreLeftOutOfTheAvailableSet(): void
     {
+        $user = $this->createUser();
+        $user->addPermission('users.list');
+        $this->actingAs($user);
         setting('Stats.Stats_usersExpTable693', false);
 
         $available = service('dashboard')->available();

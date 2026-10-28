@@ -12,6 +12,7 @@
 namespace Bonfire\Dashboard\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Dashboard\Layout;
 use Bonfire\Dashboard\LayoutResolver;
 use Bonfire\Dashboard\LayoutValidator;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -54,22 +55,59 @@ class DashboardController extends AdminController
      */
     public function saveLayout(): ResponseInterface
     {
-        $dashboard = service('dashboard');
+        $layout = $this->postedLayout();
 
-        try {
-            $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
-            $layout  = (new LayoutValidator($dashboard))->validate($payload);
-        } catch (InvalidArgumentException|JsonException) {
-            // The CSRF filter has rotated the token; the editor needs it to try again
-            return $this->response->setStatusCode(400)->setJSON(['saved' => false, 'csrf' => csrf_hash()]);
+        if ($layout === null) {
+            return $this->rejected(400);
         }
 
-        if ($layout->toArray() === (new LayoutResolver($dashboard))->defaultLayout()->toArray()) {
+        if ($layout->toArray() === (new LayoutResolver(service('dashboard')))->defaultLayout()->toArray()) {
             setting()->forget('Dashboard.layout', LayoutResolver::userContext());
         } else {
             setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
         }
 
         return $this->response->setJSON(['saved' => true]);
+    }
+
+    /**
+     * Stores the posted layout (JSON) as the site default, which every
+     * user who has not saved their own layout sees.
+     */
+    public function saveSiteLayout(): ResponseInterface
+    {
+        if (! auth()->user()->can('widgets.settings')) {
+            return $this->rejected(403);
+        }
+
+        $layout = $this->postedLayout();
+
+        if ($layout === null) {
+            return $this->rejected(400);
+        }
+
+        setting()->set('Dashboard.layout', $layout->toArray());
+
+        return $this->response->setJSON(['saved' => true]);
+    }
+
+    /**
+     * The posted layout, validated, or null when it does not read.
+     */
+    private function postedLayout(): ?Layout
+    {
+        try {
+            $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
+
+            return (new LayoutValidator(service('dashboard')))->validate($payload);
+        } catch (InvalidArgumentException|JsonException) {
+            return null;
+        }
+    }
+
+    private function rejected(int $status): ResponseInterface
+    {
+        // The CSRF filter has rotated the token; the editor needs it to try again
+        return $this->response->setStatusCode($status)->setJSON(['saved' => false, 'csrf' => csrf_hash()]);
     }
 }

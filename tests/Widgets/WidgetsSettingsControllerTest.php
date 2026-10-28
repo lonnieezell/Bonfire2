@@ -48,6 +48,35 @@ final class WidgetsSettingsControllerTest extends TestCase
         $this->assertStringContainsString('id="Stats_usersExpTable693">', $response->getBody());
     }
 
+    public function testResettingTheSiteDefaultForgetsTheStoredLayout()
+    {
+        $configured = config('Dashboard')->layout;
+        setting('Dashboard.layout', ['version' => 1, 'sections' => []]);
+
+        $this->actingAs($this->user)->post(route_to('widgets-reset-layout'))->assertRedirect();
+
+        $this->assertSame($configured, setting('Dashboard.layout'));
+    }
+
+    public function testOnlyWidgetsSettingsHoldersMayResetTheSiteDefault()
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+        $stored = ['version' => 1, 'sections' => []];
+        setting('Dashboard.layout', $stored);
+
+        $this->actingAs($user)->post(route_to('widgets-reset-layout'))->assertStatus(403);
+
+        $this->assertSame($stored, setting('Dashboard.layout'));
+    }
+
+    public function testTheSettingsPageOffersToResetTheSiteDefaultWithAConfirmation()
+    {
+        $response = $this->actingAs($this->user)->get('/admin/settings/widgets');
+
+        $this->assertMatchesRegularExpression('#<form action="' . preg_quote(url_to('widgets-reset-layout'), '#') . '" method="post">.*?<button type="submit"[^>]*data-confirm=#s', $response->getBody());
+    }
+
     public function testSavingEnabledFlagsStoresOnAndForgetsTheRest()
     {
         setting('Stats.Stats_usersInRecycler693', 'on');

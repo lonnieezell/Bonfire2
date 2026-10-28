@@ -7,7 +7,7 @@
     <form action="<?= site_url(ADMIN_AREA . '/settings/widgets') ?>" method="post">
         <?= csrf_field() ?>
 
-        <x-admin-box title="Dashboard widgets" description="Choose which widgets show on the dashboard.">
+        <x-admin-box title="Available widgets" description="Choose which widgets are available to add to the dashboard. Switched-off widgets are left out of every palette and layout.">
             <?php foreach ($items as $item): ?>
                 <?php $settings = $item->settings() ?>
                 <x-setting-row label="<?= esc('Enable ' . rtrim($settings->kind->value, 's') . ' ' . (method_exists($item, 'type') ? $item->type() . ' ' : '') . 'widget "' . $item->title() . '"') ?>" for="<?= $settings->fieldName() ?>">
@@ -20,6 +20,13 @@
     </form>
 
     <x-admin-box title="Reset">
+        <form action="<?= url_to('widgets-reset-layout') ?>" method="post">
+            <?= csrf_field() ?>
+            <x-setting-row label="Reset site default dashboard" description="Users who have not customized their dashboard see the default layout again.">
+                <button type="submit" class="btn btn-outline-danger"
+                        data-confirm="Reset the site default dashboard? Users' own layouts are kept." data-confirm-button="Reset" data-confirm-danger="1">Reset site default</button>
+            </x-setting-row>
+        </form>
         <form action="<?= site_url(ADMIN_AREA . '/settings/widgetsReset') ?>" method="post" x-data="{ confirming: false }">
             <?= csrf_field() ?>
             <x-setting-row label="Reset all widget settings" description="Every widget goes back to its default settings.">

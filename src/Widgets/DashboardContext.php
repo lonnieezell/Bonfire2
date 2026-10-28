@@ -15,8 +15,8 @@ use Bonfire\Dashboard\LayoutResolver;
 
 /**
  * Decides whether a widget item should do the work of fetching its
- * data: only when the dashboard is being shown and the item is in the
- * viewer's resolved layout.
+ * data: only when the dashboard is being shown, the item is in the
+ * viewer's resolved layout, and the viewer holds its permission, if any.
  *
  * Reached through service('dashboardContext'), so tests can swap it
  * instead of faking the request URL.
@@ -28,8 +28,10 @@ class DashboardContext
         return current_url() === config('App')->baseURL . '/' . ADMIN_AREA;
     }
 
-    public function shows(ItemSettings $item): bool
+    public function shows(ItemSettings $item, ?string $permission = null): bool
     {
-        return $this->isDashboard() && (new LayoutResolver(service('dashboard')))->includes($item->widgetId());
+        return $this->isDashboard()
+            && ($permission === null || auth()->user()?->can($permission))
+            && (new LayoutResolver(service('dashboard')))->includes($item->widgetId());
     }
 }

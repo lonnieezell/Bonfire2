@@ -81,6 +81,7 @@ return [
     'resetLayout'       => 'Reset to the default layout',
     'layoutFailed'      => 'Your layout could not be saved. Try again.',
     'saveLayout'        => 'Save layout',
+    'saveSiteDefault'   => 'Save as site default',
     'done'              => 'Done',
     'sizeQuarter'       => 'Quarter width',
     'sizeThird'         => 'Third width',
