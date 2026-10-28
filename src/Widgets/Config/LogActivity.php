@@ -24,8 +24,8 @@ class LogActivity extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
-     * How many of the newest log files to chart (1 to 31)
+     * How many of the last days to chart (1 to 31)
      * --------------------------------------------------------------------------
      */
-    public int $logActivity_fileCount = 12;
+    public int $logActivity_fileCount = 7;
 }

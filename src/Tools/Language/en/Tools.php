@@ -38,7 +38,7 @@ return [
     'deleteFileConfirm'     => 'Delete this log file?',
     'confirmDelete'         => 'Yes, delete',
     'logActivity'           => 'Log activity',
-    'logActivityErrors'     => '{0} {1, plural, =1{error} other{errors}} across the last {2, plural, =1{# log file} other{# log files}}',
+    'logActivityErrors'     => '{0} {1, plural, =1{error} other{errors}} across the last {2, plural, =1{# day} other{# days}}',
     'openLogs'              => 'Open logs',
     'levelError'            => 'Error',
     'levelWarning'          => 'Warning',

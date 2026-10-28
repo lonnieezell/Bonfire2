@@ -11,6 +11,7 @@
 
 namespace Tests\Widgets;
 
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User;
 use Tests\Support\Libraries\StubDashboard;
 use Tests\Support\RendersDashboard;
@@ -40,6 +41,7 @@ final class DashboardWidgetsTest extends TestCase
     protected function tearDown(): void
     {
         @unlink(self::LOG_FILE);
+        Time::setTestNow();
         $this->forgetDashboardState();
 
         parent::tearDown();
@@ -99,23 +101,26 @@ final class DashboardWidgetsTest extends TestCase
         $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>USER CLASSIFICATION BY GROUP</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
     }
 
-    public function testPlacedLogActivityShowsABarPerLogFile()
+    public function testPlacedLogActivityShowsABarPerLogFileAndALineForDaysWithout()
     {
+        Time::setTestNow('2000-01-01');
         $this->placeOnDashboard($this->user, 'logs:logActivity');
         file_put_contents(self::LOG_FILE, "ERROR - 2000-01-01 10:00:00 --> One\nERROR - 2000-01-01 10:00:01 --> Two\nDEBUG - 2000-01-01 10:00:02 --> Three\n");
 
         $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
         $this->assertStringContainsString('<h2>Log activity</h2>', $html);
-        $this->assertMatchesRegularExpression('#<strong>2</strong> errors across the last \d+ log files?#', $html);
+        $this->assertStringContainsString('<strong>2</strong> errors across the last 7 days', $html);
         $this->assertStringContainsString('href="' . site_url(ADMIN_AREA . '/tools/logs') . '"', $html);
         $this->assertMatchesRegularExpression('#<a class="bf-log-stack"[^>]*href="' . preg_quote(site_url(ADMIN_AREA . '/tools/view-log/log-2000-01-01'), '#') . '"[^>]*aria-label="1/1: 2 Error, 0 Warning, 0 Info, 1 Debug"#', $html);
         $this->assertStringContainsString('<span class="bf-log-segment bf-log-error" style="flex-grow: 2"></span>', $html);
+        $this->assertSame(6, substr_count($html, 'class="bf-log-none"'));
         $this->assertStringContainsString('Debug</li>', $html);
     }
 
     public function testLogActivityLeavesDebugOutWhenHidden()
     {
+        Time::setTestNow('2000-01-01');
         $this->placeOnDashboard($this->user, 'logs:logActivity');
         setting('LogActivity.logActivity_hideDebug', 'on');
         file_put_contents(self::LOG_FILE, "DEBUG - 2000-01-01 10:00:02 --> Three\n");

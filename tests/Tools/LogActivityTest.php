@@ -6,6 +6,7 @@ use Bonfire\Tools\Libraries\LogStore;
 use Bonfire\Tools\Widgets\LogActivity;
 use Bonfire\Widgets\WidgetKind;
 use Bonfire\Widgets\WidgetOptions;
+use CodeIgniter\I18n\Time;
 use Tests\Support\TestCase;
 
 /**
@@ -28,12 +29,15 @@ final class LogActivityTest extends TestCase
 
         // Options stored by an earlier test stay in the shared settings cache
         WidgetOptions::forAlias('logactivity')->reset();
+
+        Time::setTestNow('2024-01-03');
     }
 
     protected function tearDown(): void
     {
         array_map(unlink(...), glob($this->dir . '*'));
         rmdir($this->dir);
+        Time::setTestNow();
 
         parent::tearDown();
     }
@@ -55,7 +59,7 @@ final class LogActivityTest extends TestCase
         $this->assertSame('Log activity', $this->widget->title());
     }
 
-    public function testFilesAreTheNewestOnesOldestFirst()
+    public function testDaysAreTheLastOnesToTodayOldestFirst()
     {
         setting('LogActivity.logActivity_fileCount', '2');
 
@@ -65,25 +69,38 @@ final class LogActivityTest extends TestCase
 
         $this->assertSame(
             ['log-2024-01-02', 'log-2024-01-03'],
-            array_column($this->widget->files(), 'name'),
+            array_column($this->widget->days(), 'name'),
         );
     }
 
-    public function testFilesAreLabelledByMonthAndDay()
+    public function testDaysWithoutALogFileHaveNoNameAndNoCounts()
     {
-        $this->writeLog('log-2024-09-10');
+        setting('LogActivity.logActivity_fileCount', '3');
 
-        $this->assertSame('9/10', $this->widget->files()[0]['label']);
+        $this->writeLog('log-2024-01-02', ['ERROR']);
+
+        $days = $this->widget->days();
+
+        $this->assertSame([null, 'log-2024-01-02', null], array_column($days, 'name'));
+        $this->assertSame([], $days[0]['counts']);
+        $this->assertSame([], $days[2]['counts']);
+    }
+
+    public function testDaysAreLabelledByMonthAndDay()
+    {
+        Time::setTestNow('2024-09-10');
+
+        $this->assertSame('9/10', $this->widget->days()[6]['label']);
     }
 
     public function testLevelsAreGroupedIntoErrorWarningInfoAndDebug()
     {
-        $this->writeLog('log-2024-01-01', ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY', 'WARNING', 'NOTICE', 'INFO', 'DEBUG']);
+        $this->writeLog('log-2024-01-03', ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY', 'WARNING', 'NOTICE', 'INFO', 'DEBUG']);
 
         $this->assertSame(['error', 'warning', 'info', 'debug'], $this->widget->levels());
         $this->assertSame(
             ['error' => 4, 'warning' => 1, 'info' => 2, 'debug' => 1],
-            $this->widget->files()[0]['counts'],
+            $this->widget->days()[6]['counts'],
         );
     }
 
@@ -91,31 +108,23 @@ final class LogActivityTest extends TestCase
     {
         setting('LogActivity.logActivity_hideDebug', 'on');
 
-        $this->writeLog('log-2024-01-01', ['ERROR', 'DEBUG']);
+        $this->writeLog('log-2024-01-03', ['ERROR', 'DEBUG']);
 
         $this->assertSame(['error', 'warning', 'info'], $this->widget->levels());
-        $this->assertSame(['error' => 1, 'warning' => 0, 'info' => 0], $this->widget->files()[0]['counts']);
+        $this->assertSame(['error' => 1, 'warning' => 0, 'info' => 0], $this->widget->days()[6]['counts']);
     }
 
-    public function testFileCountIsKeptBetweenOneAndThirtyOne()
+    public function testDayCountIsKeptBetweenOneAndThirtyOne()
     {
-        foreach (range(1, 40) as $day) {
-            $this->writeLog(sprintf('log-2024-%02d-%02d', intdiv($day - 1, 28) + 1, ($day - 1) % 28 + 1));
-        }
-
         setting('LogActivity.logActivity_fileCount', '0');
-        $this->assertCount(1, $this->widget->files());
+        $this->assertCount(1, $this->widget->days());
 
         setting('LogActivity.logActivity_fileCount', '100');
-        $this->assertCount(31, $this->widget->files());
+        $this->assertCount(31, $this->widget->days());
     }
 
-    public function testDefaultsToTwelveFiles()
+    public function testDefaultsToSevenDays()
     {
-        foreach (range(1, 20) as $day) {
-            $this->writeLog(sprintf('log-2024-01-%02d', $day));
-        }
-
-        $this->assertCount(12, $this->widget->files());
+        $this->assertCount(7, $this->widget->days());
     }
 }

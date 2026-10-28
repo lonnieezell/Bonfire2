@@ -6,6 +6,9 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 28 October 2026
 
+The Log activity widget now shows a column for each of the last days up to today, with a thin line for days without
+a log file. Its **Days to show** setting (formerly *Log files to show*) keeps its saved value, and now defaults to 7.
+
 Dashboard widgets can need a permission: pass `'permission'` to a `StatsItem` or `ChartsItem`, and admins who lack it
 don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
 need `users.list` and the Groups widgets `groups.settings`. Admins with `widgets.settings` can **Save as site
