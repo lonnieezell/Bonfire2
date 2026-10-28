@@ -346,9 +346,7 @@ final class CustomizeDashboardTest extends TestCase
         StubDashboard::inject(true);
         setting('Stats.Stats_users1', 'on');
         $viewer = $this->createUser();
-        setting()->set('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [
-            ['id' => 'stats:users1', 'size' => 'quarter'],
-        ]]]], 'user:' . $viewer->id);
+        $this->placeOnDashboard($viewer, 'stats:users1');
         $this->actingAs($viewer);
 
         $this->assertNull((new StatsItem(['id' => 'users1', 'permission' => 'users.list']))->addValue('users')->value());

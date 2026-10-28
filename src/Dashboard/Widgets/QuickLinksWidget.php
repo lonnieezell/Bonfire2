@@ -11,6 +11,7 @@
 
 namespace Bonfire\Dashboard\Widgets;
 
+use Bonfire\Dashboard\DashboardCells;
 use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
@@ -26,7 +27,7 @@ use IntlDatePatternGenerator;
  */
 class QuickLinksWidget implements DashboardWidget
 {
-    public const ID = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
+    public const ID = 'cell:' . DashboardCells::class . '::quickLinks';
 
     public function id(): string
     {

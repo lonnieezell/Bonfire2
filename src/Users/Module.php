@@ -16,9 +16,7 @@ use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Users\Actions\DeleteUsers;
 use Bonfire\Users\Models\UserModel;
-use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\Types\Stats\StatsItem;
-use Bonfire\Widgets\WidgetKind;
 use CodeIgniter\View\Table;
 
 class Module extends BaseModule
@@ -62,7 +60,7 @@ class Module extends BaseModule
             'title'   => 'Users in Recycler',
             // assigning param directly possible, but it always executes the query, even if not on dashboard or the stats item not enabled, not optimal
             // 'value'   => (new UserModel())->onlyDeleted()->countAllResults(),
-            'id'     => 'usersInRecycler693',
+            'id'         => 'usersInRecycler693',
             'url'        => ADMIN_AREA . '/tools/recycler?r=users',
             'faIcon'     => 'fa fa-users',
             'permission' => 'users.list',
@@ -75,26 +73,26 @@ class Module extends BaseModule
 
         $widgets    = service('widgets');
         $statsItem1 = new StatsItem([
-            'bgColor' => 'bg-purple',
-            'title'   => 'Users by Group',
-            'id'      => 'usersExpTable693',
-            'value'   => $this->buildTableUsersByGroup('usersExpTable693'),
+            'bgColor'    => 'bg-purple',
+            'title'      => 'Users by Group',
+            'id'         => 'usersExpTable693',
             'url'        => ADMIN_AREA . '/users',
             'faIcon'     => 'fa fa-users',
             'permission' => 'users.list',
         ]);
+        $statsItem1->setValue($this->buildTableUsersByGroup($statsItem1));
         $widgets->widget('stats')->collection('stats')->addItem($statsItem1);
     }
 
     /**
      * Build the table for the Users by Group stats item to be displayed within widget.
      *
-     * @param string $statsId - id of the stats item
+     * @param StatsItem $statsItem - the stats item the table is for
      */
-    private function buildTableUsersByGroup($statsId): string
+    private function buildTableUsersByGroup(StatsItem $statsItem): string
     {
         // Check if we are on Dashboard page and the chart is enabled, return empty string if not
-        if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, $statsId), 'users.list')) {
+        if (! service('dashboardContext')->shows($statsItem->settings(), $statsItem->permission())) {
             return '';
         }
         $users = new UserModel();

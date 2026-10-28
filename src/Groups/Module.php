@@ -39,11 +39,11 @@ class Module extends BaseModule
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');
         $statsItem = new StatsItem([
-            'bgColor' => 'bg-teal',
-            'title'   => 'User Groups',
-            'value'   => count(setting('AuthGroups.groups')),
-            'id'      => 'userGroups643',
-            'url'     => ADMIN_AREA . '/settings/groups',
+            'bgColor'    => 'bg-teal',
+            'title'      => 'User Groups',
+            'value'      => count(setting('AuthGroups.groups')),
+            'id'         => 'userGroups643',
+            'url'        => ADMIN_AREA . '/settings/groups',
             'faIcon'     => 'fa fa-users',
             'permission' => 'groups.settings',
         ]);
@@ -52,9 +52,9 @@ class Module extends BaseModule
         $widgets->widget('stats')->collection('stats')->addItem($statsItem);
 
         $statsItem = new ChartsItem([
-            'title'    => 'User classification by group',
-            'type'     => 'line',
-            'id'       => 'usersByGroupLine123',
+            'title'      => 'User classification by group',
+            'type'       => 'line',
+            'id'         => 'usersByGroupLine123',
             'cssClass'   => 'col-6',
             'permission' => 'groups.settings',
         ]);
@@ -62,9 +62,9 @@ class Module extends BaseModule
         $widgets->widget('charts')->collection('charts')->addItem($statsItem);
 
         $statsItem1 = new ChartsItem([
-            'title'    => 'User classification by group',
-            'type'     => 'bar',
-            'id'       => 'usersByGroupBar345',
+            'title'      => 'User classification by group',
+            'type'       => 'bar',
+            'id'         => 'usersByGroupBar345',
             'cssClass'   => 'col-6',
             'permission' => 'groups.settings',
         ]);
@@ -72,9 +72,9 @@ class Module extends BaseModule
         $widgets->widget('charts')->collection('charts')->addItem($statsItem1);
 
         $statsItem2 = new ChartsItem([
-            'title'    => 'User classification by group',
-            'type'     => 'doughnut',
-            'id'       => 'usersByGroupDou654',
+            'title'      => 'User classification by group',
+            'type'       => 'doughnut',
+            'id'         => 'usersByGroupDou654',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
         ]);
@@ -82,9 +82,9 @@ class Module extends BaseModule
         $widgets->widget('charts')->collection('charts')->addItem($statsItem2);
 
         $statsItem3 = new ChartsItem([
-            'title'    => 'User classification by group',
-            'type'     => 'pie',
-            'id'       => 'usersByGroupPie223',
+            'title'      => 'User classification by group',
+            'type'       => 'pie',
+            'id'         => 'usersByGroupPie223',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
         ]);
@@ -92,9 +92,9 @@ class Module extends BaseModule
         $widgets->widget('charts')->collection('charts')->addItem($statsItem3);
 
         $statsItem4 = new ChartsItem([
-            'title'    => 'User classification by group',
-            'type'     => 'polarArea',
-            'id'       => 'usersByGroupPiePolar645',
+            'title'      => 'User classification by group',
+            'type'       => 'polarArea',
+            'id'         => 'usersByGroupPiePolar645',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
         ]);
