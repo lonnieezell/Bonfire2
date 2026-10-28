@@ -87,6 +87,19 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
     }
 
+    public function testAViewerLackingAWidgetsPermissionSeesItNeitherOnTheDashboardNorInThePalette(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $html = $this->dashboardHtml($user);
+
+        $this->assertSame([self::QUICK_LINKS], $this->placedIds($user));
+        $this->assertArrayNotHasKey('stats:usersInRecycler693', $this->paletteEntries($html));
+        $this->assertArrayNotHasKey('stats:userGroups643', $this->paletteEntries($html));
+        $this->assertArrayHasKey(self::QUICK_LINKS, $this->paletteEntries($html));
+    }
+
     public function testSavingDropsWidgetsTheUserMayNotSee(): void
     {
         $user = $this->createUser();
