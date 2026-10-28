@@ -46,6 +46,7 @@ class DashboardController extends AdminController
             'defaultLayout' => $resolver->defaultLayout(),
             'widgets'       => $dashboard->available(),
             'palette'       => $dashboard->grouped(),
+            'canSetDefault' => auth()->user()->can('widgets.settings'),
         ]);
     }
 
@@ -72,7 +73,8 @@ class DashboardController extends AdminController
 
     /**
      * Stores the posted layout (JSON) as the site default, which every
-     * user who has not saved their own layout sees.
+     * user who has not saved their own layout sees. The saver follows it
+     * too, so they see what they saved.
      */
     public function saveSiteLayout(): ResponseInterface
     {
@@ -87,6 +89,7 @@ class DashboardController extends AdminController
         }
 
         setting()->set('Dashboard.layout', $layout->toArray());
+        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
 
         return $this->response->setJSON(['saved' => true]);
     }

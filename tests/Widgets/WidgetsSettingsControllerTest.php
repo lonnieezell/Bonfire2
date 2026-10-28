@@ -53,7 +53,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $configured = config('Dashboard')->layout;
         setting('Dashboard.layout', ['version' => 1, 'sections' => []]);
 
-        $this->actingAs($this->user)->post(route_to('widgets-reset-layout'))->assertRedirect();
+        $this->actingAs($this->user)->post(route_to('widgets-reset-layout'), [csrf_token() => csrf_hash()])->assertRedirect();
 
         $this->assertSame($configured, setting('Dashboard.layout'));
     }
@@ -65,7 +65,7 @@ final class WidgetsSettingsControllerTest extends TestCase
         $stored = ['version' => 1, 'sections' => []];
         setting('Dashboard.layout', $stored);
 
-        $this->actingAs($user)->post(route_to('widgets-reset-layout'))->assertStatus(403);
+        $this->actingAs($user)->post(route_to('widgets-reset-layout'), [csrf_token() => csrf_hash()])->assertStatus(403);
 
         $this->assertSame($stored, setting('Dashboard.layout'));
     }

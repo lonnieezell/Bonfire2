@@ -52,7 +52,9 @@ Admins who have not saved their own layout see the site default. Out of the box 
 Dashboard config file (see [The Dashboard](dashboard.md#configuration)).
 
 Admins with the `widgets.settings` permission get **Save as site default** in the edit bar. It stores the layout as
-shown as the site default, which every admin without their own layout then sees. Admins who customized keep theirs.
+shown as the site default, which every admin without their own layout then sees, and forgets the saver's own layout so
+they follow it too. Other admins who customized keep theirs. Widgets the saver may not see aren't in their editor, so
+they aren't in the saved default either.
 
 **Settings → Widgets → Reset site default** forgets the stored site default, so it goes back to the configured
 `$layout`. Admins' own layouts are kept.

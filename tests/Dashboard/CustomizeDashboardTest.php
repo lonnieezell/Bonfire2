@@ -304,6 +304,16 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['stats:userGroups643'], $this->placedIds($customized));
     }
 
+    public function testSavingTheSiteDefaultMakesTheSaverFollowIt(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'quarter']]]]);
+
+        $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'quarter']]]], route: 'dashboard-site-layout')
+            ->assertOK();
+
+        $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
+    }
+
     public function testOnlyWidgetsSettingsHoldersMaySaveTheSiteDefault(): void
     {
         $user = $this->createUser();

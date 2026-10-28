@@ -14,7 +14,7 @@
     <div class="bf-dashboard" x-data="dashboardEditor" :class="{ 'is-editing': editing, 'is-arranging': arranging, 'has-library': library }"
         @keydown.window="key($event)"
         data-save-url="<?= url_to('dashboard-layout') ?>"
-        <?php if (auth()->user()->can('widgets.settings')) : ?>data-site-save-url="<?= url_to('dashboard-site-layout') ?>"<?php endif ?>
+        <?php if ($canSetDefault) : ?>data-site-save-url="<?= url_to('dashboard-site-layout') ?>"<?php endif ?>
         data-csrf-header="<?= esc(config('Security')->headerName, 'attr') ?>" data-csrf-hash="<?= csrf_hash() ?>"
         data-default-layout="<?= esc(json_encode($defaultLayout->toArray()), 'attr') ?>"
         data-size-columns="<?= esc(json_encode(array_combine(
@@ -68,7 +68,7 @@
                     <i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Bonfire.addWidget') ?>
                 </button>
                 <button type="button" class="btn btn-outline-secondary btn-sm" @click="cancel()"><?= lang('Actions.cancel') ?></button>
-                <?php if (auth()->user()->can('widgets.settings')) : ?>
+                <?php if ($canSetDefault) : ?>
                     <button type="button" class="btn btn-outline-secondary btn-sm" @click="saveSite()" :disabled="saving"><?= lang('Bonfire.saveSiteDefault') ?></button>
                 <?php endif ?>
                 <button type="button" class="btn btn-primary btn-sm" @click="save()" :disabled="saving">
