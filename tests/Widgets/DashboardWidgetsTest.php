@@ -51,15 +51,16 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testAWidgetOutsideTheDefaultLayoutShowsOnlyOncePlaced()
     {
+        $this->withTestCharts();
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
         $placed   = $this->placedHtml((string) $response->response()->getBody());
 
         $response->assertOK();
-        $this->assertStringNotContainsString('USER CLASSIFICATION BY GROUP', $placed);
+        $this->assertStringNotContainsString('TEST CHART', $placed);
 
-        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
+        $this->placeOnDashboard($this->user, 'charts:testBar');
 
-        $this->assertStringContainsString('USER CLASSIFICATION BY GROUP', $this->placedHtml($this->dashboardHtml($this->user)));
+        $this->assertStringContainsString('TEST CHART', $this->placedHtml($this->dashboardHtml($this->user)));
     }
 
     public function testPlacedStatsWidgetShows()
@@ -104,11 +105,12 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testPlacedChartSitsInACard()
     {
-        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
+        $this->withTestCharts();
+        $this->placeOnDashboard($this->user, 'charts:testBar');
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
-        $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>USER CLASSIFICATION BY GROUP</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
+        $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>TEST CHART</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
     }
 
     public function testPlacedLogActivityShowsABarPerLogFileAndALineForDaysWithout()
@@ -163,7 +165,8 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testPlacedChartShowsItsCanvasAndScript()
     {
-        $this->placeOnDashboard($this->user, 'charts:usersByGroupBar345');
+        $this->withTestCharts();
+        $this->placeOnDashboard($this->user, 'charts:testBar');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
 

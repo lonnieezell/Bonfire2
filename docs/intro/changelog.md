@@ -56,6 +56,10 @@ API: `WidgetField`'s factories no longer take `key:` (a key passed by position n
 `LogActivity` classes are gone; `ItemSettings` keeps only `widgetId()`; and `ItemWidget::available()` is gone. The
 `widgets-settings` and `widgets-reset-layout` routes are gone; the reset is now `dashboard-site-layout-reset`.
 
+The five *User classification by group* charts (line, bar, doughnut, pie and polar area) are gone: **Users by group**
+shows the same numbers. Saved dashboards that placed one lose it: add Users by group from the widget library. The
+*User Groups* stat card stays. `ChartsItem` is unchanged, so modules can still add charts of their own.
+
 Log activity is now a dashboard widget of its own, `Bonfire\Tools\Widgets\LogActivity`, like Recent errors. It
 keeps its id `logs:logActivity`, so saved layouts keep it in place, and its days and Debug defaults in Settings →
 Widgets keep their saved values. It no longer has a switch under *Available widgets*: every admin with `logs.view`

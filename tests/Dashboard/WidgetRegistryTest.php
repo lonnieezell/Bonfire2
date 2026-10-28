@@ -78,16 +78,16 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame('users.list', service('dashboard')->widget('stats:usersInRecycler693')->permission());
         $this->assertSame('users.list', service('dashboard')->widget('users:byGroup')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
-        $this->assertSame('groups.settings', service('dashboard')->widget('charts:usersByGroupBar345')->permission());
         $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
     }
 
     public function testChartsItemsTakeTheirDefaultSizeFromTheirCssClass(): void
     {
-        $widget = service('dashboard')->widget('charts:usersByGroupBar345');
+        $this->bootWithTestCharts();
+        $widget = service('dashboard')->widget('charts:testBar');
 
         $this->assertNotNull($widget);
-        $this->assertSame(lang('Groups.groupsModTitle'), $widget->group());
+        $this->assertSame('Test charts', $widget->group());
         $this->assertSame(Size::Half, $widget->sizes()->default);
     }
 
@@ -123,8 +123,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame([lang('Bonfire.dashboard'), lang('Bonfire.toolsModTitle'), lang('Groups.groupsModTitle'), lang('Users.usersModTitle')], array_keys($ids));
         $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $ids[lang('Bonfire.dashboard')]);
         $this->assertEqualsCanonicalizing(['tools:recentErrors', 'logs:logActivity'], $ids[lang('Bonfire.toolsModTitle')]);
-        $this->assertContains('stats:userGroups643', $ids[lang('Groups.groupsModTitle')]);
-        $this->assertContains('charts:usersByGroupBar345', $ids[lang('Groups.groupsModTitle')]);
+        $this->assertSame(['stats:userGroups643'], $ids[lang('Groups.groupsModTitle')]);
         $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
     }
 
@@ -148,17 +147,20 @@ final class WidgetRegistryTest extends TestCase
 
     public function testAdaptersDescribeTheirWidgets(): void
     {
-        foreach (['stats:usersInRecycler693', 'charts:usersByGroupBar345', 'logs:logActivity', 'cell:Bonfire\Dashboard\DashboardCells::quickLinks'] as $id) {
+        $this->bootWithTestCharts();
+
+        foreach (['stats:usersInRecycler693', 'charts:testBar', 'logs:logActivity', 'cell:Bonfire\Dashboard\DashboardCells::quickLinks'] as $id) {
             $this->assertNotSame('', service('dashboard')->widget($id)->description(), $id);
         }
     }
 
     public function testEachChartTypeOffersItsOwnSettings(): void
     {
+        $this->bootWithTestCharts();
         $names = static fn (string $id) => array_map(static fn ($field) => $field->name, service('dashboard')->widget($id)->fields());
 
-        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'tension'], $names('charts:usersByGroupLine123'));
-        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'colorScheme'], $names('charts:usersByGroupBar345'));
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'tension'], $names('charts:testLine'));
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'colorScheme'], $names('charts:testBar'));
     }
 
     public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void
@@ -182,5 +184,13 @@ final class WidgetRegistryTest extends TestCase
         setting('Stats.Stats_usersInRecycler693', false);
 
         $this->assertArrayHasKey('stats:usersInRecycler693', service('dashboard')->available());
+    }
+
+    private function bootWithTestCharts(): void
+    {
+        $this->withTestCharts();
+        Services::resetSingle('widgets');
+        Services::resetSingle('dashboard');
+        (new Bonfire())->boot(true);
     }
 }

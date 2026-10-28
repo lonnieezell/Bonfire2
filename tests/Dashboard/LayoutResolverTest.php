@@ -105,8 +105,8 @@ final class LayoutResolverTest extends TestCase
     {
         $resolver = new LayoutResolver(service('dashboard'));
 
-        $this->assertNotContains('charts:usersByGroupBar345', $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
+        $this->assertNotContains('stats:usersInRecycler693', $resolver->resolve()->ids());
+        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
         $this->assertTrue($resolver->includes('logs:logActivity'));
         $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
@@ -131,7 +131,7 @@ final class LayoutResolverTest extends TestCase
 
     public function testTheDefaultLayoutIgnoresTheUsersOwn(): void
     {
-        $this->placeForAUser('charts:usersByGroupBar345');
+        $this->placeForAUser('stats:usersInRecycler693');
 
         $this->assertSame(self::DEFAULT_IDS, (new LayoutResolver(service('dashboard')))->defaultLayout()->ids());
     }
@@ -148,12 +148,12 @@ final class LayoutResolverTest extends TestCase
         $user = $this->createUser();
         $user->addGroup('superadmin');
         auth()->login($user);
-        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'charts:usersByGroupBar345']]]]], LayoutResolver::userContext());
+        setting()->set('Dashboard.layout', ['version' => '1', 'sections' => [['widgets' => [['id' => 'stats:usersInRecycler693']]]]], LayoutResolver::userContext());
 
         $resolver = new LayoutResolver(service('dashboard'));
 
         $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
-        $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
+        $this->assertFalse($resolver->includes('stats:usersInRecycler693'));
     }
 
     public function testTheContextShowsPlacedItemsWhateverSwitchIsStoredForThem(): void

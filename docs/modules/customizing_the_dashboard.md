@@ -96,7 +96,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 | Widget | Permission |
 | --- | --- |
 | Users by group, Newest users, Users in Recycler | `users.list` |
-| User Groups and the group charts | `groups.settings` |
+| User Groups | `groups.settings` |
 | Log activity, Recent errors | `logs.view` |
 | Quick Links | none |
 

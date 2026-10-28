@@ -304,8 +304,9 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testAChartRendersWithTheSettingsSavedForIt(): void
     {
+        $this->withTestCharts();
         $this->save($this->user, [['title' => '', 'widgets' => [
-            ['id' => 'charts:usersByGroupBar345', 'size' => 'half', 'settings' => ['colorScheme' => 'Reds']],
+            ['id' => 'charts:testBar', 'size' => 'half', 'settings' => ['colorScheme' => 'Reds']],
         ]]])->assertOK();
 
         $this->assertStringContainsString('d3.schemeReds[9]', $this->dashboardHtml($this->user));
