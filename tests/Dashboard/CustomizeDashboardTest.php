@@ -14,7 +14,7 @@ namespace Tests\Dashboard;
 use Bonfire\Users\User;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\StatsItem;
-use Tests\Support\Libraries\StubDashboard;
+use CodeIgniter\Events\Events;
 use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
@@ -434,34 +434,30 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertDoesNotMatchRegularExpression($form, $this->dashboardHtml($user));
     }
 
-    public function testLazyQueriesRunOnlyForWidgetsInTheUsersLayout(): void
+    public function testTheDashboardRunsTheQueriesOfOnlyTheItemsItShows(): void
     {
-        StubDashboard::inject(true);
-        setting()->set('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [
-            ['id' => 'stats:users1', 'size' => 'quarter'],
-        ]]]], 'user:' . $this->user->id);
-        $this->actingAs($this->user);
-
-        $inLayout  = (new StatsItem())->setId('users1')->addValue('users');
-        $offLayout = (new StatsItem())->setId('users2')->addValue('users');
-
-        $this->assertNotNull($inLayout->value());
-        $this->assertNull($offLayout->value());
-    }
-
-    public function testLazyQueriesDoNotRunForAViewerLackingTheItemsPermission(): void
-    {
-        StubDashboard::inject(true);
         $viewer = $this->createUser();
-        $this->placeOnDashboard($viewer, 'stats:users1');
-        $this->actingAs($viewer);
+        $viewer->addPermission('admin.access');
+        // The admin filter sets the widgets up again on each request, so the items are added after it
+        $addItems = static function (): void {
+            $broken = 'SELECT * FROM no_such_table';
+            $stats  = service('widgets')->widget('stats')->collection('stats');
+            $stats->addItem((new StatsItem(['id' => 'shown', 'url' => 'admin']))->addValue('users'));
+            $stats->addItem((new StatsItem(['id' => 'unplaced']))->addValueByFreeQuery($broken));
+            $stats->addItem((new StatsItem(['id' => 'unpermitted', 'permission' => 'users.list']))->addValueByFreeQuery($broken));
+            service('widgets')->widget('charts')->collection('charts')
+                ->addItem((new ChartsItem(['id' => 'unpermitted', 'permission' => 'users.list']))->addDataset('no_such_table', 'a', 'b'));
+        };
+        Events::on('post_controller_constructor', $addItems);
+        $this->placeOnDashboard($viewer, 'stats:shown', 'stats:unpermitted', 'charts:unpermitted');
 
-        $this->assertNull((new StatsItem(['id' => 'users1', 'permission' => 'users.list']))->addValue('users')->value());
-        $this->assertNull((new ChartsItem(['id' => 'users1', 'permission' => 'users.list']))->addDataset('users', 'active', 'id')->data());
+        try {
+            $html = $this->placedHtml($this->dashboardHtml($viewer));
+        } finally {
+            Events::removeListener('post_controller_constructor', $addItems);
+        }
 
-        $viewer->addPermission('users.list');
-
-        $this->assertNotNull((new StatsItem(['id' => 'users1', 'permission' => 'users.list']))->addValue('users')->value());
+        $this->assertMatchesRegularExpression('#data-widget-id="' . preg_quote(esc('stats:shown', 'attr'), '#') . '".*<p class="bf-stat-value">\d+</p>#s', $html);
     }
 
     /**

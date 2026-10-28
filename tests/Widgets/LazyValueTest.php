@@ -13,99 +13,55 @@ namespace Tests\Widgets;
 
 use Bonfire\Widgets\Types\Charts\ChartsItem;
 use Bonfire\Widgets\Types\Stats\StatsItem;
-use Tests\Support\Libraries\StubDashboard;
-use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
- * An item only runs its query on the dashboard, when it is placed on the
- * viewer's dashboard.
+ * An item runs its query when its value is read, not when it is added.
  *
  * @internal
  */
 final class LazyValueTest extends TestCase
 {
-    use RendersDashboard;
-
     protected $refresh = true;
 
-    protected function setUp(): void
+    public function testStatsValueIsFetchedWhenRead()
     {
-        parent::setUp();
+        $item = (new StatsItem())->addValue('users');
+        $this->createUser();
 
-        setting()->flush();
-        $user = $this->createUser();
-        $this->actingAs($user);
-        $this->placeOnDashboard($user, 'stats:users1', 'charts:chart1', 'charts:chart2');
+        $this->assertSame('1', $item->value());
     }
 
-    protected function tearDown(): void
+    public function testStatsFreeQueryIsFetchedWhenRead()
     {
-        $this->forgetDashboardState();
+        $item = (new StatsItem())->addValueByFreeQuery('SELECT COUNT(*) FROM ' . db_connect()->prefixTable('users'));
+        $this->createUser();
 
-        parent::tearDown();
+        $this->assertSame('1', $item->value());
     }
 
-    public function testStatsValueIsFetchedOnTheDashboardWhenPlaced()
+    public function testAValueSetLaterTakesThePlaceOfTheQuery()
     {
-        StubDashboard::inject(true);
-        $item = (new StatsItem())->setId('users1');
+        $item = (new StatsItem())->addValue('users')->setValue('5');
 
-        $this->assertSame('1', $item->addValue('users')->value());
+        $this->assertSame('5', $item->value());
     }
 
-    public function testStatsFreeQueryIsFetchedOnTheDashboardWhenPlaced()
+    public function testChartDataIsFetchedWhenRead()
     {
-        StubDashboard::inject(true);
-        $item = (new StatsItem())->setId('users1');
-
-        $this->assertSame('1', $item->addValueByFreeQuery($this->countUsers())->value());
-    }
-
-    public function testStatsValueIsSkippedWhenNotPlaced()
-    {
-        StubDashboard::inject(true);
-        $item = (new StatsItem())->setId('users2');
-
-        $this->assertNull($item->addValue('users')->value());
-        $this->assertNull($item->addValueByFreeQuery($this->countUsers())->value());
-    }
-
-    public function testStatsValueIsSkippedOffTheDashboard()
-    {
-        StubDashboard::inject(false);
-        $item = (new StatsItem())->setId('users1');
-
-        $this->assertNull($item->addValue('users')->value());
-        $this->assertNull($item->addValueByFreeQuery($this->countUsers())->value());
-    }
-
-    public function testChartDataIsFetchedOnTheDashboardWhenPlaced()
-    {
-        StubDashboard::inject(true);
-        $item = (new ChartsItem())->setId('chart1');
-
-        $item->addDataset('users', 'active', 'id');
+        $item = (new ChartsItem())->addDataset('users', 'active', 'id');
+        $this->createUser();
 
         $this->assertSame([1], $item->data());
+        $this->assertCount(1, $item->label());
     }
 
-    public function testChartDataIsSkippedWhenNotPlacedOrOffTheDashboard()
+    public function testChartDataSetLaterKeepsTheQuerysLabels()
     {
-        StubDashboard::inject(true);
-        $unplaced = (new ChartsItem())->setId('chart3');
-        $unplaced->addDataset('users', 'active', 'id');
+        $this->createUser();
+        $item = (new ChartsItem())->addDataset('users', 'active', 'id')->setData([3]);
 
-        StubDashboard::inject(false);
-        $elsewhere = (new ChartsItem())->setId('chart2');
-        $elsewhere->addDataset('users', 'active', 'id');
-
-        $this->assertNull($unplaced->data());
-        $this->assertNull($elsewhere->data());
-    }
-
-    private function countUsers(): string
-    {
-        return 'SELECT COUNT(*) FROM ' . db_connect()->prefixTable('users');
+        $this->assertSame([3], $item->data());
+        $this->assertCount(1, $item->label());
     }
 }

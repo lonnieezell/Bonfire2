@@ -16,7 +16,7 @@ trait RendersDashboard
      */
     protected function forgetDashboardState(): void
     {
-        foreach (['dashboard', 'dashboardContext', 'viewMeta', 'response'] as $service) {
+        foreach (['dashboard', 'viewMeta', 'response'] as $service) {
             Services::resetSingle($service);
         }
         setting()->flush();

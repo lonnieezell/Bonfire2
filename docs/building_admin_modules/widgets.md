@@ -90,33 +90,10 @@ The FontAwesome icon
 
 ### Fetching data only when it is shown
 
-`addValue()` and `addValueByFreeQuery()` only run their query when the dashboard is being displayed and the widget is
-on the viewer's dashboard: in their layout. When you build a value yourself, ask the same
-question before doing the work:
-
-```php
-use Bonfire\Widgets\ItemSettings;
-use Bonfire\Widgets\WidgetKind;
-
-if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'countAllUsers643'))) {
-    return '';
-}
-```
-
-In your own tests you can make that answer yes or no without faking the URL by injecting a subclass of
-`Bonfire\Widgets\DashboardContext` that overrides `isDashboard()`:
-
-```php
-use Bonfire\Widgets\DashboardContext;
-use Config\Services;
-
-Services::injectMock('dashboardContext', new class () extends DashboardContext {
-    public function isDashboard(): bool
-    {
-        return true;
-    }
-});
-```
+`addValue()` and `addValueByFreeQuery()` store their query and run it when the value is first read. The dashboard
+reads it only for a widget in the viewer's layout whose permission they hold, so a stats item costs nothing on other
+pages. A `value` you pass directly runs whenever your module boots: build that in a widget's `render()` instead
+(see [Dashboard Widgets](dashboard_widgets.md)).
 
 ## Configuration
 
