@@ -11,11 +11,12 @@ use Config\Services;
 trait RendersDashboard
 {
     /**
-     * Forgets the settings and shared services a dashboard request leaves behind.
+     * Forgets the settings and shared services a dashboard request leaves behind,
+     * such as the JSON content type a layout save sets on the shared response.
      */
     protected function forgetDashboardState(): void
     {
-        foreach (['dashboard', 'dashboardContext', 'viewMeta'] as $service) {
+        foreach (['dashboard', 'dashboardContext', 'viewMeta', 'response'] as $service) {
             Services::resetSingle($service);
         }
         setting()->flush();
