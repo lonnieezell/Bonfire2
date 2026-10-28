@@ -31,10 +31,10 @@ class ChartWidget extends ItemWidget
     public function icon(): string
     {
         return match ($this->item->type()) {
-            'line'                     => 'fas fa-chart-line',
-            'bar'                      => 'fas fa-chart-bar',
+            'line'                         => 'fas fa-chart-line',
+            'bar'                          => 'fas fa-chart-bar',
             'pie', 'doughnut', 'polarArea' => 'fas fa-chart-pie',
-            default                    => 'fas fa-chart-area',
+            default                        => 'fas fa-chart-area',
         };
     }
 

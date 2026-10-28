@@ -22,6 +22,8 @@ use Bonfire\Widgets\WidgetOptions;
  */
 class ChartsItem implements Item
 {
+    private const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
+
     /**
      * The 'weight' used for sorting.
      *
@@ -106,8 +108,6 @@ class ChartsItem implements Item
      * @var string
      */
     protected $chartName;
-
-    private const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
 
     /**
      * Adds Chart.js and its helpers to the page, once.

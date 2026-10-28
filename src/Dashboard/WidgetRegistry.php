@@ -86,13 +86,13 @@ class WidgetRegistry
         $widgets = $this->registered;
 
         foreach (service('widgets')->items() as $item) {
-            $widget                   = ItemWidget::for($item);
+            $widget = ItemWidget::for($item);
             $widgets[$widget->id()] ??= $widget;
         }
 
         foreach (setting('Dashboard.cells') ?? [] as $alias) {
             if (! isset(self::ITEM_CELLS[$alias])) {
-                $widget                   = new CellWidget($alias);
+                $widget = new CellWidget($alias);
                 $widgets[$widget->id()] ??= $widget;
             }
         }
