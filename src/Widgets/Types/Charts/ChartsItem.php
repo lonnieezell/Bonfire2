@@ -252,19 +252,23 @@ class ChartsItem implements Item
         return new ItemSettings(WidgetKind::Charts, $this->id);
     }
 
-    public function getScript(): string
+    /**
+     * @param array<string, mixed> $overrides Options that take the place of the stored ones, e.g. ['colorScheme' => 'Reds']
+     */
+    public function getScript(array $overrides = []): string
     {
         $options = WidgetOptions::forChartType($this->type());
+        $option  = static fn (string $name): mixed => $overrides[$name] ?? $options?->get($name);
 
-        $flag = static fn (string $name): string => $options?->get($name) ? 'true' : 'null';
-        $text = static function (string $name) use ($options): string {
-            $value = $options?->get($name);
+        $flag = static fn (string $name): string => $option($name) ? 'true' : 'null';
+        $text = static function (string $name) use ($option): string {
+            $value = $option($name);
 
             return $value ? "'" . $value . "'" : 'null';
         };
 
-        $line_tension    = $options?->get('tension') ?: 'null';
-        $borderWidth     = $options?->get('borderWidth') ?: 'null';
+        $line_tension    = $option('tension') ?: 'null';
+        $borderWidth     = $option('borderWidth') ?: 'null';
         $enableAnimation = $flag('enableAnimation');
         $showTitle       = $flag('showTitle');
         $showSubTitle    = $flag('showSubTitle');

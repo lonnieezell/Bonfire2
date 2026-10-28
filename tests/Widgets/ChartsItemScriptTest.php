@@ -12,6 +12,7 @@
 namespace Tests\Widgets;
 
 use Bonfire\Widgets\Types\Charts\ChartsItem;
+use Bonfire\Widgets\WidgetOptions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\TestCase;
 
@@ -104,6 +105,19 @@ final class ChartsItemScriptTest extends TestCase
             'polarArea', ['PolarAreaChart.polarArea_showLegend' => false],
             "'polarArea', null, backgroundColor__ID , borderColor__ID, null, true, true, null, null, 'bottom')",
         ];
+    }
+
+    public function testOptionsPassedInTakeThePlaceOfTheStoredOnes()
+    {
+        // Options stored by an earlier test stay in the shared settings cache
+        WidgetOptions::forChartType('bar')->reset();
+        setting('BarChart.bar_colorScheme', 'Blues');
+        setting('BarChart.bar_showLegend', 'on');
+
+        $script = $this->normalise($this->chart('bar')->getScript(['colorScheme' => 'Reds', 'showLegend' => false]));
+
+        $this->assertStringContainsString("const backgroundColor__ID = d3.schemeReds[9]; const borderColor__ID = 'reds';", $script);
+        $this->assertStringContainsString("'bar', null, backgroundColor__ID , borderColor__ID, null, true, true, null, null, 'bottom')", $script);
     }
 
     public function testDataAndLabelsAreEmbedded()

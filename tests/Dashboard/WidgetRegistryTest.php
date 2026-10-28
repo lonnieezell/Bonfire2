@@ -130,6 +130,14 @@ final class WidgetRegistryTest extends TestCase
         }
     }
 
+    public function testEachChartTypeOffersItsOwnSettings(): void
+    {
+        $names = static fn (string $id) => array_map(static fn ($field) => $field->name, service('dashboard')->widget($id)->fields());
+
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'tension'], $names('charts:usersByGroupLine123'));
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'colorScheme'], $names('charts:usersByGroupBar345'));
+    }
+
     public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void
     {
         service('dashboard')->register(new TestWidget('test:logsOnly', 'logs.view'));

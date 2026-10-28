@@ -306,6 +306,15 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertStringContainsString('data-widget-settings', $this->tileTools($html, 'stats&#x3A;usersInRecycler693'));
     }
 
+    public function testAChartRendersWithTheSettingsSavedForIt(): void
+    {
+        $this->save($this->user, [['title' => '', 'widgets' => [
+            ['id' => 'charts:usersByGroupBar345', 'size' => 'half', 'settings' => ['colorScheme' => 'Reds']],
+        ]]])->assertOK();
+
+        $this->assertStringContainsString('d3.schemeReds[9]', $this->dashboardHtml($this->user));
+    }
+
     public function testTheSiteDefaultKeepsTheSettingsOfItsWidgets(): void
     {
         $this->save($this->user, [['title' => '', 'widgets' => [
