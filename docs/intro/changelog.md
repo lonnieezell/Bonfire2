@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 28 October 2026
 
+The sidebar now shows **Settings** as a single link to the first settings page you may open, since the settings
+pages list one another in their own nav. A menu collection opts into this with `setPageNav()`. Installs that
+published the Admin theme keep the old expanding Settings menu until they copy the new
+`themes/Admin/Components/sidebar.php`.
+
 Each admin can now change a dashboard widget's settings for their own dashboard: in edit mode, its sliders button
 opens them in a panel, and they are saved with the layout (see
 [Customizing the Dashboard](../modules/customizing_the_dashboard.md#widget-settings)). Stat cards, charts and Log

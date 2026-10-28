@@ -21,7 +21,13 @@ $activeItem  = isset($menu) ? $menu->activeItem() : null;
                 continue;
             } ?>
 
-            <?php if ($collection->isCollapsible()) : ?>
+            <?php if ($collection->hasPageNav()) : ?>
+                <?php $active = $collection->isActive() || in_array($activeItem, $collection->items(), true) ?>
+                <a class="bf-nav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($collection->firstVisibleItem()->url) ?>" title="<?= esc(strip_tags($collection->title), 'attr') ?>">
+                    <?= $collection->icon ?>
+                    <span class="bf-label"><?= $collection->title ?></span>
+                </a>
+            <?php elseif ($collection->isCollapsible()) : ?>
                 <?php $open = $collection->isActive() || in_array($activeItem, $collection->items(), true) ?>
                 <div class="bf-nav-group <?= $open ? 'open' : '' ?>" x-data="{ open: <?= $open ? 'true' : 'false' ?> }" :class="{ open }">
                     <button type="button" class="bf-nav-link <?= $open ? 'active' : '' ?>" @click="open = ! open" :aria-expanded="open" title="<?= esc(strip_tags($collection->title), 'attr') ?>">
