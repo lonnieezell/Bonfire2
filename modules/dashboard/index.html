@@ -731,6 +731,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#customizing-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1493,6 +1504,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#customizing-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1629,12 +1651,32 @@
 <h1 id="the-dashboard">The Dashboard</h1>
 <p>The Dashboard is the first page you seen when you log into the admin area. It provides a place to put the widgets that provide a quick overview of the site's status, or other information that is important to the user.</p>
 <h2 id="configuration">Configuration</h2>
-<p>By default, the Dashboard is setup to display:</p>
+<p>By default, the Dashboard displays:</p>
 <ul>
-<li>a series of quick links</li>
-<li>any statistics that you have defined</li>
-<li>any widgets that you have added.</li>
+<li>the quick links;</li>
+<li>a <strong>Users</strong> section with the Users by Group and Users in Recycler stats, each half the width;</li>
+<li>a <strong>Monitoring</strong> section with Log activity.</li>
 </ul>
+<p>That default is the <code>$layout</code> property of the Dashboard config file, in the same format a saved layout uses. Change
+it to give every admin who hasn't customized their dashboard a different one; set it to <code>null</code> and the default is
+the cells below instead, in order:</p>
+<pre class="highlight"><code class="language-php">public ?array $layout = [
+    'version'  =&gt; 1,
+    'sections' =&gt; [
+        ['title' =&gt; '', 'widgets' =&gt; [
+            ['id' =&gt; 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' =&gt; 'full'],
+        ]],
+        ['title' =&gt; 'Users', 'widgets' =&gt; [
+            ['id' =&gt; 'stats:usersExpTable693', 'size' =&gt; 'half'],
+            ['id' =&gt; 'stats:usersInRecycler693', 'size' =&gt; 'half'],
+        ]],
+        ['title' =&gt; 'Monitoring', 'widgets' =&gt; [
+            ['id' =&gt; 'logs:logActivity', 'size' =&gt; 'full'],
+        ]],
+    ],
+];</code></pre>
+<p>Widgets the viewer may not see, or that are switched off in Settings → Widgets, are left out, and so is a section
+left empty.</p>
 <p>You can create additional <a href="https://codeigniter.com/user_guide/outgoing/view_cells.html">View Cells</a> and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.</p>
 <pre class="highlight"><code class="language-php">public array $cells = [
     'Bonfire\Dashboard\DashboardCells::quickLinks',
@@ -1642,6 +1684,31 @@
     'Bonfire\Widgets\Cells\WidgetCells::logs',
     'Bonfire\Widgets\Cells\WidgetCells::charts',
 ];</code></pre>
+<h2 id="customizing-the-dashboard">Customizing the dashboard</h2>
+<p>Every admin can arrange their own dashboard without changing anyone else's. Until they do, they see the default
+layout above. Other widgets are added from the widget library.</p>
+<p>Click <strong>Customize</strong> to enter edit mode. Nothing is stored until you click <strong>Save layout</strong>; <strong>Cancel</strong> puts the
+dashboard back the way it was. Every change can be undone and redone with the arrows in the edit bar, or Ctrl+Z
+(⌘Z) and Shift+Ctrl+Z, and the message after a removal or deletion has its own <strong>Undo</strong>. In edit mode you can:</p>
+<ul>
+<li>drag a widget to reorder it, also into another section;</li>
+<li>size a widget from the tools above it: ¼, ⅓, ½, ⅔ or Full width (3, 4, 6, 8 or 12 of 12 columns), within the
+  range that widget allows, or drag its bottom-right corner;</li>
+<li>open a widget's settings from its sliders button, when it has settings you may change;</li>
+<li>remove a widget with its trash button, and add widgets from <strong>Add widget</strong>, which lists every widget and marks the
+  ones already on your dashboard. Click <strong>Add</strong>, or drag one straight onto a section. An added widget shows a
+  placeholder until you save;</li>
+<li>give a section an optional heading, and from its ⋯ menu add a widget to it, move it up or down, insert a section
+  below it or delete it with its widgets;</li>
+<li>reset to the default layout with the clock button. Saving the default layout forgets yours, so you follow the
+  default again when a site admin changes it.</li>
+</ul>
+<p>Everything works from the keyboard, too: with a widget focused, the arrow keys move it (Up and Down, and Left and
+Right past either end, move it to the section before or after), Shift with Left or Right resizes it, and Delete
+removes it. Screen readers hear each change announced.</p>
+<p>Settings → Widgets decides which widgets are available to everyone. Every widget is available until a site admin
+switches it off; a switched-off widget is left out of every palette and every layout. A widget that becomes available later shows up in the palette of admins who have customized,
+never in their layout. Sections without widgets are dropped on save, and a layout holds at most 20 sections.</p>
 <h2 id="quick-links">Quick Links</h2>
 <p>The Quick Links cell is a simple list of links that have been added to the <code>Content</code> section of the sidebar menu. It is automatically generated and displayed.</p>
 <h2 id="widgets">Widgets</h2>

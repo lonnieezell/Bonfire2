@@ -1516,8 +1516,11 @@ You can specify which cells to display by editing the <code>Bonfire\Dashboard\Co
         'Bonfire\Widgets\Cells\WidgetCells::charts',
     ];
 }</code></pre>
-<p>The cells are displayed in the order listed, from top to bottom in the Dashboard. You can comment out any class to have it not show.
-The stats, logs and charts cells that come on by default are used to display the widgets, that can be configured in the admin area.</p>
+<p>The cells make up the default layout of the Dashboard, in the order listed. You can comment out any class to have it not show.
+The stats, logs and charts cells that come on by default stand for the stats, log and chart widgets: those are not on the
+default layout, and admins add them from the palette. Every other cell becomes one full-width widget with the id <code>cell:</code> plus its
+<code>Class::method</code>, which admins can move, size or remove when they <a href="../../modules/dashboard/#customizing-the-dashboard">customize their dashboard</a>.
+For more control over a widget's title, icon, sizes or permission, write a <a href="../widgets/#your-own-dashboard-widget">dashboard widget</a> instead.</p>
 <h2 id="creating-the-cell">Creating the Cell</h2>
 <p>The cells are very simple class methods that return the HTML or <code>view()</code> results. Here is the Quick Links cell as an example:</p>
 <pre class="highlight"><code class="language-php">class DashboardCells
