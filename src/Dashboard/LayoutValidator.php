@@ -19,7 +19,9 @@ use InvalidArgumentException;
  * A wrong shape or version, or too many sections, is rejected. Unknown,
  * unavailable and repeated widgets are dropped, then empty sections; an
  * unknown or out-of-range size becomes the widget's default, and titles
- * are trimmed.
+ * are trimmed. Of a widget's settings, only those of a field it declares
+ * are kept, as that field's type, and only when they differ from what the
+ * field inherits.
  */
 class LayoutValidator
 {
@@ -83,7 +85,7 @@ class LayoutValidator
                 }
 
                 $placed[$id]  = true;
-                $placements[] = new Placement($id, $this->size($available[$id]->sizes(), $widget['size'] ?? null));
+                $placements[] = new Placement($id, $this->size($available[$id]->sizes(), $widget['size'] ?? null), $this->settings($available[$id], $widget['settings'] ?? null));
             }
 
             if ($placements !== []) {
@@ -92,6 +94,24 @@ class LayoutValidator
         }
 
         return new Layout($sections);
+    }
+
+    /**
+     * @return array<string, bool|float|int|string>
+     */
+    private function settings(DashboardWidget $widget, mixed $settings): array
+    {
+        $own = [];
+
+        foreach (is_array($settings) ? $widget->fields() : [] as $field) {
+            $value = $field->cast($settings[$field->name] ?? null);
+
+            if ($value !== null && $value !== $field->inherited()) {
+                $own[$field->name] = $value;
+            }
+        }
+
+        return $own;
     }
 
     private function size(SizeRange $range, mixed $size): Size

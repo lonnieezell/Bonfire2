@@ -15,6 +15,7 @@ use Bonfire\Dashboard\DashboardCells;
 use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetValues;
 use CodeIgniter\I18n\Time;
 use IntlDatePatternGenerator;
 
@@ -64,12 +65,12 @@ class QuickLinksWidget implements DashboardWidget
         return null;
     }
 
-    public function settingsUrl(): ?string
+    public function fields(): array
     {
-        return null;
+        return [];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         $now  = Time::now();
         $user = auth()->user();

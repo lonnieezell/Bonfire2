@@ -13,7 +13,10 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Widgets\Types\Stats\StatsItem;
+use Bonfire\Widgets\WidgetOptions;
 
 /**
  * A StatsItem as a stat card.
@@ -47,13 +50,13 @@ class StatsWidget extends ItemWidget
         return new SizeRange(Size::Quarter);
     }
 
-    protected function settingsTab(): ?string
+    public function fields(): array
     {
-        return 'stats';
+        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true, key: WidgetOptions::forAlias('stats')->key('showLink'))];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
-        return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item]);
+        return view('Bonfire\Widgets\Views\Cells\_stat', ['stat' => $this->item, 'showLink' => $values->get('showLink')]);
     }
 }

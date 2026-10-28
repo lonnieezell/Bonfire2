@@ -13,8 +13,11 @@ namespace Bonfire\Dashboard\Widgets;
 
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
+use Bonfire\Dashboard\WidgetValues;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
+use Bonfire\Widgets\WidgetOptions;
 
 /**
  * A ChartsItem as a chart card.
@@ -64,21 +67,34 @@ class ChartWidget extends ItemWidget
     }
 
     /**
-     * The tab of its chart type: polarArea is "polarareachart".
+     * The options of its chart type in Settings → Widgets: a line's tension, the others' color scheme.
      */
-    protected function settingsTab(): ?string
+    public function fields(): array
     {
-        $type = (string) $this->item->type();
+        $type    = (string) $this->item->type();
+        $options = WidgetOptions::forChartType($type);
 
-        return in_array($type, ['line', 'bar', 'doughnut', 'pie', 'polarArea'], true) ? strtolower($type) . 'chart' : null;
+        if ($options === null) {
+            return [];
+        }
+
+        return [
+            WidgetField::toggle('showTitle', lang('Widgets.showTitle'), default: true, key: $options->key('showTitle')),
+            WidgetField::toggle('showLegend', lang('Widgets.showLegend'), default: true, key: $options->key('showLegend')),
+            WidgetField::choice('legendPosition', lang('Widgets.legendPosition'), lang('Widgets.legendPositions'), default: 'bottom', key: $options->key('legendPosition')),
+            WidgetField::toggle('enableAnimation', lang('Widgets.enableAnimation'), default: true, key: $options->key('enableAnimation')),
+            $type === 'line'
+                ? WidgetField::number('tension', lang('Widgets.lineTension'), default: 0.1, min: 0, step: 0.1, key: $options->key('tension'), description: lang('Widgets.lineTensionHint'))
+                : WidgetField::choice('colorScheme', lang('Widgets.colorScheme'), lang('Widgets.colorSchemes'), default: 'null', key: $options->key('colorScheme')),
+        ];
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         /** @var Metadata $meta */
         $meta = service('viewMeta');
         ChartsItem::addAssets($meta);
-        $meta->addRawScript($this->item->getScript());
+        $meta->addRawScript($this->item->getScript($values->all()));
 
         return '<div class="bf-chart">' . view('Bonfire\Widgets\Views\Cells\_chart', ['chart' => $this->item]) . '</div>';
     }

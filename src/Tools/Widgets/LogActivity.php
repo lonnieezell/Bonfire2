@@ -35,9 +35,16 @@ class LogActivity implements Item
         'debug'   => ['DEBUG'],
     ];
 
-    private const MAX_DAYS = 31;
+    public const MAX_DAYS = 31;
 
     private ?string $title = null;
+
+    /**
+     * Options that take the place of the stored ones, by option name.
+     *
+     * @var array<string, mixed>
+     */
+    private array $options = [];
 
     public function __construct(private readonly LogStore $store = new LogStore())
     {
@@ -63,6 +70,20 @@ class LogActivity implements Item
         return 'logs.view';
     }
 
+    /**
+     * A copy that shows these options in place of the stored ones, such as
+     * the settings of the widget as placed on a dashboard.
+     *
+     * @param array<string, mixed> $options e.g. ['fileCount' => 14]
+     */
+    public function withOptions(array $options): static
+    {
+        $copy          = clone $this;
+        $copy->options = $options;
+
+        return $copy;
+    }
+
     public function settings(): ItemSettings
     {
         return new ItemSettings(WidgetKind::Logs, 'logActivity');
@@ -77,7 +98,7 @@ class LogActivity implements Item
     {
         $levels = array_keys(self::LEVELS);
 
-        return $this->options()->get('hideDebug') ? array_values(array_diff($levels, ['debug'])) : $levels;
+        return $this->option('hideDebug') ? array_values(array_diff($levels, ['debug'])) : $levels;
     }
 
     /**
@@ -88,7 +109,7 @@ class LogActivity implements Item
      */
     public function days(): array
     {
-        $count   = max(1, min(self::MAX_DAYS, (int) $this->options()->get('fileCount')));
+        $count   = max(1, min(self::MAX_DAYS, (int) $this->option('fileCount')));
         $pattern = (new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('Md');
         $days    = [];
 
@@ -143,8 +164,8 @@ class LogActivity implements Item
         return $counts;
     }
 
-    private function options(): WidgetOptions
+    private function option(string $name): mixed
     {
-        return WidgetOptions::forAlias('logactivity');
+        return $this->options[$name] ?? WidgetOptions::forAlias('logactivity')->get($name);
     }
 }

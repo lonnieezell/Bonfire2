@@ -130,23 +130,12 @@ final class WidgetRegistryTest extends TestCase
         }
     }
 
-    public function testItemWidgetsLinkToTheirWidgetsSettingsTab(): void
+    public function testEachChartTypeOffersItsOwnSettings(): void
     {
-        $user = $this->createUser();
-        $user->addPermission('widgets.settings');
-        $this->actingAs($user);
+        $names = static fn (string $id) => array_map(static fn ($field) => $field->name, service('dashboard')->widget($id)->fields());
 
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/stats'), service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/barchart'), service('dashboard')->widget('charts:usersByGroupBar345')->settingsUrl());
-        $this->assertSame(site_url(ADMIN_AREA . '/settings/widgets/logactivity'), service('dashboard')->widget('logs:logActivity')->settingsUrl());
-        $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->settingsUrl());
-    }
-
-    public function testNoSettingsLinkWithoutThePermissionToChangeThem(): void
-    {
-        $this->actingAs($this->createUser());
-
-        $this->assertNull(service('dashboard')->widget('stats:usersInRecycler693')->settingsUrl());
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'tension'], $names('charts:usersByGroupLine123'));
+        $this->assertSame(['showTitle', 'showLegend', 'legendPosition', 'enableAnimation', 'colorScheme'], $names('charts:usersByGroupBar345'));
     }
 
     public function testWidgetsTheViewerMayNotSeeAreLeftOutOfTheAvailableSet(): void

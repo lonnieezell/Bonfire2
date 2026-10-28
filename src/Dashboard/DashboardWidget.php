@@ -47,10 +47,15 @@ interface DashboardWidget
     public function permission(): ?string;
 
     /**
-     * Where the viewer changes the widget's settings, or null when it
-     * has none they may change. Shown as a link in its edit-mode tools.
+     * The settings admins may change for the widget as placed on their
+     * dashboard. With none, its edit-mode tools offer no settings.
+     *
+     * @return list<WidgetField>
      */
-    public function settingsUrl(): ?string;
+    public function fields(): array;
 
-    public function render(): string;
+    /**
+     * @param WidgetValues $values Each field's value as placed
+     */
+    public function render(WidgetValues $values): string;
 }

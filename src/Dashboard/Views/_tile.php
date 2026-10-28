@@ -2,6 +2,7 @@
 /**
  * A placed widget: its edit-mode tools and resize handle, and its content.
  * In edit mode the tile itself takes focus, for the keyboard controls.
+ * It carries the settings its placement sets for itself, if any.
  *
  * @var Bonfire\Dashboard\DashboardWidget $widget
  * @var Bonfire\Dashboard\Placement       $placement
@@ -9,7 +10,7 @@
  */
 $presets = $widget->sizes()->presets();
 ?>
-<div class="bf-widget bf-span-<?= $placement->size->columns() ?>" data-widget-id="<?= esc($placement->id, 'attr') ?>" data-size="<?= $placement->size->value ?>" data-title="<?= esc($widget->title(), 'attr') ?>"
+<div class="bf-widget bf-span-<?= $placement->size->columns() ?>" data-widget-id="<?= esc($placement->id, 'attr') ?>" data-size="<?= $placement->size->value ?>" data-title="<?= esc($widget->title(), 'attr') ?>"<?php if ($placement->values !== []) : ?> data-settings="<?= esc(json_encode($placement->values), 'attr') ?>"<?php endif ?>
     data-sizes="<?= implode(' ', array_map(static fn ($size) => $size->value, $presets)) ?>"
     :tabindex="editing ? 0 : false" :role="editing && 'group'" :aria-label="editing && $el.dataset.title" :aria-describedby="editing && 'bf-dashboard-help'"
     @keydown="tileKey($event)" @click="editing && $el.focus()">
@@ -21,15 +22,18 @@ $presets = $widget->sizes()->presets();
                     title="<?= esc(lang('Bonfire.size' . $size->name), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.size' . $size->name), 'attr') ?>"><?= lang('Bonfire.sizeLabels.' . $size->name) ?></button>
 			<?php endforeach ?>
             <span class="bf-widget-tools-divider" aria-hidden="true"></span>
-			<?php if (($settings = $widget->settingsUrl()) !== null) : ?>
-                <a class="bf-widget-tool" href="<?= esc($settings, 'attr') ?>" data-widget-settings title="<?= esc(lang('Bonfire.widgetSettings'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.widgetSettings'), 'attr') ?>">
+			<?php if ($widget->fields() !== []) : ?>
+                <button type="button" class="bf-widget-tool" data-widget-settings @click="openSettings($el)" title="<?= esc(lang('Bonfire.widgetSettings'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.widgetSettings'), 'attr') ?>">
                     <i class="fas fa-sliders" aria-hidden="true"></i>
-                </a>
+                </button>
 			<?php endif ?>
             <button type="button" class="bf-widget-tool bf-widget-remove" @click="removeWidget($el)" title="<?= esc(lang('Bonfire.removeWidget', [$widget->title()]), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.removeWidget', [$widget->title()]), 'attr') ?>">
                 <i class="fas fa-trash" aria-hidden="true"></i>
             </button>
         </div>
+    </template>
+    <template x-if="editing">
+        <span class="bf-widget-pending" x-show="(revision, settingsChanged($el))"><?= lang('Bonfire.settingsOnSave') ?></span>
     </template>
     <template x-if="editing">
         <span class="bf-widget-resize" @pointerdown="startResize($event)" aria-hidden="true"></span>

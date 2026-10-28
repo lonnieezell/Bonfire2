@@ -11,7 +11,7 @@
 
 <?php $this->section('main') ?>
 
-    <div class="bf-dashboard" x-data="dashboardEditor" :class="{ 'is-editing': editing, 'is-arranging': arranging, 'has-library': library }"
+    <div class="bf-dashboard" x-data="dashboardEditor" :class="{ 'is-editing': editing, 'is-arranging': arranging, 'has-library': library || configuring }"
         @keydown.window="key($event)"
         data-save-url="<?= url_to('dashboard-layout') ?>"
         <?php if ($canSetDefault) : ?>data-site-save-url="<?= url_to('dashboard-site-layout') ?>"<?php endif ?>
@@ -35,6 +35,7 @@
             'reset'          => lang('Bonfire.layoutReset'),
             'undone'         => lang('Bonfire.undone'),
             'redone'         => lang('Bonfire.redone'),
+            'settings'       => lang('Bonfire.settingsChanged'),
         ]), 'attr') ?>">
 
         <div class="visually-hidden" aria-live="polite" x-text="announcement"></div>
@@ -83,7 +84,7 @@
 				<?php $tiles = '' ?>
 				<?php foreach ($section->widgets as $placement) : ?>
 					<?php $widget = $widgets[$placement->id] ?>
-					<?php $tiles .= $this->setData(['widget' => $widget, 'placement' => $placement, 'html' => $widget->render()])->include('Bonfire\Dashboard\Views\_tile') ?>
+					<?php $tiles .= $this->setData(['widget' => $widget, 'placement' => $placement, 'html' => $widget->render(Bonfire\Dashboard\WidgetValues::resolve($widget->fields(), $placement->values))])->include('Bonfire\Dashboard\Views\_tile') ?>
 				<?php endforeach ?>
 				<?= $this->setData(['title' => $section->title, 'tiles' => $tiles])->include('Bonfire\Dashboard\Views\_section') ?>
 			<?php endforeach ?>
@@ -100,6 +101,7 @@
         </div>
 
 		<?= $this->setData(['groups' => $palette, 'placed' => $layout->ids()])->include('Bonfire\Dashboard\Views\_widget_palette') ?>
+		<?= $this->setData(['widgets' => $widgets])->include('Bonfire\Dashboard\Views\_widget_settings') ?>
 
         <div class="bf-dashboard-toast" x-show="toast" x-cloak x-transition.opacity>
             <span x-text="toast"></span>

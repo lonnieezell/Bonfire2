@@ -42,9 +42,9 @@ final readonly class Layout
     }
 
     /**
-     * The stored format, version 1.
+     * The stored format, version 1. A widget's settings are left out when it has none of its own.
      *
-     * @return array{version: int, sections: list<array{title: string, widgets: list<array{id: string, size: string}>}>}
+     * @return array{version: int, sections: list<array{title: string, widgets: list<array{id: string, size: string, settings?: array<string, bool|float|int|string>}>}>}
      */
     public function toArray(): array
     {
@@ -55,7 +55,7 @@ final readonly class Layout
                 'widgets' => array_map(static fn (Placement $placement) => [
                     'id'   => $placement->id,
                     'size' => $placement->size->value,
-                ], $section->widgets),
+                ] + ($placement->values === [] ? [] : ['settings' => $placement->values]), $section->widgets),
             ], $this->sections),
         ];
     }

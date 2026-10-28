@@ -1,7 +1,7 @@
 /**
  * The dashboard editor: Customize lets the user drag widgets into a new
  * order, group them into sections, size, remove and add them from the
- * palette; Save stores the result as their own layout, Cancel puts the
+ * palette, and change each widget's settings; Save stores the result as their own layout, Cancel puts the
  * page back as it was. Every change can be undone, can also be made from
  * the keyboard, and is announced to screen readers.
  *
@@ -14,12 +14,18 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('dashboardEditor', () => {
         // Kept from init(): $root is found from the element that ran the handler, which may be a tile just taken off the page
         let root;
+        // The tile whose settings are open
+        let settingsTile = null;
 
         return {
             editing: false,
             saving: false,
             failed: false,
             library: false,
+            // The settings panel is open, in the palette's place
+            configuring: false,
+            settingsTitle: '',
+            settingsIcon: '',
             // A drag or resize is under way: the column guides show stronger
             arranging: false,
             sectionNames: [],
@@ -48,6 +54,14 @@ document.addEventListener('alpine:init', () => {
                 const palette = root.querySelector('#bf-widget-palette');
                 palette.addEventListener('show.bs.offcanvas', () => { this.library = true; });
                 palette.addEventListener('hide.bs.offcanvas', () => { this.library = false; });
+
+                const settings = root.querySelector('#bf-widget-settings');
+                settings.addEventListener('show.bs.offcanvas', () => { this.configuring = true; });
+                settings.addEventListener('hide.bs.offcanvas', () => {
+                    this.configuring = false;
+                    settingsTile?.classList.remove('is-configuring');
+                    settingsTile = null;
+                });
             },
 
             start() {
@@ -85,6 +99,7 @@ document.addEventListener('alpine:init', () => {
                 this.editing = false;
                 this.toast = '';
                 this.closeLibrary();
+                this.closeSettings();
             },
 
             dirty() {
@@ -179,6 +194,9 @@ document.addEventListener('alpine:init', () => {
 
             // Puts a recorded layout on the page.
             apply(layout) {
+                // Its form may no longer show the tile's settings
+                this.closeSettings();
+
                 const placed = new Map(this.tiles().map((tile) => [tile.dataset.widgetId, tile]));
                 const ids = new Set(layout.sections.flatMap((section) => section.widgets.map((widget) => widget.id)));
 
@@ -202,6 +220,7 @@ document.addEventListener('alpine:init', () => {
 
                         grid.append(tile);
                         this.setSize(tile, widget.size);
+                        this.setSettings(tile, widget.settings ?? {});
                     });
                 });
                 // Emptied by now: every tile they held is elsewhere or off the page
@@ -259,11 +278,101 @@ document.addEventListener('alpine:init', () => {
                 if (section) {
                     this.target = this.sections().indexOf(section);
                 }
+                this.closeSettings();
                 bootstrap.Offcanvas.getOrCreateInstance('#bf-widget-palette').show();
             },
 
             closeLibrary() {
                 bootstrap.Offcanvas.getInstance('#bf-widget-palette')?.hide();
+            },
+
+            // Opens the tile's settings in the palette's place: its own values, else what each field inherits.
+            openSettings(button) {
+                const tile = button.closest('.bf-widget');
+                const template = this.settingsTemplate(tile);
+
+                this.closeLibrary();
+                settingsTile?.classList.remove('is-configuring');
+                settingsTile = tile;
+                tile.classList.add('is-configuring');
+                this.settingsTitle = template.dataset.title;
+                this.settingsIcon = template.dataset.icon;
+                root.querySelector('[data-settings-fields]').replaceChildren(template.content.firstElementChild.cloneNode(true));
+                this.fillSettings(JSON.parse(tile.dataset.settings ?? '{}'));
+                bootstrap.Offcanvas.getOrCreateInstance('#bf-widget-settings').show();
+            },
+
+            closeSettings() {
+                bootstrap.Offcanvas.getInstance('#bf-widget-settings')?.hide();
+            },
+
+            // Keeps on the tile the values that differ from what their fields inherit.
+            applySettings() {
+                const tile = settingsTile;
+                const form = root.querySelector('#bf-widget-settings form');
+                const own = {};
+
+                this.settingsFields(tile).forEach((field) => {
+                    const input = form.elements[field.name];
+                    const value = { toggle: () => input.checked, number: () => Number(input.value), text: () => input.value.trim() }[field.type]?.() ?? input.value;
+
+                    if (value !== field.inherited) {
+                        own[field.name] = value;
+                    }
+                });
+
+                const before = this.current;
+
+                this.setSettings(tile, own);
+                this.closeSettings();
+                this.commit();
+                // Applying unchanged values records nothing, so there is nothing to undo
+                if (this.current !== before) {
+                    this.notify(this.message('settings', tile.dataset.title), true);
+                }
+                this.focusTile(tile);
+            },
+
+            // Fills the form with what each field inherits; Apply keeps it.
+            resetSettings() {
+                this.fillSettings({});
+            },
+
+            fillSettings(own) {
+                const form = root.querySelector('#bf-widget-settings form');
+
+                this.settingsFields(settingsTile).forEach((field) => {
+                    const input = form.elements[field.name];
+                    const value = own[field.name] ?? field.inherited;
+
+                    // A segmented choice is a RadioNodeList, whose value checks the matching radio
+                    field.type === 'toggle' ? (input.checked = value) : (input.value = value);
+                });
+            },
+
+            // Whether the tile's settings differ from those it had when the page loaded.
+            settingsChanged(el) {
+                const tile = el.closest('.bf-widget');
+                const saved = this.saved?.sections.flatMap((section) => section.widgets).find((widget) => widget.id === tile.dataset.widgetId);
+
+                return JSON.stringify(saved?.settings ?? {}) !== JSON.stringify(JSON.parse(tile.dataset.settings ?? '{}'));
+            },
+
+            // A tile without settings of its own carries none.
+            setSettings(tile, own) {
+                if (Object.keys(own).length) {
+                    tile.dataset.settings = JSON.stringify(own);
+                } else {
+                    delete tile.dataset.settings;
+                }
+            },
+
+            settingsTemplate(tile) {
+                return root.querySelector(`template[data-settings-for="${CSS.escape(tile.dataset.widgetId)}"]`);
+            },
+
+            settingsFields(tile) {
+                return JSON.parse(this.settingsTemplate(tile).dataset.fields);
             },
 
             // Appends the entry's widget to the chosen section.
@@ -405,7 +514,7 @@ document.addEventListener('alpine:init', () => {
                 if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
                     event.preventDefault();
                     event.shiftKey ? this.redo() : this.undo();
-                } else if (event.key === 'Escape' && ! this.library) {
+                } else if (event.key === 'Escape' && ! this.library && ! this.configuring) {
                     document.activeElement?.closest('.bf-widget')?.blur();
                 }
             },
@@ -522,6 +631,9 @@ document.addEventListener('alpine:init', () => {
             },
 
             takeOff(tile) {
+                if (tile === settingsTile) {
+                    this.closeSettings();
+                }
                 this.removed.set(tile.dataset.widgetId, tile);
                 tile.remove();
             },
@@ -558,6 +670,7 @@ document.addEventListener('alpine:init', () => {
                         widgets: this.tiles(section).map((tile) => ({
                             id: tile.dataset.widgetId,
                             size: tile.dataset.size,
+                            ...(tile.dataset.settings ? { settings: JSON.parse(tile.dataset.settings) } : {}),
                         })),
                     })),
                 };

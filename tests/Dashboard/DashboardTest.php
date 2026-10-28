@@ -2,6 +2,7 @@
 
 namespace Tests\Dashboard;
 
+use Bonfire\Dashboard\DashboardCells;
 use Bonfire\Users\User;
 use CodeIgniter\I18n\Time;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -29,6 +30,13 @@ final class DashboardTest extends TestCase
         Time::setTestNow();
 
         parent::tearDown();
+    }
+
+    public function testTheDeprecatedQuickLinksCellStillRenders()
+    {
+        $this->actingAs($this->user);
+
+        $this->assertStringContainsString('Ada', (string) (new DashboardCells())->quickLinks());
     }
 
     public function testCanSeeDashboard()

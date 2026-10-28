@@ -14,18 +14,26 @@ namespace Tests\Support\Libraries;
 use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
+use Bonfire\Dashboard\WidgetValues;
 
 /**
- * A native dashboard widget that counts how often it is rendered.
+ * A native dashboard widget that counts how often it is rendered, and
+ * keeps the settings values it was last rendered with.
  */
 final class TestWidget implements DashboardWidget
 {
-    public int $renders = 0;
+    public int $renders          = 0;
+    public ?WidgetValues $values = null;
 
+    /**
+     * @param list<WidgetField> $fields
+     */
     public function __construct(
         private readonly string $id,
         private readonly ?string $permission = null,
         private readonly SizeRange $sizes = new SizeRange(Size::Half),
+        private readonly array $fields = [],
     ) {
     }
 
@@ -64,14 +72,15 @@ final class TestWidget implements DashboardWidget
         return $this->permission;
     }
 
-    public function settingsUrl(): ?string
+    public function fields(): array
     {
-        return null;
+        return $this->fields;
     }
 
-    public function render(): string
+    public function render(WidgetValues $values): string
     {
         $this->renders++;
+        $this->values = $values;
 
         return '<p data-test-widget="' . esc($this->id, 'attr') . '"></p>';
     }
