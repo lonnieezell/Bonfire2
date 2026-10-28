@@ -1832,6 +1832,13 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="28-october-2026">28 October 2026</h2>
+<p>Each admin can now change a dashboard widget's settings for their own dashboard: in edit mode, its sliders button
+opens them in a panel, and they are saved with the layout (see
+<a href="../../modules/customizing_the_dashboard/#widget-settings">Customizing the Dashboard</a>). Stat cards, charts and Log
+activity have settings; until an admin changes one, it follows the site-wide value in Settings → Widgets. Widgets
+declare their settings with <code>fields()</code>, a list of <code>Bonfire\Dashboard\WidgetField</code>, and get their values in
+<code>render(WidgetValues $values)</code>; <code>DashboardWidget::settingsUrl()</code> is gone (see
+<a href="../../building_admin_modules/dashboard_widgets/#settings">Dashboard Widgets</a>).</p>
 <p>The Log activity widget now shows a column for each of the last days up to today, with a thin line for days without
 a log file. Its <strong>Days to show</strong> setting (formerly <em>Log files to show</em>) keeps its saved value, and now defaults to 7.</p>
 <p>Dashboard widgets can need a permission: pass <code>'permission'</code> to a <code>StatsItem</code> or <code>ChartsItem</code>, and admins who lack it

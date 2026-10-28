@@ -1271,6 +1271,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#registering-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1514,6 +1525,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#registering-it" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1617,6 +1639,8 @@ register it from your module's <code>initAdmin()</code>. Bonfire's own Quick Lin
 <pre class="highlight"><code class="language-php">use Bonfire\Dashboard\DashboardWidget;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\SizeRange;
+use Bonfire\Dashboard\WidgetField;
+use Bonfire\Dashboard\WidgetValues;
 
 class OpenOrders implements DashboardWidget
 {
@@ -1627,11 +1651,21 @@ class OpenOrders implements DashboardWidget
     public function description(): string { return 'Orders waiting to ship'; }
     public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
     public function permission(): ?string { return 'shop.orders'; }
-    public function settingsUrl(): ?string { return url_to('shop-dashboard-settings'); }
 
-    public function render(): string
+    public function fields(): array
     {
-        return view('Shop\Views\open_orders', ['orders' =&gt; model(OrderModel::class)-&gt;open()]);
+        return [
+            WidgetField::number('limit', 'Orders to show', default: 5, min: 1, max: 20),
+            WidgetField::toggle('showTotals', 'Show totals', default: true, key: 'Shop.dashboardTotals'),
+        ];
+    }
+
+    public function render(WidgetValues $values): string
+    {
+        return view('Shop\Views\open_orders', [
+            'orders'     =&gt; model(OrderModel::class)-&gt;open($values-&gt;get('limit')),
+            'showTotals' =&gt; $values-&gt;get('showTotals'),
+        ]);
     }
 }</code></pre>
 <ul>
@@ -1641,10 +1675,51 @@ class OpenOrders implements DashboardWidget
   <code>Third</code>, <code>Half</code>, <code>TwoThirds</code> and <code>Full</code>.</li>
 <li><strong>permission</strong> hides the widget from admins who lack it, in the library and on the dashboard, and drops it from
   layouts they save. <code>null</code> shows it to every admin.</li>
-<li><strong>settingsUrl</strong> is where the viewer changes the widget's settings, linked from its tools in edit mode. Return
-  <code>null</code> when it has none, or the viewer may not change them.</li>
-<li><strong>render</strong> is called only when the widget is on the viewer's dashboard, so it may run queries.</li>
+<li><strong>fields</strong> are the <a href="#settings">settings</a> admins may change for the widget on their own dashboard. Return <code>[]</code> when
+  it has none, and its edit-mode tools offer no settings.</li>
+<li><strong>render</strong> is called only when the widget is on the viewer's dashboard, so it may run queries. It gets the value
+  of each field as the viewer placed it.</li>
 </ul>
+<h2 id="settings">Settings</h2>
+<p>Each <code>WidgetField</code> is one setting, drawn in the widget's settings panel. Bonfire draws the form, checks what is
+posted, stores each admin's values with their layout, and hands <code>render()</code> the result. Read a value with
+<code>$values-&gt;get('name')</code>, not with <code>setting()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Input</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WidgetField::toggle($name, $label, default: …)</code></td>
+<td>A switch</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><code>WidgetField::number($name, $label, default: …, min: …, max: …, step: …)</code></td>
+<td>A number box</td>
+<td><code>int</code>, or <code>float</code> when <code>step</code> is a fraction; kept within <code>min</code> and <code>max</code></td>
+</tr>
+<tr>
+<td><code>WidgetField::choice($name, $label, $options, default: …)</code></td>
+<td>Segmented buttons, or a select for more than four options</td>
+<td>One of the keys of <code>$options</code> (value =&gt; label)</td>
+</tr>
+<tr>
+<td><code>WidgetField::text($name, $label, default: …)</code></td>
+<td>A text box</td>
+<td><code>string</code>, trimmed, at most 255 characters</td>
+</tr>
+</tbody>
+</table>
+<p>Every field also takes an optional <code>description:</code> shown under its label, and <code>key:</code>, the name of a setting
+(<code>Class.property</code>) it follows. A field follows that setting's stored value, or its <code>default</code> when it has no <code>key</code>,
+until an admin changes it. Only values that differ from it are stored, so changing the setting later reaches every
+admin who left the field alone. A value that is not of the field's type, a choice the field does not offer, or the
+name of a field the widget no longer declares is dropped when the layout is saved, and ignored when it is rendered.</p>
 <h2 id="registering-it">Registering it</h2>
 <pre class="highlight"><code class="language-php">public function initAdmin()
 {
