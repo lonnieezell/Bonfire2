@@ -220,11 +220,7 @@ document.addEventListener('alpine:init', () => {
 
                         grid.append(tile);
                         this.setSize(tile, widget.size);
-                        if (widget.settings) {
-                            tile.dataset.settings = JSON.stringify(widget.settings);
-                        } else {
-                            delete tile.dataset.settings;
-                        }
+                        this.setSettings(tile, widget.settings ?? {});
                     });
                 });
                 // Emptied by now: every tile they held is elsewhere or off the page
@@ -325,11 +321,7 @@ document.addEventListener('alpine:init', () => {
                     }
                 });
 
-                if (Object.keys(own).length) {
-                    tile.dataset.settings = JSON.stringify(own);
-                } else {
-                    delete tile.dataset.settings;
-                }
+                this.setSettings(tile, own);
                 this.closeSettings();
                 this.commit();
                 this.notify(this.message('settings', tile.dataset.title), true);
@@ -359,6 +351,15 @@ document.addEventListener('alpine:init', () => {
                 const saved = this.saved?.sections.flatMap((section) => section.widgets).find((widget) => widget.id === tile.dataset.widgetId);
 
                 return JSON.stringify(saved?.settings ?? {}) !== JSON.stringify(JSON.parse(tile.dataset.settings ?? '{}'));
+            },
+
+            // A tile without settings of its own carries none.
+            setSettings(tile, own) {
+                if (Object.keys(own).length) {
+                    tile.dataset.settings = JSON.stringify(own);
+                } else {
+                    delete tile.dataset.settings;
+                }
             },
 
             settingsTemplate(tile) {

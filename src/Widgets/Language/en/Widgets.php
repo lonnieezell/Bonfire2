@@ -12,6 +12,7 @@
 return [
     'widgetsModTitle' => 'Widgets',
     'viewDetail'      => 'View Detail',
+    'defaultsHint'    => 'These are the defaults; admins can override them per widget on their own dashboard.',
     'showDetailLink'  => 'Show the "View Detail" link',
     'showTitle'       => 'Show the title',
     'showLegend'      => 'Show the legend',

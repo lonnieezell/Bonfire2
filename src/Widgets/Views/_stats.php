@@ -8,7 +8,7 @@
         <?= csrf_field() ?>
         <input type="hidden" id="widget" name="widget" value="<?= esc($tab) ?>">
 
-        <x-admin-box title="Statistics widgets" description="These are the defaults; admins can override them per widget on their own dashboard.">
+        <x-admin-box title="Statistics widgets" description="<?= esc(lang('Widgets.defaultsHint'), 'attr') ?>">
             <x-setting-row label='Show the "View Detail" link' for="stats_showLink">
                 <x-switch name="stats_showLink" value="on" offValue id="stats_showLink" checked="<?= setting('Stats.stats_showLink') ? '1' : '0' ?>" />
             </x-setting-row>

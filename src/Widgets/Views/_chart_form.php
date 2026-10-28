@@ -10,7 +10,7 @@ $value = static fn (string $option) => old("{$prefix}_{$option}", setting("{$con
         <?= csrf_field() ?>
         <input type="hidden" id="widget" name="widget" value="<?= esc($tab) ?>">
 
-        <x-admin-box title="<?= esc($title) ?>" description="These are the defaults; admins can override them per widget on their own dashboard.">
+        <x-admin-box title="<?= esc($title) ?>" description="<?= esc(lang('Widgets.defaultsHint'), 'attr') ?>">
             <x-setting-row label="Show the title" for="<?= $prefix ?>_showTitle">
                 <x-switch name="<?= $prefix ?>_showTitle" value="on" offValue id="<?= $prefix ?>_showTitle" checked="<?= $value('showTitle') ? '1' : '0' ?>" />
             </x-setting-row>

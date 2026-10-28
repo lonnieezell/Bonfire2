@@ -26,15 +26,15 @@ final readonly class WidgetValues
     /**
      * Each field's value: the placement's own, else what it inherits.
      *
-     * @param list<WidgetField>    $fields
-     * @param array<string, mixed> $own    The placement's stored settings
+     * @param list<WidgetField>                    $fields
+     * @param array<string, bool|float|int|string> $own    The placement's settings, as validated
      */
     public static function resolve(array $fields, array $own = []): self
     {
         $values = [];
 
         foreach ($fields as $field) {
-            $values[$field->name] = $field->cast($own[$field->name] ?? null) ?? $field->inherited();
+            $values[$field->name] = $own[$field->name] ?? $field->inherited();
         }
 
         return new self($values);
