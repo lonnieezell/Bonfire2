@@ -11,6 +11,8 @@
 
 namespace Tests\Widgets;
 
+use Bonfire\Widgets\Types\Stats\Stats;
+use Bonfire\Widgets\Types\Stats\StatsItem;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User;
 use Tests\Support\Libraries\StubDashboard;
@@ -90,6 +92,18 @@ final class DashboardWidgetsTest extends TestCase
 
         $this->assertMatchesRegularExpression('#<div class="bf-stat">.*USERS IN RECYCLER.*<p class="bf-stat-value">0</p>#s', $html);
         $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', (string) $html);
+    }
+
+    public function testTheStatsCellFollowsTheSiteDefaultForItsLink()
+    {
+        $stats = new Stats();
+        $stats->addItem(new StatsItem(['title' => 'Item', 'id' => 'item1', 'url' => 'admin/items']));
+        $cell = static fn () => view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]);
+
+        $this->assertStringContainsString('class="bf-stat-link"', $cell());
+
+        setting('Stats.stats_showLink', false);
+        $this->assertStringNotContainsString('class="bf-stat-link"', $cell());
     }
 
     public function testPlacedChartSitsInACard()

@@ -68,8 +68,11 @@ posted, stores each admin's values with their layout, and hands `render()` the r
 | `WidgetField::text($name, $label, default: …)` | A text box | `string`, trimmed, at most 255 characters |
 
 Every field also takes an optional `description:` shown under its label, and `key:`, the name of a setting
-(`Class.property`) it follows. A field follows that setting's stored value, or its `default` when it has no `key`,
-until an admin changes it. Only values that differ from it are stored, so changing the setting later reaches every
+(`Class.property`) it follows. A field follows that setting's stored value, or its `default` when it has no `key`
+or the setting is not stored, until an admin changes it. Fields with a `key` are also the site-wide defaults:
+Settings → Widgets has a tab for each `Class`, listing those fields, which saves the setting and **Reset all widget
+settings** forgets it. Widgets that share a key, as every chart of one type does, should declare it alike: the tab
+shows the first declaration. Only values that differ from it are stored, so changing the setting later reaches every
 admin who left the field alone. A value that is not of the field's type, a choice the field does not offer, or the
 name of a field the widget no longer declares is dropped when the layout is saved, and ignored when it is rendered.
 

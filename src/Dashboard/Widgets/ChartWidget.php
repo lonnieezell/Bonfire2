@@ -17,7 +17,6 @@ use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
-use Bonfire\Widgets\WidgetOptions;
 
 /**
  * A ChartsItem as a chart card.
@@ -26,6 +25,11 @@ use Bonfire\Widgets\WidgetOptions;
  */
 class ChartWidget extends ItemWidget
 {
+    /**
+     * The chart types with settings, and so a tab in Settings → Widgets.
+     */
+    private const TYPES = ['line', 'bar', 'doughnut', 'pie', 'polarArea'];
+
     public function title(): string
     {
         return (string) $this->item->title();
@@ -67,25 +71,27 @@ class ChartWidget extends ItemWidget
     }
 
     /**
-     * The options of its chart type in Settings → Widgets: a line's tension, the others' color scheme.
+     * Keyed to the defaults of its chart type in Settings → Widgets, e.g.
+     * BarChart.bar_showTitle: a line's tension, the others' color scheme.
      */
     public function fields(): array
     {
-        $type    = (string) $this->item->type();
-        $options = WidgetOptions::forChartType($type);
+        $type = (string) $this->item->type();
 
-        if ($options === null) {
+        if (! in_array($type, self::TYPES, true)) {
             return [];
         }
 
+        $key = static fn (string $name): string => ucfirst($type) . 'Chart.' . $type . '_' . $name;
+
         return [
-            WidgetField::toggle('showTitle', lang('Widgets.showTitle'), default: true, key: $options->key('showTitle')),
-            WidgetField::toggle('showLegend', lang('Widgets.showLegend'), default: true, key: $options->key('showLegend')),
-            WidgetField::choice('legendPosition', lang('Widgets.legendPosition'), lang('Widgets.legendPositions'), default: 'bottom', key: $options->key('legendPosition')),
-            WidgetField::toggle('enableAnimation', lang('Widgets.enableAnimation'), default: true, key: $options->key('enableAnimation')),
+            WidgetField::toggle('showTitle', lang('Widgets.showTitle'), default: true, key: $key('showTitle')),
+            WidgetField::toggle('showLegend', lang('Widgets.showLegend'), default: true, key: $key('showLegend')),
+            WidgetField::choice('legendPosition', lang('Widgets.legendPosition'), lang('Widgets.legendPositions'), default: 'bottom', key: $key('legendPosition')),
+            WidgetField::toggle('enableAnimation', lang('Widgets.enableAnimation'), default: true, key: $key('enableAnimation')),
             $type === 'line'
-                ? WidgetField::number('tension', lang('Widgets.lineTension'), default: 0.1, min: 0, step: 0.1, key: $options->key('tension'), description: lang('Widgets.lineTensionHint'))
-                : WidgetField::choice('colorScheme', lang('Widgets.colorScheme'), lang('Widgets.colorSchemes'), default: 'null', key: $options->key('colorScheme')),
+                ? WidgetField::number('tension', lang('Widgets.lineTension'), default: 0.1, min: 0, step: 0.1, key: $key('tension'), description: lang('Widgets.lineTensionHint'))
+                : WidgetField::choice('colorScheme', lang('Widgets.colorScheme'), lang('Widgets.colorSchemes'), default: 'null', key: $key('colorScheme')),
         ];
     }
 

@@ -41,6 +41,14 @@ in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is docu
 
 ## 28 October 2026 (breaking change)
 
+Each widget's `fields()` is now the only place its settings are declared: the Settings → Widgets tabs are built from
+the fields that have a `key`, one tab per settings class, and saved through them. Values you saved there keep
+working. The properties of `Bonfire\Widgets\Config\Stats`, `LineChart`, `BarChart`, `DoughnutChart`, `PieChart`,
+`PolarAreaChart` and `LogActivity` are gone, so a default overridden in a published copy of those classes or in
+`.env` no longer applies: set it in Settings → Widgets instead. The line chart's subtitle and custom border
+settings, which had no form, are no longer read. `WidgetOptions` keeps only `all()`, `forAlias()`, `save()` and
+`reset()`.
+
 **Users by group** is now a bar list: each group, a bar scaled to the largest one, and its number of users, with a
 setting to sort by count or by name. It is a new widget, `users:byGroup`, in place of the *Users by Group* stat card
 (`stats:usersExpTable693`), which is gone. Saved dashboards that placed the stat card lose it: re-add Users by group

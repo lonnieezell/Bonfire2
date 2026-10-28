@@ -13,46 +13,11 @@ namespace Bonfire\Widgets\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Where the settings library stores the line chart defaults
+ * (LineChart.line_showTitle, ...), so it must stay. The defaults are those
+ * of the widgets' fields().
+ */
 class LineChart extends BaseConfig
 {
-    /**
-     * --------------------------------------------------------------------------
-     * Bezier curve tension of the line. Set to 0 to draw straightlines. This option is ignored if monotone cubic interpolation is used.
-     * --------------------------------------------------------------------------
-     */
-    public float $line_tension = 0.1;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Enable the chart animation
-     * --------------------------------------------------------------------------
-     */
-    public bool $line_enableAnimation = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Show the chart title
-     * --------------------------------------------------------------------------
-     */
-    public bool $line_showTitle = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Show the chart legend
-     * --------------------------------------------------------------------------
-     */
-    public bool $line_showLegend = true;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Set the legend position
-     *
-     * possible value are:
-     * top
-     * left
-     * bottom
-     * right
-     * --------------------------------------------------------------------------
-     */
-    public string $line_legendPosition = 'bottom';
 }

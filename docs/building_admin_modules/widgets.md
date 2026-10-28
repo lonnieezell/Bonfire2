@@ -120,7 +120,7 @@ Services::injectMock('dashboardContext', new class () extends DashboardContext {
 
 ## Configuration
 
-All settings are available in the `Bonfire\Widgets\Config\Stats` class, or in the admin settings area.
+All settings are available in the admin settings area.
 
 In the administration settings area, you can also choose to:
 - Display the "View Detail" link
@@ -224,8 +224,6 @@ Each type of widget has its own specific settings.
 
 ***Line Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\LineChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -234,16 +232,9 @@ In the administration settings area, you can choose to:
 - Enable animation
 - You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.
 
-Advanced settings:
-
-- You can set Line color
-- You can set Line width
-
 ---
 
 ***Bar Chart***
-
-You can set the default values in the `Bonfire\Widgets\Config\BarChart` Class
 
 In the administration settings area, you can choose to:
 
@@ -257,8 +248,6 @@ In the administration settings area, you can choose to:
 
 ***Doughnut Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\DoughnutChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -270,8 +259,6 @@ In the administration settings area, you can choose to:
 ---
 
 ***Pie Chart***
-
-You can set the default values in the `Bonfire\Widgets\Config\PieChart` Class
 
 In the administration settings area, you can choose to:
 
@@ -285,8 +272,6 @@ In the administration settings area, you can choose to:
 
 ***Polar Area Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\PolarAreaChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -298,8 +283,6 @@ In the administration settings area, you can choose to:
 ---
 
 ### Log activity ###
-
-You can set the default values in the `Bonfire\Widgets\Config\LogActivity` Class
 
 In the administration settings area, you can choose:
 

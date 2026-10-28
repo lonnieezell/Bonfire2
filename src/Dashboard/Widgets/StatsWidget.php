@@ -16,7 +16,6 @@ use Bonfire\Dashboard\SizeRange;
 use Bonfire\Dashboard\WidgetField;
 use Bonfire\Dashboard\WidgetValues;
 use Bonfire\Widgets\Types\Stats\StatsItem;
-use Bonfire\Widgets\WidgetOptions;
 
 /**
  * A StatsItem as a stat card.
@@ -52,7 +51,7 @@ class StatsWidget extends ItemWidget
 
     public function fields(): array
     {
-        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true, key: WidgetOptions::forAlias('stats')->key('showLink'))];
+        return [WidgetField::toggle('showLink', lang('Widgets.showDetailLink'), default: true, key: 'Stats.stats_showLink')];
     }
 
     public function render(WidgetValues $values): string

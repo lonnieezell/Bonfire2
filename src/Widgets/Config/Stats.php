@@ -13,12 +13,12 @@ namespace Bonfire\Widgets\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
+/**
+ * Where the settings library stores the Stats widgets' defaults
+ * (Stats.stats_showLink) and every widget's enabled switch
+ * (Stats.Stats_userGroups643, ...), so it must stay. The defaults are those
+ * of the widgets' fields().
+ */
 class Stats extends BaseConfig
 {
-    /**
-     * --------------------------------------------------------------------------
-     * Show the Link "View Detail"
-     * --------------------------------------------------------------------------
-     */
-    public bool $stats_showLink = true;
 }
