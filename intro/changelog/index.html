@@ -1861,6 +1861,23 @@ the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire
 in place. <code>DashboardCells::quickLinks()</code> is deprecated. Building widgets is documented in
 <a href="../../building_admin_modules/dashboard_widgets/">Dashboard Widgets</a>.</p>
 <h2 id="28-october-2026-breaking-change">28 October 2026 (breaking change)</h2>
+<p>Settings → Widgets is gone. Permissions decide who may see a widget, and each admin's settings for a placed widget
+decide how it looks, so the page's switches and defaults repeated them. Every widget is now offered to anyone who holds
+its <code>permission()</code>: a widget switched off there is offered again. A placed widget follows its fields' coded
+<code>default</code> until the admin changes a setting, so a site-wide default saved there, such as a chart's color scheme, no
+longer applies. Run <code>php spark migrate --all</code>: a migration forgets those stored values. Delete any published copy
+of the removed Config classes below (such as <code>app/Config/Stats.php</code>), which extends a class that is gone. This
+replaces what the notes below say about Settings → Widgets. <strong>Reset site default</strong> has moved into the dashboard's edit
+bar, next to <strong>Save as site default</strong>, for admins with <code>widgets.settings</code> (see
+<a href="../../modules/customizing_the_dashboard/#the-site-default">Customizing the Dashboard</a>). Code that used the removed
+API: <code>WidgetField</code>'s factories no longer take <code>key:</code> (a key passed by position now lands in <code>description</code>), and
+<code>WidgetField::inherited()</code> is gone (read <code>default</code>); <code>Bonfire\Widgets\WidgetOptions</code> and the
+<code>Bonfire\Widgets\Config\Stats</code>, <code>LineChart</code>, <code>BarChart</code>, <code>DoughnutChart</code>, <code>PieChart</code>, <code>PolarAreaChart</code> and
+<code>LogActivity</code> classes are gone; <code>ItemSettings</code> keeps only <code>widgetId()</code>; and <code>ItemWidget::available()</code> is gone. The
+<code>widgets-settings</code> and <code>widgets-reset-layout</code> routes are gone; the reset is now <code>dashboard-site-layout-reset</code>.</p>
+<p>The five <em>User classification by group</em> charts (line, bar, doughnut, pie and polar area) are gone: <strong>Users by group</strong>
+shows the same numbers. Saved dashboards that placed one lose it: add Users by group from the widget library. The
+<em>User Groups</em> stat card stays. <code>ChartsItem</code> is unchanged, so modules can still add charts of their own.</p>
 <p>Log activity is now a dashboard widget of its own, <code>Bonfire\Tools\Widgets\LogActivity</code>, like Recent errors. It
 keeps its id <code>logs:logActivity</code>, so saved layouts keep it in place, and its days and Debug defaults in Settings →
 Widgets keep their saved values. It no longer has a switch under <em>Available widgets</em>: every admin with <code>logs.view</code>

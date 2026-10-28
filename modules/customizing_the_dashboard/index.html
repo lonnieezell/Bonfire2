@@ -1745,8 +1745,8 @@ are dropped on save, and a layout holds at most 20 sections.</p>
 The settings are your own: they change that widget on your dashboard only. <strong>Apply</strong> keeps them as part of your
 edit, so undo, <strong>Cancel</strong> and <strong>Save layout</strong> cover them like any other change, and the widget shows <em>Changes apply on
 save</em> until you save. A widget you just added can be set up before you save, too.</p>
-<p>Until you change a setting, it follows the site-wide value a site admin sets in <strong>Settings → Widgets</strong>. Once you change
-it, yours is kept. <strong>Reset to defaults</strong> fills the panel with the site-wide values again. Widgets without settings,
+<p>Until you change a setting, it uses the widget's default. Once you change it, yours is kept. <strong>Reset to defaults</strong>
+fills the panel with the widget's defaults again. Widgets without settings,
 such as Quick Links, have no sliders button.</p>
 <table>
 <thead>
@@ -1823,8 +1823,8 @@ Dashboard config file (see <a href="../dashboard/#configuration">The Dashboard</
 shown as the site default, which every admin without their own layout then sees, and forgets the saver's own layout so
 they follow it too. Other admins who customized keep theirs. Widgets the saver may not see aren't in their editor, so
 they aren't in the saved default either.</p>
-<p><strong>Settings → Widgets → Reset site default</strong> forgets the stored site default, so it goes back to the configured
-<code>$layout</code>. Admins' own layouts are kept.</p>
+<p><strong>Reset site default</strong>, next to it in the edit bar, forgets the stored site default, so it goes back to the configured
+<code>$layout</code>. It asks first. Admins' own layouts are kept.</p>
 <p>The dashboard picks the first of these that exists:</p>
 <ol>
 <li>the admin's own saved layout;</li>
@@ -1832,10 +1832,7 @@ they aren't in the saved default either.</p>
 <li>the <code>$layout</code> of the Dashboard config file, or, when that is <code>null</code>, the plain cells of <code>$cells</code> in order.</li>
 </ol>
 <h2 id="which-widgets-are-available">Which widgets are available</h2>
-<p><strong>Settings → Widgets</strong> decides which widgets are available to everyone. Every widget is available until a site admin
-switches it off. A switched-off widget is left out of every library and every layout. Quick Links, Users by group,
-Newest users and Recent errors have no switch there: they are always available.</p>
-<p>A widget can also need a permission. Admins who lack it don't see it in their library or on their dashboard, its
+<p>A widget's permission decides who may use it. Admins who lack it don't see it in their library or on their dashboard, its
 data is never fetched for them, and it is dropped from any layout they save. The built-in widgets need:</p>
 <table>
 <thead>
@@ -1850,7 +1847,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 <td><code>users.list</code></td>
 </tr>
 <tr>
-<td>User Groups and the group charts</td>
+<td>User Groups</td>
 <td><code>groups.settings</code></td>
 </tr>
 <tr>
