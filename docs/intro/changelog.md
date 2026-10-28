@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 28 October 2026
 
+The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
+A widget's `group()` gives its module's name; the type keys `quickLinks`, `stats`, `charts` and `custom` still work,
+each under its own heading. A `StatsItem` or `ChartsItem` takes `'module' => '…'` (see
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)). With the library open, the page now widens by
+its width instead of narrowing the dashboard, where the screen has room.
+
 The sidebar now shows **Settings** as a single link to the first settings page you may open, since the settings
 pages list one another in their own nav. A menu collection opts into this with `setPageNav()`. Installs that
 published the Admin theme keep the old expanding Settings menu until they copy the new
@@ -34,6 +40,16 @@ in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is docu
 [Dashboard Widgets](../building_admin_modules/dashboard_widgets.md).
 
 ## 28 October 2026 (breaking change)
+
+**Users by group** is now a bar list: each group, a bar scaled to the largest one, and its number of users, with a
+setting to sort by count or by name. It is a new widget, `users:byGroup`, in place of the *Users by Group* stat card
+(`stats:usersExpTable693`), which is gone. Saved dashboards that placed the stat card lose it: re-add Users by group
+from the widget library. Two new widgets: **Newest users** (the latest users to join, linking to each; needs
+`users.list`) and **Recent errors** (the newest errors, or errors and warnings, across the log files, linking to each
+log file; needs `logs.view`). The default dashboard now has Users by group and Newest users in its **Users** section, in place of the
+Users in Recycler stat, and Log activity and Recent errors side by side in **Monitoring** (see
+[The Dashboard](../modules/dashboard.md#configuration)). Installs that published the Admin theme need
+the new `.bf-list-card`, `.bf-bars` and `.bf-rows` rules of `themes/Admin/css/admin.css`.
 
 Lists have a shared system for row and bulk actions (see [Row and Bulk Actions](../building_admin_modules/actions.md)):
 an action is one class, registered on a named list, run through `POST admin/actions/{list}/{action}` with permission,

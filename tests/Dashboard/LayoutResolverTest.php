@@ -31,7 +31,7 @@ final class LayoutResolverTest extends TestCase
     use RendersDashboard;
 
     private const QUICK_LINKS = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
-    private const DEFAULT_IDS = [self::QUICK_LINKS, 'stats:usersExpTable693', 'stats:usersInRecycler693', 'logs:logActivity'];
+    private const DEFAULT_IDS = [self::QUICK_LINKS, 'users:byGroup', 'users:newest', 'logs:logActivity', 'tools:recentErrors'];
 
     protected $refresh = true;
 
@@ -71,7 +71,7 @@ final class LayoutResolverTest extends TestCase
         $this->assertSame(['', 'Users', 'Monitoring'], array_column($layout->sections, 'title'));
         $this->assertSame(self::DEFAULT_IDS, $layout->ids());
         $this->assertSame(
-            [Size::Full, Size::Half, Size::Half, Size::Full],
+            [Size::Full, Size::Half, Size::Half, Size::Half, Size::Half],
             array_merge(...array_map(static fn ($section) => array_column($section->widgets, 'size'), $layout->sections)),
         );
     }
@@ -107,7 +107,7 @@ final class LayoutResolverTest extends TestCase
 
         $this->assertNotContains('charts:usersByGroupBar345', $resolver->resolve()->ids());
         $this->assertFalse($resolver->includes('charts:usersByGroupBar345'));
-        $this->assertTrue($resolver->includes('stats:usersInRecycler693'));
+        $this->assertTrue($resolver->includes('logs:logActivity'));
         $this->assertTrue($resolver->includes(self::QUICK_LINKS));
     }
 

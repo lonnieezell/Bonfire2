@@ -28,10 +28,10 @@ final class CustomizeDashboardTest extends TestCase
     private const QUICK_LINKS    = 'cell:Bonfire\Dashboard\DashboardCells::quickLinks';
     private const DEFAULT_LAYOUT = ['version' => 1, 'sections' => [
         ['title' => '', 'widgets' => [['id' => self::QUICK_LINKS, 'size' => 'full']]],
-        ['title' => 'Users', 'widgets' => [['id' => 'stats:usersExpTable693', 'size' => 'half'], ['id' => 'stats:usersInRecycler693', 'size' => 'half']]],
-        ['title' => 'Monitoring', 'widgets' => [['id' => 'logs:logActivity', 'size' => 'full']]],
+        ['title' => 'Users', 'widgets' => [['id' => 'users:byGroup', 'size' => 'half'], ['id' => 'users:newest', 'size' => 'half']]],
+        ['title' => 'Monitoring', 'widgets' => [['id' => 'logs:logActivity', 'size' => 'half'], ['id' => 'tools:recentErrors', 'size' => 'half']]],
     ]];
-    private const DEFAULT_IDS = [self::QUICK_LINKS, 'stats:usersExpTable693', 'stats:usersInRecycler693', 'logs:logActivity'];
+    private const DEFAULT_IDS = [self::QUICK_LINKS, 'users:byGroup', 'users:newest', 'logs:logActivity', 'tools:recentErrors'];
 
     protected $refresh = true;
     private User $user;
@@ -75,12 +75,12 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testSavingDropsUnknownUnavailableAndDuplicateIds(): void
     {
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Stats_userGroups643', false);
 
         $this->save($this->user, [['title' => '', 'widgets' => [
             ['id' => 'stats:usersInRecycler693', 'size' => 'quarter'],
             ['id' => 'stats:nope', 'size' => 'quarter'],
-            ['id' => 'stats:usersExpTable693', 'size' => 'quarter'],
+            ['id' => 'stats:userGroups643', 'size' => 'quarter'],
             ['id' => 'stats:usersInRecycler693', 'size' => 'quarter'],
         ]]])->assertOK();
 
@@ -160,17 +160,17 @@ final class CustomizeDashboardTest extends TestCase
     public function testAFreshDashboardShowsTheDefaultLayoutAndOffersEveryWidgetInThePalette(): void
     {
         setting()->flush();
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Logs_logActivity', false);
 
         $entries = $this->paletteEntries($this->dashboardHtml($this->user));
 
-        $this->assertSame([self::QUICK_LINKS, 'stats:usersInRecycler693', 'logs:logActivity'], $this->placedIds($this->user));
+        $this->assertSame([self::QUICK_LINKS, 'users:byGroup', 'users:newest', 'tools:recentErrors'], $this->placedIds($this->user));
         $this->assertTrue($entries[self::QUICK_LINKS]['placed']);
-        $this->assertTrue($entries['stats:usersInRecycler693']['placed']);
-        $this->assertTrue($entries['logs:logActivity']['placed']);
-        $this->assertFalse($entries['stats:userGroups643']['placed']);
+        $this->assertTrue($entries['users:byGroup']['placed']);
+        $this->assertTrue($entries['tools:recentErrors']['placed']);
+        $this->assertFalse($entries['stats:usersInRecycler693']['placed']);
         $this->assertFalse($entries['charts:usersByGroupBar345']['placed']);
-        $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
+        $this->assertArrayNotHasKey('logs:logActivity', $entries);
     }
 
     public function testAnInstallListingTheOldQuickLinksCellRendersItOnce(): void
@@ -186,7 +186,7 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testThePaletteListsAvailableWidgetsMarkingPlacedOnes(): void
     {
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Charts_usersByGroupPie223', false);
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'quarter']]]]);
 
         $entries = $this->paletteEntries($this->dashboardHtml($this->user));
@@ -194,9 +194,9 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertTrue($entries['stats:usersInRecycler693']['placed']);
         $this->assertFalse($entries['stats:userGroups643']['placed']);
         $this->assertFalse($entries[self::QUICK_LINKS]['placed']);
-        $this->assertArrayNotHasKey('stats:usersExpTable693', $entries);
-        $this->assertSame('stats', $entries['stats:userGroups643']['group']);
-        $this->assertSame('quickLinks', $entries[self::QUICK_LINKS]['group']);
+        $this->assertArrayNotHasKey('charts:usersByGroupPie223', $entries);
+        $this->assertSame(esc(lang('Groups.groupsModTitle'), 'attr'), $entries['stats:userGroups643']['group']);
+        $this->assertSame(esc(lang('Bonfire.dashboard'), 'attr'), $entries[self::QUICK_LINKS]['group']);
     }
 
     public function testEachPaletteEntryCarriesAPlaceholderTileAtItsDefaultSize(): void
@@ -216,12 +216,12 @@ final class CustomizeDashboardTest extends TestCase
 
     public function testAWidgetMadeAvailableLaterOnlyAppearsInACustomizedUsersPalette(): void
     {
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Charts_usersByGroupPie223', false);
         $this->save($this->user, [['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'quarter']]]]);
-        setting('Stats.Stats_usersExpTable693', 'on');
+        setting('Stats.Charts_usersByGroupPie223', 'on');
 
         $this->assertSame(['stats:usersInRecycler693'], $this->placedIds($this->user));
-        $this->assertFalse($this->paletteEntries($this->dashboardHtml($this->user))['stats:usersExpTable693']['placed']);
+        $this->assertFalse($this->paletteEntries($this->dashboardHtml($this->user))['charts:usersByGroupPie223']['placed']);
     }
 
     public function testChangesAreAnnouncedThroughALiveRegion(): void

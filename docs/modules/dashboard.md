@@ -7,8 +7,8 @@ The Dashboard is the first page you seen when you log into the admin area. It pr
 By default, the Dashboard displays:
 
 - the quick links;
-- a **Users** section with the Users by Group and Users in Recycler stats, each half the width;
-- a **Monitoring** section with Log activity.
+- a **Users** section with Users by group and Newest users, each half the width;
+- a **Monitoring** section with Log activity and Recent errors, each half the width.
 
 That default is the `$layout` property of the Dashboard config file, in the same format a saved layout uses. Change
 it to give every admin who hasn't customized their dashboard a different one; set it to `null` and the default is
@@ -22,11 +22,12 @@ public ?array $layout = [
             ['id' => 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' => 'full'],
         ]],
         ['title' => 'Users', 'widgets' => [
-            ['id' => 'stats:usersExpTable693', 'size' => 'half'],
-            ['id' => 'stats:usersInRecycler693', 'size' => 'half'],
+            ['id' => 'users:byGroup', 'size' => 'half'],
+            ['id' => 'users:newest', 'size' => 'half'],
         ]],
         ['title' => 'Monitoring', 'widgets' => [
-            ['id' => 'logs:logActivity', 'size' => 'full'],
+            ['id' => 'logs:logActivity', 'size' => 'half'],
+            ['id' => 'tools:recentErrors', 'size' => 'half'],
         ]],
     ],
 ];

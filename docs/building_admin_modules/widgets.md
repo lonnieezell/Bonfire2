@@ -91,7 +91,7 @@ The FontAwesome icon
 ### Fetching data only when it is shown
 
 `addValue()` and `addValueByFreeQuery()` only run their query when the dashboard is being displayed and the widget is
-on the viewer's dashboard: in their layout and not switched off in the widgets settings. When you build a value yourself, as `buildTableUsersByGroup()` does, ask the same
+on the viewer's dashboard: in their layout and not switched off in the widgets settings. When you build a value yourself, ask the same
 question before doing the work:
 
 ```php

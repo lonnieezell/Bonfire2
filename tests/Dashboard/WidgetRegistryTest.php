@@ -69,7 +69,7 @@ final class WidgetRegistryTest extends TestCase
         $widget = service('dashboard')->widget('stats:usersInRecycler693');
 
         $this->assertNotNull($widget);
-        $this->assertSame('stats', $widget->group());
+        $this->assertSame(lang('Users.usersModTitle'), $widget->group());
         $this->assertSame('fa fa-users', $widget->icon());
         $this->assertSame(Size::Quarter, $widget->sizes()->default);
     }
@@ -77,7 +77,7 @@ final class WidgetRegistryTest extends TestCase
     public function testTheBuiltInUsersAndGroupsWidgetsDeclarePermissions(): void
     {
         $this->assertSame('users.list', service('dashboard')->widget('stats:usersInRecycler693')->permission());
-        $this->assertSame('users.list', service('dashboard')->widget('stats:usersExpTable693')->permission());
+        $this->assertSame('users.list', service('dashboard')->widget('users:byGroup')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('charts:usersByGroupBar345')->permission());
         $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
@@ -88,7 +88,7 @@ final class WidgetRegistryTest extends TestCase
         $widget = service('dashboard')->widget('charts:usersByGroupBar345');
 
         $this->assertNotNull($widget);
-        $this->assertSame('charts', $widget->group());
+        $this->assertSame(lang('Groups.groupsModTitle'), $widget->group());
         $this->assertSame(Size::Half, $widget->sizes()->default);
     }
 
@@ -97,7 +97,7 @@ final class WidgetRegistryTest extends TestCase
         $widget = service('dashboard')->widget('logs:logActivity');
 
         $this->assertNotNull($widget);
-        $this->assertSame('charts', $widget->group());
+        $this->assertSame(lang('Bonfire.toolsModTitle'), $widget->group());
         $this->assertSame(Size::Full, $widget->sizes()->default);
     }
 
@@ -108,8 +108,31 @@ final class WidgetRegistryTest extends TestCase
         $widget = service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks');
 
         $this->assertInstanceOf(QuickLinksWidget::class, $widget);
-        $this->assertSame('quickLinks', $widget->group());
-        $this->assertSame(['quickLinks'], array_keys(array_intersect_key(service('dashboard')->grouped(), ['quickLinks' => 1, 'custom' => 1])));
+        $this->assertSame(lang('Bonfire.dashboard'), $widget->group());
+    }
+
+    public function testTheLibraryListsTheBuiltInWidgetsByModuleInNameOrder(): void
+    {
+        setting('Dashboard.cells', []);
+        $user = $this->createUser();
+        $user->addGroup('superadmin');
+        auth()->login($user);
+
+        $ids = array_map(static fn (array $widgets) => array_map(static fn ($widget) => $widget->id(), $widgets), service('dashboard')->grouped());
+
+        $this->assertSame([lang('Bonfire.dashboard'), lang('Bonfire.toolsModTitle'), lang('Groups.groupsModTitle'), lang('Users.usersModTitle')], array_keys($ids));
+        $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $ids[lang('Bonfire.dashboard')]);
+        $this->assertEqualsCanonicalizing(['tools:recentErrors', 'logs:logActivity'], $ids[lang('Bonfire.toolsModTitle')]);
+        $this->assertContains('stats:userGroups643', $ids[lang('Groups.groupsModTitle')]);
+        $this->assertContains('charts:usersByGroupBar345', $ids[lang('Groups.groupsModTitle')]);
+        $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
+    }
+
+    public function testAWidgetGroupedByTypeIsListedUnderThatTypesHeading(): void
+    {
+        service('dashboard')->register(new TestWidget('test:hello'));
+
+        $this->assertSame('test:hello', service('dashboard')->grouped()[lang('Bonfire.groupCustom')][0]->id());
     }
 
     public function testCustomCellsBecomeWidgets(): void
@@ -156,11 +179,11 @@ final class WidgetRegistryTest extends TestCase
         $user = $this->createUser();
         $user->addPermission('users.list');
         $this->actingAs($user);
-        setting('Stats.Stats_usersExpTable693', false);
+        setting('Stats.Stats_userGroups643', false);
 
         $available = service('dashboard')->available();
 
         $this->assertArrayHasKey('stats:usersInRecycler693', $available);
-        $this->assertArrayNotHasKey('stats:usersExpTable693', $available);
+        $this->assertArrayNotHasKey('stats:userGroups643', $available);
     }
 }

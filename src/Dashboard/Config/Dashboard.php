@@ -23,11 +23,12 @@ class Dashboard extends BaseConfig
                 ['id' => 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' => 'full'],
             ]],
             ['title' => 'Users', 'widgets' => [
-                ['id' => 'stats:usersExpTable693', 'size' => 'half'],
-                ['id' => 'stats:usersInRecycler693', 'size' => 'half'],
+                ['id' => 'users:byGroup', 'size' => 'half'],
+                ['id' => 'users:newest', 'size' => 'half'],
             ]],
             ['title' => 'Monitoring', 'widgets' => [
-                ['id' => 'logs:logActivity', 'size' => 'full'],
+                ['id' => 'logs:logActivity', 'size' => 'half'],
+                ['id' => 'tools:recentErrors', 'size' => 'half'],
             ]],
         ],
     ];

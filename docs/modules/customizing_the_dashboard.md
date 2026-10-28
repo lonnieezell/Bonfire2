@@ -45,6 +45,9 @@ such as Quick Links, have no sliders button.
 | Line chart | Show the title, Show the legend, Legend position, Enable animation, Line tension |
 | Bar, doughnut, pie and polar area charts | Show the title, Show the legend, Legend position, Enable animation, Color scheme |
 | Log activity | Days to show, Hide Debug entries |
+| Users by group | Sort by most users first or by group name |
+| Newest users | Users to show (1–10) |
+| Recent errors | Entries to show (1–20), Show errors only or errors and warnings |
 
 **Save as site default** carries each widget's settings into the site default.
 
@@ -88,16 +91,17 @@ The dashboard picks the first of these that exists:
 ## Which widgets are available
 
 **Settings → Widgets** decides which widgets are available to everyone. Every widget is available until a site admin
-switches it off. A switched-off widget is left out of every library and every layout.
+switches it off. A switched-off widget is left out of every library and every layout. Quick Links, Users by group,
+Newest users and Recent errors have no switch there: they are always available.
 
 A widget can also need a permission. Admins who lack it don't see it in their library or on their dashboard, its
 data is never fetched for them, and it is dropped from any layout they save. The built-in widgets need:
 
 | Widget | Permission |
 | --- | --- |
-| Users by Group, Users in Recycler | `users.list` |
+| Users by group, Newest users, Users in Recycler | `users.list` |
 | User Groups and the group charts | `groups.settings` |
-| Log activity | `logs.view` |
+| Log activity, Recent errors | `logs.view` |
 | Quick Links | none |
 
 A widget that becomes available later shows up in the library of admins who have customized, never in their layout.

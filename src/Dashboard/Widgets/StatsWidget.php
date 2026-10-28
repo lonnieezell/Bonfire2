@@ -42,7 +42,7 @@ class StatsWidget extends ItemWidget
 
     public function group(): string
     {
-        return 'stats';
+        return $this->moduleOr('stats');
     }
 
     public function sizes(): SizeRange

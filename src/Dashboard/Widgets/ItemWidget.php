@@ -50,6 +50,14 @@ abstract class ItemWidget implements DashboardWidget
     }
 
     /**
+     * The item's own module(), if it declares one, else the heading of its type.
+     */
+    protected function moduleOr(string $type): string
+    {
+        return (method_exists($this->item, 'module') ? $this->item->module() : null) ?? $type;
+    }
+
+    /**
      * The item's own permission(), if it declares one.
      */
     public function permission(): ?string

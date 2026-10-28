@@ -63,6 +63,14 @@ class LogActivity implements Item
     }
 
     /**
+     * Its heading in the widget library.
+     */
+    public function module(): string
+    {
+        return lang('Bonfire.toolsModTitle');
+    }
+
+    /**
      * Who may see the widget on their dashboard.
      */
     public function permission(): string

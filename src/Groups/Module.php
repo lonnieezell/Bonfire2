@@ -46,6 +46,7 @@ class Module extends BaseModule
             'url'        => ADMIN_AREA . '/settings/groups',
             'faIcon'     => 'fa fa-users',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         // alternative way of retrieving group number (groups "in use"):
         // $statsItem->addValueByFreeQuery('SELECT COUNT(DISTINCT "group") AS groups FROM auth_groups_users;');
@@ -57,6 +58,7 @@ class Module extends BaseModule
             'id'         => 'usersByGroupLine123',
             'cssClass'   => 'col-6',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         $statsItem->addDataset('auth_groups_users', 'group', 'user_id');
         $widgets->widget('charts')->collection('charts')->addItem($statsItem);
@@ -67,6 +69,7 @@ class Module extends BaseModule
             'id'         => 'usersByGroupBar345',
             'cssClass'   => 'col-6',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         $statsItem1->addDataset('auth_groups_users', 'group', 'user_id');
         $widgets->widget('charts')->collection('charts')->addItem($statsItem1);
@@ -77,6 +80,7 @@ class Module extends BaseModule
             'id'         => 'usersByGroupDou654',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         $statsItem2->addDataset('auth_groups_users', 'group', 'user_id');
         $widgets->widget('charts')->collection('charts')->addItem($statsItem2);
@@ -87,6 +91,7 @@ class Module extends BaseModule
             'id'         => 'usersByGroupPie223',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         $statsItem3->addDataset('auth_groups_users', 'group', 'user_id');
         $widgets->widget('charts')->collection('charts')->addItem($statsItem3);
@@ -97,6 +102,7 @@ class Module extends BaseModule
             'id'         => 'usersByGroupPiePolar645',
             'cssClass'   => 'col-3',
             'permission' => 'groups.settings',
+            'module'     => lang('Groups.groupsModTitle'),
         ]);
         $statsItem4->addDataset('auth_groups_users', 'group', 'user_id');
         $widgets->widget('charts')->collection('charts')->addItem($statsItem4);
