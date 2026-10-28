@@ -44,6 +44,7 @@ final class LayoutResolverTest extends TestCase
             Services::resetSingle($service);
         }
 
+        Services::resetSingle('dashboardContext');
         setting()->flush();
 
         parent::tearDown();

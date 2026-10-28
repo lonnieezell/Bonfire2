@@ -12,4 +12,10 @@ class Dashboard extends BaseConfig
         'Bonfire\Widgets\Cells\WidgetCells::logs',
         'Bonfire\Widgets\Cells\WidgetCells::charts',
     ];
+
+    /**
+     * The site default layout (global) or a user's own (context "user:<id>"),
+     * in the format of Layout::toArray(). Null means derived from $cells.
+     */
+    public ?array $layout = null;
 }

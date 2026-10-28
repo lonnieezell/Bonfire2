@@ -41,6 +41,7 @@ final class DashboardLayoutTest extends TestCase
         // Rendered charts leave their scripts on the shared page metadata
         Services::resetSingle('viewMeta');
 
+        Services::resetSingle('dashboardContext');
         setting()->flush();
 
         parent::tearDown();
@@ -101,7 +102,7 @@ final class DashboardLayoutTest extends TestCase
     {
         $html = $this->dashboard();
 
-        $this->assertMatchesRegularExpression('#<section class="bf-dashboard-section">\s*<div class="bf-dashboard-grid">#', $html);
+        $this->assertMatchesRegularExpression('#<section class="bf-dashboard-section">\s*<div class="bf-dashboard-grid" data-section>#', $html);
         $this->assertStringNotContainsString('bf-dashboard-section-title', $html);
     }
 

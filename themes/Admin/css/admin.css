@@ -1854,6 +1854,50 @@ input[type="checkbox"]:indeterminate {
     .bf-dashboard-grid > .bf-span-9 { grid-column: span 9; }
 }
 
+/* Dashboard edit mode: drag handles on tiles, their content dimmed and inert. */
+.bf-dashboard-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.bf-widget {
+    position: relative;
+}
+
+.bf-widget-handle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    padding: 4px 8px;
+    border: 1px solid var(--bf-border);
+    border-radius: 6px;
+    background: var(--bf-surface);
+    color: var(--bf-text);
+    cursor: grab;
+}
+
+.bf-dashboard.is-editing .bf-widget {
+    outline: 1px dashed var(--bf-border);
+    outline-offset: 2px;
+    border-radius: 12px;
+}
+
+.bf-dashboard.is-editing .bf-widget-body {
+    opacity: 0.55;
+    pointer-events: none;
+    user-select: none;
+}
+
+.bf-widget.sortable-ghost {
+    opacity: 0.4;
+}
+
+.bf-dashboard-editbar-text {
+    margin-right: auto;
+}
+
 /* Log activity widget: a stacked bar per log file, most severe level at the bottom. */
 .bf-log-activity > .bf-card-head {
     display: flex;

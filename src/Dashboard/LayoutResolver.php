@@ -13,12 +13,14 @@ namespace Bonfire\Dashboard;
 
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
+use InvalidArgumentException;
 
 /**
  * Decides which widgets the viewer's dashboard shows, and in what order.
  *
- * The default layout is one untitled section holding Dashboard.cells in
- * order, the stats, logs and charts cells expanded into their available items.
+ * A user's own Dashboard.layout comes first. Otherwise the default layout
+ * is one untitled section holding Dashboard.cells in order, the stats, logs
+ * and charts cells expanded into their available items.
  */
 class LayoutResolver
 {
@@ -27,6 +29,21 @@ class LayoutResolver
     }
 
     public function resolve(): Layout
+    {
+        $stored = $this->stored();
+
+        if ($stored !== null) {
+            try {
+                return (new LayoutValidator($this->registry))->validate($stored);
+            } catch (InvalidArgumentException) {
+                // A layout that no longer reads falls back to the default
+            }
+        }
+
+        return $this->derived();
+    }
+
+    private function derived(): Layout
     {
         $available  = $this->registry->available();
         $placements = [];
@@ -56,16 +73,37 @@ class LayoutResolver
     public function includes(string $id): bool
     {
         [$prefix, $rest] = explode(':', $id, 2) + ['', ''];
+        $kind            = WidgetKind::tryFrom(ucfirst($prefix));
+        $stored          = $this->stored();
+
+        if ($stored !== null) {
+            $ids = [];
+
+            foreach ((array) ($stored['sections'] ?? []) as $section) {
+                $ids = [...$ids, ...array_column((array) ($section['widgets'] ?? []), 'id')];
+            }
+
+            return in_array($id, $ids, true) && ($kind === null || (new ItemSettings($kind, $rest))->enabled());
+        }
 
         if ($prefix === 'cell') {
             return in_array($rest, $this->cells(), true);
         }
 
-        $kind = WidgetKind::tryFrom(ucfirst($prefix));
-
         return $kind !== null
             && in_array(array_search($kind, WidgetRegistry::ITEM_CELLS, true), $this->cells(), true)
             && (new ItemSettings($kind, $rest))->enabled();
+    }
+
+    /**
+     * The viewer's own layout as stored, if they saved one.
+     */
+    private function stored(): ?array
+    {
+        $userId = auth()->id();
+        $layout = $userId === null ? null : setting()->get('Dashboard.layout', 'user:' . $userId);
+
+        return is_array($layout) ? $layout : null;
     }
 
     /**

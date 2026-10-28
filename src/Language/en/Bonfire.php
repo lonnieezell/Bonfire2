@@ -72,6 +72,12 @@ return [
     'goodMorning'   => 'Good morning, {0}',
     'goodAfternoon' => 'Good afternoon, {0}',
     'goodEvening'   => 'Good evening, {0}',
+    'customize'     => 'Customize',
+    'customizing'   => 'Drag widgets to rearrange your dashboard',
+    'resetLayout'   => 'Reset to default',
+    'resetLayoutQ'  => 'Reset your dashboard to the default layout?',
+    'dragWidget'    => 'Drag to move {0}',
+    'layoutFailed'  => 'Your layout could not be saved. Try again.',
 
     // users module Search template:
     'email'      => 'Email',

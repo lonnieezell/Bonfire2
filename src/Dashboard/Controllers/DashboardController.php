@@ -13,6 +13,11 @@ namespace Bonfire\Dashboard\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Dashboard\LayoutResolver;
+use Bonfire\Dashboard\LayoutValidator;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
+use InvalidArgumentException;
+use JsonException;
 
 /**
  * Class Dashboard
@@ -26,9 +31,48 @@ class DashboardController extends AdminController
      */
     public function index()
     {
+        service('viewMeta')->addScript([
+            'src'            => 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
+            'integrity'      => 'sha256-bQqDH8GbS66FF5etM5MVfoYa+3hiRZwRImNZsn4sQzc=',
+            'crossorigin'    => 'anonymous',
+            'referrerpolicy' => 'no-referrer',
+        ]);
+
         echo $this->render('Bonfire\Dashboard\Views\dashboard', [
             'layout'    => (new LayoutResolver(service('dashboard')))->resolve(),
             'dashboard' => service('dashboard'),
         ]);
+    }
+
+    /**
+     * Stores the posted layout (JSON) as the current user's own.
+     */
+    public function saveLayout(): ResponseInterface
+    {
+        try {
+            $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
+            $layout  = (new LayoutValidator(service('dashboard')))->validate($payload);
+        } catch (InvalidArgumentException|JsonException) {
+            return $this->response->setStatusCode(400)->setJSON(['saved' => false]);
+        }
+
+        setting()->set('Dashboard.layout', $layout->toArray(), $this->userContext());
+
+        return $this->response->setJSON(['saved' => true]);
+    }
+
+    /**
+     * Forgets the current user's layout, back to the default.
+     */
+    public function resetLayout(): RedirectResponse
+    {
+        setting()->forget('Dashboard.layout', $this->userContext());
+
+        return redirect()->to(ADMIN_AREA);
+    }
+
+    private function userContext(): string
+    {
+        return 'user:' . auth()->id();
     }
 }

@@ -40,4 +40,23 @@ final readonly class Layout
 
         return $ids;
     }
+
+    /**
+     * The stored format, version 1.
+     *
+     * @return array{version: int, sections: list<array{title: string, widgets: list<array{id: string, size: string}>}>}
+     */
+    public function toArray(): array
+    {
+        return [
+            'version'  => 1,
+            'sections' => array_map(static fn (Section $section) => [
+                'title'   => $section->title,
+                'widgets' => array_map(static fn (Placement $placement) => [
+                    'id'   => $placement->id,
+                    'size' => $placement->size->value,
+                ], $section->widgets),
+            ], $this->sections),
+        ];
+    }
 }
