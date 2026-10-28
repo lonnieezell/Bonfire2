@@ -1865,17 +1865,54 @@ input[type="checkbox"]:indeterminate {
     position: relative;
 }
 
-.bf-widget-handle {
+.bf-widget-tools {
     position: absolute;
     top: 8px;
     right: 8px;
     z-index: 2;
+    display: flex;
+    gap: 4px;
+}
+
+.bf-widget-handle,
+.bf-widget-tool,
+.bf-section-handle {
     padding: 4px 8px;
     border: 1px solid var(--bf-border);
     border-radius: 6px;
     background: var(--bf-surface);
     color: var(--bf-text);
+}
+
+.bf-widget-handle,
+.bf-section-handle {
     cursor: grab;
+}
+
+.bf-dashboard-section-title {
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--bf-border);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.bf-dashboard-section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.bf-dashboard.is-editing .bf-dashboard-grid {
+    min-height: 80px;
+    padding: 8px;
+    border: 1px dashed var(--bf-border);
+    border-radius: 12px;
+}
+
+.bf-dashboard-add-section {
+    margin-top: 16px;
 }
 
 .bf-dashboard.is-editing .bf-widget {

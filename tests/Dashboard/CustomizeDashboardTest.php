@@ -82,6 +82,39 @@ final class CustomizeDashboardTest extends TestCase
         $this->assertSame(['stats:usersInRecycler693'], $this->renderedIds($this->user));
     }
 
+    public function testSectionsAndSizesPersistAndRender(): void
+    {
+        $this->save($this->user, [
+            ['title' => 'People <b>', 'widgets' => [['id' => 'stats:usersInRecycler693', 'size' => 'lg']]],
+            ['title' => '', 'widgets' => [['id' => 'stats:userGroups643', 'size' => 'sm']]],
+        ])->assertOK();
+
+        $html = $this->dashboard($this->user);
+
+        $this->assertMatchesRegularExpression('#<section class="bf-dashboard-section"[^>]*>\s*<h2 class="bf-dashboard-section-title"[^>]*>People &lt;b&gt;</h2>#', $html);
+        $this->assertSame(1, substr_count($html, 'class="bf-dashboard-section-title"'));
+        $this->assertMatchesRegularExpression('#class="bf-widget bf-span-9" data-widget-id="stats&\#x3A;usersInRecycler693"#', $html);
+    }
+
+    public function testTooManySectionsAreRefused(): void
+    {
+        $this->save($this->user, array_fill(0, 21, ['title' => '', 'widgets' => [['id' => 'stats:usersInRecycler693']]]))
+            ->assertStatus(400);
+    }
+
+    public function testTheSizeMenuOffersTheWidgetsPresets(): void
+    {
+        preg_match('#data-widget-id="stats&\#x3A;usersInRecycler693".*?</ul>#s', $this->dashboard($this->user), $tile);
+        preg_match_all('/data-size-option="(\w+)"/', $tile[0], $options);
+
+        $this->assertSame(['sm', 'md', 'lg', 'full'], $options[1]);
+
+        preg_match('#data-widget-id="logs&\#x3A;logActivity".*?</ul>#s', $this->dashboard($this->logViewer()), $tile);
+        preg_match_all('/data-size-option="(\w+)"/', $tile[0] ?? '', $options);
+
+        $this->assertSame(['md', 'lg', 'full'], $options[1]);
+    }
+
     public function testAMalformedPayloadOrWrongVersionIsRejected(): void
     {
         $this->save($this->user, 'nonsense')->assertStatus(400);
@@ -136,6 +169,13 @@ final class CustomizeDashboardTest extends TestCase
 
         $this->assertNotNull($inLayout->value());
         $this->assertNull($offLayout->value());
+    }
+
+    private function logViewer(): User
+    {
+        setting('Stats.Logs_logActivity', 'on');
+
+        return $this->user;
     }
 
     private function admin(): User

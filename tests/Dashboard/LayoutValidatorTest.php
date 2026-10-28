@@ -13,6 +13,7 @@ namespace Tests\Dashboard;
 
 use Bonfire\Dashboard\LayoutValidator;
 use Bonfire\Dashboard\Size;
+use Bonfire\Dashboard\SizeRange;
 use Bonfire\Dashboard\WidgetRegistry;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -34,7 +35,8 @@ final class LayoutValidatorTest extends TestCase
         setting('Dashboard.cells', []);
         $registry = (new WidgetRegistry())
             ->register(new TestWidget('test:a'))
-            ->register(new TestWidget('test:b'));
+            ->register(new TestWidget('test:b'))
+            ->register(new TestWidget('test:narrow', null, new SizeRange(Size::Small, Size::Small, Size::Medium)));
         $this->validator = new LayoutValidator($registry);
     }
 
@@ -82,6 +84,53 @@ final class LayoutValidatorTest extends TestCase
         $this->assertSame(Size::Medium, $layout->sections[0]->widgets[0]->size);
     }
 
+    public function testASizeOutsideTheWidgetsRangeFallsBackToItsDefault(): void
+    {
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => '', 'widgets' => [['id' => 'test:narrow', 'size' => 'full'], ['id' => 'test:a', 'size' => 'full']]],
+        ]]);
+
+        $this->assertSame(Size::Small, $layout->sections[0]->widgets[0]->size);
+        $this->assertSame(Size::Full, $layout->sections[0]->widgets[1]->size);
+    }
+
+    public function testKeepsSectionsAndTheirTitles(): void
+    {
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => '  Overview ', 'widgets' => [['id' => 'test:a']]],
+            ['title' => '', 'widgets' => [['id' => 'test:b']]],
+        ]]);
+
+        $this->assertSame(['Overview', ''], array_map(static fn ($section) => $section->title, $layout->sections));
+    }
+
+    public function testTrimsLongTitles(): void
+    {
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => str_repeat('é', 150), 'widgets' => [['id' => 'test:a']]],
+        ]]);
+
+        $this->assertSame(str_repeat('é', 100), $layout->sections[0]->title);
+    }
+
+    public function testDropsEmptySections(): void
+    {
+        $layout = $this->validator->validate(['version' => 1, 'sections' => [
+            ['title' => 'Empty', 'widgets' => []],
+            ['title' => 'Only gone widgets', 'widgets' => [['id' => 'test:gone']]],
+            ['title' => 'Kept', 'widgets' => [['id' => 'test:a']]],
+        ]]);
+
+        $this->assertSame(['Kept'], array_map(static fn ($section) => $section->title, $layout->sections));
+    }
+
+    public function testRefusesMoreThanTwentySections(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->validator->validate(['version' => 1, 'sections' => array_fill(0, 21, ['title' => '', 'widgets' => [['id' => 'test:a']]])]);
+    }
+
     public function testStoresAsTheVersionOneFormat(): void
     {
         $layout = $this->validator->validate(['version' => 1, 'sections' => [
@@ -111,6 +160,7 @@ final class LayoutValidatorTest extends TestCase
             'sections missing' => [['version' => 1]],
             'section not list' => [['version' => 1, 'sections' => ['x']]],
             'widgets not list' => [['version' => 1, 'sections' => [['title' => '', 'widgets' => 'x']]]],
+            'title not text'   => [['version' => 1, 'sections' => [['title' => ['x'], 'widgets' => []]]]],
             'widget no id'     => [['version' => 1, 'sections' => [['title' => '', 'widgets' => [['size' => 'sm']]]]]],
         ];
     }

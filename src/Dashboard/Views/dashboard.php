@@ -21,30 +21,29 @@
             </button>
         </div>
 
-		<?php foreach ($layout->sections as $section) : ?>
-            <section class="bf-dashboard-section">
-				<?php if ($section->title !== '') : ?>
-                    <h2 class="bf-dashboard-section-title"><?= esc($section->title) ?></h2>
-				<?php endif ?>
-                <div class="bf-dashboard-grid" data-section>
-					<?php foreach ($section->widgets as $placement) : ?>
-						<?php $widget = $dashboard->widget($placement->id) ?>
-						<?php $html = $widget->render() ?>
-						<?php if ($html === '') {
-						    continue;
-						} ?>
-                        <div class="bf-widget bf-span-<?= $placement->size->columns() ?>" data-widget-id="<?= esc($placement->id, 'attr') ?>" data-size="<?= $placement->size->value ?>">
-                            <button type="button" class="bf-widget-handle" x-show="editing" x-cloak aria-label="<?= esc(lang('Bonfire.dragWidget', [$widget->title()]), 'attr') ?>">
-                                <i class="fas fa-grip-vertical" aria-hidden="true"></i>
-                            </button>
-                            <div class="bf-widget-body" :inert="editing">
-								<?= $html ?>
-                            </div>
-                        </div>
-					<?php endforeach ?>
-                </div>
-            </section>
-		<?php endforeach ?>
+        <div class="bf-dashboard-sections" data-sections>
+			<?php foreach ($layout->sections as $section) : ?>
+				<?php $tiles = '' ?>
+				<?php foreach ($section->widgets as $placement) : ?>
+					<?php $widget = $dashboard->widget($placement->id) ?>
+					<?php $html = $widget->render() ?>
+					<?php if ($html !== '') {
+					    $tiles .= $this->setData(['widget' => $widget, 'placement' => $placement, 'html' => $html])->include('Bonfire\Dashboard\Views\_tile');
+					} ?>
+				<?php endforeach ?>
+				<?= $this->setData(['title' => $section->title, 'tiles' => $tiles])->include('Bonfire\Dashboard\Views\_section') ?>
+			<?php endforeach ?>
+        </div>
+
+        <template x-ref="newSection">
+			<?= $this->setData(['title' => '', 'tiles' => ''])->include('Bonfire\Dashboard\Views\_section') ?>
+        </template>
+
+        <div class="bf-dashboard-add-section" x-show="editing" x-cloak>
+            <button type="button" class="btn btn-outline-secondary btn-sm" @click="addSection()" :disabled="sectionCount >= <?= Bonfire\Dashboard\LayoutValidator::MAX_SECTIONS ?>">
+                <i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Bonfire.addSection') ?>
+            </button>
+        </div>
 
         <div class="bf-floating-bar" x-show="editing" x-cloak>
             <div class="bf-floating-bar-inner bf-dashboard-editbar">

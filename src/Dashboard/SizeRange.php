@@ -22,4 +22,17 @@ final readonly class SizeRange
         public Size $max = Size::Full,
     ) {
     }
+
+    /**
+     * The presets from min to max.
+     *
+     * @return list<Size>
+     */
+    public function presets(): array
+    {
+        return array_values(array_filter(
+            Size::cases(),
+            fn (Size $size) => $size->columns() >= $this->min->columns() && $size->columns() <= $this->max->columns(),
+        ));
+    }
 }

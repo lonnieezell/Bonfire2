@@ -102,7 +102,9 @@ final class DashboardLayoutTest extends TestCase
     {
         $html = $this->dashboard();
 
-        $this->assertMatchesRegularExpression('#<section class="bf-dashboard-section">\s*<div class="bf-dashboard-grid" data-section>#', $html);
+        $sections = substr($html, (int) strpos($html, 'data-sections>'), (int) strpos($html, '<template x-ref="newSection">') - (int) strpos($html, 'data-sections>'));
+
+        $this->assertSame(1, substr_count($sections, '<section class="bf-dashboard-section"'));
         $this->assertStringNotContainsString('bf-dashboard-section-title', $html);
     }
 

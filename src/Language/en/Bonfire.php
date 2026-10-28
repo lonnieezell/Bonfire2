@@ -78,6 +78,16 @@ return [
     'resetLayoutQ'  => 'Reset your dashboard to the default layout?',
     'dragWidget'    => 'Drag to move {0}',
     'layoutFailed'  => 'Your layout could not be saved. Try again.',
+    'widgetMenu'    => 'Options for {0}',
+    'widgetSize'    => 'Size',
+    'sizeSmall'     => 'Small',
+    'sizeMedium'    => 'Medium',
+    'sizeLarge'     => 'Large',
+    'sizeFull'      => 'Full width',
+    'addSection'    => 'Add section',
+    'sectionTitle'  => 'Section heading (optional)',
+    'dragSection'   => 'Drag to move this section',
+    'deleteSection' => 'Delete section',
 
     // users module Search template:
     'email'      => 'Email',
