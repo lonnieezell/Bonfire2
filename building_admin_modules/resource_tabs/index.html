@@ -1321,6 +1321,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resource Tabs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1337,6 +1355,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a tab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-tabs-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the tab's page
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1454,6 +1513,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a tab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-the-tabs-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the tab's page
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1526,33 +1615,98 @@
 
 
 <h1 id="resource-tabs">Resource Tabs</h1>
-<p>Resource tabs are the tabs that are displayed when editing a resource, like an individual User or User Group. 
-They make it possible for you to easily integrate other tabs onto a user without editing the core theme. </p>
-<p>Adding a new tab is typically done from the <code>Module.php</code> for your module. You only need 3 pieces of information
-to create a new tab: a title, the URL to send them to, and (optionally) a permission to check against to see 
-if they can see the tab or not.</p>
-<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">\Bonfire\Resources\ResourceTab</span><span class="p">;</span>
+<p>Resource tabs are the tabs shown when editing a resource: a single User or User Group. They let your module add its
+own tab to those pages without editing Bonfire's views.</p>
+<p>Two resources accept tabs:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Page</th>
+<th>Shown to users with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td><code>admin/users/{id}</code></td>
+<td>access to the page</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td><code>admin/settings/groups/{alias}</code></td>
+<td><code>groups.edit</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="registering-a-tab">Registering a tab</h2>
+<p>Add the tab from the <code>initAdmin()</code> method of your module's <code>Module.php</code>. A tab needs a title, the URL it links to and,
+optionally, a permission:</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Resources\ResourceTab</span><span class="p">;</span>
 
-<span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span> 
+<span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="nx">service</span><span class="p">(</span><span class="s1">'resourceTabs'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addTabFor</span><span class="p">(</span><span class="s1">'user'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">ResourceTab</span><span class="p">([</span>
-        <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Permissions'</span><span class="p">,</span>
-        <span class="s1">'url'</span> <span class="o">=&gt;</span> <span class="s1">'users/(id)/permissions'</span><span class="p">,</span>
-        <span class="s1">'permission'</span> <span class="o">=&gt;</span> <span class="s1">'users.edit'</span>
+        <span class="s1">'title'</span>      <span class="o">=&gt;</span> <span class="s1">'Notes'</span><span class="p">,</span>
+        <span class="s1">'url'</span>        <span class="o">=&gt;</span> <span class="s1">'users/(id)/notes'</span><span class="p">,</span>
+        <span class="s1">'permission'</span> <span class="o">=&gt;</span> <span class="s1">'users.edit'</span><span class="p">,</span>
     <span class="p">]));</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The <code>title</code> is what is displayed to the user on the tab itself.</p>
-<p>If it is set, <code>permission</code> will check the current user against that permission. If they have the permission
-then the tab will display, otherwise it will not be rendered.</p>
-<p>When setting the URL there are a few things to note: </p>
-<ol>
-<li>The <code>ADMIN_AREA</code> constant will be prefixed to the URl you provide. </li>
-<li>To represent the ID of the resource you want to provide the tab to, use the <code>(id)</code> placeholder. This will
-    be replaced by the ID of the current user being edited, by analyzing the current URL.</li>
-</ol>
-<p>As an example, assuming you were on the current url <code>/admin/users/123</code>, the above URL would be 
-<code>/admin/users/123/permissions</code>.</p>
+<ul>
+<li><code>title</code> is the text on the tab.</li>
+<li><code>url</code> is relative to the admin area: <code>ADMIN_AREA</code> is put in front of it. Write <code>(id)</code> where the ID of the resource
+  being edited goes. It is read from the current URL, so on <code>/admin/users/123</code> the tab above links to
+  <code>/admin/users/123/notes</code>. For groups, the ID is the group's alias, such as <code>admin</code>.</li>
+<li><code>permission</code>, if set, hides the tab from users who don't have that permission.</li>
+</ul>
+<p>The tab is shown as the current one when the page's URL matches its link.</p>
+<h2 id="building-the-tabs-page">Building the tab's page</h2>
+<p>The tab only links to a page; your module provides that page. Add a route for it in your module's <code>Config/Routes.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">group</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">,</span> <span class="p">[</span><span class="s1">'namespace'</span> <span class="o">=&gt;</span> <span class="s1">'\App\Modules\Notes\Controllers'</span><span class="p">],</span> <span class="k">static</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$routes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'users/(:num)/notes'</span><span class="p">,</span> <span class="s1">'NotesController::index/$1'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>Then a controller that loads the user and renders a view:</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">App\Modules\Notes\Controllers</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Bonfire\Core\AdminController</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Users\Models\UserModel</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">NotesController</span> <span class="k">extends</span> <span class="nx">AdminController</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$userId</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'users.edit'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.notAuthorized'</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="nv">$user</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="nx">UserModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="nv">$userId</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$user</span> <span class="o">===</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.resourceNotFound'</span><span class="p">,</span> <span class="p">[</span><span class="nx">lang</span><span class="p">(</span><span class="s1">'Users.userGenitive'</span><span class="p">)]));</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'App\Modules\Notes\Views\notes'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'user'</span> <span class="o">=&gt;</span> <span class="nv">$user</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Check the permission in the controller too: the tab's <code>permission</code> only hides the link, it doesn't protect the page.</p>
+<p>In the view, include the user's header and tab bar so your page looks like the other tabs. Pass <code>tab</code> a name that none
+of Bonfire's tabs use, so only your tab is marked as current:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">include</span><span class="p">(</span><span class="s1">'Bonfire\Users\Views\_user_head'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'Bonfire\Users\Views\_tabs'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'tab'</span> <span class="o">=&gt;</span> <span class="s1">'notes'</span><span class="p">,</span> <span class="s1">'user'</span> <span class="o">=&gt;</span> <span class="nv">$user</span><span class="p">])</span> <span class="cp">?&gt;</span>
+
+<span class="x">&lt;x-admin-box title="Notes"&gt;</span>
+<span class="x">    ...</span>
+<span class="x">&lt;/x-admin-box&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>For a group tab, include <code>Bonfire\Groups\Views\_tabs</code> instead. It needs <code>title</code> (shown in the page header), <code>group</code>
+(the group's alias) and <code>tab</code>.</p>
 
 
 
