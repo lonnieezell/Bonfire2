@@ -119,7 +119,7 @@ $user->deleteMeta('website_url');
 Deletes all meta info associated with an entity. To be used when purging a record.
 
 ```php
-$user->deletResouceMeta();
+$user->deleteResourceMeta();
 ```
 
 **syncMeta(array $post)**
@@ -167,8 +167,8 @@ required to make that work.
    Config class containing `$metaFields` array, to the Entity class that represents your resource.
 
 ```php
-use Bonfire\Traits\HasMeta;
-use CodeIgniter\Entity;
+use Bonfire\Core\Traits\HasMeta;
+use CodeIgniter\Entity\Entity;
 
 class CustomEntity extends Entity
 {

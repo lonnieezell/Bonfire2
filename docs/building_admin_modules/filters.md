@@ -47,7 +47,7 @@ filter functionality into a new class that extends the model, placing your custo
 
 ```php
 use App\UserModel;
-use Bonfire\Traits\Filterable;
+use Bonfire\Core\Traits\Filterable;
 
 class UserFilter extends UserModel
 {
@@ -157,7 +157,7 @@ Here's how this is used for the list of users within Bonfire.
 
         <!-- Filters -->
         <div class="col-auto order-1 order-md-2" x-show="filtered" x-transition.duration.240ms>
-            <?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?>
+            <?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=UserFilter target=#content-list') ?>
         </div>
     </div>
 </div>

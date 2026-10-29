@@ -14,13 +14,14 @@ script](../intro/installation.md#run-the-install-script). No other setup is need
 
 ## Usage
 
-To retrieve a config value use the `settings()` helper method that is always loaded. 
+To retrieve a config value use the `setting()` helper method that is always loaded. Pass the class name and the
+key joined with a dot:
 
 ```php
 // The same as config('App')->siteName;
-$siteName = setting('App', 'siteName');
+$siteName = setting('App.siteName');
 // or
-$siteName = setting()->get('App', 'siteName');
+$siteName = setting()->get('App.siteName');
 ```
 
 In this case we used the short class name, `App`, which the `config()` method automatically locates within the 
@@ -28,13 +29,13 @@ In this case we used the short class name, `App`, which the `config()` method au
 is automatically detected by the Settings class to keep values separated from config files that may share the 
 same name but different namespaces. 
 
-To save a value, call the `set()` method on the settings class, providing the class name, the key, and the value.
+To save a value, call the `set()` method on the settings class, providing the dotted class name and key, and the value.
 Note that boolean `true`/`false` will be converted to strings `:true` and `:false` when stored in the database, but
 will be converted back into a boolean when retrieved. Arrays and objects are serialized when saved, and unserialized
 when retrieved. 
 
 ```php
-setting()->set('App', 'siteName', 'My Great Site');
+setting()->set('App.siteName', 'My Great Site');
 ```
 
 ## Admin accent color

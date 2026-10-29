@@ -24,4 +24,5 @@ A new folder is created in the project root that holds the view files that defin
 - The `app` theme is extremely simple and is meant mostly as a semi-functional skeleton that you can
   leverage as a starting point for your app.
 - The `auth` theme is more a set of partials that are used for all of the authentication-related screens.
-  You can specify which theme/layout it should extend.<!-- TODO: what does this mean? I cannot find how to do that -->
+  You can specify which layout it should extend with the `layout` key of `$views` in `app/Config/Auth.php`
+  (see [Authentication and Authorization](../modules/auth.md#views)).

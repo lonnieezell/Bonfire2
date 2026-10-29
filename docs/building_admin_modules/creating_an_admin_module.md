@@ -13,7 +13,7 @@ Bonfire 2 admin panel for administration of pages on a website.
 
 ## Configuring Module Locations
 
-In order for Bonfire to discover your modules, you need to specify one or more locations that you plan on storing the modules. By default, the system will look within `app/Modules` for directories. As an example, we could create a Blog folder to store our new blog package. You would then need to create the standard directories, `Config`, `Controllers`, `Models` and `Views` at the very least. A `Module.php` file is also expected to live here, which we will look at in more detail a little later. The directory structure would look like:
+In order for Bonfire to discover your modules, you need to specify one or more locations that you plan on storing the modules. No location is set by default: the `app/Modules` entry in `Config\Bonfire` ships commented out, so uncomment it (or add your own, see below) before Bonfire will find your modules. As an example, we could create a Blog folder to store our new blog package. You would then need to create the standard directories, `Config`, `Controllers`, `Models` and `Views` at the very least. A `Module.php` file is also expected to live here, which we will look at in more detail a little later. The directory structure would look like:
 
 ```
 app/
@@ -26,7 +26,7 @@ app/
             Module.php
 ```
 
-All files within the Blog directory would be expected to live within the `App\Modules\{ModuleName}` namespace, i.e. `App\Modules\Blog\Config\Routes`. You can customize this by editing `Config\Bonfire` and changing the key of the `$appModules` setting within it.
+All files within the Blog directory would be expected to live within the `App\Modules\{ModuleName}` namespace, i.e. `App\Modules\Blog\Config\Routes`. To enable discovery, uncomment the entry in the `$appModules` setting of `Config\Bonfire`. You can customize the namespace by changing its key.
 
 ```php
 public $appModules = [
