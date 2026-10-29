@@ -1994,6 +1994,9 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>The Users, Email and System Info settings pages now check permissions in the controller, not just in the sidebar.
+Users without <code>users.settings</code> (Users) or <code>admin.settings</code> (Email, System Info and PHP Info) are sent back to the
+admin dashboard, even if they type the URL.</p>
 <p>A new page, <a href="../../building_admin_modules/controllers_and_views/">Admin Controllers, Views and Themes</a>, covers
 <code>AdminController</code>, the <code>render()</code> helper, the <code>master</code> layout's sections, and overriding the published Admin theme.</p>
 <p>A module's <code>initFront()</code> now runs on public requests. Bonfire boots once per web request from a new <code>bonfire</code> filter,
