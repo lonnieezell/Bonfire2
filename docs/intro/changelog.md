@@ -6,6 +6,9 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A new tutorial, [Build Your First Admin Module](../building_admin_modules/tutorial_first_module.md), walks you
+from an empty folder to a working list screen with a permission, search, filters, global search and the Recycler.
+
 A module can now add its own permissions, and grant them to groups by default, from its `Config\Registrar` instead of
 asking you to edit `app/Config/AuthGroups.php`. The new `php spark bonfire:permissions` command applies the grants.
 New installs run it for you; **after updating, run `php spark bonfire:permissions` yourself**, and again whenever you
