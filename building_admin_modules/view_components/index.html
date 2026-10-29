@@ -308,6 +308,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -391,6 +395,62 @@
     
   
     Our Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/request_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Bonfire Fits Into a Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/published_themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Themes Are Published Into Your App
   
 
     
@@ -1690,6 +1750,8 @@
 <p>View Components (or just Components) allow you to create custom HTML elements to use within your views. The main 
 description of their use and creating new ones is described within the <code>Building Sites</code> section of the guide. This
 page lists the components that are available within the default <code>Admin</code> theme. </p>
+<p>Your app renders its own copy of these components, in <code>themes/Admin/Components/</code>, which <code>composer update</code> doesn't
+change. See <a href="../../intro/published_themes/">Why Themes Are Published Into Your App</a>.</p>
 <p>Escape attribute values with <code>esc()</code> (<code>title="&lt;?= esc($user-&gt;name()) ?&gt;"</code>), as you would any HTML attribute. The
 renderer decodes them and the component escapes them again on output, so a quote in the data can't end the attribute
 early. On a paired tag (<code>&lt;x-…&gt;…&lt;/x-…&gt;</code>) a value can't contain <code>&gt;</code>. Slots are HTML and are output as given.</p>

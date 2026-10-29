@@ -310,6 +310,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -393,6 +397,62 @@
     
   
     Our Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/request_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Bonfire Fits Into a Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/published_themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Themes Are Published Into Your App
   
 
     
@@ -1815,7 +1875,8 @@ for displaying and admin page should be done.</p>
 <li><code>initFront()</code> on every other routed web request. Use it for setup your module needs on public pages.</li>
 </ul>
 <p>Bonfire boots from the <code>bonfire</code> filter, so neither runs where filters don't: 404 pages, pages served from
-CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.</p>
+CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
+<a href="../../intro/request_flow/">How Bonfire Fits Into a Request</a> explains where booting sits among Bonfire's filters.</p>
 <div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">Acme\Blog</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>

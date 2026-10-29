@@ -310,6 +310,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -393,6 +397,62 @@
     
   
     Our Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/request_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Bonfire Fits Into a Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/published_themes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why Themes Are Published Into Your App
   
 
     
@@ -2060,7 +2120,8 @@ more than one permission to check whether the user has any of them.</p>
 <p>Anyone who can enter the admin area can still type the page's URL. Check the permission in the controller too.</p>
 </div>
 <p>Every route under the admin area also needs <code>admin.access</code>. Bonfire's <code>admin</code> filter checks it before your controller
-runs and sends other users to the home page.</p>
+runs and sends other users to the home page. <a href="../../intro/request_flow/#the-filter-chain">How Bonfire Fits Into a Request</a>
+shows where it runs among Bonfire's other filters.</p>
 <h2 id="declaring-permissions">Declaring permissions</h2>
 <p>Add a <code>Config/Registrar.php</code> to your module with an <code>AuthGroups()</code> method. CodeIgniter merges the <code>permissions</code> it
 returns into <code>Config\AuthGroups</code>, including the install's published copy, on every request:</p>
