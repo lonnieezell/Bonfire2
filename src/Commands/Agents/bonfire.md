@@ -26,6 +26,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Task | Read |
 |---|---|
 | Finding where config, themes and modules live | `intro/app_structure.md` |
+| Building a first admin module from scratch, step by step | `building_admin_modules/tutorial_first_module.md` |
 | Adding an admin module, menu item or breadcrumb | `building_admin_modules/creating_an_admin_module.md` |
 | Writing admin controllers and views, or changing the admin theme | `building_admin_modules/controllers_and_views.md` |
 | Building admin pages, settings forms and lists | `building_admin_modules/view_components.md` |

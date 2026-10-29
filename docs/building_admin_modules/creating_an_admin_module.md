@@ -44,6 +44,8 @@ public $appModules = [
 
 If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.
 
+Bonfire caches the modules it finds in these locations for a minute. To pick up a new module folder straight away, run `php spark cache:clear`.
+
 ## Modules in Composer packages
 
 `$appModules` treats every folder in a location as a module, so it doesn't fit a Composer package that is a single
@@ -85,6 +87,15 @@ default.
 The Module file handles initialization functions when the admin is loaded. It allows the module to create new
 menus, insert itself into the existing sidebar menus, etc. The `initAdmin` method is where all of the setup
 for displaying and admin page should be done.
+
+Bonfire boots once per web request and calls one of two methods on every module:
+
+- `initAdmin()` on a request inside the admin area (`ADMIN_AREA`). The sidebar menus and dashboard widgets
+  exist only then, so add menu items and widgets here.
+- `initFront()` on every other routed web request. Use it for setup your module needs on public pages.
+
+Bonfire boots from the `bonfire` filter, so neither runs where filters don't: 404 pages, pages served from
+CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
 
 ```php
 namespace Acme\Blog;
