@@ -1300,6 +1300,8 @@
       
         
       
+        
+      
     
     
     
@@ -1476,6 +1478,34 @@
     
   
     Filters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_admin_modules/permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permissions
   
 
     
@@ -1904,6 +1934,10 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>A module can now add its own permissions, and grant them to groups by default, from its <code>Config\Registrar</code> instead of
+asking you to edit <code>app/Config/AuthGroups.php</code>. The new <code>php spark bonfire:permissions</code> command applies the grants.
+New installs run it for you; <strong>after updating, run <code>php spark bonfire:permissions</code> yourself</strong>, and again whenever you
+add a module. See <a href="../../building_admin_modules/permissions/">Permissions</a>.</p>
 <p>A Composer package can now add a Bonfire module by listing it in the new <code>Config\Bonfire::$packageModules</code>, from
 its own <code>Config\Registrar</code> so the app using it changes nothing. See
 <a href="../../building_admin_modules/creating_an_admin_module/#modules-in-composer-packages">Modules in Composer packages</a>.</p>
