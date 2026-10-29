@@ -310,6 +310,8 @@
       
         
       
+        
+      
     
     
     
@@ -421,6 +423,34 @@
     
   
     Bonfire Application Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
   
 
     
@@ -1905,6 +1935,8 @@
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
 <p><code>POST admin/settings/groups</code>, without a group alias, now returns 404. It used to throw an <code>ArgumentCountError</code>.</p>
+<p>A new page, <a href="../configuration/">Configuration Reference</a>, lists every key in the published config files with its
+default and what it does, including keys that weren't documented before.</p>
 <p>The Users sidebar item now needs <code>users.list</code>, the permission the users list page checks, not <code>users.view</code>. The
 <code>admin</code> and <code>developer</code> groups now see it.</p>
 <p>The Users, Email and System Info settings pages now check permissions in the controller, not just in the sidebar.
