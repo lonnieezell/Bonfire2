@@ -4,6 +4,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 30 October 2026
+
+A new page, [Menus](../building_admin_modules/menus.md), lists every `MenuItem` key, the collection and menu methods,
+custom menus, and reordering with `$menuWeights`.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,

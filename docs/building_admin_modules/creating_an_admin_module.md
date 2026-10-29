@@ -121,43 +121,22 @@ The main side navigation in the admin consists of three primary menu collections
 - the `Settings` collection where your module's settings pages should live.
 - the `Tools` collection which holds miscellaneous things that are helpful, but not needed on a daily basis.
 
-Menu items are added to the sidebar using the `menus` service. Below are two examples taken from the core
-Users module. They share common setup which will be discussed after the example:
+Menu items are added to the sidebar using the `menus` service. This example from the core Users module adds the
+Users page to the `content` collection:
 
 ```php
-// Settings menu for sidebar
-$sidebar = service('menus');
-$item    = new MenuItem([
-    'title'           => 'Users',
-    'namedRoute'      => 'user-settings',
-    'fontAwesomeIcon' => 'fas fa-user',
-    'permission'      => 'users.settings',
-]);
-$sidebar->menu('sidebar')->collection('settings')->addItem($item);
-
-// Content Menu for sidebar
 $item = new MenuItem([
-    'title'           => 'Users',
+    'title'           => lang('Users.usersModTitle'),
     'namedRoute'      => 'user-list',
     'fontAwesomeIcon' => 'fas fa-users',
     'permission'      => 'users.list',
 ]);
-$sidebar->menu('sidebar')->collection('content')->addItem($item);
+service('menus')->menu('sidebar')->collection('content')->addItem($item);
 ```
 
-`MenuItems` contain the information about a single menu item. When you create a new one you have the following
-settings available to you:
-
-- `title` is the string that will be displayed to the user in the Menu
-- `namedRoute` is the route that will be called when the link is clicked. You must use a
-  [named route](https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes) which should be defined
-  within your module's `Config/Routes` file.
-- `fontAwesomeIcon` is used to specify the [FontAwesome icon](https://fontawesome.com/) that will be displayed in the sidebar.
-- `permission` is used to specify a permission string that is required for a user to see that link. If they do not have
-  the proper permissions the link will not be displayed within the menu. If this item should be available to everyone
-  leave it blank.
-
-One the MenuItem has been created, you add it to the appropriate menu/collection.
+`namedRoute` must be a [named route](https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes)
+defined in your module's `Config/Routes.php`. Users without `permission` don't see the item. See [Menus](menus.md)
+for every key, collections, custom menus and reordering with `$menuWeights`.
 
 Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
 the active item (and its collection, when that collection is collapsible).
