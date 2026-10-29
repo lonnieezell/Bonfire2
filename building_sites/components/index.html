@@ -1644,10 +1644,10 @@ application. This can help boil longer, complex sections down to a single HTML t
 useful with CSS utility frameworks like TailWind, or when using the utilities in Bootstrap 5, etc. Using
 components in these situations allows you to keep the style info in one place where making changes to 
 one file changes every instance of the view throughout the application.</p>
-<p>To create a component, simply create a new view file within the theme's <code>Component</code> directory, or the 
-application's, <code>app/Components</code> directory.</p>
+<p>To create a component, simply create a new view file within the theme's <code>Components</code> directory, or the 
+application's, <code>app/Views/Components</code> directory.</p>
 <p>A simple avatar image might look something like this: </p>
-<div class="highlight"><pre><span></span><code><span class="c1">// app/Components/avatar.php</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// app/Views/Components/avatar.php</span>
 <span class="o">&lt;</span><span class="nx">img</span>
   <span class="nx">src</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$src</span><span class="s2"> ?? '' ?&gt;"</span>
   <span class="nx">class</span><span class="o">=</span><span class="s2">"rounded-circle shadow-4"</span>
@@ -1656,7 +1656,7 @@ application's, <code>app/Components</code> directory.</p>
 <span class="o">/&gt;</span> 
 </code></pre></div>
 <p>When using the component within a view, you would insert a tag with <code>x-</code> prepended to the filename: </p>
-<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">avatar</span> <span class="nx">src</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;avatarUrl</span><span class="s2">() ?&gt;"</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;name</span><span class="s2"> ?&gt;"</span> <span class="o">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">avatar</span> <span class="nx">src</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;avatarLink</span><span class="s2">() ?&gt;"</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;name</span><span class="s2"> ?&gt;"</span> <span class="o">/&gt;</span>
 </code></pre></div>
 <p>Any attributes provided when you insert the component like this are made available as variables within 
 the component view. In this case, the <code>$src</code> and <code>$alt</code> attributes are passed to the component view, resulting
@@ -1672,7 +1672,7 @@ in the following output: </p>
 <p>You can include the content within the opening and closing tags by inserting the reserved <code>$slot</code> variable: </p>
 <div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">x-green-button</span><span class="p">&gt;</span>Click Me!<span class="p">&lt;/</span><span class="nt">x-green-button</span><span class="p">&gt;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// app/Components/green-button.php</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// app/Views/Components/green-button.php</span>
 <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"btn btn-success"</span><span class="o">&gt;</span>
     <span class="o">&lt;?=</span> <span class="nv">$slot</span> <span class="cp">?&gt;</span>
 <span class="x">&lt;/button&gt;</span>

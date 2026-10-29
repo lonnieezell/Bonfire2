@@ -1619,7 +1619,7 @@ for module Users.</p>
 <span class="sd">     *</span>
 <span class="sd">     * @return array</span>
 <span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">search</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$term</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$post</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span><span class="o">:</span> <span class="k">array</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">search</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$term</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="o">?</span><span class="k">array</span> <span class="nv">$post</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span><span class="o">:</span> <span class="k">array</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s1">'users.*'</span><span class="p">)</span>
             <span class="o">-&gt;</span><span class="na">distinct</span><span class="p">()</span>
@@ -1671,7 +1671,7 @@ for module Users.</p>
 extends the UserModel. It is not necessary to do so, but is a simple way to get access to the model features when you
 need them.</p>
 <p>If you want the search to find not only the data from the main table, but also
-the related meta info (see <a href="../users_and_security/user_meta.md">User Meta Info</a>), you should:</p>
+the related meta info (see <a href="../../modules/meta_info/">Meta Info</a>), you should:</p>
 <ol>
 <li>
 <p>Put a property <code>$includeMetaFieldsInSearech</code> into the module config file

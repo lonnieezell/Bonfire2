@@ -1727,7 +1727,7 @@ The name is the key of the array mentioned above.</p>
 </code></pre></div>
 <p><strong>deleteResourceMeta()</strong></p>
 <p>Deletes all meta info associated with an entity. To be used when purging a record.</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">deletResouceMeta</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">deleteResourceMeta</span><span class="p">();</span>
 </code></pre></div>
 <p><strong>syncMeta(array $post)</strong></p>
 <p>Given an array of key/value pairs representing the name of the meta field and it's value, this will update existing
@@ -1763,8 +1763,8 @@ required to make that work.</p>
 <li>Add the <code>HasMeta</code> trait and a protected <code>$configClass</code> property with a string value, the name of the above-mentioned
    Config class containing <code>$metaFields</code> array, to the Entity class that represents your resource.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Traits\HasMeta</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">CodeIgniter\Entity</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Core\Traits\HasMeta</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">CodeIgniter\Entity\Entity</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">CustomEntity</span> <span class="k">extends</span> <span class="nx">Entity</span>
 <span class="p">{</span>

@@ -1763,7 +1763,7 @@ trait, which implements a basic <code>filter()</code> method for you.</p>
 <p>Since model's can get crowded with test data, filter data, custom methods, events, and more, you can split out the
 filter functionality into a new class that extends the model, placing your custom filter logic within that class.</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">App\UserModel</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Bonfire\Traits\Filterable</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Core\Traits\Filterable</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">UserFilter</span> <span class="k">extends</span> <span class="nx">UserModel</span>
 <span class="p">{</span>
@@ -1852,7 +1852,7 @@ results as the <code>target</code>.</p>
 
         <span class="cm">&lt;!-- Filters --&gt;</span>
         <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"col-auto order-1 order-md-2"</span> <span class="na">x-show</span><span class="o">=</span><span class="s">"filtered"</span> <span class="na">x-transition</span><span class="err">.</span><span class="na">duration</span><span class="err">.</span><span class="na">240ms</span><span class="p">&gt;</span>
-            <span class="cp">&lt;?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?&gt;</span>
+            <span class="cp">&lt;?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=UserFilter target=#content-list') ?&gt;</span>
         <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
     <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
