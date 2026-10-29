@@ -140,4 +140,23 @@ class AuthGroups extends ShieldAuthGroups
             'beta.access',
         ],
     ];
+
+    /**
+     * --------------------------------------------------------------------
+     * Module Grants
+     * --------------------------------------------------------------------
+     * Default permissions that modules grant to groups, keyed by module,
+     * then by group. Modules add to this from their Config\Registrar.
+     *
+     * It is never merged into $matrix at runtime. `spark bonfire:permissions`
+     * adds each grant to the matrix once.
+     *
+     *   'content' => [
+     *       'superadmin' => ['content.*'],
+     *       'admin'      => ['content.access', 'content.edit'],
+     *   ],
+     *
+     * @var array<string, array<string, list<string>>>
+     */
+    public array $moduleGrants = [];
 }
