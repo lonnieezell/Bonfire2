@@ -4,6 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 29 October 2026 (breaking change)
+
+An action run's lifecycle now lives in `service('actionRuns')` (`Bonfire\Actions\ActionRuns`): `dispatch()` runs an
+action in the request or queues it, `process()` runs a queued run, and `progress()` and `toast()` look one up for the
+admin who started it. `ActionRunModel` now reads and writes `status` as a `Bonfire\Actions\RunStatus` enum in place of
+the strings `queued`, `running`, `done` and `failed`, so code that writes a status string to it must pass the enum.
+The Admin theme's `<x-action-run>` now calls `service('actionRuns')->toast()` rather than `ActionRunModel`; installs
+that published the Admin theme should copy the new `themes/Admin/Components/action-run.php`.
+
 ## 28 October 2026
 
 `spark notify:breaking-changes` used to keep its marker in a `last-update.txt` file inside the package folder, which

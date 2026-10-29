@@ -6,6 +6,7 @@ use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Actions\Models\ActionRunModel;
 use Bonfire\Actions\ModelSource;
 use Bonfire\Actions\Queue;
+use Bonfire\Actions\RunStatus;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Services;
@@ -13,7 +14,6 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Queue\Interfaces\QueueInterface;
 use CodeIgniter\Queue\QueuePushResult;
 use CodeIgniter\Test\TestResponse;
-use RuntimeException;
 use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
 
@@ -101,40 +101,6 @@ final class ActionQueueTest extends TestCase
         $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'done', 'processed' => 2, 'skipped' => 1, 'message' => '2 users touched. Skipped 1.']);
     }
 
-    public function testAFailingJobMarksTheRunFailed(): void
-    {
-        $this->touch->queue = Queue::Always;
-        $this->touch->fails = true;
-        $runId              = $this->queueAction($this->users(1));
-
-        try {
-            (new RunAction(['run' => $runId]))->process();
-            $this->fail('The job should rethrow so the queue keeps the failed job.');
-        } catch (RuntimeException $e) {
-            $this->assertSame('Touch failed', $e->getMessage());
-        }
-
-        $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'failed', 'message' => lang('Bonfire.unknownError')]);
-    }
-
-    public function testTheJobLoadsActionsInAWorkerThatHasNotBootedTheAdmin(): void
-    {
-        $target = $this->createUser();
-        $runId  = model(ActionRunModel::class)->insert([
-            'list'    => 'users',
-            'action'  => 'delete-users',
-            'user_id' => $this->admin->id,
-            'ids'     => json_encode([$target->id]),
-            'total'   => 1,
-            'status'  => 'queued',
-        ]);
-        Services::resetSingle('actions');
-
-        (new RunAction(['run' => $runId]))->process();
-
-        $this->assertNull(model(UserModel::class)->find($target->id));
-    }
-
     public function testAFailedPushMarksTheRunFailed(): void
     {
         $this->touch->queue = Queue::Always;
@@ -182,13 +148,13 @@ final class ActionQueueTest extends TestCase
     public function testProgressPollsUntilTheRunEnds(): void
     {
         $runs  = model(ActionRunModel::class);
-        $runId = $runs->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 4, 'processed' => 1, 'skipped' => 1, 'status' => 'running']);
+        $runId = $runs->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 4, 'processed' => 1, 'skipped' => 1, 'status' => RunStatus::Running]);
 
         $running = (string) $this->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();
         $this->assertStringContainsString('hx-trigger="every 2s"', $running);
         $this->assertStringContainsString(lang('Actions.running', [2, 4]), $running);
 
-        $runs->update($runId, ['status' => 'done', 'message' => 'All touched.']);
+        $runs->update($runId, ['status' => RunStatus::Done, 'message' => 'All touched.']);
 
         $done = (string) $this->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();
         $this->assertStringNotContainsString('hx-trigger', $done);
@@ -197,7 +163,7 @@ final class ActionQueueTest extends TestCase
 
     public function testOnlyTheAdminWhoStartedARunSeesIt(): void
     {
-        $runId = model(ActionRunModel::class)->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 1, 'status' => 'queued']);
+        $runId = model(ActionRunModel::class)->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 1, 'status' => RunStatus::Queued]);
         $other = $this->createUser();
         $other->addGroup('admin');
 

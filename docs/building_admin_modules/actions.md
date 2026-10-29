@@ -232,4 +232,5 @@ Without the package, `Queue::Auto` runs in the request, a chunk at a time, and `
 explaining what's missing.
 
 A queued run is recorded in the `action_runs` table with its totals and status. The admin who started it sees a toast
-that shows its progress, updated every two seconds, and its message once it ends.
+that shows its progress, updated every two seconds, and its message once it ends. `service('actionRuns')` owns this
+lifecycle: the endpoint, the queue job and `<x-action-run>` all go through it.
