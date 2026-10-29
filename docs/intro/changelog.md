@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A **Recently active** dashboard widget (`users:recentlyActive`) lists the users active within the last 5 minutes, hour
+or 24 hours, most recent first, each linking to their account. It needs the `users.list` permission; add it from
+**Add widget** on the dashboard.
+
 A **Recent failed logins** dashboard widget (`users:failedLogins`) lists the newest unsuccessful login attempts across
 all accounts, with the identifier, IP address and date. Attempts by a known user's email link to their Security tab for
 admins who may open it. It needs the `users.view` permission; add it from **Add widget** on the dashboard.

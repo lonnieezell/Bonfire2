@@ -78,6 +78,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame('users.list', service('dashboard')->widget('stats:usersInRecycler693')->permission());
         $this->assertSame('users.list', service('dashboard')->widget('users:byGroup')->permission());
         $this->assertSame('users.view', service('dashboard')->widget('users:failedLogins')->permission());
+        $this->assertSame('users.list', service('dashboard')->widget('users:recentlyActive')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
         $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
     }
@@ -125,7 +126,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $ids[lang('Bonfire.dashboard')]);
         $this->assertEqualsCanonicalizing(['tools:recentErrors', 'logs:logActivity'], $ids[lang('Bonfire.toolsModTitle')]);
         $this->assertSame(['stats:userGroups643'], $ids[lang('Groups.groupsModTitle')]);
-        $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'users:failedLogins', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
+        $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'users:failedLogins', 'users:recentlyActive', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
     }
 
     public function testAWidgetGroupedByTypeIsListedUnderThatTypesHeading(): void
