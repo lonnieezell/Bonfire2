@@ -310,6 +310,8 @@
       
         
       
+        
+      
     
     
     
@@ -545,6 +547,34 @@
     
   
     Bonfire Application Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working With AI Agents
   
 
     
@@ -1759,6 +1789,9 @@ recreates <code>writable/</code> on each release, point the marker somewhere els
 <pre class="highlight"><code class="language-php">public $breakingChangeStateFile = ROOTPATH . 'bonfire-breaking-changes.json';</code></pre>
 <p>To turn the check off, remove <code>php spark notify:breaking-changes</code> from the <code>post-update-cmd</code> scripts of your
 <code>composer.json</code>.</p>
+<p>If you use AI coding agents, <code>php spark bf:agents</code> writes Bonfire's conventions into your project's <code>AGENTS.md</code>. Add it
+to the same <code>post-update-cmd</code> scripts to keep that guide in step with the installed version. See
+<a href="../ai_agents/">Working With AI Agents</a>.</p>
 <h2 id="generate-some-data-for-testing">Generate some data for testing</h2>
 <p>You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):</p>
 <pre class="highlight"><code class="language-bash">php spark db:seed Bonfire\\Users\\Database\\Seeds\\Seed100Users</code></pre>

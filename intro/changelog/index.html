@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../app_structure/">
+        <link rel="prev" href="../ai_agents/">
       
       
         <link rel="next" href="../../modules/">
@@ -310,6 +310,8 @@
       
         
       
+        
+      
     
     
     
@@ -421,6 +423,34 @@
     
   
     Bonfire Application Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working With AI Agents
   
 
     
@@ -1876,6 +1906,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>A new <code>php spark bf:agents</code> command writes a guide to Bonfire's conventions for AI coding agents into your project's
+<code>AGENTS.md</code>: where things live, the rules for admin modules, and which docs page to read for each task. Your own text
+in that file is kept, and running it again only replaces Bonfire's section. Add it to the <code>post-update-cmd</code> scripts of
+your <code>composer.json</code> to keep the guide in step with the installed version. See
+<a href="../ai_agents/">Working With AI Agents</a>.</p>
 <p>A <strong>Recycler</strong> dashboard widget (<code>recycler:summary</code>) shows how many deleted records each Recycler resource holds,
 leaving out those with none, and links each to its list in the Recycler. Resources other modules register with
 <code>service('recycler')</code> appear in it without extra setup. It needs the <code>recycler.view</code> permission; add it from
@@ -2194,7 +2229,7 @@ composer.json scripts section:</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../app_structure/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Bonfire Application Structure">
+          <a href="../ai_agents/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Working With AI Agents">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2204,7 +2239,7 @@ composer.json scripts section:</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Bonfire Application Structure
+                Working With AI Agents
               </div>
             </div>
           </a>
