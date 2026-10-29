@@ -1304,6 +1304,8 @@
       
         
       
+        
+      
     
     
     
@@ -1396,6 +1398,34 @@
     
   
     Row and Bulk Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_admin_modules/controllers_and_views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Controllers, Views and Themes
   
 
     
@@ -1964,6 +1994,8 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>A new page, <a href="../../building_admin_modules/controllers_and_views/">Admin Controllers, Views and Themes</a>, covers
+<code>AdminController</code>, the <code>render()</code> helper, the <code>master</code> layout's sections, and overriding the published Admin theme.</p>
 <p>A module's <code>initFront()</code> now runs on public requests. Bonfire boots once per web request from a new <code>bonfire</code> filter,
 which runs on every route after the <code>session</code> and <code>admin</code> filters, instead of from the <code>admin</code> filter. Bonfire now
 caches the modules it finds in <code>Config\Bonfire::$appModules</code> for a minute; run <code>php spark cache:clear</code> to pick up a
