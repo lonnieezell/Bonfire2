@@ -50,7 +50,8 @@ app/
 Every class in the module lives in the `App\Modules\Blog` namespace.
 
 **Check it:** nothing changes in the browser yet. Bonfire only loads a module once it has a `Module.php`, which you
-will add in step 3.
+will add in step 3. Bonfire caches the module folders it finds for a minute, so if Blog doesn't show up then, run
+`php spark cache:clear`.
 
 ## Step 2: Create the posts table
 

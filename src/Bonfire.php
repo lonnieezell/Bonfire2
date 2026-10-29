@@ -67,15 +67,13 @@ class Bonfire
 
     /**
      * Checks to see if we're in the admin area
-     * by analyzing the current url and the ADMIN_AREA constant.
+     * by checking whether the current path starts with the ADMIN_AREA constant.
      */
     private function saveInAdmin()
     {
-        $url = current_url();
+        $path = uri_string();
 
-        $path = parse_url($url, PHP_URL_PATH);
-
-        $this->inAdmin = str_contains($path, ADMIN_AREA);
+        $this->inAdmin = $path === ADMIN_AREA || str_starts_with($path, ADMIN_AREA . '/');
     }
 
     /**
@@ -157,7 +155,8 @@ class Bonfire
 
     private function discoverAppModules()
     {
-        if (! $modules = cache('app-modules-search')) {
+        // A location without modules yet caches [], so compare with null to skip rescanning it
+        if (($modules = cache('app-modules-search')) === null) {
             $modules  = [];
             $excluded = ['Core', 'Config', 'Language', 'Views'];
 
@@ -191,7 +190,7 @@ class Bonfire
                 }
             }
 
-            // cache()->save('app-modules-search', $modules);
+            cache()->save('app-modules-search', $modules);
         }
 
         $this->loadModules($modules);
