@@ -27,6 +27,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 |---|---|
 | Finding where config, themes and modules live | `intro/app_structure.md` |
 | Adding an admin module, menu item or breadcrumb | `building_admin_modules/creating_an_admin_module.md` |
+| Writing admin controllers and views, or changing the admin theme | `building_admin_modules/controllers_and_views.md` |
 | Building admin pages, settings forms and lists | `building_admin_modules/view_components.md` |
 | Adding row or bulk actions to a list | `building_admin_modules/actions.md` |
 | Adding filters to a list | `building_admin_modules/filters.md` |

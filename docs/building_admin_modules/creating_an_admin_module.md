@@ -162,3 +162,9 @@ name the parent too with `crumbParent`:
 <?php $this->section('crumbParent') ?><?= lang('Tools.logsModTitle') ?><?php $this->endSection() ?>
 <?php $this->section('crumb') ?><?= esc($logFilePretty) ?><?php $this->endSection() ?>
 ```
+
+## Controllers and views
+
+Your module's pages are ordinary CodeIgniter controllers and views, rendered inside the Admin theme. See
+[Admin Controllers, Views and Themes](controllers_and_views.md) for `AdminController`, the `master` layout and its
+sections, and changing the theme's own files.
