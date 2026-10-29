@@ -64,6 +64,12 @@ The Recent failed logins widget (`users:failedLogins`) isn't on the default dash
 It lists the newest unsuccessful login attempts across all accounts: who tried, from which IP address, and when. An
 attempt whose email belongs to a user links to that user's Security tab, for admins who may open it.
 
+## Recently active
+
+The Recently active widget (`users:recentlyActive`) isn't on the default dashboard; add it from the widget library. It
+lists the users active within the last 5 minutes, hour or 24 hours, most recent first, with how long ago each was
+active, and links to each user's account. Users who have never been active don't appear.
+
 ## Widgets
 
 The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
