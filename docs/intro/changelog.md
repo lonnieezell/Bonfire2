@@ -4,6 +4,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 30 October 2026
+
+The [Authentication](../modules/auth.md) page now lists Bonfire's defaults for registration, magic links, redirects
+and the email activation and 2FA actions, and shows where to change each one. It also documents the `Auth` theme's
+`<x-auth-card>` and `<x-unsplash>` components.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,
