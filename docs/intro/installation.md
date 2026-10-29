@@ -82,6 +82,34 @@ That's all that's needed to get started. You can now visit [http://localhost:808
 
 If you'd rather use a different server, like Apache or Nginx, you can follow the [CodeIgniter 4 User Guide](https://codeigniter.com/user_guide/installation/running.html) suggestions for a number of different server setups.
 
+## Updating Bonfire
+
+After `composer update`, Bonfire reads the changelog of the version you now have and, when a release since your last
+update contains breaking changes, prints a warning:
+
+```
+======= WARNING: =======
+Breaking changes since the previous update of your Bonfire install detected.
+You may need to update your app manually.
+Please read the changelog for more information:
+vendor/lonnieezell/bonfire/docs/intro/changelog.md
+Latest breaking change date: 2026-10-28
+```
+
+The warning is a reminder to read the changelog, nothing more: re-publishing a theme, copying a view or changing a
+config file is not something an update can do for you.
+
+Bonfire remembers the change it has shown you in `writable/bonfire-breaking-changes.json`. That folder has to be
+writable, and it has to survive a deploy, otherwise the same warning comes back after every update. If your server
+recreates `writable/` on each release, point the marker somewhere else in `app/Config/Bonfire.php`:
+
+```php
+public $breakingChangeStateFile = ROOTPATH . 'bonfire-breaking-changes.json';
+```
+
+To turn the check off, remove `php spark notify:breaking-changes` from the `post-update-cmd` scripts of your
+`composer.json`.
+
 ## Generate some data for testing
 
 You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):

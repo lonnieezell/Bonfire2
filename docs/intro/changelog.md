@@ -6,6 +6,16 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 28 October 2026
 
+`spark notify:breaking-changes` used to keep its marker in a `last-update.txt` file inside the package folder, which
+`composer update` deleted together with the previous version, so it warned on every update. It now remembers the
+breaking change it last reported in `writable/bonfire-breaking-changes.json`: expect one more warning after this
+update, and none for changes you have already been shown.
+
+The check also notices a note added to an existing `(breaking change)` heading, not only a new heading, and a fresh
+install no longer warns about changes that came before it. If `writable/` is recreated on every deploy, move the
+marker with `Config\Bonfire::$breakingChangeStateFile`. See
+[Updating Bonfire](installation.md#updating-bonfire).
+
 The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
 A widget's `group()` gives its module's name; the type keys `quickLinks`, `stats`, `charts` and `custom` still work,
 each under its own heading. A `StatsItem` or `ChartsItem` takes `'module' => '…'` (see
