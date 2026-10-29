@@ -957,7 +957,7 @@
   <span class="md-ellipsis">
     
   
-    Including Assets
+    Add CSS and JS to Your Site Theme
   
 
     
@@ -1013,7 +1013,7 @@
   <span class="md-ellipsis">
     
   
-    Consent
+    Load Analytics Only After Visitors Consent
   
 
     
@@ -1097,7 +1097,7 @@
   <span class="md-ellipsis">
     
   
-    Meta Info
+    Add a Custom Field to User Profiles
   
 
     
@@ -1753,6 +1753,7 @@
 across the globe, you have various requirements as web developers that you didn't use to. The Consent module helps
 you manage collecting consent from the user before storing any cookies through an opt-in system for all non-required
 cookies. It provides the mechanism for displaying the consent form, and recording the user's preferences.</p>
+<p>For a step-by-step example, see <a href="../../building_sites/consent/">Load Analytics Only After Visitors Consent</a>.</p>
 <h2 id="defining-the-consent-types">Defining the Consent Types</h2>
 <p>The Consent module allows you to define the types of consent that you would like to collect from the user. These are defined in the <code>Config\Consent</code> class. The default consents are:</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$consents</span> <span class="o">=</span> <span class="p">[</span>
@@ -1769,7 +1770,8 @@ cookies. It provides the mechanism for displaying the consent form, and recordin
     <span class="s1">'targeting'</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Targeting'</span><span class="p">,</span>
         <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These are usually placed by third-party advertising networks, which may use information about</span>
-<span class="s1">            your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.'</span><span class="p">,</span>
+<span class="s1">            your visits to develop a profile of your interests. This information may be shared with other networks</span>
+<span class="s1">            or sites to deliver more relevant advertising across multiple sites.'</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">];</span>
 </code></pre></div>
@@ -1779,8 +1781,8 @@ cookies. It provides the mechanism for displaying the consent form, and recordin
 children, like the AuthController) then you do not need to explicitly load the helper.</p>
 <p>The helper can be used both within the views and the controllers to limit which services are called (like ad-tracking
 or analytics) and which cookies you set.</p>
-<p>Within a view you might wrap a Google Analytics tag within a check against the <code>performing</code> consent:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">has_consent</span><span class="p">(</span><span class="s1">'performing'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<p>Pass the consent's key from <code>$consents</code>. Within a view you might wrap a Google Analytics tag within a check against the <code>performance</code> consent:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">has_consent</span><span class="p">(</span><span class="s1">'performance'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
 <span class="x">&lt;script&gt;</span>
 <span class="x">    &lt;!-- Global Site Tag (gtag.js) - Google Analytics --&gt;</span>
 <span class="x">    ... (several lines of code) ...</span>
@@ -1796,7 +1798,8 @@ or analytics) and which cookies you set.</p>
 <span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentFormScripts</span> <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_scripts'</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="configuration">Configuration</h2>
-<p>All settings are available in the <code>Config\Consent</code> class, or in the admin settings area.</p>
+<p>All settings are available in the <code>Config\Consent</code> class. Everything except the form views can also be changed in the admin
+area under <strong>Settings → Consent</strong>, which saves the values to the database.</p>
 <p><strong>$requireConsent</strong></p>
 <p>This determines whether the consent system is enabled or not. If <code>true</code>, the consent form will be automatically
 inserted into all front-end views by the Consent controller filter. If <code>false</code>, the consent system will not display
@@ -1813,7 +1816,12 @@ determines if you're logged in or not.</p>
 be inserted into each page upon page load.</p>
 <p><strong>$policyUrl</strong></p>
 <p>A URL (either full or relative) that points to the page that details the cookie policy. On many sites this will be
-included in the Privacy Policy or Terms of Service pages, or similar.</p>
+included in the Privacy Policy or Terms of Service pages, or similar. The default value is <code>privacy</code>.</p>
+<p><strong>$policyTitle</strong></p>
+<p>The link text used for the cookie policy link in the consent form. The default value is <code>Cookie Policy</code>.</p>
+<p><strong>$consentMessage</strong></p>
+<p>The message shown to visitors at the top of the consent form. Put <code>{policy_url}</code> where the cookie policy link should
+appear; it is replaced with a link to <code>$policyUrl</code> that uses <code>$policyTitle</code> as its text.</p>
 <p><strong>$consents</strong></p>
 <p>This is an array of the initial consents that will be asked for in the Consent Form. Each array item includes
 the alias the consent can be checked with, and the following items:</p>

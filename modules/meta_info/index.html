@@ -946,7 +946,7 @@
   <span class="md-ellipsis">
     
   
-    Including Assets
+    Add CSS and JS to Your Site Theme
   
 
     
@@ -1002,7 +1002,7 @@
   <span class="md-ellipsis">
     
   
-    Consent
+    Load Analytics Only After Visitors Consent
   
 
     
@@ -1086,7 +1086,7 @@
   <span class="md-ellipsis">
     
   
-    Meta Info
+    Add a Custom Field to User Profiles
   
 
     
@@ -1729,7 +1729,8 @@
 <h1 id="meta-info">Meta Info</h1>
 <p>Bonfire provides Entity-Attribute-Value style storage for additional data of entities without modifying the underlying models and database tables. By default it can be used
 to add meta information to users, and it can be adapted to store meta information for the entities managed by your own admin modules.</p>
-<p>We will explore an example of using Meta Info on users resource.</p>
+<p>We will explore an example of using Meta Info on users resource. For a short walkthrough, see
+<a href="../../building_sites/meta_info/">Add a Custom Field to User Profiles</a>.</p>
 <p>By default, Bonfire comes with a pretty limited amount of data saved to a user. Most applications will likely require
 additional information available to the user, whether this is a bio, a website URL, the name of the school they
 attended, or anything else. Bonfire provides User Meta information that you can easily define to add additional
@@ -1785,19 +1786,26 @@ The name is the key of the array mentioned above.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$website</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">meta</span><span class="p">(</span><span class="s1">'website_url'</span><span class="p">);</span>
 </code></pre></div>
 <p><strong>allMeta()</strong></p>
-<p>This returns all meta fields for this user. Note that it returns the full database results, not just the name/value.</p>
+<p>This returns all meta fields for this user, indexed by meta key. Note that each entry is the full database row, not just the value.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$meta</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">allMeta</span><span class="p">();</span>
 
-<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$meta</span><span class="p">);</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$meta</span><span class="p">[</span><span class="s1">'website_url'</span><span class="p">]);</span>
+
+<span class="c1">// Returns an object with:</span>
+    <span class="nx">resource_id</span> <span class="o">=&gt;</span> <span class="mi">123</span>
+    <span class="k">class</span>       <span class="err">=&gt; '</span><span class="nc">Bonfire\Users\User</span><span class="s1">'</span>
+<span class="s1">    key         =&gt; '</span><span class="nx">website_url</span><span class="s1">'</span>
+<span class="s1">    value       =&gt; '</span><span class="nx">https</span><span class="o">://</span><span class="nx">example</span><span class="o">.</span><span class="nx">com</span><span class="s1">'</span>
+<span class="s1">    created_at  =&gt; '</span><span class="mi">2021</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">12</span> <span class="mi">12</span><span class="o">:</span><span class="mi">31</span><span class="o">:</span><span class="mi">12</span><span class="s1">'</span>
+<span class="s1">    updated_at  =&gt; '</span><span class="mi">2021</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">12</span> <span class="mi">12</span><span class="o">:</span><span class="mi">31</span><span class="o">:</span><span class="mi">12</span><span class="err">'</span>
+</code></pre></div>
+<p><strong>allMetaKeyValue()</strong></p>
+<p>This returns all meta fields for this user as a simple array of key/value pairs.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$meta</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">allMetaKeyValue</span><span class="p">();</span>
 
 <span class="c1">// Returns:</span>
 <span class="p">[</span>
-    <span class="s1">'resource_id'</span> <span class="o">=&gt;</span> <span class="mi">123</span><span class="p">,</span>
-    <span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'Bonfire\Users\User'</span><span class="p">,</span>
-    <span class="s1">'key'</span> <span class="o">=&gt;</span> <span class="s1">'website_url'</span><span class="p">,</span>
-    <span class="s1">'value'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com'</span><span class="p">,</span>
-    <span class="s1">'created_at'</span> <span class="o">=&gt;</span> <span class="s1">'2021-01-12 12:31:12'</span><span class="p">,</span>
-    <span class="s1">'updated_at'</span> <span class="o">=&gt;</span> <span class="s1">'2021-01-12 12:31:12'</span><span class="p">,</span>
+    <span class="s1">'website_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com'</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div>
 <p><strong>hasMeta(string $key)</strong></p>
@@ -1821,8 +1829,9 @@ The name is the key of the array mentioned above.</p>
 </code></pre></div>
 <p><strong>syncMeta(array $post)</strong></p>
 <p>Given an array of key/value pairs representing the name of the meta field and it's value, this will update existing
-meta values, insert new ones, and delete any ones that were not passed in. Useful when grabbing the information from
-a form and updating all the values at once.</p>
+meta values, insert new ones, and delete any that are passed in with an empty value. Only fields defined in the config
+file's <code>$metaFields</code> are saved; other keys are ignored. Useful when grabbing the information from a form and updating
+all the values at once.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$post</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'website_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com'</span><span class="p">,</span>
     <span class="s1">'facebook_name'</span> <span class="o">=&gt;</span> <span class="s1">'johnny.rose'</span>

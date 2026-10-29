@@ -25,7 +25,7 @@
     
     
       
-        <title>Including Assets - Bonfire 2 (beta)</title>
+        <title>Add CSS and JS to Your Site Theme - Bonfire 2 (beta)</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#including-assets" class="md-skip">
+        <a href="#add-css-and-js-to-your-site-theme" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Including Assets
+              Add CSS and JS to Your Site Theme
             
           </span>
         </div>
@@ -875,7 +875,7 @@
   <span class="md-ellipsis">
     
   
-    Including Assets
+    Add CSS and JS to Your Site Theme
   
 
     
@@ -893,7 +893,7 @@
   <span class="md-ellipsis">
     
   
-    Including Assets
+    Add CSS and JS to Your Site Theme
   
 
     
@@ -919,10 +919,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#linking-to-assets" class="md-nav__link">
+  <a href="#1-put-the-files-in-the-theme" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Linking to assets
+        1. Put the files in the theme
       
     </span>
   </a>
@@ -930,10 +930,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#2-link-them-from-the-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        2. Link them from the layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-optional-switch-to-version-based-cache-busting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Optional: switch to version-based cache-busting
       
     </span>
   </a>
@@ -991,7 +1002,7 @@
   <span class="md-ellipsis">
     
   
-    Consent
+    Load Analytics Only After Visitors Consent
   
 
     
@@ -1075,7 +1086,7 @@
   <span class="md-ellipsis">
     
   
-    Meta Info
+    Add a Custom Field to User Profiles
   
 
     
@@ -1610,10 +1621,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#linking-to-assets" class="md-nav__link">
+  <a href="#1-put-the-files-in-the-theme" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Linking to assets
+        1. Put the files in the theme
       
     </span>
   </a>
@@ -1621,10 +1632,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#2-link-them-from-the-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        2. Link them from the layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-optional-switch-to-version-based-cache-busting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Optional: switch to version-based cache-busting
       
     </span>
   </a>
@@ -1704,23 +1726,35 @@
   
 
 
-<h1 id="including-assets">Including Assets</h1>
-<p>As elaborated in <a href="../../modules/assets/">Assets Management</a>, Bonfire provides a simple assets system that was created to serve CSS/JS assets from anywhere and to easily handle browser caching/cache-busting with updated assets.</p>
-<h2 id="linking-to-assets">Linking to assets</h2>
-<p>Within your views you can link to assets anywhere within your project with the <code>asset()</code> or <code>asset_link()</code> helper function.
-<code>asset_link()</code> takes two arguments. The first is the path to the file to load. The first segment of this path must be one of the defined
-<code>$folders</code> in the configuration file <code>Assets.php</code>. The rest of the path would be based on the actual file structure within that
-location. For the <code>App</code> theme, a folder has been defined called <code>app</code>.</p>
-<p>The second argument is the type of asset being loaded. Currently, it only supports <code>css</code> and <code>js</code> files.</p>
-<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/css/admin.css'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)</span> <span class="cp">?&gt;</span>
-<span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/js/admin.js'</span><span class="p">,</span> <span class="s1">'js'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<h1 id="add-css-and-js-to-your-site-theme">Add CSS and JS to Your Site Theme</h1>
+<p>This guide adds your own stylesheet and script to the public site's <code>App</code> theme, with cache-busting handled for you.
+For every helper argument and config setting, see the <a href="../../modules/assets/">Asset Management</a> reference.</p>
+<h2 id="1-put-the-files-in-the-theme">1. Put the files in the theme</h2>
+<p>Save your files inside the <code>App</code> theme folder, for example:</p>
+<div class="highlight"><pre><span></span><code>themes/App/css/site.css
+themes/App/js/site.js
 </code></pre></div>
-<p>The <code>asset()</code> function is similar, except it only returns the URL only.</p>
-<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/css/admin.css', 'css') ?&gt;"</span> <span class="p">/&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<h2 id="2-link-them-from-the-layout">2. Link them from the layout</h2>
+<p>The <code>app</code> folder alias points at the <code>App</code> theme, so start each path with <code>app/</code>. Add the links to
+<code>themes/App/master.php</code>, next to the existing <code>asset_link()</code> calls:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/css/site.css'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/js/site.js'</span><span class="p">,</span> <span class="s1">'js'</span><span class="p">,</span> <span class="s1">'defer'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 </code></pre></div>
-<h2 id="configuration">Configuration</h2>
-<p>Configuration of assets is detailed in the <a href="../../modules/assets/">Assets Management</a> page of <strong>Modules</strong> section.</p>
+<p>Bonfire adds a cache-busting string to each URL, so browsers fetch the new file whenever it changes.</p>
+<p>If you need only the URL, for example to write the tag yourself, use <code>asset()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"&lt;?= asset('app/css/site.css', 'css') ?&gt;"</span> <span class="p">/&gt;</span>
+</code></pre></div>
+<h2 id="3-optional-switch-to-version-based-cache-busting">3. Optional: switch to version-based cache-busting</h2>
+<p>By default the cache-busting string comes from each file's modified time, which costs a file read per link.
+On busy sites, set a version instead in <code>app/Config/Assets.php</code> and bump it with each deploy:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$bustingType</span> <span class="o">=</span> <span class="s1">'version'</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="nv">$versions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'css'</span> <span class="o">=&gt;</span> <span class="s1">'1.1'</span><span class="p">,</span>
+    <span class="s1">'js'</span>  <span class="o">=&gt;</span> <span class="s1">'1.1'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
+<p>In the <code>development</code> and <code>testing</code> environments Bonfire uses the current time instead, so nothing is cached while you work.</p>
 
 
 
