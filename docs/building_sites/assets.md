@@ -1,28 +1,47 @@
-# Including Assets
+# Add CSS and JS to Your Site Theme
 
- As elaborated in [Assets Management](../modules/assets.md), Bonfire provides a simple assets system that was created to serve CSS/JS assets from anywhere and to easily handle browser caching/cache-busting with updated assets.
+This guide adds your own stylesheet and script to the public site's `App` theme, with cache-busting handled for you.
+For every helper argument and config setting, see the [Asset Management](../modules/assets.md) reference.
 
-## Linking to assets
+## 1. Put the files in the theme
 
-Within your views you can link to assets anywhere within your project with the `asset()` or `asset_link()` helper function.
-`asset_link()` takes two arguments. The first is the path to the file to load. The first segment of this path must be one of the defined
-`$folders` in the configuration file `Assets.php`. The rest of the path would be based on the actual file structure within that
-location. For the `App` theme, a folder has been defined called `app`.
+Save your files inside the `App` theme folder, for example:
 
-The second argument is the type of asset being loaded. Currently, it only supports `css` and `js` files.
+```
+themes/App/css/site.css
+themes/App/js/site.js
+```
+
+## 2. Link them from the layout
+
+The `app` folder alias points at the `App` theme, so start each path with `app/`. Add the links to
+`themes/App/master.php`, next to the existing `asset_link()` calls:
 
 ```php
-<?= asset_link('app/css/admin.css', 'css') ?>
-<?= asset_link('app/js/admin.js', 'js') ?>
+<?= asset_link('app/css/site.css', 'css') ?>
+<?= asset_link('app/js/site.js', 'js', 'defer') ?>
 ```
 
-The `asset()` function is similar, except it only returns the URL only.
+Bonfire adds a cache-busting string to each URL, so browsers fetch the new file whenever it changes.
+
+If you need only the URL, for example to write the tag yourself, use `asset()`:
 
 ```html
-<link rel="stylesheet" href="<?= asset('admin/css/admin.css', 'css') ?>" />
-<script src="<?= asset('admin/js/admin.js', 'js') ?>"></script>
+<link rel="stylesheet" href="<?= asset('app/css/site.css', 'css') ?>" />
 ```
 
-## Configuration
+## 3. Optional: switch to version-based cache-busting
 
-Configuration of assets is detailed in the [Assets Management](../modules/assets.md) page of **Modules** section.
+By default the cache-busting string comes from each file's modified time, which costs a file read per link.
+On busy sites, set a version instead in `app/Config/Assets.php` and bump it with each deploy:
+
+```php
+public $bustingType = 'version';
+
+public $versions = [
+    'css' => '1.1',
+    'js'  => '1.1',
+];
+```
+
+In the `development` and `testing` environments Bonfire uses the current time instead, so nothing is cached while you work.
