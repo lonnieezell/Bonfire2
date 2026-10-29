@@ -133,6 +133,7 @@ class Install extends BaseCommand
             CLI::write("\tphp spark bf:install --continue", 'green');
         } else {
             $this->migrate();
+            command('bonfire:permissions');
             $this->createUser();
         }
 

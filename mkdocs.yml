@@ -112,6 +112,7 @@ nav:
       - building_admin_modules/dashboard_cells.md
       - building_admin_modules/dashboard_widgets.md
       - building_admin_modules/filters.md
+      - building_admin_modules/permissions.md
       - building_admin_modules/recycler.md
       - building_admin_modules/resource_tabs.md
       - building_admin_modules/search.md

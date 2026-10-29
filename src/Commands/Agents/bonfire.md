@@ -16,7 +16,8 @@ Rules
    (page-head, admin-box, button, tabs, save-bar…) before writing raw Bootstrap.
    The admin UI is Bootstrap 5 + Alpine.js + htmx; don't add other JS frameworks.
 4. Gate access with Shield permissions: auth()->user()->can('module.action');
-   declare new permissions in app/Config/AuthGroups.php.
+   a module declares its permissions and default grants in its own
+   Config/Registrar.php, not in app/Config/AuthGroups.php.
 5. Read and write settings with setting('Class.key'), not new config constants
    or tables.
 6. Stats widgets take lazy values: StatsItem::addValue() / addValueByFreeQuery().
@@ -29,6 +30,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Building admin pages, settings forms and lists | `building_admin_modules/view_components.md` |
 | Adding row or bulk actions to a list | `building_admin_modules/actions.md` |
 | Adding filters to a list | `building_admin_modules/filters.md` |
+| Adding permissions and granting them to groups | `building_admin_modules/permissions.md` |
 | Adding a tab to the user or group edit page | `building_admin_modules/resource_tabs.md` |
 | Adding results to the admin search | `building_admin_modules/search.md` |
 | Soft-deleting records into the Recycler | `building_admin_modules/recycler.md` |

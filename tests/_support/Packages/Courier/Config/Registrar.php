@@ -12,4 +12,19 @@ class Registrar
     {
         return ['packageModules' => ['Tests\Support\Packages\Courier' => realpath(__DIR__ . '/..')]];
     }
+
+    public static function AuthGroups(): array
+    {
+        return [
+            'permissions' => [
+                'courier.send' => 'Can send couriers',
+            ],
+            'moduleGrants' => [
+                'courier' => [
+                    'superadmin' => ['courier.*'],
+                    'admin'      => ['courier.send'],
+                ],
+            ],
+        ];
+    }
 }
