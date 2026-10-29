@@ -10,6 +10,9 @@ New admin guides cover the shipped screens: [Users](../modules/users.md) (includ
 [General Settings](../modules/settings.md), [Email Settings](../modules/email.md) and [Tools](../modules/tools.md)
 (System Info and Logs). [Bonfire Modules](../modules/index.md) now lists every shipped module.
 
+A new page, [Menus](../building_admin_modules/menus.md), lists every `MenuItem` key, the collection and menu methods,
+custom menus, and reordering with `$menuWeights`.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,
