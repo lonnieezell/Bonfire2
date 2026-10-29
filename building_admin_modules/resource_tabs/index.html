@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1533,16 +1531,17 @@ They make it possible for you to easily integrate other tabs onto a user without
 <p>Adding a new tab is typically done from the <code>Module.php</code> for your module. You only need 3 pieces of information
 to create a new tab: a title, the URL to send them to, and (optionally) a permission to check against to see 
 if they can see the tab or not.</p>
-<pre class="highlight"><code class="language-php">use \Bonfire\Resources\ResourceTab;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">\Bonfire\Resources\ResourceTab</span><span class="p">;</span>
 
-public function initAdmin() 
-{
-    service('resourceTabs')-&gt;addTabFor('user', new ResourceTab([
-        'title' =&gt; 'Permissions',
-        'url' =&gt; 'users/(id)/permissions',
-        'permission' =&gt; 'users.edit'
-    ]));
-}</code></pre>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span> 
+<span class="p">{</span>
+    <span class="nx">service</span><span class="p">(</span><span class="s1">'resourceTabs'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addTabFor</span><span class="p">(</span><span class="s1">'user'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">ResourceTab</span><span class="p">([</span>
+        <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Permissions'</span><span class="p">,</span>
+        <span class="s1">'url'</span> <span class="o">=&gt;</span> <span class="s1">'users/(id)/permissions'</span><span class="p">,</span>
+        <span class="s1">'permission'</span> <span class="o">=&gt;</span> <span class="s1">'users.edit'</span>
+    <span class="p">]));</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>The <code>title</code> is what is displayed to the user on the tab itself.</p>
 <p>If it is set, <code>permission</code> will check the current user against that permission. If they have the permission
 then the tab will display, otherwise it will not be rendered.</p>
@@ -1673,10 +1672,6 @@ then the tab will display, otherwise it will not be rendered.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

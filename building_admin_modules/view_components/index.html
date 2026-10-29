@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1671,96 +1669,109 @@ early. On a paired tag (<code>&lt;x-…&gt;…&lt;/x-…&gt;</code>) a value can
 <p><strong>&lt;x-page-head&gt;</strong></p>
 <p>The page header. Give it a <code>title</code> and it renders the design's head: an <code>&lt;h1&gt;</code>, an optional <code>count</code> badge or
 <code>subtitle</code>, an optional <code>back</code> link (<code>backLabel</code> names it, defaulting to "Back"), and the slot as actions on the right.</p>
-<pre class="highlight"><code class="language-php">&lt;x-page-head title="Users" count="&lt;?= $total ?&gt;"&gt;
-    &lt;a href="&lt;?= url_to('user-new') ?&gt;" class="btn btn-primary"&gt;New user&lt;/a&gt;
-&lt;/x-page-head&gt;
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">page</span><span class="o">-</span><span class="nx">head</span> <span class="nx">title</span><span class="o">=</span><span class="s2">"Users"</span> <span class="nb">count</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$total</span><span class="s2"> ?&gt;"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"&lt;?= url_to('user-new') ?&gt;"</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"btn btn-primary"</span><span class="o">&gt;</span><span class="k">New</span> <span class="nx">user</span><span class="o">&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">page</span><span class="o">-</span><span class="nx">head</span><span class="o">&gt;</span>
 
-&lt;x-page-head title="&lt;?= esc($user-&gt;displayName()) ?&gt;" back="&lt;?= esc(site_url(ADMIN_AREA . '/users')) ?&gt;" backLabel="&lt;?= esc(lang('Users.usersModTitle')) ?&gt;" /&gt;</code></pre>
+<span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">page</span><span class="o">-</span><span class="nx">head</span> <span class="nx">title</span><span class="o">=</span><span class="s2">"&lt;?= esc(</span><span class="si">$user-&gt;displayName</span><span class="s2">()) ?&gt;"</span> <span class="nx">back</span><span class="o">=</span><span class="s2">"&lt;?= esc(site_url(ADMIN_AREA . '/users')) ?&gt;"</span> <span class="nx">backLabel</span><span class="o">=</span><span class="s2">"&lt;?= esc(lang('Users.usersModTitle')) ?&gt;"</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p>Without a <code>title</code> it wraps the slot as before, so existing <code>&lt;x-page-head&gt;&lt;h2&gt;…&lt;/h2&gt;&lt;/x-page-head&gt;</code> headers keep working.</p>
 <p><strong>&lt;x-admin-box&gt;</strong></p>
 <p>A card section. The optional <code>title</code> and <code>description</code> render a header. Setting rows and tables inside it run edge to
 edge; put buttons in a <code>&lt;div class="bf-card-footer"&gt;</code> as the last child for a footer.</p>
-<pre class="highlight"><code class="language-php">&lt;x-admin-box title="Site" description="How the site presents itself."&gt;
-    …
-&lt;/x-admin-box&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">admin</span><span class="o">-</span><span class="nx">box</span> <span class="nx">title</span><span class="o">=</span><span class="s2">"Site"</span> <span class="nx">description</span><span class="o">=</span><span class="s2">"How the site presents itself."</span><span class="o">&gt;</span>
+    <span class="nx">…</span>
+<span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">admin</span><span class="o">-</span><span class="nx">box</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-tabs&gt;</strong></p>
 <p>Underline tabs. The slot holds Bootstrap <code>nav-item</code> list items, so <code>service('resourceTabs')-&gt;renderTabsFor()</code> output
 fits in it.</p>
-<pre class="highlight"><code class="language-php">&lt;x-tabs&gt;
-    &lt;li class="nav-item"&gt;&lt;a class="nav-link active" href="&lt;?= $user-&gt;adminLink() ?&gt;"&gt;Details&lt;/a&gt;&lt;/li&gt;
-    &lt;?= service('resourceTabs')-&gt;renderTabsFor('user') ?&gt;
-&lt;/x-tabs&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">tabs</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"nav-item"</span><span class="o">&gt;&lt;</span><span class="nx">a</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"nav-link active"</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;adminLink</span><span class="s2">() ?&gt;"</span><span class="o">&gt;</span><span class="nx">Details</span><span class="o">&lt;/</span><span class="nx">a</span><span class="o">&gt;&lt;/</span><span class="nx">li</span><span class="o">&gt;</span>
+    <span class="o">&lt;?=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'resourceTabs'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">renderTabsFor</span><span class="p">(</span><span class="s1">'user'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;/x-tabs&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-settings-layout&gt;</strong></p>
 <p>The frame of a settings page: a "Settings" page head, a sub-nav of the sidebar's <code>settings</code> collection (only the pages
 the user may open, the current one marked), and the slot beside it. Register your module's settings page in that
 collection and wrap the page in it.</p>
-<pre class="highlight"><code class="language-php">&lt;x-settings-layout&gt;
-    &lt;form action="&lt;?= site_url(ADMIN_AREA . '/settings/blog') ?&gt;" method="post"&gt;
-        &lt;?= csrf_field() ?&gt;
-        &lt;x-admin-box title="Posts"&gt;…&lt;/x-admin-box&gt;
-        &lt;x-save-bar /&gt;
-    &lt;/form&gt;
-&lt;/x-settings-layout&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">settings</span><span class="o">-</span><span class="nx">layout</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">form</span> <span class="nx">action</span><span class="o">=</span><span class="s2">"&lt;?= site_url(ADMIN_AREA . '/settings/blog') ?&gt;"</span> <span class="nx">method</span><span class="o">=</span><span class="s2">"post"</span><span class="o">&gt;</span>
+        <span class="o">&lt;?=</span> <span class="nx">csrf_field</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;x-admin-box title="Posts"&gt;…&lt;/x-admin-box&gt;</span>
+<span class="x">        &lt;x-save-bar /&gt;</span>
+<span class="x">    &lt;/form&gt;</span>
+<span class="x">&lt;/x-settings-layout&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-sidebar&gt;</strong></p>
 <p>This is the main view that renders the sidebar and all links within it.</p>
 <h2 id="settings-forms">Settings forms</h2>
 <p><strong>&lt;x-setting-row&gt;</strong></p>
 <p>A label and description on the left, the control (the slot) on the right. Wraps on narrow screens. <code>for</code> points the
 label at the control's <code>id</code>.</p>
-<pre class="highlight"><code class="language-php">&lt;x-setting-row label="Site name" description="Shown in the admin." for="siteName"&gt;
-    &lt;input type="text" class="form-control" id="siteName" name="siteName" value="&lt;?= esc($siteName) ?&gt;"&gt;
-&lt;/x-setting-row&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">setting</span><span class="o">-</span><span class="nx">row</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Site name"</span> <span class="nx">description</span><span class="o">=</span><span class="s2">"Shown in the admin."</span> <span class="k">for</span><span class="o">=</span><span class="s2">"siteName"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">input</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"text"</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"form-control"</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"siteName"</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"siteName"</span> <span class="nx">value</span><span class="o">=</span><span class="s2">"&lt;?= esc(</span><span class="si">$siteName</span><span class="s2">) ?&gt;"</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">setting</span><span class="o">-</span><span class="nx">row</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-switch&gt;</strong></p>
 <p>An accessible <code>role="switch"</code> checkbox. A hidden input posts <code>offValue</code> (default <code>0</code>) when it is off; <code>value</code> (default
 <code>1</code>) posts when it is on. Give it an empty <code>offValue</code> to post nothing when off, as for an array name like
 <code>permissions[]</code> that should hold only the checked values. <code>checked</code> turns it on unless it is empty, <code>0</code> or <code>false</code>;
 <code>label</code> becomes its <code>aria-label</code>. Any other attribute (<code>id</code>, <code>x-model</code>, <code>disabled</code>, …) goes on the checkbox.</p>
-<pre class="highlight"><code class="language-php">&lt;x-switch name="siteOnline" label="Site online" checked="&lt;?= setting('Site.siteOnline') ? '1' : '' ?&gt;" /&gt;
-&lt;x-switch name="permissions[]" offValue value="users.edit" checked="&lt;?= $canEdit ? '1' : '' ?&gt;" /&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="k">switch</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"siteOnline"</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Site online"</span> <span class="nx">checked</span><span class="o">=</span><span class="s2">"&lt;?= setting('Site.siteOnline') ? '1' : '' ?&gt;"</span> <span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="k">switch</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"permissions[]"</span> <span class="nx">offValue</span> <span class="nx">value</span><span class="o">=</span><span class="s2">"users.edit"</span> <span class="nx">checked</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$canEdit</span><span class="s2"> ? '1' : '' ?&gt;"</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-segmented&gt;</strong></p>
 <p>A radio group styled as a segmented control. <code>options</code> is a JSON object of value =&gt; label; wrap it in single quotes.</p>
-<pre class="highlight"><code class="language-php">&lt;x-segmented name="timeFormat" label="Time format" value="&lt;?= $timeFormat ?&gt;"
-    options='&lt;?= json_encode(['g:i A' =&gt; '12-hour', 'H:i' =&gt; '24-hour'], JSON_HEX_APOS) ?&gt;' /&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">segmented</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"timeFormat"</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Time format"</span> <span class="nx">value</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$timeFormat</span><span class="s2"> ?&gt;"</span>
+    <span class="nx">options</span><span class="o">=</span><span class="s1">'&lt;?= json_encode(['</span><span class="nx">g</span><span class="o">:</span><span class="nx">i</span> <span class="nx">A</span><span class="s1">' =&gt; '</span><span class="mi">12</span><span class="o">-</span><span class="nx">hour</span><span class="s1">', '</span><span class="nx">H</span><span class="o">:</span><span class="nx">i</span><span class="s1">' =&gt; '</span><span class="mi">24</span><span class="o">-</span><span class="nx">hour</span><span class="s1">'], JSON_HEX_APOS) ?&gt;'</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-save-bar&gt;</strong></p>
 <p>A sticky "Unsaved changes · Discard · Save" bar for long forms. Put it inside the <code>&lt;form&gt;</code>: it appears once a field
 changes, Discard resets the form, and Save submits it. <code>save</code> relabels the Save button. Without JavaScript it is always
 shown, so the form can still be submitted.</p>
-<pre class="highlight"><code class="language-php">&lt;form method="post" action="…"&gt;
-    …
-    &lt;x-save-bar save="Save settings" /&gt;
-&lt;/form&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">form</span> <span class="nx">method</span><span class="o">=</span><span class="s2">"post"</span> <span class="nx">action</span><span class="o">=</span><span class="s2">"…"</span><span class="o">&gt;</span>
+    <span class="nx">…</span>
+    <span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">save</span><span class="o">-</span><span class="nx">bar</span> <span class="nx">save</span><span class="o">=</span><span class="s2">"Save settings"</span> <span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="nx">form</span><span class="o">&gt;</span>
+</code></pre></div>
 <h2 id="lists">Lists</h2>
 <p><strong>&lt;x-chip&gt;</strong></p>
 <p>A pill filter with an optional <code>count</code>. With an <code>href</code> it is a link (<code>active</code> marks the current one). With a <code>name</code> it
 is a radio input for a filter form, checked when <code>active</code>; give the chips one <code>name</code> and each its own <code>value</code>. With
 neither it is a toggle button. Other attributes (<code>hx-get</code>, <code>hx-target</code>, …) pass through.</p>
-<pre class="highlight"><code class="language-php">&lt;x-chip label="Admins" count="3" href="?group=admin" active="&lt;?= $group === 'admin' ? '1' : '' ?&gt;" /&gt;
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">chip</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Admins"</span> <span class="nb">count</span><span class="o">=</span><span class="s2">"3"</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"?group=admin"</span> <span class="nx">active</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$group</span><span class="s2"> === 'admin' ? '1' : '' ?&gt;"</span> <span class="o">/&gt;</span>
 
-&lt;x-chip name="role" value="admin" label="Admins" count="3" active="&lt;?= $role === 'admin' ? '1' : '' ?&gt;" /&gt;</code></pre>
+<span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">chip</span> <span class="nx">name</span><span class="o">=</span><span class="s2">"role"</span> <span class="nx">value</span><span class="o">=</span><span class="s2">"admin"</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Admins"</span> <span class="nb">count</span><span class="o">=</span><span class="s2">"3"</span> <span class="nx">active</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$role</span><span class="s2"> === 'admin' ? '1' : '' ?&gt;"</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-status&gt;</strong></p>
 <p>A coloured dot and a label. <code>tone</code> is <code>ok</code>, <code>warn</code>, <code>danger</code>, <code>info</code> or <code>muted</code> (the default).</p>
-<pre class="highlight"><code class="language-php">&lt;x-status tone="ok" label="Active" /&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">status</span> <span class="nx">tone</span><span class="o">=</span><span class="s2">"ok"</span> <span class="nx">label</span><span class="o">=</span><span class="s2">"Active"</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-empty-state&gt;</strong></p>
 <p>A centered <code>title</code> and optional <code>hint</code> for a list with nothing in it.</p>
-<pre class="highlight"><code class="language-php">&lt;x-empty-state title="No users match" hint="Try a different search or group." /&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="k">empty</span><span class="o">-</span><span class="nx">state</span> <span class="nx">title</span><span class="o">=</span><span class="s2">"No users match"</span> <span class="nx">hint</span><span class="o">=</span><span class="s2">"Try a different search or group."</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-selection-bar&gt;</strong></p>
 <p>A sticky bar showing "N selected" while any row checkbox (<code>tbody input[type=checkbox]</code>) in its form is checked. The
 slot holds the bulk actions; the ✕ clears the selection.</p>
-<pre class="highlight"><code class="language-php">&lt;form method="post"&gt;
-    &lt;?= csrf_field() ?&gt;
-    &lt;table class="table"&gt;…&lt;/table&gt;
-    &lt;x-selection-bar&gt;
-        &lt;x-bulk-actions list="users" /&gt;
-    &lt;/x-selection-bar&gt;
-&lt;/form&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">form</span> <span class="nx">method</span><span class="o">=</span><span class="s2">"post"</span><span class="o">&gt;</span>
+    <span class="o">&lt;?=</span> <span class="nx">csrf_field</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;table class="table"&gt;…&lt;/table&gt;</span>
+<span class="x">    &lt;x-selection-bar&gt;</span>
+<span class="x">        &lt;x-bulk-actions list="users" /&gt;</span>
+<span class="x">    &lt;/x-selection-bar&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-bulk-actions&gt;</strong></p>
 <p>The bulk <a href="../actions/">actions</a> of the <code>list</code>, as buttons that post the form's checked <code>selects[]</code>. Place it inside
 <code>&lt;x-selection-bar&gt;</code>.</p>
 <p><strong>&lt;x-row-actions&gt;</strong></p>
 <p>A row's menu: its slot (links like Edit), then the row <a href="../actions/">actions</a> of the <code>list</code> for the record <code>id</code>.</p>
-<pre class="highlight"><code class="language-php">&lt;x-row-actions list="users" id="&lt;?= $user-&gt;id ?&gt;"&gt;
-    &lt;li&gt;&lt;a href="&lt;?= $user-&gt;adminLink() ?&gt;" class="dropdown-item"&gt;Edit&lt;/a&gt;&lt;/li&gt;
-&lt;/x-row-actions&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">row</span><span class="o">-</span><span class="nx">actions</span> <span class="k">list</span><span class="o">=</span><span class="s2">"users"</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;id</span><span class="s2"> ?&gt;"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;adminLink</span><span class="s2">() ?&gt;"</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"dropdown-item"</span><span class="o">&gt;</span><span class="nx">Edit</span><span class="o">&lt;/</span><span class="nx">a</span><span class="o">&gt;&lt;/</span><span class="nx">li</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">row</span><span class="o">-</span><span class="nx">actions</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-confirm-dialog&gt;</strong> and <strong>&lt;x-action-run&gt;</strong></p>
 <p>Both sit once in the Admin layout (<code>master.php</code>). <code>&lt;x-confirm-dialog&gt;</code> asks before actions, <code>hx-confirm</code> requests and
 <code>data-confirm</code> links and buttons go ahead (see <a href="../actions/#confirmation">Confirmation</a>), and renders the form
@@ -1896,10 +1907,6 @@ toasts, shows the progress of an action run just queued.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

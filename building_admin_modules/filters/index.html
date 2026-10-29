@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1736,17 +1734,18 @@ for you. This ensures a consistent look and functionality in the UI while provid
 need to create a UI in a hurry.</p>
 <h2 id="specifying-filterable-columns">Specifying Filterable Columns</h2>
 <p>You specify the available filters within your Model, using a class property named <code>filters</code>.</p>
-<pre class="highlight"><code class="language-php">protected $filters = [
-    'column_name' =&gt; [
-        'title' =&gt; 'Column Title',
-        'type' =&gt; 'radio',
-        'options' =&gt; ['one' =&gt; 'Option 1', 'two' =&gt; 'Option 2']
-    ],
-    'column_two' =&gt; [
-        'title' =&gt; 'Column Title',
-        'options' =&gt; 'methodName'
-    ]
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">protected</span> <span class="nv">$filters</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'column_name'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Column Title'</span><span class="p">,</span>
+        <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'radio'</span><span class="p">,</span>
+        <span class="s1">'options'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'one'</span> <span class="o">=&gt;</span> <span class="s1">'Option 1'</span><span class="p">,</span> <span class="s1">'two'</span> <span class="o">=&gt;</span> <span class="s1">'Option 2'</span><span class="p">]</span>
+    <span class="p">],</span>
+    <span class="s1">'column_two'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Column Title'</span><span class="p">,</span>
+        <span class="s1">'options'</span> <span class="o">=&gt;</span> <span class="s1">'methodName'</span>
+    <span class="p">]</span>
+<span class="p">];</span>
+</code></pre></div>
 <p>The key of each array element is the name of the <code>column</code> that you wish to filter on. The column must be within the
 table for the model (see below for other options). It is then described by an array with the keys <code>title</code>, <code>options</code>, and 
 optional key <code>type</code>. 
@@ -1763,69 +1762,73 @@ that returns the list of options.</p>
 trait, which implements a basic <code>filter()</code> method for you.</p>
 <p>Since model's can get crowded with test data, filter data, custom methods, events, and more, you can split out the
 filter functionality into a new class that extends the model, placing your custom filter logic within that class.</p>
-<pre class="highlight"><code class="language-php">use App\UserModel;
-use Bonfire\Traits\Filterable;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">App\UserModel</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Traits\Filterable</span><span class="p">;</span>
 
-class UserFilter extends UserModel
-{
-    use Filterable;
+<span class="k">class</span> <span class="nc">UserFilter</span> <span class="k">extends</span> <span class="nx">UserModel</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">Filterable</span><span class="p">;</span>
 
-    public $filters = [
-        ...
-    ];
+    <span class="k">public</span> <span class="nv">$filters</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">...</span>
+    <span class="p">];</span>
 
-    /**
-     * A computed options function
-     */
-    protected function computeFilterA()
-    {
-        //
-    }
-}</code></pre>
+    <span class="sd">/**</span>
+<span class="sd">     * A computed options function</span>
+<span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">computeFilterA</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">//</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="complex-filter-columns">Complex Filter Columns</h3>
 <p>There are many times that you'll need to show options that don't directly relate to the model at hand. In this case
 you must override the  <code>filter()</code> method on the model. Within that method you must handle all of the cases for the
 options you provided manually, returning the query object.</p>
-<pre class="highlight"><code class="language-php">public function filter(array $params)
-{
-    $query = $this-&gt;builder();
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">filter</span><span class="p">(</span><span class="k">array</span> <span class="nv">$params</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">builder</span><span class="p">();</span>
 
-    if (isset($params['foo']) &amp;&amp; ! empty($params['foo'])) {
-        $query-&gt;whereIn('foo', $params['foo']);
-    }
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$params</span><span class="p">[</span><span class="s1">'foo'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$params</span><span class="p">[</span><span class="s1">'foo'</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">whereIn</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">,</span> <span class="nv">$params</span><span class="p">[</span><span class="s1">'foo'</span><span class="p">]);</span>
+    <span class="p">}</span>
 
-    return $query;
-}</code></pre>
+    <span class="k">return</span> <span class="nv">$query</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="displaying-filters-in-the-admin">Displaying Filters in the Admin</h2>
 <p>There are 4 parts that are needed to get a working, filterable list of resources in the admin area.</p>
 <h3 id="the-route">The Route</h3>
 <p>The main route for your resource list page must support both GET and POST methods.</p>
-<pre class="highlight"><code class="language-php">$routes-&gt;match(['GET', 'POST'], 'users', 'UserController::list', ['as' =&gt; 'user-list']);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">match</span><span class="p">([</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'POST'</span><span class="p">],</span> <span class="s1">'users'</span><span class="p">,</span> <span class="s1">'UserController::list'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'as'</span> <span class="o">=&gt;</span> <span class="s1">'user-list'</span><span class="p">]);</span>
+</code></pre></div>
 <p>The controller should then choose between sending either a full HTML page for a regular GET request, 
 or just sending back the table for ajax requests issued via HTMX. You might do it something like:</p>
-<pre class="highlight"><code class="language-php">public function list()
-{
-    $userModel = model('UserFilter');
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">list</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$userModel</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="s1">'UserFilter'</span><span class="p">);</span>
 
-    // Performs the actual filtering of the results.
-    $userModel-&gt;filter($this-&gt;request-&gt;getPost('filters'));
+    <span class="c1">// Performs the actual filtering of the results.</span>
+    <span class="nv">$userModel</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">getPost</span><span class="p">(</span><span class="s1">'filters'</span><span class="p">));</span>
 
-    $view = $this-&gt;request-&gt;hasHeader('HX-Request')
-        ? $this-&gt;viewPrefix .'_table'
-        : $this-&gt;viewPrefix .'list';
+    <span class="nv">$view</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">hasHeader</span><span class="p">(</span><span class="s1">'HX-Request'</span><span class="p">)</span>
+        <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">viewPrefix</span> <span class="o">.</span><span class="s1">'_table'</span>
+        <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">viewPrefix</span> <span class="o">.</span><span class="s1">'list'</span><span class="p">;</span>
 
-    return $this-&gt;render($view, [
-        'headers' =&gt; [
-            'email' =&gt; 'Email',
-            'name' =&gt; 'Name',
-            'groups' =&gt; 'Groups',
-            'last_login' =&gt; 'Last Login'
-        ],
-        'showSelectAll' =&gt; true,
-        'users' =&gt; $userModel-&gt;paginate(setting('Site.perPage')),
-        'pager' =&gt; $userModel-&gt;pager,
-    ]);
-}</code></pre>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="nv">$view</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'Email'</span><span class="p">,</span>
+            <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Name'</span><span class="p">,</span>
+            <span class="s1">'groups'</span> <span class="o">=&gt;</span> <span class="s1">'Groups'</span><span class="p">,</span>
+            <span class="s1">'last_login'</span> <span class="o">=&gt;</span> <span class="s1">'Last Login'</span>
+        <span class="p">],</span>
+        <span class="s1">'showSelectAll'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">'users'</span> <span class="o">=&gt;</span> <span class="nv">$userModel</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="nx">setting</span><span class="p">(</span><span class="s1">'Site.perPage'</span><span class="p">)),</span>
+        <span class="s1">'pager'</span> <span class="o">=&gt;</span> <span class="nv">$userModel</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">,</span>
+    <span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="the-view">The View</h3>
 <p>Within your view there are 3 things to do.</p>
 <p>First, ensure that the table with your resource list is wrapped in a div that uses some <a href="https://alpinejs.dev/">Alpine.js</a>
@@ -1838,21 +1841,22 @@ that calls your controller method via AJAX and updates the list of items without
 <a href="https://htmx.org/">htmx</a> magic. When calling this, you must supply the ID of the div that surrounds the table of
 results as the <code>target</code>.</p>
 <p>Here's how this is used for the list of users within Bonfire.</p>
-<pre class="highlight"><code class="language-html">&lt;div x-data="{filtered: false}"&gt;
-    &lt;x-filter-link /&gt;
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">x-data</span><span class="o">=</span><span class="s">"{filtered: false}"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">x-filter-link</span> <span class="p">/&gt;</span>
 
-    &lt;div class="row"&gt;
-        &lt;!-- List Users --&gt;
-        &lt;div class="col order-2 order-md-1" id="content-list"&gt;
-            &lt;?= $this-&gt;include('Bonfire\Users\Views\_table') ?&gt;
-        &lt;/div&gt;
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"row"</span><span class="p">&gt;</span>
+        <span class="cm">&lt;!-- List Users --&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"col order-2 order-md-1"</span> <span class="na">id</span><span class="o">=</span><span class="s">"content-list"</span><span class="p">&gt;</span>
+            <span class="cp">&lt;?= $this-&gt;include('Bonfire\Users\Views\_table') ?&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-        &lt;!-- Filters --&gt;
-        &lt;div class="col-auto order-1 order-md-2" x-show="filtered" x-transition.duration.240ms&gt;
-            &lt;?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+        <span class="cm">&lt;!-- Filters --&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"col-auto order-1 order-md-2"</span> <span class="na">x-show</span><span class="o">=</span><span class="s">"filtered"</span> <span class="na">x-transition</span><span class="err">.</span><span class="na">duration</span><span class="err">.</span><span class="na">240ms</span><span class="p">&gt;</span>
+            <span class="cp">&lt;?= view_cell('Bonfire\Libraries\Cells\Filters::renderList 'model=UserFilter target=#content-list') ?&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
 <p>Note that the id of the eleent that contains the included table should be with <code>id="content-list"</code> as it this <code>id</code> is
 the default target for content replacements by the pager and the filter.</p>
 <p>For the admin design's list footer ("Showing X of Y · Previous / Next", loaded through htmx), render the pager with
@@ -1977,10 +1981,6 @@ takes its <code>hx-target</code> from an ancestor, so put <code>hx-target="#cont
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1596,46 +1594,48 @@
 
 <h1 id="view-metadata">View Metadata</h1>
 <p>Bonfire provides a <code>Metadata</code> service that simplifies working with the meta information, scripts, and styles in your application.</p>
-<pre class="highlight"><code class="language-php">$viewMeta = service('viewMeta');
+<div class="highlight"><pre><span></span><code><span class="nv">$viewMeta</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'viewMeta'</span><span class="p">);</span>
 
-// Add the page title
-$viewMeta-&gt;setTitle('My Site');
+<span class="c1">// Add the page title</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">setTitle</span><span class="p">(</span><span class="s1">'My Site'</span><span class="p">);</span>
 
-// Add misc page meta data
-$viewMeta-&gt;addMeta(['description' =&gt; 'This is the description of the page']);
-$viewMeta-&gt;addMeta(['property' =&gt; 'og:title', 'content' =&gt; 'This is the title of the page']);
+<span class="c1">// Add misc page meta data</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addMeta</span><span class="p">([</span><span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'This is the description of the page'</span><span class="p">]);</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addMeta</span><span class="p">([</span><span class="s1">'property'</span> <span class="o">=&gt;</span> <span class="s1">'og:title'</span><span class="p">,</span> <span class="s1">'content'</span> <span class="o">=&gt;</span> <span class="s1">'This is the title of the page'</span><span class="p">]);</span>
 
-// Add link tags
-$viewMeta-&gt;addLink(['rel' =&gt; 'canonical', 'href' =&gt; 'https://example.com/']);
-$viewMeta-&gt;addLink(['rel' =&gt; 'icon', 'href' =&gt; 'favicon.ico', 'type' =&gt; 'image/x-icon']);
+<span class="c1">// Add link tags</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addLink</span><span class="p">([</span><span class="s1">'rel'</span> <span class="o">=&gt;</span> <span class="s1">'canonical'</span><span class="p">,</span> <span class="s1">'href'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com/'</span><span class="p">]);</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addLink</span><span class="p">([</span><span class="s1">'rel'</span> <span class="o">=&gt;</span> <span class="s1">'icon'</span><span class="p">,</span> <span class="s1">'href'</span> <span class="o">=&gt;</span> <span class="s1">'favicon.ico'</span><span class="p">,</span> <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'image/x-icon'</span><span class="p">]);</span>
 
-// Add script tags
-$viewMeta-&gt;addScript(['src' =&gt; 'https://example.com/js/jquery.min.js']);
-$viewMeta-&gt;addScript(['src' =&gt; 'https://example.com/js/bootstrap.min.js', 'type' =&gt; 'text/javascript']);
+<span class="c1">// Add script tags</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addScript</span><span class="p">([</span><span class="s1">'src'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com/js/jquery.min.js'</span><span class="p">]);</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addScript</span><span class="p">([</span><span class="s1">'src'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com/js/bootstrap.min.js'</span><span class="p">,</span> <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'text/javascript'</span><span class="p">]);</span>
 
-// Adding script blocks
-$script = &lt;&lt;&lt;TEXT
-    // all your javscript code here
-TEXT;
-$viewMeta-&gt;addRawScript($script);</code></pre>
+<span class="c1">// Adding script blocks</span>
+<span class="nv">$script</span> <span class="o">=</span> <span class="s">&lt;&lt;&lt;</span><span class="dl">TEXT</span>
+<span class="s">    // all your javscript code here</span>
+<span class="dl">TEXT</span><span class="p">;</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addRawScript</span><span class="p">(</span><span class="nv">$script</span><span class="p">);</span>
+</code></pre></div>
 <p>The <code>addMeta</code>, <code>addLink</code> and <code>addScript</code> methods all take an array of key value pairs. Each of the pairs will have
 all of the key/value pairs rendered as <code>key=value</code> within the tags, so you can fully customize what each one contains.</p>
 <h2 id="outputting-the-metadata">Outputting the Metadata</h2>
 <p>Within your layouts you can use the <code>render()</code> method to render any of the data types.</p>
-<pre class="highlight"><code class="language-php">// Render the title tag - &lt;title&gt;...&lt;/title&gt;
-&lt;?= $viewMeta-&gt;render('title') ?&gt;
-// Get just the title value
-&lt;?= $viewMeta-&gt;title() ?&gt;
+<div class="highlight"><pre><span></span><code><span class="c1">// Render the title tag - &lt;title&gt;...&lt;/title&gt;</span>
+<span class="o">&lt;?=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'title'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">// Get just the title value</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">()</span> <span class="cp">?&gt;</span>
 
-// Render all meta tags
-&lt;?= $viewMeta-&gt;render('meta') ?&gt;
+<span class="x">// Render all meta tags</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'meta'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 
-// Render all link tags
-&lt;?= $viewMeta-&gt;render('link') ?&gt;
+<span class="x">// Render all link tags</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'link'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 
-// Render all script tags
-&lt;?= $viewMeta-&gt;render('script') ?&gt;
-&lt;?= $viewMeta-&gt;render('rawScripts') ?&gt;</code></pre>
+<span class="x">// Render all script tags</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'script'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'rawScripts'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 
 
 
@@ -1755,10 +1755,6 @@ all of the key/value pairs rendered as <code>key=value</code> within the tags, s
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

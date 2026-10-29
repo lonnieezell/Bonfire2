@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1649,31 +1647,36 @@ one file changes every instance of the view throughout the application.</p>
 <p>To create a component, simply create a new view file within the theme's <code>Component</code> directory, or the 
 application's, <code>app/Components</code> directory.</p>
 <p>A simple avatar image might look something like this: </p>
-<pre class="highlight"><code class="language-php">// app/Components/avatar.php
-&lt;img
-  src="&lt;?= $src ?? '' ?&gt;"
-  class="rounded-circle shadow-4"
-  style="width: &lt;?= $width ?? '150px' ?&gt;;"
-  alt="&lt;?= $alt ?? '' ?&gt;"
-/&gt; </code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// app/Components/avatar.php</span>
+<span class="o">&lt;</span><span class="nx">img</span>
+  <span class="nx">src</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$src</span><span class="s2"> ?? '' ?&gt;"</span>
+  <span class="nx">class</span><span class="o">=</span><span class="s2">"rounded-circle shadow-4"</span>
+  <span class="nx">style</span><span class="o">=</span><span class="s2">"width: &lt;?= </span><span class="si">$width</span><span class="s2"> ?? '150px' ?&gt;;"</span>
+  <span class="nx">alt</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$alt</span><span class="s2"> ?? '' ?&gt;"</span>
+<span class="o">/&gt;</span> 
+</code></pre></div>
 <p>When using the component within a view, you would insert a tag with <code>x-</code> prepended to the filename: </p>
-<pre class="highlight"><code class="language-php">&lt;x-avatar src="&lt;?= $user-&gt;avatarUrl() ?&gt;" alt="&lt;?= $user-&gt;name ?&gt;" /&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">avatar</span> <span class="nx">src</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;avatarUrl</span><span class="s2">() ?&gt;"</span> <span class="nx">alt</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$user-&gt;name</span><span class="s2"> ?&gt;"</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <p>Any attributes provided when you insert the component like this are made available as variables within 
 the component view. In this case, the <code>$src</code> and <code>$alt</code> attributes are passed to the component view, resulting
 in the following output: </p>
-<pre class="highlight"><code class="language-html">&lt;img
-  src="http://example.com/avatars/foo.jpg"
-  class="rounded-circle shadow-4"
-  style="width: 150px"
-  alt="John Smith"
-/&gt; </code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">img</span>
+  <span class="na">src</span><span class="o">=</span><span class="s">"http://example.com/avatars/foo.jpg"</span>
+  <span class="na">class</span><span class="o">=</span><span class="s">"rounded-circle shadow-4"</span>
+  <span class="na">style</span><span class="o">=</span><span class="s">"width: 150px"</span>
+  <span class="na">alt</span><span class="o">=</span><span class="s">"John Smith"</span>
+<span class="p">/&gt;</span> 
+</code></pre></div>
 <h2 id="components-with-opening-and-closing-tags">Components With Opening and Closing Tags</h2>
 <p>You can include the content within the opening and closing tags by inserting the reserved <code>$slot</code> variable: </p>
-<pre class="highlight"><code class="language-html">&lt;x-green-button&gt;Click Me!&lt;/x-green-button&gt;</code></pre>
-<pre class="highlight"><code class="language-php">// app/Components/green-button.php
-&lt;button class="btn btn-success"&gt;
-    &lt;?= $slot ?&gt;
-&lt;/button&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">x-green-button</span><span class="p">&gt;</span>Click Me!<span class="p">&lt;/</span><span class="nt">x-green-button</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// app/Components/green-button.php</span>
+<span class="o">&lt;</span><span class="nx">button</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"btn btn-success"</span><span class="o">&gt;</span>
+    <span class="o">&lt;?=</span> <span class="nv">$slot</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;/button&gt;</span>
+</code></pre></div>
 <h2 id="controlled-components">Controlled Components</h2>
 <p>Finally, you can create a class to add additional logic to the output for both self-closing tags and tags 
 with content. The file must be in the same directory as the component view, and should have a name that is
@@ -1686,75 +1689,78 @@ The data you pass will be available within the class as it's <code>$data</code> 
 <code>FamousQuotesComponent.php</code>. The class must extend <code>Bonfire\View\Component</code>. The only requirement is that you
 implement a method called <code>render()</code>.</p>
 <p>Below are example files of a usable <code>famous-quotes</code> component, that can be included in any of these three ways:</p>
-<pre class="highlight"><code class="language-html">&lt;x-famous-quotes /&gt;
-&lt;x-famous-quotes seconds="30" /&gt;
-&lt;x-famous-quotes seconds="30"&gt;Famous Quotes&lt;/x-famous-quotes&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">x-famous-quotes</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">x-famous-quotes</span> <span class="na">seconds</span><span class="o">=</span><span class="s">"30"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">x-famous-quotes</span> <span class="na">seconds</span><span class="o">=</span><span class="s">"30"</span><span class="p">&gt;</span>Famous Quotes<span class="p">&lt;/</span><span class="nt">x-famous-quotes</span><span class="p">&gt;</span>
+</code></pre></div>
 <p>It's controlling class file <code>FamousQuotesComponent.php</code>:</p>
-<pre class="highlight"><code class="language-php">namespace App\Components;
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">App\Components</span><span class="p">;</span>
 
-/**
- * This example controlled component allows to retrieve a random famous quote
- * from the ZenQuotes API and cache it for a specified number of seconds.
- * Number of seconds can be passed as a parameter to the component.
- * If you want to add a title to the component, you can pass it as a $slot variable.
- */
-class FamousQuotesComponent extends \Bonfire\View\Component
-{
-    protected $defaultNoOfSeconds         = 600;
-    protected string $famousQuotesAPINode = 'https://zenquotes.io/api/random';
+<span class="sd">/**</span>
+<span class="sd"> * This example controlled component allows to retrieve a random famous quote</span>
+<span class="sd"> * from the ZenQuotes API and cache it for a specified number of seconds.</span>
+<span class="sd"> * Number of seconds can be passed as a parameter to the component.</span>
+<span class="sd"> * If you want to add a title to the component, you can pass it as a $slot variable.</span>
+<span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">FamousQuotesComponent</span> <span class="k">extends</span> <span class="nx">\Bonfire\View\Component</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$defaultNoOfSeconds</span>         <span class="o">=</span> <span class="mi">600</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nx">string</span> <span class="nv">$famousQuotesAPINode</span> <span class="o">=</span> <span class="s1">'https://zenquotes.io/api/random'</span><span class="p">;</span>
 
-    public function render(): string
-    {
-        return $this-&gt;renderView($this-&gt;view, $this-&gt;getFamousQuote());
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">render</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">renderView</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getFamousQuote</span><span class="p">());</span>
+    <span class="p">}</span>
 
-    public function getFamousQuote(): array
-    {
-        helper('cache');
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getFamousQuote</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+    <span class="p">{</span>
+        <span class="nx">helper</span><span class="p">(</span><span class="s1">'cache'</span><span class="p">);</span>
 
-        if (isset($this-&gt;data['seconds']) &amp;&amp; is_numeric($this-&gt;data['seconds'])) {
-            $this-&gt;data['seconds'] = (int) round($this-&gt;data['seconds'], 0);
-        } else {
-            $this-&gt;data['seconds'] = $this-&gt;defaultNoOfSeconds;
-        }
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">is_numeric</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span> <span class="nb">round</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">defaultNoOfSeconds</span><span class="p">;</span>
+        <span class="p">}</span>
 
-        $cacheKey = 'famous_quote';
+        <span class="nv">$cacheKey</span> <span class="o">=</span> <span class="s1">'famous_quote'</span><span class="p">;</span>
 
-        if ($cachedQuote = cache($cacheKey)) {
-            return $cachedQuote;
-        }
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$cachedQuote</span> <span class="o">=</span> <span class="nx">cache</span><span class="p">(</span><span class="nv">$cacheKey</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$cachedQuote</span><span class="p">;</span>
+        <span class="p">}</span>
 
-        $response  = file_get_contents($this-&gt;famousQuotesAPINode);
-        $quoteData = json_decode($response, true);
+        <span class="nv">$response</span>  <span class="o">=</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">famousQuotesAPINode</span><span class="p">);</span>
+        <span class="nv">$quoteData</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$response</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
 
-        if (isset($quoteData[0])) {
-            $this-&gt;data['quote'] = [
-                'text'   =&gt; $quoteData[0]['q'],
-                'author' =&gt; $quoteData[0]['a'],
-            ];
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$quoteData</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'quote'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">'text'</span>   <span class="o">=&gt;</span> <span class="nv">$quoteData</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'q'</span><span class="p">],</span>
+                <span class="s1">'author'</span> <span class="o">=&gt;</span> <span class="nv">$quoteData</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'a'</span><span class="p">],</span>
+            <span class="p">];</span>
 
-            cache()-&gt;save($cacheKey, $this-&gt;data, $this-&gt;data['seconds']);
-        } else {
-            $this-&gt;data['quote'] = [
-                'text'   =&gt; 'Sucking at something is the first step to becoming sorta good at something.',
-                'author' =&gt; 'Jake (from "Adventure Time")',
-            ];
-        }
+            <span class="nx">cache</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$cacheKey</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">[</span><span class="s1">'quote'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">'text'</span>   <span class="o">=&gt;</span> <span class="s1">'Sucking at something is the first step to becoming sorta good at something.'</span><span class="p">,</span>
+                <span class="s1">'author'</span> <span class="o">=&gt;</span> <span class="s1">'Jake (from "Adventure Time")'</span><span class="p">,</span>
+            <span class="p">];</span>
+        <span class="p">}</span>
 
-        return $this-&gt;data;
-    }
-}</code></pre>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>And it's view file <code>famous-quotes.php</code>:</p>
-<pre class="highlight"><code class="language-php">&lt;div class="card mb-3"&gt;
-    &lt;div class="card-header"&gt;
-        &lt;?= esc($slot ?? '') ?&gt;
-    &lt;/div&gt;
-    &lt;div class="card-body mt-3"&gt;
-        &lt;p class="card-text text-center"&gt;&lt;?= esc($quote['text']) ?&gt;&lt;/p&gt;
-        &lt;footer class="blockquote-footer text-center"&gt;&lt;em&gt;&lt;?= esc($quote['author']) ?&gt;&lt;/em&gt;&lt;/footer&gt;
-    &lt;/div&gt;
-    &lt;div class="card-footer" style="font-size:10px;"&gt;Cached for &lt;?= esc($seconds) ?&gt; seconds&lt;/div&gt;
-&lt;/div&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"card mb-3"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"card-header"</span><span class="o">&gt;</span>
+        <span class="o">&lt;?=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$slot</span> <span class="o">??</span> <span class="s1">''</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">    &lt;div class="card-body mt-3"&gt;</span>
+<span class="x">        &lt;p class="card-text text-center"&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$quote</span><span class="p">[</span><span class="s1">'text'</span><span class="p">])</span> <span class="cp">?&gt;</span><span class="x">&lt;/p&gt;</span>
+<span class="x">        &lt;footer class="blockquote-footer text-center"&gt;&lt;em&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$quote</span><span class="p">[</span><span class="s1">'author'</span><span class="p">])</span> <span class="cp">?&gt;</span><span class="x">&lt;/em&gt;&lt;/footer&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">    &lt;div class="card-footer" style="font-size:10px;"&gt;Cached for </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$seconds</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x"> seconds&lt;/div&gt;</span>
+<span class="x">&lt;/div&gt;</span>
+</code></pre></div>
 
 
 
@@ -1874,10 +1880,6 @@ class FamousQuotesComponent extends \Bonfire\View\Component
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

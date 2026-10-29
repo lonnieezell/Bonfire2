@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1830,30 +1828,36 @@
 </div>
 <h2 id="loading-the-helpers">Loading the Helpers</h2>
 <p>As long as you use Bonfire's custom View system, this helper will be automatically loaded. Otherwise, you will need to load it manually.</p>
-<pre class="highlight"><code class="language-php">helper('assets');</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">helper</span><span class="p">(</span><span class="s1">'assets'</span><span class="p">);</span>
+</code></pre></div>
 <h2 id="defining-asset-locations">Defining Asset Locations</h2>
 <p>The first step is to define the locations where assets can be located. This is done in the <code>app/Config/Assets.php</code> file. The <code>$folders</code> array defines an alias for each folder that we can reference later, and the actual path to the folder.</p>
-<pre class="highlight"><code class="language-php">public $folders = [
-    'app' =&gt; ROOTPATH.'themes/app',
-    'admin' =&gt; ROOTPATH.'themes/Admin',
-    'auth' =&gt; ROOTPATH.'themes/Auth',
-    'other' =&gt; ROOTPATH.'vendor',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$folders</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'app'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/app'</span><span class="p">,</span>
+    <span class="s1">'admin'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/Admin'</span><span class="p">,</span>
+    <span class="s1">'auth'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/Auth'</span><span class="p">,</span>
+    <span class="s1">'other'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'vendor'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <h2 id="linking-to-assets">Linking to assets</h2>
 <p>Within your views you can link to assets anywhere within your project with the <code>asset()</code> or <code>asset_link()</code> helper functions.</p>
 <h3 id="asset_link">asset_link()</h3>
 <p><code>asset_link()</code> takes two arguments. The first is the path to the file to load. The first segment of this path must be one of the defined folders. The rest of the path would be based on the actual file structure within that location.</p>
-<pre class="highlight"><code class="language-php">{$folder alias}/path/to/file.{css|js}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nv">$folder</span> <span class="nx">alias</span><span class="p">}</span><span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nb">file</span><span class="o">.</span><span class="p">{</span><span class="nx">css</span><span class="o">|</span><span class="nx">js</span><span class="p">}</span>
+</code></pre></div>
 <p>For the <code>Admin</code> theme, a folder has been defined called <code>admin</code>. Both the <code>Auth</code> and <code>App</code> themes have similar folders already defined. Assuming there was a file at <code>themes/Admin/css/admin.css</code>, you would build the link to it like this:</p>
-<pre class="highlight"><code class="language-php">'admin/css/admin.css'</code></pre>
+<div class="highlight"><pre><span></span><code><span class="s1">'admin/css/admin.css'</span>
+</code></pre></div>
 <p>The second argument is the type of asset being loaded. This tells it how the resulting link should be formed.
 Currently, it only supports <code>css</code> and <code>js</code> files.</p>
-<pre class="highlight"><code class="language-php">&lt;?= asset_link('admin/css/admin.css', 'css') ?&gt;
-&lt;?= asset_link('admin/js/admin.js', 'js') ?&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'admin/css/admin.css'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'admin/js/admin.js'</span><span class="p">,</span> <span class="s1">'js'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <h3 id="asset">asset()</h3>
 <p>The <code>asset()</code> function is similar, except it only returns the URL and allows you to include it in your own HTML tags manually if needed.</p>
-<pre class="highlight"><code class="language-html">&lt;link rel="stylesheet" href="&lt;?= asset('admin/css/admin.css', 'css') ?&gt;" /&gt;
-&lt;script src="&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"&gt;&lt;/script&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/css/admin.css', 'css') ?&gt;"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>The <code>Config\Assets</code> class has a handful of settings to customize the experience.</p>
 <h3 id="bustingtype">$bustingType</h3>
@@ -1864,18 +1868,20 @@ Currently, it only supports <code>css</code> and <code>js</code> files.</p>
 <p>The <code>$separator</code> setting allows the app to detect the part of the asset file name that was added for cache-busting purposes. It can be a single web-safe non-reserved character or a combination of such characters (characters that are allowed in a URI, but do not have a reserved purpose) that DOES NOT OCCUR in your asset file names (like <code>~</code>, <code>-</code> or <code>_</code> or any combination of ASCII letters and numbers). Separator will be inserted before the file version/timestamp, in between the file name and file extension.</p>
 <h3 id="versions">$versions</h3>
 <p>The <code>$versions</code> setting allows you to define the version number for <code>css</code> and <code>js</code> separately. This value is used as the cache-busting string when the <code>version</code> busting type is used.</p>
-<pre class="highlight"><code class="language-php">public $versions = [
-    'css' =&gt; '1.0',
-    'js' =&gt; '1.0',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$versions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'css'</span> <span class="o">=&gt;</span> <span class="s1">'1.0'</span><span class="p">,</span>
+    <span class="s1">'js'</span> <span class="o">=&gt;</span> <span class="s1">'1.0'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <h3 id="folders">$folders</h3>
 <p>This values is where you define the folders that are looked in linking to an asset. Folders for all themes and the vendor folder are setup by default.</p>
-<pre class="highlight"><code class="language-php">public $folders = [
-    'app' =&gt; ROOTPATH.'themes/app',
-    'admin' =&gt; ROOTPATH.'themes/Admin',
-    'auth' =&gt; ROOTPATH.'themes/Auth',
-    'other' =&gt; ROOTPATH.'vendor',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$folders</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'app'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/app'</span><span class="p">,</span>
+    <span class="s1">'admin'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/Admin'</span><span class="p">,</span>
+    <span class="s1">'auth'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'themes/Auth'</span><span class="p">,</span>
+    <span class="s1">'other'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span><span class="o">.</span><span class="s1">'vendor'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 
 
 
@@ -1995,10 +2001,6 @@ Currently, it only supports <code>css</code> and <code>js</code> files.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

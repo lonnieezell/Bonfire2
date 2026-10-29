@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1530,16 +1528,18 @@
 <h1 id="alerts">Alerts</h1>
 <p>Bonfire uses <a href="https://github.com/tattersoftware/codeigniter4-alerts">Tatter\Alerts</a> to provide support for
 simple alerts. The usage is simple: </p>
-<pre class="highlight"><code class="language-php">alert('success', 'Your message goes here.');</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">alert</span><span class="p">(</span><span class="s1">'success'</span><span class="p">,</span> <span class="s1">'Your message goes here.'</span><span class="p">);</span>
+</code></pre></div>
 <p>This displays a green message that appears in the top-right corner of the admin area. The first argument (<code>success</code>)
 specifies a <a href="https://getbootstrap.com/docs/5.0/components/alerts/#examples">Bootstrap alert type</a> that is added
 to the class automatically to specify how it looks. The second argument is the content that should be in the alert
 and can be a single string or an array of strings to apply multiple alerts.</p>
 <p>Additionally, you can use flash messages in the session to trigger alerts. 
 This would typically be used during a redirect: </p>
-<pre class="highlight"><code class="language-php">return redirect()-&gt;back()-&gt;with('message', 'It worked!');
-return redirect()-&gt;back()-&gt;with('error', 'Did not work');
-return redirect()-&gt;back()-&gt;with('error', ['not good', 'nope', 'cannot do it']);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="s1">'It worked!'</span><span class="p">);</span>
+<span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="s1">'Did not work'</span><span class="p">);</span>
+<span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'not good'</span><span class="p">,</span> <span class="s1">'nope'</span><span class="p">,</span> <span class="s1">'cannot do it'</span><span class="p">]);</span>
+</code></pre></div>
 <p>When an array is used it will display a new alert for each element in the array.</p>
 <p>You can adjust which session variables are checked and their class mapping using the
 Alerts config file. Read more in the docs at the repo linked above.</p>
@@ -1662,10 +1662,6 @@ Alerts config file. Read more in the docs at the repo linked above.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1624,11 +1622,13 @@
 <code>$folders</code> in the configuration file <code>Assets.php</code>. The rest of the path would be based on the actual file structure within that
 location. For the <code>App</code> theme, a folder has been defined called <code>app</code>.</p>
 <p>The second argument is the type of asset being loaded. Currently, it only supports <code>css</code> and <code>js</code> files.</p>
-<pre class="highlight"><code class="language-php">&lt;?= asset_link('app/css/admin.css', 'css') ?&gt;
-&lt;?= asset_link('app/js/admin.js', 'js') ?&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/css/admin.css'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">asset_link</span><span class="p">(</span><span class="s1">'app/js/admin.js'</span><span class="p">,</span> <span class="s1">'js'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <p>The <code>asset()</code> function is similar, except it only returns the URL only.</p>
-<pre class="highlight"><code class="language-html">&lt;link rel="stylesheet" href="&lt;?= asset('admin/css/admin.css', 'css') ?&gt;" /&gt;
-&lt;script src="&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"&gt;&lt;/script&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span> <span class="na">href</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/css/admin.css', 'css') ?&gt;"</span> <span class="p">/&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"&lt;?= asset('admin/js/admin.js', 'js') ?&gt;"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>Configuration of assets is detailed in the <a href="../../modules/assets/">Assets Management</a> page of <strong>Modules</strong> section.</p>
 
@@ -1750,10 +1750,6 @@ location. For the <code>App</code> theme, a folder has been defined called <code
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1644,15 +1642,17 @@ of modules, hand-roll Bootstrap instead of using the admin view components, edit
 published themes and config, and mix in patterns from Bonfire 1 or older CodeIgniter versions.</p>
 <p>Bonfire can write a short guide for them into your project's <code>AGENTS.md</code>, the file Cursor, Copilot, Codex and other
 agents read for project instructions:</p>
-<pre class="highlight"><code class="language-bash">php spark bf:agents</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>bf:agents
+</code></pre></div>
 <p>The guide says where things live, the rules to follow when adding admin features, and which page of these docs to read
 for each task. It points to the docs that ship with the package in <code>vendor/lonnieezell/bonfire/docs/</code>, so they always
 match the version you have installed.</p>
 <h2 id="your-own-text-is-kept">Your own text is kept</h2>
 <p>Bonfire's part of <code>AGENTS.md</code> sits between two markers:</p>
-<pre class="highlight"><code class="language-markdown">&lt;!-- bonfire:start --&gt;
+<div class="highlight"><pre><span></span><code>&lt;!-- bonfire:start --&gt;
 ...
-&lt;!-- bonfire:end --&gt;</code></pre>
+&lt;!-- bonfire:end --&gt;
+</code></pre></div>
 <ul>
 <li>With no <code>AGENTS.md</code>, the command creates one holding just this section.</li>
 <li>With an <code>AGENTS.md</code> that has no markers, the section is added at the end. Nothing above it changes.</li>
@@ -1664,17 +1664,19 @@ it again; repairing them automatically could delete your own text.</p>
 <h2 id="claude-code">Claude Code</h2>
 <p>Claude Code reads <code>CLAUDE.md</code> rather than <code>AGENTS.md</code>. If your project has a <code>CLAUDE.md</code>, the command reminds you to
 import the guide from it by adding this line:</p>
-<pre class="highlight"><code class="language-markdown">@AGENTS.md</code></pre>
+<div class="highlight"><pre><span></span><code><span class="ni">@AGENTS</span>.md
+</code></pre></div>
 <p>The command never edits <code>CLAUDE.md</code> itself.</p>
 <h2 id="keeping-it-up-to-date">Keeping it up to date</h2>
 <p>The guide names the Bonfire version it was written for. To refresh it after every update, add the command to the
 <code>post-update-cmd</code> scripts of your <code>composer.json</code>, next to the breaking changes check:</p>
-<pre class="highlight"><code class="language-json">"scripts": {
-    "post-update-cmd": [
-        "php spark notify:breaking-changes",
-        "php spark bf:agents"
-    ]
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"post-update-cmd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">"php spark notify:breaking-changes"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"php spark bf:agents"</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
@@ -1794,10 +1796,6 @@ import the guide from it by adding this line:</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

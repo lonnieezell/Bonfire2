@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1666,38 +1664,39 @@
 register it from your module's <code>initAdmin()</code>. Bonfire's own Quick Links is built this way
 (<code>Bonfire\Dashboard\Widgets\QuickLinksWidget</code>).</p>
 <h2 id="writing-a-widget">Writing a widget</h2>
-<pre class="highlight"><code class="language-php">use Bonfire\Dashboard\DashboardWidget;
-use Bonfire\Dashboard\Size;
-use Bonfire\Dashboard\SizeRange;
-use Bonfire\Dashboard\WidgetField;
-use Bonfire\Dashboard\WidgetValues;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Dashboard\DashboardWidget</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Dashboard\Size</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Dashboard\SizeRange</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Dashboard\WidgetField</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Dashboard\WidgetValues</span><span class="p">;</span>
 
-class OpenOrders implements DashboardWidget
-{
-    public function id(): string { return 'shop:openOrders'; }
-    public function title(): string { return 'Open orders'; }
-    public function icon(): string { return 'fas fa-cart-shopping'; }
-    public function group(): string { return 'Shop'; }
-    public function description(): string { return 'Orders waiting to ship'; }
-    public function sizes(): SizeRange { return new SizeRange(Size::Half, Size::Quarter, Size::TwoThirds); }
-    public function permission(): ?string { return 'shop.orders'; }
+<span class="k">class</span> <span class="nc">OpenOrders</span> <span class="k">implements</span> <span class="nx">DashboardWidget</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'shop:openOrders'</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">title</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'Open orders'</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">icon</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'fas fa-cart-shopping'</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">group</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'Shop'</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">description</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'Orders waiting to ship'</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizes</span><span class="p">()</span><span class="o">:</span> <span class="nx">SizeRange</span> <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">SizeRange</span><span class="p">(</span><span class="nx">Size</span><span class="o">::</span><span class="na">Half</span><span class="p">,</span> <span class="nx">Size</span><span class="o">::</span><span class="na">Quarter</span><span class="p">,</span> <span class="nx">Size</span><span class="o">::</span><span class="na">TwoThirds</span><span class="p">);</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">permission</span><span class="p">()</span><span class="o">:</span> <span class="o">?</span><span class="nx">string</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'shop.orders'</span><span class="p">;</span> <span class="p">}</span>
 
-    public function fields(): array
-    {
-        return [
-            WidgetField::number('limit', 'Orders to show', default: 5, min: 1, max: 20),
-            WidgetField::toggle('showTotals', 'Show totals', default: true),
-        ];
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fields</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="nx">WidgetField</span><span class="o">::</span><span class="na">number</span><span class="p">(</span><span class="s1">'limit'</span><span class="p">,</span> <span class="s1">'Orders to show'</span><span class="p">,</span> <span class="k">default</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">min</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">:</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="nx">WidgetField</span><span class="o">::</span><span class="na">toggle</span><span class="p">(</span><span class="s1">'showTotals'</span><span class="p">,</span> <span class="s1">'Show totals'</span><span class="p">,</span> <span class="k">default</span><span class="o">:</span> <span class="k">true</span><span class="p">),</span>
+        <span class="p">];</span>
+    <span class="p">}</span>
 
-    public function render(WidgetValues $values): string
-    {
-        return view('Shop\Views\open_orders', [
-            'orders'     =&gt; model(OrderModel::class)-&gt;open($values-&gt;get('limit')),
-            'showTotals' =&gt; $values-&gt;get('showTotals'),
-        ]);
-    }
-}</code></pre>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">render</span><span class="p">(</span><span class="nx">WidgetValues</span> <span class="nv">$values</span><span class="p">)</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'Shop\Views\open_orders'</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s1">'orders'</span>     <span class="o">=&gt;</span> <span class="nx">model</span><span class="p">(</span><span class="nx">OrderModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">open</span><span class="p">(</span><span class="nv">$values</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'limit'</span><span class="p">)),</span>
+            <span class="s1">'showTotals'</span> <span class="o">=&gt;</span> <span class="nv">$values</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'showTotals'</span><span class="p">),</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <ul>
 <li><strong>id</strong> is stored in admins' saved layouts, so keep it unique and never change it. Prefix it with your module's name.</li>
 <li><strong>group</strong> is the library heading it is listed under: your module's name. The library lists modules in name order.
@@ -1751,10 +1750,11 @@ until an admin changes it. Only values that differ from the default are stored, 
 reaches every admin who left the field alone. A value that is not of the field's type, a choice the field does not offer, or the
 name of a field the widget no longer declares is dropped when the layout is saved, and ignored when it is rendered.</p>
 <h2 id="registering-it">Registering it</h2>
-<pre class="highlight"><code class="language-php">public function initAdmin()
-{
-    service('dashboard')-&gt;register(new OpenOrders());
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">service</span><span class="p">(</span><span class="s1">'dashboard'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="k">new</span> <span class="nx">OpenOrders</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>A registered widget is not part of the default layout: admins add it from the widget library, or a site admin puts it
 on the <a href="../../modules/customizing_the_dashboard/#the-site-default">site default</a>. To ship it on the default layout,
 add its id to the <code>$layout</code> of your <code>Config\Dashboard</code>.</p>
@@ -1917,10 +1917,6 @@ cell show it once, where it was.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

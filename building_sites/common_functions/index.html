@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1533,20 +1531,23 @@
 <p>This helper will display a date based on the current settings in the General Settings page for date format and the 
 application's current timezone. You can pass a string with the date, a DateTime object, or a CodeIgniter\i18n\Time 
 instance as the first argument.</p>
-<pre class="highlight"><code class="language-php">echo app_date('2021-01-15 15:35:00');
-// outputs: 01/15/2021
+<div class="highlight"><pre><span></span><code><span class="k">echo</span> <span class="nx">app_date</span><span class="p">(</span><span class="s1">'2021-01-15 15:35:00'</span><span class="p">);</span>
+<span class="c1">// outputs: 01/15/2021</span>
 
-$date = new DateTime('2021-01-15 15:35:00');
-echo app_date($date);
+<span class="nv">$date</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DateTime</span><span class="p">(</span><span class="s1">'2021-01-15 15:35:00'</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nx">app_date</span><span class="p">(</span><span class="nv">$date</span><span class="p">);</span>
 
-$date = new CodeIgniter\i18n\Time('2021-01-15 15:35:00');
-echo app_date($date);</code></pre>
+<span class="nv">$date</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CodeIgniter\i18n\Time</span><span class="p">(</span><span class="s1">'2021-01-15 15:35:00'</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nx">app_date</span><span class="p">(</span><span class="nv">$date</span><span class="p">);</span>
+</code></pre></div>
 <p>You can include the time, formatted as specified in General Settings, by passing <code>true</code> as the second argument.</p>
-<pre class="highlight"><code class="language-php">echo app_date($date, true);
-// outputs: 01/15/2021 3:35 PM</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">echo</span> <span class="nx">app_date</span><span class="p">(</span><span class="nv">$date</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="c1">// outputs: 01/15/2021 3:35 PM</span>
+</code></pre></div>
 <p>You can further include the timezone by passing <code>true</code> as the third argument.</p>
-<pre class="highlight"><code class="language-php">echo app_date($date, true, true);
-// outputs: 01/15/2021 3:35 PM CST</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">echo</span> <span class="nx">app_date</span><span class="p">(</span><span class="nv">$date</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="c1">// outputs: 01/15/2021 3:35 PM CST</span>
+</code></pre></div>
 
 
 
@@ -1666,10 +1667,6 @@ echo app_date($date);</code></pre>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

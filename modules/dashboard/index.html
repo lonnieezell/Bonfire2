@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1860,30 +1858,32 @@
 <p>That default is the <code>$layout</code> property of the Dashboard config file, in the same format a saved layout uses. Change
 it to give every admin who hasn't customized their dashboard a different one; set it to <code>null</code> and the default is
 the cells below instead, in order:</p>
-<pre class="highlight"><code class="language-php">public ?array $layout = [
-    'version'  =&gt; 1,
-    'sections' =&gt; [
-        ['title' =&gt; '', 'widgets' =&gt; [
-            ['id' =&gt; 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' =&gt; 'full'],
-        ]],
-        ['title' =&gt; 'Users', 'widgets' =&gt; [
-            ['id' =&gt; 'users:byGroup', 'size' =&gt; 'half'],
-            ['id' =&gt; 'users:newest', 'size' =&gt; 'half'],
-        ]],
-        ['title' =&gt; 'Monitoring', 'widgets' =&gt; [
-            ['id' =&gt; 'logs:logActivity', 'size' =&gt; 'half'],
-            ['id' =&gt; 'tools:recentErrors', 'size' =&gt; 'half'],
-        ]],
-    ],
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="o">?</span><span class="k">array</span> <span class="nv">$layout</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'version'</span>  <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'sections'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'widgets'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'cell:Bonfire\Dashboard\DashboardCells::quickLinks'</span><span class="p">,</span> <span class="s1">'size'</span> <span class="o">=&gt;</span> <span class="s1">'full'</span><span class="p">],</span>
+        <span class="p">]],</span>
+        <span class="p">[</span><span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span> <span class="s1">'widgets'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'users:byGroup'</span><span class="p">,</span> <span class="s1">'size'</span> <span class="o">=&gt;</span> <span class="s1">'half'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'users:newest'</span><span class="p">,</span> <span class="s1">'size'</span> <span class="o">=&gt;</span> <span class="s1">'half'</span><span class="p">],</span>
+        <span class="p">]],</span>
+        <span class="p">[</span><span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Monitoring'</span><span class="p">,</span> <span class="s1">'widgets'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'logs:logActivity'</span><span class="p">,</span> <span class="s1">'size'</span> <span class="o">=&gt;</span> <span class="s1">'half'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'tools:recentErrors'</span><span class="p">,</span> <span class="s1">'size'</span> <span class="o">=&gt;</span> <span class="s1">'half'</span><span class="p">],</span>
+        <span class="p">]],</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre></div>
 <p>Widgets the viewer may not see are left out, and so is a section left empty. A site admin can replace this default from the dashboard with <strong>Save as site default</strong> (see
 <a href="../customizing_the_dashboard/#the-site-default">The site default</a>).</p>
 <p>You can create additional <a href="https://codeigniter.com/user_guide/outgoing/view_cells.html">View Cells</a> and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.</p>
-<pre class="highlight"><code class="language-php">public array $cells = [
-    'Bonfire\Widgets\Cells\WidgetCells::stats',
-    'Bonfire\Widgets\Cells\WidgetCells::logs',
-    'Bonfire\Widgets\Cells\WidgetCells::charts',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$cells</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::stats'</span><span class="p">,</span>
+    <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::logs'</span><span class="p">,</span>
+    <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::charts'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <h2 id="customizing-the-dashboard">Customizing the dashboard</h2>
 <p>Every admin can arrange their own dashboard, and site admins can set the default everyone else sees. See
 <a href="../customizing_the_dashboard/">Customizing the Dashboard</a>.</p>
@@ -1927,35 +1927,37 @@ list of elements of a module. It could be used to display a year-to-day revenue 
 in the system, new users this month, or any other simple statistic. It can also show tables or other types of data
 passed to it's parameter <code>value</code> as a string.</p>
 <p>Adding a new widget is done by editing the <code>initAdmin</code> method of your <code>Module.php</code> file, similar to adding a menu. To display the total number of users in the system, you could use the following code:</p>
-<pre class="highlight"><code class="language-php">$statsItem = new StatsItem([
-    'bgColor' =&gt; 'bg-blue',
-    'title' =&gt; 'Users',
-    'value' =&gt; model('UserModel')-&gt;countAll(),
-    'url' =&gt; ADMIN_AREA . '/users',
-    'faIcon' =&gt; 'fa fa-user',
-]);
-service('widgets')-&gt;widget('stats')-&gt;collection('stats')-&gt;addItem($statsItem);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$statsItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StatsItem</span><span class="p">([</span>
+    <span class="s1">'bgColor'</span> <span class="o">=&gt;</span> <span class="s1">'bg-blue'</span><span class="p">,</span>
+    <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+    <span class="s1">'value'</span> <span class="o">=&gt;</span> <span class="nx">model</span><span class="p">(</span><span class="s1">'UserModel'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">countAll</span><span class="p">(),</span>
+    <span class="s1">'url'</span> <span class="o">=&gt;</span> <span class="nx">ADMIN_AREA</span> <span class="o">.</span> <span class="s1">'/users'</span><span class="p">,</span>
+    <span class="s1">'faIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fa fa-user'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nx">service</span><span class="p">(</span><span class="s1">'widgets'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">widget</span><span class="p">(</span><span class="s1">'stats'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'stats'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$statsItem</span><span class="p">);</span>
+</code></pre></div>
 <p>When defining a new StatsItem, you can pass the following parameters:</p>
 <p><strong>bgColor</strong></p>
 <p><code>bgColor</code> represents the background color of the widget.
 The available options are:</p>
-<pre class="highlight"><code class="language-css">- bg-blue
-- bg-red
-- bg-orange
-- bg-light
-- bg-dark
-- bg-inverse
-- bg-indigo
-- bg-purple
-- bg-pink
-- bg-yellow
-- bg-green
-- bg-teal
-- bg-lime
-- bg-cyan
-- bg-white
-- bg-gray
-- bg-gray-dark</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">-</span><span class="w"> </span><span class="nt">bg-blue</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-red</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-orange</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-light</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-dark</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-inverse</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-indigo</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-purple</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-pink</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-yellow</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-green</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-teal</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-lime</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-cyan</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-white</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-gray</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-gray-dark</span>
+</code></pre></div>
 <p><strong>title</strong></p>
 <p>The title of the widget displayed at the top left</p>
 <p><strong>value</strong></p>
@@ -1966,13 +1968,14 @@ The available options are:</p>
 <p>The FontAwesome icon to display next to the title.</p>
 <h3 id="charts">Charts</h3>
 <p>Adding a new chart widget is done in the <code>initAdmin</code> method of your <code>Module.php</code> file, similar to adding a menu:</p>
-<pre class="highlight"><code class="language-php">$statsItem = new ChartsItem([
-    'title'   =&gt; 'User classification by group',
-    'type'   =&gt; 'line',
-    'cssClass'   =&gt; 'col-6',
-]);
-$statsItem-&gt;addDataset('auth_groups_users', 'group', 'user_id');
-service('widgets')-&gt;widget('charts')-&gt;collection('charts')-&gt;addItem($statsItem);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$statsItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChartsItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>   <span class="o">=&gt;</span> <span class="s1">'User classification by group'</span><span class="p">,</span>
+    <span class="s1">'type'</span>   <span class="o">=&gt;</span> <span class="s1">'line'</span><span class="p">,</span>
+    <span class="s1">'cssClass'</span>   <span class="o">=&gt;</span> <span class="s1">'col-6'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nv">$statsItem</span><span class="o">-&gt;</span><span class="na">addDataset</span><span class="p">(</span><span class="s1">'auth_groups_users'</span><span class="p">,</span> <span class="s1">'group'</span><span class="p">,</span> <span class="s1">'user_id'</span><span class="p">);</span>
+<span class="nx">service</span><span class="p">(</span><span class="s1">'widgets'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">widget</span><span class="p">(</span><span class="s1">'charts'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'charts'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$statsItem</span><span class="p">);</span>
+</code></pre></div>
 <p>The following parameters can be passed to the <code>ChartsItem</code> constructor:</p>
 <p><strong>title</strong></p>
 <p>The title of the chart displayed at the top center</p>
@@ -2138,10 +2141,6 @@ Examples options are:</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1684,39 +1682,43 @@ example module <a href="https://github.com/dgvirtual/bonfire2-pages-module">Page
 Bonfire 2 admin panel for administration of pages on a website.</p>
 <h2 id="configuring-module-locations">Configuring Module Locations</h2>
 <p>In order for Bonfire to discover your modules, you need to specify one or more locations that you plan on storing the modules. By default, the system will look within <code>app/Modules</code> for directories. As an example, we could create a Blog folder to store our new blog package. You would then need to create the standard directories, <code>Config</code>, <code>Controllers</code>, <code>Models</code> and <code>Views</code> at the very least. A <code>Module.php</code> file is also expected to live here, which we will look at in more detail a little later. The directory structure would look like:</p>
-<pre class="highlight"><code>app/
+<div class="highlight"><pre><span></span><code>app/
     Modules/
         Blog/
             Config/
             Controllers/
             Models/
             Views/
-            Module.php</code></pre>
+            Module.php
+</code></pre></div>
 <p>All files within the Blog directory would be expected to live within the <code>App\Modules\{ModuleName}</code> namespace, i.e. <code>App\Modules\Blog\Config\Routes</code>. You can customize this by editing <code>Config\Bonfire</code> and changing the key of the <code>$appModules</code> setting within it.</p>
-<pre class="highlight"><code class="language-php">public $appModules = [
-    'App\Modules' =&gt; APPPATH .'Modules',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$appModules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'App\Modules'</span> <span class="o">=&gt;</span> <span class="nx">APPPATH</span> <span class="o">.</span><span class="s1">'Modules'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <p>For example, if I would prefer the modules to simply live within my company's namespace, <code>Acme</code>, I could edit the key to reflect that:</p>
-<pre class="highlight"><code class="language-php">public $appModules = [
-    'Acme' =&gt; APPPATH .'Modules',
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$appModules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Acme'</span> <span class="o">=&gt;</span> <span class="nx">APPPATH</span> <span class="o">.</span><span class="s1">'Modules'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <p>If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.</p>
 <h2 id="the-module-file">The Module File</h2>
 <p>The Module file handles initialization functions when the admin is loaded. It allows the module to create new
 menus, insert itself into the existing sidebar menus, etc. The <code>initAdmin</code> method is where all of the setup
 for displaying and admin page should be done.</p>
-<pre class="highlight"><code class="language-php">namespace Acme\Blog;
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">Acme\Blog</span><span class="p">;</span>
 
-use Bonfire\Core\BaseModule;
-use Bonfire\Menus\MenuItem;
+<span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Menus\MenuItem</span><span class="p">;</span>
 
-class Module extends BaseModule
-{
-    public function initAdmin()
-    {
-        //
-    }
-}</code></pre>
+<span class="k">class</span> <span class="nc">Module</span> <span class="k">extends</span> <span class="nx">BaseModule</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">//</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="adding-a-menu-item">Adding a Menu Item</h3>
 <p>The main side navigation in the admin consists of three primary menu collections:</p>
 <ul>
@@ -1726,24 +1728,25 @@ class Module extends BaseModule
 </ul>
 <p>Menu items are added to the sidebar using the <code>menus</code> service. Below are two examples taken from the core
 Users module. They share common setup which will be discussed after the example:</p>
-<pre class="highlight"><code class="language-php">// Settings menu for sidebar
-$sidebar = service('menus');
-$item    = new MenuItem([
-    'title'           =&gt; 'Users',
-    'namedRoute'      =&gt; 'user-settings',
-    'fontAwesomeIcon' =&gt; 'fas fa-user',
-    'permission'      =&gt; 'users.settings',
-]);
-$sidebar-&gt;menu('sidebar')-&gt;collection('settings')-&gt;addItem($item);
+<div class="highlight"><pre><span></span><code><span class="c1">// Settings menu for sidebar</span>
+<span class="nv">$sidebar</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">);</span>
+<span class="nv">$item</span>    <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'user-settings'</span><span class="p">,</span>
+    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-user'</span><span class="p">,</span>
+    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'users.settings'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nv">$sidebar</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'settings'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
 
-// Content Menu for sidebar
-$item = new MenuItem([
-    'title'           =&gt; 'Users',
-    'namedRoute'      =&gt; 'user-list',
-    'fontAwesomeIcon' =&gt; 'fas fa-users',
-    'permission'      =&gt; 'users.list',
-]);
-$sidebar-&gt;menu('sidebar')-&gt;collection('content')-&gt;addItem($item);</code></pre>
+<span class="c1">// Content Menu for sidebar</span>
+<span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'user-list'</span><span class="p">,</span>
+    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-users'</span><span class="p">,</span>
+    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'users.list'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nv">$sidebar</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
+</code></pre></div>
 <p><code>MenuItems</code> contain the information about a single menu item. When you create a new one you have the following
 settings available to you:</p>
 <ul>
@@ -1763,10 +1766,11 @@ the active item (and its collection, when that collection is collapsible).</p>
 <p>A page below a menu item, like a single record's edit form, can add itself to the breadcrumb with a <code>crumb</code> view
 section. The breadcrumb then reads "active menu item › crumb". When the page's URL doesn't sit under any menu item,
 name the parent too with <code>crumbParent</code>:</p>
-<pre class="highlight"><code class="language-php">&lt;?php $this-&gt;extend('master') ?&gt;
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 
-&lt;?php $this-&gt;section('crumbParent') ?&gt;&lt;?= lang('Tools.logsModTitle') ?&gt;&lt;?php $this-&gt;endSection() ?&gt;
-&lt;?php $this-&gt;section('crumb') ?&gt;&lt;?= esc($logFilePretty) ?&gt;&lt;?php $this-&gt;endSection() ?&gt;</code></pre>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'crumbParent'</span><span class="p">)</span> <span class="cp">?&gt;&lt;?</span><span class="o">=</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Tools.logsModTitle'</span><span class="p">)</span> <span class="cp">?&gt;&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'crumb'</span><span class="p">)</span> <span class="cp">?&gt;&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$logFilePretty</span><span class="p">)</span> <span class="cp">?&gt;&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 
 
 
@@ -1886,10 +1890,6 @@ name the parent too with <code>crumbParent</code>:</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

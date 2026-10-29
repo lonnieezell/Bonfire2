@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1719,17 +1717,19 @@
 <h1 id="the-recycler">The Recycler</h1>
 <p>The Recycler provides an area where users can browse objects that have been deleted and either restore or purge them. 
 The models for these resources must have <strong>soft deletes</strong> enabled. By default, only users are displayed here. </p>
-<pre class="highlight"><code class="language-php">// In the model:
-protected $useSoftDeletes = true;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// In the model:</span>
+<span class="k">protected</span> <span class="nv">$useSoftDeletes</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="registering-a-resource">Registering A Resource</h2>
 <p>The Recycler must be told which models it should display. You do not need to do anything special with a model
 before registering. A module registers its resources in the <code>initAdmin()</code> method of its <code>Module.php</code>: </p>
-<pre class="highlight"><code class="language-php">public function initAdmin()
-{
-    service('recycler')-&gt;register('photos', 'Photos', PhotoModel::class, [
-        'title', 'caption',
-    ]);
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">service</span><span class="p">(</span><span class="s1">'recycler'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="s1">'photos'</span><span class="p">,</span> <span class="s1">'Photos'</span><span class="p">,</span> <span class="nx">PhotoModel</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">'title'</span><span class="p">,</span> <span class="s1">'caption'</span><span class="p">,</span>
+    <span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>The arguments are, in order:</p>
 <p><strong>alias</strong> is what you would use to specify the default resource to show when visiting the Recycler, and is part of
 the URLs for restoring and purging.</p>
@@ -1739,27 +1739,29 @@ the URLs for restoring and purging.</p>
 This information should only be what is needed to allow someone to find the correct record. </p>
 <p>An app can also add a resource, or replace how a module's resource is displayed, within <code>app/Config/Recycler.php</code>. 
 An entry here wins over a module's registration with the same alias:</p>
-<pre class="highlight"><code class="language-php">public $resources = [
-    'users' =&gt; [
-        'label' =&gt; 'Users',
-        'model' =&gt; App\Models\UserModel::class,
-        'columns' =&gt; [
-            'username', 'first_name', 'last_name', 'email'
-        ]
-    ],
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$resources</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'users'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'label'</span> <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+        <span class="s1">'model'</span> <span class="o">=&gt;</span> <span class="nx">App\Models\UserModel</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
+        <span class="s1">'columns'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'username'</span><span class="p">,</span> <span class="s1">'first_name'</span><span class="p">,</span> <span class="s1">'last_name'</span><span class="p">,</span> <span class="s1">'email'</span>
+        <span class="p">]</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre></div>
 <h2 id="localization-of-column-names-in-recycler">Localization of Column names in Recycler</h2>
 <p>To localize the column names, an array <code>recycler</code> should be created in the module's language file, named after the <code>$resource['label']</code> value (with the <code>.php</code> extension (in case of label 'Users' – Users.php). The array should have sub-keys <code>label</code> and <code>columns</code>, with each column name corresponding <code>$resource['columns']</code> array value. Example for module Users:</p>
-<pre class="highlight"><code class="language-php">    'recycler' =&gt; [
-        'label'     =&gt; 'Users',
-        'columns'   =&gt; [
-            'id'           =&gt; 'ID',
-            'username'     =&gt; 'User Name',
-            'first_name'   =&gt; 'Name',
-            'last_name'    =&gt; 'Surname',
-            'email'        =&gt; 'Email',
-        ],
-    ],</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="s1">'recycler'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'label'</span>     <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+        <span class="s1">'columns'</span>   <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'id'</span>           <span class="o">=&gt;</span> <span class="s1">'ID'</span><span class="p">,</span>
+            <span class="s1">'username'</span>     <span class="o">=&gt;</span> <span class="s1">'User Name'</span><span class="p">,</span>
+            <span class="s1">'first_name'</span>   <span class="o">=&gt;</span> <span class="s1">'Name'</span><span class="p">,</span>
+            <span class="s1">'last_name'</span>    <span class="o">=&gt;</span> <span class="s1">'Surname'</span><span class="p">,</span>
+            <span class="s1">'email'</span>        <span class="o">=&gt;</span> <span class="s1">'Email'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
+</code></pre></div>
 <p>If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.</p>
 <h2 id="changing-how-a-model-is-recycled">Changing How A Model Is Recycled</h2>
 <p>The Recycler does three things with a resource: it lists the deleted records, restores one, and purges one. 
@@ -1775,39 +1777,42 @@ called.</p>
 specify the fields to select, etc. Implement <code>CustomRecyclerQuery</code> and its <code>setupRecycler()</code> method. It doesn't take
 any arguments, and should return the modified model. </p>
 <p>Here is an example from the <code>UserModel</code> that pulls in the <code>email</code> field from the <code>auth_identities</code> table.  </p>
-<pre class="highlight"><code class="language-php">class UserModel extends ShieldUsers implements CustomRecyclerQuery
-{
-    public function setupRecycler(): static
-    {
-        return $this-&gt;select("users.*, 
-            (SELECT secret 
-                from auth_identities 
-                where user_id = users.id
-                    and type = 'email_password'
-                order by last_used_at desc 
-                limit 1
-            ) as email
-       ");
-    }
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">UserModel</span> <span class="k">extends</span> <span class="nx">ShieldUsers</span> <span class="k">implements</span> <span class="nx">CustomRecyclerQuery</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">setupRecycler</span><span class="p">()</span><span class="o">:</span> <span class="k">static</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">"users.*, </span>
+<span class="s2">            (SELECT secret </span>
+<span class="s2">                from auth_identities </span>
+<span class="s2">                where user_id = users.id</span>
+<span class="s2">                    and type = 'email_password'</span>
+<span class="s2">                order by last_used_at desc </span>
+<span class="s2">                limit 1</span>
+<span class="s2">            ) as email</span>
+<span class="s2">       "</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="overriding-the-restore">Overriding the Restore</h3>
 <p>You may override the default handling of the restore process if you have needs outside simply setting the 
 <code>deleted_at</code> date to <code>null</code>. Implement <code>CustomRecyclerRestore</code> and its <code>recyclerRestore()</code> method. 
 It only accepts a single argument, the record primary key, and returns whether the record was restored. </p>
-<pre class="highlight"><code class="language-php">public function recyclerRestore(int $id): bool
-{
-    return $this-&gt;where('id', $id)
-        -&gt;set('deleted_at', null)
-        -&gt;update();
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerRestore</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="nv">$id</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">'deleted_at'</span><span class="p">,</span> <span class="k">null</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">update</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="overriding-the-purge">Overriding the Purge</h3>
 <p>You may override the default handling of the purge process if you have needs outside simply deleting the record. 
 Implement <code>CustomRecyclerPurge</code> and its <code>recyclerPurge()</code> method.
 It only accepts a single argument, the record primary key, and returns whether the record was purged.</p>
-<pre class="highlight"><code class="language-php">public function recyclerPurge(int $id): bool
-{
-    return (bool) $this-&gt;delete($id, true);
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerPurge</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 
@@ -1927,10 +1932,6 @@ It only accepts a single argument, the record primary key, and returns whether t
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

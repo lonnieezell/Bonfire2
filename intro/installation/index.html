@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1730,19 +1728,23 @@
 <p>Bonfire is a set of modules and libraries for CodeIgniter 4. It is designed to be installed via <a href="https://getcomposer.org">Composer</a> and is not intended to be installed manually. These directions assume that you have Composer <a href="https://getcomposer.org/doc/00-intro.md#globally">installed globally</a>. If you do not, then you will need to adjust the commands according to your setup.</p>
 <h2 id="install-codeigniter-app-starter">Install CodeIgniter App Starter</h2>
 <p>You must have an existing CodeIgniter 4 project already setup. If you do not already, you can install a new project as detailed in <a href="https://codeigniter.com/user_guide/installation/installing_composer.html#installation-set-up">CodeIgniter User Guide</a> by typing the following at the command line:</p>
-<pre class="highlight"><code class="language-bash">composer create-project codeigniter4/appstarter my-app
-cd my-app</code></pre>
+<div class="highlight"><pre><span></span><code>composer<span class="w"> </span>create-project<span class="w"> </span>codeigniter4/appstarter<span class="w"> </span>my-app
+<span class="nb">cd</span><span class="w"> </span>my-app
+</code></pre></div>
 <p>You need to allow installation of development stability level packages by executing the following commands:</p>
-<pre class="highlight"><code class="language-bash">composer config minimum-stability dev
-composer config prefer-stable true</code></pre>
+<div class="highlight"><pre><span></span><code>composer<span class="w"> </span>config<span class="w"> </span>minimum-stability<span class="w"> </span>dev
+composer<span class="w"> </span>config<span class="w"> </span>prefer-stable<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
 <h2 id="install-bonfire">Install Bonfire</h2>
 <p>Next you need to install Bonfire as a dependency in your project. From your command line type the following (omit <code>:dev-develop</code> if you want the current stable version):</p>
-<pre class="highlight"><code class="language-bash">composer require lonnieezell/bonfire:dev-develop</code></pre>
+<div class="highlight"><pre><span></span><code>composer<span class="w"> </span>require<span class="w"> </span>lonnieezell/bonfire:dev-develop
+</code></pre></div>
 <p>This will download the latest version and all dependencies.</p>
 <h2 id="run-the-install-script">Run The Install Script</h2>
 <p>To setup the initial environment, a CLI command is provided to do all of the setup you need to get up and running.
 From the project root, type:</p>
-<pre class="highlight"><code class="language-bash">php spark bf:install</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>bf:install
+</code></pre></div>
 <p>This will:</p>
 <ul>
 <li>Copy the <code>env</code> file to <code>.env</code> to save your site's customized setting.</li>
@@ -1754,9 +1756,11 @@ From the project root, type:</p>
 <li>Copy the theme directories to <code>ROOTPATH/themes</code></li>
 </ul>
 <p>Then it will present you with a recommendation on creating the database via command</p>
-<pre class="highlight"><code class="language-bash">php spark db:create &lt;database name&gt;</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>db:create<span class="w"> </span>&lt;database<span class="w"> </span>name&gt;
+</code></pre></div>
 <p>and to create the initial user via command</p>
-<pre class="highlight"><code class="language-bash">php spark bf:install --continue</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>bf:install<span class="w"> </span>--continue
+</code></pre></div>
 <p>Continuing the installation will then do the following:</p>
 <ul>
 <li>Run all migrations so the database is setup and ready to go</li>
@@ -1768,25 +1772,28 @@ From the project root, type:</p>
 </div>
 <h2 id="run-the-site">Run the Site</h2>
 <p>You can now run the site using CodeIgniter's built-in <a href="https://codeigniter.com/user_guide/installation/running.html#local-development-server">development server</a>:</p>
-<pre class="highlight"><code class="language-bash">php spark serve</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>serve
+</code></pre></div>
 <h2 id="enjoy">Enjoy!</h2>
 <p>That's all that's needed to get started. You can now visit <a href="http://localhost:8080/admin">http://localhost:8080/admin</a> and login with your new user.</p>
 <p>If you'd rather use a different server, like Apache or Nginx, you can follow the <a href="https://codeigniter.com/user_guide/installation/running.html">CodeIgniter 4 User Guide</a> suggestions for a number of different server setups.</p>
 <h2 id="updating-bonfire">Updating Bonfire</h2>
 <p>After <code>composer update</code>, Bonfire reads the changelog of the version you now have and, when a release since your last
 update contains breaking changes, prints a warning:</p>
-<pre class="highlight"><code>======= WARNING: =======
+<div class="highlight"><pre><span></span><code>======= WARNING: =======
 Breaking changes since the previous update of your Bonfire install detected.
 You may need to update your app manually.
 Please read the changelog for more information:
 vendor/lonnieezell/bonfire/docs/intro/changelog.md
-Latest breaking change date: 2026-10-28</code></pre>
+Latest breaking change date: 2026-10-28
+</code></pre></div>
 <p>The warning is a reminder to read the changelog, nothing more: re-publishing a theme, copying a view or changing a
 config file is not something an update can do for you.</p>
 <p>Bonfire remembers the change it has shown you in <code>writable/bonfire-breaking-changes.json</code>. That folder has to be
 writable, and it has to survive a deploy, otherwise the same warning comes back after every update. If your server
 recreates <code>writable/</code> on each release, point the marker somewhere else in <code>app/Config/Bonfire.php</code>:</p>
-<pre class="highlight"><code class="language-php">public $breakingChangeStateFile = ROOTPATH . 'bonfire-breaking-changes.json';</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$breakingChangeStateFile</span> <span class="o">=</span> <span class="nx">ROOTPATH</span> <span class="o">.</span> <span class="s1">'bonfire-breaking-changes.json'</span><span class="p">;</span>
+</code></pre></div>
 <p>To turn the check off, remove <code>php spark notify:breaking-changes</code> from the <code>post-update-cmd</code> scripts of your
 <code>composer.json</code>.</p>
 <p>If you use AI coding agents, <code>php spark bf:agents</code> writes Bonfire's conventions into your project's <code>AGENTS.md</code>. Add it
@@ -1794,7 +1801,8 @@ to the same <code>post-update-cmd</code> scripts to keep that guide in step with
 <a href="../ai_agents/">Working With AI Agents</a>.</p>
 <h2 id="generate-some-data-for-testing">Generate some data for testing</h2>
 <p>You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):</p>
-<pre class="highlight"><code class="language-bash">php spark db:seed Bonfire\\Users\\Database\\Seeds\\Seed100Users</code></pre>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>db:seed<span class="w"> </span>Bonfire<span class="se">\\</span>Users<span class="se">\\</span>Database<span class="se">\\</span>Seeds<span class="se">\\</span>Seed100Users
+</code></pre></div>
 
 
 
@@ -1914,10 +1922,6 @@ to the same <code>post-update-cmd</code> scripts to keep that guide in step with
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

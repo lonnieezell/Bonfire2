@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1628,12 +1626,13 @@ children, like the AuthController) then you do not need to explicitly load the h
 <p>The helper can be used both within the views and the controllers to limit which services are called (like ad-tracking
 or analytics) and which cookies you set. </p>
 <p>Within a view you might wrap Google Analytics tag withn a check against the <code>performing</code> consent: </p>
-<pre class="highlight"><code class="language-php">&lt;?php if (has_consent('performing')) : ?&gt;
-&lt;script&gt;
-    &lt;!-- Global Site Tag (gtag.js) - Google Analytics --&gt;
-    ... (several lines of code) ...
-&lt;/script&gt;
-&lt;?php endif ?&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">has_consent</span><span class="p">(</span><span class="s1">'performing'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;script&gt;</span>
+<span class="x">    &lt;!-- Global Site Tag (gtag.js) - Google Analytics --&gt;</span>
+<span class="x">    ... (several lines of code) ...</span>
+<span class="x">&lt;/script&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>All settings are available in the <code>Config\Consent</code> class, or in the admin settings area.</p>
 <p><strong>$requireConsent</strong></p>
@@ -1780,10 +1779,6 @@ the alias the consent can be checked with, and the following items: </p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

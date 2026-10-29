@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1667,23 +1665,24 @@ you manage collecting consent from the user before storing any cookies through a
 cookies. It provides the mechanism for displaying the consent form, and recording the user's preferences.</p>
 <h2 id="defining-the-consent-types">Defining the Consent Types</h2>
 <p>The Consent module allows you to define the types of consent that you would like to collect from the user. These are defined in the <code>Config\Consent</code> class. The default consents are:</p>
-<pre class="highlight"><code class="language-php">public array $consents = [
-    'required' =&gt; [
-        'name' =&gt; 'Functionality',
-        'desc' =&gt; 'These cookies are required for the normal operation of this website.',
-    ],
-    'performance' =&gt; [
-        'name' =&gt; 'Performance',
-        'desc' =&gt; 'These cookies help us measure how visitors use the site, what the traffic sources are,
-            and which pages are popular. This helps to improve the website for everyone. If you reject these
-            we will be unable to use your visits to make site improvements.',
-    ],
-    'targeting' =&gt; [
-        'name' =&gt; 'Targeting',
-        'desc' =&gt; 'These are usually placed by third-party advertising networks, which may use information about
-            your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.',
-    ],
-];</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$consents</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'required'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Functionality'</span><span class="p">,</span>
+        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These cookies are required for the normal operation of this website.'</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">'performance'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Performance'</span><span class="p">,</span>
+        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These cookies help us measure how visitors use the site, what the traffic sources are,</span>
+<span class="s1">            and which pages are popular. This helps to improve the website for everyone. If you reject these</span>
+<span class="s1">            we will be unable to use your visits to make site improvements.'</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">'targeting'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Targeting'</span><span class="p">,</span>
+        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These are usually placed by third-party advertising networks, which may use information about</span>
+<span class="s1">            your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.'</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre></div>
 <h2 id="using-the-helper">Using the Helper</h2>
 <p>A helper method, <code>has_consent</code>, is provided so that you can easily meet the consent requirements when building your site.</p>
 <p>The helper is loaded automatically by the BaseController. As long as you extend the BaseController (or one of its
@@ -1691,18 +1690,21 @@ children, like the AuthController) then you do not need to explicitly load the h
 <p>The helper can be used both within the views and the controllers to limit which services are called (like ad-tracking
 or analytics) and which cookies you set.</p>
 <p>Within a view you might wrap a Google Analytics tag within a check against the <code>performing</code> consent:</p>
-<pre class="highlight"><code class="language-php">&lt;?php if (has_consent('performing')) : ?&gt;
-&lt;script&gt;
-    &lt;!-- Global Site Tag (gtag.js) - Google Analytics --&gt;
-    ... (several lines of code) ...
-&lt;/script&gt;
-&lt;?php endif ?&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">has_consent</span><span class="p">(</span><span class="s1">'performing'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;script&gt;</span>
+<span class="x">    &lt;!-- Global Site Tag (gtag.js) - Google Analytics --&gt;</span>
+<span class="x">    ... (several lines of code) ...</span>
+<span class="x">&lt;/script&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <h2 id="customizing-the-consent-form">Customizing the Consent Form</h2>
 <p>The consent form is a view that can be customized to fit your site's design. The view can be changed by editing the <code>Consent</code> config file:</p>
-<pre class="highlight"><code class="language-php">public string $consentForm = 'Bonfire\Consent\Views\consent_form';</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentForm</span> <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_form'</span><span class="p">;</span>
+</code></pre></div>
 <p>You can also specify the CSS and Javascript files that are loaded with the form:</p>
-<pre class="highlight"><code class="language-php">public string $consentFormStyles  = 'Bonfire\Consent\Views\consent_styles';
-public string $consentFormScripts = 'Bonfire\Consent\Views\consent_scripts';</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentFormStyles</span>  <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_styles'</span><span class="p">;</span>
+<span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentFormScripts</span> <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_scripts'</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>All settings are available in the <code>Config\Consent</code> class, or in the admin settings area.</p>
 <p><strong>$requireConsent</strong></p>
@@ -1849,10 +1851,6 @@ the alias the consent can be checked with, and the following items:</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

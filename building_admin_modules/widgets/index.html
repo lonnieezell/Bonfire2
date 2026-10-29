@@ -49,8 +49,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1831,38 +1829,40 @@ labels are displayed, etc.</p>
 list of elements of a module. It could be used to display a year-to-day revenue at a glance, total number of users
 in the system, new users this month, or any other simple statistic.</p>
 <p>Adding a new widget is done by editing the <code>initAdmin</code> method of your <code>Module.php</code> file, similar to adding a menu:</p>
-<pre class="highlight"><code class="language-php">// Settings widgets stats on dashboard
-$widgets = service('widgets');
-$users = new UserModel();
-$statsItem = new StatsItem([
-    'bgColor' =&gt; 'bg-blue',
-    'title'   =&gt; 'Users',
-    'value'   =&gt; $users-&gt;countAll(),
-    'id'      =&gt; 'countAllUsers643',
-    'url'     =&gt; ADMIN_AREA . '/users',
-    'faIcon'  =&gt; 'fa fa-user',
-]);
-$widgets-&gt;widget("stats")-&gt;collection('stats')-&gt;addItem($statsItem);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// Settings widgets stats on dashboard</span>
+<span class="nv">$widgets</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'widgets'</span><span class="p">);</span>
+<span class="nv">$users</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserModel</span><span class="p">();</span>
+<span class="nv">$statsItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StatsItem</span><span class="p">([</span>
+    <span class="s1">'bgColor'</span> <span class="o">=&gt;</span> <span class="s1">'bg-blue'</span><span class="p">,</span>
+    <span class="s1">'title'</span>   <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+    <span class="s1">'value'</span>   <span class="o">=&gt;</span> <span class="nv">$users</span><span class="o">-&gt;</span><span class="na">countAll</span><span class="p">(),</span>
+    <span class="s1">'id'</span>      <span class="o">=&gt;</span> <span class="s1">'countAllUsers643'</span><span class="p">,</span>
+    <span class="s1">'url'</span>     <span class="o">=&gt;</span> <span class="nx">ADMIN_AREA</span> <span class="o">.</span> <span class="s1">'/users'</span><span class="p">,</span>
+    <span class="s1">'faIcon'</span>  <span class="o">=&gt;</span> <span class="s1">'fa fa-user'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nv">$widgets</span><span class="o">-&gt;</span><span class="na">widget</span><span class="p">(</span><span class="s2">"stats"</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'stats'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$statsItem</span><span class="p">);</span>
+</code></pre></div>
 <p><strong>bgColor</strong></p>
 <p>bgColor represents the background color of the widget.
 The available options are:</p>
-<pre class="highlight"><code class="language-css">- bg-blue
-- bg-red
-- bg-orange
-- bg-light
-- bg-dark
-- bg-inverse
-- bg-indigo
-- bg-purple
-- bg-pink
-- bg-yellow
-- bg-green
-- bg-teal
-- bg-lime
-- bg-cyan
-- bg-white
-- bg-gray
-- bg-gray-dark</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">-</span><span class="w"> </span><span class="nt">bg-blue</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-red</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-orange</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-light</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-dark</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-inverse</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-indigo</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-purple</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-pink</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-yellow</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-green</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-teal</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-lime</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-cyan</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-white</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-gray</span>
+<span class="nt">-</span><span class="w"> </span><span class="nt">bg-gray-dark</span>
+</code></pre></div>
 <p><strong>title</strong></p>
 <p>The title of the widget displayed at the top left</p>
 <p><strong>value</strong></p>
@@ -1886,33 +1886,36 @@ pages. A <code>value</code> you pass directly runs whenever your module boots: b
 <hr />
 <h2 id="charts-widget">Charts widget</h2>
 <p>Adding a new chart widget is done in the <code>initAdmin</code> method of your <code>Module.php</code> file, similar to adding a menu:</p>
-<pre class="highlight"><code class="language-php">$statsItem = new ChartsItem([
-    'title'    =&gt; 'User classification by group',
-    'type'     =&gt; 'line',
-    'id'       =&gt; 'usersByGroupLine123',
-    'cssClass' =&gt; 'col-6',
-]);
-$statsItem-&gt;addDataset('auth_groups_users', 'group', 'user_id');
-$widgets-&gt;widget('charts')-&gt;collection('charts')-&gt;addItem($statsItem);</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$statsItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChartsItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>    <span class="o">=&gt;</span> <span class="s1">'User classification by group'</span><span class="p">,</span>
+    <span class="s1">'type'</span>     <span class="o">=&gt;</span> <span class="s1">'line'</span><span class="p">,</span>
+    <span class="s1">'id'</span>       <span class="o">=&gt;</span> <span class="s1">'usersByGroupLine123'</span><span class="p">,</span>
+    <span class="s1">'cssClass'</span> <span class="o">=&gt;</span> <span class="s1">'col-6'</span><span class="p">,</span>
+<span class="p">]);</span>
+<span class="nv">$statsItem</span><span class="o">-&gt;</span><span class="na">addDataset</span><span class="p">(</span><span class="s1">'auth_groups_users'</span><span class="p">,</span> <span class="s1">'group'</span><span class="p">,</span> <span class="s1">'user_id'</span><span class="p">);</span>
+<span class="nv">$widgets</span><span class="o">-&gt;</span><span class="na">widget</span><span class="p">(</span><span class="s1">'charts'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'charts'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$statsItem</span><span class="p">);</span>
+</code></pre></div>
 <p><strong>title</strong></p>
 <p>The title of the chart displayed at the top center</p>
 <p><strong>type</strong></p>
 <p>The type of chart.
 The available options are:
-<pre class="highlight"><code>- line
+<div class="highlight"><pre><span></span><code>- line
 - bar
 - doughnut
 - pie
-- polarArea</code></pre></p>
+- polarArea
+</code></pre></div></p>
 <p><strong>id</strong></p>
 <p>A uniwue widget ID throughout application (make it descriptive and add extra symbols to make sure the uniqueness).</p>
 <p><strong>cssClass</strong></p>
 <p>Set the width of the chart.
 Examples options are:
-<pre class="highlight"><code>- col-3
+<div class="highlight"><pre><span></span><code>- col-3
 - col-6
 - col-9
-- col-12</code></pre></p>
+- col-12
+</code></pre></div></p>
 <p><strong>addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count')</strong></p>
 <p>Currently, only one dataset can be added to the chart. The required parameters are:</p>
 <ul>
@@ -1921,11 +1924,12 @@ Examples options are:
 <li>Field to count</li>
 </ul>
 <p>It is possible to indicate a fourth parameter to choose the counting mode; the possible values are:</p>
-<pre class="highlight"><code class="language-php">- count
-- avg
-- max
-- min
-- sum</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">-</span> <span class="nb">count</span>
+<span class="o">-</span> <span class="nx">avg</span>
+<span class="o">-</span> <span class="nb">max</span>
+<span class="o">-</span> <span class="nb">min</span>
+<span class="o">-</span> <span class="nx">sum</span>
+</code></pre></div>
 <ul>
 <li>if indicate <strong>count</strong> then <strong>selectCount($field)</strong> is executed</li>
 <li>if indicate <strong>avg</strong> then <strong>selectAvg($field)</strong>  is executed</li>
@@ -2107,10 +2111,6 @@ permission can add it to their dashboard, and the log files are only read when i
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

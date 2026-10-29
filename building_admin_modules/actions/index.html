@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1724,42 +1722,43 @@ and runs large batches in the background when a queue is available.</p>
 <p>The Users list (row and bulk delete) and the Logs list (bulk delete) are built this way.</p>
 <h2 id="writing-an-action">Writing An Action</h2>
 <p>An action is one class that extends <code>Bonfire\Actions\Action</code>:</p>
-<pre class="highlight"><code class="language-php">use Bonfire\Actions\Action;
-use Bonfire\Actions\ActionContext;
-use Bonfire\Actions\ActionResult;
-use Bonfire\Actions\Confirm;
-use Bonfire\Actions\Placement;
-use Bonfire\Users\User;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Actions\Action</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Actions\ActionContext</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Actions\ActionResult</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Actions\Confirm</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Actions\Placement</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Users\User</span><span class="p">;</span>
 
-class BanUsers extends Action
-{
-    public string    $label      = 'Ban';
-    public string    $icon       = 'fas fa-ban';
-    public string    $permission = 'users.manage-admins';
-    public Placement $placement  = Placement::Both;
-    public bool      $danger     = true;
+<span class="k">class</span> <span class="nc">BanUsers</span> <span class="k">extends</span> <span class="nx">Action</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nx">string</span>    <span class="nv">$label</span>      <span class="o">=</span> <span class="s1">'Ban'</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nx">string</span>    <span class="nv">$icon</span>       <span class="o">=</span> <span class="s1">'fas fa-ban'</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nx">string</span>    <span class="nv">$permission</span> <span class="o">=</span> <span class="s1">'users.manage-admins'</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nx">Placement</span> <span class="nv">$placement</span>  <span class="o">=</span> <span class="nx">Placement</span><span class="o">::</span><span class="na">Both</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nx">bool</span>      <span class="nv">$danger</span>     <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
 
-    public function confirm(): ?Confirm
-    {
-        return Confirm::make('Ban {count} users?')
-            -&gt;body('They are signed out and cannot sign in until unbanned.')
-            -&gt;button('Ban');
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">confirm</span><span class="p">()</span><span class="o">:</span> <span class="o">?</span><span class="nx">Confirm</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">Confirm</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'Ban {count} users?'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">body</span><span class="p">(</span><span class="s1">'They are signed out and cannot sign in until unbanned.'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">button</span><span class="p">(</span><span class="s1">'Ban'</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public function allows(User $actor, object $record): bool
-    {
-        return $actor-&gt;id !== $record-&gt;id;
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">allows</span><span class="p">(</span><span class="nx">User</span> <span class="nv">$actor</span><span class="p">,</span> <span class="nx">object</span> <span class="nv">$record</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$actor</span><span class="o">-&gt;</span><span class="na">id</span> <span class="o">!==</span> <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    public function handle(ActionContext $context): ActionResult
-    {
-        foreach ($context-&gt;entities() as $user) {
-            $user-&gt;ban();
-        }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">ActionContext</span> <span class="nv">$context</span><span class="p">)</span><span class="o">:</span> <span class="nx">ActionResult</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$context</span><span class="o">-&gt;</span><span class="na">entities</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$user</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">ban</span><span class="p">();</span>
+        <span class="p">}</span>
 
-        return ActionResult::message('{count} users banned.');
-    }
-}</code></pre>
+        <span class="k">return</span> <span class="nx">ActionResult</span><span class="o">::</span><span class="na">message</span><span class="p">(</span><span class="s1">'{count} users banned.'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>label</strong> and <strong>icon</strong> (a Font Awesome class) are shown on the action's button.</p>
 <p><strong>permission</strong> is needed to see and run the action. Leave it empty for anyone who can reach the admin area. Add a new
 permission to your app's <code>AuthGroups</code> config.</p>
@@ -1783,30 +1782,32 @@ of up to 100 at a time) and <code>$context-&gt;actor()</code> (the admin who sta
 <h3 id="deleting">Deleting</h3>
 <p><code>Bonfire\Actions\DeleteAction</code> is a ready-made delete: a red <strong>Delete</strong> that asks first and deletes a chunk at a time.
 Extend it with how your records are deleted, and usually your own permission and wording:</p>
-<pre class="highlight"><code class="language-php">use Bonfire\Actions\DeleteAction;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Actions\DeleteAction</span><span class="p">;</span>
 
-class DeletePhotos extends DeleteAction
-{
-    public string $permission = 'photos.delete';
+<span class="k">class</span> <span class="nc">DeletePhotos</span> <span class="k">extends</span> <span class="nx">DeleteAction</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nx">string</span> <span class="nv">$permission</span> <span class="o">=</span> <span class="s1">'photos.delete'</span><span class="p">;</span>
 
-    protected function delete(array $records): void
-    {
-        model(PhotoModel::class)-&gt;delete(array_map(static fn ($photo) =&gt; $photo-&gt;id, $records));
-    }
-}</code></pre>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="k">array</span> <span class="nv">$records</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nx">model</span><span class="p">(</span><span class="nx">PhotoModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nb">array_map</span><span class="p">(</span><span class="k">static</span> <span class="nx">fn</span> <span class="p">(</span><span class="nv">$photo</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nv">$photo</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">,</span> <span class="nv">$records</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>Override <code>confirm()</code> for your own question and <code>deleted()</code> for the message once it's done. See
 <code>Bonfire\Users\Actions\DeleteUsers</code> for a complete example.</p>
 <h2 id="registering-actions">Registering Actions</h2>
 <p>Actions belong to a named list. Register them in your module's <code>initAdmin()</code>, saying where the list's records come
 from:</p>
-<pre class="highlight"><code class="language-php">use Bonfire\Actions\ModelSource;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Actions\ModelSource</span><span class="p">;</span>
 
-public function initAdmin()
-{
-    service('actions')-&gt;for('photos')
-        -&gt;records(new ModelSource(PhotoModel::class))
-        -&gt;add(new DeletePhotos());
-}</code></pre>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">service</span><span class="p">(</span><span class="s1">'actions'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">for</span><span class="p">(</span><span class="s1">'photos'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">records</span><span class="p">(</span><span class="k">new</span> <span class="nx">ModelSource</span><span class="p">(</span><span class="nx">PhotoModel</span><span class="o">::</span><span class="na">class</span><span class="p">))</span>
+        <span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">DeletePhotos</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><code>ModelSource</code> finds records by primary key through a model. For records that don't live in a model, implement
 <code>Bonfire\Actions\RecordSource</code>, which has one method, <code>find(array $ids): array</code>; the Logs list's <code>LogStore</code> is an
 example.</p>
@@ -1829,45 +1830,48 @@ example.</p>
 </tr>
 </tbody>
 </table>
-<pre class="highlight"><code class="language-php">service('actions')-&gt;for('users')-&gt;add(new BanUsers());</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">service</span><span class="p">(</span><span class="s1">'actions'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">for</span><span class="p">(</span><span class="s1">'users'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">BanUsers</span><span class="p">());</span>
+</code></pre></div>
 <h2 id="showing-actions-in-a-list">Showing Actions In A List</h2>
 <p>Two view components render a list's actions for the signed-in admin, leaving out those they lack the permission for.</p>
 <p><code>&lt;x-row-actions&gt;</code> renders a row's menu. Pass the list and the record's ID. Anything in its slot, like an Edit link,
 comes first:</p>
-<pre class="highlight"><code class="language-php">&lt;td class="text-end"&gt;
-    &lt;x-row-actions list="photos" id="&lt;?= $photo-&gt;id ?&gt;"&gt;
-        &lt;li&gt;&lt;a href="&lt;?= url_to('photo-edit', $photo-&gt;id) ?&gt;" class="dropdown-item"&gt;Edit&lt;/a&gt;&lt;/li&gt;
-    &lt;/x-row-actions&gt;
-&lt;/td&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">td</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"text-end"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">row</span><span class="o">-</span><span class="nx">actions</span> <span class="k">list</span><span class="o">=</span><span class="s2">"photos"</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"&lt;?= </span><span class="si">$photo-&gt;id</span><span class="s2"> ?&gt;"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"&lt;?= url_to('photo-edit', </span><span class="si">$photo-&gt;id</span><span class="s2">) ?&gt;"</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"dropdown-item"</span><span class="o">&gt;</span><span class="nx">Edit</span><span class="o">&lt;/</span><span class="nx">a</span><span class="o">&gt;&lt;/</span><span class="nx">li</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">row</span><span class="o">-</span><span class="nx">actions</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nx">td</span><span class="o">&gt;</span>
+</code></pre></div>
 <p>The row menu shows only the actions the admin may run on that record: their permission, and their <code>allows()</code> for
 it. To ask <code>allows()</code>, the component needs the record. Hand the page's records to the list with <code>showing()</code> before
 the rows render, or the component loads each one through the list's record source, one lookup per row.</p>
 <p><code>&lt;x-bulk-actions&gt;</code> goes inside <code>&lt;x-selection-bar&gt;</code>, in a form whose row checkboxes are named <code>selects[]</code> with the
 record's ID as their value. Ask the list's <code>selectable()</code> whether to show them at all: it is true when the admin may
 run any of its bulk actions. Given a record, it says whether any of those actions <code>allows()</code> it:</p>
-<pre class="highlight"><code class="language-php">&lt;?php
-$actionList = service('actions')-&gt;for('photos')-&gt;showing($photos);
-$selectable = $actionList-&gt;selectable(auth()-&gt;user());
-?&gt;
-&lt;form method="post"&gt;
-    &lt;?= csrf_field() ?&gt;
-    &lt;table class="table bf-table"&gt;
-        &lt;!-- ... --&gt;
-        &lt;?php if ($selectable) : ?&gt;
-            &lt;td class="bf-select-cell"&gt;
-                &lt;input type="checkbox" name="selects[]" value="&lt;?= $photo-&gt;id ?&gt;" class="form-check-input"
-                    &lt;?= $actionList-&gt;selectable(auth()-&gt;user(), $photo) ? '' : 'disabled' ?&gt;&gt;
-            &lt;/td&gt;
-        &lt;?php endif ?&gt;
-        &lt;!-- ... --&gt;
-    &lt;/table&gt;
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nv">$actionList</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'actions'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">for</span><span class="p">(</span><span class="s1">'photos'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">showing</span><span class="p">(</span><span class="nv">$photos</span><span class="p">);</span>
+<span class="nv">$selectable</span> <span class="o">=</span> <span class="nv">$actionList</span><span class="o">-&gt;</span><span class="na">selectable</span><span class="p">(</span><span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">());</span>
+<span class="cp">?&gt;</span>
+<span class="x">&lt;form method="post"&gt;</span>
+<span class="x">    </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">csrf_field</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;table class="table bf-table"&gt;</span>
+<span class="x">        &lt;!-- ... --&gt;</span>
+<span class="x">        </span><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$selectable</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">            &lt;td class="bf-select-cell"&gt;</span>
+<span class="x">                &lt;input type="checkbox" name="selects[]" value="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$photo</span><span class="o">-&gt;</span><span class="na">id</span> <span class="cp">?&gt;</span><span class="x">" class="form-check-input"</span>
+<span class="x">                    </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$actionList</span><span class="o">-&gt;</span><span class="na">selectable</span><span class="p">(</span><span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">(),</span> <span class="nv">$photo</span><span class="p">)</span> <span class="o">?</span> <span class="s1">''</span> <span class="o">:</span> <span class="s1">'disabled'</span> <span class="cp">?&gt;</span><span class="x">&gt;</span>
+<span class="x">            &lt;/td&gt;</span>
+<span class="x">        </span><span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;!-- ... --&gt;</span>
+<span class="x">    &lt;/table&gt;</span>
 
-    &lt;?php if ($selectable) : ?&gt;
-        &lt;x-selection-bar&gt;
-            &lt;x-bulk-actions list="photos" /&gt;
-        &lt;/x-selection-bar&gt;
-    &lt;?php endif ?&gt;
-&lt;/form&gt;</code></pre>
+<span class="x">    </span><span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$selectable</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;x-selection-bar&gt;</span>
+<span class="x">            &lt;x-bulk-actions list="photos" /&gt;</span>
+<span class="x">        &lt;/x-selection-bar&gt;</span>
+<span class="x">    </span><span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</code></pre></div>
 <h2 id="confirmation">Confirmation</h2>
 <p>With JavaScript, an action that asks first opens <code>&lt;x-confirm-dialog&gt;</code>, a dialog that is in the Admin layout once. It
 shows the title with the count filled in, the body, and a red button for dangerous actions.</p>
@@ -1879,7 +1883,8 @@ the same question and a button to go ahead. Either way, an action never runs unt
 <li>A <code>data-confirm</code> attribute on any link or submit button: the link is followed, or the form submitted, once the admin
   confirms. <code>data-confirm-button</code> sets the button's label and <code>data-confirm-danger="1"</code> makes it red.</li>
 </ul>
-<pre class="highlight"><code class="language-php">&lt;a href="&lt;?= url_to('photo-purge', $photo-&gt;id) ?&gt;" data-confirm="Purge this photo?" data-confirm-danger="1"&gt;Purge&lt;/a&gt;</code></pre>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">"&lt;?= url_to('photo-purge', </span><span class="si">$photo-&gt;id</span><span class="s2">) ?&gt;"</span> <span class="nx">data</span><span class="o">-</span><span class="nx">confirm</span><span class="o">=</span><span class="s2">"Purge this photo?"</span> <span class="nx">data</span><span class="o">-</span><span class="nx">confirm</span><span class="o">-</span><span class="nx">danger</span><span class="o">=</span><span class="s2">"1"</span><span class="o">&gt;</span><span class="nx">Purge</span><span class="o">&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
+</code></pre></div>
 <h2 id="running-in-the-background">Running In The Background</h2>
 <p>Each action decides whether its runs are queued with its <code>$queue</code> property:</p>
 <ul>
@@ -1887,18 +1892,20 @@ the same question and a button to go ahead. Either way, an action never runs unt
 <li><code>Queue::Always</code> always queues.</li>
 <li><code>Queue::Never</code> always runs in the request.</li>
 </ul>
-<pre class="highlight"><code class="language-php">use Bonfire\Actions\Queue;
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Actions\Queue</span><span class="p">;</span>
 
-class ExportPhotos extends Action
-{
-    public Queue $queue = Queue::Always;
-    // ...
-}</code></pre>
+<span class="k">class</span> <span class="nc">ExportPhotos</span> <span class="k">extends</span> <span class="nx">Action</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nx">Queue</span> <span class="nv">$queue</span> <span class="o">=</span> <span class="nx">Queue</span><span class="o">::</span><span class="na">Always</span><span class="p">;</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>Queued runs need the <a href="https://github.com/codeigniter4/queue">codeigniter4/queue</a> package, which Bonfire suggests but
 doesn't require:</p>
-<pre class="highlight"><code class="language-console">composer require codeigniter4/queue
-php spark migrate --all
-php spark queue:work bonfire-actions</code></pre>
+<div class="highlight"><pre><span></span><code><span class="go">composer require codeigniter4/queue</span>
+<span class="go">php spark migrate --all</span>
+<span class="go">php spark queue:work bonfire-actions</span>
+</code></pre></div>
 <p>Bonfire registers its <code>bonfire-action</code> job with the queue for you. Keep a <code>queue:work bonfire-actions</code> worker running,
 or queued runs will wait forever.</p>
 <p>Without the package, <code>Queue::Auto</code> runs in the request, a chunk at a time, and <code>Queue::Always</code> refuses with a message
@@ -2025,10 +2032,6 @@ lifecycle: the endpoint, the queue job and <code>&lt;x-action-run&gt;</code> all
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

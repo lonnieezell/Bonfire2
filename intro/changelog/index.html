@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -2165,10 +2163,11 @@ A user with <code>users.edit</code> but without <code>me.edit</code> can no long
 <h2 id="18-march-2025-breaking-change">18 March 2025 (breaking change)</h2>
 <p>The way widgets are enabled has changed in the database, so if you had widgets enabled before, they will
 all be disabled. To clear the database of the orphaned data about enabled widgets run this in your DB:</p>
-<pre class="highlight"><code class="language-sql">DELETE FROM `settings`
-WHERE `class` = 'Bonfire\Widgets\Config\Stats' AND `key` LIKE 'Stats_%';
-DELETE FROM `settings`
-WHERE `class` = 'Bonfire\Widgets\Config\Stats' AND `key` LIKE 'Charts_%';</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">settings</span><span class="o">`</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="k">class</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Bonfire\Widgets\Config\Stats'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'Stats_%'</span><span class="p">;</span>
+<span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">settings</span><span class="o">`</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="o">`</span><span class="k">class</span><span class="o">`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Bonfire\Widgets\Config\Stats'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="o">`</span><span class="k">key</span><span class="o">`</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">'Charts_%'</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="26-february-2025-breaking-change">26 February 2025 (breaking change)</h2>
 <p>Finished implementation of <strong>&lt;x-button&gt;</strong> component in the Admin theme. Users need to update the
 Admin theme (updated the component definition).</p>
@@ -2180,21 +2179,24 @@ Admin theme (updated the component definition).</p>
 feature.</p>
 <p>To use the feature on existing installs you will first need to update the userspace Config file <code>app/Config/Auth.php</code>,
 in particular – the property <code>$views</code>, two keys relating to 2FA to look like this:</p>
-<pre class="highlight"><code class="language-php">    'action_email_2fa'        =&gt; '\Bonfire\Views\Auth\email_2fa_show',
-    'action_email_2fa_verify' =&gt; '\Bonfire\Views\Auth\email_2fa_verify',</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="s1">'action_email_2fa'</span>        <span class="o">=&gt;</span> <span class="s1">'\Bonfire\Views\Auth\email_2fa_show'</span><span class="p">,</span>
+    <span class="s1">'action_email_2fa_verify'</span> <span class="o">=&gt;</span> <span class="s1">'\Bonfire\Views\Auth\email_2fa_verify'</span><span class="p">,</span>
+</code></pre></div>
 <p>Failing to do that and enabling 2FA in the admin area will lock the users out of your website.</p>
 <p>To fix it, after modifying the config file, issue this command on your database to clean up references 
 to wrong classes:</p>
-<pre class="highlight"><code class="language-sql">DELETE FROM settings WHERE class="Config\Auth" AND key="actions";</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">settings</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">class</span><span class="o">=</span><span class="ss">"Config\Auth"</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="ss">"actions"</span><span class="p">;</span>
+</code></pre></div>
 <h2 id="16-january-2025">16 January 2025</h2>
 <p>Bonfire can henceforth warn you about breaking changes (like need to update Admin/Auth themes, change config files, etc).</p>
 <p>To get such notifications when updating Bonfire, you can add a command to your
 composer.json scripts section:</p>
-<pre class="highlight"><code class="language-json">    "scripts": {
-        "post-update-cmd": [
-            "php spark notify:breaking-changes"
-        ]
-    }</code></pre>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"post-update-cmd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"php spark notify:breaking-changes"</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
 <p>New Bonfire install will automatically include this command.</p>
 <h2 id="18-march-2024-breaking-change">18 March 2024 (breaking change)</h2>
 <p><strong>&lt;x-button&gt;</strong> and <strong>&lt;x-button-container&gt;</strong> view <a href="https://github.com/lonnieezell/Bonfire2/blob/develop/docs/building_admin_modules/view_components.md">components</a> implemented.</p>
@@ -2318,10 +2320,6 @@ composer.json scripts section:</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

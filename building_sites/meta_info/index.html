@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1535,28 +1533,29 @@ entities managed by your own admin modules.</p>
 <p>Once you configure meta info for a resource as described in the Meta Info page of
 <a href="../../modules/meta_info/">Modules section</a>, you can access and write extra data to an entity without
 the modifying the underlying resource database table:</p>
-<pre class="highlight"><code class="language-php">// access your user entity
-$user = model('UserModel')-&gt;find(5);
+<div class="highlight"><pre><span></span><code><span class="c1">// access your user entity</span>
+<span class="nv">$user</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="s1">'UserModel'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 
-$url = $this-&gt;request-&gt;getPost('website_url');
-// save meta field:
-$user-&gt;saveMeta('website_url', $url);
+<span class="nv">$url</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">getPost</span><span class="p">(</span><span class="s1">'website_url'</span><span class="p">);</span>
+<span class="c1">// save meta field:</span>
+<span class="nv">$user</span><span class="o">-&gt;</span><span class="na">saveMeta</span><span class="p">(</span><span class="s1">'website_url'</span><span class="p">,</span> <span class="nv">$url</span><span class="p">);</span>
 
-// get all meta data
-$meta = $user-&gt;allMeta();
+<span class="c1">// get all meta data</span>
+<span class="nv">$meta</span> <span class="o">=</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">allMeta</span><span class="p">();</span>
 
-// delete meta info entry
-$user-&gt;deleteMeta('website_url');
+<span class="c1">// delete meta info entry</span>
+<span class="nv">$user</span><span class="o">-&gt;</span><span class="na">deleteMeta</span><span class="p">(</span><span class="s1">'website_url'</span><span class="p">);</span>
 
-// delete all meta info for an entry
-$user-&gt;deletResouceMeta();
+<span class="c1">// delete all meta info for an entry</span>
+<span class="nv">$user</span><span class="o">-&gt;</span><span class="na">deletResouceMeta</span><span class="p">();</span>
 
-// update meta for a resource
-$post = [
-    'website_url' =&gt; 'https://example.com',
-    'facebook_name' =&gt; 'johnny.rose'
-];
-$user-&gt;syncMeta($post);</code></pre>
+<span class="c1">// update meta for a resource</span>
+<span class="nv">$post</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'website_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://example.com'</span><span class="p">,</span>
+    <span class="s1">'facebook_name'</span> <span class="o">=&gt;</span> <span class="s1">'johnny.rose'</span>
+<span class="p">];</span>
+<span class="nv">$user</span><span class="o">-&gt;</span><span class="na">syncMeta</span><span class="p">(</span><span class="nv">$post</span><span class="p">);</span>
+</code></pre></div>
 <p>See more examples and detailed documentation on <a href="../../modules/meta_info/">Meta Info</a> page.</p>
 
 
@@ -1677,10 +1676,6 @@ $user-&gt;syncMeta($post);</code></pre>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

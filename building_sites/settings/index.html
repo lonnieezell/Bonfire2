@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1649,10 +1647,11 @@ and still allows your users to override those settings once the site is live. </
 script</a>. No other setup is needed. </p>
 <h2 id="usage">Usage</h2>
 <p>To retrieve a config value use the <code>settings()</code> helper method that is always loaded. </p>
-<pre class="highlight"><code class="language-php">// The same as config('App')-&gt;siteName;
-$siteName = setting('App', 'siteName');
-// or
-$siteName = setting()-&gt;get('App', 'siteName');</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// The same as config('App')-&gt;siteName;</span>
+<span class="nv">$siteName</span> <span class="o">=</span> <span class="nx">setting</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="s1">'siteName'</span><span class="p">);</span>
+<span class="c1">// or</span>
+<span class="nv">$siteName</span> <span class="o">=</span> <span class="nx">setting</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="s1">'siteName'</span><span class="p">);</span>
+</code></pre></div>
 <p>In this case we used the short class name, <code>App</code>, which the <code>config()</code> method automatically locates within the 
 <code>app/Config</code> directory. If it was from a module, it would be found there. Either way, the fully qualified name
 is automatically detected by the Settings class to keep values separated from config files that may share the 
@@ -1661,11 +1660,13 @@ same name but different namespaces. </p>
 Note that boolean <code>true</code>/<code>false</code> will be converted to strings <code>:true</code> and <code>:false</code> when stored in the database, but
 will be converted back into a boolean when retrieved. Arrays and objects are serialized when saved, and unserialized
 when retrieved. </p>
-<pre class="highlight"><code class="language-php">setting()-&gt;set('App', 'siteName', 'My Great Site');</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">setting</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">'App'</span><span class="p">,</span> <span class="s1">'siteName'</span><span class="p">,</span> <span class="s1">'My Great Site'</span><span class="p">);</span>
+</code></pre></div>
 <h2 id="admin-accent-color">Admin accent color</h2>
 <p>The admin theme's highlight color is the <code>Site.adminAccent</code> setting, a <code>#rrggbb</code> hex string that defaults to
 <code>#D9622B</code>. Admins change it under <strong>Settings → General</strong>. To set it from code:</p>
-<pre class="highlight"><code class="language-php">setting('Site.adminAccent', '#2F6FEB');</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">setting</span><span class="p">(</span><span class="s1">'Site.adminAccent'</span><span class="p">,</span> <span class="s1">'#2F6FEB'</span><span class="p">);</span>
+</code></pre></div>
 <p>Use the <code>admin_accent()</code> helper to read it. The helper always returns a valid hex color and falls back to the default
 when the stored value isn't one.</p>
 
@@ -1787,10 +1788,6 @@ when the stored value isn't one.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>

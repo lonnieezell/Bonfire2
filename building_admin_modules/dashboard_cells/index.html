@@ -51,8 +51,6 @@
       
     
     
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
-    
       <link rel="stylesheet" href="../../assets/css/codeigniter.css">
     
       <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
@@ -1597,14 +1595,15 @@
 <h1 id="dashboard-cells">Dashboard Cells</h1>
 <p>You can customize the dashboard with the use of <a href="https://codeigniter.com/user_guide/outgoing/view_cells.html">view cells</a>.
 You can specify which cells to display by editing the <code>Bonfire\Dashboard\Config\Dashboard</code> config class;</p>
-<pre class="highlight"><code class="language-php">class Dashboard extends BaseConfig
-{
-    public array $cells = [
-        'Bonfire\Widgets\Cells\WidgetCells::stats',
-        'Bonfire\Widgets\Cells\WidgetCells::logs',
-        'Bonfire\Widgets\Cells\WidgetCells::charts',
-    ];
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Dashboard</span> <span class="k">extends</span> <span class="nx">BaseConfig</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">array</span> <span class="nv">$cells</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::stats'</span><span class="p">,</span>
+        <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::logs'</span><span class="p">,</span>
+        <span class="s1">'Bonfire\Widgets\Cells\WidgetCells::charts'</span><span class="p">,</span>
+    <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>The cells make up the default layout of the Dashboard, in the order listed. You can comment out any class to have it not show.
 The stats, logs and charts cells that come on by default stand for the stats, log and chart widgets: those are not on the
 default layout, and admins add them from the palette. Every other cell becomes one full-width widget with the id <code>cell:</code> plus its
@@ -1613,18 +1612,19 @@ For more control over a widget's title, icon, sizes or permission, write a <a hr
 as Quick Links now is.</p>
 <h2 id="creating-the-cell">Creating the Cell</h2>
 <p>The cells are very simple class methods that return the HTML or <code>view()</code> results:</p>
-<pre class="highlight"><code class="language-php">class ShopCells
-{
-    /**
-     * Lists the orders waiting to ship.
-     */
-    public function openOrders()
-    {
-        return view('Shop\Views\open_orders', [
-            'orders' =&gt; model(OrderModel::class)-&gt;open(),
-        ]);
-    }
-}</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ShopCells</span>
+<span class="p">{</span>
+    <span class="sd">/**</span>
+<span class="sd">     * Lists the orders waiting to ship.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">openOrders</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'Shop\Views\open_orders'</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s1">'orders'</span> <span class="o">=&gt;</span> <span class="nx">model</span><span class="p">(</span><span class="nx">OrderModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">open</span><span class="p">(),</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>Add <code>'Shop\Cells\ShopCells::openOrders'</code> to <code>$cells</code> and it becomes the widget <code>cell:Shop\Cells\ShopCells::openOrders</code>.</p>
 
 
@@ -1745,10 +1745,6 @@ as Quick Links now is.</p>
     
     
       <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-      
-        <script src="../../assets/js/hljs.js"></script>
       
     
   </body>
