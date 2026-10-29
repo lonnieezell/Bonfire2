@@ -25,6 +25,8 @@ class ActionRunModel extends Model
     protected $useTimestamps = true;
     protected $allowedFields = ['list', 'action', 'user_id', 'ids', 'total', 'processed', 'skipped', 'status', 'message'];
     protected array $casts   = [
-        'status' => 'enum[' . RunStatus::class . ']',
+        'status'     => 'enum[' . RunStatus::class . ']',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 }

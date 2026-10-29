@@ -25,4 +25,22 @@ enum RunStatus: string
     {
         return $this === self::Done || $this === self::Failed;
     }
+
+    /**
+     * Its `<x-status>` tone.
+     */
+    public function tone(): string
+    {
+        return match ($this) {
+            self::Queued  => 'muted',
+            self::Running => 'info',
+            self::Done    => 'ok',
+            self::Failed  => 'danger',
+        };
+    }
+
+    public function label(): string
+    {
+        return lang('Actions.status.' . $this->value);
+    }
 }

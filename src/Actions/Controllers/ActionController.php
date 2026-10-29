@@ -71,7 +71,8 @@ class ActionController extends AdminController
     }
 
     /**
-     * A queued run's progress toast, which polls until the run ends.
+     * A queued run's progress toast, which polls until the run ends. Opened
+     * as a link rather than polled, it shows inside the admin page.
      */
     public function progress(int $id): string
     {
@@ -79,6 +80,13 @@ class ActionController extends AdminController
 
         if ($run === null) {
             throw PageNotFoundException::forPageNotFound();
+        }
+
+        if (! $this->request->hasHeader('HX-Request')) {
+            return $this->render($this->viewPrefix . 'run', [
+                'run'   => $run,
+                'label' => service('actionRuns')->label($run),
+            ]);
         }
 
         return view($this->viewPrefix . '_run', ['run' => $run]);
