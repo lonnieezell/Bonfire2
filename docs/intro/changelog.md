@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,
+`Users::$avatarDirectory` also sets where avatar links point, and `Users::$avatarNameBasis = 'username'` takes an
+avatar's letters from the username, not the email. `Users::$includeMetaFieldsInSearech` is now spelled
+`$includeMetaFieldsInSearch`; published configs that still use the old spelling keep working. The unused
+`Themes::$haveComponents` is gone.
+
 `POST admin/settings/groups`, without a group alias, now returns 404. It used to throw an `ArgumentCountError`.
 
 A new page, [Configuration Reference](configuration.md), lists every key in the published config files with its

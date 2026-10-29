@@ -65,6 +65,24 @@ final class SearchProviderTest extends TestCase
         $this->assertCount(2, $result);
     }
 
+    public function testSearchMatchesMetaFieldsListedInIncludeMetaFieldsInSearch()
+    {
+        setting('Users.includeMetaFieldsInSearch', ['blog']);
+        setting('Users.includeMetaFieldsInSearech', null);
+        $this->createUser(['first_name' => 'John', 'email' => 'john@example.com'])->saveMeta('blog', 'https://quokka.test');
+
+        $this->assertCount(1, $this->provider->search('quokka'));
+    }
+
+    public function testSearchFallsBackToTheMisspelledSetting()
+    {
+        setting('Users.includeMetaFieldsInSearch', null);
+        setting('Users.includeMetaFieldsInSearech', ['blog']);
+        $this->createUser(['first_name' => 'John', 'email' => 'john@example.com'])->saveMeta('blog', 'https://quokka.test');
+
+        $this->assertCount(1, $this->provider->search('quokka'));
+    }
+
     public function testResourceUrl()
     {
         $this->assertSame('admin/users', $this->provider->resourceUrl());

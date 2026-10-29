@@ -52,7 +52,6 @@ apply to it.
 | Key | Default | Effect |
 | --- | --- | --- |
 | `$collections` | `[__DIR__ . '/../../themes/']` | Folders that hold themes. Each theme is a direct child folder of a collection. |
-| `$haveComponents` | `true` | Whether theme folders are expected to have a `Components` folder. Not read anywhere yet; see [#722](https://github.com/lonnieezell/Bonfire2/issues/722). |
 | `$componentsLookupPaths` | `[APPPATH . 'Views/Components/']` | Fallback folders for a view component that the current theme doesn't define, checked in order. Each path must end with `/`. Use it for a component library shared by several themes. |
 
 ## Users
@@ -65,22 +64,13 @@ apply to it.
 | `$gravatarDefault` | `'blank'` | The Gravatar image for emails with no Gravatar: `mp`, `identicon`, `monsterid`, `wavatar`, `retro`, `robohash` or `blank`. **Admin** |
 | `$avatarNameBasis` | `'name'` | What the letters on a generated avatar come from: `'name'` (initials, or the username when there's no first name) or `'username'`. **Admin** |
 | `$avatarPalette` | 11 hex colors | Background colors for generated avatars. Each user always gets the same one. |
-| `$avatarDirectory` | `'uploads/avatars'` | Where uploaded avatars are saved, relative to `FCPATH`. |
+| `$avatarDirectory` | `'uploads/avatars'` | Where uploaded avatars are saved and linked from, relative to `FCPATH`. |
 | `$avatarResize` | `false` | Shrink uploaded avatars that are larger than `$avatarSize`. **Admin** |
 | `$avatarSize` | `140` | The largest width or height in pixels of a resized avatar. **Admin** |
 | `$avatarResizeFloor` | `32` | The smallest `$avatarSize` allowed. |
 | `$validation` | rules for `id`, `email`, `username`, `first_name`, `last_name`, `groups.*` | Validation rules for saving a user in the admin. Rules for the fields in `$metaFields` are added to them. |
 | `$metaFields` | one example field, `blog` | Extra fields on a user's profile, grouped by fieldset legend. See [Defining Meta Fields](../modules/meta_info.md#defining-meta-fields). |
-| `$includeMetaFieldsInSearech` | `['blog']` | Names of `$metaFields` fields that the admin search looks in. The key is misspelled in the code; use the spelling shown. |
-
-!!! warning
-    Some of these keys don't behave as their names say yet:
-
-    - `$avatarResizeFloor` is never read, so the floor is always 32.
-    - `$avatarDirectory` only changes where avatars are saved. Avatar links always point to `uploads/avatars`.
-    - `$avatarNameBasis = 'username'` takes the letters from the email address.
-
-    All three are tracked in [#722](https://github.com/lonnieezell/Bonfire2/issues/722).
+| `$includeMetaFieldsInSearch` | `['blog']` | Names of `$metaFields` fields that the admin search looks in. Older published configs spell it `$includeMetaFieldsInSearech`, which still works. |
 
 ## Consent
 

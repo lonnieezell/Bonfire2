@@ -30,7 +30,8 @@ class SearchProvider extends UserModel implements SearchProviderInterface
 
         $query->join('auth_identities', 'auth_identities.user_id = users.id', 'inner');
 
-        $searchInMeta = setting('Users.includeMetaFieldsInSearech');
+        // Installs with a published config may still use the old, misspelled key.
+        $searchInMeta = setting('Users.includeMetaFieldsInSearch') ?? setting('Users.includeMetaFieldsInSearech');
 
         if (! empty($searchInMeta)) {
             // TODO: find a better way to access both of these variables -

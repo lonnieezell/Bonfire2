@@ -18,7 +18,7 @@ $activeValidators = old('validators', setting('Auth.passwordValidators')) ?? [];
 $remember         = (bool) old('allowRemember', setting('Auth.sessionConfig')['allowRemembering']);
 $useGravatar      = (bool) old('useGravatar', setting('Users.useGravatar'));
 $avatarResize     = (bool) old('avatarResize', setting('Users.avatarResize'));
-$avatarSizeFloor  = setting('Users.avatarSizeFloor') ?? 32;
+$avatarSizeFloor  = setting('Users.avatarResizeFloor') ?? 32;
 ?>
 
 <?php $this->section('main') ?>

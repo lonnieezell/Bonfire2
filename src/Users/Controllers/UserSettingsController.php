@@ -64,7 +64,7 @@ class UserSettingsController extends BaseController
             'minimumPasswordLength' => 'required|integer|greater_than[6]',
             'defaultGroup'          => 'required|string',
             'avatarResize'          => 'required|in_list[0,1]',
-            'avatarSize'            => 'required_with[avatarResize]|integer|greater_than_equal_to[' . (setting('Users.avatarSizeFloor') ?? '32') . ']',
+            'avatarSize'            => 'required_with[avatarResize]|integer|greater_than_equal_to[' . (setting('Users.avatarResizeFloor') ?? '32') . ']',
         ];
 
         if (! $this->validate($rules)) {
