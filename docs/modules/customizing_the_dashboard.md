@@ -51,6 +51,7 @@ such as Quick Links, have no sliders button.
 | Recently active | Active within (5 minutes, 1 hour, 24 hours), Users to show (1–10) |
 | Action runs | Runs to show (1–20), Days to show (1–30), Include completed runs |
 | Recent errors | Entries to show (1–20), Show errors only or errors and warnings |
+| System health | Warn when server load is above (0.5–100) |
 
 **Save as site default** carries each widget's settings into the site default.
 
@@ -102,6 +103,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 | Recent failed logins | `users.view` |
 | User Groups | `groups.settings` |
 | Log activity, Recent errors | `logs.view` |
+| System health | `admin.settings` |
 | Quick Links, Action runs | none |
 
 A widget that becomes available later shows up in the library of admins who have customized, never in their layout.

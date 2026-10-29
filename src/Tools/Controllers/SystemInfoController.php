@@ -12,6 +12,7 @@
 namespace Bonfire\Tools\Controllers;
 
 use Bonfire\Core\AdminController;
+use Bonfire\Tools\Libraries\SystemHealth;
 use CodeIgniter\CodeIgniter;
 
 class SystemInfoController extends AdminController
@@ -28,23 +29,11 @@ class SystemInfoController extends AdminController
     {
         $db = db_connect();
 
-        helper('filesystem');
         helper('number');
 
-        $serverLoad = function_exists('sys_getloadavg') ? current(sys_getloadavg()) : null;
-
-        $files = [['name' => '/writable', 'dir' => true, 'writable' => is_really_writable(WRITEPATH)]];
-
-        foreach (get_dir_file_info(WRITEPATH, true) as $name => $info) {
-            $isDir   = is_dir(WRITEPATH . $name);
-            $files[] = [
-                'name'     => trim($name, ' /'),
-                'dir'      => $isDir,
-                'writable' => is_really_writable(WRITEPATH . $name),
-                'modified' => $isDir ? null : $info['date'],
-                'size'     => $isDir ? null : $info['size'],
-            ];
-        }
+        $health     = new SystemHealth();
+        $serverLoad = $health->serverLoad();
+        $files      = $health->files();
 
         return $this->render($this->viewPrefix . 'index', [
             'server' => [
@@ -52,12 +41,12 @@ class SystemInfoController extends AdminController
                 'CodeIgniter Version' => CodeIgniter::CI_VERSION,
                 'SQL Engine'          => $db->DBDriver . ' ' . $db->getVersion(),
                 'Server OS'           => php_uname('s') . ' ' . php_uname('r') . ' (' . php_uname('m') . ')',
-                'Server Load'         => $serverLoad !== false && $serverLoad !== null ? number_format($serverLoad, 1) : 'Unknown',
+                'Server Load'         => $serverLoad !== null ? number_format($serverLoad, 1) : 'Unknown',
                 'Max Upload'          => ini_get('upload_max_filesize'),
                 'Max POST'            => ini_get('post_max_size'),
                 'Memory Limit'        => ini_get('memory_limit'),
             ],
-            'envPresent'  => is_file(ROOTPATH . '.env'),
+            'envPresent'  => $health->envPresent(),
             'files'       => $files,
             'allWritable' => ! in_array(false, array_column($files, 'writable'), true),
         ]);

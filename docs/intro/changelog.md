@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A **System health** dashboard widget (`tools:systemHealth`) lists problems with the install: each file or folder in
+`writable/` that can't be written to, a missing `.env` file, and server load above a limit you set (default 4). When
+there are none it says so, and it links to the System Info page. It needs the `admin.settings` permission; add it from
+**Add widget** on the dashboard. The checks moved into `Bonfire\Tools\Libraries\SystemHealth`, which System Info
+now uses too.
+
 An **Action runs** dashboard widget (`actions:runs`) lists your own queued, running and recently failed bulk action
 runs, newest first, each linking to its progress. Settings choose how many to show, how many days of ended runs to
 include and whether completed runs appear. It needs no permission; add it from **Add widget** on the dashboard. Opening
