@@ -37,8 +37,8 @@ has none.
 | `admin.settings` | Open the General, Email and System Info settings | ✓ | | ✓ | |
 | `groups.settings` | List groups and edit their details | ✓ | ✓ | ✓ | |
 | `groups.edit` | Change a group's permissions | ✓ | | | |
-| `users.list` | List users and see the user dashboard widgets | ✓ | ✓ | ✓ | |
-| `users.view` | See the Users menu item and open a user's Permissions tab | ✓ | | | |
+| `users.list` | See the Users menu item, list users and see the user dashboard widgets | ✓ | ✓ | ✓ | |
+| `users.view` | Open a user's Permissions tab | ✓ | | | |
 | `users.create` | Create users | ✓ | ✓ | ✓ | |
 | `users.edit` | Edit users, their groups and permissions, and ban them | ✓ | ✓ | ✓ | |
 | `users.delete` | Delete users | ✓ | ✓ | | |

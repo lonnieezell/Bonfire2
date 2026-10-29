@@ -6,6 +6,9 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+The Users sidebar item now needs `users.list`, the permission the users list page checks, not `users.view`. The
+`admin` and `developer` groups now see it.
+
 The Users, Email and System Info settings pages now check permissions in the controller, not just in the sidebar.
 Users without `users.settings` (Users) or `admin.settings` (Email, System Info and PHP Info) are sent back to the
 admin dashboard, even if they type the URL.
