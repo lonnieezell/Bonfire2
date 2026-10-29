@@ -54,7 +54,7 @@ class ComponentRenderer
         $pattern = "/
             <
                 \\s*
-                x[-\\:](?<name>[\\w\\-\\:\\.]*)
+                x[-\\:](?<name>\\w[\\w\\-\\:\\.]*)
                 \\s*
                 (?<attributes>
                     (?:

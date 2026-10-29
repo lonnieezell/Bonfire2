@@ -59,6 +59,7 @@ final class ComponentRendererTest extends TestCase
             'value ending in a quote keeps it'   => ['<x-greeting name="say \'hi\'" />', "Hello say 'hi'"],
             'single-quoted value ending in "'    => ['<x-greeting name=\'say "hi"\' />', 'Hello say "hi"'],
             'self-closing inside a component'    => ['<x-framed>hi</x-framed>', 'Hello Ada|hi'],
+            'tag without a name is left alone'   => ['<x- /> <x-: />', '<x- /> <x-: />'],
         ];
     }
 
