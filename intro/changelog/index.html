@@ -732,8 +732,6 @@
       
         
       
-        
-      
     
     
     
@@ -910,34 +908,6 @@
     
   
     The Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../modules/customizing_the_dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Customizing the Dashboard
   
 
     
@@ -1302,10 +1272,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1454,34 +1420,6 @@
     
   
     Creating an Admin Module
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../building_admin_modules/dashboard_cells/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard Cells
   
 
     
@@ -1678,34 +1616,6 @@
     
   
     View Components
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../building_admin_modules/widgets/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Widgets
   
 
     
@@ -2078,7 +1988,7 @@ published the Admin theme keep the old expanding Settings menu until they copy t
 <code>themes/Admin/Components/sidebar.php</code>.</p>
 <p>Each admin can now change a dashboard widget's settings for their own dashboard: in edit mode, its sliders button
 opens them in a panel, and they are saved with the layout (see
-<a href="../../modules/customizing_the_dashboard/#widget-settings">Customizing the Dashboard</a>). Stat cards, charts and Log
+<a href="../../modules/dashboard/#widget-settings">The Dashboard</a>). Stat cards, charts and Log
 activity have settings; until an admin changes one, it follows the site-wide value in Settings → Widgets. Widgets
 declare their settings with <code>fields()</code>, a list of <code>Bonfire\Dashboard\WidgetField</code>, and get their values in
 <code>render(WidgetValues $values)</code>; <code>DashboardWidget::settingsUrl()</code> is gone (see
@@ -2089,7 +1999,7 @@ a log file. Its <strong>Days to show</strong> setting (formerly <em>Log files to
 don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
 need <code>users.list</code> and the Groups widgets <code>groups.settings</code>. Admins with <code>widgets.settings</code> can <strong>Save as site
 default</strong> from the dashboard's edit bar, and <strong>Reset site default</strong> in Settings → Widgets (see
-<a href="../../modules/customizing_the_dashboard/#the-site-default">Customizing the Dashboard</a>). The Settings → Widgets
+<a href="../../modules/dashboard/#the-site-default">The Dashboard</a>). The Settings → Widgets
 switches are now labelled as choosing which widgets are <em>available</em>. Quick Links is now a native widget,
 <code>Bonfire\Dashboard\Widgets\QuickLinksWidget</code>, registered by the Dashboard module under its old id, and no longer in
 the default <code>Dashboard.cells</code>; installs that still list <code>Bonfire\Dashboard\DashboardCells::quickLinks</code> show it once,
@@ -2111,7 +2021,7 @@ longer applies. Run <code>php spark migrate --all</code>: a migration forgets th
 of the removed Config classes below (such as <code>app/Config/Stats.php</code>), which extends a class that is gone. This
 replaces what the notes below say about Settings → Widgets. <strong>Reset site default</strong> has moved into the dashboard's edit
 bar, next to <strong>Save as site default</strong>, for admins with <code>widgets.settings</code> (see
-<a href="../../modules/customizing_the_dashboard/#the-site-default">Customizing the Dashboard</a>). Code that used the removed
+<a href="../../modules/dashboard/#the-site-default">The Dashboard</a>). Code that used the removed
 API: <code>WidgetField</code>'s factories no longer take <code>key:</code> (a key passed by position now lands in <code>description</code>), and
 <code>WidgetField::inherited()</code> is gone (read <code>default</code>); <code>Bonfire\Widgets\WidgetOptions</code> and the
 <code>Bonfire\Widgets\Config\Stats</code>, <code>LineChart</code>, <code>BarChart</code>, <code>DoughnutChart</code>, <code>PieChart</code>, <code>PolarAreaChart</code> and
@@ -2149,7 +2059,7 @@ from the widget library. Two new widgets: <strong>Newest users</strong> (the lat
 <code>users.list</code>) and <strong>Recent errors</strong> (the newest errors, or errors and warnings, across the log files, linking to each
 log file; needs <code>logs.view</code>). The default dashboard now has Users by group and Newest users in its <strong>Users</strong> section, in place of the
 Users in Recycler stat, and Log activity and Recent errors side by side in <strong>Monitoring</strong> (see
-<a href="../../modules/dashboard/#configuration">The Dashboard</a>). Installs that published the Admin theme need
+<a href="../../modules/dashboard/#setting-it-in-config">The Dashboard</a>). Installs that published the Admin theme need
 the new <code>.bf-list-card</code>, <code>.bf-bars</code> and <code>.bf-rows</code> rules of <code>themes/Admin/css/admin.css</code>.</p>
 <p>Lists have a shared system for row and bulk actions (see <a href="../../building_admin_modules/actions/">Row and Bulk Actions</a>):
 an action is one class, registered on a named list, run through <code>POST admin/actions/{list}/{action}</code> with permission,
@@ -2171,17 +2081,17 @@ render. Turning <strong>Site Online</strong> off now saves <code>0</code>; the o
 <p>The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.</p>
 <p>A new <strong>Log activity</strong> dashboard widget charts the entries of the newest log files per level (see
-<a href="../../building_admin_modules/widgets/#log-activity-widget">Widgets</a>). Turn it on in Settings → Widgets; its own tab sets
+<a href="../../modules/dashboard/#built-in-widgets">The Dashboard</a>). Turn it on in Settings → Widgets; its own tab sets
 how many files it shows and whether Debug entries are left out. It is shown by a new
 <code>Bonfire\Widgets\Cells\WidgetCells::logs</code> cell: installs with their own <code>Config\Dashboard</code> must add that cell to
 <code>$cells</code> to see it. Its styles are in the Admin theme, so re-publish the theme.</p>
-<p>Each admin can customize their own dashboard (see <a href="../../modules/dashboard/#customizing-the-dashboard">The Dashboard</a>):
+<p>Each admin can customize their own dashboard (see <a href="../../modules/dashboard/#customizing-your-dashboard">The Dashboard</a>):
 <strong>Customize</strong> lets them drag widgets into a new order, group them into titled sections, size them (¼ / ⅓ / ½ / ⅔ /
 Full, from their tools or by dragging a corner), remove them and add others from a widget library, all of it also from
 the keyboard, with undo and redo. <strong>Save layout</strong> stores the layout as theirs alone; saving the default layout, after
 resetting to it, forgets theirs. Every stat card, chart, Log activity and custom cell in <code>Dashboard.cells</code> is now
 one widget, and modules can add their own by implementing <code>Bonfire\Dashboard\DashboardWidget</code> and calling
-<code>service('dashboard')-&gt;register()</code> in <code>initAdmin()</code> (see <a href="../../building_admin_modules/widgets/#your-own-dashboard-widget">Widgets</a>).
+<code>service('dashboard')-&gt;register()</code> in <code>initAdmin()</code> (see <a href="../../building_admin_modules/dashboard_widgets/#writing-a-widget">Dashboard Widgets</a>).
 The switches in Settings → Widgets now decide which widgets are <em>available</em> in the palette, and are on unless a site
 admin switches them off; their stored keys are unchanged. The default dashboard is the new <code>Dashboard.layout</code> config
 property: Quick Links, a Users section (Users by Group and Users in Recycler) and a Monitoring section (Log activity).
