@@ -6,6 +6,13 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+New admin guides cover the shipped screens: [Users](../modules/users.md) (including Settings → Users),
+[General Settings](../modules/settings.md), [Email Settings](../modules/email.md) and [Tools](../modules/tools.md)
+(System Info and Logs). [Bonfire Modules](../modules/index.md) now lists every shipped module.
+
+A new page, [Menus](../building_admin_modules/menus.md), lists every `MenuItem` key, the collection and menu methods,
+custom menus, and reordering with `$menuWeights`.
+
 The [Authentication](../modules/auth.md) page now lists Bonfire's defaults for registration, magic links, redirects
 and the email activation and 2FA actions, and shows where to change each one. It also documents the `Auth` theme's
 `<x-auth-card>` and `<x-unsplash>` components.

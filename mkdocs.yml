@@ -97,6 +97,10 @@ nav:
       - modules/meta_info.md
       - modules/consent.md
       - modules/dashboard.md
+      - modules/users.md
+      - modules/settings.md
+      - modules/email.md
+      - modules/tools.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/alerts.md
@@ -115,6 +119,7 @@ nav:
       - building_admin_modules/creating_an_admin_module.md
       - building_admin_modules/dashboard_widgets.md
       - building_admin_modules/filters.md
+      - building_admin_modules/menus.md
       - building_admin_modules/permissions.md
       - building_admin_modules/recycler.md
       - building_admin_modules/resource_tabs.md
