@@ -45,7 +45,7 @@ them instead of Shield's.
 | `register` | `Bonfire\Auth\Actions\EmailActivator` | After registering, they get a code by email and must enter it to activate their account. | Force email verification |
 | `login` | `Bonfire\Auth\Actions\Email2FA` | After entering their password, they get a code by email and must enter it to finish logging in. | Force 2FA after login |
 
-Both actions send email, so set up email under **Settings → Email** first.
+Both actions send email, so set up [Email](email.md) first.
 
 The switches recognize only Bonfire's classes. If you set Shield's classes, or your own, in code, the switch shows as off,
 and saving the screen replaces your class with `null`.
