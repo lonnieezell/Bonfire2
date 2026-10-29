@@ -472,6 +472,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#updating-bonfire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Bonfire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#generate-some-data-for-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1591,6 +1602,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#updating-bonfire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating Bonfire
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#generate-some-data-for-testing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1720,6 +1742,23 @@ From the project root, type:</p>
 <h2 id="enjoy">Enjoy!</h2>
 <p>That's all that's needed to get started. You can now visit <a href="http://localhost:8080/admin">http://localhost:8080/admin</a> and login with your new user.</p>
 <p>If you'd rather use a different server, like Apache or Nginx, you can follow the <a href="https://codeigniter.com/user_guide/installation/running.html">CodeIgniter 4 User Guide</a> suggestions for a number of different server setups.</p>
+<h2 id="updating-bonfire">Updating Bonfire</h2>
+<p>After <code>composer update</code>, Bonfire reads the changelog of the version you now have and, when a release since your last
+update contains breaking changes, prints a warning:</p>
+<pre class="highlight"><code>======= WARNING: =======
+Breaking changes since the previous update of your Bonfire install detected.
+You may need to update your app manually.
+Please read the changelog for more information:
+vendor/lonnieezell/bonfire/docs/intro/changelog.md
+Latest breaking change date: 2026-10-28</code></pre>
+<p>The warning is a reminder to read the changelog, nothing more: re-publishing a theme, copying a view or changing a
+config file is not something an update can do for you.</p>
+<p>Bonfire remembers the change it has shown you in <code>writable/bonfire-breaking-changes.json</code>. That folder has to be
+writable, and it has to survive a deploy, otherwise the same warning comes back after every update. If your server
+recreates <code>writable/</code> on each release, point the marker somewhere else in <code>app/Config/Bonfire.php</code>:</p>
+<pre class="highlight"><code class="language-php">public $breakingChangeStateFile = ROOTPATH . 'bonfire-breaking-changes.json';</code></pre>
+<p>To turn the check off, remove <code>php spark notify:breaking-changes</code> from the <code>post-update-cmd</code> scripts of your
+<code>composer.json</code>.</p>
 <h2 id="generate-some-data-for-testing">Generate some data for testing</h2>
 <p>You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):</p>
 <pre class="highlight"><code class="language-bash">php spark db:seed Bonfire\\Users\\Database\\Seeds\\Seed100Users</code></pre>

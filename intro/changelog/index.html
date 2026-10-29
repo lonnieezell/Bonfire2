@@ -1832,6 +1832,14 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="28-october-2026">28 October 2026</h2>
+<p><code>spark notify:breaking-changes</code> used to keep its marker in a <code>last-update.txt</code> file inside the package folder, which
+<code>composer update</code> deleted together with the previous version, so it warned on every update. It now remembers the
+breaking change it last reported in <code>writable/bonfire-breaking-changes.json</code>: expect one more warning after this
+update, and none for changes you have already been shown.</p>
+<p>The check also notices a note added to an existing <code>(breaking change)</code> heading, not only a new heading, and a fresh
+install no longer warns about changes that came before it. If <code>writable/</code> is recreated on every deploy, move the
+marker with <code>Config\Bonfire::$breakingChangeStateFile</code>. See
+<a href="../installation/#updating-bonfire">Updating Bonfire</a>.</p>
 <p>The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
 A widget's <code>group()</code> gives its module's name; the type keys <code>quickLinks</code>, <code>stats</code>, <code>charts</code> and <code>custom</code> still work,
 each under its own heading. A <code>StatsItem</code> or <code>ChartsItem</code> takes <code>'module' =&gt; '…'</code> (see
