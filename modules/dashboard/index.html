@@ -755,6 +755,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recent-failed-logins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recent failed logins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1586,6 +1597,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recent-failed-logins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recent failed logins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1752,6 +1774,10 @@ the cells below instead, in order:</p>
 may see. It is a <a href="../../building_admin_modules/dashboard_widgets/">dashboard widget</a> registered by the Dashboard module, not
 a cell any more. It keeps its old id, <code>cell:Bonfire\Dashboard\DashboardCells::quickLinks</code>, so installs whose <code>$cells</code>
 still list <code>Bonfire\Dashboard\DashboardCells::quickLinks</code> show it once, in the same place.</p>
+<h2 id="recent-failed-logins">Recent failed logins</h2>
+<p>The Recent failed logins widget (<code>users:failedLogins</code>) isn't on the default dashboard; add it from the widget library.
+It lists the newest unsuccessful login attempts across all accounts: who tried, from which IP address, and when. An
+attempt whose email belongs to a user links to that user's Security tab, for admins who may open it.</p>
 <h2 id="widgets">Widgets</h2>
 <p>The <code>stats</code>, <code>logs</code> and <code>charts</code> cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.</p>
 <h3 id="settings">Settings</h3>
