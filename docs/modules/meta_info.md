@@ -3,7 +3,8 @@
 Bonfire provides Entity-Attribute-Value style storage for additional data of entities without modifying the underlying models and database tables. By default it can be used
 to add meta information to users, and it can be adapted to store meta information for the entities managed by your own admin modules.
 
-We will explore an example of using Meta Info on users resource.
+We will explore an example of using Meta Info on users resource. For a short walkthrough, see
+[Add a Custom Field to User Profiles](../building_sites/meta_info.md).
 
 By default, Bonfire comes with a pretty limited amount of data saved to a user. Most applications will likely require
 additional information available to the user, whether this is a bio, a website URL, the name of the school they
@@ -69,21 +70,32 @@ $website = $user->meta('website_url');
 
 **allMeta()**
 
-This returns all meta fields for this user. Note that it returns the full database results, not just the name/value.
+This returns all meta fields for this user, indexed by meta key. Note that each entry is the full database row, not just the value.
 
 ```php
 $meta = $user->allMeta();
 
-var_dump($meta);
+var_dump($meta['website_url']);
+
+// Returns an object with:
+    resource_id => 123
+    class       => 'Bonfire\Users\User'
+    key         => 'website_url'
+    value       => 'https://example.com'
+    created_at  => '2021-01-12 12:31:12'
+    updated_at  => '2021-01-12 12:31:12'
+```
+
+**allMetaKeyValue()**
+
+This returns all meta fields for this user as a simple array of key/value pairs.
+
+```php
+$meta = $user->allMetaKeyValue();
 
 // Returns:
 [
-    'resource_id' => 123,
-    'class' => 'Bonfire\Users\User',
-    'key' => 'website_url',
-    'value' => 'https://example.com',
-    'created_at' => '2021-01-12 12:31:12',
-    'updated_at' => '2021-01-12 12:31:12',
+    'website_url' => 'https://example.com',
 ]
 ```
 
@@ -125,8 +137,9 @@ $user->deleteResourceMeta();
 **syncMeta(array $post)**
 
 Given an array of key/value pairs representing the name of the meta field and it's value, this will update existing
-meta values, insert new ones, and delete any ones that were not passed in. Useful when grabbing the information from
-a form and updating all the values at once.
+meta values, insert new ones, and delete any that are passed in with an empty value. Only fields defined in the config
+file's `$metaFields` are saved; other keys are ignored. Useful when grabbing the information from a form and updating
+all the values at once.
 
 ```php
 $post = [

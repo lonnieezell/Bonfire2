@@ -5,6 +5,8 @@ across the globe, you have various requirements as web developers that you didn'
 you manage collecting consent from the user before storing any cookies through an opt-in system for all non-required
 cookies. It provides the mechanism for displaying the consent form, and recording the user's preferences.
 
+For a step-by-step example, see [Load Analytics Only After Visitors Consent](../building_sites/consent.md).
+
 ## Defining the Consent Types
 
 The Consent module allows you to define the types of consent that you would like to collect from the user. These are defined in the `Config\Consent` class. The default consents are:
@@ -24,7 +26,8 @@ public array $consents = [
     'targeting' => [
         'name' => 'Targeting',
         'desc' => 'These are usually placed by third-party advertising networks, which may use information about
-            your visits to develop a profile of your interests. This information may be shared with other networks or sites to deliver more relevant advertising across multiple sites.',
+            your visits to develop a profile of your interests. This information may be shared with other networks
+            or sites to deliver more relevant advertising across multiple sites.',
     ],
 ];
 ```
@@ -39,10 +42,10 @@ children, like the AuthController) then you do not need to explicitly load the h
 The helper can be used both within the views and the controllers to limit which services are called (like ad-tracking
 or analytics) and which cookies you set.
 
-Within a view you might wrap a Google Analytics tag within a check against the `performing` consent:
+Pass the consent's key from `$consents`. Within a view you might wrap a Google Analytics tag within a check against the `performance` consent:
 
 ```php
-<?php if (has_consent('performing')) : ?>
+<?php if (has_consent('performance')) : ?>
 <script>
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     ... (several lines of code) ...
@@ -67,7 +70,8 @@ public string $consentFormScripts = 'Bonfire\Consent\Views\consent_scripts';
 
 ## Configuration
 
-All settings are available in the `Config\Consent` class, or in the admin settings area.
+All settings are available in the `Config\Consent` class. Everything except the form views can also be changed in the admin
+area under **Settings → Consent**, which saves the values to the database.
 
 **$requireConsent**
 
@@ -94,7 +98,16 @@ be inserted into each page upon page load.
 **$policyUrl**
 
 A URL (either full or relative) that points to the page that details the cookie policy. On many sites this will be
-included in the Privacy Policy or Terms of Service pages, or similar.
+included in the Privacy Policy or Terms of Service pages, or similar. The default value is `privacy`.
+
+**$policyTitle**
+
+The link text used for the cookie policy link in the consent form. The default value is `Cookie Policy`.
+
+**$consentMessage**
+
+The message shown to visitors at the top of the consent form. Put `{policy_url}` where the cookie policy link should
+appear; it is replaced with a link to `$policyUrl` that uses `$policyTitle` as its text.
 
 **$consents**
 
