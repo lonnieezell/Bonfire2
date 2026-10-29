@@ -1906,6 +1906,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p><code>ComponentRenderer::render(null)</code> now returns an empty string instead of throwing a <code>TypeError</code>. Text like <code>&lt;x- /&gt;</code>
+is left alone instead of failing the page with "View not found for component". Paired components with one- or
+two-letter names (<code>&lt;x-em&gt;…&lt;/x-em&gt;</code>) now render, and a closing tag that doesn't match its opening tag's name is left
+alone rather than rendering a shorter-named component. A <code>&gt;</code> inside a quoted attribute of a paired component
+(<code>&lt;x-foo title="a&gt;b"&gt;…&lt;/x-foo&gt;</code>) no longer cuts the attribute short.</p>
 <p>A new <code>php spark bf:agents</code> command writes a guide to Bonfire's conventions for AI coding agents into your project's
 <code>AGENTS.md</code>: where things live, the rules for admin modules, and which docs page to read for each task. Your own text
 in that file is kept, and running it again only replaces Bonfire's section. Add it to the <code>post-update-cmd</code> scripts of
