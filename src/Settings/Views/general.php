@@ -36,20 +36,20 @@
 
         <x-admin-box title="Date and Time">
             <x-setting-row label="Timezone" for="timezone">
-                <div class="d-flex gap-2">
-                    <select name="timezoneArea" class="form-select" aria-label="Timezone area"
+                <div class="d-flex gap-2" x-data="{ area: '<?= esc($currentTZArea, 'js') ?>' }">
+                    <select name="timezoneArea" class="form-select" aria-label="Timezone region" x-model="area"
                             hx-get="/<?= ADMIN_AREA ?>/settings/timezones"
                             hx-target="#timezone"
                             hx-include="[name='timezoneArea']"
                     >
-                        <option>Select timezone...</option>
+                        <option value="">Select region...</option>
                         <?php foreach ($timezones as $timezone) : ?>
                             <option value="<?= $timezone ?>" <?php if ($currentTZArea === $timezone) : ?> selected <?php endif ?>>
                                 <?= $timezone ?>
                             </option>
                         <?php endforeach ?>
                     </select>
-                    <select name="timezone" id="timezone" class="form-select">
+                    <select name="timezone" id="timezone" class="form-select" aria-label="Timezone" x-show="area && area !== 'UTC'" x-cloak>
                         <?php if (isset($timezoneOptions) && ! empty($timezoneOptions)) : ?>
                             <?= $timezoneOptions ?>
                         <?php else : ?>
