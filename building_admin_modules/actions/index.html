@@ -1874,7 +1874,8 @@ or queued runs will wait forever.</p>
 <p>Without the package, <code>Queue::Auto</code> runs in the request, a chunk at a time, and <code>Queue::Always</code> refuses with a message
 explaining what's missing.</p>
 <p>A queued run is recorded in the <code>action_runs</code> table with its totals and status. The admin who started it sees a toast
-that shows its progress, updated every two seconds, and its message once it ends.</p>
+that shows its progress, updated every two seconds, and its message once it ends. <code>service('actionRuns')</code> owns this
+lifecycle: the endpoint, the queue job and <code>&lt;x-action-run&gt;</code> all go through it.</p>
 
 
 

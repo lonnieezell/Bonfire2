@@ -501,6 +501,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#29-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        29 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#28-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1613,6 +1624,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#29-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        29 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#28-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1831,6 +1853,13 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="29-october-2026-breaking-change">29 October 2026 (breaking change)</h2>
+<p>An action run's lifecycle now lives in <code>service('actionRuns')</code> (<code>Bonfire\Actions\ActionRuns</code>): <code>dispatch()</code> runs an
+action in the request or queues it, <code>process()</code> runs a queued run, and <code>progress()</code> and <code>toast()</code> look one up for the
+admin who started it. <code>ActionRunModel</code> now reads and writes <code>status</code> as a <code>Bonfire\Actions\RunStatus</code> enum in place of
+the strings <code>queued</code>, <code>running</code>, <code>done</code> and <code>failed</code>, so code that writes a status string to it must pass the enum.
+The Admin theme's <code>&lt;x-action-run&gt;</code> now calls <code>service('actionRuns')-&gt;toast()</code> rather than <code>ActionRunModel</code>; installs
+that published the Admin theme should copy the new <code>themes/Admin/Components/action-run.php</code>.</p>
 <h2 id="28-october-2026">28 October 2026</h2>
 <p><code>spark notify:breaking-changes</code> used to keep its marker in a <code>last-update.txt</code> file inside the package folder, which
 <code>composer update</code> deleted together with the previous version, so it warned on every update. It now remembers the
