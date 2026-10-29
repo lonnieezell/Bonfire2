@@ -30,7 +30,7 @@ class ComponentRenderer
     public function render(?string $output): string
     {
         if ($output === null || $output === '' || $output === '0') {
-            return $output;
+            return $output ?? '';
         }
 
         // Try to locate any custom tags, with names like: x-sidebar, x-btn, etc.

@@ -31,7 +31,7 @@ final class ComponentRendererTest extends TestCase
     }
 
     #[DataProvider('provideRendersTags')]
-    public function testRendersTags(string $input, string $expected): void
+    public function testRendersTags(?string $input, string $expected): void
     {
         $this->assertSame($expected, $this->renderer->render($input));
     }
@@ -39,6 +39,8 @@ final class ComponentRendererTest extends TestCase
     public static function provideRendersTags(): iterable
     {
         return [
+            'null'                               => [null, ''],
+            'empty string'                       => ['', ''],
             'text without tags'                  => ['<p>plain</p>', '<p>plain</p>'],
             'self-closing without attributes'    => ['<x-greeting />', 'Hello nobody'],
             'self-closing with attribute'        => ['<x-greeting name="Ada" />', 'Hello Ada'],
@@ -47,6 +49,8 @@ final class ComponentRendererTest extends TestCase
             'tags inside surrounding markup'     => ['<p><x-greeting name="Ada" /></p>', '<p>Hello Ada</p>'],
             'nested paired'                      => ['<x-wrapper><x-wrapper>hi</x-wrapper></x-wrapper>', '[[hi]]'],
             'self-closing inside paired'         => ['<x-wrapper><x-greeting name="Ada" /></x-wrapper>', '[Hello Ada]'],
+            'mixed children inside paired'       => ['<x-wrapper><x-greeting name="Ada" /><x-badge label="new">x</x-badge>!</x-wrapper>', '[Hello Ada<b>new</b>!]'],
+            'bare attribute is empty'            => ['<x-greeting name />', 'Hello '],
             'class-based self-closing with attr' => ['<x-badge label="new" />', '<b>new</b>'],
             'class-based self-closing, no attr'  => ['<x-badge />', '<b>none</b>'],
             'class-based paired with attr'       => ['<x-badge label="new">x</x-badge>', '<b>new</b>'],

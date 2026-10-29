@@ -6,6 +6,8 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+`ComponentRenderer::render(null)` now returns an empty string instead of throwing a `TypeError`.
+
 A new `php spark bf:agents` command writes a guide to Bonfire's conventions for AI coding agents into your project's
 `AGENTS.md`: where things live, the rules for admin modules, and which docs page to read for each task. Your own text
 in that file is kept, and running it again only replaces Bonfire's section. Add it to the `post-update-cmd` scripts of
