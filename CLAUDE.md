@@ -25,6 +25,7 @@ CI runs `composer test`, `composer style`, `composer rector`, `composer inspect`
 ## Docs
 
 - User docs are MkDocs in `docs/`. `mkdocs.yml` has an explicit `nav`, so add every new page to it.
+- Add new `building_admin_modules/` and `building_sites/` pages to the task → doc map in `src/Commands/Agents/bonfire.md` too, which `spark bf:agents` writes into installs' `AGENTS.md`.
 - Log user-facing changes in `docs/intro/changelog.md` under `## D Month YYYY`. Mark breaking ones `## D Month YYYY (breaking change)`: `spark notify:breaking-changes` parses that exact heading to warn installs after `composer update`.
 
 ## Agent skills

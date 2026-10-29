@@ -110,6 +110,10 @@ public $breakingChangeStateFile = ROOTPATH . 'bonfire-breaking-changes.json';
 To turn the check off, remove `php spark notify:breaking-changes` from the `post-update-cmd` scripts of your
 `composer.json`.
 
+If you use AI coding agents, `php spark bf:agents` writes Bonfire's conventions into your project's `AGENTS.md`. Add it
+to the same `post-update-cmd` scripts to keep that guide in step with the installed version. See
+[Working With AI Agents](ai_agents.md).
+
 ## Generate some data for testing
 
 You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):
