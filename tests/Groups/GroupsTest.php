@@ -3,6 +3,7 @@
 namespace Tests\Groups;
 
 use Bonfire\Users\User;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Shield\Authorization\Groups;
 use CodeIgniter\Shield\Entities\Group;
 use Tests\Support\SubmitsForms;
@@ -59,6 +60,13 @@ final class GroupsTest extends TestCase
         $result->assertSessionHas('message', lang('Bonfire.resourceSaved', ['group']));
         $groups = setting('AuthGroups.groups');
         $this->assertSame(['title' => 'Brave Soul', 'description' => 'Tries broken things'], $groups['beta']);
+    }
+
+    public function testPostWithoutAliasIsNotFound(): void
+    {
+        $this->expectException(PageNotFoundException::class);
+
+        $this->actingAs($this->user)->post('/admin/settings/groups', ['title' => 'Nobody']);
     }
 
     public function testCanSeeGroupPermissions()
