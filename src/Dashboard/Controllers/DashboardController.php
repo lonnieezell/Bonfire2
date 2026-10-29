@@ -51,8 +51,7 @@ class DashboardController extends AdminController
     }
 
     /**
-     * Stores the posted layout (JSON) as the current user's own. The
-     * default layout is not stored, so they keep following the default.
+     * Stores the posted layout (JSON) as the current user's own.
      */
     public function saveLayout(): ResponseInterface
     {
@@ -62,19 +61,13 @@ class DashboardController extends AdminController
             return $this->rejected(400);
         }
 
-        if ($layout->toArray() === (new LayoutResolver(service('dashboard')))->defaultLayout()->toArray()) {
-            setting()->forget('Dashboard.layout', LayoutResolver::userContext());
-        } else {
-            setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
-        }
+        (new LayoutResolver(service('dashboard')))->saveForUser($layout);
 
         return $this->response->setJSON(['saved' => true]);
     }
 
     /**
-     * Stores the posted layout (JSON) as the site default, which every
-     * user who has not saved their own layout sees. The saver follows it
-     * too, so they see what they saved.
+     * Stores the posted layout (JSON) as the site default.
      */
     public function saveSiteLayout(): ResponseInterface
     {
@@ -88,15 +81,13 @@ class DashboardController extends AdminController
             return $this->rejected(400);
         }
 
-        setting()->set('Dashboard.layout', $layout->toArray());
-        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+        (new LayoutResolver(service('dashboard')))->saveAsSiteDefault($layout);
 
         return $this->response->setJSON(['saved' => true]);
     }
 
     /**
-     * Forgets the stored site default layout, so users who have not
-     * saved their own see the configured Dashboard::$layout again.
+     * Forgets the stored site default layout.
      */
     public function resetSiteLayout(): ResponseInterface
     {
@@ -104,7 +95,7 @@ class DashboardController extends AdminController
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        setting()->forget('Dashboard.layout');
+        (new LayoutResolver(service('dashboard')))->resetSiteDefault();
 
         alert('success', lang('Bonfire.resetSiteDone'));
 
