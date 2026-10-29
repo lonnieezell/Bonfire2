@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+[Resource tabs](../building_admin_modules/resource_tabs.md) added with `service('resourceTabs')->addTabFor()` are now
+shown as the current tab on their own page. On group pages, `(id)` in a tab's URL is now replaced with the group's
+alias instead of being left in the link. The Resource Tabs page now shows how to build the page a tab links to.
+
 `ComponentRenderer::render(null)` now returns an empty string instead of throwing a `TypeError`. Text like `<x- />`
 is left alone instead of failing the page with "View not found for component". Paired components with one- or
 two-letter names (`<x-em>…</x-em>`) now render, and a closing tag that doesn't match its opening tag's name is left
