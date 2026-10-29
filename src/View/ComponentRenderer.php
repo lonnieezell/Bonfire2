@@ -30,7 +30,7 @@ class ComponentRenderer
     public function render(?string $output): string
     {
         if ($output === null || $output === '' || $output === '0') {
-            return $output;
+            return $output ?? '';
         }
 
         // Try to locate any custom tags, with names like: x-sidebar, x-btn, etc.
@@ -54,7 +54,7 @@ class ComponentRenderer
         $pattern = "/
             <
                 \\s*
-                x[-\\:](?<name>[\\w\\-\\:\\.]*)
+                x[-\\:](?<name>\\w[\\w\\-\\:\\.]*)
                 \\s*
                 (?<attributes>
                     (?:
@@ -99,8 +99,8 @@ class ComponentRenderer
     private function renderPairedTags(string $output): string
     {
         $pattern = '/(?(DEFINE)(?<marker>x-))
-                        <\g<marker>(?<name>\w[\w\-\:\.]+[^\>\/\s\/])
-                                   (?<attributes>[\s\S\=\'\"]+?)??>
+                        <\g<marker>(?<name>\w[\w\-\:\.]*)(?=[\s\/>])
+                                   (?<attributes>(?:"[^"]*"|\'[^\']*\'|[^\'">])*)>
                             (?(?<!\/>) # Not paired so ignore the rest
                                 (?<slot>.*?)??
                         <\/\g<marker>\k<name>\s*>
