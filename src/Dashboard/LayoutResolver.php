@@ -12,6 +12,7 @@
 namespace Bonfire\Dashboard;
 
 use Bonfire\Dashboard\Widgets\CellWidget;
+use LogicException;
 
 /**
  * Decides which widgets the viewer's dashboard shows, and in what order.
@@ -19,6 +20,8 @@ use Bonfire\Dashboard\Widgets\CellWidget;
  * A user's own Dashboard.layout comes first. Otherwise the default layout
  * is the site's Dashboard.layout; without one, it is one untitled section
  * holding the plain cells of Dashboard.cells in order.
+ *
+ * It is also the only place that saves and resets those layouts.
  */
 class LayoutResolver
 {
@@ -41,6 +44,46 @@ class LayoutResolver
         $site = $this->site();
 
         return $site === null ? $this->derived() : (new LayoutValidator($this->registry))->validate($site);
+    }
+
+    /**
+     * Stores the layout as the signed-in user's own. The default layout is
+     * not stored, so they keep following the default.
+     */
+    public function saveForUser(Layout $layout): void
+    {
+        // A null context is the site's own, so it must not stand in for a user
+        $context = self::userContext() ?? throw new LogicException('Only a signed-in user has a layout of their own.');
+
+        if ($layout->toArray() === $this->defaultLayout()->toArray()) {
+            setting()->forget('Dashboard.layout', $context);
+        } else {
+            setting()->set('Dashboard.layout', $layout->toArray(), $context);
+        }
+    }
+
+    /**
+     * Stores the layout as the site default, which every user who has not
+     * saved their own sees. The saver follows it too, so they see what they saved.
+     */
+    public function saveAsSiteDefault(Layout $layout): void
+    {
+        setting()->set('Dashboard.layout', $layout->toArray());
+
+        $context = self::userContext();
+
+        if ($context !== null) {
+            setting()->forget('Dashboard.layout', $context);
+        }
+    }
+
+    /**
+     * Forgets the stored site default, so users who have not saved their
+     * own see the configured Dashboard::$layout again.
+     */
+    public function resetSiteDefault(): void
+    {
+        setting()->forget('Dashboard.layout');
     }
 
     private function derived(): Layout

@@ -12,11 +12,16 @@
 namespace Tests\Dashboard;
 
 use Bonfire\Bonfire;
+use Bonfire\Dashboard\Layout;
 use Bonfire\Dashboard\LayoutResolver;
+use Bonfire\Dashboard\Placement;
+use Bonfire\Dashboard\Section;
 use Bonfire\Dashboard\Size;
 use Bonfire\Dashboard\Widgets\QuickLinksWidget;
+use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
 use Config\Services;
+use LogicException;
 use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
@@ -138,12 +143,91 @@ final class LayoutResolverTest extends TestCase
         $this->assertSame(self::DEFAULT_IDS, $resolver->resolve()->ids());
     }
 
-    private function placeForAUser(string $id): void
+    public function testAUserSavesTheirOwnLayout(): void
+    {
+        $this->signIn();
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $resolver->saveForUser($this->layoutOf('stats:userGroups643'));
+
+        $this->assertSame(['stats:userGroups643'], $resolver->resolve()->ids());
+    }
+
+    public function testAUserWhoSavesTheDefaultKeepsFollowingIt(): void
+    {
+        $this->signIn();
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $resolver->saveForUser($resolver->defaultLayout());
+        setting('Dashboard.layout', $this->layoutOf('stats:usersInRecycler693')->toArray());
+
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->resolve()->ids());
+    }
+
+    public function testTheSiteDefaultBecomesTheSaversLayoutToo(): void
+    {
+        $this->signIn();
+        $resolver = new LayoutResolver(service('dashboard'));
+        $resolver->saveForUser($this->layoutOf('stats:userGroups643'));
+
+        $resolver->saveAsSiteDefault($this->layoutOf('stats:usersInRecycler693'));
+
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->defaultLayout()->ids());
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->resolve()->ids());
+    }
+
+    public function testTheSiteDefaultSavesWithNobodySignedIn(): void
+    {
+        $resolver = new LayoutResolver(service('dashboard'));
+
+        $resolver->saveAsSiteDefault($this->layoutOf('stats:usersInRecycler693'));
+
+        $this->signIn();
+        $this->assertSame(['stats:usersInRecycler693'], $resolver->defaultLayout()->ids());
+    }
+
+    public function testAUserLayoutNeedsSomeoneSignedIn(): void
+    {
+        $resolver = new LayoutResolver(service('dashboard'));
+        $resolver->saveAsSiteDefault($this->layoutOf('stats:usersInRecycler693'));
+
+        try {
+            $resolver->saveForUser($this->layoutOf('stats:userGroups643'));
+            $this->fail('A user layout saved with nobody signed in');
+        } catch (LogicException) {
+            $this->signIn();
+            $this->assertSame(['stats:usersInRecycler693'], $resolver->defaultLayout()->ids());
+        }
+    }
+
+    public function testResettingTheSiteDefaultRestoresTheConfiguredOne(): void
+    {
+        $this->signIn();
+        $resolver = new LayoutResolver(service('dashboard'));
+        $resolver->saveAsSiteDefault($this->layoutOf('stats:usersInRecycler693'));
+
+        $resolver->resetSiteDefault();
+
+        $this->assertSame(self::DEFAULT_IDS, $resolver->defaultLayout()->ids());
+    }
+
+    private function signIn(): User
     {
         $user = $this->createUser();
         // Log activity, in the default layout, needs logs.view
         $user->addGroup('superadmin');
         auth()->login($user);
-        $this->placeOnDashboard($user, $id);
+
+        return $user;
+    }
+
+    private function layoutOf(string ...$ids): Layout
+    {
+        return new Layout([new Section('', array_map(static fn (string $id) => new Placement($id, Size::Full), $ids))]);
+    }
+
+    private function placeForAUser(string $id): void
+    {
+        $this->placeOnDashboard($this->signIn(), $id);
     }
 }
