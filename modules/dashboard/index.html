@@ -788,6 +788,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1652,6 +1663,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1833,6 +1855,11 @@ runs, plus runs that failed in the last 7 days (set <strong>Days to show</strong
 to list runs that finished in that time too. Each row shows the action, its list, status, how many records it has got
 through and when it started, newest first, and links to the run's progress page. It needs no permission: admins only
 ever see the runs they started.</p>
+<h2 id="system-health">System health</h2>
+<p>The System health widget (<code>tools:systemHealth</code>) isn't on the default dashboard; add it from the widget library. It
+lists what is wrong with the install, if anything: each file or folder in <code>writable/</code> that can't be written to, a
+missing <code>.env</code> file, and a 1-minute server load above <strong>Warn when server load is above</strong> (default 4). With no problems
+it says so in one line. It links to the System Info page and needs the <code>admin.settings</code> permission, like that page.</p>
 <h2 id="widgets">Widgets</h2>
 <p>The <code>stats</code>, <code>logs</code> and <code>charts</code> cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.</p>
 <h3 id="settings">Settings</h3>
