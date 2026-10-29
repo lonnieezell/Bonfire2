@@ -2029,11 +2029,6 @@ apply to it.</p>
 <td>Folders that hold themes. Each theme is a direct child folder of a collection.</td>
 </tr>
 <tr>
-<td><code>$haveComponents</code></td>
-<td><code>true</code></td>
-<td>Whether theme folders are expected to have a <code>Components</code> folder. Not read anywhere yet; see <a href="https://github.com/lonnieezell/Bonfire2/issues/722">#722</a>.</td>
-</tr>
-<tr>
 <td><code>$componentsLookupPaths</code></td>
 <td><code>[APPPATH . 'Views/Components/']</code></td>
 <td>Fallback folders for a view component that the current theme doesn't define, checked in order. Each path must end with <code>/</code>. Use it for a component library shared by several themes.</td>
@@ -2074,7 +2069,7 @@ apply to it.</p>
 <tr>
 <td><code>$avatarDirectory</code></td>
 <td><code>'uploads/avatars'</code></td>
-<td>Where uploaded avatars are saved, relative to <code>FCPATH</code>.</td>
+<td>Where uploaded avatars are saved and linked from, relative to <code>FCPATH</code>.</td>
 </tr>
 <tr>
 <td><code>$avatarResize</code></td>
@@ -2102,22 +2097,12 @@ apply to it.</p>
 <td>Extra fields on a user's profile, grouped by fieldset legend. See <a href="../../modules/meta_info/#defining-meta-fields">Defining Meta Fields</a>.</td>
 </tr>
 <tr>
-<td><code>$includeMetaFieldsInSearech</code></td>
+<td><code>$includeMetaFieldsInSearch</code></td>
 <td><code>['blog']</code></td>
-<td>Names of <code>$metaFields</code> fields that the admin search looks in. The key is misspelled in the code; use the spelling shown.</td>
+<td>Names of <code>$metaFields</code> fields that the admin search looks in. Older published configs spell it <code>$includeMetaFieldsInSearech</code>, which still works.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Some of these keys don't behave as their names say yet:</p>
-<ul>
-<li><code>$avatarResizeFloor</code> is never read, so the floor is always 32.</li>
-<li><code>$avatarDirectory</code> only changes where avatars are saved. Avatar links always point to <code>uploads/avatars</code>.</li>
-<li><code>$avatarNameBasis = 'username'</code> takes the letters from the email address.</li>
-</ul>
-<p>All three are tracked in <a href="https://github.com/lonnieezell/Bonfire2/issues/722">#722</a>.</p>
-</div>
 <h2 id="consent">Consent</h2>
 <p><code>app/Config/Consent.php</code> controls the cookie consent banner. The <a href="../../modules/consent/#configuration">Consent</a> page
 describes each key in more detail. All keys except the three views can be changed under <strong>Settings → Consent</strong>.</p>

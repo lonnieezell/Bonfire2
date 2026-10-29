@@ -1934,6 +1934,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>Four config keys now do what they say. <code>Users::$avatarResizeFloor</code> sets the smallest allowed avatar size,
+<code>Users::$avatarDirectory</code> also sets where avatar links point, and <code>Users::$avatarNameBasis = 'username'</code> takes an
+avatar's letters from the username, not the email. <code>Users::$includeMetaFieldsInSearech</code> is now spelled
+<code>$includeMetaFieldsInSearch</code>; published configs that still use the old spelling keep working. The unused
+<code>Themes::$haveComponents</code> is gone.</p>
 <p><code>POST admin/settings/groups</code>, without a group alias, now returns 404. It used to throw an <code>ArgumentCountError</code>.</p>
 <p>A new page, <a href="../configuration/">Configuration Reference</a>, lists every key in the published config files with its
 default and what it does, including keys that weren't documented before.</p>
