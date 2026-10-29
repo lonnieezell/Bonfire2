@@ -1150,6 +1150,8 @@
       
         
       
+        
+      
     
     
     
@@ -1473,6 +1475,34 @@
     
   
     Filters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../menus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Menus
   
 
     
@@ -1897,40 +1927,19 @@ CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
 <li>the <code>Settings</code> collection where your module's settings pages should live.</li>
 <li>the <code>Tools</code> collection which holds miscellaneous things that are helpful, but not needed on a daily basis.</li>
 </ul>
-<p>Menu items are added to the sidebar using the <code>menus</code> service. Below are two examples taken from the core
-Users module. They share common setup which will be discussed after the example:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Settings menu for sidebar</span>
-<span class="nv">$sidebar</span> <span class="o">=</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">);</span>
-<span class="nv">$item</span>    <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
-    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
-    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'user-settings'</span><span class="p">,</span>
-    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-user'</span><span class="p">,</span>
-    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'users.settings'</span><span class="p">,</span>
-<span class="p">]);</span>
-<span class="nv">$sidebar</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'settings'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
-
-<span class="c1">// Content Menu for sidebar</span>
-<span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
-    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Users'</span><span class="p">,</span>
+<p>Menu items are added to the sidebar using the <code>menus</code> service. This example from the core Users module adds the
+Users page to the <code>content</code> collection:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Users.usersModTitle'</span><span class="p">),</span>
     <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'user-list'</span><span class="p">,</span>
     <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-users'</span><span class="p">,</span>
     <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'users.list'</span><span class="p">,</span>
 <span class="p">]);</span>
-<span class="nv">$sidebar</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
+<span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
 </code></pre></div>
-<p><code>MenuItems</code> contain the information about a single menu item. When you create a new one you have the following
-settings available to you:</p>
-<ul>
-<li><code>title</code> is the string that will be displayed to the user in the Menu</li>
-<li><code>namedRoute</code> is the route that will be called when the link is clicked. You must use a
-  <a href="https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes">named route</a> which should be defined
-  within your module's <code>Config/Routes</code> file.</li>
-<li><code>fontAwesomeIcon</code> is used to specify the <a href="https://fontawesome.com/">FontAwesome icon</a> that will be displayed in the sidebar.</li>
-<li><code>permission</code> is used to specify a permission string that is required for a user to see that link. If they do not have
-  the proper permissions the link will not be displayed within the menu. If this item should be available to everyone
-  leave it blank.</li>
-</ul>
-<p>One the MenuItem has been created, you add it to the appropriate menu/collection.</p>
+<p><code>namedRoute</code> must be a <a href="https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes">named route</a>
+defined in your module's <code>Config/Routes.php</code>. Users without <code>permission</code> don't see the item. See <a href="../menus/">Menus</a>
+for every key, collections, custom menus and reordering with <code>$menuWeights</code>.</p>
 <p>Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
 the active item (and its collection, when that collection is collapsible).</p>
 <h3 id="naming-a-page-in-the-breadcrumb">Naming a page in the breadcrumb</h3>
