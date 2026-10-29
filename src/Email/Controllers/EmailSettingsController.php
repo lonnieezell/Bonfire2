@@ -44,7 +44,7 @@ class EmailSettingsController extends AdminController
             'mailPath'      => 'permit_empty|string',
             'SMTPHost'      => 'permit_empty|string',
             'SMTPPort'      => 'permit_empty|in_list[25,587,465,2525,other]',
-            'SMTPPortOther' => 'permit_empty|string',
+            'SMTPPortOther' => 'permit_empty|is_natural_no_zero',
             'SMTPUser'      => 'permit_empty|string',
             'SMTPPass'      => 'permit_empty|string',
             'SMTPCrypto'    => 'permit_empty|in_list[ssl,tls]',
@@ -65,11 +65,11 @@ class EmailSettingsController extends AdminController
         setting('Email.protocol', $this->request->getPost('protocol'));
         setting('Email.mailPath', $this->request->getPost('mailPath'));
         setting('Email.SMTPHost', $this->request->getPost('SMTPHost'));
-        setting('Email.SMTPPort', $port);
+        setting('Email.SMTPPort', (int) $port);
         setting('Email.SMTPUser', $this->request->getPost('SMTPUser'));
         setting('Email.SMTPPass', $this->request->getPost('SMTPPass'));
         setting('Email.SMTPCrypto', $this->request->getPost('SMTPCrypto'));
-        setting('Email.SMTPTimeout', $this->request->getPost('SMTPTimeout'));
+        setting('Email.SMTPTimeout', (int) $this->request->getPost('SMTPTimeout'));
         setting('Email.SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
 
         alert('success', 'The settings have been saved.');
