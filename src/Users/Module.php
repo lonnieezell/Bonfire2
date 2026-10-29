@@ -35,7 +35,7 @@ class Module extends BaseModule
             'title'           => lang('Users.usersModTitle'),
             'namedRoute'      => 'user-list',
             'fontAwesomeIcon' => 'fas fa-users',
-            'permission'      => 'users.view',
+            'permission'      => 'users.list',
         ]);
         $sidebar->menu('sidebar')->collection('content')->addItem($item);
 

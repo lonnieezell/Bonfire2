@@ -93,4 +93,16 @@ final class AdminAccessTest extends TestCase
         // Cannot see the Recycler area
         $this->assertStringNotContainsString('Recycler', $sidebar);
     }
+
+    public function testAdminGroupSeesUsersNavItem()
+    {
+        $admin = $this->createUser();
+        $admin->addGroup('admin');
+
+        $response = $this->actingAs($admin)->get(ADMIN_AREA);
+
+        preg_match('#<aside id="sidebar".*?</aside>#s', (string) $response->response()->getBody(), $match);
+
+        $this->assertStringContainsString('href="' . site_url(route_to('user-list')) . '"', $match[0] ?? '');
+    }
 }
