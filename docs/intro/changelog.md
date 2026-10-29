@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A module's `initFront()` now runs on public requests. Bonfire boots once per web request from a new `bonfire` filter,
+which runs on every route after the `session` and `admin` filters, instead of from the `admin` filter. Bonfire now
+caches the modules it finds in `Config\Bonfire::$appModules` for a minute; run `php spark cache:clear` to pick up a
+new module folder straight away. See
+[The Module File](../building_admin_modules/creating_an_admin_module.md#the-module-file).
+
 A module can now add its own permissions, and grant them to groups by default, from its `Config\Registrar` instead of
 asking you to edit `app/Config/AuthGroups.php`. The new `php spark bonfire:permissions` command applies the grants.
 New installs run it for you; **after updating, run `php spark bonfire:permissions` yourself**, and again whenever you

@@ -5,6 +5,7 @@ namespace Bonfire\Config;
 use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
+use Bonfire\Core\Filters\Boot;
 use Bonfire\Core\Filters\OnlineCheck;
 use Bonfire\Users\Validation\UserRules;
 use Bonfire\View\Decorator;
@@ -50,6 +51,7 @@ class Registrar
                 'tokens'  => TokenAuth::class,
                 'chain'   => ChainAuth::class,
                 'online'  => OnlineCheck::class,
+                'bonfire' => Boot::class,
                 'consent' => ConsentFilter::class,
                 'admin'   => Admin::class,
             ],
@@ -68,6 +70,10 @@ class Registrar
                 ],
                 'admin' => [
                     'before' => [ADMIN_AREA . '*'],
+                ],
+                // After 'session' and 'admin', so guests are turned away before modules boot
+                'bonfire' => [
+                    'before' => ['*'],
                 ],
             ],
         ];

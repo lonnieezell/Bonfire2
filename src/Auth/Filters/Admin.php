@@ -2,7 +2,6 @@
 
 namespace Bonfire\Auth\Filters;
 
-use Bonfire\Bonfire;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -26,9 +25,6 @@ class Admin implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         helper(['auth', 'setting']);
-
-        // Boot Bonfire
-        (new Bonfire())->boot();
 
         if (! auth('session')->user()->can('admin.access')) {
             return redirect()->to('/')->with('error', lang('Bonfire.notAuthorized'));
