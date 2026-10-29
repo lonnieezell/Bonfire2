@@ -113,7 +113,7 @@ published the Admin theme keep the old expanding Settings menu until they copy t
 
 Each admin can now change a dashboard widget's settings for their own dashboard: in edit mode, its sliders button
 opens them in a panel, and they are saved with the layout (see
-[Customizing the Dashboard](../modules/customizing_the_dashboard.md#widget-settings)). Stat cards, charts and Log
+[The Dashboard](../modules/dashboard.md#widget-settings)). Stat cards, charts and Log
 activity have settings; until an admin changes one, it follows the site-wide value in Settings → Widgets. Widgets
 declare their settings with `fields()`, a list of `Bonfire\Dashboard\WidgetField`, and get their values in
 `render(WidgetValues $values)`; `DashboardWidget::settingsUrl()` is gone (see
@@ -126,7 +126,7 @@ Dashboard widgets can need a permission: pass `'permission'` to a `StatsItem` or
 don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
 need `users.list` and the Groups widgets `groups.settings`. Admins with `widgets.settings` can **Save as site
 default** from the dashboard's edit bar, and **Reset site default** in Settings → Widgets (see
-[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). The Settings → Widgets
+[The Dashboard](../modules/dashboard.md#the-site-default)). The Settings → Widgets
 switches are now labelled as choosing which widgets are *available*. Quick Links is now a native widget,
 `Bonfire\Dashboard\Widgets\QuickLinksWidget`, registered by the Dashboard module under its old id, and no longer in
 the default `Dashboard.cells`; installs that still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once,
@@ -151,7 +151,7 @@ longer applies. Run `php spark migrate --all`: a migration forgets those stored 
 of the removed Config classes below (such as `app/Config/Stats.php`), which extends a class that is gone. This
 replaces what the notes below say about Settings → Widgets. **Reset site default** has moved into the dashboard's edit
 bar, next to **Save as site default**, for admins with `widgets.settings` (see
-[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). Code that used the removed
+[The Dashboard](../modules/dashboard.md#the-site-default)). Code that used the removed
 API: `WidgetField`'s factories no longer take `key:` (a key passed by position now lands in `description`), and
 `WidgetField::inherited()` is gone (read `default`); `Bonfire\Widgets\WidgetOptions` and the
 `Bonfire\Widgets\Config\Stats`, `LineChart`, `BarChart`, `DoughnutChart`, `PieChart`, `PolarAreaChart` and
@@ -194,7 +194,7 @@ from the widget library. Two new widgets: **Newest users** (the latest users to 
 `users.list`) and **Recent errors** (the newest errors, or errors and warnings, across the log files, linking to each
 log file; needs `logs.view`). The default dashboard now has Users by group and Newest users in its **Users** section, in place of the
 Users in Recycler stat, and Log activity and Recent errors side by side in **Monitoring** (see
-[The Dashboard](../modules/dashboard.md#configuration)). Installs that published the Admin theme need
+[The Dashboard](../modules/dashboard.md#setting-it-in-config)). Installs that published the Admin theme need
 the new `.bf-list-card`, `.bf-bars` and `.bf-rows` rules of `themes/Admin/css/admin.css`.
 
 Lists have a shared system for row and bulk actions (see [Row and Bulk Actions](../building_admin_modules/actions.md)):
@@ -221,18 +221,18 @@ The Logs, log view, Recycler and System Info pages use the new admin layout, wit
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
 
 A new **Log activity** dashboard widget charts the entries of the newest log files per level (see
-[Widgets](../building_admin_modules/widgets.md#log-activity-widget)). Turn it on in Settings → Widgets; its own tab sets
+[The Dashboard](../modules/dashboard.md#built-in-widgets)). Turn it on in Settings → Widgets; its own tab sets
 how many files it shows and whether Debug entries are left out. It is shown by a new
 `Bonfire\Widgets\Cells\WidgetCells::logs` cell: installs with their own `Config\Dashboard` must add that cell to
 `$cells` to see it. Its styles are in the Admin theme, so re-publish the theme.
 
-Each admin can customize their own dashboard (see [The Dashboard](../modules/dashboard.md#customizing-the-dashboard)):
+Each admin can customize their own dashboard (see [The Dashboard](../modules/dashboard.md#customizing-your-dashboard)):
 **Customize** lets them drag widgets into a new order, group them into titled sections, size them (¼ / ⅓ / ½ / ⅔ /
 Full, from their tools or by dragging a corner), remove them and add others from a widget library, all of it also from
 the keyboard, with undo and redo. **Save layout** stores the layout as theirs alone; saving the default layout, after
 resetting to it, forgets theirs. Every stat card, chart, Log activity and custom cell in `Dashboard.cells` is now
 one widget, and modules can add their own by implementing `Bonfire\Dashboard\DashboardWidget` and calling
-`service('dashboard')->register()` in `initAdmin()` (see [Widgets](../building_admin_modules/widgets.md#your-own-dashboard-widget)).
+`service('dashboard')->register()` in `initAdmin()` (see [Dashboard Widgets](../building_admin_modules/dashboard_widgets.md#writing-a-widget)).
 The switches in Settings → Widgets now decide which widgets are *available* in the palette, and are on unless a site
 admin switches them off; their stored keys are unchanged. The default dashboard is the new `Dashboard.layout` config
 property: Quick Links, a Users section (Users by Group and Users in Recycler) and a Monitoring section (Log activity).

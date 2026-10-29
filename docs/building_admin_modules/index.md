@@ -44,14 +44,8 @@ Bonfire provides a flexible search system that is highlighted on all areas of th
 
 [Read more about Search](search.md)
 
-## Widgets
+## Dashboard Widgets
 
-Widgets are elements that display information on the dashboard. They can be small informational cards or charts. This section covers adding new widgets, configuring them, and displaying them on the dashboard.
+Widgets are what admins place on their dashboard. This section covers writing a widget with its own settings, adding stat cards and charts, and the older view cells.
 
-[Read more about Widgets](widgets.md)
-
-## Dashboard Cells
-
-Customize the dashboard with the use of view cells. This section covers specifying which cells to display, creating the cell, and displaying it on the dashboard.
-
-[Read more about Dashboard Cells](dashboard_cells.md)
+[Read more about Dashboard Widgets](dashboard_widgets.md)
