@@ -104,6 +104,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 | User Groups | `groups.settings` |
 | Log activity, Recent errors | `logs.view` |
 | System health | `admin.settings` |
+| Recycler | `recycler.view` |
 | Quick Links, Action runs | none |
 
 A widget that becomes available later shows up in the library of admins who have customized, never in their layout.

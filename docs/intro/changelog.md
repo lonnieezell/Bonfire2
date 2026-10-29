@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A **Recycler** dashboard widget (`recycler:summary`) shows how many deleted records each Recycler resource holds,
+leaving out those with none, and links each to its list in the Recycler. Resources other modules register with
+`service('recycler')` appear in it without extra setup. It needs the `recycler.view` permission; add it from
+**Add widget** on the dashboard. The existing "Users in Recycler" stat stays, since saved layouts use it.
+
 A **System health** dashboard widget (`tools:systemHealth`) lists problems with the install: each file or folder in
 `writable/` that can't be written to, a missing `.env` file, and server load above a limit you set (default 4). When
 there are none it says so, and it links to the System Info page. It needs the `admin.settings` permission; add it from

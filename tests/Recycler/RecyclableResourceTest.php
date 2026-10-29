@@ -42,6 +42,7 @@ final class RecyclableResourceTest extends TestCase
 
         $this->assertSame([$second->id, $first->id], array_map(static fn ($row) => (int) $row['id'], $deleted['items']));
         $this->assertSame(2, $deleted['pager']->getTotal());
+        $this->assertSame(2, $this->users()->deletedCount());
     }
 
     public function testRestoreAndPurgeUseDefaults()
@@ -98,6 +99,8 @@ final class RecyclableResourceTest extends TestCase
         // The hooks ran instead of the defaults: nothing was restored or purged
         $row = db_connect()->table('users')->where('id', $other->id)->get()->getRow();
         $this->assertNotNull($row?->deleted_at);
+        // The count goes through the query hook too
+        $this->assertSame(1, $resource->deletedCount());
     }
 
     public function testColumnsAndLabelAreLocalizedWhenTheLanguageFileHasThem()
