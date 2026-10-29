@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+The Users, Email and System Info settings pages now check permissions in the controller, not just in the sidebar.
+Users without `users.settings` (Users) or `admin.settings` (Email, System Info and PHP Info) are sent back to the
+admin dashboard, even if they type the URL.
+
 A new page, [Admin Controllers, Views and Themes](../building_admin_modules/controllers_and_views.md), covers
 `AdminController`, the `render()` helper, the `master` layout's sections, and overriding the published Admin theme.
 

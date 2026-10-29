@@ -117,6 +117,29 @@ final class AdminSettingsTest extends TestCase
         $this->assertStringContainsString('x-show="overlap"', $html);
     }
 
+    public function testPageNeedsUsersSettingsPermission(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+
+        $this->actingAs($user)->get('/admin/settings/users')->assertRedirectTo(ADMIN_AREA);
+    }
+
+    public function testSaveNeedsUsersSettingsPermission(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+        setting('Auth.minimumPasswordLength', 8);
+
+        $this->actingAs($user)->post('/admin/settings/users', [
+            'minimumPasswordLength' => 20,
+            'defaultGroup'          => 'user',
+            'avatarResize'          => 0,
+        ])->assertRedirectTo(ADMIN_AREA);
+
+        $this->assertSame(8, setting('Auth.minimumPasswordLength'));
+    }
+
     private function submitTheForm(): void
     {
         $html   = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();

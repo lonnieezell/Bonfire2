@@ -61,4 +61,21 @@ final class SystemInfoTest extends TestCase
         $this->assertMatchesRegularExpression('#locked-by-test.txt</span>.*?bf-status-danger"><span class="bf-dot" aria-hidden="true"></span>Not writable#s', $html);
         $this->assertStringContainsString('bf-callout-warn', $html);
     }
+
+    public function testPageNeedsAdminSettingsPermission(): void
+    {
+        // The admin group may reach the admin area but not see system info
+        $user = $this->createUser();
+        $user->addGroup('admin');
+
+        $this->actingAs($user)->get(route_to('sys-info'))->assertRedirectTo(ADMIN_AREA);
+    }
+
+    public function testPhpInfoNeedsAdminSettingsPermission(): void
+    {
+        $user = $this->createUser();
+        $user->addGroup('admin');
+
+        $this->actingAs($user)->get(ADMIN_AREA . '/tools/php-info')->assertRedirectTo(ADMIN_AREA);
+    }
 }

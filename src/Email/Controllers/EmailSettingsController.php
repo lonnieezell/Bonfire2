@@ -25,6 +25,10 @@ class EmailSettingsController extends AdminController
      */
     public function index()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         return $this->render($this->viewPrefix . 'email_settings', [
             'config'    => config('Email'),
             'activeTab' => setting('Email.protocol') ?? 'smtp',
@@ -37,6 +41,10 @@ class EmailSettingsController extends AdminController
      */
     public function save()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $rules = [
             'fromName'      => 'required|string|min_length[2]',
             'fromEmail'     => 'required|valid_email',
