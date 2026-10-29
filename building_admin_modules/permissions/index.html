@@ -1406,6 +1406,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bonfires-groups-and-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonfire's groups and permissions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonfire&#39;s groups and permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permissions-and-the-default-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permissions and the default matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-a-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking a permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#declaring-permissions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1424,6 +1474,34 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-groups-in-the-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing groups in the admin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing groups in the admin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a group
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1610,6 +1688,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bonfires-groups-and-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonfire's groups and permissions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonfire&#39;s groups and permissions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permissions-and-the-default-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permissions and the default matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checking-a-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking a permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#declaring-permissions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1628,6 +1756,34 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-groups-in-the-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing groups in the admin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing groups in the admin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a group
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1705,10 +1861,266 @@
 
 
 <h1 id="permissions">Permissions</h1>
-<p>Bonfire uses <a href="https://shield.codeigniter.com/">Shield</a> groups and permissions. Your module checks a permission with
-<code>auth()-&gt;user()-&gt;can('forum.moderate')</code>, and only users in a group that grants it get through.</p>
+<p>Bonfire uses <a href="https://shield.codeigniter.com/">Shield</a> groups and permissions. A permission, like <code>users.edit</code>, names
+one thing a user may do. A group, like <code>admin</code>, works like a role. The permission matrix says which permissions each
+group grants. Your module checks a permission with <code>auth()-&gt;user()-&gt;can('forum.moderate')</code>, and only users in a group
+that grants it, or users given it directly, get through.</p>
 <p>Every install publishes its own <code>app/Config/AuthGroups.php</code>, so a module should not ask developers to edit that file.
 Instead, it declares its permissions, and the groups they go to by default, from its own <code>Config\Registrar</code>.</p>
+<h2 id="bonfires-groups-and-permissions">Bonfire's groups and permissions</h2>
+<h3 id="groups">Groups</h3>
+<p><code>$groups</code> in <code>app/Config/AuthGroups.php</code> defines five groups:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Title</th>
+<th>For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>superadmin</code></td>
+<td>Super Admin</td>
+<td>Complete control of the site.</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>Admin</td>
+<td>Day to day administrators of the site.</td>
+</tr>
+<tr>
+<td><code>developer</code></td>
+<td>Developer</td>
+<td>Site programmers.</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>User</td>
+<td>General users of the site. Often customers.</td>
+</tr>
+<tr>
+<td><code>beta</code></td>
+<td>Beta User</td>
+<td>Has access to beta-level features.</td>
+</tr>
+</tbody>
+</table>
+<p>New users join <code>$defaultGroup</code>, which is <code>user</code>. The <code>user</code> group grants no permissions, so it can't enter the admin
+area.</p>
+<h3 id="permissions-and-the-default-matrix">Permissions and the default matrix</h3>
+<p><code>$permissions</code> lists every permission Bonfire uses, and <code>$matrix</code> grants them to groups. Shield refuses to give a user
+a permission that isn't in <code>$permissions</code>, and the admin screens only list those. The table shows the default matrix. The <code>user</code> group is left out because it
+has none.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Lets a user</th>
+<th style="text-align: center;">superadmin</th>
+<th style="text-align: center;">admin</th>
+<th style="text-align: center;">developer</th>
+<th style="text-align: center;">beta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin.access</code></td>
+<td>Enter the admin area. Login also sends these users to the admin.</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>admin.settings</code></td>
+<td>Open the General, Email and System Info settings</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>groups.settings</code></td>
+<td>List groups and edit their details</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>groups.edit</code></td>
+<td>Change a group's permissions</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.list</code></td>
+<td>List users and see the user dashboard widgets</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.view</code></td>
+<td>See the Users menu item and open a user's Permissions tab</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.create</code></td>
+<td>Create users</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.edit</code></td>
+<td>Edit users, their groups and permissions, and ban them</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.delete</code></td>
+<td>Delete users</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.manage-admins</code></td>
+<td>Manage admins (see <a href="#managing-groups-in-the-admin">Managing groups in the admin</a>)</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>users.settings</code></td>
+<td>Open the Users settings</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>beta.access</code></td>
+<td>Nothing in Bonfire checks it. Use it for your own beta features.</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code>site.viewOffline</code></td>
+<td>Browse the site while it's offline</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>widgets.settings</code></td>
+<td>Save and reset the site's default dashboard</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>consent.settings</code></td>
+<td>Open the Consent settings</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>recycler.view</code></td>
+<td>Open the Recycler</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>logs.view</code></td>
+<td>Read the logs and see the log widgets</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>logs.manage</code></td>
+<td>Delete logs</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>me.edit</code></td>
+<td>Edit their own profile</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><code>me.security</code></td>
+<td>Change their own password</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>The matrix grants <code>superadmin</code> wildcards such as <code>users.*</code>, so it also gets any new permission that starts with one of
+those prefixes.</p>
+<h2 id="checking-a-permission">Checking a permission</h2>
+<p><code>can()</code> returns <code>true</code> when any of the user's groups grants the permission, or the user was given it directly. Pass
+more than one permission to check whether the user has any of them.</p>
+<p>In a controller, check before doing the work. Bonfire's own controllers send the user back with an error:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'forum.access'</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.notAuthorized'</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>In a view, hide the controls a user can't use:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'forum.moderate'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">site_url</span><span class="p">(</span><span class="nx">ADMIN_AREA</span> <span class="o">.</span> <span class="s1">'/forum/hidden'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">" class="btn btn-outline-secondary"&gt;Hidden posts&lt;/a&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>To show a menu item only to users with a permission, give it a <code>permission</code> key. See
+<a href="../creating_an_admin_module/#adding-a-menu-item">Creating an admin module</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Forum'</span><span class="p">,</span>
+    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'forum-list'</span><span class="p">,</span>
+    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-comments'</span><span class="p">,</span>
+    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'forum.access'</span><span class="p">,</span>
+<span class="p">]);</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">A menu permission only hides the link</p>
+<p>Anyone who can enter the admin area can still type the page's URL. Check the permission in the controller too.</p>
+</div>
+<p>Every route under the admin area also needs <code>admin.access</code>. Bonfire's <code>admin</code> filter checks it before your controller
+runs and sends other users to the home page.</p>
 <h2 id="declaring-permissions">Declaring permissions</h2>
 <p>Add a <code>Config/Registrar.php</code> to your module with an <code>AuthGroups()</code> method. CodeIgniter merges the <code>permissions</code> it
 returns into <code>Config\AuthGroups</code>, including the install's published copy, on every request:</p>
@@ -1769,6 +2181,52 @@ command again does not give it back. A grant for a group the install doesn't hav
 <p>When the command adds a grant, it saves the whole matrix to the database, just as saving a group does. From then on,
 changes to <code>$matrix</code> in <code>app/Config/AuthGroups.php</code> are ignored.</p>
 <p><code>bf:install</code> runs the command for you. After you add a module or update one that declares new grants, run it yourself.</p>
+<h2 id="managing-groups-in-the-admin">Managing groups in the admin</h2>
+<p>Settings → Groups lists every group with its alias, how many users are in it and how many permissions it grants. It
+needs <code>groups.settings</code>. Click a group to edit its title and description.</p>
+<p>The group's Permissions tab has a switch for each permission, grouped by prefix. It needs <code>groups.edit</code>. Saving it
+stores the whole matrix in the database, so from then on changes to <code>$matrix</code> in <code>app/Config/AuthGroups.php</code> are
+ignored.</p>
+<p>To give a single user extra permissions, open the user and use their Permissions tab. The user keeps everything
+their groups grant as well.</p>
+<p><code>users.manage-admins</code> guards the admins themselves. A user without it can still edit users, but can't:</p>
+<ul>
+<li>add a user to the <code>admin</code> or <code>superadmin</code> group, or take one out</li>
+<li>give a user a <code>users.*</code> permission they don't already have</li>
+<li>ban an admin, or delete a user who has <code>users.manage-admins</code></li>
+</ul>
+<h3 id="adding-a-group">Adding a group</h3>
+<p>The admin has no screen for adding a group. Add it to <code>$groups</code> in <code>app/Config/AuthGroups.php</code>, and add the
+permissions it should start with to <code>$matrix</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$groups</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// ...</span>
+    <span class="s1">'editor'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'title'</span>       <span class="o">=&gt;</span> <span class="s1">'Editor'</span><span class="p">,</span>
+        <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'Writes and publishes content.'</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+
+<span class="k">public</span> <span class="k">array</span> <span class="nv">$matrix</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// ...</span>
+    <span class="s1">'editor'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">'admin.access'</span><span class="p">,</span>
+        <span class="s1">'me.*'</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">];</span>
+</code></pre></div>
+<p>Saving a group's details in Settings → Groups stores the whole list of groups in the database, just as saving its
+permissions stores the matrix. After that, Bonfire reads the groups from the database and ignores <code>$groups</code>. On an
+install where that has happened, add the group with <code>setting()</code> instead, for example from a migration:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$groups</span> <span class="o">=</span> <span class="nx">setting</span><span class="p">(</span><span class="s1">'AuthGroups.groups'</span><span class="p">);</span>
+
+<span class="nv">$groups</span><span class="p">[</span><span class="s1">'editor'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'title'</span>       <span class="o">=&gt;</span> <span class="s1">'Editor'</span><span class="p">,</span>
+    <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'Writes and publishes content.'</span><span class="p">,</span>
+<span class="p">];</span>
+
+<span class="nx">setting</span><span class="p">(</span><span class="s1">'AuthGroups.groups'</span><span class="p">,</span> <span class="nv">$groups</span><span class="p">);</span>
+</code></pre></div>
+<p>Then grant its permissions on the group's Permissions tab.</p>
 
 
 
