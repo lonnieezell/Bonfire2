@@ -88,6 +88,30 @@ final class EmailSettingsTest extends TestCase
         $this->assertMatchesRegularExpression('#role="radiogroup" aria-label="Protocol">.*?<input type="radio" name="protocol" value="smtp"#s', $html);
     }
 
+    public function testPageNeedsAdminSettingsPermission(): void
+    {
+        // The admin group may reach the admin area but not change settings
+        $user = $this->createUser();
+        $user->addGroup('admin');
+
+        $this->actingAs($user)->get('/admin/settings/email')->assertRedirectTo(ADMIN_AREA);
+    }
+
+    public function testSaveNeedsAdminSettingsPermission(): void
+    {
+        $user = $this->createUser();
+        $user->addGroup('admin');
+        setting('Email.fromName', 'Ada');
+
+        $this->actingAs($user)->post('/admin/settings/email', [
+            'fromName'  => 'Mallory',
+            'fromEmail' => 'mallory@example.com',
+            'protocol'  => 'mail',
+        ])->assertRedirectTo(ADMIN_AREA);
+
+        $this->assertSame('Ada', setting('Email.fromName'));
+    }
+
     /**
      * @param array<string, string> $settings
      */

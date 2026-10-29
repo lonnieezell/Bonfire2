@@ -27,6 +27,10 @@ class SystemInfoController extends AdminController
      */
     public function index()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $db = db_connect();
 
         helper('number');
@@ -57,6 +61,10 @@ class SystemInfoController extends AdminController
      */
     public function phpInfo()
     {
+        if (! auth()->user()->can('admin.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         echo phpinfo();
     }
 }

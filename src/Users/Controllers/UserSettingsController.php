@@ -25,6 +25,10 @@ class UserSettingsController extends BaseController
      */
     public function index()
     {
+        if (! auth()->user()->can('users.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $rememberOptions = [
             '1 hour'   => HOUR,
             '4 hours'  => 4 * HOUR,
@@ -52,6 +56,10 @@ class UserSettingsController extends BaseController
      */
     public function save()
     {
+        if (! auth()->user()->can('users.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
         $rules = [
             'minimumPasswordLength' => 'required|integer|greater_than[6]',
             'defaultGroup'          => 'required|string',
