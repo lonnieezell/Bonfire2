@@ -86,6 +86,13 @@ lists what is wrong with the install, if anything: each file or folder in `writa
 missing `.env` file, and a 1-minute server load above **Warn when server load is above** (default 4). With no problems
 it says so in one line. It links to the System Info page and needs the `admin.settings` permission, like that page.
 
+## Recycler
+
+The Recycler widget (`recycler:summary`) isn't on the default dashboard; add it from the widget library. It lists each
+resource in the Recycler that has deleted records, with how many, and links each one to its list in the Recycler.
+Resources with nothing deleted are left out, and when the Recycler is empty it says so in one line. Any resource a
+module registers with `service('recycler')` appears in it. It needs the `recycler.view` permission, like the Recycler.
+
 ## Widgets
 
 The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.

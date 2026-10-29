@@ -81,6 +81,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame('users.list', service('dashboard')->widget('users:recentlyActive')->permission());
         $this->assertNull(service('dashboard')->widget('actions:runs')->permission());
         $this->assertSame('admin.settings', service('dashboard')->widget('tools:systemHealth')->permission());
+        $this->assertSame('recycler.view', service('dashboard')->widget('recycler:summary')->permission());
         $this->assertSame('groups.settings', service('dashboard')->widget('stats:userGroups643')->permission());
         $this->assertNull(service('dashboard')->widget('cell:Bonfire\Dashboard\DashboardCells::quickLinks')->permission());
     }
@@ -127,7 +128,7 @@ final class WidgetRegistryTest extends TestCase
         $this->assertSame([lang('Actions.actionsModTitle'), lang('Bonfire.dashboard'), lang('Bonfire.toolsModTitle'), lang('Groups.groupsModTitle'), lang('Users.usersModTitle')], array_keys($ids));
         $this->assertSame(['actions:runs'], $ids[lang('Actions.actionsModTitle')]);
         $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $ids[lang('Bonfire.dashboard')]);
-        $this->assertEqualsCanonicalizing(['tools:recentErrors', 'tools:systemHealth', 'logs:logActivity'], $ids[lang('Bonfire.toolsModTitle')]);
+        $this->assertEqualsCanonicalizing(['tools:recentErrors', 'tools:systemHealth', 'logs:logActivity', 'recycler:summary'], $ids[lang('Bonfire.toolsModTitle')]);
         $this->assertSame(['stats:userGroups643'], $ids[lang('Groups.groupsModTitle')]);
         $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'users:failedLogins', 'users:recentlyActive', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
     }

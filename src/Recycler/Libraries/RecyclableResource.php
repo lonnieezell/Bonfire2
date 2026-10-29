@@ -87,11 +87,7 @@ class RecyclableResource
      */
     public function deleted(int $perPage): array
     {
-        $model = $this->model();
-
-        if ($model instanceof CustomRecyclerQuery) {
-            $model = $model->setupRecycler();
-        }
+        $model = $this->query();
 
         $items = $model
             ->asArray()
@@ -100,6 +96,14 @@ class RecyclableResource
             ->paginate($perPage);
 
         return ['items' => $items, 'pager' => $model->pager];
+    }
+
+    /**
+     * How many records `deleted()` would list.
+     */
+    public function deletedCount(): int
+    {
+        return $this->query()->onlyDeleted()->countAllResults();
     }
 
     public function restore(int $id): bool
@@ -138,6 +142,16 @@ class RecyclableResource
     private function model(): Model
     {
         return $this->model ??= model($this->modelClass);
+    }
+
+    /**
+     * The model to list deleted records from, after the model's query hook.
+     */
+    private function query(): Model
+    {
+        $model = $this->model();
+
+        return $model instanceof CustomRecyclerQuery ? $model->setupRecycler() : $model;
     }
 
     private function isDeleted(int $id): bool

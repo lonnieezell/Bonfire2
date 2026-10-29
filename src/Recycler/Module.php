@@ -13,6 +13,7 @@ namespace Bonfire\Recycler;
 
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Recycler\Widgets\RecyclerSummaryWidget;
 
 /**
  * Docs Module setup
@@ -33,5 +34,7 @@ class Module extends BaseModule
             'permission'      => 'recycler.view',
         ]);
         $sidebar->menu('sidebar')->collection('tools')->addItem($item);
+
+        service('dashboard')->register(new RecyclerSummaryWidget());
     }
 }

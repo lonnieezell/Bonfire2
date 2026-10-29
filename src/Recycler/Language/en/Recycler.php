@@ -17,4 +17,8 @@ return [
                             other {# records}
                         }',
     'actions' => 'Actions',
+    // dashboard widget
+    'summaryCard'    => 'How many deleted records each resource holds',
+    'openRecycler'   => 'Open Recycler',
+    'nothingDeleted' => 'The Recycler is empty.',
 ];
