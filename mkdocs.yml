@@ -85,6 +85,7 @@ nav:
       - intro/installation.md
       - intro/philosophy.md
       - intro/app_structure.md
+      - intro/configuration.md
       - intro/ai_agents.md
       - intro/changelog.md
   - Modules:

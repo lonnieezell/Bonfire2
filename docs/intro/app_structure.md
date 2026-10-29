@@ -16,6 +16,8 @@ Once installed, Bonfire will have copied several configuration files into your `
 - `Recycler` - Defines how the Recycler library should behave, and lets an app add or override its resources.
 - `Users` - Contains avatar settings, custom user fields, and more.
 
+The [Configuration Reference](configuration.md) lists every key in these files, its default and what it does.
+
 ## /themes
 
 A new folder is created in the project root that holds the view files that define a theme for Bonfire. Themes provide the basic structure of the web pages, including all of the information that surrounds the actual content. By default, it ships with three themes, `admin`, `app`, and `auth`.
