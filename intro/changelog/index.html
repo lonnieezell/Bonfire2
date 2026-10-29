@@ -1860,6 +1860,8 @@ admin who started it. <code>ActionRunModel</code> now reads and writes <code>sta
 the strings <code>queued</code>, <code>running</code>, <code>done</code> and <code>failed</code>, so code that writes a status string to it must pass the enum.
 The Admin theme's <code>&lt;x-action-run&gt;</code> now calls <code>service('actionRuns')-&gt;toast()</code> rather than <code>ActionRunModel</code>; installs
 that published the Admin theme should copy the new <code>themes/Admin/Components/action-run.php</code>.</p>
+<p>Picking an accent color swatch under <strong>Settings → General → Appearance</strong> now shows the save bar, so the new color can
+be saved. Before, only the color picker itself did.</p>
 <h2 id="28-october-2026">28 October 2026</h2>
 <p><code>spark notify:breaking-changes</code> used to keep its marker in a <code>last-update.txt</code> file inside the package folder, which
 <code>composer update</code> deleted together with the previous version, so it warned on every update. It now remembers the
