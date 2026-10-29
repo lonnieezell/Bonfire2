@@ -58,6 +58,12 @@ may see. It is a [dashboard widget](../building_admin_modules/dashboard_widgets.
 a cell any more. It keeps its old id, `cell:Bonfire\Dashboard\DashboardCells::quickLinks`, so installs whose `$cells`
 still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once, in the same place.
 
+## Recent failed logins
+
+The Recent failed logins widget (`users:failedLogins`) isn't on the default dashboard; add it from the widget library.
+It lists the newest unsuccessful login attempts across all accounts: who tried, from which IP address, and when. An
+attempt whose email belongs to a user links to that user's Security tab, for admins who may open it.
+
 ## Widgets
 
 The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.

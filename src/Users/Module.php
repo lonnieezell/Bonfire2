@@ -16,6 +16,7 @@ use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Users\Actions\DeleteUsers;
 use Bonfire\Users\Models\UserModel;
+use Bonfire\Users\Widgets\FailedLoginsWidget;
 use Bonfire\Users\Widgets\NewestUsersWidget;
 use Bonfire\Users\Widgets\UsersByGroupWidget;
 use Bonfire\Widgets\Types\Stats\StatsItem;
@@ -75,6 +76,7 @@ class Module extends BaseModule
 
         service('dashboard')
             ->register(new UsersByGroupWidget())
-            ->register(new NewestUsersWidget());
+            ->register(new NewestUsersWidget())
+            ->register(new FailedLoginsWidget());
     }
 }

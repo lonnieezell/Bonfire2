@@ -47,6 +47,7 @@ such as Quick Links, have no sliders button.
 | Log activity | Days to show, Hide Debug entries |
 | Users by group | Sort by most users first or by group name |
 | Newest users | Users to show (1–10) |
+| Recent failed logins | Attempts to show (1–20) |
 | Recent errors | Entries to show (1–20), Show errors only or errors and warnings |
 
 **Save as site default** carries each widget's settings into the site default.
@@ -96,6 +97,7 @@ data is never fetched for them, and it is dropped from any layout they save. The
 | Widget | Permission |
 | --- | --- |
 | Users by group, Newest users, Users in Recycler | `users.list` |
+| Recent failed logins | `users.view` |
 | User Groups | `groups.settings` |
 | Log activity, Recent errors | `logs.view` |
 | Quick Links | none |

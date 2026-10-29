@@ -4,6 +4,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 29 October 2026
+
+A **Recent failed logins** dashboard widget (`users:failedLogins`) lists the newest unsuccessful login attempts across
+all accounts, with the identifier, IP address and date. Attempts by a known user's email link to their Security tab for
+admins who may open it. It needs the `users.view` permission; add it from **Add widget** on the dashboard.
+
 ## 29 October 2026 (breaking change)
 
 An action run's lifecycle now lives in `service('actionRuns')` (`Bonfire\Actions\ActionRuns`): `dispatch()` runs an
