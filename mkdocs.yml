@@ -97,6 +97,10 @@ nav:
       - modules/meta_info.md
       - modules/consent.md
       - modules/dashboard.md
+      - modules/users.md
+      - modules/settings.md
+      - modules/email.md
+      - modules/tools.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/alerts.md
