@@ -23,7 +23,8 @@
     "php-parallel-lint/php-parallel-lint": "^1.3",
     "roave/security-advisories": "dev-latest",
     "deptrac/deptrac": "^4.7",
-    "codeigniter4/queue": "^1.0"
+    "codeigniter4/queue": "^1.0",
+    "phpstan/phpstan": "^2.3, !=2.3.4"
   },
   "suggest": {
     "codeigniter4/queue": "Runs large admin actions in the background",
