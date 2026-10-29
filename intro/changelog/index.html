@@ -1904,6 +1904,9 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>A Composer package can now add a Bonfire module by listing it in the new <code>Config\Bonfire::$packageModules</code>, from
+its own <code>Config\Registrar</code> so the app using it changes nothing. See
+<a href="../../building_admin_modules/creating_an_admin_module/#modules-in-composer-packages">Modules in Composer packages</a>.</p>
 <p>The email settings page now saves the SMTP port and timeout as integers. Sending SMTP mail no longer fails with a
 <code>fsockopen()</code> <code>TypeError</code>, and port 465 turns on implicit SSL again. A custom port must now be a positive number.
 Thanks to Alistair Wearring for the report and fix.</p>

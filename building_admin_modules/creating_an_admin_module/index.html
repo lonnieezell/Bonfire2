@@ -1243,6 +1243,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#modules-in-composer-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules in Composer packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-module-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1559,6 +1570,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#modules-in-composer-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modules in Composer packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-module-file" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1702,6 +1724,33 @@ Bonfire 2 admin panel for administration of pages on a website.</p>
 <span class="p">];</span>
 </code></pre></div>
 <p>If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.</p>
+<h2 id="modules-in-composer-packages">Modules in Composer packages</h2>
+<p><code>$appModules</code> treats every folder in a location as a module, so it doesn't fit a Composer package that is a single
+module. List such a module in <code>$packageModules</code> instead. Each entry maps the module's own namespace to the
+directory that holds its <code>Module.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$packageModules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Acme\Blog'</span> <span class="o">=&gt;</span> <span class="nx">ROOTPATH</span> <span class="o">.</span> <span class="s1">'vendor/acme/blog/src'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
+<p>Composer already autoloads the package's classes, so Bonfire only needs to find its <code>Module.php</code>. An entry whose
+directory or <code>Module.php</code> is missing is skipped.</p>
+<p>A package can register itself, so the app using it changes nothing. Add a <code>Config\Registrar</code> class to the package
+with a <code>Bonfire()</code> method, and CodeIgniter merges what it returns into <code>Config\Bonfire</code>, including an app's
+published copy:</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">Acme\Blog\Config</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Registrar</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">Bonfire</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s1">'packageModules'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'Acme\Blog'</span> <span class="o">=&gt;</span> <span class="nb">realpath</span><span class="p">(</span><span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">'/..'</span><span class="p">)],</span>
+        <span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>CodeIgniter only finds registrars in Composer packages while <code>Config\Modules::$discoverInComposer</code> is <code>true</code>, its
+default.</p>
 <h2 id="the-module-file">The Module File</h2>
 <p>The Module file handles initialization functions when the admin is loaded. It allows the module to create new
 menus, insert itself into the existing sidebar menus, etc. The <code>initAdmin</code> method is where all of the setup
