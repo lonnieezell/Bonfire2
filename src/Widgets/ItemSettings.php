@@ -12,11 +12,10 @@
 namespace Bonfire\Widgets;
 
 /**
- * Owns the stored "enabled" flag of one widget item and the names it is
- * stored and posted under.
+ * Names one widget item on the dashboard.
  *
- * The keys (Stats.Stats_<id>, Stats.Charts_<id>) are already in installs'
- * databases, so they must not change.
+ * Its widget id (stats:<id>, charts:<id>) is in the layouts installs have
+ * saved, so it must not change.
  */
 final readonly class ItemSettings
 {
@@ -27,30 +26,10 @@ final readonly class ItemSettings
     }
 
     /**
-     * The name of the checkbox on the widgets settings form.
+     * The item's id on the dashboard, e.g. "stats:usersInRecycler693".
      */
-    public function fieldName(): string
+    public function widgetId(): string
     {
-        return $this->kind->value . '_' . $this->id;
-    }
-
-    public function key(): string
-    {
-        return 'Stats.' . $this->fieldName();
-    }
-
-    public function enabled(): bool
-    {
-        return (bool) setting($this->key());
-    }
-
-    public function store(bool $enabled): void
-    {
-        setting($this->key(), $enabled ? 'on' : false);
-    }
-
-    public function forget(): void
-    {
-        setting()->forget($this->key());
+        return strtolower($this->kind->value) . ':' . $this->id;
     }
 }

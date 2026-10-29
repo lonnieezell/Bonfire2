@@ -11,6 +11,7 @@
 
 namespace Bonfire;
 
+use Bonfire\Widgets\BaseWidget;
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Stats\Stats;
 
@@ -43,12 +44,15 @@ class Bonfire
 
     /**
      * Sets up admin menus, initializes modules.
+     *
+     * @param bool $admin Boot for the admin area outside an admin request, like in a queue worker
      */
-    public function boot()
+    public function boot(bool $admin = false)
     {
         helper('filesystem');
 
         $this->saveInAdmin();
+        $this->inAdmin = $admin || $this->inAdmin;
 
         if ($this->inAdmin) {
             $this->setupMenus();
@@ -88,7 +92,8 @@ class Bonfire
         $menus->menu('sidebar')
             ->createCollection('settings', lang('Bonfire.settingsModTitle'))
             ->setFontAwesomeIcon('fas fa-cog')
-            ->setCollapsible();
+            ->setCollapsible()
+            ->setPageNav();
         $menus->menu('sidebar')
             ->createCollection('tools', lang('Bonfire.toolsModTitle'))
             ->setFontAwesomeIcon('fas fa-toolbox')
@@ -113,6 +118,8 @@ class Bonfire
         $widgets->createWidget(Charts::class, 'charts');
         $widgets->widget('charts')
             ->createCollection('charts');
+
+        $widgets->createWidget(BaseWidget::class, 'logs');
     }
 
     /**

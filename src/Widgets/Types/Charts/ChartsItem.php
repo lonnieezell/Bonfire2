@@ -11,16 +11,21 @@
 
 namespace Bonfire\Widgets\Types\Charts;
 
+use Bonfire\Dashboard\Widgets\ChartWidget;
+use Bonfire\Dashboard\WidgetValues;
+use Bonfire\View\Metadata;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
-use Bonfire\Widgets\WidgetOptions;
+use Closure;
 
 /**
  * Represents an individual widget Charts.
  */
 class ChartsItem implements Item
 {
+    private const CHART_JS = 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
+
     /**
      * The 'weight' used for sorting.
      *
@@ -106,6 +111,42 @@ class ChartsItem implements Item
      */
     protected $chartName;
 
+    /**
+     * The permission a user needs to see the item on their dashboard.
+     */
+    protected ?string $permission = null;
+
+    /**
+     * The name of the module that adds the item, its heading in the widget library.
+     */
+    protected ?string $module = null;
+
+    /**
+     * The query addDataset() stored, run when the data or labels are first read.
+     */
+    private ?Closure $fetch = null;
+
+    /**
+     * Adds Chart.js and its helpers to the page, once.
+     */
+    public static function addAssets(Metadata $meta): void
+    {
+        if (in_array(self::CHART_JS, array_column($meta->scripts(), 'src'), true)) {
+            return;
+        }
+
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-color@3']);
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-interpolate@3']);
+        $meta->addScript(['src' => 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3']);
+        $meta->addScript([
+            'src'            => self::CHART_JS,
+            'integrity'      => 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ',
+            'crossorigin'    => 'anonymous',
+            'referrerpolicy' => 'no-referrer',
+        ]);
+        $meta->addScript(['src' => asset('admin/js/chart.js', 'js')]);
+    }
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -146,6 +187,30 @@ class ChartsItem implements Item
         return $this;
     }
 
+    public function permission(): ?string
+    {
+        return $this->permission;
+    }
+
+    public function module(): ?string
+    {
+        return $this->module;
+    }
+
+    public function setModule(?string $module): ChartsItem
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function setPermission(?string $permission): ChartsItem
+    {
+        $this->permission = $permission;
+
+        return $this;
+    }
+
     public function type(): ?string
     {
         return $this->type;
@@ -172,11 +237,15 @@ class ChartsItem implements Item
 
     public function data(): ?array
     {
+        $this->runStoredQuery();
+
         return $this->data;
     }
 
     public function setData(array $data): ChartsItem
     {
+        // The stored query fills the labels too, so it runs before its data is replaced
+        $this->runStoredQuery();
         $this->data = $data;
 
         return $this;
@@ -184,11 +253,14 @@ class ChartsItem implements Item
 
     public function label(): ?array
     {
+        $this->runStoredQuery();
+
         return $this->label;
     }
 
     public function setLabel(array $label): ChartsItem
     {
+        $this->runStoredQuery();
         $this->label = $label;
 
         return $this;
@@ -211,27 +283,28 @@ class ChartsItem implements Item
         return new ItemSettings(WidgetKind::Charts, $this->id);
     }
 
-    public function getScript(): string
+    /**
+     * @param array<string, mixed> $overrides Options that take the place of the fields' defaults, e.g. ['colorScheme' => 'Reds']
+     */
+    public function getScript(array $overrides = []): string
     {
-        $options = WidgetOptions::forChartType($this->type());
+        $values = WidgetValues::resolve((new ChartWidget($this))->fields(), $overrides);
+        $option = $values->get(...);
 
-        $flag = static fn (string $name): string => $options?->get($name) ? 'true' : 'null';
-        $text = static function (string $name) use ($options): string {
-            $value = $options?->get($name);
+        $flag = static fn (string $name): string => $option($name) ? 'true' : 'null';
+        $text = static function (string $name) use ($option): string {
+            $value = $option($name);
 
             return $value ? "'" . $value . "'" : 'null';
         };
 
-        $line_tension    = $options?->get('tension') ?: 'null';
-        $borderWidth     = $options?->get('borderWidth') ?: 'null';
+        $line_tension    = $option('tension') ?: 'null';
         $enableAnimation = $flag('enableAnimation');
         $showTitle       = $flag('showTitle');
-        $showSubTitle    = $flag('showSubTitle');
         $showLegend      = $flag('showLegend');
         $legendPosition  = $text('legendPosition');
 
-        $scheme          = $text('colorScheme');
-        $backgroundColor = $scheme !== 'null' ? $scheme : $text('borderColor');
+        $backgroundColor = $text('colorScheme');
         // A bar chart has always taken a lowercase border colour from the scheme name
         $borderColor = $this->type() === 'bar' ? strtolower(rtrim($backgroundColor, 's')) : $backgroundColor;
 
@@ -250,47 +323,44 @@ class ChartsItem implements Item
             ' . $borderColor . '
             const Chart_' . $this->chartName() . " = new Chart(
                 document.getElementById('" . $this->chartName() . "'),
-                drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', ' . $borderWidth . ', ' . $enableAnimation . ', ' . $showTitle . ',	' . $showSubTitle . ',	' . $showLegend . ',  ' . $legendPosition . ')
+                drawChart( data_" . $this->chartName() . ', labels_' . $this->chartName() . ", '" . $this->title() . "', '" . $this->type() . "', " . $line_tension . ', backgroundColor_' . $this->chartName() . ' , borderColor_' . $this->chartName() . ', null, ' . $enableAnimation . ', ' . $showTitle . ',	null,	' . $showLegend . ',  ' . $legendPosition . ')
             );';
     }
 
+    /**
+     * Stores the query, run when the data is first read: only a chart the dashboard shows runs it.
+     */
     public function addDataset(string $tableName, string $groupField, string $countField, string $selectMode = 'count'): ChartsItem
     {
-        // Only fetch the data on the dashboard, and when this chart is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
-            return $this;
-        }
+        $this->fetch = static function () use ($tableName, $groupField, $countField, $selectMode): array {
+            $groupsData = db_connect()->table($tableName)
+                ->select($groupField);
 
-        // Chart Section Begin
-        $groupsData = db_connect()->table($tableName)
-            ->select($groupField);
+            $groupsData = match ($selectMode) {
+                'count' => $groupsData->selectCount($countField),
+                'avg'   => $groupsData->selectAvg($countField),
+                'max'   => $groupsData->selectMax($countField),
+                'min'   => $groupsData->selectMin($countField),
+                'sum'   => $groupsData->selectSum($countField),
+                // TODO: return error message
+                default => $groupsData->selectCount($countField),
+            };
 
-        $groupsData = match ($selectMode) {
-            'count' => $groupsData->selectCount($countField),
-            'avg'   => $groupsData->selectAvg($countField),
-            'max'   => $groupsData->selectMax($countField),
-            'min'   => $groupsData->selectMin($countField),
-            'sum'   => $groupsData->selectSum($countField),
-            // TODO: return error message
-            default => $groupsData->selectCount($countField),
+            $groupsData = $groupsData->groupBy($groupField)
+                ->get()
+                ->getResultArray();
+
+            return [array_column($groupsData, $countField), array_column($groupsData, $groupField)];
         };
 
-        $groupsData = $groupsData->groupBy($groupField)
-            ->get()
-            ->getResultArray();
-
-        // Prepare Data
-        $data  = [];
-        $label = [];
-
-        foreach ($groupsData as $el) {
-            $data[]  = $el[$countField];
-            $label[] = $el[$groupField];
-        }
-
-        $this->setData($data);
-        $this->setLabel($label);
-
         return $this;
+    }
+
+    private function runStoredQuery(): void
+    {
+        if ($this->fetch !== null) {
+            [$this->data, $this->label] = ($this->fetch)();
+            $this->fetch                = null;
+        }
     }
 }

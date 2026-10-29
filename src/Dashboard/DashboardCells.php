@@ -2,32 +2,17 @@
 
 namespace Bonfire\Dashboard;
 
-use CodeIgniter\I18n\Time;
-use IntlDatePatternGenerator;
+use Bonfire\Dashboard\Widgets\QuickLinksWidget;
 
 class DashboardCells
 {
     /**
      * Displays a selection of "Quick Links" in the admin dashboard.
-     * This is a view cell that uses the "content" sidebar menu
-     * items to determine the links to show.
+     *
+     * @deprecated Quick Links is now QuickLinksWidget, registered by the Dashboard module.
      */
     public function quickLinks()
     {
-        $now  = Time::now();
-        $user = auth()->user();
-        $name = $user->first_name ?: $user->username;
-
-        $greeting = match (true) {
-            $now->getHour() < 12 => 'goodMorning',
-            $now->getHour() < 18 => 'goodAfternoon',
-            default              => 'goodEvening',
-        };
-
-        return view('Bonfire\Dashboard\Views\quick_links', [
-            'menu'     => service('menus')->menu('sidebar')->collection('content'),
-            'today'    => $now->toLocalizedString((new IntlDatePatternGenerator(service('request')->getLocale()))->getBestPattern('EEEEMMMMd')),
-            'greeting' => lang('Bonfire.' . $greeting, [$name]),
-        ]);
+        return (new QuickLinksWidget())->render(WidgetValues::resolve([]));
     }
 }

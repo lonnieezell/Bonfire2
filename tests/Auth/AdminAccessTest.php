@@ -69,24 +69,28 @@ final class AdminAccessTest extends TestCase
 
         $response = $this->actingAs($admin)->get(ADMIN_AREA);
 
+        // The dashboard's widget palette names widgets too, so look at the sidebar only
+        preg_match('#<aside id="sidebar".*?</aside>#s', (string) $response->response()->getBody(), $match);
+        $sidebar = $match[0] ?? '';
+
         // Should see 'Dashboard' link
-        $response->assertSee('Dashboard');
+        $this->assertStringContainsString('Dashboard', $sidebar);
 
         // Cannot see the User menus
-        $response->assertDontSee('href="admin/users"');
-        $response->assertDontSee('User Groups');
+        $this->assertStringNotContainsString('href="admin/users"', $sidebar);
+        $this->assertStringNotContainsString('User Groups', $sidebar);
 
         // Cannot see General Admin settings
-        $response->assertDontSee('Email');
-        $response->assertDontSee('General');
+        $this->assertStringNotContainsString('Email', $sidebar);
+        $this->assertStringNotContainsString('General', $sidebar);
 
         // Cannot see Consent settings
-        $response->assertDontSee('Consent');
+        $this->assertStringNotContainsString('Consent', $sidebar);
 
         // Cannot see Widget settings
-        $response->assertDontSee('<span>Widgets');
+        $this->assertStringNotContainsString('<span>Widgets', $sidebar);
 
         // Cannot see the Recycler area
-        $response->assertDontSee('Recycler');
+        $this->assertStringNotContainsString('Recycler', $sidebar);
     }
 }

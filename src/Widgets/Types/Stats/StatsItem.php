@@ -14,6 +14,7 @@ namespace Bonfire\Widgets\Types\Stats;
 use Bonfire\Widgets\Interfaces\Item;
 use Bonfire\Widgets\ItemSettings;
 use Bonfire\Widgets\WidgetKind;
+use Closure;
 
 /**
  * Represents an individual widget stats.
@@ -80,6 +81,21 @@ class StatsItem implements Item
      */
     protected $bgColor;
 
+    /**
+     * The permission a user needs to see the item on their dashboard.
+     */
+    protected ?string $permission = null;
+
+    /**
+     * The name of the module that adds the item, its heading in the widget library.
+     */
+    protected ?string $module = null;
+
+    /**
+     * The query addValue() or addValueByFreeQuery() stored, run when the value is first read unless it is set first.
+     */
+    private ?Closure $fetch = null;
+
     public function __construct(?array $data = null)
     {
         if (! is_array($data)) {
@@ -111,6 +127,7 @@ class StatsItem implements Item
     public function setValue(?string $value): StatsItem
     {
         $this->value = $value;
+        $this->fetch = null;
 
         return $this;
     }
@@ -118,6 +135,13 @@ class StatsItem implements Item
     public function setFaIcon(?string $faIcon): StatsItem
     {
         $this->faIcon = $faIcon;
+
+        return $this;
+    }
+
+    public function setPermission(?string $permission): StatsItem
+    {
+        $this->permission = $permission;
 
         return $this;
     }
@@ -179,6 +203,10 @@ class StatsItem implements Item
 
     public function value(): ?string
     {
+        if ($this->fetch !== null) {
+            $this->setValue(($this->fetch)());
+        }
+
         return $this->value;
     }
 
@@ -192,6 +220,23 @@ class StatsItem implements Item
         return $this->url;
     }
 
+    public function permission(): ?string
+    {
+        return $this->permission;
+    }
+
+    public function module(): ?string
+    {
+        return $this->module;
+    }
+
+    public function setModule(?string $module): StatsItem
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
     public function bgColor(): ?string
     {
         return $this->bgColor;
@@ -202,60 +247,51 @@ class StatsItem implements Item
         return new ItemSettings(WidgetKind::Stats, $this->id);
     }
 
+    /**
+     * Stores the query, run when the value is first read: only an item the dashboard shows runs it.
+     */
     public function addValue(string $tableName, ?string $whereString = null, string $selectMode = 'count'): StatsItem
     {
-        // Only fetch the value on the dashboard, and when this item is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
-            return $this;
-        }
+        $this->fetch = static function () use ($tableName, $whereString, $selectMode): string {
+            $query = db_connect()->table($tableName);
+            $query->where('deleted_at');
+            if ($whereString) {
+                $query->where($whereString);
+            }
 
-        // Chart Section Begin
-        $query = db_connect()->table($tableName);
-        $query->where('deleted_at');
-        if ($whereString) {
-            $query->where($whereString);
-        }
+            $value = match ($selectMode) {
+                'count' => $query->countAllResults(),
+                'avg'   => $query->selectAvg('value')->get()->getRow()->value,
+                'max'   => $query->selectMax('value')->get()->getRow()->value,
+                'min'   => $query->selectMin('value')->get()->getRow()->value,
+                'sum'   => $query->selectSum('value')->get()->getRow()->value,
+                default => $query->countAllResults(),
+            };
 
-        $query = match ($selectMode) {
-            'count' => $query->countAllResults(),
-            'avg'   => $query->selectAvg('value')->get()->getRow()->value,
-            'max'   => $query->selectMax('value')->get()->getRow()->value,
-            'min'   => $query->selectMin('value')->get()->getRow()->value,
-            'sum'   => $query->selectSum('value')->get()->getRow()->value,
-            default => $query->countAllResults(),
+            return self::format($value);
         };
-
-        // Check if the result is a float and format accordingly
-        if (is_float($query)) {
-            // todo: format the value dynamically based on locale
-            $this->setValue(number_format($query, 2, '.', ''));
-        } else {
-            $this->setValue((string) $query);
-        }
 
         return $this;
     }
 
+    /**
+     * Stores the query, run when the value is first read: only an item the dashboard shows runs it.
+     */
     public function addValueByFreeQuery(string $query): StatsItem
     {
-        // Only fetch the value on the dashboard, and when this item is enabled
-        if (! service('dashboardContext')->shows($this->settings())) {
-            return $this;
-        }
+        $this->fetch = static function () use ($query): string {
+            $result = db_connect()->query($query)->getRowArray() ?? [];
 
-        // Execute the query
-        $result = db_connect()->query($query)->getRow();
-
-        // Assuming the query returns a single value in the first column
-        $value = reset($result);
-
-        // Check if the result is a float and format accordingly
-        if (is_float($value)) {
-            $this->setValue(number_format($value, 2, '.', ''));
-        } else {
-            $this->setValue((string) $value);
-        }
+            // Assuming the query returns a single value in the first column
+            return self::format(reset($result));
+        };
 
         return $this;
+    }
+
+    private static function format(mixed $value): string
+    {
+        // todo: format the value dynamically based on locale
+        return is_float($value) ? number_format($value, 2, '.', '') : (string) $value;
     }
 }

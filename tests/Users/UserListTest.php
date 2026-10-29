@@ -2,8 +2,13 @@
 
 namespace Tests\Users;
 
+use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
+use CodeIgniter\Database\Query;
+use CodeIgniter\Events\Events;
 use CodeIgniter\Shield\Authentication\Actions\EmailActivator;
+use Config\Services;
+use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
 
 /**
@@ -97,17 +102,61 @@ final class UserListTest extends TestCase
         $this->assertStringContainsString('<div class="bf-empty-title">No users match</div>', $html);
     }
 
-    public function testSelectionBarPostsTheSelectedRowsToBatchDelete(): void
+    public function testRowsAreSelectableForAnyBulkActionTheAdminMayRun(): void
     {
-        $this->createUser(['username' => 'grace', 'active' => 1])->addGroup('user');
+        $editor = $this->createUser(['username' => 'editor', 'active' => 1]);
+        $editor->addPermission('admin.access', 'users.list', 'users.edit');
+        $grace = $this->createUser(['username' => 'grace', 'active' => 1]);
 
-        $html = $this->list();
+        $this->admin = $editor;
+        $this->assertDoesNotMatchRegularExpression('#name="selects\[\]"#', $this->list());
 
-        $this->assertMatchesRegularExpression('#<form action="' . preg_quote(site_url(ADMIN_AREA . '/users/delete-batch'), '#') . '" method="post">#', $html);
+        service('actions')->for('users')->add(new TouchUsers());
+
+        try {
+            $html = $this->list();
+        } finally {
+            Services::resetSingle('actions');
+        }
+
         $this->assertStringContainsString('x-data="bfSelectionBar"', $html);
-        $this->assertMatchesRegularExpression('#<button[^>]*name="delete"[^>]*onclick="return confirm\(#', $html);
-        // You can't select yourself for deletion.
-        $this->assertMatchesRegularExpression('#name="selects\[' . $this->admin->id . '\]"[^>]*disabled#', $html);
+        $this->assertMatchesRegularExpression('#<input type="checkbox" name="selects\[\]" value="' . $grace->id . '"[^>]*\s+>#', $html);
+        // TouchUsers refuses the editor's own record.
+        $this->assertMatchesRegularExpression('#name="selects\[\]" value="' . $editor->id . '"[^>]*\s+disabled#', $html);
+    }
+
+    public function testRowActionsDoNotQueryPerRow(): void
+    {
+        $this->createUser(['username' => 'grace', 'active' => 1]);
+        $this->list(htmx: true); // loads the admin's own permissions once
+        $twoRows = $this->countQueries(fn () => $this->list(htmx: true));
+
+        $this->createUser(['username' => 'linus', 'active' => 1]);
+        $this->createUser(['username' => 'ken', 'active' => 1]);
+        $fourRows = $this->countQueries(fn () => $this->list(htmx: true));
+
+        $this->assertSame($twoRows, $fourRows);
+    }
+
+    public function testDeleteActionDeletesTheSelectedUsersButNotYourself(): void
+    {
+        $grace = $this->createUser(['username' => 'grace', 'active' => 1]);
+
+        $response = $this->actingAs($this->admin)->post(route_to('action', 'users', 'delete-users'), [
+            csrf_token() => csrf_hash(),
+            'selects'    => [$grace->id, $this->admin->id],
+            'confirmed'  => '1',
+        ]);
+
+        $response->assertSessionHas('message', lang('Bonfire.resourcesDeleted', [lang('Users.usersAccusative')]) . ' Skipped 1.');
+        $this->assertNull(model(UserModel::class)->find($grace->id));
+        $this->assertNotNull(model(UserModel::class)->find($this->admin->id));
+    }
+
+    public function testTheOldDeleteRoutesAreGone(): void
+    {
+        $this->assertFalse(route_to('user-delete', $this->admin->id));
+        $this->assertNull(service('routes')->getRoutes('POST')[ADMIN_AREA . '/users/delete-batch'] ?? null);
     }
 
     public function testPagerShowsHowManyOfTheTotal(): void
@@ -119,6 +168,28 @@ final class UserListTest extends TestCase
 
         $this->assertStringContainsString('Showing 1 of 2', $html);
         $this->assertMatchesRegularExpression('#<a class="btn[^"]*" href="[^"]*page=2[^"]*" hx-get="[^"]*page=2#', $html);
+    }
+
+    /**
+     * Counts the SELECTs, leaving out writes like the session's random expiry purge.
+     */
+    private function countQueries(callable $request): int
+    {
+        $count    = 0;
+        $listener = static function (Query $query) use (&$count): void {
+            if (str_starts_with($query->getQuery(), 'SELECT')) {
+                $count++;
+            }
+        };
+        Events::on('DBQuery', $listener);
+
+        try {
+            $request();
+        } finally {
+            Events::removeListener('DBQuery', $listener);
+        }
+
+        return $count;
     }
 
     private function list(string $query = '', bool $htmx = false): string

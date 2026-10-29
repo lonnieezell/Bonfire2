@@ -151,4 +151,30 @@ final class MenuCollectionTest extends TestCase
         // test that collection now does have visible items:
         $this->assertTrue($collection->hasVisibleItems());
     }
+
+    public function testPageNavIsOffByDefault()
+    {
+        $collection = new MenuCollection(['name' => 'Foo']);
+        $this->assertFalse($collection->hasPageNav());
+
+        $collection->setPageNav();
+        $this->assertTrue($collection->hasPageNav());
+    }
+
+    public function testFirstVisibleItemSkipsItemsTheUserCannotSee()
+    {
+        $user = fake(UserModel::class);
+        /** @phpstan-ignore-next-line */
+        $user->addPermission('admin.access');
+        auth()->login($user);
+
+        $collection = new MenuCollection(['name' => 'Foo']);
+        $this->assertNull($collection->firstVisibleItem());
+
+        $hidden  = new MenuItem(['title' => 'Hidden', 'weight' => 1, 'permission' => 'admin.settings']);
+        $visible = new MenuItem(['title' => 'Visible', 'weight' => 2, 'permission' => 'admin.access']);
+        $collection->addItems([$visible, $hidden]);
+
+        $this->assertSame($visible, $collection->firstVisibleItem());
+    }
 }

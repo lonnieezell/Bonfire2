@@ -120,6 +120,25 @@ final class AdminShellTest extends TestCase
         $this->assertMatchesRegularExpression('#<a[^>]*href="' . preg_quote(url_to('sys-logs'), '#') . '"[^>]*aria-current="page"#', $sidebar);
     }
 
+    public function testSidebarLinksToSettingsOnceAndMarksItActive(): void
+    {
+        $sidebar = $this->sidebarOf($this->actingAs($this->admin)->get(ADMIN_AREA . '/settings/users')->response()->getBody());
+
+        // The settings pages have their own nav, so the sidebar shows one link to them.
+        $this->assertSame(1, preg_match_all('#<a[^>]*href="' . preg_quote(site_url(ADMIN_AREA . '/settings/'), '#') . '#', $sidebar));
+        $this->assertMatchesRegularExpression('#<a class="bf-nav-link active"[^>]*href="' . preg_quote(site_url(ADMIN_AREA . '/settings/'), '#') . '#', $sidebar);
+    }
+
+    public function testSidebarSettingsLinkOpensTheFirstSettingsPageTheUserMaySee(): void
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access', 'users.settings');
+
+        $sidebar = $this->sidebarOf($this->actingAs($user)->get(ADMIN_AREA)->response()->getBody());
+
+        $this->assertStringContainsString('href="' . url_to('user-settings') . '"', $sidebar);
+    }
+
     public function testFlashedAlertsShowAsDismissibleToasts(): void
     {
         $response = $this->actingAs($this->admin)->withSession(['message' => 'Saved the thing'])->get(ADMIN_AREA);

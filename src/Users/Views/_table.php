@@ -1,17 +1,21 @@
-<?php $hasUsers = isset($users) && count($users) > 0 ?>
-<form action="<?= site_url(ADMIN_AREA . '/users/delete-batch') ?>" method="post">
+<?php
+$hasUsers   = isset($users) && count($users) > 0;
+$actionList = service('actions')->for('users')->showing($users ?? []);
+$selectable = $actionList->selectable(auth()->user());
+?>
+<form method="post">
     <?= csrf_field() ?>
     <?php if ($hasUsers) : ?>
         <div class="table-responsive">
             <table class="table table-hover bf-table">
-                <?= $this->include('_table_head') ?>
+                <?= $this->setData(['showSelectAll' => $selectable])->include('_table_head') ?>
                 <tbody>
                     <?php foreach ($users as $user) : ?>
                         <tr>
-                            <?php if (auth()->user()->can('users.delete')) : ?>
+                            <?php if ($selectable) : ?>
                                 <td class="bf-select-cell">
-                                    <input type="checkbox" name="selects[<?= $user->id ?>]" class="form-check-input" aria-label="<?= lang('Users.selectUser', [esc($user->username)]) ?>"
-                                        <?php if (! $access->canSelectForDeletion($user)) : ?>
+                                    <input type="checkbox" name="selects[]" value="<?= $user->id ?>" class="form-check-input" aria-label="<?= lang('Users.selectUser', [esc($user->username)]) ?>"
+                                        <?php if (! $actionList->selectable(auth()->user(), $user)) : ?>
                                             disabled
                                         <?php endif; ?>
                                     >
@@ -27,11 +31,9 @@
         <x-empty-state title="<?= esc(lang('Users.noUsersMatch')) ?>" hint="<?= esc(lang('Users.noUsersHint')) ?>" />
     <?php endif ?>
 
-    <?php if (auth()->user()->can('users.delete')) : ?>
+    <?php if ($selectable) : ?>
         <x-selection-bar>
-            <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('<?= lang('Bonfire.deleteSelectedConfirm', [lang('Users.usersAccusative')]) ?>')">
-                <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Bonfire.delete') ?>
-            </button>
+            <x-bulk-actions list="users" />
         </x-selection-bar>
     <?php endif ?>
 </form>

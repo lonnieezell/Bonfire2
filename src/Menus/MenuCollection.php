@@ -47,6 +47,12 @@ class MenuCollection extends MenuItem
     protected bool $collapsible = false;
 
     /**
+     * If true, its pages show their own nav of its items, so the sidebar
+     * shows one link to the collection instead of listing them.
+     */
+    protected bool $pageNav = false;
+
+    /**
      * Sets the name this collection can be referenced by.
      *
      * @param string $name Name of Menu item
@@ -84,6 +90,24 @@ class MenuCollection extends MenuItem
     public function isCollapsible(): bool
     {
         return $this->collapsible;
+    }
+
+    /**
+     * Sets whether this collection's pages show their own nav of its items.
+     */
+    public function setPageNav(bool $pageNav = true): self
+    {
+        $this->pageNav = $pageNav;
+
+        return $this;
+    }
+
+    /**
+     * Do this collection's pages show their own nav of its items?
+     */
+    public function hasPageNav(): bool
+    {
+        return $this->pageNav;
     }
 
     /**
@@ -196,6 +220,20 @@ class MenuCollection extends MenuItem
         }
 
         return $visible;
+    }
+
+    /**
+     * Returns the first item, by weight, the current user may see.
+     */
+    public function firstVisibleItem(): ?MenuItem
+    {
+        foreach ($this->items() as $item) {
+            if ($item->userCanSee()) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 
     /**

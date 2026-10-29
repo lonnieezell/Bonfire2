@@ -2,14 +2,11 @@
 	<?php foreach ($charts  as $elem) : ?>
 
 		<?php foreach ($elem->items() as $widget) : ?>
+		<?php if ($widget->permission() !== null && ! auth()->user()?->can($widget->permission())) { continue; } ?>
 
-			<?php if ($widget->settings()->enabled()) : ?>
-                <div class="bf-chart <?= esc($widget->cssClass()) ?>">
-                    <x-admin-box title="<?= esc($widget->title()) ?>">
-                        <canvas id="<?= $widget->chartName() ?>" class="chart-border"></canvas>
-                    </x-admin-box>
-                </div>
-			<?php endif?>
+            <div class="bf-chart <?= esc($widget->cssClass()) ?>">
+				<?= $this->setData(['chart' => $widget])->include('Bonfire\Widgets\Views\Cells\_chart') ?>
+            </div>
 
 		<?php endforeach; ?>
 

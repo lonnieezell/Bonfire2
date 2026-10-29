@@ -82,4 +82,12 @@ abstract class TestCase extends CIUnitTestCase
 
         return $user;
     }
+
+    /**
+     * Makes the admin offer the charts:testLine and charts:testBar widgets.
+     */
+    protected function withTestCharts(): void
+    {
+        config('Bonfire')->appModules = ['Tests\Support\Modules' => SUPPORTPATH . 'Modules'];
+    }
 }

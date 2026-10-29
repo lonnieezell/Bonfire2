@@ -11,8 +11,13 @@
 
 namespace Tests\Widgets;
 
+use Bonfire\Widgets\Types\Charts\Charts;
+use Bonfire\Widgets\Types\Charts\ChartsItem;
+use Bonfire\Widgets\Types\Stats\Stats;
+use Bonfire\Widgets\Types\Stats\StatsItem;
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User;
-use Tests\Support\Libraries\StubDashboard;
+use Tests\Support\RendersDashboard;
 use Tests\Support\TestCase;
 
 /**
@@ -20,6 +25,10 @@ use Tests\Support\TestCase;
  */
 final class DashboardWidgetsTest extends TestCase
 {
+    use RendersDashboard;
+
+    private const LOG_FILE = WRITEPATH . 'logs/log-2000-01-01.log';
+
     protected $refresh = true;
     private User $user;
 
@@ -27,33 +36,47 @@ final class DashboardWidgetsTest extends TestCase
     {
         parent::setUp();
 
+        setting()->flush();
         $this->user = $this->createUser();
         $this->user->addGroup('superadmin');
     }
 
-    public function testNothingShowsUntilWidgetsAreEnabled()
+    protected function tearDown(): void
     {
-        $response = $this->actingAs($this->user)->get(ADMIN_AREA);
+        @unlink(self::LOG_FILE);
+        Time::setTestNow();
+        $this->forgetDashboardState();
 
-        $response->assertOK();
-        $response->assertDontSee('USERS IN RECYCLER');
-        $response->assertDontSee('USER CLASSIFICATION BY GROUP');
+        parent::tearDown();
     }
 
-    public function testEnabledStatsWidgetShows()
+    public function testAWidgetOutsideTheDefaultLayoutShowsOnlyOncePlaced()
     {
-        setting('Stats.Stats_usersInRecycler693', 'on');
-
+        $this->withTestCharts();
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
+        $placed   = $this->placedHtml((string) $response->response()->getBody());
 
-        $response->assertSee('USERS IN RECYCLER');
-        $response->assertDontSee('USERS BY GROUP');
+        $response->assertOK();
+        $this->assertStringNotContainsString('TEST CHART', $placed);
+
+        $this->placeOnDashboard($this->user, 'charts:testBar');
+
+        $this->assertStringContainsString('TEST CHART', $this->placedHtml($this->dashboardHtml($this->user)));
+    }
+
+    public function testPlacedStatsWidgetShows()
+    {
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
+
+        $placed = $this->placedHtml($this->dashboardHtml($this->user));
+
+        $this->assertStringContainsString('USERS IN RECYCLER', $placed);
+        $this->assertStringNotContainsString('USERS BY GROUP', $placed);
     }
 
     public function testStatsValueIsFilledInOnTheDashboard()
     {
-        StubDashboard::inject(true);
-        setting('Stats.Stats_usersInRecycler693', 'on');
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
 
@@ -62,9 +85,7 @@ final class DashboardWidgetsTest extends TestCase
 
     public function testStatsCardShowsItsValueAndLinksToItsDetail()
     {
-        StubDashboard::inject(true);
-        setting('Stats.Stats_usersInRecycler693', 'on');
-        setting('Stats.stats_showLink', true);
+        $this->placeOnDashboard($this->user, 'stats:usersInRecycler693');
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
@@ -72,18 +93,92 @@ final class DashboardWidgetsTest extends TestCase
         $this->assertStringContainsString('<a class="bf-stat-link" href="' . site_url(ADMIN_AREA . '/tools/recycler?r=users') . '">', (string) $html);
     }
 
-    public function testEnabledChartSitsInACard()
+    public function testTheStatsCellLinksItsItemsWhateverSiteDefaultIsStored()
     {
-        setting('Stats.Charts_usersByGroupBar345', 'on');
+        $stats = new Stats();
+        $stats->addItem(new StatsItem(['title' => 'Item', 'id' => 'item1', 'url' => 'admin/items']));
+        setting('Stats.stats_showLink', false);
+
+        $this->assertStringContainsString('class="bf-stat-link"', view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]));
+    }
+
+    public function testTheLegacyCellsSkipItemsTheViewerMayNotSee()
+    {
+        $this->actingAs($this->createUser());
+        $stats = new Stats();
+        $stats->addItem((new StatsItem(['id' => 'hidden', 'permission' => 'users.list']))->addValueByFreeQuery('SELECT * FROM no_such_table'));
+        $charts = new Charts();
+        $charts->addItem((new ChartsItem(['id' => 'hidden', 'permission' => 'users.list']))->addDataset('no_such_table', 'a', 'b'));
+
+        $this->assertStringNotContainsString('bf-stat"', view('Bonfire\Widgets\Views\Cells\stats', ['stats' => [$stats]]));
+        $this->assertStringNotContainsString('<canvas', view('Bonfire\Widgets\Views\Cells\charts', ['charts' => [$charts]]));
+        $this->assertStringNotContainsString('new Chart', view('Bonfire\Widgets\Views\Cells\scripts', ['charts' => [$charts]]));
+    }
+
+    public function testPlacedChartSitsInACard()
+    {
+        $this->withTestCharts();
+        $this->placeOnDashboard($this->user, 'charts:testBar');
 
         $html = $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
 
-        $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>USER CLASSIFICATION BY GROUP</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
+        $this->assertMatchesRegularExpression('#<section class="bf-card">\s*<header class="bf-card-head">\s*<h2>TEST CHART</h2>.*?<canvas id="[^"]+" class="chart-border">#s', $html);
     }
 
-    public function testEnabledChartShowsItsCanvasAndScript()
+    public function testPlacedLogActivityShowsABarPerLogFileAndALineForDaysWithout()
     {
-        setting('Stats.Charts_usersByGroupBar345', 'on');
+        Time::setTestNow('2000-01-01');
+        $this->placeOnDashboard($this->user, 'logs:logActivity');
+        file_put_contents(self::LOG_FILE, "ERROR - 2000-01-01 10:00:00 --> One\nERROR - 2000-01-01 10:00:01 --> Two\nDEBUG - 2000-01-01 10:00:02 --> Three\n");
+
+        $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
+
+        $this->assertStringContainsString('<h2>Log activity</h2>', $html);
+        $this->assertStringContainsString('<strong>2</strong> errors across the last 7 days', $html);
+        $this->assertStringContainsString('href="' . site_url(ADMIN_AREA . '/tools/logs') . '"', $html);
+        $this->assertMatchesRegularExpression('#<a class="bf-log-stack"[^>]*href="' . preg_quote(site_url(ADMIN_AREA . '/tools/view-log/log-2000-01-01'), '#') . '"[^>]*aria-label="1/1: 2 Error, 0 Warning, 0 Info, 1 Debug"#', $html);
+        $this->assertStringContainsString('<span class="bf-log-segment bf-log-error" style="flex-grow: 2"></span>', $html);
+        $this->assertSame(6, substr_count($html, 'class="bf-log-none"'));
+        $this->assertStringContainsString('Debug</li>', $html);
+    }
+
+    public function testLogActivityLeavesDebugOutWhenHidden()
+    {
+        Time::setTestNow('2000-01-01');
+        setting()->set('Dashboard.layout', ['version' => 1, 'sections' => [['title' => '', 'widgets' => [
+            ['id' => 'logs:logActivity', 'settings' => ['hideDebug' => true]],
+        ]]]], 'user:' . $this->user->id);
+        file_put_contents(self::LOG_FILE, "DEBUG - 2000-01-01 10:00:02 --> Three\n");
+
+        $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
+
+        $this->assertStringContainsString('<h2>Log activity</h2>', $html);
+        $this->assertStringNotContainsString('bf-log-debug', $html);
+    }
+
+    public function testLogActivityIgnoresItsFormerEnableSwitch()
+    {
+        $this->placeOnDashboard($this->user, 'logs:logActivity');
+        setting('Stats.Logs_logActivity', false);
+
+        $html = (string) $this->actingAs($this->user)->get(ADMIN_AREA)->response()->getBody();
+
+        $this->assertStringContainsString('data-widget-id="logs&#x3A;logActivity"', $html);
+    }
+
+    public function testLogActivityIsHiddenFromUsersWhoCannotViewLogs()
+    {
+        $user = $this->createUser();
+        $user->addPermission('admin.access');
+        $this->placeOnDashboard($user, 'logs:logActivity');
+
+        $this->actingAs($user)->get(ADMIN_AREA)->assertDontSee('Log activity');
+    }
+
+    public function testPlacedChartShowsItsCanvasAndScript()
+    {
+        $this->withTestCharts();
+        $this->placeOnDashboard($this->user, 'charts:testBar');
 
         $response = $this->actingAs($this->user)->get(ADMIN_AREA);
 

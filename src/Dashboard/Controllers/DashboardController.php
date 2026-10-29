@@ -12,7 +12,12 @@
 namespace Bonfire\Dashboard\Controllers;
 
 use Bonfire\Core\AdminController;
-use Bonfire\Dashboard\CellManager;
+use Bonfire\Dashboard\Layout;
+use Bonfire\Dashboard\LayoutResolver;
+use Bonfire\Dashboard\LayoutValidator;
+use CodeIgniter\HTTP\ResponseInterface;
+use InvalidArgumentException;
+use JsonException;
 
 /**
  * Class Dashboard
@@ -26,8 +31,103 @@ class DashboardController extends AdminController
      */
     public function index()
     {
-        echo $this->render('Bonfire\Dashboard\Views\dashboard', [
-            'cells' => new CellManager(),
+        service('viewMeta')->addScript([
+            'src'            => 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
+            'integrity'      => 'sha256-bQqDH8GbS66FF5etM5MVfoYa+3hiRZwRImNZsn4sQzc=',
+            'crossorigin'    => 'anonymous',
+            'referrerpolicy' => 'no-referrer',
         ]);
+
+        $dashboard = service('dashboard');
+        $resolver  = new LayoutResolver($dashboard);
+
+        echo $this->render('Bonfire\Dashboard\Views\dashboard', [
+            'layout'        => $resolver->resolve(),
+            'defaultLayout' => $resolver->defaultLayout(),
+            'widgets'       => $dashboard->available(),
+            'palette'       => $dashboard->grouped(),
+            'canSetDefault' => auth()->user()->can('widgets.settings'),
+        ]);
+    }
+
+    /**
+     * Stores the posted layout (JSON) as the current user's own. The
+     * default layout is not stored, so they keep following the default.
+     */
+    public function saveLayout(): ResponseInterface
+    {
+        $layout = $this->postedLayout();
+
+        if ($layout === null) {
+            return $this->rejected(400);
+        }
+
+        if ($layout->toArray() === (new LayoutResolver(service('dashboard')))->defaultLayout()->toArray()) {
+            setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+        } else {
+            setting()->set('Dashboard.layout', $layout->toArray(), LayoutResolver::userContext());
+        }
+
+        return $this->response->setJSON(['saved' => true]);
+    }
+
+    /**
+     * Stores the posted layout (JSON) as the site default, which every
+     * user who has not saved their own layout sees. The saver follows it
+     * too, so they see what they saved.
+     */
+    public function saveSiteLayout(): ResponseInterface
+    {
+        if (! auth()->user()->can('widgets.settings')) {
+            return $this->rejected(403);
+        }
+
+        $layout = $this->postedLayout();
+
+        if ($layout === null) {
+            return $this->rejected(400);
+        }
+
+        setting()->set('Dashboard.layout', $layout->toArray());
+        setting()->forget('Dashboard.layout', LayoutResolver::userContext());
+
+        return $this->response->setJSON(['saved' => true]);
+    }
+
+    /**
+     * Forgets the stored site default layout, so users who have not
+     * saved their own see the configured Dashboard::$layout again.
+     */
+    public function resetSiteLayout(): ResponseInterface
+    {
+        if (! auth()->user()->can('widgets.settings')) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        setting()->forget('Dashboard.layout');
+
+        alert('success', lang('Bonfire.resetSiteDone'));
+
+        return redirect()->to(ADMIN_AREA);
+    }
+
+    /**
+     * The posted layout, validated, or null when it does not read.
+     */
+    private function postedLayout(): ?Layout
+    {
+        try {
+            $payload = json_decode($this->request->getBody() ?? '', true, 512, JSON_THROW_ON_ERROR);
+
+            return (new LayoutValidator(service('dashboard')))->validate($payload);
+        } catch (InvalidArgumentException|JsonException) {
+            return null;
+        }
+    }
+
+    private function rejected(int $status): ResponseInterface
+    {
+        // The CSRF filter has rotated the token; the editor needs it to try again
+        return $this->response->setStatusCode($status)->setJSON(['saved' => false, 'csrf' => csrf_hash()]);
     }
 }

@@ -70,15 +70,13 @@ class UserController extends AdminController
                 'status'      => lang('Users.headers.status'),
                 'last_active' => lang('Users.headers.last_active'),
             ],
-            'showSelectAll' => true,
-            'users'         => $userModel->paginate(setting('Site.perPage')),
-            'pager'         => $userModel->pager,
-            'access'        => UserAccess::forCurrentUser(),
-            'search'        => $search,
-            'role'          => $role,
-            'roles'         => $isHtmx ? [] : $userModel->getRoleFilters(),
-            'groupCounts'   => $isHtmx ? [] : $userModel->groupCounts(),
-            'total'         => $isHtmx ? null : model(UserModel::class)->countAllResults(),
+            'users'       => $userModel->paginate(setting('Site.perPage')),
+            'pager'       => $userModel->pager,
+            'search'      => $search,
+            'role'        => $role,
+            'roles'       => $isHtmx ? [] : $userModel->getRoleFilters(),
+            'groupCounts' => $isHtmx ? [] : $userModel->groupCounts(),
+            'total'       => $isHtmx ? null : model(UserModel::class)->countAllResults(),
         ]);
     }
 
@@ -220,62 +218,6 @@ class UserController extends AdminController
         }
 
         return redirect()->to($user->adminLink('/security'))->with('message', lang('Bonfire.resourceSaved', [lang('Users.user')]));
-    }
-
-    /**
-     * Delete the specified user.
-     *
-     * @return RedirectResponse
-     */
-    public function delete(int $userId)
-    {
-        if (! auth()->user()->can('users.delete')) {
-            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
-        }
-
-        $users = model(UserModel::class);
-        /** @var User|null $user */
-        $user = $users->find($userId);
-
-        if ($user === null) {
-            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
-        }
-
-        if (! $users->delete($user->id)) {
-            log_message('error', implode(' ', $users->errors()));
-
-            return redirect()->back()->with('error', lang('Bonfire.unknownError'));
-        }
-
-        return redirect()->back()->with('message', lang('Bonfire.resourceDeleted', [lang('Users.user')]));
-    }
-
-    /**
-     * Deletes multiple users from the database.
-     * Called via the checked() records in the table.
-     */
-    public function deleteBatch()
-    {
-        if (! auth()->user()->can('users.delete')) {
-            return redirect()->back()->with('error', lang('Bonfire.notAuthorized'));
-        }
-
-        $ids = $this->request->getPost('selects');
-
-        if (empty($ids)) {
-            return redirect()->back()->with('error', lang('Bonfire.resourcesNotSelected', [lang('Users.users')]));
-        }
-        $ids = array_keys($ids);
-
-        $users = model(UserModel::class);
-
-        if (! $users->delete($ids)) {
-            log_message('error', implode(' ', $users->errors()));
-
-            return redirect()->back()->with('error', lang('Bonfire.unknownError'));
-        }
-
-        return redirect()->back()->with('message', lang('Bonfire.resourcesDeleted', [lang('Users.users')]));
     }
 
     /**

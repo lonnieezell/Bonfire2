@@ -11,6 +11,13 @@ labels are displayed, etc.
 
 ---
 
+## Your own dashboard widget
+
+Implement `Bonfire\Dashboard\DashboardWidget` and register it with `service('dashboard')->register()`. See
+[Dashboard Widgets](dashboard_widgets.md), which also maps the stats, charts and cells below onto widgets.
+
+---
+
 ## Statistic widget
 
 The first widget is the statistics widget, which is just a counter with a shortcut that allows me to open the
@@ -83,37 +90,14 @@ The FontAwesome icon
 
 ### Fetching data only when it is shown
 
-`addValue()` and `addValueByFreeQuery()` only run their query when the dashboard is being displayed and the widget is
-enabled in the widgets settings. When you build a value yourself, as `buildTableUsersByGroup()` does, ask the same
-question before doing the work:
-
-```php
-use Bonfire\Widgets\ItemSettings;
-use Bonfire\Widgets\WidgetKind;
-
-if (! service('dashboardContext')->shows(new ItemSettings(WidgetKind::Stats, 'countAllUsers643'))) {
-    return '';
-}
-```
-
-In your own tests you can make that answer yes or no without faking the URL by injecting a subclass of
-`Bonfire\Widgets\DashboardContext` that overrides `isDashboard()`:
-
-```php
-use Bonfire\Widgets\DashboardContext;
-use Config\Services;
-
-Services::injectMock('dashboardContext', new class () extends DashboardContext {
-    public function isDashboard(): bool
-    {
-        return true;
-    }
-});
-```
+`addValue()` and `addValueByFreeQuery()` store their query and run it when the value is first read. The dashboard
+reads it only for a widget in the viewer's layout whose permission they hold, so a stats item costs nothing on other
+pages. A `value` you pass directly runs whenever your module boots: build that in a widget's `render()` instead
+(see [Dashboard Widgets](dashboard_widgets.md)).
 
 ## Configuration
 
-All settings are available in the `Bonfire\Widgets\Config\Stats` class, or in the admin settings area.
+All settings are available in the admin settings area.
 
 In the administration settings area, you can also choose to:
 - Display the "View Detail" link
@@ -192,6 +176,18 @@ It is possible to indicate a fourth parameter to choose the counting mode; the p
 
 ---
 
+## Log activity widget
+
+The Log activity widget charts the last days up to today, one stacked bar per day's log file, split into Error,
+Warning, Info and Debug entries. CRITICAL, ALERT and EMERGENCY entries count as Error, and NOTICE entries count as
+Info. Each bar links to that log file, days without a log file show a thin line, and the headline counts the errors
+across the days shown.
+
+It is built in (`Bonfire\Tools\Widgets\LogActivity`, id `logs:logActivity`). Only users with the `logs.view`
+permission can add it to their dashboard, and the log files are only read when it is on the dashboard being shown.
+
+---
+
 ## Configuration
 
 All settings are available in the administration settings area.
@@ -204,8 +200,6 @@ Each type of widget has its own specific settings.
 
 ***Line Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\LineChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -214,16 +208,9 @@ In the administration settings area, you can choose to:
 - Enable animation
 - You can choose the value of the tension: Bezier curve tension of the line. Set to 0 to draw straightlines.
 
-Advanced settings:
-
-- You can set Line color
-- You can set Line width
-
 ---
 
 ***Bar Chart***
-
-You can set the default values in the `Bonfire\Widgets\Config\BarChart` Class
 
 In the administration settings area, you can choose to:
 
@@ -237,8 +224,6 @@ In the administration settings area, you can choose to:
 
 ***Doughnut Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\DoughnutChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -250,8 +235,6 @@ In the administration settings area, you can choose to:
 ---
 
 ***Pie Chart***
-
-You can set the default values in the `Bonfire\Widgets\Config\PieChart` Class
 
 In the administration settings area, you can choose to:
 
@@ -265,8 +248,6 @@ In the administration settings area, you can choose to:
 
 ***Polar Area Chart***
 
-You can set the default values in the `Bonfire\Widgets\Config\PolarAreaChart` Class
-
 In the administration settings area, you can choose to:
 
 - Display the title
@@ -274,3 +255,13 @@ In the administration settings area, you can choose to:
 - Choose the location of the legend
 - Enable animation
 - Assign a predefined color scheme to fill the chart
+
+---
+
+### Log activity ###
+
+In the administration settings area, you can choose:
+
+- How many of the last days to show, from 1 to 31 (7 by default). Every log file in those days is read on each
+  dashboard load.
+- To hide Debug entries

@@ -2,12 +2,13 @@
 
 namespace Bonfire\Config;
 
+use Bonfire\Actions\ActionRegistry;
 use Bonfire\Bonfire;
+use Bonfire\Dashboard\WidgetRegistry;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Recycler\Libraries\Recycler;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\View\Metadata;
-use Bonfire\Widgets\DashboardContext;
 use Bonfire\Widgets\Manager as WidgetManager;
 use CodeIgniter\Config\BaseService;
 
@@ -26,6 +27,18 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
+    /**
+     * The row and bulk actions of the admin lists
+     */
+    public static function actions(bool $getShared = true): ActionRegistry
+    {
+        if ($getShared) {
+            return static::getSharedInstance('actions');
+        }
+
+        return new ActionRegistry();
+    }
+
     /**
      * Core utility class for Bonfire's system.
      *
@@ -110,14 +123,16 @@ class Services extends BaseService
     }
 
     /**
-     * Decides whether a widget item fetches its data on this request.
+     * Returns the registry of dashboard widgets.
+     *
+     * @return WidgetRegistry
      */
-    public static function dashboardContext(bool $getShared = true)
+    public static function dashboard(bool $getShared = true)
     {
         if ($getShared) {
-            return static::getSharedInstance('dashboardContext');
+            return static::getSharedInstance('dashboard');
         }
 
-        return new DashboardContext();
+        return new WidgetRegistry();
     }
 }

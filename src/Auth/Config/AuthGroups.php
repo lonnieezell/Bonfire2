@@ -74,7 +74,7 @@ class AuthGroups extends ShieldAuthGroups
         'users.settings'      => 'Can manage User settings in admin area',
         'beta.access'         => 'Can access beta-level features',
         'site.viewOffline'    => 'Can view the site even when in "offline" mode',
-        'widgets.settings'    => 'Can view the settings for site Widgets',
+        'widgets.settings'    => 'Can save and reset the site default dashboard',
         'consent.settings'    => 'Can view the settings for the Consent module',
         'recycler.view'       => 'Can view the Recycler area',
         'logs.view'           => 'Can view the logs',

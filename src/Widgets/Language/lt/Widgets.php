@@ -10,6 +10,5 @@
  */
 
 return [
-    'widgetsModTitle' => 'Skydelio elementai',
-    'viewDetail'      => 'Rodyti detaliau',
+    'viewDetail' => 'Rodyti detaliau',
 ];

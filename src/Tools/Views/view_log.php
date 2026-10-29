@@ -13,16 +13,13 @@ $this->extend('master') ?>
         <i class="fas fa-download" aria-hidden="true"></i> <?= lang('Tools.download') ?>
     </a>
     <?php if ($canDelete) : ?>
-        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" method="post" class="d-flex gap-2" x-data="{ confirming: false }">
+        <form action="<?= site_url(ADMIN_AREA . '/tools/delete-log') ?>" method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="checked[]" value="<?= esc($logFile) ?>"/>
-            <button type="button" class="btn btn-outline-danger" x-show="! confirming" @click="confirming = true">
+            <button type="submit" name="delete" value="1" class="btn btn-outline-danger"
+                    data-confirm="<?= esc(lang('Tools.deleteFileConfirm')) ?>" data-confirm-button="<?= esc(lang('Tools.confirmDelete')) ?>" data-confirm-danger="1">
                 <i class="fas fa-trash" aria-hidden="true"></i> <?= lang('Tools.deleteFile') ?>
             </button>
-            <span class="d-flex gap-2" x-show="confirming" x-cloak>
-                <button type="button" class="btn btn-outline-secondary" @click="confirming = false"><?= lang('Tools.cancel') ?></button>
-                <button type="submit" name="delete" value="1" class="btn btn-danger"><?= lang('Tools.confirmDelete') ?></button>
-            </span>
         </form>
     <?php endif ?>
 </x-page-head>

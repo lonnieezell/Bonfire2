@@ -11,7 +11,6 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static
     $routes->match(['GET', 'POST'], 'users', 'UserController::list', ['as' => 'user-list']);
     $routes->get('users/new', 'UserController::create', ['as' => 'user-new']);
     $routes->get('users/(:num)', 'UserController::edit/$1', ['as' => 'user-edit']);
-    $routes->get('users/(:num)/delete', 'UserController::delete/$1', ['as' => 'user-delete']);
     $routes->get('users/(:num)/deleteAvatar', 'UserController::deleteAvatar/$1', ['as' => 'user-avatar-delete']);
     $routes->post('users/(:num)/save', 'UserController::save/$1', ['as' => 'user-save']);
     $routes->post('users/(:num)/changePassword', 'UserController::changePassword/$1', ['as' => 'user-pass-change']);
@@ -19,5 +18,4 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Users\Controllers'], static
     $routes->get('users/(:num)/security', 'UserController::security/$1');
     $routes->get('users/(:num)/permissions', 'UserController::permissions/$1');
     $routes->post('users/(:num)/permissions', 'UserController::savePermissions/$1');
-    $routes->post('users/delete-batch', 'UserController::deleteBatch');
 });

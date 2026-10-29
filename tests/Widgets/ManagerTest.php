@@ -11,6 +11,7 @@
 
 namespace Tests\Widgets;
 
+use Bonfire\Widgets\BaseWidget;
 use Bonfire\Widgets\Manager;
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Charts\ChartsItem;
@@ -38,6 +39,16 @@ final class ManagerTest extends TestCase
         $manager->widget('charts')->createCollection('charts')->addItem($c);
 
         $this->assertSame([$a, $b, $c], $manager->items());
+    }
+
+    public function testItemsIncludesItemsOfAWidgetWithoutCollections()
+    {
+        $manager = (new Manager())->createWidget(BaseWidget::class, 'logs');
+        $item    = new StatsItem(['title' => 'A', 'id' => 'a']);
+
+        $manager->widget('logs')->addItem($item);
+
+        $this->assertSame([$item], $manager->items());
     }
 
     public function testItemsIsEmptyWithoutWidgets()

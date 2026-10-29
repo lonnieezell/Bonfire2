@@ -16,7 +16,113 @@ install no longer warns about changes that came before it. If `writable/` is rec
 marker with `Config\Bonfire::$breakingChangeStateFile`. See
 [Updating Bonfire](installation.md#updating-bonfire).
 
+The dashboard's widget library now lists widgets by the module that adds them, in name order, in place of by type.
+A widget's `group()` gives its module's name; the type keys `quickLinks`, `stats`, `charts` and `custom` still work,
+each under its own heading. A `StatsItem` or `ChartsItem` takes `'module' => '…'` (see
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)). With the library open, the page now widens by
+its width instead of narrowing the dashboard, where the screen has room.
+
+The sidebar now shows **Settings** as a single link to the first settings page you may open, since the settings
+pages list one another in their own nav. A menu collection opts into this with `setPageNav()`. Installs that
+published the Admin theme keep the old expanding Settings menu until they copy the new
+`themes/Admin/Components/sidebar.php`.
+
+Each admin can now change a dashboard widget's settings for their own dashboard: in edit mode, its sliders button
+opens them in a panel, and they are saved with the layout (see
+[Customizing the Dashboard](../modules/customizing_the_dashboard.md#widget-settings)). Stat cards, charts and Log
+activity have settings; until an admin changes one, it follows the site-wide value in Settings → Widgets. Widgets
+declare their settings with `fields()`, a list of `Bonfire\Dashboard\WidgetField`, and get their values in
+`render(WidgetValues $values)`; `DashboardWidget::settingsUrl()` is gone (see
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md#settings)).
+
+The Log activity widget now shows a column for each of the last days up to today, with a thin line for days without
+a log file. Its **Days to show** setting (formerly *Log files to show*) keeps its saved value, and now defaults to 7.
+
+Dashboard widgets can need a permission: pass `'permission'` to a `StatsItem` or `ChartsItem`, and admins who lack it
+don't see it in the widget library or on their dashboard, nor is its data fetched for them. The built-in Users widgets
+need `users.list` and the Groups widgets `groups.settings`. Admins with `widgets.settings` can **Save as site
+default** from the dashboard's edit bar, and **Reset site default** in Settings → Widgets (see
+[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). The Settings → Widgets
+switches are now labelled as choosing which widgets are *available*. Quick Links is now a native widget,
+`Bonfire\Dashboard\Widgets\QuickLinksWidget`, registered by the Dashboard module under its old id, and no longer in
+the default `Dashboard.cells`; installs that still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once,
+in place. `DashboardCells::quickLinks()` is deprecated. Building widgets is documented in
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md).
+
 ## 28 October 2026 (breaking change)
+
+`StatsItem::addValue()`, `addValueByFreeQuery()` and `ChartsItem::addDataset()` now store their query and run it
+when the item's value or data is first read, which the dashboard does only for the widgets it shows. They keep
+their signatures. `service('dashboardContext')`, `Bonfire\Widgets\DashboardContext`, `LayoutResolver::includes()`
+and `CellWidget::aliasOf()` are gone: a value you build by hand belongs in a widget's `render()` (see
+[Dashboard Widgets](../building_admin_modules/dashboard_widgets.md)), which the dashboard calls only for a widget
+that is placed and permitted. A view that still calls the `WidgetCells::stats` or `::charts` cell directly now runs
+the query of every item it lists. Tests that injected a `DashboardContext` mock no longer need one.
+
+Settings → Widgets is gone. Permissions decide who may see a widget, and each admin's settings for a placed widget
+decide how it looks, so the page's switches and defaults repeated them. Every widget is now offered to anyone who holds
+its `permission()`: a widget switched off there is offered again. A placed widget follows its fields' coded
+`default` until the admin changes a setting, so a site-wide default saved there, such as a chart's color scheme, no
+longer applies. Run `php spark migrate --all`: a migration forgets those stored values. Delete any published copy
+of the removed Config classes below (such as `app/Config/Stats.php`), which extends a class that is gone. This
+replaces what the notes below say about Settings → Widgets. **Reset site default** has moved into the dashboard's edit
+bar, next to **Save as site default**, for admins with `widgets.settings` (see
+[Customizing the Dashboard](../modules/customizing_the_dashboard.md#the-site-default)). Code that used the removed
+API: `WidgetField`'s factories no longer take `key:` (a key passed by position now lands in `description`), and
+`WidgetField::inherited()` is gone (read `default`); `Bonfire\Widgets\WidgetOptions` and the
+`Bonfire\Widgets\Config\Stats`, `LineChart`, `BarChart`, `DoughnutChart`, `PieChart`, `PolarAreaChart` and
+`LogActivity` classes are gone; `ItemSettings` keeps only `widgetId()`; and `ItemWidget::available()` is gone. The
+`widgets-settings` and `widgets-reset-layout` routes are gone; the reset is now `dashboard-site-layout-reset`.
+
+The five *User classification by group* charts (line, bar, doughnut, pie and polar area) are gone: **Users by group**
+shows the same numbers. Saved dashboards that placed one lose it: add Users by group from the widget library. The
+*User Groups* stat card stays. `ChartsItem` is unchanged, so modules can still add charts of their own.
+
+Log activity is now a dashboard widget of its own, `Bonfire\Tools\Widgets\LogActivity`, like Recent errors. It
+keeps its id `logs:logActivity`, so saved layouts keep it in place, and its days and Debug defaults in Settings →
+Widgets keep their saved values. It no longer has a switch under *Available widgets*: every admin with `logs.view`
+can add it, even where it was switched off. It is no longer an item of `service('widgets')->widget('logs')`, so the
+`Bonfire\Widgets\Cells\WidgetCells::logs` cell no longer shows it. Code that calls it directly: `days()` and
+`levels()` now take the options as arguments, `days(int $count, bool $hideDebug)` and `levels(bool $hideDebug)`;
+`render()` takes a `WidgetValues`; and `setTitle()`, `withOptions()`, `module()` and `settings()` are gone.
+
+List rows are now selectable whenever the admin may run any of the list's bulk actions, not only when they may
+delete: a module's bulk action shows the checkboxes on its own. A row's checkbox is disabled when no bulk action
+`allows()` that record. `ActionList::selectable()` answers both, and `ActionList::showing()` hands a page's records to
+`<x-row-actions>`, which no longer loads its record with one query per row once the view calling it does so. Installs that published the Admin theme
+should copy the new `themes/Admin/Components/row-actions.php`, `themes/Admin/Search/users.php` and
+`themes/Admin/_table_head.php`; `_table_head.php`
+now shows the select-all checkbox only when `$showSelectAll` is true, rather than whenever it is set and the admin
+has `users.delete`.
+
+Each widget's `fields()` is now the only place its settings are declared: the Settings → Widgets tabs are built from
+the fields that have a `key`, one tab per settings class, and saved through them. Values you saved there keep
+working. The properties of `Bonfire\Widgets\Config\Stats`, `LineChart`, `BarChart`, `DoughnutChart`, `PieChart`,
+`PolarAreaChart` and `LogActivity` are gone, so a default overridden in a published copy of those classes or in
+`.env` no longer applies: set it in Settings → Widgets instead. The line chart's subtitle and custom border
+settings, which had no form, are no longer read. `WidgetOptions` keeps only `all()`, `forAlias()`, `save()` and
+`reset()`.
+
+**Users by group** is now a bar list: each group, a bar scaled to the largest one, and its number of users, with a
+setting to sort by count or by name. It is a new widget, `users:byGroup`, in place of the *Users by Group* stat card
+(`stats:usersExpTable693`), which is gone. Saved dashboards that placed the stat card lose it: re-add Users by group
+from the widget library. Two new widgets: **Newest users** (the latest users to join, linking to each; needs
+`users.list`) and **Recent errors** (the newest errors, or errors and warnings, across the log files, linking to each
+log file; needs `logs.view`). The default dashboard now has Users by group and Newest users in its **Users** section, in place of the
+Users in Recycler stat, and Log activity and Recent errors side by side in **Monitoring** (see
+[The Dashboard](../modules/dashboard.md#configuration)). Installs that published the Admin theme need
+the new `.bf-list-card`, `.bf-bars` and `.bf-rows` rules of `themes/Admin/css/admin.css`.
+
+Lists have a shared system for row and bulk actions (see [Row and Bulk Actions](../building_admin_modules/actions.md)):
+an action is one class, registered on a named list, run through `POST admin/actions/{list}/{action}` with permission,
+CSRF and per-record checks, confirmation (with or without JavaScript), and an optional queue through
+`codeigniter4/queue`. Run `php spark migrate --all` for its new `action_runs` table. The Users and Logs deletes use it,
+which removes routes: `GET admin/users/{id}/delete` and `POST admin/users/delete-batch` are gone, as is
+`UserController::delete()` and `deleteBatch()`. Links or forms that used them must post to
+`admin/actions/users/delete-users` instead, with the IDs in `selects[]`. The Users and Logs list checkboxes are now
+named `selects[]` with the ID as their value. Every inline `confirm()` is replaced by `<x-confirm-dialog>`, which also
+handles `hx-confirm`. Installs that published their own copy of the Admin theme must re-publish it: `master.php` gains
+`<x-confirm-dialog />` and `<x-action-run />`, and the lists use the new `<x-row-actions>` and `<x-bulk-actions>`.
 
 `<x-switch>` gained an `offValue` attribute: the value its hidden input posts when the switch is off (`0` by default).
 An empty `offValue` posts nothing, which Bonfire's own views now use for array names like `permissions[]`. Installs
@@ -30,9 +136,33 @@ render. Turning **Site Online** off now saves `0`; the offline check treats any 
 The Logs, log view, Recycler and System Info pages use the new admin layout, with styles an older published copy of
 the Admin theme doesn't have, so re-publish the theme. A log file can now be downloaded from its page.
 
+A new **Log activity** dashboard widget charts the entries of the newest log files per level (see
+[Widgets](../building_admin_modules/widgets.md#log-activity-widget)). Turn it on in Settings → Widgets; its own tab sets
+how many files it shows and whether Debug entries are left out. It is shown by a new
+`Bonfire\Widgets\Cells\WidgetCells::logs` cell: installs with their own `Config\Dashboard` must add that cell to
+`$cells` to see it. Its styles are in the Admin theme, so re-publish the theme.
+
+Each admin can customize their own dashboard (see [The Dashboard](../modules/dashboard.md#customizing-the-dashboard)):
+**Customize** lets them drag widgets into a new order, group them into titled sections, size them (¼ / ⅓ / ½ / ⅔ /
+Full, from their tools or by dragging a corner), remove them and add others from a widget library, all of it also from
+the keyboard, with undo and redo. **Save layout** stores the layout as theirs alone; saving the default layout, after
+resetting to it, forgets theirs. Every stat card, chart, Log activity and custom cell in `Dashboard.cells` is now
+one widget, and modules can add their own by implementing `Bonfire\Dashboard\DashboardWidget` and calling
+`service('dashboard')->register()` in `initAdmin()` (see [Widgets](../building_admin_modules/widgets.md#your-own-dashboard-widget)).
+The switches in Settings → Widgets now decide which widgets are *available* in the palette, and are on unless a site
+admin switches them off; their stored keys are unchanged. The default dashboard is the new `Dashboard.layout` config
+property: Quick Links, a Users section (Users by Group and Users in Recycler) and a Monitoring section (Log activity).
+Stats, charts and Log activity no longer appear on it by being switched on, and each admin adds the ones they want
+from the widget library. Installs with their own `Config\Dashboard` and no `$layout` property get the plain cells of
+`Dashboard.cells` (Quick Links and your own cells) instead. A stats or chart item now fetches its data only
+when it is on the viewer's dashboard, so `service('dashboardContext')->shows()` answers "is it in the viewer's
+layout". The dashboard needs the new `admin/js/dashboard.js` and new `admin.css` rules
+from the Admin theme, so installs that published their own copy of the Admin theme must re-publish it; with an older
+copy the dashboard shows its widgets stacked in one column and Customize does nothing.
+
 Also fixed: a custom SMTP port is saved and shown again, and a user's name, profile fields and avatar initials are
-escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks in
-two steps.
+escaped wherever the admin shows them. The Recycler's Restore button no longer asks for confirmation; Purge asks
+first.
 
 ## 27 October 2026 (breaking change)
 

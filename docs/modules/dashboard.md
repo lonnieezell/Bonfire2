@@ -4,29 +4,63 @@ The Dashboard is the first page you seen when you log into the admin area. It pr
 
 ## Configuration
 
-By default, the Dashboard is setup to display:
+By default, the Dashboard displays:
 
-- a series of quick links
-- any statistics that you have defined
-- any widgets that you have added.
+- the quick links;
+- a **Users** section with Users by group and Newest users, each half the width;
+- a **Monitoring** section with Log activity and Recent errors, each half the width.
+
+That default is the `$layout` property of the Dashboard config file, in the same format a saved layout uses. Change
+it to give every admin who hasn't customized their dashboard a different one; set it to `null` and the default is
+the cells below instead, in order:
+
+```php
+public ?array $layout = [
+    'version'  => 1,
+    'sections' => [
+        ['title' => '', 'widgets' => [
+            ['id' => 'cell:Bonfire\Dashboard\DashboardCells::quickLinks', 'size' => 'full'],
+        ]],
+        ['title' => 'Users', 'widgets' => [
+            ['id' => 'users:byGroup', 'size' => 'half'],
+            ['id' => 'users:newest', 'size' => 'half'],
+        ]],
+        ['title' => 'Monitoring', 'widgets' => [
+            ['id' => 'logs:logActivity', 'size' => 'half'],
+            ['id' => 'tools:recentErrors', 'size' => 'half'],
+        ]],
+    ],
+];
+```
+
+Widgets the viewer may not see are left out, and so is a section left empty. A site admin can replace this default from the dashboard with **Save as site default** (see
+[The site default](customizing_the_dashboard.md#the-site-default)).
 
 You can create additional [View Cells](https://codeigniter.com/user_guide/outgoing/view_cells.html) and add them to the Dashboard config file to have them displayed on the Dashboard, also. They will be displayed in the order that they are listed in the config file. Each one takes up a full row.
 
 ```php
 public array $cells = [
-    'Bonfire\Dashboard\DashboardCells::quickLinks',
     'Bonfire\Widgets\Cells\WidgetCells::stats',
+    'Bonfire\Widgets\Cells\WidgetCells::logs',
     'Bonfire\Widgets\Cells\WidgetCells::charts',
 ];
 ```
 
+## Customizing the dashboard
+
+Every admin can arrange their own dashboard, and site admins can set the default everyone else sees. See
+[Customizing the Dashboard](customizing_the_dashboard.md).
+
 ## Quick Links
 
-The Quick Links cell is a simple list of links that have been added to the `Content` section of the sidebar menu. It is automatically generated and displayed.
+The Quick Links widget greets the admin and links to each item of the `Content` section of the sidebar menu they
+may see. It is a [dashboard widget](../building_admin_modules/dashboard_widgets.md) registered by the Dashboard module, not
+a cell any more. It keeps its old id, `cell:Bonfire\Dashboard\DashboardCells::quickLinks`, so installs whose `$cells`
+still list `Bonfire\Dashboard\DashboardCells::quickLinks` show it once, in the same place.
 
 ## Widgets
 
-The `stats` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
+The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
 
 ### Settings
 

@@ -2,19 +2,9 @@
 	<?php foreach ($stats  as $elem) : ?>
 
 		<?php foreach ($elem->items() as $widget) : ?>
+		<?php if ($widget->permission() !== null && ! auth()->user()?->can($widget->permission())) { continue; } ?>
 
-			<?php if ($widget->settings()->enabled()) : ?>
-                <div class="bf-stat">
-                    <div class="bf-stat-label">
-                        <i class="<?= esc($widget->faIcon()) ?>" aria-hidden="true"></i>
-                        <h3><?= esc($widget->title()) ?></h3>
-                    </div>
-                    <p class="bf-stat-value"><?= $widget->value() ?></p>
-					<?php if (setting('Stats.stats_showLink')) : ?>
-                        <a class="bf-stat-link" href="<?= site_url($widget->url()) ?>"><?= lang('Widgets.viewDetail') ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-					<?php endif?>
-                </div>
-			<?php endif?>
+			<?= $this->setData(['stat' => $widget, 'showLink' => true])->include('Bonfire\Widgets\Views\Cells\_stat') ?>
 
 		<?php endforeach; ?>
 
