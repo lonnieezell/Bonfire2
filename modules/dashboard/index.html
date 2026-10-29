@@ -799,6 +799,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recycler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recycler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1674,6 +1685,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recycler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recycler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#widgets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1860,6 +1882,11 @@ ever see the runs they started.</p>
 lists what is wrong with the install, if anything: each file or folder in <code>writable/</code> that can't be written to, a
 missing <code>.env</code> file, and a 1-minute server load above <strong>Warn when server load is above</strong> (default 4). With no problems
 it says so in one line. It links to the System Info page and needs the <code>admin.settings</code> permission, like that page.</p>
+<h2 id="recycler">Recycler</h2>
+<p>The Recycler widget (<code>recycler:summary</code>) isn't on the default dashboard; add it from the widget library. It lists each
+resource in the Recycler that has deleted records, with how many, and links each one to its list in the Recycler.
+Resources with nothing deleted are left out, and when the Recycler is empty it says so in one line. Any resource a
+module registers with <code>service('recycler')</code> appears in it. It needs the <code>recycler.view</code> permission, like the Recycler.</p>
 <h2 id="widgets">Widgets</h2>
 <p>The <code>stats</code>, <code>logs</code> and <code>charts</code> cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.</p>
 <h3 id="settings">Settings</h3>
