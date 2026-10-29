@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+A new `php spark bf:agents` command writes a guide to Bonfire's conventions for AI coding agents into your project's
+`AGENTS.md`: where things live, the rules for admin modules, and which docs page to read for each task. Your own text
+in that file is kept, and running it again only replaces Bonfire's section. Add it to the `post-update-cmd` scripts of
+your `composer.json` to keep the guide in step with the installed version. See
+[Working With AI Agents](ai_agents.md).
+
 A **Recycler** dashboard widget (`recycler:summary`) shows how many deleted records each Recycler resource holds,
 leaving out those with none, and links each to its list in the Recycler. Resources other modules register with
 `service('recycler')` appear in it without extra setup. It needs the `recycler.view` permission; add it from
