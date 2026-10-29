@@ -36,9 +36,8 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Adding a tab to the user or group edit page | `building_admin_modules/resource_tabs.md` |
 | Adding results to the admin search | `building_admin_modules/search.md` |
 | Soft-deleting records into the Recycler | `building_admin_modules/recycler.md` |
-| Adding a dashboard widget | `building_admin_modules/dashboard_widgets.md` |
-| Adding a stats or chart widget (older API) | `building_admin_modules/widgets.md` |
-| Showing a view cell on the dashboard | `building_admin_modules/dashboard_cells.md` |
+| Adding a dashboard widget, stat card or chart | `building_admin_modules/dashboard_widgets.md` |
+| Changing the default dashboard layout | `modules/dashboard.md` |
 | Showing flash alerts | `building_sites/alerts.md` |
 | Linking CSS and JS assets | `building_sites/assets.md` |
 | Writing your own view components | `building_sites/components.md` |
