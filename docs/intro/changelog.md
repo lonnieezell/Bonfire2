@@ -17,6 +17,10 @@ The [Authentication](../modules/auth.md) page now lists Bonfire's defaults for r
 and the email activation and 2FA actions, and shows where to change each one. It also documents the `Auth` theme's
 `<x-auth-card>` and `<x-unsplash>` components.
 
+[Common functions](../building_sites/common_functions.md) now covers every helper in `src/Common.php`: `has_error()`,
+`error()`, `render()`, `admin_accent()` and `site_offline()`, alongside `app_date()`. A new Maintenance mode section
+explains how to take the site offline, who can still get in, and how to get back in if you're locked out.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,

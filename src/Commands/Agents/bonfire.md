@@ -47,4 +47,5 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Setting page titles, meta tags, scripts and styles | `building_sites/metadata.md` |
 | Storing extra data on users or other entities | `building_sites/meta_info.md` |
 | Reading and writing settings | `building_sites/settings.md` |
-| Formatting dates with app_date() | `building_sites/common_functions.md` |
+| Formatting dates, form errors and other global helpers | `building_sites/common_functions.md` |
+| Taking the site offline for maintenance | `building_sites/common_functions.md#maintenance-mode` |
