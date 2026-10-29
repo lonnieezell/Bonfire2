@@ -10,13 +10,13 @@ useful with CSS utility frameworks like TailWind, or when using the utilities in
 components in these situations allows you to keep the style info in one place where making changes to 
 one file changes every instance of the view throughout the application.
 
-To create a component, simply create a new view file within the theme's `Component` directory, or the 
-application's, `app/Components` directory.
+To create a component, simply create a new view file within the theme's `Components` directory, or the 
+application's, `app/Views/Components` directory.
 
 A simple avatar image might look something like this: 
 
 ```php
-// app/Components/avatar.php
+// app/Views/Components/avatar.php
 <img
   src="<?= $src ?? '' ?>"
   class="rounded-circle shadow-4"
@@ -28,7 +28,7 @@ A simple avatar image might look something like this:
 When using the component within a view, you would insert a tag with `x-` prepended to the filename: 
 
 ```php
-<x-avatar src="<?= $user->avatarUrl() ?>" alt="<?= $user->name ?>" />
+<x-avatar src="<?= $user->avatarLink() ?>" alt="<?= $user->name ?>" />
 ```
 
 Any attributes provided when you insert the component like this are made available as variables within 
@@ -53,7 +53,7 @@ You can include the content within the opening and closing tags by inserting the
 ```
 
 ```php
-// app/Components/green-button.php
+// app/Views/Components/green-button.php
 <button class="btn btn-success">
     <?= $slot ?>
 </button>

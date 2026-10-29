@@ -18,17 +18,15 @@ framework to help you build your own web application or internal tools.
 - Cookie Consent framework to help you comply with GDPR
 - Customizable charts and stats for the dashboard
 - Easy log and system info viewers
-- A way to provide documentation with your app
-<!-- TODO: what is this last item about? -->
 
 ## License
 
 Bonfire is licensed under the MIT License - see the
-[LICENSE](https://github.com/codeigniter4/shield/blob/develop/LICENSE) file for details.
+[LICENSE](https://github.com/lonnieezell/Bonfire2/blob/develop/LICENSE) file for details.
 
 ## Acknowledgements
 
-Every open-source project depends on it's contributors to be a success. The following users have
+Every open-source project depends on its contributors to be a success. The following users have
 contributed in one manner or another in making Bonfire:
 
 <a href="https://github.com/lonnieezell/bonfire2/graphs/contributors">

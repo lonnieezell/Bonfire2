@@ -24,7 +24,7 @@ $meta = $user->allMeta();
 $user->deleteMeta('website_url');
 
 // delete all meta info for an entry
-$user->deletResouceMeta();
+$user->deleteResourceMeta();
 
 // update meta for a resource
 $post = [

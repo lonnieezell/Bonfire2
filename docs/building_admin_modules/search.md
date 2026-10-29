@@ -30,7 +30,7 @@ class SearchProvider extends UserModel implements SearchProviderInterface
      *
      * @return array
      */
-    public function search(string $term, int $limit = 10, array $post = null): array
+    public function search(string $term, int $limit = 10, ?array $post = null): array
     {
         return $this->select('users.*')
             ->distinct()
@@ -85,7 +85,7 @@ extends the UserModel. It is not necessary to do so, but is a simple way to get 
 need them.
 
 If you want the search to find not only the data from the main table, but also
-the related meta info (see [User Meta Info](../users_and_security/user_meta.md)), you should:
+the related meta info (see [Meta Info](../modules/meta_info.md)), you should:
 
 1. Put a property `$includeMetaFieldsInSearech` into the module config file
     (example for `app/Config/Users.php`, since, suppose, we want to be able to search
