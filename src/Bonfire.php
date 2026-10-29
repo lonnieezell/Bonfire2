@@ -61,6 +61,7 @@ class Bonfire
 
         $this->discoverCoreModules();
         $this->discoverAppModules();
+        $this->discoverPackageModules();
         $this->initModules();
     }
 
@@ -151,16 +152,7 @@ class Bonfire
             cache()->save('bf-modules-search', $modules);
         }
 
-        // save instances of our module configs
-        foreach ($modules as $namespace => $dir) {
-            if (! is_file($dir . '/Module.php')) {
-                continue;
-            }
-
-            include_once $dir . '/Module.php';
-            $className                       = $namespace . '\Module';
-            $this->moduleConfigs[$namespace] = new $className();
-        }
+        $this->loadModules($modules);
     }
 
     private function discoverAppModules()
@@ -202,7 +194,26 @@ class Bonfire
             // cache()->save('app-modules-search', $modules);
         }
 
-        // save instances of our module configs
+        $this->loadModules($modules);
+    }
+
+    /**
+     * Loads the modules that Composer packages register,
+     * each as its own namespace and directory.
+     */
+    private function discoverPackageModules()
+    {
+        $this->loadModules(config('Bonfire')->packageModules);
+    }
+
+    /**
+     * Saves an instance of each module's config,
+     * skipping directories without a Module.php.
+     *
+     * @param array<string, string> $modules namespace => directory
+     */
+    private function loadModules(array $modules)
+    {
         foreach ($modules as $namespace => $dir) {
             if (! is_file($dir . '/Module.php')) {
                 continue;

@@ -30,6 +30,26 @@ class Bonfire extends BaseConfig
 
     /**
      * --------------------------------------------------------------------------
+     * Package Modules
+     * --------------------------------------------------------------------------
+     *
+     * Single modules that live in Composer packages. Unlike $appModules, each
+     * entry maps a module's own namespace to its own directory, the one that
+     * holds its Module.php.
+     *
+     *   'Myth\Courier' => ROOTPATH . 'vendor/myth/courier/src',
+     *
+     * A package can add itself from its own Config\Registrar instead:
+     *
+     *   public static function Bonfire(): array
+     *   {
+     *       return ['packageModules' => ['Myth\Courier' => realpath(__DIR__ . '/..')]];
+     *   }
+     */
+    public array $packageModules = [];
+
+    /**
+     * --------------------------------------------------------------------------
      * Menu ordering
      * --------------------------------------------------------------------------
      *

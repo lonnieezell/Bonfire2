@@ -44,6 +44,42 @@ public $appModules = [
 
 If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.
 
+## Modules in Composer packages
+
+`$appModules` treats every folder in a location as a module, so it doesn't fit a Composer package that is a single
+module. List such a module in `$packageModules` instead. Each entry maps the module's own namespace to the
+directory that holds its `Module.php`:
+
+```php
+public array $packageModules = [
+    'Acme\Blog' => ROOTPATH . 'vendor/acme/blog/src',
+];
+```
+
+Composer already autoloads the package's classes, so Bonfire only needs to find its `Module.php`. An entry whose
+directory or `Module.php` is missing is skipped.
+
+A package can register itself, so the app using it changes nothing. Add a `Config\Registrar` class to the package
+with a `Bonfire()` method, and CodeIgniter merges what it returns into `Config\Bonfire`, including an app's
+published copy:
+
+```php
+namespace Acme\Blog\Config;
+
+class Registrar
+{
+    public static function Bonfire(): array
+    {
+        return [
+            'packageModules' => ['Acme\Blog' => realpath(__DIR__ . '/..')],
+        ];
+    }
+}
+```
+
+CodeIgniter only finds registrars in Composer packages while `Config\Modules::$discoverInComposer` is `true`, its
+default.
+
 ## The Module File
 
 The Module file handles initialization functions when the admin is loaded. It allows the module to create new
