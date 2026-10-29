@@ -9,7 +9,8 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 `ComponentRenderer::render(null)` now returns an empty string instead of throwing a `TypeError`. Text like `<x- />`
 is left alone instead of failing the page with "View not found for component". Paired components with one- or
 two-letter names (`<x-em>…</x-em>`) now render, and a closing tag that doesn't match its opening tag's name is left
-alone rather than rendering a shorter-named component.
+alone rather than rendering a shorter-named component. A `>` inside a quoted attribute of a paired component
+(`<x-foo title="a>b">…</x-foo>`) no longer cuts the attribute short.
 
 A new `php spark bf:agents` command writes a guide to Bonfire's conventions for AI coding agents into your project's
 `AGENTS.md`: where things live, the rules for admin modules, and which docs page to read for each task. Your own text

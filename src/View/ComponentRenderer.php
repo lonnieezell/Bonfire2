@@ -100,7 +100,7 @@ class ComponentRenderer
     {
         $pattern = '/(?(DEFINE)(?<marker>x-))
                         <\g<marker>(?<name>\w[\w\-\:\.]*)(?=[\s\/>])
-                                   (?<attributes>[\s\S\=\'\"]+?)??>
+                                   (?<attributes>(?:"[^"]*"|\'[^\']*\'|[^\'">])*)>
                             (?(?<!\/>) # Not paired so ignore the rest
                                 (?<slot>.*?)??
                         <\/\g<marker>\k<name>\s*>

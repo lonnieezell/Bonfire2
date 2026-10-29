@@ -62,6 +62,8 @@ final class ComponentRendererTest extends TestCase
             'tag without a name is left alone'   => ['<x- /> <x-: />', '<x- /> <x-: />'],
             'paired with a two-letter name'      => ['<x-em>hi</x-em>', '<em>hi</em>'],
             'mismatched closing tag left alone'  => ['<x-greetings>hi</x-greeting>', '<x-greetings>hi</x-greeting>'],
+            'quoted > in paired attribute'       => ['<x-greeting name="a>b">x</x-greeting>', 'Hello a>b'],
+            'single-quoted > in paired attr'     => ["<x-greeting name='a>b'>x</x-greeting>", 'Hello a>b'],
         ];
     }
 
