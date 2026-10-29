@@ -96,6 +96,7 @@ Bonfire boots once per web request and calls one of two methods on every module:
 
 Bonfire boots from the `bonfire` filter, so neither runs where filters don't: 404 pages, pages served from
 CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
+[How Bonfire Fits Into a Request](../intro/request_flow.md) explains where booting sits among Bonfire's filters.
 
 ```php
 namespace Acme\Blog;

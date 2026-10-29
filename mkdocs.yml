@@ -84,6 +84,8 @@ nav:
   - Welcome:
       - intro/installation.md
       - intro/philosophy.md
+      - intro/request_flow.md
+      - intro/published_themes.md
       - intro/app_structure.md
       - intro/ai_agents.md
       - intro/changelog.md

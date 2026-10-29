@@ -125,6 +125,7 @@ copy, and point your controllers at it with `$theme`. Bonfire's own admin pages 
 
 `composer update` changes the themes in `vendor/lonnieezell/bonfire/themes/`, never your copy in `themes/`. Your
 edits are safe, but your copy also doesn't get Bonfire's fixes and new features.
+[Why Themes Are Published Into Your App](../intro/published_themes.md) explains this trade-off.
 
 When an update changes a theme in a way your copy needs, the [changelog](../intro/changelog.md) marks it
 `(breaking change)` and says what to change, and `php spark notify:breaking-changes` warns you after
