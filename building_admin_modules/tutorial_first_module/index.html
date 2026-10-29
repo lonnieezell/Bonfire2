@@ -1,0 +1,2579 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bonfire 2 for CodeIgniter User Guide">
+      
+      
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../actions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Tutorial: Build Your First Admin Module - Bonfire 2 (beta)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/codeigniter.css">
+    
+      <link rel="stylesheet" href="../../assets/css/codeigniter_dark_mode.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tutorial-build-your-first-admin-module" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://codeigniter.com" title="Bonfire 2 (beta)" class="md-header__button md-logo" aria-label="Bonfire 2 (beta)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Bonfire 2 (beta)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tutorial: Build Your First Admin Module
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lonnieezell/Bonfire2" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://codeigniter.com" title="Bonfire 2 (beta)" class="md-nav__button md-logo" aria-label="Bonfire 2 (beta)" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Bonfire 2 (beta)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lonnieezell/Bonfire2" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Welcome
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Our Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/app_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bonfire Application Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/ai_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working With AI Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../modules/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/assets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Asset Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication and Authorization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/meta_info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta Info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/consent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/customizing_the_dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customizing the Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../building_sites/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Sites
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Building Sites
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/alerts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alerts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/assets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Including Assets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/consent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/meta_info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta Info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/common_functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building Admin Modules
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Building Admin Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: Build Your First Admin Module
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: Build Your First Admin Module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-turn-on-module-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Turn on module discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-the-posts-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create the posts table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-a-menu-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add a menu item
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-show-a-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Show a page
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-protect-it-with-a-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Protect it with a permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-list-the-posts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: List the posts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-add-search-and-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Add search and filters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-appear-in-the-global-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Appear in the global search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-9-send-deleted-posts-to-the-recycler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Send deleted posts to the Recycler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you built
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Row and Bulk Actions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../creating_an_admin_module/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating an Admin Module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard Cells
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../filters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Filters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recycler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Recycler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resource_tabs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resource Tabs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-turn-on-module-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Turn on module discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-create-the-posts-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Create the posts table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-add-a-menu-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Add a menu item
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-show-a-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Show a page
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-protect-it-with-a-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Protect it with a permission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-list-the-posts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: List the posts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-add-search-and-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Add search and filters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-appear-in-the-global-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Appear in the global search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-9-send-deleted-posts-to-the-recycler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 9: Send deleted posts to the Recycler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you built
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Building Admin Modules
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/lonnieezell/Bonfire2/edit/develop/docs/building_admin_modules/tutorial_first_module.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="tutorial-build-your-first-admin-module">Tutorial: Build Your First Admin Module</h1>
+<p>In this tutorial you will build a Blog module that adds a <strong>Posts</strong> screen to the admin area. By the end you will
+have:</p>
+<ul>
+<li>a "Posts" item in the sidebar, shown only to groups that may use it</li>
+<li>a paginated list of posts built from the admin theme's components</li>
+<li>a search box and a status filter that update the list without reloading the page</li>
+<li>posts in the admin's global search results</li>
+<li>deleted posts in the Recycler, ready to be restored</li>
+</ul>
+<p>Every step ends with something to check in your browser before you move on.</p>
+<h2 id="before-you-start">Before you start</h2>
+<p>You need:</p>
+<ul>
+<li>a CodeIgniter 4 app with Bonfire installed (see <a href="../../intro/installation/">Installation</a>)</li>
+<li>the app running, for example with <code>php spark serve</code>, and a superadmin account you can log in with</li>
+<li>some familiarity with CodeIgniter routes, controllers, models and migrations</li>
+</ul>
+<p>All paths below are relative to your project root.</p>
+<h2 id="step-1-turn-on-module-discovery">Step 1: Turn on module discovery</h2>
+<p>Bonfire only finds modules in folders listed in <code>Config\Bonfire::$appModules</code>. The entry for <code>app/Modules</code> ships
+commented out. Open <code>app/Config/Bonfire.php</code> and uncomment it:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$appModules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'App\Modules'</span> <span class="o">=&gt;</span> <span class="nx">APPPATH</span> <span class="o">.</span> <span class="s1">'Modules'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
+<p>Now create the folders for the Blog module:</p>
+<div class="highlight"><pre><span></span><code>app/
+    Modules/
+        Blog/
+            Config/
+            Controllers/
+            Database/
+                Migrations/
+                Seeds/
+            Models/
+            Views/
+</code></pre></div>
+<p>Every class in the module lives in the <code>App\Modules\Blog</code> namespace.</p>
+<p><strong>Check it:</strong> nothing changes in the browser yet. Bonfire only loads a module once it has a <code>Module.php</code>, which you
+will add in step 3.</p>
+<h2 id="step-2-create-the-posts-table">Step 2: Create the posts table</h2>
+<p>The list needs data. Create a migration at
+<code>app/Modules/Blog/Database/Migrations/2026-10-29-120000_CreatePostsTable.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Database\Migrations</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">CodeIgniter\Database\Migration</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">CreatePostsTable</span> <span class="k">extends</span> <span class="nx">Migration</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">up</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">forge</span><span class="o">-&gt;</span><span class="na">addField</span><span class="p">([</span>
+            <span class="s1">'id'</span>         <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span> <span class="s1">'unsigned'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="s1">'auto_increment'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">],</span>
+            <span class="s1">'title'</span>      <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'varchar'</span><span class="p">,</span> <span class="s1">'constraint'</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">],</span>
+            <span class="s1">'status'</span>     <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'varchar'</span><span class="p">,</span> <span class="s1">'constraint'</span> <span class="o">=&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">'default'</span> <span class="o">=&gt;</span> <span class="s1">'draft'</span><span class="p">],</span>
+            <span class="s1">'created_at'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'datetime'</span><span class="p">,</span> <span class="s1">'null'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">],</span>
+            <span class="s1">'updated_at'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'datetime'</span><span class="p">,</span> <span class="s1">'null'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">],</span>
+            <span class="s1">'deleted_at'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'datetime'</span><span class="p">,</span> <span class="s1">'null'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">],</span>
+        <span class="p">]);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">forge</span><span class="o">-&gt;</span><span class="na">addPrimaryKey</span><span class="p">(</span><span class="s1">'id'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">forge</span><span class="o">-&gt;</span><span class="na">createTable</span><span class="p">(</span><span class="s1">'posts'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">down</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">forge</span><span class="o">-&gt;</span><span class="na">dropTable</span><span class="p">(</span><span class="s1">'posts'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>deleted_at</code> column lets the model soft-delete posts, which the Recycler needs in step 9.</p>
+<p>Then a seeder at <code>app/Modules/Blog/Database/Seeds/PostSeeder.php</code> that adds a few posts. The last one is already
+deleted, so you will have something to find in the Recycler later:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Database\Seeds</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">CodeIgniter\Database\Seeder</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">CodeIgniter\I18n\Time</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostSeeder</span> <span class="k">extends</span> <span class="nx">Seeder</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$now</span>   <span class="o">=</span> <span class="nx">Time</span><span class="o">::</span><span class="na">now</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">toDateTimeString</span><span class="p">();</span>
+        <span class="nv">$posts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="s1">'Hello, world'</span><span class="p">,</span> <span class="s1">'published'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'Why we moved to CodeIgniter 4'</span><span class="p">,</span> <span class="s1">'published'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'Ten tips for faster pages'</span><span class="p">,</span> <span class="s1">'published'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'Our roadmap for next year'</span><span class="p">,</span> <span class="s1">'draft'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'Behind the scenes'</span><span class="p">,</span> <span class="s1">'draft'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'Meet the team'</span><span class="p">,</span> <span class="s1">'published'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'A post nobody needs'</span><span class="p">,</span> <span class="s1">'draft'</span><span class="p">,</span> <span class="nv">$now</span><span class="p">],</span>
+        <span class="p">];</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$posts</span> <span class="k">as</span> <span class="nv">$post</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">table</span><span class="p">(</span><span class="s1">'posts'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">([</span>
+                <span class="s1">'title'</span>      <span class="o">=&gt;</span> <span class="nv">$post</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s1">'status'</span>     <span class="o">=&gt;</span> <span class="nv">$post</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">'created_at'</span> <span class="o">=&gt;</span> <span class="nv">$now</span><span class="p">,</span>
+                <span class="s1">'updated_at'</span> <span class="o">=&gt;</span> <span class="nv">$now</span><span class="p">,</span>
+                <span class="s1">'deleted_at'</span> <span class="o">=&gt;</span> <span class="nv">$post</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">??</span> <span class="k">null</span><span class="p">,</span>
+            <span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Run both:</p>
+<div class="highlight"><pre><span></span><code>php spark migrate --all
+php spark db:seed "App\Modules\Blog\Database\Seeds\PostSeeder"
+</code></pre></div>
+<p><strong>Check it:</strong> <code>php spark db:table posts</code> shows seven posts, the last with a <code>deleted_at</code> date.</p>
+<h2 id="step-3-add-a-menu-item">Step 3: Add a menu item</h2>
+<p>A module joins the admin through its <code>Module.php</code>. Bonfire calls its <code>initAdmin()</code> method on every admin page, and
+that is where you add the module's menu items. Create <code>app/Modules/Blog/Module.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Menus\MenuItem</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Module</span> <span class="k">extends</span> <span class="nx">BaseModule</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+            <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Posts'</span><span class="p">,</span>
+            <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'posts-list'</span><span class="p">,</span>
+            <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-newspaper'</span><span class="p">,</span>
+        <span class="p">]);</span>
+        <span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The item goes in the sidebar's <code>content</code> collection, next to Users. A menu item links to a named route, so define
+<code>posts-list</code> in <code>app/Modules/Blog/Config/Routes.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">group</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">,</span> <span class="p">[</span><span class="s1">'namespace'</span> <span class="o">=&gt;</span> <span class="s1">'App\Modules\Blog\Controllers'</span><span class="p">],</span> <span class="k">static</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$routes</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'posts'</span><span class="p">,</span> <span class="s1">'PostController::list'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'as'</span> <span class="o">=&gt;</span> <span class="s1">'posts-list'</span><span class="p">]);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><code>ADMIN_AREA</code> is the admin's URL prefix, <code>admin</code> by default, so the list lives at <code>/admin/posts</code>.</p>
+<p><strong>Check it:</strong> reload the admin. <strong>Posts</strong> appears in the sidebar, and in the ⌘K / Ctrl+K command palette. Clicking it
+shows a 404 page saying the controller is not found. You'll write it next.</p>
+<h2 id="step-4-show-a-page">Step 4: Show a page</h2>
+<p>Admin controllers extend <code>Bonfire\Core\AdminController</code>, which renders views inside the Admin theme. Create
+<code>app/Modules/Blog/Controllers/PostController.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Controllers</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Bonfire\Core\AdminController</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostController</span> <span class="k">extends</span> <span class="nx">AdminController</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">list</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\list'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Create the view at <code>app/Modules/Blog/Views/list.php</code>. It extends the theme's <code>master</code> layout and fills its <code>main</code>
+section, using two <a href="../view_components/">view components</a>: <code>&lt;x-page-head&gt;</code> for the page title and <code>&lt;x-admin-box&gt;</code> for
+a card to hold the content.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;x-page-head title="Posts" /&gt;</span>
+
+<span class="x">&lt;x-admin-box&gt;</span>
+<span class="x">    &lt;p&gt;Your posts will be listed here.&lt;/p&gt;</span>
+<span class="x">&lt;/x-admin-box&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p><strong>Check it:</strong> click <strong>Posts</strong> in the sidebar. You get a page titled "Posts" inside the admin layout, and the menu
+item is marked as the current page.</p>
+<h2 id="step-5-protect-it-with-a-permission">Step 5: Protect it with a permission</h2>
+<p>Right now anyone who can reach the admin can open this page. Bonfire uses <a href="https://shield.codeigniter.com/">Shield</a>
+permissions to control access. You'll require a <code>posts.list</code> permission for the page.</p>
+<p>First, require it. Add a <code>permission</code> to the menu item in <code>Module.php</code>, so users without it don't see the link:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Posts'</span><span class="p">,</span>
+    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'posts-list'</span><span class="p">,</span>
+    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-newspaper'</span><span class="p">,</span>
+<span class="hll">    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'posts.list'</span><span class="p">,</span>
+</span><span class="p">]);</span>
+</code></pre></div>
+<p>Hiding the link doesn't stop anyone typing the URL, so check the permission in the controller too:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">list</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="hll">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'posts.list'</span><span class="p">))</span> <span class="p">{</span>
+</span><span class="hll">        <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.notAuthorized'</span><span class="p">));</span>
+</span><span class="hll">    <span class="p">}</span>
+</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\list'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Reload the admin. <strong>Posts</strong> has disappeared from the sidebar, and <code>/admin/posts</code> sends you back to the dashboard:
+the permission doesn't exist yet, so no one has it, not even a superadmin.</p>
+<p>Now declare the permission, and grant it to groups, from the module itself. Create
+<code>app/Modules/Blog/Config/Registrar.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Config</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Registrar</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">AuthGroups</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s1">'permissions'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'posts.list'</span> <span class="o">=&gt;</span> <span class="s1">'Can view the list of blog posts'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'moduleGrants'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'blog'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                    <span class="s1">'superadmin'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'posts.*'</span><span class="p">],</span>
+                    <span class="s1">'admin'</span>      <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'posts.list'</span><span class="p">],</span>
+                <span class="p">],</span>
+            <span class="p">],</span>
+        <span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>CodeIgniter only reads a <code>Config/Registrar.php</code> at the root of a namespace it knows about. Tell it about the module's
+namespace in <code>app/Config/Autoload.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nv">$psr4</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nx">APP_NAMESPACE</span>      <span class="o">=&gt;</span> <span class="nx">APPPATH</span><span class="p">,</span>
+    <span class="s1">'App\Modules\Blog'</span> <span class="o">=&gt;</span> <span class="nx">APPPATH</span> <span class="o">.</span> <span class="s1">'Modules/Blog'</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
+<p>The permission now exists. Apply the default grants to the groups:</p>
+<div class="highlight"><pre><span></span><code>php spark bonfire:permissions
+</code></pre></div>
+<p>It reports <code>Added 2 permission grant(s).</code></p>
+<p><strong>Check it:</strong> reload the admin. <strong>Posts</strong> is back in the sidebar, and the page opens again. In
+<strong>Settings › User Groups</strong>, open the Superadmin group's permissions: <code>posts.list</code> is ticked.</p>
+<p><a href="../permissions/">Permissions</a> explains the registrar and the grants command in more depth.</p>
+<h2 id="step-6-list-the-posts">Step 6: List the posts</h2>
+<p>Now put real data on the page. Create a model at <code>app/Modules/Blog/Models/PostModel.php</code>. Soft deletes mean a
+deleted post keeps its row with a <code>deleted_at</code> date, and the model leaves it out of results:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Models</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">CodeIgniter\Model</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostModel</span> <span class="k">extends</span> <span class="nx">Model</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$table</span>          <span class="o">=</span> <span class="s1">'posts'</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$returnType</span>     <span class="o">=</span> <span class="s1">'object'</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$useSoftDeletes</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$useTimestamps</span>  <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$allowedFields</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Update the controller to load a page of posts. <code>setting('Site.perPage')</code> is the page size, from <code>app/Config/Site.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Controllers</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">App\Modules\Blog\Models\PostModel</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Core\AdminController</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostController</span> <span class="k">extends</span> <span class="nx">AdminController</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">list</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'posts.list'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.notAuthorized'</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="nv">$model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="nx">PostModel</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\list'</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s1">'posts'</span> <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">orderBy</span><span class="p">(</span><span class="s1">'created_at'</span><span class="p">,</span> <span class="s1">'desc'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="nx">setting</span><span class="p">(</span><span class="s1">'Site.perPage'</span><span class="p">)),</span>
+            <span class="s1">'pager'</span> <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">,</span>
+            <span class="s1">'total'</span> <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">pager</span><span class="o">-&gt;</span><span class="na">getTotal</span><span class="p">(),</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Put the table in its own view, <code>app/Modules/Blog/Views/_table.php</code>. In step 7 the search and filters will reload just
+this part of the page. It uses three more components and helpers:</p>
+<ul>
+<li><code>&lt;x-status&gt;</code> shows each post's status as a coloured dot and label.</li>
+<li><code>&lt;x-empty-state&gt;</code> takes the table's place when nothing matches.</li>
+<li>The <code>bonfire_list_hx</code> pager template adds the "Showing X of Y · Previous / Next" footer.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$posts</span> <span class="o">===</span> <span class="p">[])</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;x-empty-state title="No posts match" hint="Try a different search or filter." /&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">else</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;div class="table-responsive"&gt;</span>
+<span class="x">        &lt;table class="table table-hover bf-table"&gt;</span>
+<span class="x">            &lt;thead&gt;</span>
+<span class="x">                &lt;tr&gt;</span>
+<span class="x">                    &lt;th&gt;Title&lt;/th&gt;</span>
+<span class="x">                    &lt;th&gt;Status&lt;/th&gt;</span>
+<span class="x">                    &lt;th&gt;Created&lt;/th&gt;</span>
+<span class="x">                &lt;/tr&gt;</span>
+<span class="x">            &lt;/thead&gt;</span>
+<span class="x">            &lt;tbody&gt;</span>
+<span class="x">            </span><span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$posts</span> <span class="k">as</span> <span class="nv">$post</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">                &lt;tr&gt;</span>
+<span class="x">                    &lt;td&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/td&gt;</span>
+<span class="x">                    &lt;td&gt;</span>
+<span class="x">                        &lt;x-status tone="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$post</span><span class="o">-&gt;</span><span class="na">status</span> <span class="o">===</span> <span class="s1">'published'</span> <span class="o">?</span> <span class="s1">'ok'</span> <span class="o">:</span> <span class="s1">'muted'</span> <span class="cp">?&gt;</span><span class="x">" label="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nb">ucfirst</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">status</span><span class="p">))</span> <span class="cp">?&gt;</span><span class="x">" /&gt;</span>
+<span class="x">                    &lt;/td&gt;</span>
+<span class="x">                    &lt;td&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">app_date</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">created_at</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/td&gt;</span>
+<span class="x">                &lt;/tr&gt;</span>
+<span class="x">            </span><span class="cp">&lt;?php</span> <span class="k">endforeach</span> <span class="cp">?&gt;</span>
+<span class="x">            &lt;/tbody&gt;</span>
+<span class="x">        &lt;/table&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+
+<span class="x">    </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$pager</span><span class="o">-&gt;</span><span class="na">links</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="s1">'bonfire_list_hx'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>Then include it from <code>list.php</code>, and show the total beside the title with the page head's <code>count</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;x-page-head title="Posts" count="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$total</span> <span class="cp">?&gt;</span><span class="x">" /&gt;</span>
+
+<span class="x">&lt;x-admin-box&gt;</span>
+<span class="x">    &lt;div id="content-list" hx-target="#content-list"&gt;</span>
+<span class="x">        </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">include</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\_table'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">&lt;/x-admin-box&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>The pager's Previous / Next links load the next page with <a href="https://htmx.org/">htmx</a> and swap it into the element
+named by the nearest <code>hx-target</code>, here <code>#content-list</code>.</p>
+<p><strong>Check it:</strong> the page lists six posts with green "Published" and grey "Draft" labels, and a count of 6
+beside the title. "A post nobody needs" is missing because it is deleted. The footer reads "Showing 6 of 6".</p>
+<h2 id="step-7-add-search-and-filters">Step 7: Add search and filters</h2>
+<p>Bonfire draws a filter panel from a list of filters declared on a model. Add them to a model of their own, so
+<code>PostModel</code> stays plain. Create <code>app/Modules/Blog/Models/PostFilter.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Models</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Bonfire\Core\Traits\Filterable</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostFilter</span> <span class="k">extends</span> <span class="nx">PostModel</span>
+<span class="p">{</span>
+    <span class="k">use</span> <span class="nx">Filterable</span><span class="p">;</span>
+
+    <span class="k">protected</span> <span class="nv">$filters</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'status'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'title'</span>   <span class="o">=&gt;</span> <span class="s1">'Status'</span><span class="p">,</span>
+            <span class="s1">'options'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'draft'</span> <span class="o">=&gt;</span> <span class="s1">'Draft'</span><span class="p">,</span> <span class="s1">'published'</span> <span class="o">=&gt;</span> <span class="s1">'Published'</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Each key of <code>$filters</code> is a column. Its <code>options</code> become checkboxes, and the <code>Filterable</code> trait's <code>filter()</code> method
+turns the checked ones into a <code>WHERE status IN (…)</code>. <a href="../filters/">Filters</a> covers radio buttons and options computed
+by a method.</p>
+<p>Update the controller. It applies the filters and the search term from the query string. When htmx asks for the list
+(the request has an <code>HX-Request</code> header), it returns only <code>_table</code>, which htmx swaps into the page:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog\Controllers</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">App\Modules\Blog\Models\PostFilter</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Core\AdminController</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PostController</span> <span class="k">extends</span> <span class="nx">AdminController</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">list</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'posts.list'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nx">ADMIN_AREA</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Bonfire.notAuthorized'</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="nv">$model</span>  <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="nx">PostFilter</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+        <span class="nv">$search</span> <span class="o">=</span> <span class="nb">trim</span><span class="p">((</span><span class="nx">string</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">getGet</span><span class="p">(</span><span class="s1">'search'</span><span class="p">));</span>
+
+        <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">filter</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">getGet</span><span class="p">(</span><span class="s1">'filters'</span><span class="p">));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$search</span> <span class="o">!==</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">like</span><span class="p">(</span><span class="s1">'title'</span><span class="p">,</span> <span class="nv">$search</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nv">$isHtmx</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">hasHeader</span><span class="p">(</span><span class="s1">'HX-Request'</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\\'</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$isHtmx</span> <span class="o">?</span> <span class="s1">'_table'</span> <span class="o">:</span> <span class="s1">'list'</span><span class="p">),</span> <span class="p">[</span>
+            <span class="s1">'posts'</span>  <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">orderBy</span><span class="p">(</span><span class="s1">'created_at'</span><span class="p">,</span> <span class="s1">'desc'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="nx">setting</span><span class="p">(</span><span class="s1">'Site.perPage'</span><span class="p">)),</span>
+            <span class="s1">'pager'</span>  <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">,</span>
+            <span class="s1">'total'</span>  <span class="o">=&gt;</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">pager</span><span class="o">-&gt;</span><span class="na">getTotal</span><span class="p">(),</span>
+            <span class="s1">'search'</span> <span class="o">=&gt;</span> <span class="nv">$search</span><span class="p">,</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Finally, add the toolbar and filter panel to <code>list.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;x-page-head title="Posts" count="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$total</span> <span class="cp">?&gt;</span><span class="x">" /&gt;</span>
+
+<span class="x">&lt;x-admin-box&gt;</span>
+<span class="x">    &lt;div x-data="{filtered: false}" hx-target="#content-list" hx-include=".bf-toolbar-form, .filters .filter-check"&gt;</span>
+<span class="x">        &lt;div class="bf-toolbar"&gt;</span>
+<span class="x">            &lt;form class="bf-toolbar-form" action="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">current_url</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">" method="get"</span>
+<span class="x">                hx-get="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">current_url</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="x">"</span>
+<span class="x">                hx-trigger="input delay:300ms from:[name=search]"&gt;</span>
+<span class="x">                &lt;div class="bf-toolbar-search"&gt;</span>
+<span class="x">                    &lt;i class="fas fa-search" aria-hidden="true"&gt;&lt;/i&gt;</span>
+<span class="x">                    &lt;input type="search" name="search" class="form-control" value="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$search</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"</span>
+<span class="x">                        placeholder="Search posts" aria-label="Search posts"&gt;</span>
+<span class="x">                &lt;/div&gt;</span>
+<span class="x">            &lt;/form&gt;</span>
+<span class="x">            &lt;x-filter-link /&gt;</span>
+<span class="x">        &lt;/div&gt;</span>
+
+<span class="x">        &lt;div class="bf-list-with-filters"&gt;</span>
+<span class="x">            &lt;div id="content-list"&gt;</span>
+<span class="x">                </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">include</span><span class="p">(</span><span class="s1">'App\Modules\Blog\Views\_table'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">            &lt;/div&gt;</span>
+
+<span class="x">            &lt;div class="bf-filter-panel" x-cloak x-show="filtered" x-transition.duration.240ms&gt;</span>
+<span class="x">                </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">view_cell</span><span class="p">(</span><span class="s1">'Bonfire\Core\Cells\Filters::renderList'</span><span class="p">,</span> <span class="s1">'model=App\Modules\Blog\Models\PostFilter target=#content-list'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">            &lt;/div&gt;</span>
+<span class="x">        &lt;/div&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">&lt;/x-admin-box&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endSection</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>Here is what each part does:</p>
+<ul>
+<li><code>x-data="{filtered: false}"</code> is <a href="https://alpinejs.dev/">Alpine.js</a> state for whether the filter panel is open.
+  <code>&lt;x-filter-link&gt;</code> toggles it, and <code>x-show="filtered"</code> shows or hides the panel.</li>
+<li>The search form sends a request 300 ms after you stop typing, with <code>hx-get</code> and <code>hx-trigger</code>.</li>
+<li>The <code>Filters::renderList</code> view cell draws the checkboxes from <code>PostFilter::$filters</code>, and sends a request whenever one
+  changes.</li>
+<li><code>hx-include</code> on the wrapper sends the search box and the checked filters with every request, so the search, the
+  filters and the pager all keep each other's values.</li>
+<li><code>hx-target</code> puts each response into <code>#content-list</code>.</li>
+</ul>
+<p><strong>Check it:</strong> type <code>team</code> in the search box. Without a page reload, the list narrows to "Meet the team" and the footer
+reads "Showing 1 of 1". Clear the search, open the filters, and tick <strong>Draft</strong>: two drafts remain. Tick <strong>Published</strong>
+and search for <code>the</code>: only "Meet the team" is left.</p>
+<h2 id="step-8-appear-in-the-global-search">Step 8: Appear in the global search</h2>
+<p>The search box in the admin header searches every module that provides a <code>SearchProvider</code> class at its root. Create
+<code>app/Modules/Blog/SearchProvider.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">App\Modules\Blog\Models\PostModel</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Search\Interfaces\SearchProviderInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">SearchProvider</span> <span class="k">extends</span> <span class="nx">PostModel</span> <span class="k">implements</span> <span class="nx">SearchProviderInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">search</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$term</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="o">?</span><span class="k">array</span> <span class="nv">$post</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span><span class="o">:</span> <span class="k">array</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">auth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">user</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">can</span><span class="p">(</span><span class="s1">'posts.list'</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="p">[];</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">like</span><span class="p">(</span><span class="s1">'title'</span><span class="p">,</span> <span class="nv">$term</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">orderBy</span><span class="p">(</span><span class="s1">'created_at'</span><span class="p">,</span> <span class="s1">'desc'</span><span class="p">)</span>
+            <span class="o">-&gt;</span><span class="na">findAll</span><span class="p">(</span><span class="nv">$limit</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">resourceName</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">'posts'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">resourceUrl</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">ADMIN_AREA</span> <span class="o">.</span> <span class="s1">'/posts'</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">resultView</span><span class="p">()</span><span class="o">:</span> <span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">'Search/posts'</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>search()</code> returns the matching posts. Bonfire asks every provider, whoever is searching, so the provider checks the
+permission itself. <code>resourceName()</code> heads this module's results, <code>resourceUrl()</code> is the "See all" link, and
+<code>resultView()</code> names the view that shows the results.</p>
+<p>That view must be in the Admin theme. Create <code>themes/Admin/Search/posts.php</code>. The results arrive as <code>$rows</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"table-responsive"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">table</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"table table-hover bf-table"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">tbody</span><span class="o">&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$rows</span> <span class="k">as</span> <span class="nv">$post</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">            &lt;tr&gt;</span>
+<span class="x">                &lt;td&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/td&gt;</span>
+<span class="x">                &lt;td&gt;&lt;x-status tone="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$post</span><span class="o">-&gt;</span><span class="na">status</span> <span class="o">===</span> <span class="s1">'published'</span> <span class="o">?</span> <span class="s1">'ok'</span> <span class="o">:</span> <span class="s1">'muted'</span> <span class="cp">?&gt;</span><span class="x">" label="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nb">ucfirst</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">status</span><span class="p">))</span> <span class="cp">?&gt;</span><span class="x">" /&gt;&lt;/td&gt;</span>
+<span class="x">            &lt;/tr&gt;</span>
+<span class="x">        </span><span class="cp">&lt;?php</span> <span class="k">endforeach</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;/tbody&gt;</span>
+<span class="x">    &lt;/table&gt;</span>
+<span class="x">&lt;/div&gt;</span>
+</code></pre></div>
+<p><strong>Check it:</strong> type <code>tips</code> in the search box in the admin header and press Enter. The results page has a <strong>Posts</strong>
+section listing "Ten tips for faster pages", with a "See all posts" link back to your list.</p>
+<p><a href="../search/">Search</a> shows how to search related tables and meta fields.</p>
+<h2 id="step-9-send-deleted-posts-to-the-recycler">Step 9: Send deleted posts to the Recycler</h2>
+<p>The Recycler under <strong>Tools</strong> lists soft-deleted records so an admin can restore or purge them. It only shows the
+models it has been told about. Register <code>PostModel</code> in <code>initAdmin()</code>, with the columns that help someone recognise a
+post:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Modules\Blog</span><span class="p">;</span>
+
+<span class="hll"><span class="k">use</span> <span class="nx">App\Modules\Blog\Models\PostModel</span><span class="p">;</span>
+</span><span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Menus\MenuItem</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Module</span> <span class="k">extends</span> <span class="nx">BaseModule</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initAdmin</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
+            <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="s1">'Posts'</span><span class="p">,</span>
+            <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'posts-list'</span><span class="p">,</span>
+            <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-newspaper'</span><span class="p">,</span>
+            <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'posts.list'</span><span class="p">,</span>
+        <span class="p">]);</span>
+        <span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
+
+<span class="hll">        <span class="nx">service</span><span class="p">(</span><span class="s1">'recycler'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="s1">'posts'</span><span class="p">,</span> <span class="s1">'Posts'</span><span class="p">,</span> <span class="nx">PostModel</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="p">[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">]);</span>
+</span>    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>To restore a post, the Recycler sets its <code>deleted_at</code> back to <code>null</code> through the model, and a model only writes the
+fields listed in <code>$allowedFields</code>. Add <code>deleted_at</code> to them in <code>PostModel</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">protected</span> <span class="nv">$allowedFields</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">,</span> <span class="s1">'deleted_at'</span><span class="p">];</span>
+</code></pre></div>
+<p><strong>Check it:</strong> open <strong>Tools › Recycler</strong> and pick <strong>Posts</strong> from the list of resources. "A post nobody needs" is there.
+Click <strong>Restore</strong>, then go back to <strong>Posts</strong>: the list now shows seven posts.</p>
+<h2 id="what-you-built">What you built</h2>
+<p>Your Blog module is a complete, if small, admin screen:</p>
+<ul>
+<li><code>Module.php</code> adds the sidebar item and registers posts with the Recycler.</li>
+<li><code>Config/Routes.php</code> maps <code>/admin/posts</code> to the controller.</li>
+<li><code>Config/Registrar.php</code> declares the <code>posts.list</code> permission and grants it to superadmins and admins.</li>
+<li><code>PostController</code> checks the permission and renders the full page, or only the table for htmx.</li>
+<li><code>PostModel</code> soft-deletes posts, and <code>PostFilter</code> adds the status filter.</li>
+<li><code>list.php</code> and <code>_table.php</code> build the page from the admin theme's components.</li>
+<li><code>SearchProvider</code> and <code>themes/Admin/Search/posts.php</code> add posts to the global search.</li>
+</ul>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li>Add row and bulk actions, such as deleting posts into the Recycler: <a href="../actions/">Actions</a></li>
+<li>Browse the other admin components, like <code>&lt;x-save-bar&gt;</code> for edit forms: <a href="../view_components/">View Components</a></li>
+<li>Add a settings page under <strong>Settings</strong>: <a href="../creating_an_admin_module/">Creating an Admin Module</a></li>
+<li>Add tabs to an edit page: <a href="../resource_tabs/">Resource Tabs</a></li>
+<li>Put post stats on the dashboard: <a href="../dashboard_widgets/">Dashboard Widgets</a></li>
+<li>Change how the Recycler lists, restores or purges posts: <a href="../recycler/">Recycler</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building Admin Modules">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Building Admin Modules
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../actions/" class="md-footer__link md-footer__link--next" aria-label="Next: Row and Bulk Actions">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Row and Bulk Actions
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 Lonnie Ezell
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/lonnieezell/Bonfire2" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/lonnieezell/Bonfire2/discussions" target="_blank" rel="noopener" title="Discussions" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 12V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v14l4-4h10a1 1 0 0 0 1-1m4-6h-2v9H6v2a1 1 0 0 0 1 1h11l4 4V7a1 1 0 0 0-1-1"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.footer", "content.action.edit", "navigation.top", "search.suggest", "search.highlight", "search.share", "navigation.path", "navigation.indexes", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
