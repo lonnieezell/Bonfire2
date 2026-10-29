@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+The email settings page now saves the SMTP port and timeout as integers. Sending SMTP mail no longer fails with a
+`fsockopen()` `TypeError`, and port 465 turns on implicit SSL again. A custom port must now be a positive number.
+Thanks to Alistair Wearring for the report and fix.
+
 [Resource tabs](../building_admin_modules/resource_tabs.md) added with `service('resourceTabs')->addTabFor()` are now
 shown as the current tab on their own page. On group pages, `(id)` in a tab's URL is now replaced with the group's
 alias instead of being left in the link. The Resource Tabs page now shows how to build the page a tab links to.

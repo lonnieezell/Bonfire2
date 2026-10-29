@@ -55,6 +55,32 @@ final class EmailSettingsTest extends TestCase
         ]);
     }
 
+    public function testPortAndTimeoutAreSavedAsIntegers(): void
+    {
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'      => 'Ada',
+            'fromEmail'     => 'ada@example.com',
+            'protocol'      => 'smtp',
+            'SMTPPort'      => 'other',
+            'SMTPPortOther' => '2526',
+            'SMTPTimeout'   => '9',
+        ])->assertSessionMissing('errors');
+
+        $this->assertSame(2526, setting('Email.SMTPPort'));
+        $this->assertSame(9, setting('Email.SMTPTimeout'));
+    }
+
+    public function testANonNumericCustomPortIsRejected(): void
+    {
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'      => 'Ada',
+            'fromEmail'     => 'ada@example.com',
+            'protocol'      => 'smtp',
+            'SMTPPort'      => 'other',
+            'SMTPPortOther' => 'abc',
+        ])->assertSessionHas('errors');
+    }
+
     public function testProtocolIsASegmentedControl(): void
     {
         $html = $this->actingAs($this->user)->get('/admin/settings/email')->getBody();
