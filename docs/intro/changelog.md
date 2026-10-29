@@ -12,6 +12,9 @@ caches the modules it finds in `Config\Bonfire::$appModules` for a minute; run `
 new module folder straight away. See
 [The Module File](../building_admin_modules/creating_an_admin_module.md#the-module-file).
 
+A new tutorial, [Build Your First Admin Module](../building_admin_modules/tutorial_first_module.md), walks you
+from an empty folder to a working list screen with a permission, search, filters, global search and the Recycler.
+
 A module can now add its own permissions, and grant them to groups by default, from its `Config\Registrar` instead of
 asking you to edit `app/Config/AuthGroups.php`. The new `php spark bonfire:permissions` command applies the grants.
 New installs run it for you; **after updating, run `php spark bonfire:permissions` yourself**, and again whenever you
