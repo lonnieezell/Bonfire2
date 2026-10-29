@@ -99,7 +99,7 @@ class ComponentRenderer
     private function renderPairedTags(string $output): string
     {
         $pattern = '/(?(DEFINE)(?<marker>x-))
-                        <\g<marker>(?<name>\w[\w\-\:\.]+[^\>\/\s\/])
+                        <\g<marker>(?<name>\w[\w\-\:\.]*)(?=[\s\/>])
                                    (?<attributes>[\s\S\=\'\"]+?)??>
                             (?(?<!\/>) # Not paired so ignore the rest
                                 (?<slot>.*?)??

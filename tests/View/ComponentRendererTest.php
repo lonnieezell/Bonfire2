@@ -60,6 +60,8 @@ final class ComponentRendererTest extends TestCase
             'single-quoted value ending in "'    => ['<x-greeting name=\'say "hi"\' />', 'Hello say "hi"'],
             'self-closing inside a component'    => ['<x-framed>hi</x-framed>', 'Hello Ada|hi'],
             'tag without a name is left alone'   => ['<x- /> <x-: />', '<x- /> <x-: />'],
+            'paired with a two-letter name'      => ['<x-em>hi</x-em>', '<em>hi</em>'],
+            'mismatched closing tag left alone'  => ['<x-greetings>hi</x-greeting>', '<x-greetings>hi</x-greeting>'],
         ];
     }
 
