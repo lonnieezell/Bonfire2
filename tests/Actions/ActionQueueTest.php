@@ -150,13 +150,14 @@ final class ActionQueueTest extends TestCase
         $runs  = model(ActionRunModel::class);
         $runId = $runs->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 4, 'processed' => 1, 'skipped' => 1, 'status' => RunStatus::Running]);
 
-        $running = (string) $this->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();
+        $running = (string) $this->actingAs($this->admin)->withHeaders(['HX-Request' => 'true'])->get(route_to('action-run', $runId))->response()->getBody();
+        $this->assertStringNotContainsString('<html', $running);
         $this->assertStringContainsString('hx-trigger="every 2s"', $running);
         $this->assertStringContainsString(lang('Actions.running', [2, 4]), $running);
 
         $runs->update($runId, ['status' => RunStatus::Done, 'message' => 'All touched.']);
 
-        $done = (string) $this->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();
+        $done = (string) $this->actingAs($this->admin)->withHeaders(['HX-Request' => 'true'])->get(route_to('action-run', $runId))->response()->getBody();
         $this->assertStringNotContainsString('hx-trigger', $done);
         $this->assertStringContainsString('All touched.', $done);
     }

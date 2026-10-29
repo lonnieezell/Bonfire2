@@ -132,6 +132,16 @@ class ActionRuns
     }
 
     /**
+     * The label of a run's action, or its name when the action is no longer registered.
+     *
+     * @param array<string, mixed> $run A row of action_runs
+     */
+    public function label(array $run): string
+    {
+        return service('actions')->find($run['list'], $run['action'])?->label ?: $run['action'];
+    }
+
+    /**
      * The toast of the run the current admin just queued, if any. It polls until the run ends.
      */
     public function toast(): string

@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 29 October 2026
 
+An **Action runs** dashboard widget (`actions:runs`) lists your own queued, running and recently failed bulk action
+runs, newest first, each linking to its progress. Settings choose how many to show, how many days of ended runs to
+include and whether completed runs appear. It needs no permission; add it from **Add widget** on the dashboard. Opening
+a run's progress link (`action-run`) directly now shows it inside the admin page rather than as a bare fragment.
+`ActionRunModel` now returns `created_at` and `updated_at` as `CodeIgniter\I18n\Time` rather than strings.
+
 A **Recently active** dashboard widget (`users:recentlyActive`) lists the users active within the last 5 minutes, hour
 or 24 hours, most recent first, each linking to their account. It needs the `users.list` permission; add it from
 **Add widget** on the dashboard.

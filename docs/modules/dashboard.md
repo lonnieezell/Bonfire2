@@ -70,6 +70,15 @@ The Recently active widget (`users:recentlyActive`) isn't on the default dashboa
 lists the users active within the last 5 minutes, hour or 24 hours, most recent first, with how long ago each was
 active, and links to each user's account. Users who have never been active don't appear.
 
+## Action runs
+
+The Action runs widget (`actions:runs`) isn't on the default dashboard; add it from the widget library. It lists the
+admin's own [queued bulk action runs](../building_admin_modules/actions.md) that need attention: queued and running
+runs, plus runs that failed in the last 7 days (set **Days to show** from 1 to 30). Turn on **Include completed runs**
+to list runs that finished in that time too. Each row shows the action, its list, status, how many records it has got
+through and when it started, newest first, and links to the run's progress page. It needs no permission: admins only
+ever see the runs they started.
+
 ## Widgets
 
 The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
