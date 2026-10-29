@@ -11,11 +11,12 @@
 
 namespace Bonfire\Actions\Models;
 
+use Bonfire\Actions\RunStatus;
 use CodeIgniter\Model;
 
 /**
- * Queued action runs. `status` is queued, running, done or failed; `message`
- * is what the run reported when it ended.
+ * Queued action runs. `status` is a RunStatus; `message` is what the run
+ * reported when it ended.
  */
 class ActionRunModel extends Model
 {
@@ -23,4 +24,7 @@ class ActionRunModel extends Model
     protected $returnType    = 'array';
     protected $useTimestamps = true;
     protected $allowedFields = ['list', 'action', 'user_id', 'ids', 'total', 'processed', 'skipped', 'status', 'message'];
+    protected array $casts   = [
+        'status' => 'enum[' . RunStatus::class . ']',
+    ];
 }

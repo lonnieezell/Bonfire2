@@ -3,6 +3,7 @@
 namespace Bonfire\Config;
 
 use Bonfire\Actions\ActionRegistry;
+use Bonfire\Actions\ActionRuns;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\WidgetRegistry;
 use Bonfire\Menus\Manager as MenuManager;
@@ -37,6 +38,18 @@ class Services extends BaseService
         }
 
         return new ActionRegistry();
+    }
+
+    /**
+     * Runs or queues actions, and tracks queued runs
+     */
+    public static function actionRuns(bool $getShared = true): ActionRuns
+    {
+        if ($getShared) {
+            return static::getSharedInstance('actionRuns');
+        }
+
+        return new ActionRuns();
     }
 
     /**
