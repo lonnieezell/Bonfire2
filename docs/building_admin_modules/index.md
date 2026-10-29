@@ -2,6 +2,12 @@
 
 Any application admin panel will need more than just user management capabilities. Your app might need page, tag, product management. This section deals with extending Bonfire admin are with your own modules and integrating them into the admin panel.
 
+## Tutorial: Build Your First Admin Module
+
+New to Bonfire? Start here. This tutorial walks you from an empty folder to a working Posts screen, with a sidebar item, a permission, a list with search and filters, global search results and the Recycler, checking each step in the browser.
+
+[Start the tutorial](tutorial_first_module.md)
+
 ## Creating an Admin Module
 
 Learn how to create new modules of code for the admin area, centered around a single task or resource, like Users, Photos, etc. This guide covers the basics of creating a `Module.php` file, configuring module locations, and adding menu items.
