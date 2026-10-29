@@ -153,7 +153,7 @@ class Users extends BaseConfig
      * --------------------------------------------------------------------------
      * To enable search in additional user fields, add the field names to this array.
      */
-    public $includeMetaFieldsInSearech = [
+    public $includeMetaFieldsInSearch = [
         'blog',
     ];
 }

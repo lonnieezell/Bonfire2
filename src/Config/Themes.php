@@ -25,14 +25,6 @@ class Themes
     ];
 
     /**
-     * Whether or not we should expect to find
-     * a "Components" folder within the theme folders.
-     *
-     * @var bool
-     */
-    public $haveComponents = true;
-
-    /**
      * --------------------------------------------------------------------------
      * Components' default lookup paths
      * --------------------------------------------------------------------------

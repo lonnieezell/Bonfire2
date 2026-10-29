@@ -87,12 +87,12 @@ need them.
 If you want the search to find not only the data from the main table, but also
 the related meta info (see [Meta Info](../modules/meta_info.md)), you should:
 
-1. Put a property `$includeMetaFieldsInSearech` into the module config file
+1. Put a property `$includeMetaFieldsInSearch` into the module config file
     (example for `app/Config/Users.php`, since, suppose, we want to be able to search
     for users by their blog urls, which we keep in the `meta_info` table):
 
     ```php
-        public $includeMetaFieldsInSearech = [
+        public $includeMetaFieldsInSearch = [
         'blog',
         ];
     ```
@@ -107,7 +107,7 @@ the related meta info (see [Meta Info](../modules/meta_info.md)), you should:
         $query = $this->select('users.*')->distinct();
         $query->join('auth_identities', 'auth_identities.user_id = users.id', 'inner');
 
-        $searchInMeta = setting('Users.includeMetaFieldsInSearech');
+        $searchInMeta = setting('Users.includeMetaFieldsInSearch');
 
         if (!empty($searchInMeta)) {
             // first argument is the resource entity name, second – the DB table name

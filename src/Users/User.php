@@ -30,8 +30,12 @@ class User extends ShieldUser
         $idString = 'default-avatar-hash'; // Default avatar string
 
         if ($this->id) {
-            if (setting('Users.avatarNameBasis') === 'name') {
-                $idString = $this->first_name ? $this->first_name[0] . ($this->last_name[0] ?? '') : $this->username[0] . $this->username[1];
+            $basis = setting('Users.avatarNameBasis');
+
+            if ($basis === 'name' && $this->first_name) {
+                $idString = $this->first_name[0] . ($this->last_name[0] ?? '');
+            } elseif (in_array($basis, ['name', 'username'], true) && $this->username) {
+                $idString = substr($this->username, 0, 2);
             } else {
                 $idString = $this->email[0] . $this->email[1];
             }
@@ -75,7 +79,7 @@ class User extends ShieldUser
 
         return empty($this->avatar)
             ? ''
-            : base_url('/uploads/avatars/' . $this->avatar);
+            : base_url((setting('Users.avatarDirectory') ?? 'uploads/avatars') . '/' . $this->avatar);
     }
 
     /**

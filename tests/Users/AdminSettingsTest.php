@@ -66,6 +66,27 @@ final class AdminSettingsTest extends TestCase
         $this->assertSame('1', setting('Auth.actions')['register']);
     }
 
+    public function testAvatarSizeCannotGoBelowAvatarResizeFloor(): void
+    {
+        setting('Auth.actions', ['register' => null, 'login' => null]);
+        setting('Users.avatarResizeFloor', 100);
+        setting('Users.avatarSize', 140);
+
+        $this->actingAs($this->user)
+            ->get('/admin/settings/users')
+            ->assertSee('min="100"');
+
+        $this->actingAs($this->user)
+            ->post('/admin/settings/users', [
+                'minimumPasswordLength' => 10,
+                'defaultGroup'          => 'user',
+                'avatarResize'          => 1,
+                'avatarSize'            => 50,
+            ]);
+
+        $this->assertSame(140, setting('Users.avatarSize'));
+    }
+
     public function testEverySettingRoundTripsThroughTheForm(): void
     {
         $settings = [

@@ -18,10 +18,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 class OnlineCheck implements FilterInterface
 {
     /**
-     * Checks the App.siteOnline setting. If not `true`, will
-     * stop script execution and display the Site Offline page.
-     * This view is expected to be found in:
-     *      app/Views/errors/offline.php
+     * Checks the Site.siteOnline setting (via site_offline()). While the
+     * site is offline, redirects to /site-offline, which renders
+     * Site::$siteOfflineView. Superadmins and users with the
+     * site.viewOffline permission get through.
      *
      * @param array|null $arguments
      *
