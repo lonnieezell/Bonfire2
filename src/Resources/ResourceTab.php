@@ -69,15 +69,30 @@ class ResourceTab
             return '';
         }
 
+        return site_url($this->getPath());
+    }
+
+    /**
+     * Whether the tab links to the current page.
+     */
+    public function isActive(): bool
+    {
+        return ! empty($this->url) && url_is($this->getPath());
+    }
+
+    /**
+     * The admin-area path the tab links to, with the
+     * resource ID filled in.
+     */
+    private function getPath(): string
+    {
         $url = $this->url;
 
         if (str_contains($this->url, '(id)')) {
             $url = $this->fillPlaceholder($url);
         }
 
-        $url = ADMIN_AREA . '/' . $url;
-
-        return site_url($url);
+        return ADMIN_AREA . '/' . $url;
     }
 
     /**
@@ -93,7 +108,7 @@ class ResourceTab
         $path = trim(substr($path, 0, strpos($path, '(id)')), ' /');
 
         // Parse out the current resource ID - $matches[1] should contain it
-        preg_match("|{$path}\\/([0-9]+)|i", current_url(), $matches);
+        preg_match("|{$path}\\/([^/?#]+)|i", current_url(), $matches);
 
         if (isset($matches[1]) && (isset($matches[1]) && ($matches[1] !== '' && $matches[1] !== '0'))) {
             return str_replace('(id)', $matches[1], $url);
