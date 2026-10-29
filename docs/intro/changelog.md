@@ -13,6 +13,9 @@ the strings `queued`, `running`, `done` and `failed`, so code that writes a stat
 The Admin theme's `<x-action-run>` now calls `service('actionRuns')->toast()` rather than `ActionRunModel`; installs
 that published the Admin theme should copy the new `themes/Admin/Components/action-run.php`.
 
+Picking an accent color swatch under **Settings → General → Appearance** now shows the save bar, so the new color can
+be saved. Before, only the color picker itself did.
+
 ## 28 October 2026
 
 `spark notify:breaking-changes` used to keep its marker in a `last-update.txt` file inside the package folder, which

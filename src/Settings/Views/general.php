@@ -22,10 +22,10 @@
                         <?php foreach (['#D9622B', '#2F6FEB', '#0F9F6E', '#7C5CE0'] as $preset) : ?>
                             <button type="button" class="bf-swatch" style="background: <?= $preset ?>"
                                     x-bind:class="accent.toLowerCase() === '<?= strtolower($preset) ?>' && 'active'"
-                                    x-on:click="accent = '<?= $preset ?>'"
+                                    x-on:click="$refs.picker.value = '<?= $preset ?>'; $refs.picker.dispatchEvent(new Event('input', { bubbles: true }))"
                                     aria-label="<?= $preset ?>"></button>
                         <?php endforeach ?>
-                        <input type="color" class="form-control form-control-color" name="adminAccent" id="adminAccent" value="<?= admin_accent() ?>" x-model="accent" />
+                        <input type="color" class="form-control form-control-color" name="adminAccent" id="adminAccent" value="<?= admin_accent() ?>" x-ref="picker" x-model="accent" />
                     </div>
                     <?php if (has_error('adminAccent')) : ?>
                         <p class="text-danger small mb-0"><?= error('adminAccent') ?></p>
