@@ -17,6 +17,7 @@ use Bonfire\Tools\Actions\DeleteLogs;
 use Bonfire\Tools\Libraries\LogStore;
 use Bonfire\Tools\Widgets\LogActivity;
 use Bonfire\Tools\Widgets\RecentErrorsWidget;
+use Bonfire\Tools\Widgets\SystemHealthWidget;
 
 /**
  * Email Module setup
@@ -52,5 +53,6 @@ class Module extends BaseModule
 
         service('dashboard')->register(new LogActivity());
         service('dashboard')->register(new RecentErrorsWidget());
+        service('dashboard')->register(new SystemHealthWidget());
     }
 }

@@ -54,4 +54,12 @@ return [
     'recentErrorsOnly'        => 'Errors only',
     'recentErrorsAndWarnings' => 'Errors and warnings',
     'noRecentErrors'          => 'No errors in the logs.',
+    'systemHealth'            => 'System health',
+    'systemHealthCard'        => 'Problems with this install, such as folders that can\'t be written to',
+    'systemHealthMaxLoad'     => 'Warn when server load is above',
+    'systemHealthy'           => 'No problems found.',
+    'openSystemInfo'          => 'Open System Info',
+    'problemNotWritable'      => '{0} is not writable',
+    'problemEnvMissing'       => 'The .env file is missing',
+    'problemHighLoad'         => 'Server load is {0}',
 ];

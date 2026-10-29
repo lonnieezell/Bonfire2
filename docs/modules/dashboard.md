@@ -79,6 +79,13 @@ to list runs that finished in that time too. Each row shows the action, its list
 through and when it started, newest first, and links to the run's progress page. It needs no permission: admins only
 ever see the runs they started.
 
+## System health
+
+The System health widget (`tools:systemHealth`) isn't on the default dashboard; add it from the widget library. It
+lists what is wrong with the install, if anything: each file or folder in `writable/` that can't be written to, a
+missing `.env` file, and a 1-minute server load above **Warn when server load is above** (default 4). With no problems
+it says so in one line. It links to the System Info page and needs the `admin.settings` permission, like that page.
+
 ## Widgets
 
 The `stats`, `logs` and `charts` cells are elements that display information on the dashboard. They are either a small informational card, or a chart of some sort.
