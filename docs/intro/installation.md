@@ -97,7 +97,8 @@ Latest breaking change date: 2026-10-28
 ```
 
 The warning is a reminder to read the changelog, nothing more: re-publishing a theme, copying a view or changing a
-config file is not something an update can do for you.
+config file is not something an update can do for you. [Why Themes Are Published Into Your App](published_themes.md)
+explains why.
 
 Bonfire remembers the change it has shown you in `writable/bonfire-breaking-changes.json`. That folder has to be
 writable, and it has to survive a deploy, otherwise the same warning comes back after every update. If your server

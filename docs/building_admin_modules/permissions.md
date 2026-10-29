@@ -99,7 +99,8 @@ $item = new MenuItem([
     Anyone who can enter the admin area can still type the page's URL. Check the permission in the controller too.
 
 Every route under the admin area also needs `admin.access`. Bonfire's `admin` filter checks it before your controller
-runs and sends other users to the home page.
+runs and sends other users to the home page. [How Bonfire Fits Into a Request](../intro/request_flow.md#the-filter-chain)
+shows where it runs among Bonfire's other filters.
 
 ## Declaring permissions
 

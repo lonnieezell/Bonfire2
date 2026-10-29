@@ -4,6 +4,9 @@ View Components (or just Components) allow you to create custom HTML elements to
 description of their use and creating new ones is described within the `Building Sites` section of the guide. This
 page lists the components that are available within the default `Admin` theme. 
 
+Your app renders its own copy of these components, in `themes/Admin/Components/`, which `composer update` doesn't
+change. See [Why Themes Are Published Into Your App](../intro/published_themes.md).
+
 Escape attribute values with `esc()` (`title="<?= esc($user->name()) ?>"`), as you would any HTML attribute. The
 renderer decodes them and the component escapes them again on output, so a quote in the data can't end the attribute
 early. On a paired tag (`<x-…>…</x-…>`) a value can't contain `>`. Slots are HTML and are output as given.
