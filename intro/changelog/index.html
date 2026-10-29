@@ -1964,6 +1964,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
+<p>A module's <code>initFront()</code> now runs on public requests. Bonfire boots once per web request from a new <code>bonfire</code> filter,
+which runs on every route after the <code>session</code> and <code>admin</code> filters, instead of from the <code>admin</code> filter. Bonfire now
+caches the modules it finds in <code>Config\Bonfire::$appModules</code> for a minute; run <code>php spark cache:clear</code> to pick up a
+new module folder straight away. See
+<a href="../../building_admin_modules/creating_an_admin_module/#the-module-file">The Module File</a>.</p>
 <p>A new tutorial, <a href="../../building_admin_modules/tutorial_first_module/">Build Your First Admin Module</a>, walks you
 from an empty folder to a working list screen with a permission, search, filters, global search and the Recycler.</p>
 <p>A module can now add its own permissions, and grant them to groups by default, from its <code>Config\Registrar</code> instead of

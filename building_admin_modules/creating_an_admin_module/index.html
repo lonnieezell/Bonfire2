@@ -1784,6 +1784,7 @@ Bonfire 2 admin panel for administration of pages on a website.</p>
 <span class="p">];</span>
 </code></pre></div>
 <p>If you have multiple locations you need to keep modules, you can add multiple entries here and they will all be automatically discovered and registered within Bonfire.</p>
+<p>Bonfire caches the modules it finds in these locations for a minute. To pick up a new module folder straight away, run <code>php spark cache:clear</code>.</p>
 <h2 id="modules-in-composer-packages">Modules in Composer packages</h2>
 <p><code>$appModules</code> treats every folder in a location as a module, so it doesn't fit a Composer package that is a single
 module. List such a module in <code>$packageModules</code> instead. Each entry maps the module's own namespace to the
@@ -1815,6 +1816,14 @@ default.</p>
 <p>The Module file handles initialization functions when the admin is loaded. It allows the module to create new
 menus, insert itself into the existing sidebar menus, etc. The <code>initAdmin</code> method is where all of the setup
 for displaying and admin page should be done.</p>
+<p>Bonfire boots once per web request and calls one of two methods on every module:</p>
+<ul>
+<li><code>initAdmin()</code> on a request inside the admin area (<code>ADMIN_AREA</code>). The sidebar menus and dashboard widgets
+  exist only then, so add menu items and widgets here.</li>
+<li><code>initFront()</code> on every other routed web request. Use it for setup your module needs on public pages.</li>
+</ul>
+<p>Bonfire boots from the <code>bonfire</code> filter, so neither runs where filters don't: 404 pages, pages served from
+CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.</p>
 <div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">Acme\Blog</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>

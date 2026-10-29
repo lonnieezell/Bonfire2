@@ -1934,7 +1934,8 @@ commented out. Open <code>app/Config/Bonfire.php</code> and uncomment it:</p>
 </code></pre></div>
 <p>Every class in the module lives in the <code>App\Modules\Blog</code> namespace.</p>
 <p><strong>Check it:</strong> nothing changes in the browser yet. Bonfire only loads a module once it has a <code>Module.php</code>, which you
-will add in step 3.</p>
+will add in step 3. Bonfire caches the module folders it finds for a minute, so if Blog doesn't show up then, run
+<code>php spark cache:clear</code>.</p>
 <h2 id="step-2-create-the-posts-table">Step 2: Create the posts table</h2>
 <p>The list needs data. Create a migration at
 <code>app/Modules/Blog/Database/Migrations/2026-10-29-120000_CreatePostsTable.php</code>:</p>
