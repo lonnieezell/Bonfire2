@@ -65,12 +65,12 @@ anonymises them is up to that module; see
 
 ## 4. Make sure old data is deleted on schedule
 
-Bonfire deletes login attempts and old consent records once they are past their retention period, but only if the
-scheduler runs.
+Bonfire deletes login attempts and old consent records once they are past their retention period. It does this with a
+daily `bf-privacy-prune` task that it schedules through [CodeIgniter Tasks](https://tasks.codeigniter.com/).
 
-1. Check that `init()` in `app/Config/Tasks.php` calls Bonfire's schedule. `php spark bf:install` sets this up on new
-   installs. On an older install without the file, run `php spark tasks:publish`, delete the example tasks it adds,
-   and add the call:
+1. Register Bonfire's tasks in `init()` in `app/Config/Tasks.php`. `php spark bf:install` sets this up on new installs.
+   On an older install without the file, run `php spark tasks:publish`, delete the example tasks it adds, and add the
+   call:
 
     ```php
     public function init(Scheduler $schedule)
@@ -79,13 +79,26 @@ scheduler runs.
     }
     ```
 
-2. Add a cron entry that runs the scheduler every minute:
+2. Check that the task is scheduled:
+
+    ```
+    php spark tasks:list
+    ```
+
+    The list includes `bf-privacy-prune`, with its next run at midnight.
+
+3. Turn on the CodeIgniter Tasks runner, if your site doesn't run it already. CodeIgniter Tasks runs every scheduled
+   task, Bonfire's and your own, from one command that your server calls every minute. With cron, that is a single
+   entry:
 
     ```
     * * * * * cd /path/to/your/site && php spark tasks:run >> /dev/null 2>&1
     ```
 
-3. To change how long data is kept, edit `$retention` in `app/Config/Privacy.php`: a number of days, or `null` to keep
+    If your host has its own scheduler, point it at `php spark tasks:run` instead. See the
+    [CodeIgniter Tasks documentation](https://tasks.codeigniter.com/) for details.
+
+4. To change how long data is kept, edit `$retention` in `app/Config/Privacy.php`: a number of days, or `null` to keep
    the data forever. `php spark bf:install` publishes this file on new installs. On an older install, create it:
 
     ```php

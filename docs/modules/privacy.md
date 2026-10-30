@@ -108,18 +108,16 @@ addresses are kept for good.
 php spark bf:privacy:prune
 ```
 
-deletes the expired data and prints how many records each provider removed. Bonfire schedules it to run daily through
-[CodeIgniter Tasks](https://tasks.codeigniter.com/). `php spark bf:install` adds this line to `init()` in
-`app/Config/Tasks.php`, creating the file if needed:
+deletes the expired data and prints how many records each provider removed. Bonfire schedules it daily, as the
+`bf-privacy-prune` task, through [CodeIgniter Tasks](https://tasks.codeigniter.com/). `php spark bf:install` adds
+Bonfire's tasks to `init()` in `app/Config/Tasks.php`, creating the file if needed:
 
 ```php
 \Bonfire\Bonfire::schedule($schedule);
 ```
 
-For scheduled tasks to run, call `php spark tasks:run` every minute from cron:
-
-```
-* * * * * cd /path/to/your/site && php spark tasks:run >> /dev/null 2>&1
-```
+`php spark tasks:list` shows the task. Like every CodeIgniter task, it only runs while the CodeIgniter Tasks runner,
+`php spark tasks:run`, is called every minute, usually from a single cron entry. See
+[Handle a Data Export or Erasure Request](../building_sites/data_requests.md#4-make-sure-old-data-is-deleted-on-schedule).
 
 **Tools → System Info** warns when the prune has never run, or last ran more than 7 days ago.
