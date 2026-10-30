@@ -166,6 +166,12 @@ final class UserEditTest extends TestCase
         $this->assertMatchesRegularExpression('#10.0.0.2</td>.*?bf-status-danger"><span class="bf-dot" aria-hidden="true"></span>Failed#s', $html);
     }
 
+    public function testSecurityKeepsTheAuthThemeStylesheetOut(): void
+    {
+        // auth.css restyles <body>, which breaks the admin's dark mode
+        $this->assertStringNotContainsString('auth/css/auth', $this->page($this->admin, 'security'));
+    }
+
     private function betaUserWithLogsView(): User
     {
         $user = $this->createUser(['username' => 'grace', 'active' => 1]);
