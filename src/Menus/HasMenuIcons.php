@@ -116,6 +116,6 @@ trait HasMenuIcons
             ? $this->iconUrl
             : '/' . ltrim($this->iconUrl, '/ ');
 
-        return "<img href=\"{$iconUrl}\" alt=\"{$this->title}\" {$class}/>";
+        return "<img src=\"{$iconUrl}\" alt=\"{$this->title}\" {$class}/>";
     }
 }

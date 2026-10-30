@@ -44,7 +44,7 @@ Pass the keys as an array to the constructor. Each key calls the setter of the s
 | `namedRoute` | string | none | `setNamedRoute()` | Sets the URL with `route_to()`. Required unless you pass `url`. It's also the key `$menuWeights` looks up. |
 | `url` | string | none | `setUrl()` | Sets the URL directly. A URL without `://` gets a leading `/`. When you pass both `url` and `namedRoute`, the later one in the array wins. |
 | `fontAwesomeIcon` | string | none | `setFontAwesomeIcon()` | [FontAwesome](https://fontawesome.com/) classes, like `fas fa-users`. |
-| `iconUrl` | string | none | `setIconUrl()` | URL of an image icon. Used only when there's no `fontAwesomeIcon`. Currently broken, see [Limitations](#limitations). |
+| `iconUrl` | string | none | `setIconUrl()` | URL of an image icon. Used only when there's no `fontAwesomeIcon`. |
 | `altText` | string | none | `setAltText()` | Stored, but the Admin theme doesn't use it. See [Limitations](#limitations). |
 | `weight` | int | `0` | `setWeight()` | Sort order inside the collection. Larger weights appear later; equal weights sort by title. `$menuWeights` overrides it, see [Ordering](#ordering-with-menuweights). |
 | `permission` | string | none | `setPermission()` | A [permission](permissions.md) the user needs to see the item. Leave it out to show the item to everyone. |
@@ -229,7 +229,6 @@ The rendering described on this page is the stock Admin theme's: `Components/sid
 
 ## Limitations
 
-- `iconUrl` icons don't appear. The tag uses `href` instead of `src` ([#727](https://github.com/lonnieezell/Bonfire2/issues/727)).
 - `altText` isn't rendered anywhere ([#728](https://github.com/lonnieezell/Bonfire2/issues/728)).
 - Items added with `Menu::addItem()` don't appear in the sidebar, the palette or the breadcrumb. Put every item in a
   collection ([#729](https://github.com/lonnieezell/Bonfire2/issues/729)).
