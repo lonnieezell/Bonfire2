@@ -2,8 +2,12 @@
 
 namespace Tests\Theme;
 
+use Bonfire\Menus\Manager;
+use Bonfire\Menus\Menu;
+use Bonfire\Menus\MenuItem;
 use Bonfire\View\ComponentRenderer;
 use Bonfire\View\Theme;
+use Config\Services;
 use Tests\Support\TestCase;
 
 /**
@@ -233,11 +237,56 @@ final class AdminComponentsTest extends TestCase
         $this->assertStringNotContainsString('" onclick="', $this->render('<x-button color=\'x" onclick="y\'>Go</x-button>'));
     }
 
+    public function testSidebarLinksUseTheItemsAltTextAsTheirTitle(): void
+    {
+        $menu = new Menu();
+        $menu->createCollection('content', 'Content')
+            ->addItem(new MenuItem(['title' => 'Flat', 'url' => 'admin/flat', 'altText' => 'Flat alt']))
+            ->addItem(new MenuItem(['title' => 'Plain', 'url' => 'admin/plain']));
+        $menu->createCollection('tools', 'Tools')
+            ->setCollapsible()
+            ->addItem(new MenuItem(['title' => 'Sub', 'url' => 'admin/sub', 'altText' => 'Sub alt']));
+
+        $html = single_service('renderer', Theme::path('Admin'))->setData(['menu' => $menu])->render('Components/sidebar');
+
+        $this->assertLinkTitle('Flat alt', site_url('admin/flat'), $html);
+        $this->assertLinkTitle('Plain', site_url('admin/plain'), $html);
+        $this->assertLinkTitle('Sub alt', site_url('admin/sub'), $html);
+    }
+
+    public function testSettingsNavLinksUseTheItemsAltTextAsTheirTitle(): void
+    {
+        $menus = new Manager();
+        $menus->createMenu('sidebar');
+        $menus->menu('sidebar')->createCollection('settings', 'Settings')
+            ->addItem(new MenuItem(['title' => 'General', 'url' => 'admin/settings/general', 'altText' => 'General alt']));
+        Services::injectMock('menus', $menus);
+
+        $html = $this->render('<x-settings-layout>body</x-settings-layout>');
+
+        $this->assertLinkTitle('General alt', '/admin/settings/general', $html);
+    }
+
+    public function testQuickLinksUseTheItemsAltTextAsTheirTitle(): void
+    {
+        $menu = new Menu();
+        $menu->addItem(new MenuItem(['title' => 'Users', 'url' => 'admin/users', 'altText' => 'Users alt']));
+
+        $html = view('Bonfire\Dashboard\Views\quick_links', ['menu' => $menu, 'today' => '', 'greeting' => '']);
+
+        $this->assertLinkTitle('Users alt', site_url('admin/users'), $html);
+    }
+
     public function testLegacyComponentsStillRenderTheirSlots(): void
     {
         $this->assertStringContainsString('Users', $this->render('<x-module-title>Users</x-module-title>'));
         $this->assertStringContainsString('<p>x</p>', $this->render('<x-button-container><p>x</p></x-button-container>'));
         $this->assertStringContainsString('x-on:click="filtered = ! filtered"', $this->render('<x-filter-link />'));
+    }
+
+    private function assertLinkTitle(string $title, string $href, string $html): void
+    {
+        $this->assertMatchesRegularExpression('#<a[^>]*href="' . preg_quote($href, '#') . '"[^>]*title="' . preg_quote(esc($title, 'attr'), '#') . '"#', $html);
     }
 
     private function render(string $input): string

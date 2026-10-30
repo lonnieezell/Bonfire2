@@ -11,7 +11,7 @@ $active = $menu->activeItem();
             <?php if (! $item->userCanSee()) {
                 continue;
             } ?>
-            <a class="bf-settings-nav-link<?= $item === $active ? ' active' : '' ?>" href="<?= esc($item->url()) ?>"<?= $item === $active ? ' aria-current="page"' : '' ?>>
+            <a class="bf-settings-nav-link<?= $item === $active ? ' active' : '' ?>" href="<?= esc($item->url()) ?>"<?= $item->altText() !== null ? ' title="' . esc($item->altText(), 'attr') . '"' : '' ?><?= $item === $active ? ' aria-current="page"' : '' ?>>
                 <?= $item->icon ?>
                 <?= esc($item->title()) ?>
             </a>

@@ -8,7 +8,7 @@
             <h2 class="visually-hidden"><?= lang('Bonfire.quickLinks') ?></h2>
             <?php foreach ($menu->items() as $item) : ?>
                 <?php if ($item->userCanSee()): ?>
-                    <a class="btn btn-outline-secondary" href="<?= site_url($item->url) ?>">
+                    <a class="btn btn-outline-secondary" href="<?= site_url($item->url) ?>"<?= $item->altText !== null ? ' title="' . esc($item->altText, 'attr') . '"' : '' ?>>
                         <?= $item->icon ?>
                         <?= $item->title ?>
                     </a>

@@ -40,7 +40,7 @@ $activeItem  = isset($menu) ? $menu->activeItem() : null;
                         <?php foreach ($collection->items() as $item) : ?>
                             <?php if ($item->userCanSee()) : ?>
                                 <?php $active = $item === $activeItem ?>
-                                <a class="bf-subnav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" <?= $active ? 'aria-current="page"' : '' ?>>
+                                <a class="bf-subnav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>"<?= $item->altText !== null ? ' title="' . esc($item->altText, 'attr') . '"' : '' ?> <?= $active ? 'aria-current="page"' : '' ?>>
                                     <?= $item->title ?>
                                 </a>
                             <?php endif ?>
@@ -51,7 +51,7 @@ $activeItem  = isset($menu) ? $menu->activeItem() : null;
                 <?php foreach ($collection->items() as $item) : ?>
                     <?php if ($item->userCanSee()) : ?>
                         <?php $active = $item === $activeItem ?>
-                        <a class="bf-nav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" title="<?= esc(strip_tags($item->title), 'attr') ?>" <?= $active ? 'aria-current="page"' : '' ?>>
+                        <a class="bf-nav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" title="<?= esc($item->altText ?? strip_tags($item->title), 'attr') ?>" <?= $active ? 'aria-current="page"' : '' ?>>
                             <?= $item->icon ?>
                             <span class="bf-label"><?= $item->title ?></span>
                         </a>

@@ -45,7 +45,7 @@ Pass the keys as an array to the constructor. Each key calls the setter of the s
 | `url` | string | none | `setUrl()` | Sets the URL directly. A URL without `://` gets a leading `/`. When you pass both `url` and `namedRoute`, the later one in the array wins. |
 | `fontAwesomeIcon` | string | none | `setFontAwesomeIcon()` | [FontAwesome](https://fontawesome.com/) classes, like `fas fa-users`. |
 | `iconUrl` | string | none | `setIconUrl()` | URL of an image icon. Used only when there's no `fontAwesomeIcon`. |
-| `altText` | string | none | `setAltText()` | Stored, but the Admin theme doesn't use it. See [Limitations](#limitations). |
+| `altText` | string | none | `setAltText()` | The link's `title` tooltip in the sidebar, the settings nav and the dashboard quick links. Without it, top-level sidebar links use the item's title. |
 | `weight` | int | `0` | `setWeight()` | Sort order inside the collection. Larger weights appear later; equal weights sort by title. `$menuWeights` overrides it, see [Ordering](#ordering-with-menuweights). |
 | `permission` | string | none | `setPermission()` | A [permission](permissions.md) the user needs to see the item. Leave it out to show the item to everyone. |
 
@@ -82,7 +82,7 @@ the route for it.
 |---|---|
 | `title()` | The title. |
 | `url()` | The URL. |
-| `altText()` | The alt text. |
+| `altText()` | The alt text, `null` when unset. |
 | `weight()` | The weight, `0` when unset. |
 | `userCanSee()` | `true` when the item has no permission or the logged-in user has it. |
 | `icon(string $class = '')` | The icon tag: `<i class="…">` for FontAwesome, `<img>` for `iconUrl`, or `''`. `$class` adds classes to it. |
@@ -229,7 +229,6 @@ The rendering described on this page is the stock Admin theme's: `Components/sid
 
 ## Limitations
 
-- `altText` isn't rendered anywhere ([#728](https://github.com/lonnieezell/Bonfire2/issues/728)).
 - Items added with `Menu::addItem()` don't appear in the sidebar, the palette or the breadcrumb. Put every item in a
   collection ([#729](https://github.com/lonnieezell/Bonfire2/issues/729)).
 - Collapsible groups list item titles only, without icons.

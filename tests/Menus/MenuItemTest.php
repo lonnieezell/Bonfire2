@@ -26,6 +26,11 @@ final class MenuItemTest extends TestCase
         $this->assertSame(5, $item->weight());
     }
 
+    public function testAltTextIsNullWhenNotSet()
+    {
+        $this->assertNull((new MenuItem(['title' => 'Item A']))->altText());
+    }
+
     public function testConstructorFill()
     {
         $item = new MenuItem([
