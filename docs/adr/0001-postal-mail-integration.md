@@ -1,6 +1,6 @@
 # ADR 0001: Send all mail through Postal, configured in code
 
-- **Status:** Accepted
+- **Status:** Accepted; partly superseded by [ADR 0008](0008-zero-touch-postal-upgrade.md)
 - **Date:** 2026-10-27
 
 ## Context
