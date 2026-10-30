@@ -9,13 +9,13 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Privacy\Commands;
+namespace Bonfire\Commands;
 
 use Bonfire\Bonfire;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
-class Prune extends BaseCommand
+class PrivacyPrune extends BaseCommand
 {
     protected $group       = 'Bonfire';
     protected $name        = 'bf:privacy:prune';
