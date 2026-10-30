@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+Three consent banner fixes. An absolute cookie policy URL (`https://...`) is now used as-is; before, it was run
+through `site_url()`. The consent cookie now lasts `Consent.consentLength` days instead of a fixed 180, and is set
+for the whole site. Closing the banner with its X now rejects all non-essential cookies, so it stops reappearing on
+every page. If you published your own `consentFormScripts` view, copy the change from `consent_scripts.php`.
+
 Items added straight to a menu with `Menu::addItem()`, outside any collection, now show in the sidebar, the command
 palette and the breadcrumb. Before, the Admin theme skipped them. If you published the Admin theme, copy the change
 from `Components/sidebar.php` and `_palette.php`.

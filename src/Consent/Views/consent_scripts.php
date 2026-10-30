@@ -3,7 +3,7 @@
     var ConsentForm = {
 
         cookieName: 'bf_consent',
-        cookieLength: 180,  // days
+        cookieLength: <?= (int) setting('Consent.consentLength') ?>,  // days
         consentForm: null,
         cookie: null,
 
@@ -18,7 +18,7 @@
 
             // Close consent form
             document.getElementById('consent-close').addEventListener('click', function() {
-                ConsentForm.closeForm();
+                ConsentForm.rejectAll();
             }, false);
 
             // Reject All
@@ -111,7 +111,7 @@
         rejectAll: function() {
             let values = this.getCookieForm(0);
 
-            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength);
+            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength, '/');
             this.closeForm();
         },
 
@@ -121,7 +121,7 @@
         acceptAll: function() {
             let values = this.getCookieForm(1);
 
-            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength);
+            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength, '/');
             this.closeForm();
         },
 
@@ -131,7 +131,7 @@
         acceptCustom: function() {
             let values = this.getCookieForm();
 
-            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength);
+            this.setCookie('bf_consent', JSON.stringify(values), this.cookieLength, '/');
             this.closeForm();
 
             console.log(values)
