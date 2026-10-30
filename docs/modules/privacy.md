@@ -79,8 +79,8 @@ reasoning.
 | `users.export` | download a user's data | `superadmin` (through `users.*`), `admin` |
 | `users.erase` | run **Erase personal data** | `superadmin` (through `users.*`) |
 
-Erasing follows the same rules as deleting: nobody erases themselves, and only users with `users.manage-admins` erase
-users who have it. Every erasure is recorded in `action_runs`, and every export is logged as a `notice`.
+Only users with `users.manage-admins` can export or erase users who have it, and nobody erases themselves. These are
+the same rules as deleting. Every erasure is recorded in `action_runs`, and every export is logged as a `notice`.
 
 ## Retention
 
@@ -96,8 +96,8 @@ public array $retention = [
 
 - **logins**: rows in `auth_logins`, including their IP addresses and user agents.
 - **tokenLogins**: rows in `auth_token_logins`.
-- **consents**: rows in `consent_records`. A browser's latest record is kept while its consent can still be in use
-  (within `Consent::$consentLength`); older answers it replaced are deleted once they pass the retention.
+- **consents**: rows in `consent_records` older than this many days. Each browser's latest record is kept for as long
+  as its consent is still valid (`Consent::$consentLength`); the older answers it replaced are deleted.
 
 Erased users' login rows keep their IP addresses until they are pruned. If you set `logins` to `null`, those IP
 addresses are kept for good.

@@ -5,10 +5,11 @@ stores personal data and registers no provider is left out: its data isn't in th
 guide adds a provider to a forum module whose posts and uploaded attachments belong to users. For the service and
 config, see the [Privacy](../modules/privacy.md) reference.
 
-## 1. Write the provider
+## 1. Export the module's data
 
 Implement `Bonfire\Privacy\PersonalDataProvider`. `export()` returns everything the module holds about the user, as an
-array that can be written as JSON. `erase()` removes it.
+array that can be written as JSON. Include every personal field, like IP addresses and signatures, not only the
+content. Leave out secrets such as password hashes, tokens or API keys.
 
 ```php
 namespace App\Modules\Forum;
@@ -27,7 +28,7 @@ class ForumPersonalData implements PersonalDataProvider
     public function export(User $user): array
     {
         return model(PostModel::class)
-            ->select('id, title, body, attachment, created_at')
+            ->select('id, title, body, signature, attachment, ip_address, created_at')
             ->where('user_id', $user->id)
             ->asArray()
             ->findAll();
@@ -35,17 +36,12 @@ class ForumPersonalData implements PersonalDataProvider
 
     public function erase(User $user): void
     {
-        $posts = model(PostModel::class);
-
-        // Keep the threads readable: the posts stay, attributed to the anonymised user
-        $posts->where('user_id', $user->id)->set(['signature' => null, 'ip_address' => null])->update();
+        // Step 2
     }
 }
 ```
 
-Leave secrets out of the export, like password hashes, tokens or API keys.
-
-## 2. Decide: delete or anonymise
+## 2. Erase it: delete or anonymise
 
 Each provider decides what erasing means for its data.
 
@@ -54,16 +50,25 @@ Each provider decides what erasing means for its data.
   personal fields and keep the rest. The `users` row itself stays, named `deleted-user-{id}`, so a `user_id` still
   points somewhere.
 
-Files are the exception to "everything in one transaction": a deleted file can't be rolled back. Queue file deletions
-with `afterErase()`, which runs them only after every provider has succeeded and the transaction has committed:
+Forum posts are part of other people's threads, so this provider anonymises them: it clears the signature, the IP
+address and the attachment, and keeps the post.
+
+Files are the exception to "everything in one transaction", because a deleted file can't be rolled back. Queue file
+deletions with `service('personalData')->afterErase()`, which runs them only after every provider has succeeded and the
+transaction has committed:
 
 ```php
 public function erase(User $user): void
 {
     $posts = model(PostModel::class);
-    $files = array_filter(array_column($posts->where('user_id', $user->id)->asArray()->findAll(), 'attachment'));
+    $files = array_filter(array_column(
+        $posts->select('attachment')->where('user_id', $user->id)->asArray()->findAll(),
+        'attachment',
+    ));
 
-    $posts->where('user_id', $user->id)->set(['attachment' => null])->update();
+    $posts->where('user_id', $user->id)
+        ->set(['signature' => null, 'attachment' => null, 'ip_address' => null])
+        ->update();
 
     service('personalData')->afterErase(static function () use ($files): void {
         foreach ($files as $file) {
@@ -73,8 +78,8 @@ public function erase(User $user): void
 }
 ```
 
-Don't catch your own exceptions in `erase()`. Throwing rolls back every provider's changes, and the admin sees that
-the erasure failed.
+Don't catch your own exceptions in `erase()`. Throwing rolls back every provider's changes for that user, and the
+admin sees that the erasure failed.
 
 ## 3. Register it
 
@@ -91,11 +96,15 @@ public function initAdmin()
 Bonfire's own `users` provider always runs last, so your provider can still read the user's email and other details
 while it erases.
 
+`initAdmin()` only runs on admin pages, the prune command and queued actions. A site that offers self-service export
+or erasure on its front end boots the admin modules first; see
+[Let users do it themselves](../building_sites/data_requests.md#5-optional-let-users-do-it-themselves).
+
 ## 4. Prune data that expires
 
 If your module keeps personal data only for a while, like IP addresses in an audit log, also implement
 `Bonfire\Privacy\PrunesPersonalData`. `php spark bf:privacy:prune`, which Bonfire schedules daily, calls `prune()` and
-reports the number you return.
+reports the number you return: how many records it deleted or cleared.
 
 ```php
 use Bonfire\Privacy\PrunesPersonalData;
@@ -107,8 +116,9 @@ class ForumPersonalData implements PersonalDataProvider, PrunesPersonalData
 
     public function prune(): int
     {
-        $posts = model(PostModel::class);
-        $posts->where('created_at <', Time::now()->subDays(30)->toDateTimeString())
+        model(PostModel::class)
+            ->where('created_at <', Time::now()->subDays(30)->toDateTimeString())
+            ->where('ip_address IS NOT NULL')
             ->set(['ip_address' => null])
             ->update();
 

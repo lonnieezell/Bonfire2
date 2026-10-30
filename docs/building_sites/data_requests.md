@@ -1,8 +1,9 @@
 # Handle a Data Export or Erasure Request
 
 Under the GDPR, people can ask for a copy of the data you hold about them, or ask you to erase it. This guide walks an
-admin through answering both requests in Bonfire, and shows how to let users do it themselves if your site wants that.
-For the service, settings and command, see the [Privacy](../modules/privacy.md) reference.
+admin through answering both requests in Bonfire, and keeping old personal data from piling up. It ends with how to
+let users do it themselves, if your site wants that. For the service, settings and command, see the
+[Privacy](../modules/privacy.md) reference.
 
 ## 1. Check who is asking
 
@@ -17,31 +18,37 @@ You have one month to answer a request. Keep a note of what you checked and when
 
 ## 2. Export the user's data
 
+You need the `users.export` permission, which the `superadmin` and `admin` groups have by default. Only users with
+`users.manage-admins` can export users who manage admins.
+
 1. In the admin area, open **Users** and click the user.
 2. Click **Export data** at the top of their edit screen.
 
-Your browser downloads `user-{id}-data.json`. It holds one section per module that stores personal data: `users` for
-the account, meta, avatar, sign-in identities and login history, `consent` for the cookie consent they gave while
-signed in, and a section for every module that registered its own provider. Password and token hashes are never
-included.
+Your browser downloads `user-{id}-data.json`. It holds one section per module that stores personal data:
 
-Send the file to the person through a channel you trust. The export is logged as a `notice` with your user ID and
+- `users`: the account, email address, meta, avatar file name, sign-in identities and login history;
+- `consent`: the cookie consent they gave while signed in;
+- one section for every other module that registered a provider.
+
+Password and token hashes are never included.
+
+Send the file to the person through a channel you trust. Each export is logged as a `notice` with your user ID and
 theirs.
-
-You need the `users.export` permission, which the `superadmin` and `admin` groups have by default.
 
 ## 3. Erase the user's data
 
+You need the `users.erase` permission, which only the `superadmin` group has by default. You can't erase yourself, and
+only users with `users.manage-admins` can erase users who manage admins.
+
 1. Open **Users**.
-2. Tick the user, or several, and choose **Erase personal data** from the bulk actions. For one user, you can use the
-   action on their row.
-3. Type the number of users to confirm.
+2. Tick the users in the list, or open the ⋯ menu on a user's row.
+3. Choose **Erase personal data**.
+4. Type the number of users to confirm, and click **Erase personal data**.
 
-Every module that registered a provider erases its data in one transaction, so either everything is erased or, if
-something fails, nothing is. The run appears in the **Action runs** dashboard widget and in the `action_runs` table,
-which is your record that the erasure happened.
-
-You need the `users.erase` permission, which only the `superadmin` group has by default. You can't erase yourself.
+Each user is erased in one transaction across every module: either all of their data is erased or, if something
+fails, none of it is. The run is recorded in the `action_runs` table, which is your record that the erasure happened.
+The **Action runs** dashboard widget shows failed runs, and finished ones too when its **Include completed runs**
+option is on.
 
 ### What erasure keeps
 
@@ -52,19 +59,24 @@ Bonfire anonymises the account instead of deleting it:
 - Login attempts stay for security audits, with the email address replaced. Their IP addresses are deleted when
   retention prunes them, after 90 days by default.
 
-Erased users can't be restored from the Recycler. If you need to delete a module's records outright rather than
-anonymise them, that module's provider decides; see
+Erased users don't appear in the Recycler, and can't be restored or purged. Whether a module deletes its records or
+anonymises them is up to that module; see
 [Make Your Module's Data Exportable and Erasable](../building_admin_modules/personal_data.md).
 
 ## 4. Make sure old data is deleted on schedule
 
-Bonfire deletes login attempts and old consent records once they are past their retention period. This only happens
-if the scheduler runs.
+Bonfire deletes login attempts and old consent records once they are past their retention period, but only if the
+scheduler runs.
 
-1. Check that `app/Config/Tasks.php` calls Bonfire's schedule in `init()`. `php spark bf:install` adds it:
+1. Check that `init()` in `app/Config/Tasks.php` calls Bonfire's schedule. `php spark bf:install` sets this up on new
+   installs. On an older install without the file, run `php spark tasks:publish`, delete the example tasks it adds,
+   and add the call:
 
     ```php
-    \Bonfire\Bonfire::schedule($schedule);
+    public function init(Scheduler $schedule)
+    {
+        \Bonfire\Bonfire::schedule($schedule);
+    }
     ```
 
 2. Add a cron entry that runs the scheduler every minute:
@@ -73,38 +85,79 @@ if the scheduler runs.
     * * * * * cd /path/to/your/site && php spark tasks:run >> /dev/null 2>&1
     ```
 
-3. To change how long data is kept, publish the Privacy config (`php spark bf:install` does this) and edit
-   `$retention` in `app/Config/Privacy.php`. Days, or `null` to keep data forever.
+3. To change how long data is kept, edit `$retention` in `app/Config/Privacy.php`: a number of days, or `null` to keep
+   the data forever. `php spark bf:install` publishes this file on new installs. On an older install, create it:
 
-**Tools → System Info** warns you when pruning hasn't run for over a week. To prune straight away, run
-`php spark bf:privacy:prune`.
+    ```php
+    <?php
 
-## Letting users do it themselves
+    namespace Config;
+
+    use Bonfire\Privacy\Config\Privacy as BonfirePrivacy;
+
+    class Privacy extends BonfirePrivacy
+    {
+        public array $retention = [
+            'logins'      => 90,
+            'tokenLogins' => 90,
+            'consents'    => 365,
+        ];
+    }
+    ```
+
+To prune straight away, run `php spark bf:privacy:prune`. **Tools → System Info** warns you when pruning hasn't run
+for over a week.
+
+## 5. Optional: let users do it themselves
 
 Bonfire doesn't ship "Download my data" or "Delete my account" pages, but `service('personalData')` is public, so you can
-build them in your own front end. The providers register themselves from `initAdmin()`, which doesn't run on front-end
-pages, so boot the admin modules first:
+build them in your own front end. Modules register their providers from `initAdmin()`, which doesn't run on front-end
+pages, so boot the admin modules first.
+
+Add the routes behind the `session` filter, so only signed-in users reach them:
+
+```php
+// app/Config/Routes.php
+$routes->group('my-data', ['filter' => 'session'], static function ($routes) {
+    $routes->get('download', 'MyData::download');
+    $routes->post('erase', 'MyData::erase');
+});
+```
+
+Then the controller. Erasure can't be undone, so it asks for the user's password first:
 
 ```php
 namespace App\Controllers;
 
 use Bonfire\Bonfire;
+use Bonfire\Privacy\PersonalData;
 
 class MyData extends BaseController
 {
     public function download()
     {
-        $data = $this->personalData()->export(auth()->user());
+        $user = auth()->user();
+        log_message('notice', 'User {user} exported their personal data.', ['user' => $user->id]);
 
         return $this->response
             ->setHeader('Content-Disposition', 'attachment; filename="my-data.json"')
-            ->setJSON($data);
+            ->setJSON($this->personalData()->export($user));
     }
 
     public function erase()
     {
-        // Ask for the password again before this point
-        $user = auth()->user();
+        $user    = auth()->user();
+        $correct = auth()->check([
+            'email'    => $user->email,
+            'password' => (string) $this->request->getPost('password'),
+        ])->isOK();
+
+        if (! $correct) {
+            return redirect()->back()->with('error', 'That password is not correct.');
+        }
+
+        // Self-service erasures don't go through an admin action, so log them for your records
+        log_message('notice', 'User {user} erased their personal data.', ['user' => $user->id]);
 
         auth()->logout();
         $this->personalData()->erase($user);
@@ -112,7 +165,7 @@ class MyData extends BaseController
         return redirect()->to('/')->with('message', 'Your data has been erased.');
     }
 
-    private function personalData()
+    private function personalData(): PersonalData
     {
         if (service('personalData')->providers() === []) {
             (new Bonfire())->boot(admin: true);
@@ -123,5 +176,4 @@ class MyData extends BaseController
 }
 ```
 
-Protect both routes with the `session` filter, and make the person confirm an erasure, for example by entering their
-password, since it can't be undone.
+The erase form posts a `password` field to `my-data/erase`, with `csrf_field()` if CSRF protection is on.

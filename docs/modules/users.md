@@ -117,6 +117,19 @@ You can't select yourself, and only users with `users.manage-admins` can delete 
 
 Deleted users go to the Recycler under **Tools**, where you can restore them or delete them for good.
 
+## Export a user's data
+
+You need the `users.export` permission. Click **Export data** at the top of a user's edit screen to download everything
+the site holds about them as a JSON file. Only users with `users.manage-admins` can export users who manage admins.
+
+## Erase users' personal data
+
+You need the `users.erase` permission. Tick the users in the list, or open the ⋯ menu on a user's row, choose **Erase
+personal data**, and type the number of users to confirm. Their accounts are anonymised and closed for good, and
+can't be restored from the Recycler.
+
+For both, see [Handle a Data Export or Erasure Request](../building_sites/data_requests.md).
+
 ## Settings → Users
 
 Open **Users** under **Settings** in the sidebar. You need the `users.settings` permission. Click **Save Settings**
