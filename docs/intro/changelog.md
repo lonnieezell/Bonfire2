@@ -21,6 +21,11 @@ and the email activation and 2FA actions, and shows where to change each one. It
 `error()`, `render()`, `admin_accent()` and `site_offline()`, alongside `app_date()`. A new Maintenance mode section
 explains how to take the site offline, who can still get in, and how to get back in if you're locked out.
 
+[View Components](../building_admin_modules/view_components.md) now lists the attributes of every component and has a
+Pager templates section covering `bonfire_full`, `bonfire_simple`, `bonfire_list_hx` and the rest.
+
+The `bonfire_simple` pager template no longer prints a stray `?>` above its links.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,

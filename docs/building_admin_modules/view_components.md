@@ -69,7 +69,13 @@ collection and wrap the page in it.
 
 **<x-sidebar\>**
 
-This is the main view that renders the sidebar and all links within it.
+The admin sidebar: the site's brand, a Dashboard link, then the `sidebar` menu's collections and items that the
+current user may see, with the current page marked. It takes no attributes. The Admin layout (`master.php`) renders it
+once, so you don't place it yourself: add your module's links to the `sidebar` menu instead (see [Menus](menus.md)).
+
+```php
+<x-sidebar />
+```
 
 ## Settings forms
 
@@ -189,20 +195,97 @@ toasts, shows the progress of an action run just queued.
 
 **<x-button\>**
 
-This is used within the admin forms to add pre-styled buttons (configurable via attributes `color` (any pre-defined Bootstrap 5 color, like `primary`, `secondary`, `success`, etc., defaulting to `primary`) and `type` (defaults to `submit`, but can also be `reset`, `button`, etc.). `id`, `name` and `onclick` are passed on as well.
+A Bootstrap button with the slot as its label.
+
+| Attribute | Default   | Description                                                              |
+|-----------|-----------|--------------------------------------------------------------------------|
+| `color`   | `primary` | A Bootstrap colour (`secondary`, `success`, `danger`, …): `btn-{color}`. |
+| `type`    | `submit`  | The button's `type`: `submit`, `reset` or `button`.                      |
+| `id`      |           | The button's `id`.                                                       |
+| `name`    |           | The button's `name`, posted with the form when it submits it.            |
+| `onclick` |           | A JavaScript `onclick` handler.                                          |
+
+It drops any other attribute, so for `hx-*`, Alpine or `disabled` write a `<button class="btn …">` yourself.
+
+```php
+<x-button>Save</x-button>
+<x-button color="secondary" type="button" id="preview">Preview</x-button>
+```
 
 **<x-button-container\>**
 
-Wrapper for form button area enforcing uniform margins.
+Wraps a form's buttons with uniform spacing. It takes no attributes.
+
+```php
+<x-button-container>
+    <x-button>Save</x-button>
+</x-button-container>
+```
 
 **<x-module-title\>**
 
-A muted line of text for page headers.
+A muted line of text for page headers, with the slot as its text. It takes no attributes.
+
+```php
+<x-module-title>Manage the site's users</x-module-title>
+```
 
 **<x-filter-link\>**
 
-This is used by the Filters system to show the link that display or hides the filters in a resource list page. 
+The "Filter" link that shows and hides the filters of a resource list. It takes no attributes and no slot. It toggles
+an Alpine `filtered` variable, so put it inside an element with `x-data="{filtered: false}"`. See
+[Filters](filters.md#the-view).
 
 **<x-filter-list\>**
 
-This is the box that wraps the list of filters in a resource list page. 
+The panel that holds a resource list's filters, shown while `filtered` is true. It takes no attributes; the slot is
+the filters, usually the `Filters::renderList` cell.
+
+```php
+<div x-data="{filtered: false}" hx-target="#content-list">
+    <x-filter-link />
+
+    <div class="row">
+        <div class="col order-2 order-md-1" id="content-list">
+            <?= $this->include('Blog\Views\_table') ?>
+        </div>
+
+        <x-filter-list>
+            <?= view_cell('Bonfire\Core\Cells\Filters::renderList', 'model=PostFilter target=#content-list') ?>
+        </x-filter-list>
+    </div>
+</div>
+```
+
+## Pager templates
+
+Bonfire registers six [pager](https://codeigniter.com/user_guide/libraries/pagination.html) templates. Name one when
+you render the links:
+
+```php
+<?= $pager->links('default', 'bonfire_list_hx') ?>
+```
+
+| Template            | Renders                                                     | htmx target          |
+|---------------------|-------------------------------------------------------------|----------------------|
+| `bonfire_full`      | First, Previous, two page numbers either side, Next, Last.  | None (full page loads) |
+| `bonfire_full_hx`   | The same links, loaded through htmx.                         | `#content-list`      |
+| `bonfire_simple`    | Newer and Older links.                                      | None (full page loads) |
+| `bonfire_simple_hx` | Newer and Older links, loaded through htmx.                  | `#content-list`      |
+| `bonfire_list_hx`   | The admin list footer: "Showing X of Y" with Previous and Next buttons, loaded through htmx. | The nearest `hx-target` ancestor |
+| `bonfire_head`      | `<link rel="prev">`, `<link rel="canonical">` and `<link rel="next">` tags. | —                    |
+
+The page-link templates render nothing when there is only one page; `bonfire_list_hx` still shows its "Showing" line.
+
+`bonfire_full_hx` and `bonfire_simple_hx` swap the response into `#content-list`, so give the element that holds your
+list that `id`. `bonfire_list_hx` sets no target of its own: put `hx-target` (and any `hx-include`) on an element
+that wraps the list, as in the [Filters](filters.md#the-view) example.
+
+`bonfire_head` belongs in the page's `<head>`, so search engines can follow the pages:
+
+```php
+<?= $pager->links('default', 'bonfire_head') ?>
+```
+
+The templates are package views in `src/Views/`, not part of the published theme, so `composer update` updates them.
+To change one, register your own template in `app/Config/Pager.php` and use its name instead.
