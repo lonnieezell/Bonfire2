@@ -47,9 +47,15 @@ class ConsentFilter implements FilterInterface
 
         helper('consent');
 
-        // Shown until the visitor has answered every consent;
-        // otherwise hidden, for consent_settings_link() to open.
-        $choices  = consent_choices();
+        // Shown until the visitor has answered every consent; otherwise
+        // added hidden, only to pages with a consent_settings_link() to open it.
+        $choices = consent_choices();
+        $show    = empty($choices['consent']) || array_diff_key(setting('Consent.consents'), $choices) !== [];
+
+        if (! $show && ! str_contains((string) $response->getBody(), 'data-consent-open')) {
+            return;
+        }
+
         $consents = array_map(
             fn (array $consent) => ['name' => $this->text($consent['name']), 'desc' => $this->text($consent['desc'])] + $consent,
             setting('Consent.consents'),
@@ -58,7 +64,7 @@ class ConsentFilter implements FilterInterface
         $html = view(setting('Consent.consentForm'), [
             'consents' => $consents,
             'choices'  => $choices,
-            'show'     => empty($choices['consent']) || array_diff_key($consents, $choices) !== [],
+            'show'     => $show,
             'message'  => $this->text(setting('Consent.consentMessage')),
         ]);
         // Replace {policy_url} with the actual link.

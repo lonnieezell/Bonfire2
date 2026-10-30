@@ -38,20 +38,17 @@ class ActionRuns
             return RunOutcome::ran(false, lang('Actions.queueMissing'));
         }
 
-        $queued = $queueReady && ($action->queue === Queue::Always || ($action->queue === Queue::Auto && count($ids) > $action->queueAbove));
-
-        // Runs in the request are recorded too, as the audit trail of who did what
-        $runs  = model(ActionRunModel::class);
-        $runId = $runs->insert([
+        $runs = model(ActionRunModel::class);
+        $run  = [
             'list'    => $list,
             'action'  => $action->name(),
             'user_id' => $actor->id,
             'ids'     => json_encode($ids),
             'total'   => count($ids),
-            'status'  => $queued ? RunStatus::Queued : RunStatus::Running,
-        ]);
+        ];
 
-        if ($queued) {
+        if ($queueReady && ($action->queue === Queue::Always || ($action->queue === Queue::Auto && count($ids) > $action->queueAbove))) {
+            $runId  = $runs->insert($run + ['status' => RunStatus::Queued]);
             $pushed = service('queue')->push(RunAction::QUEUE, RunAction::NAME, ['run' => $runId]);
 
             if (! $pushed->getStatus()) {
@@ -66,18 +63,21 @@ class ActionRuns
 
         $context = new ActionContext(service('actions')->for($list)->source(), $action, $actor, $ids);
 
+        // Runs in the request are recorded once they end, as the audit trail
+        // of who did what. Recording them first would leave a run killed by a
+        // timeout "running" for good.
         try {
             $result = $action->handle($context);
         } catch (Throwable $e) {
             log_message('error', $e->getMessage());
-            $runs->update($runId, ['status' => RunStatus::Failed, 'message' => lang('Bonfire.unknownError')]);
+            $runs->insert($run + ['status' => RunStatus::Failed, 'processed' => $context->processed(), 'skipped' => $context->skipped(), 'message' => lang('Bonfire.unknownError')]);
 
             return RunOutcome::ran(false, lang('Bonfire.unknownError'));
         }
 
         $outcome = RunOutcome::ran($context->succeeded($result), $context->summary($result));
 
-        $runs->update($runId, [
+        $runs->insert($run + [
             'status'    => $outcome->succeeded ? RunStatus::Done : RunStatus::Failed,
             'processed' => $context->processed(),
             'skipped'   => $context->skipped(),

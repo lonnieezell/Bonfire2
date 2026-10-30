@@ -315,14 +315,14 @@ class UserController extends AdminController
      */
     public function export(int $userId)
     {
-        if (! auth()->user()->can('users.export')) {
-            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
-        }
-
         /** @var User|null $user */
         $user = model(UserModel::class)->withDeleted()->find($userId);
         if ($user === null) {
             return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
+        }
+
+        if (! UserAccess::forCurrentUser()->canExport($user)) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
         log_message('notice', 'User {admin} exported the personal data of user {user}.', ['admin' => auth()->id(), 'user' => $user->id]);

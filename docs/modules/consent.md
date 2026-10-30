@@ -88,6 +88,8 @@ page, usually the footer:
 It renders a "Cookie settings" link that reopens the consent form with the visitor's current choices pre-filled. Pass
 your own text with `consent_settings_link('Privacy choices')`. It returns an empty string while consent is off.
 
+Once a visitor has answered every consent, the hidden form is only added to pages that contain this link.
+
 ## How Consent Is Saved
 
 The consent form posts to the `consent-save` route (`POST /consent`), with a CSRF token when CSRF protection is on. The

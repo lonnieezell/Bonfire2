@@ -131,6 +131,15 @@ final readonly class UserAccess
         ));
     }
 
+    /**
+     * Only admin managers download the data of users who manage admins.
+     */
+    public function canExport(User $target): bool
+    {
+        return $this->actor->can('users.export')
+            && ($this->canManageAdmins() || ! $target->can('users.manage-admins'));
+    }
+
     public function canSelectForDeletion(User $target): bool
     {
         return ! $this->isSelf($target->id)

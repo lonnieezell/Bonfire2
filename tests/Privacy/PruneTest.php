@@ -93,6 +93,17 @@ final class PruneTest extends TestCase
         );
     }
 
+    public function testABlankConsentLengthKeepsEachBrowsersLatestRecord(): void
+    {
+        setting('Consent.consentLength', '');
+        $this->consent('a', 400, 'old');
+        $this->consent('a', 399, 'latest');
+
+        service('personalData')->prune();
+
+        $this->assertSame(['latest'], array_column($this->db->table('consent_records')->get()->getResultArray(), 'consents'));
+    }
+
     public function testTheCommandPrunesModulesAndReportsCounts(): void
     {
         $this->login('auth_logins', 91, '10.0.0.1');

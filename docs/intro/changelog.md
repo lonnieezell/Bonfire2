@@ -114,7 +114,8 @@ New installs get steps 1 and 2 from `php spark bf:install`.
 The consent form can now be reopened, so visitors can change or withdraw consent: put `consent_settings_link()` in
 your layout's footer. Saving posts to a new `consent-save` route, which sets the `bf_consent` cookie server-side,
 appends a row to a new `consent_records` table (no IP address or user agent) and reloads the page, so `has_consent()`
-checks apply at once. Visitors who answered before are asked again when you add a consent, and any consent can be
+checks apply at once. Closing the form with its X keeps what the visitor accepted before and rejects the rest, so on
+a first visit it still rejects everything non-essential. Visitors who answered before are asked again when you add a consent, and any consent can be
 marked `'locked' => true` (the default `required` consent is). The default text is translated. See
 [Consent](../modules/consent.md).
 

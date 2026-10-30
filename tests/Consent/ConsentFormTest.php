@@ -2,6 +2,7 @@
 
 namespace Tests\Consent;
 
+use Bonfire\Consent\Filters\ConsentFilter;
 use CodeIgniter\Config\Services;
 use Tests\Support\TestCase;
 
@@ -55,12 +56,20 @@ final class ConsentFormTest extends TestCase
     public function testAnsweredVisitorsGetTheFormHiddenAndPreFilled(): void
     {
         $this->answered(['required' => 1, 'performance' => 1, 'targeting' => 0]);
+        helper('consent');
 
-        $form = $this->popup();
+        $form = $this->popup($this->filtered('<html><head></head><body>' . consent_settings_link() . '</body></html>'));
 
         $this->assertMatchesRegularExpression('#<form[^>]* hidden#', $form);
         $this->assertTrue($this->isChecked($form, 'performance'));
         $this->assertFalse($this->isChecked($form, 'targeting'));
+    }
+
+    public function testAnsweredVisitorsGetNoFormOnPagesWithoutASettingsLink(): void
+    {
+        $this->answered(['required' => 1, 'performance' => 1, 'targeting' => 0]);
+
+        $this->get('/')->assertDontSee('id="consent-popup"');
     }
 
     public function testANewConsentAsksAgainWithTheNewOneUnchecked(): void
@@ -130,14 +139,21 @@ final class ConsentFormTest extends TestCase
         service('superglobals')->setCookie('bf_consent', json_encode(['consent' => 1, 'consent_id' => str_repeat('a', 32)] + $choices));
     }
 
-    private function popup(): string
+    private function popup(?string $body = null): string
     {
-        $body = $this->get('/')->getBody();
+        $body ??= $this->get('/')->getBody();
 
         $this->assertMatchesRegularExpression('#<form id="consent-popup".*?</form>#s', $body);
         preg_match('#<form id="consent-popup".*?</form>#s', $body, $match);
 
         return $match[0];
+    }
+
+    private function filtered(string $body): string
+    {
+        $response = service('response')->setBody($body);
+
+        return (string) (new ConsentFilter())->after(service('request'), $response)->getBody();
     }
 
     private function isChecked(string $form, string $alias): bool

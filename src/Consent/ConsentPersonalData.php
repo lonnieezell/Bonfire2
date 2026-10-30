@@ -55,17 +55,21 @@ class ConsentPersonalData implements PersonalDataProvider, PrunesPersonalData
             return 0;
         }
 
-        $db     = db_connect();
-        $latest = $db->table('consent_records')->selectMax('id')->groupBy('consent_id');
-
-        model(ConsentRecordModel::class)
+        $db      = db_connect();
+        $latest  = $db->table('consent_records')->selectMax('id')->groupBy('consent_id');
+        $length  = (int) setting('Consent.consentLength');
+        $records = model(ConsentRecordModel::class)
             ->where('created_at <', Time::now()->subDays($days)->toDateTimeString())
             ->groupStart()
             // Wrapped in a derived table, as MySQL can't select from the table it deletes from
-            ->whereNotIn('id', $db->newQuery()->fromSubquery($latest, 'latest')->select('id'))
-            ->orWhere('created_at <', Time::now()->subDays((int) setting('Consent.consentLength'))->toDateTimeString())
-            ->groupEnd()
-            ->delete();
+            ->whereNotIn('id', $db->newQuery()->fromSubquery($latest, 'latest')->select('id'));
+
+        // Without a consent length, no latest record counts as expired
+        if ($length > 0) {
+            $records->orWhere('created_at <', Time::now()->subDays($length)->toDateTimeString());
+        }
+
+        $records->groupEnd()->delete();
 
         return $db->affectedRows();
     }

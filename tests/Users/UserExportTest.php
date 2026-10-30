@@ -89,6 +89,19 @@ final class UserExportTest extends TestCase
         );
     }
 
+    public function testOnlyAdminManagersExportAdmins(): void
+    {
+        $admin = $this->createUser();
+        $admin->addGroup('admin');
+
+        $this->actingAs($admin)->get("admin/users/{$this->admin->id}/export")->assertRedirect();
+        $this->assertStringNotContainsString(
+            site_url("admin/users/{$this->admin->id}/export"),
+            $this->actingAs($admin)->get("admin/users/{$this->admin->id}")->getBody(),
+        );
+        $this->actingAs($this->admin)->get("admin/users/{$this->admin->id}/export")->assertOK();
+    }
+
     public function testUsersWithoutTheExportPermissionAreRefused(): void
     {
         $developer = $this->createUser();
