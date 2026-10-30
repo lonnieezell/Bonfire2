@@ -22,7 +22,7 @@ final class MenuItemTest extends TestCase
         $this->assertSame('Item A', $item->title());
         $this->assertSame('/example.com/foo?bar=baz', $item->url());
         $this->assertSame('Alternate A', $item->altText());
-        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
+        $this->assertSame('<img src="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
         $this->assertSame(5, $item->weight());
     }
 
@@ -39,7 +39,7 @@ final class MenuItemTest extends TestCase
         $this->assertSame('Item A', $item->title());
         $this->assertSame('/example.com/foo?bar=baz', $item->url());
         $this->assertSame('Alternate A', $item->altText());
-        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
+        $this->assertSame('<img src="/example.com/img/foo.jpg" alt="Item A" />', $item->icon());
         $this->assertSame(5, $item->weight());
     }
 
@@ -80,7 +80,7 @@ final class MenuItemTest extends TestCase
         $item->setTitle('Item A')
             ->setIconUrl('example.com/img/foo.jpg');
 
-        $this->assertSame('<img href="/example.com/img/foo.jpg" alt="Item A" class="extra" />', $item->icon('extra'));
+        $this->assertSame('<img src="/example.com/img/foo.jpg" alt="Item A" class="extra" />', $item->icon('extra'));
     }
 
     public function testWithNamedRoutes()
