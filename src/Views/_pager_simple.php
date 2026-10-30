@@ -7,7 +7,6 @@ use CodeIgniter\Pager\PagerRenderer;
  */
 $pager->setSurroundCount(0);
 if ($pager->getPageCount() > 1) : ?>
-?>
 <nav>
     <ul class="pager">
         <li class="page-item <?= $pager->hasPrevious() ? '' : 'disabled' ?>">
