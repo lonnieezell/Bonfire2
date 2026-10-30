@@ -27,9 +27,7 @@ class ConsentSettingsController extends AdminController
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        return $this->render($this->viewPrefix . 'settings', [
-            'consents' => setting('Consent.consents'),
-        ]);
+        return $this->render($this->viewPrefix . 'settings');
     }
 
     /**
@@ -43,13 +41,9 @@ class ConsentSettingsController extends AdminController
         }
 
         $rules = [
-            'requireConsent'  => 'permit_empty',
-            'consentLength'   => 'required_with[requireConsent]|string',
-            'policyUrl'       => 'required_with[requireConsent]|string',
-            'policyTitle'     => 'required_with[requireConsent]|string',
-            'consentMessage'  => 'required_with[requireConsent]|string',
-            'consents.*.name' => 'required_with[requireConsent]|string',
-            'consents.*.desc' => 'required_with[requireConsent]|string',
+            'requireConsent' => 'permit_empty',
+            'consentLength'  => 'required_with[requireConsent]|string',
+            'policyUrl'      => 'required_with[requireConsent]|string',
         ];
 
         if (! $this->validate($rules)) {
@@ -59,9 +53,6 @@ class ConsentSettingsController extends AdminController
         setting('Consent.requireConsent', (bool) $this->request->getPost('requireConsent'));
         setting('Consent.consentLength', $this->request->getPost('consentLength'));
         setting('Consent.policyUrl', $this->request->getPost('policyUrl'));
-        setting('Consent.policyTitle', $this->request->getPost('policyTitle'));
-        setting('Consent.consentMessage', $this->request->getPost('consentMessage'));
-        setting('Consent.consents', $this->request->getPost('consents'));
 
         alert('success', lang('Bonfire.settingsSaved'));
 

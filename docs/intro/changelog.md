@@ -6,6 +6,29 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+The users list has an **Erase personal data** action, for one user or many. It runs every registered personal data
+provider in one transaction: the user's name is replaced with `deleted-user-{id}`, their avatar, meta, sign-in
+identities and remember tokens are deleted, their consent records are removed, and the account is deactivated,
+soft-deleted and marked with a new `erased_at` column. The row stays so content that points at it keeps working; login
+rows stay for security audits, without the email address. Erased users don't appear in the Recycler and can't be
+restored or purged. It needs the new `users.erase` permission, which only `superadmin` has (through `users.*`). See
+[ADR 0006](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0006-erasure-anonymises-users.md).
+
+Actions that run in the request, not only queued ones, are now recorded in `action_runs`, so every run has an audit
+trail. With **Include completed runs** on, the Action runs dashboard widget lists them too.
+
+A user's edit screen has an **Export data** button that downloads everything the site holds about them as
+`user-{id}-data.json`: their account, meta, avatar, sign-in identities (without password or token hashes), login
+history and consent records. Each export is logged as a notice. It needs the new `users.export` permission, which
+`superadmin` has through `users.*`; run `php spark bonfire:permissions` to grant it to `admin`. Modules add their own
+data to the export by implementing `Bonfire\Privacy\PersonalDataProvider` and registering it with
+`service('personalData')->register()` from `initAdmin()`.
+
+Three consent banner fixes. An absolute cookie policy URL (`https://...`) is now used as-is; before, it was run
+through `site_url()`. The consent cookie now lasts `Consent.consentLength` days instead of a fixed 180, and is set
+for the whole site. Closing the banner with its X now rejects all non-essential cookies, so it stops reappearing on
+every page. If you published your own `consentFormScripts` view, copy the change from `consent_scripts.php`.
+
 Items added straight to a menu with `Menu::addItem()`, outside any collection, now show in the sidebar, the command
 palette and the breadcrumb. Before, the Admin theme skipped them. If you published the Admin theme, copy the change
 from `Components/sidebar.php` and `_palette.php`.
@@ -63,6 +86,50 @@ is unaffected. Rows already in your `migrations` table keep the old `Bonfire\{â€
 keep using `--all`: `-n` filters history by namespace and would try to run those migrations again.
 
 ## 30 October 2026 (breaking change)
+
+Bonfire now deletes personal data it no longer needs on a schedule. A new Privacy config sets how many days to keep
+it (`null` keeps it forever): login attempts and access token logins for 90 days, and consent records for 365 days once
+a newer answer replaced them or their consent expired. `php spark bf:privacy:prune` does the work, and modules prune
+their own data by implementing `Bonfire\Privacy\PrunesPersonalData`. System Info warns when pruning hasn't run for
+over a week.
+
+Bonfire now requires `codeigniter4/tasks`, and `codeigniter4/queue` moved from `suggest` to `require`. To schedule
+the prune on an existing install:
+
+1. Run `php spark tasks:publish` if you have no `app/Config/Tasks.php`, and remove the example tasks it contains.
+2. Add this line to its `init()` method:
+
+    ```php
+    \Bonfire\Bonfire::schedule($schedule);
+    ```
+
+3. Run `php spark tasks:run` every minute from cron:
+
+    ```
+    * * * * * cd /path/to/your/site && php spark tasks:run >> /dev/null 2>&1
+    ```
+
+New installs get steps 1 and 2 from `php spark bf:install`.
+
+The consent form can now be reopened, so visitors can change or withdraw consent: put `consent_settings_link()` in
+your layout's footer. Saving posts to a new `consent-save` route, which sets the `bf_consent` cookie server-side,
+appends a row to a new `consent_records` table (no IP address or user agent) and reloads the page, so `has_consent()`
+checks apply at once. Closing the form with its X keeps what the visitor accepted before and rejects the rest, so on
+a first visit it still rejects everything non-essential. Visitors who answered before are asked again when you add a consent, and any consent can be
+marked `'locked' => true` (the default `required` consent is). The default text is translated. See
+[Consent](../modules/consent.md).
+
+Two things to do before you run `php spark migrate --all`:
+
+- **Text edited in Settings â†’ Consent:** the message, policy title and consents are no longer editable there, and the
+  `ForgetConsentText` migration deletes their stored values so the config and language files take effect. Copy any
+  text you changed into `app/Config/Consent.php` first, which `php spark bf:install` published. Language keys
+  (`File.key`) are translated; anything else, like the English text already in your published config, is shown as-is.
+  Add `'locked' => true` to its `required` consent, since the form no longer treats that key specially.
+- **Custom `$consentForm` view:** the form is now a `<form>` that posts to `url_to('consent-save')`, with checkboxes
+  named `consents[<alias>]` and submit buttons named `choice`. See
+  [Customizing the Consent Form](../modules/consent.md#customizing-the-consent-form) for the full contract, and update
+  your view to match. A custom `$consentFormScripts` view should drop its cookie handling; see `consent_scripts.php`.
 
 A new `Settings.php` language file (`src/Settings/Language/`) holds the General Settings text. CodeIgniter merges
 language files of the same name, so if one of your modules has a `Settings.php` language file, its keys now merge with

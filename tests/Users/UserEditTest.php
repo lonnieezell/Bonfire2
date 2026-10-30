@@ -55,7 +55,7 @@ final class UserEditTest extends TestCase
             '#<label class="bf-group-card">\s*<input type="checkbox" name="groups\[\]" value="beta"[^>]*checked\s*>\s*<span class="bf-group-card-title">Beta User</span>\s*<span class="bf-group-card-desc">Has access to beta-level features.</span>\s*<span class="bf-group-card-meta">1 permission</span>#',
             $html,
         );
-        $this->assertStringContainsString('<span class="bf-group-card-meta">20 permissions</span>', $html);
+        $this->assertStringContainsString('<span class="bf-group-card-meta">22 permissions</span>', $html);
         $this->assertStringContainsString('class="bf-floating-bar" x-data="bfSaveBar"', $html);
     }
 
@@ -164,6 +164,12 @@ final class UserEditTest extends TestCase
         $this->assertStringContainsString('<h2>Recent Logins</h2>', $html);
         $this->assertMatchesRegularExpression('#10.0.0.1</td>.*?bf-status-ok"><span class="bf-dot" aria-hidden="true"></span>Success#s', $html);
         $this->assertMatchesRegularExpression('#10.0.0.2</td>.*?bf-status-danger"><span class="bf-dot" aria-hidden="true"></span>Failed#s', $html);
+    }
+
+    public function testSecurityKeepsTheAuthThemeStylesheetOut(): void
+    {
+        // auth.css restyles <body>, which breaks the admin's dark mode
+        $this->assertStringNotContainsString('auth/css/auth', $this->page($this->admin, 'security'));
     }
 
     private function betaUserWithLogsView(): User

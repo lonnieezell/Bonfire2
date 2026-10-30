@@ -40,38 +40,39 @@ class ConsentFilter implements FilterInterface
     {
         helper('setting');
 
-        // Consent system disabled?
-        if (! setting('Consent.requireConsent')) {
+        // Consent system disabled, or not a full page (JSON, htmx partials, redirects)?
+        if (! setting('Consent.requireConsent') || ! str_contains((string) $response->getBody(), '</body>')) {
             return;
         }
 
-        // Get the existing consent cookie
-        if (! function_exists('get_cookie')) {
-            helper('cookie');
-        }
+        helper('consent');
 
-        $cookie      = get_cookie('bf_consent');
-        $permissions = $cookie !== null
-            ? json_decode($cookie, true)
-            : [];
+        // Shown until the visitor has answered every consent; otherwise
+        // added hidden, only to pages with a consent_settings_link() to open it.
+        $choices = consent_choices();
+        $show    = empty($choices['consent']) || array_diff_key(setting('Consent.consents'), $choices) !== [];
 
-        // Do we already have consent from the visitor?
-        // then nothing to do here...
-        if ($permissions['consent'] ?? false) {
+        if (! $show && ! str_contains((string) $response->getBody(), 'data-consent-open')) {
             return;
         }
 
-        // Insert the consent form
+        $consents = array_map(
+            fn (array $consent) => ['name' => $this->text($consent['name']), 'desc' => $this->text($consent['desc'])] + $consent,
+            setting('Consent.consents'),
+        );
+
         $html = view(setting('Consent.consentForm'), [
-            'consents' => setting('Consent.consents'),
-            'message'  => setting('Consent.consentMessage'),
+            'consents' => $consents,
+            'choices'  => $choices,
+            'show'     => $show,
+            'message'  => $this->text(setting('Consent.consentMessage')),
         ]);
         // Replace {policy_url} with the actual link.
         $link = setting('Consent.policyUrl');
-        $link = str_starts_with('http', (string) $link)
+        $link = str_starts_with((string) $link, 'http')
             ? $link
             : site_url($link);
-        $policyTitle = setting('Consent.policyTitle');
+        $policyTitle = esc($this->text(setting('Consent.policyTitle')));
         $html        = str_ireplace('{policy_url}', "<a href='{$link}' target='_blank'>{$policyTitle}</a>", $html);
 
         $cssFile = setting('Consent.consentFormStyles');
@@ -89,5 +90,14 @@ class ConsentFilter implements FilterInterface
         $response->setBody($output);
 
         return $response;
+    }
+
+    /**
+     * A value shaped like a language key (File.key) is translated;
+     * anything else is literal text from a published config.
+     */
+    private function text(string $value): string
+    {
+        return preg_match('/^\w+(\.\w+)+$/', $value) ? lang($value) : $value;
     }
 }

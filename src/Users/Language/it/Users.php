@@ -149,4 +149,9 @@ return [
         'email'       => 'Indirizzo Email',
         'last_active' => 'Ultima Attività',
     ],
+    'exportData'       => 'Esporta i dati',
+    'eraseUsers'       => 'Cancella i dati personali',
+    'eraseConfirm'     => 'Cancellare i dati personali di {count} utenti?',
+    'eraseConfirmBody' => 'Nomi, indirizzi email, avatar, dati di accesso e i dati che i moduli conservano su di loro vengono rimossi e gli account chiusi definitivamente. L\'operazione non può essere annullata.',
+    'erased'           => 'I dati personali di {count} utenti sono stati cancellati.',
 ];

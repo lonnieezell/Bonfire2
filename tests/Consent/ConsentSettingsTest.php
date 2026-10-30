@@ -2,7 +2,10 @@
 
 namespace Tests\Consent;
 
+use Bonfire\Consent\Database\Migrations\ForgetConsentText;
 use Bonfire\Users\User;
+use CodeIgniter\Config\Services;
+use Config\Database;
 use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
@@ -15,6 +18,13 @@ final class ConsentSettingsTest extends TestCase
 
     protected $refresh = true;
     private User $user;
+
+    protected function tearDown(): void
+    {
+        Services::resetSingle('settings');
+
+        parent::tearDown();
+    }
 
     protected function setUp(): void
     {
@@ -30,9 +40,6 @@ final class ConsentSettingsTest extends TestCase
             'Consent.requireConsent' => true,
             'Consent.consentLength'  => '30',
             'Consent.policyUrl'      => '/cookies',
-            'Consent.policyTitle'    => 'Cookie Policy',
-            'Consent.consentMessage' => 'We use cookies. See {policy_url}.',
-            'Consent.consents'       => ['analytics' => ['name' => 'Analytics', 'desc' => 'Counts visits.']],
         ];
 
         $this->assertRoundTrips($settings);
@@ -44,19 +51,31 @@ final class ConsentSettingsTest extends TestCase
             'Consent.requireConsent' => false,
             'Consent.consentLength'  => '',
             'Consent.policyUrl'      => '',
-            'Consent.policyTitle'    => '',
-            'Consent.consentMessage' => '',
         ]);
     }
 
-    public function testShowsALiveBannerPreview(): void
+    public function testConsentTextIsNotEditable(): void
     {
-        setting('Consent.consentMessage', 'We use cookies. See {policy_url}.');
+        $html   = $this->actingAs($this->user)->get('/admin/settings/consent')->getBody();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/consent'));
 
-        $html = $this->actingAs($this->user)->get('/admin/settings/consent')->getBody();
+        $this->assertSame(['requireConsent', 'consentLength', 'policyUrl'], array_values(array_diff(array_keys($fields), [csrf_token()])));
+    }
 
-        $this->assertMatchesRegularExpression('#<div class="bf-consent-preview"[^>]*>#', $html);
-        $this->assertStringContainsString('x-model="message"', $html);
+    public function testMigrationForgetsTextSavedFromTheAdmin(): void
+    {
+        setting('Consent.consentMessage', 'We use cookies.');
+        setting('Consent.policyTitle', 'Cookies');
+        setting('Consent.consents', ['analytics' => ['name' => 'Analytics', 'desc' => 'Counts visits.']]);
+        setting('Consent.policyUrl', '/cookies');
+
+        (new ForgetConsentText(Database::forge()))->up();
+        Services::resetSingle('settings');
+
+        $this->assertSame('Consent.message', setting('Consent.consentMessage'));
+        $this->assertSame('Consent.policyLinkTitle', setting('Consent.policyTitle'));
+        $this->assertSame(config('Consent')->consents, setting('Consent.consents'));
+        $this->assertSame('/cookies', setting('Consent.policyUrl'));
     }
 
     /**

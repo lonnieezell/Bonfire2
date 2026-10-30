@@ -180,4 +180,9 @@ return [
         'email'       => 'Email',
         'last_active' => 'Last Active',
     ],
+    'exportData'       => 'Export data',
+    'eraseUsers'       => 'Erase personal data',
+    'eraseConfirm'     => 'Erase the personal data of {count} users?',
+    'eraseConfirmBody' => 'Their names, email addresses, avatars, sign-in details and the data modules hold about them are removed, and the accounts are closed for good. This can\'t be undone.',
+    'erased'           => 'The personal data of {count} users has been erased.',
 ]; // <?= lang('Users.')

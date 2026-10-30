@@ -3,7 +3,21 @@
 <?php $this->section('crumb') ?><?= esc($user->displayName()) ?><?php $this->endSection() ?>
 
 <?php $this->section('styles') ?>
-  <?= asset_link('auth/css/auth.css', 'css') ?>
+<?php // The password meter's styles, in the admin's colors. The Auth theme's auth.css would restyle <body>. ?>
+<style>
+    #pass-meter { display: flex; flex-direction: column-reverse; }
+    #pass-meter .segment { display: block; width: 30px; height: 9px; background: var(--bf-surface-2); border: 1px solid var(--bf-border-strong); }
+    #pass-meter.good .segment { background: var(--bf-ok); border-color: var(--bf-ok); }
+    #pass-meter.warn .segment { background: var(--bf-warn); border-color: var(--bf-warn); }
+    #pass-meter.bad .segment { background: var(--bf-danger); border-color: var(--bf-danger); }
+    #pass-meter.str-1 .segment:nth-child(n+2),
+    #pass-meter.str-2 .segment:nth-child(n+3),
+    #pass-meter.str-3 .segment:nth-child(4) { background: var(--bf-surface-2); border-color: var(--bf-border-strong); }
+    #pass-suggestions { min-height: 2.5rem; margin-bottom: 10px; color: var(--bf-muted); font-size: .8rem; text-align: center; }
+    .pass-match-wrap { display: flex; justify-content: center; width: 53px; }
+    .pass-match, .pass-not-match { margin: auto; font-size: 20px; font-weight: bold; color: var(--bf-ok); }
+    .pass-not-match { color: var(--bf-danger); }
+</style>
 <?php $this->endSection() ?>
 
 <?php $this->section('main') ?>

@@ -20,6 +20,7 @@ use Bonfire\Users\Models\UserFilter;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Shield\Models\LoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use ReflectionException;
@@ -305,6 +306,33 @@ class UserController extends AdminController
         $user->syncPermissions(...$permissions);
 
         return redirect()->back()->with('message', lang('Bonfire.resourceSaved', [lang('Users.permissions')]));
+    }
+
+    /**
+     * Downloads everything the site holds about the user as JSON.
+     *
+     * @return RedirectResponse|ResponseInterface
+     */
+    public function export(int $userId)
+    {
+        /** @var User|null $user */
+        $user = model(UserModel::class)->withDeleted()->find($userId);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Bonfire.resourceNotFound', [lang('Users.userGenitive')]));
+        }
+
+        if (! UserAccess::forCurrentUser()->canExport($user)) {
+            return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
+        }
+
+        log_message('notice', 'User {admin} exported the personal data of user {user}.', ['admin' => auth()->id(), 'user' => $user->id]);
+
+        $json = json_encode(service('personalData')->export($user), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+
+        return $this->response
+            ->setContentType('application/json')
+            ->setHeader('Content-Disposition', "attachment; filename=\"user-{$user->id}-data.json\"")
+            ->setBody($json);
     }
 
     /**

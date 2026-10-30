@@ -4,6 +4,7 @@ namespace Tests\Recycler;
 
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
+use Bonfire\Users\UserPersonalData;
 use Tests\Support\Models\RecyclerHooksModel;
 use Tests\Support\TestCase;
 
@@ -44,6 +45,32 @@ final class RecyclerTest extends TestCase
         $response->assertDontSee($user2->first_name);
     }
 
+    public function testErasedUsersAreNotListed(): void
+    {
+        $deleted = $this->createUser(['username' => 'deleted-one']);
+        $erased  = $this->createUser(['username' => 'erased-one']);
+        $this->users->delete($deleted->id);
+        $this->eraseUser($erased);
+
+        $response = $this->actingAs($this->admin)->get(route_to('recycler') . '?r=users');
+
+        $response->assertSee('deleted-one');
+        $response->assertDontSee('deleted-user-' . $erased->id);
+        $this->assertSame(1, service('recycler')->find('users')->deletedCount());
+    }
+
+    public function testErasedUsersCannotBeRestoredOrPurged(): void
+    {
+        $erased = $this->createUser();
+        $this->eraseUser($erased);
+
+        $this->actingAs($this->admin)->get(route_to('recycler-restore', 'users', $erased->id));
+        $this->actingAs($this->admin)->get(route_to('recycler-purge', 'users', $erased->id));
+
+        $this->assertNull($this->users->find($erased->id));
+        $this->seeInDatabase('users', ['id' => $erased->id]);
+    }
+
     public function testRestore()
     {
         $user1 = $this->createUser();
@@ -69,6 +96,11 @@ final class RecyclerTest extends TestCase
         $this->dontSeeInDatabase('users', [
             'id' => $user1->id,
         ]);
+    }
+
+    private function eraseUser(User $user): void
+    {
+        service('personalData')->register('users', new UserPersonalData())->erase($user);
     }
 
     private function userWithoutRecyclerAccess(): User

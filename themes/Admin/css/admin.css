@@ -2934,20 +2934,6 @@ code.bf-rows-text {
     background: color-mix(in oklch, var(--bf-info) 10%, var(--bf-surface));
 }
 
-.bf-consent-preview {
-    margin-top: 6px;
-    padding: 14px 16px;
-    border-radius: 10px;
-    background: var(--bf-text);
-    color: var(--bf-surface);
-    font-size: 13.5px;
-}
-
-.bf-consent-preview a {
-    color: inherit;
-    text-decoration: underline;
-}
-
 .bf-group-row-title {
     display: flex;
     align-items: center;

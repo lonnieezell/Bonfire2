@@ -149,4 +149,9 @@ return [
         'email'       => 'El. p. adresas',
         'last_active' => 'Prisijungė',
     ],
+    'exportData'       => 'Eksportuoti duomenis',
+    'eraseUsers'       => 'Ištrinti asmens duomenis',
+    'eraseConfirm'     => 'Ištrinti {count} vartotojų asmens duomenis?',
+    'eraseConfirmBody' => 'Jų vardai, el. pašto adresai, avatarai, prisijungimo duomenys ir moduliuose apie juos saugomi duomenys pašalinami, o paskyros uždaromos visam laikui. Šio veiksmo atšaukti negalima.',
+    'erased'           => '{count} vartotojų asmens duomenys ištrinti.',
 ];

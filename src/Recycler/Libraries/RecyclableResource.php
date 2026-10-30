@@ -154,11 +154,14 @@ class RecyclableResource
         return $model instanceof CustomRecyclerQuery ? $model->setupRecycler() : $model;
     }
 
+    /**
+     * Whether the Recycler lists the record, after the model's query hook.
+     */
     private function isDeleted(int $id): bool
     {
-        $model = $this->model();
+        $model = $this->query();
 
-        return $model->onlyDeleted()->where($model->primaryKey, $id)->countAllResults() > 0;
+        return $model->onlyDeleted()->where($model->table . '.' . $model->primaryKey, $id)->countAllResults() > 0;
     }
 
     private function localized(string $key, string $default): string

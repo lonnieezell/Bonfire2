@@ -10,5 +10,10 @@
             </div>
             <p class="bf-page-head-subtitle"><?= esc($user->email) ?> &middot; <?= lang('Users.lastActive', [$user->last_active?->humanize() ?? lang('Users.never')]) ?></p>
         </div>
+        <?php if (Bonfire\Users\Libraries\UserAccess::forCurrentUser()->canExport($user)) : ?>
+            <div class="bf-page-head-actions ms-auto">
+                <a href="<?= url_to('user-export', $user->id) ?>" class="btn btn-outline-secondary" download><i class="fas fa-download" aria-hidden="true"></i> <?= lang('Users.exportData') ?></a>
+            </div>
+        <?php endif ?>
     </div>
 </x-page-head>

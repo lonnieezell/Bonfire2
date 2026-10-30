@@ -25,26 +25,48 @@ if (! function_exists('has_consent')) {
             return true;
         }
 
-        if (! function_exists('get_cookie')) {
-            helper('cookie');
-        }
+        $choices = consent_choices();
 
-        $cookie = $_COOKIE['bf_consent'] ?? null;
-
-        if (empty($cookie)) {
-            return false;
-        }
-
-        $permissions = json_decode((string) $cookie, true);
-
-        if (! is_array($permissions) || ! array_key_exists($group, $permissions)) {
-            return false;
-        }
         // They must have given permission at one time...
-        if (! isset($permissions['consent']) || $permissions['consent'] === 0) {
-            return false;
+        return ! empty($choices['consent']) && ! empty($choices[$group]);
+    }
+}
+
+if (! function_exists('consent_choices')) {
+    /**
+     * The visitor's saved answers from the `bf_consent` cookie:
+     * `consent` (1 once answered), `consent_id`, and 0/1 per alias.
+     * Empty when they haven't answered.
+     *
+     * @return array<string, int|string>
+     */
+    function consent_choices(): array
+    {
+        $values = json_decode((string) service('superglobals')->cookie(config('Cookie')->prefix . 'bf_consent'), true);
+
+        if (! is_array($values)) {
+            return [];
         }
 
-        return (bool) $permissions[$group];
+        if (! preg_match('/^[0-9a-f]{32}$/', (string) ($values['consent_id'] ?? ''))) {
+            unset($values['consent_id']);
+        }
+
+        return $values;
+    }
+}
+
+if (! function_exists('consent_settings_link')) {
+    /**
+     * A link that reopens the consent form, so visitors can change
+     * or withdraw their consent. Empty while consent is off.
+     */
+    function consent_settings_link(?string $label = null): string
+    {
+        if (! setting('Consent.requireConsent')) {
+            return '';
+        }
+
+        return '<a href="#consent-popup" data-consent-open>' . esc($label ?? lang('Consent.settingsLink')) . '</a>';
     }
 }

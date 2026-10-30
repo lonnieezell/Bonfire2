@@ -7,6 +7,7 @@ use Bonfire\Actions\ActionRuns;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\WidgetRegistry;
 use Bonfire\Menus\Manager as MenuManager;
+use Bonfire\Privacy\PersonalData;
 use Bonfire\Recycler\Libraries\Recycler;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\View\Metadata;
@@ -78,6 +79,18 @@ class Services extends BaseService
         }
 
         return new MenuManager();
+    }
+
+    /**
+     * The modules that hold personal data, for exports and erasure
+     */
+    public static function personalData(bool $getShared = true): PersonalData
+    {
+        if ($getShared) {
+            return static::getSharedInstance('personalData');
+        }
+
+        return new PersonalData();
     }
 
     /**

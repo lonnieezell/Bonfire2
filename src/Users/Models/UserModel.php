@@ -26,7 +26,7 @@ class UserModel extends ShieldUsers implements CustomRecyclerQuery
     /**
      * Performs additional setup when finding objects
      * for the recycler. This might pull in additional
-     * fields.
+     * fields. Erased users are left out: they stay deleted.
      */
     public function setupRecycler(): static
     {
@@ -40,7 +40,7 @@ class UserModel extends ShieldUsers implements CustomRecyclerQuery
                 order by last_used_at desc
                 limit 1
             ) as email
-        ");
+        ")->where("{$dbPrefix}users.erased_at");
     }
 
     public function fake(Generator &$faker): User

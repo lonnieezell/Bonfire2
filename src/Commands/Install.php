@@ -16,6 +16,7 @@ use Bonfire\Auth\Config\Auth;
 use Bonfire\Auth\Config\AuthGroups;
 use Bonfire\Auth\Config\AuthToken;
 use Bonfire\Commands\Install\Publisher;
+use Bonfire\Commands\Install\TasksConfig;
 use Bonfire\Config\Alerts;
 use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
@@ -23,6 +24,7 @@ use Bonfire\Config\Themes;
 use Bonfire\Consent\Config\Consent;
 use Bonfire\Core\BreakingChanges;
 use Bonfire\Dashboard\Config\Dashboard;
+use Bonfire\Privacy\Config\Privacy;
 use Bonfire\Recycler\Config\Recycler;
 use Bonfire\Users\Config\Users;
 use Bonfire\Users\Models\UserModel;
@@ -97,6 +99,7 @@ class Install extends BaseCommand
         Themes::class,
         Consent::class,
         Dashboard::class,
+        Privacy::class,
         Recycler::class,
         Users::class,
     ];
@@ -118,6 +121,7 @@ class Install extends BaseCommand
             $this->setDatabase();
             $this->publishConfigFiles();
             $this->setAutoloadHelpers();
+            $this->setScheduledTasks();
             $this->setSecurityCSRF();
             $this->publishThemes();
             if ($this->isFreshInstall) {
@@ -396,6 +400,25 @@ class Install extends BaseCommand
         } else {
             error("  Error updating file '{$cleanPath}'.");
         }
+    }
+
+    /**
+     * Adds Bonfire's scheduled tasks, like pruning old personal data,
+     * to the app's Config\Tasks.
+     */
+    private function setScheduledTasks(): void
+    {
+        $path      = APPPATH . 'Config/Tasks.php';
+        $cleanPath = clean_path($path);
+
+        match ((new TasksConfig())->addSchedule($path)) {
+            'created'   => CLI::write(CLI::color('  Created: ', 'green') . $cleanPath),
+            'updated'   => CLI::write(CLI::color('  Updated: ', 'green') . $cleanPath),
+            'unchanged' => CLI::write(CLI::color('  Tasks Setup: ', 'green') . 'Everything is fine.'),
+            'manual'    => CLI::error("  Add `\\Bonfire\\Bonfire::schedule(\$schedule);` to init() in '{$cleanPath}'."),
+        };
+
+        CLI::write('  Run `php spark tasks:run` every minute from cron so scheduled tasks run.', 'yellow');
     }
 
     private function removeHelperLoadingInBaseController(): void

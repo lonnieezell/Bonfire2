@@ -7,3 +7,5 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Consent\Controllers'], stat
     $routes->get('settings/consent', 'ConsentSettingsController::index', ['as' => 'consent-settings']);
     $routes->post('settings/consent', 'ConsentSettingsController::save');
 });
+
+$routes->post('consent', '\Bonfire\Consent\Controllers\ConsentController::save', ['as' => 'consent-save']);

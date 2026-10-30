@@ -3,6 +3,7 @@
 namespace Tests\Tools;
 
 use Bonfire\Users\User;
+use CodeIgniter\I18n\Time;
 use Tests\Support\TestCase;
 
 /**
@@ -22,6 +23,8 @@ final class SystemInfoTest extends TestCase
 
         $this->admin = $this->createUser();
         $this->admin->addGroup('superadmin');
+
+        setting('Privacy.lastPruned', Time::now()->toDateTimeString());
     }
 
     protected function tearDown(): void
@@ -60,6 +63,24 @@ final class SystemInfoTest extends TestCase
 
         $this->assertMatchesRegularExpression('#locked-by-test.txt</span>.*?bf-status-danger"><span class="bf-dot" aria-hidden="true"></span>Not writable#s', $html);
         $this->assertStringContainsString('bf-callout-warn', $html);
+    }
+
+    public function testWarnsWhenPersonalDataHasNeverBeenPruned(): void
+    {
+        setting()->forget('Privacy.lastPruned');
+
+        $html = $this->actingAs($this->admin)->get(route_to('sys-info'))->getBody();
+
+        $this->assertStringContainsString('id="privacy-prune-warning"', $html);
+    }
+
+    public function testWarnsWhenTheLastPruneIsOverAWeekOld(): void
+    {
+        setting('Privacy.lastPruned', Time::now()->subDays(8)->toDateTimeString());
+        $this->assertStringContainsString('id="privacy-prune-warning"', $this->actingAs($this->admin)->get(route_to('sys-info'))->getBody());
+
+        setting('Privacy.lastPruned', Time::now()->subDays(6)->toDateTimeString());
+        $this->assertStringNotContainsString('id="privacy-prune-warning"', $this->actingAs($this->admin)->get(route_to('sys-info'))->getBody());
     }
 
     public function testPageNeedsAdminSettingsPermission(): void
