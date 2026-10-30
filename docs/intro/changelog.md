@@ -26,6 +26,15 @@ Pager templates section covering `bonfire_full`, `bonfire_simple`, `bonfire_list
 
 The `bonfire_simple` pager template no longer prints a stray `?>` above its links.
 
+A new page, [Testing Your Admin Module](../building_admin_modules/testing.md), shows how to write feature tests for a
+module in your app: a base test case that registers Bonfire's modules, giving test users your module's permissions,
+and testing access checks and htmx requests.
+
+Bonfire now registers each module under its real namespace, like `Bonfire\Users` or `App\Modules\Blog`, instead of
+`Bonfire\{Users}`, so `php spark migrate -n "Bonfire\Actions"` finds a module's migrations. `php spark migrate --all`
+is unaffected. Rows already in your `migrations` table keep the old `Bonfire\{…}` namespace, so on an existing install
+keep using `--all`: `-n` filters history by namespace and would try to run those migrations again.
+
 ## 29 October 2026
 
 Four config keys now do what they say. `Users::$avatarResizeFloor` sets the smallest allowed avatar size,

@@ -40,6 +40,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Adding results to the admin search | `building_admin_modules/search.md` |
 | Soft-deleting records into the Recycler | `building_admin_modules/recycler.md` |
 | Adding a dashboard widget, stat card or chart | `building_admin_modules/dashboard_widgets.md` |
+| Writing feature tests for an admin module | `building_admin_modules/testing.md` |
 | Changing the default dashboard layout | `modules/dashboard.md` |
 | Showing flash alerts | `building_sites/alerts.md` |
 | Linking CSS and JS assets | `building_sites/assets.md` |

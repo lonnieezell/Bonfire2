@@ -49,3 +49,9 @@ Bonfire provides a flexible search system that is highlighted on all areas of th
 Widgets are what admins place on their dashboard. This section covers writing a widget with its own settings, adding stat cards and charts, and the older view cells.
 
 [Read more about Dashboard Widgets](dashboard_widgets.md)
+
+## Testing
+
+Feature tests request your module's pages as a logged-in user and check the response. This section covers a base test case for your app, giving test users your module's permissions, and testing the access checks and htmx requests.
+
+[Read more about Testing Your Admin Module](testing.md)
