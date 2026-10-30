@@ -1767,6 +1767,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pager-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pager templates
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1847,6 +1858,17 @@
     <span class="md-ellipsis">
       
         Buttons and filters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pager-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pager templates
       
     </span>
   </a>
@@ -1974,7 +1996,11 @@ collection and wrap the page in it.</p>
 <span class="x">&lt;/x-settings-layout&gt;</span>
 </code></pre></div>
 <p><strong>&lt;x-sidebar&gt;</strong></p>
-<p>This is the main view that renders the sidebar and all links within it.</p>
+<p>The admin sidebar: the site's brand, a Dashboard link, then the <code>sidebar</code> menu's collections and items that the
+current user may see, with the current page marked. It takes no attributes. The Admin layout (<code>master.php</code>) renders it
+once, so you don't place it yourself: add your module's links to the <code>sidebar</code> menu instead (see <a href="../menus/">Menus</a>).</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">sidebar</span> <span class="o">/&gt;</span>
+</code></pre></div>
 <h2 id="settings-forms">Settings forms</h2>
 <p><strong>&lt;x-setting-row&gt;</strong></p>
 <p>A label and description on the left, the control (the slot) on the right. Wraps on narrow screens. <code>for</code> points the
@@ -2049,15 +2075,133 @@ slot holds the bulk actions; the ✕ clears the selection.</p>
 toasts, shows the progress of an action run just queued.</p>
 <h2 id="buttons-and-filters">Buttons and filters</h2>
 <p><strong>&lt;x-button&gt;</strong></p>
-<p>This is used within the admin forms to add pre-styled buttons (configurable via attributes <code>color</code> (any pre-defined Bootstrap 5 color, like <code>primary</code>, <code>secondary</code>, <code>success</code>, etc., defaulting to <code>primary</code>) and <code>type</code> (defaults to <code>submit</code>, but can also be <code>reset</code>, <code>button</code>, etc.). <code>id</code>, <code>name</code> and <code>onclick</code> are passed on as well.</p>
+<p>A Bootstrap button with the slot as its label.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>color</code></td>
+<td><code>primary</code></td>
+<td>A Bootstrap colour (<code>secondary</code>, <code>success</code>, <code>danger</code>, …): <code>btn-{color}</code>.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>submit</code></td>
+<td>The button's <code>type</code>: <code>submit</code>, <code>reset</code> or <code>button</code>.</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td></td>
+<td>The button's <code>id</code>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td></td>
+<td>The button's <code>name</code>, posted with the form when it submits it.</td>
+</tr>
+<tr>
+<td><code>onclick</code></td>
+<td></td>
+<td>A JavaScript <code>onclick</code> handler.</td>
+</tr>
+</tbody>
+</table>
+<p>It drops any other attribute, so for <code>hx-*</code>, Alpine or <code>disabled</code> write a <code>&lt;button class="btn …"&gt;</code> yourself.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">&gt;</span><span class="nx">Save</span><span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span> <span class="nx">color</span><span class="o">=</span><span class="s2">"secondary"</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"button"</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"preview"</span><span class="o">&gt;</span><span class="nx">Preview</span><span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-button-container&gt;</strong></p>
-<p>Wrapper for form button area enforcing uniform margins.</p>
+<p>Wraps a form's buttons with uniform spacing. It takes no attributes.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">-</span><span class="nx">container</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">&gt;</span><span class="nx">Save</span><span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">button</span><span class="o">-</span><span class="nx">container</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-module-title&gt;</strong></p>
-<p>A muted line of text for page headers.</p>
+<p>A muted line of text for page headers, with the slot as its text. It takes no attributes.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">module</span><span class="o">-</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">Manage</span> <span class="nx">the</span> <span class="nx">site</span><span class="err">'</span><span class="nx">s</span> <span class="nx">users</span><span class="o">&lt;/</span><span class="nx">x</span><span class="o">-</span><span class="nx">module</span><span class="o">-</span><span class="nx">title</span><span class="o">&gt;</span>
+</code></pre></div>
 <p><strong>&lt;x-filter-link&gt;</strong></p>
-<p>This is used by the Filters system to show the link that display or hides the filters in a resource list page. </p>
+<p>The "Filter" link that shows and hides the filters of a resource list. It takes no attributes and no slot. It toggles
+an Alpine <code>filtered</code> variable, so put it inside an element with <code>x-data="{filtered: false}"</code>. See
+<a href="../filters/#the-view">Filters</a>.</p>
 <p><strong>&lt;x-filter-list&gt;</strong></p>
-<p>This is the box that wraps the list of filters in a resource list page. </p>
+<p>The panel that holds a resource list's filters, shown while <code>filtered</code> is true. It takes no attributes; the slot is
+the filters, usually the <code>Filters::renderList</code> cell.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">div</span> <span class="nx">x</span><span class="o">-</span><span class="nx">data</span><span class="o">=</span><span class="s2">"{filtered: false}"</span> <span class="nx">hx</span><span class="o">-</span><span class="nx">target</span><span class="o">=</span><span class="s2">"#content-list"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">x</span><span class="o">-</span><span class="nx">filter</span><span class="o">-</span><span class="nb">link</span> <span class="o">/&gt;</span>
+
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"row"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"col order-2 order-md-1"</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"content-list"</span><span class="o">&gt;</span>
+            <span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">include</span><span class="p">(</span><span class="s1">'Blog\Views\_table'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;/div&gt;</span>
+
+<span class="x">        &lt;x-filter-list&gt;</span>
+<span class="x">            </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">view_cell</span><span class="p">(</span><span class="s1">'Bonfire\Core\Cells\Filters::renderList'</span><span class="p">,</span> <span class="s1">'model=PostFilter target=#content-list'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="x">        &lt;/x-filter-list&gt;</span>
+<span class="x">    &lt;/div&gt;</span>
+<span class="x">&lt;/div&gt;</span>
+</code></pre></div>
+<h2 id="pager-templates">Pager templates</h2>
+<p>Bonfire registers six <a href="https://codeigniter.com/user_guide/libraries/pagination.html">pager</a> templates. Name one when
+you render the links:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nv">$pager</span><span class="o">-&gt;</span><span class="na">links</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="s1">'bonfire_list_hx'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Renders</th>
+<th>htmx target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bonfire_full</code></td>
+<td>First, Previous, two page numbers either side, Next, Last.</td>
+<td>None (full page loads)</td>
+</tr>
+<tr>
+<td><code>bonfire_full_hx</code></td>
+<td>The same links, loaded through htmx.</td>
+<td><code>#content-list</code></td>
+</tr>
+<tr>
+<td><code>bonfire_simple</code></td>
+<td>Newer and Older links.</td>
+<td>None (full page loads)</td>
+</tr>
+<tr>
+<td><code>bonfire_simple_hx</code></td>
+<td>Newer and Older links, loaded through htmx.</td>
+<td><code>#content-list</code></td>
+</tr>
+<tr>
+<td><code>bonfire_list_hx</code></td>
+<td>The admin list footer: "Showing X of Y" with Previous and Next buttons, loaded through htmx.</td>
+<td>The nearest <code>hx-target</code> ancestor</td>
+</tr>
+<tr>
+<td><code>bonfire_head</code></td>
+<td><code>&lt;link rel="prev"&gt;</code>, <code>&lt;link rel="canonical"&gt;</code> and <code>&lt;link rel="next"&gt;</code> tags.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The page-link templates render nothing when there is only one page; <code>bonfire_list_hx</code> still shows its "Showing" line.</p>
+<p><code>bonfire_full_hx</code> and <code>bonfire_simple_hx</code> swap the response into <code>#content-list</code>, so give the element that holds your
+list that <code>id</code>. <code>bonfire_list_hx</code> sets no target of its own: put <code>hx-target</code> (and any <code>hx-include</code>) on an element
+that wraps the list, as in the <a href="../filters/#the-view">Filters</a> example.</p>
+<p><code>bonfire_head</code> belongs in the page's <code>&lt;head&gt;</code>, so search engines can follow the pages:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nv">$pager</span><span class="o">-&gt;</span><span class="na">links</span><span class="p">(</span><span class="s1">'default'</span><span class="p">,</span> <span class="s1">'bonfire_head'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>The templates are package views in <code>src/Views/</code>, not part of the published theme, so <code>composer update</code> updates them.
+To change one, register your own template in <code>app/Config/Pager.php</code> and use its name instead.</p>
 
 
 
