@@ -77,6 +77,13 @@ an opt-in system for all non-required cookies.
 
 [Read more about Consent](consent.md)
 
+## Privacy
+
+The Privacy module lets admins export or erase everything the site holds about a user, and deletes personal data such
+as login IP addresses once it is past its retention period.
+
+[Read more about Privacy](privacy.md)
+
 ## Meta Info
 
 Bonfire provides Entity-Attribute-Value style storage for additional data of entities used with your

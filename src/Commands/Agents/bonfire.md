@@ -44,6 +44,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Adding a tab to the user or group edit page | `building_admin_modules/resource_tabs.md` |
 | Adding results to the admin search | `building_admin_modules/search.md` |
 | Soft-deleting records into the Recycler | `building_admin_modules/recycler.md` |
+| Making a module's personal data exportable, erasable or pruned | `building_admin_modules/personal_data.md` |
 | Adding a dashboard widget, stat card or chart | `building_admin_modules/dashboard_widgets.md` |
 | Writing feature tests for an admin module | `building_admin_modules/testing.md` |
 | Changing the default dashboard layout | `modules/dashboard.md` |
@@ -53,6 +54,8 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Writing your own view components | `building_sites/components.md` |
 | Asking visitors for cookie consent | `building_sites/consent.md` |
 | Defining consent types, customizing the consent form, or consent config | `modules/consent.md` |
+| Handling a GDPR data export or erasure request, or building self-service for it | `building_sites/data_requests.md` |
+| Looking up the personal data service, retention config or the prune command | `modules/privacy.md` |
 | Setting page titles, meta tags, scripts and styles | `building_sites/metadata.md` |
 | Storing extra data on users or other entities | `building_sites/meta_info.md` |
 | Defining meta fields, or adding meta info to your own entities | `modules/meta_info.md` |

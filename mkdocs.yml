@@ -104,6 +104,7 @@ nav:
       - modules/tools.md
       - modules/assets.md
       - modules/consent.md
+      - modules/privacy.md
       - modules/meta_info.md
   - Building Sites:
       - building_sites/index.md
@@ -112,6 +113,7 @@ nav:
       - building_sites/metadata.md
       - building_sites/alerts.md
       - building_sites/consent.md
+      - building_sites/data_requests.md
       - building_sites/settings.md
       - building_sites/meta_info.md
       - building_sites/common_functions.md
@@ -128,6 +130,7 @@ nav:
       - building_admin_modules/actions.md
       - building_admin_modules/search.md
       - building_admin_modules/recycler.md
+      - building_admin_modules/personal_data.md
       - building_admin_modules/resource_tabs.md
       - building_admin_modules/dashboard_widgets.md
       - building_admin_modules/localization.md
