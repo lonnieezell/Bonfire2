@@ -2373,7 +2373,7 @@ there and nowhere else.</p>
 <td>string</td>
 <td>none</td>
 <td><code>setAltText()</code></td>
-<td>Stored, but the Admin theme doesn't use it. See <a href="#limitations">Limitations</a>.</td>
+<td>The link's <code>title</code> tooltip in the sidebar, the settings nav and the dashboard quick links. Without it, top-level sidebar links use the item's title.</td>
 </tr>
 <tr>
 <td><code>weight</code></td>
@@ -2431,7 +2431,7 @@ the route for it.</p>
 </tr>
 <tr>
 <td><code>altText()</code></td>
-<td>The alt text.</td>
+<td>The alt text, <code>null</code> when unset.</td>
 </tr>
 <tr>
 <td><code>weight()</code></td>
@@ -2662,7 +2662,6 @@ modules that add them:</p>
 <a href="../../intro/published_themes/">Why Themes Are Published Into Your App</a>.</p>
 <h2 id="limitations">Limitations</h2>
 <ul>
-<li><code>altText</code> isn't rendered anywhere (<a href="https://github.com/lonnieezell/Bonfire2/issues/728">#728</a>).</li>
 <li>Items added with <code>Menu::addItem()</code> don't appear in the sidebar, the palette or the breadcrumb. Put every item in a
   collection (<a href="https://github.com/lonnieezell/Bonfire2/issues/729">#729</a>).</li>
 <li>Collapsible groups list item titles only, without icons.</li>
