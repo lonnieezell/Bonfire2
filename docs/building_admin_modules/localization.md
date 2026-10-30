@@ -14,7 +14,7 @@ Bonfire keeps those files beside the code that uses them:
 | File | Where it lives in the package | Holds |
 |---|---|---|
 | `Bonfire.php` | `src/Language/{locale}/` | Shared admin text: save and delete messages, collection titles. |
-| `Actions.php`, `Consent.php`, `Email.php`, `Groups.php`, `Recycler.php`, `Tools.php`, `Users.php`, `Widgets.php` | `src/{Module}/Language/{locale}/` | Each module's own text. |
+| `Actions.php`, `Consent.php`, `Email.php`, `Groups.php`, `Recycler.php`, `Settings.php`, `Tools.php`, `Users.php`, `Widgets.php` | `src/{Module}/Language/{locale}/` | Each module's own text. |
 | `Auth.php` | Shield, `vendor/codeigniter4/shield/src/Language/{locale}/` | Login, registration and magic link text. |
 
 Bonfire registers every module folder as a namespace, so CodeIgniter searches each module's `Language/` folder too.
@@ -150,7 +150,7 @@ the placeholders still in it.
 
 !!! warning
     Don't name your file after one of Bonfire's: `Bonfire`, `Actions`, `Auth`, `Consent`, `Email`, `Groups`,
-    `Recycler`, `Tools`, `Users` or `Widgets`. CodeIgniter would merge your keys into Bonfire's, and a matching key
+    `Recycler`, `Settings`, `Tools`, `Users` or `Widgets`. CodeIgniter would merge your keys into Bonfire's, and a matching key
     in your module would change Bonfire's text.
 
 ## Check your translations
@@ -167,5 +167,5 @@ Translations of Bonfire itself are welcome, including partial ones. Put each fil
 package: `src/Language/{locale}/Bonfire.php` and `src/{Module}/Language/{locale}/{Module}.php`. Open a pull request
 on [GitHub](https://github.com/lonnieezell/Bonfire2).
 
-The shipped translations have gaps. Spanish has only `Bonfire.php`, `Actions.php` exists only in English, and the
+The shipped translations have gaps. Spanish has only `Bonfire.php` and `Settings.php`, `Actions.php` exists only in English, and the
 other files lack many of the newer English keys. Those show in English until someone translates them.

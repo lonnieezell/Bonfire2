@@ -37,7 +37,7 @@ $this->extend('master') ?>
         <div class="bf-toolbar">
             <div @change="level = $event.target.value">
                 <x-segmented name="level" label="<?= lang('Tools.level') ?>" value="all"
-                    options="<?= esc(json_encode(['all' => lang('Tools.allLevels'), 'errors' => 'Errors', 'warnings' => 'Warnings', 'info' => 'Info', 'debug' => 'Debug'])) ?>" />
+                    options="<?= esc(json_encode(['all' => lang('Tools.allLevels'), 'errors' => lang('Tools.levelErrors'), 'warnings' => lang('Tools.levelWarnings'), 'info' => lang('Tools.levelInfo'), 'debug' => lang('Tools.levelDebug')])) ?>" />
             </div>
             <div class="bf-toolbar-search">
                 <i class="fas fa-search" aria-hidden="true"></i>
@@ -55,7 +55,7 @@ $this->extend('master') ?>
                         <span class="bf-log-text"><?= esc($log['content']) ?></span>
                         <?php if (array_key_exists('extra', $log)) : ?>
                             <details class="bf-log-trace">
-                                <summary>Stack trace</summary>
+                                <summary><?= lang('Tools.stackTrace') ?></summary>
                                 <pre><?= esc(trim($log['extra'], " \n")) ?></pre>
                             </details>
                         <?php endif ?>

@@ -56,6 +56,8 @@ return [
     'noResults'       => 'Ничего не найдено',
     'back'            => 'Назад',
     'save'            => 'Сохранить',
+    'saveSettings'    => 'Сохранить настройки',
+    'settingsSaved'   => 'Настройки сохранены.',
     'discard'         => 'Отменить',
     'unsavedChanges'  => 'Несохранённые изменения',
     'selectedCount'   => 'Выбрано: {0}',
@@ -80,4 +82,13 @@ return [
 
     // Auth links
     'goToFrontpage' => 'Перейти на главную страницу',
+
+    // Site offline page:
+    'siteOfflineTitle' => 'Упс!',
+    'siteOffline'      => 'Сайт временно недоступен. Пожалуйста, зайдите чуть позже.',
+
+    // Alerts and dashboard toolbar:
+    'close'        => 'Закрыть',
+    'undoShortcut' => 'Отменить (Ctrl+Z)',
+    'redoShortcut' => 'Повторить (Shift+Ctrl+Z)',
 ];

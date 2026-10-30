@@ -129,6 +129,15 @@ final class AdminSettingsTest extends TestCase
         $this->assertFalse(setting('Auth.allowRegistration'));
     }
 
+    public function testTheDayLongRememberOptionSaysTwentyFourHours(): void
+    {
+        $html = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();
+
+        preg_match('#<option value="' . DAY . '"[^>]*>([^<]*)</option>#', $html, $option);
+
+        $this->assertSame(lang('Users.rememberHours', [24]), $option[1]);
+    }
+
     public function testPasswordValidatorsUseSwitchesAndWarnAboutOverlapAndNone(): void
     {
         $html = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();

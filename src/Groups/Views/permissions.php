@@ -9,7 +9,7 @@ $this->extend('master') ?>
     <form action="<?= current_url() ?>" method="post">
         <?= csrf_field() ?>
 
-        <p class="bf-muted">Select the permissions this group should have.</p>
+        <p class="bf-muted"><?= lang('Groups.permissionsIntro') ?></p>
 
         <?php foreach (GroupPermissions::byPrefix($permissions) as $prefix => $set) : ?>
             <x-admin-box title="<?= esc(ucfirst($prefix)) ?>">
@@ -22,7 +22,7 @@ $this->extend('master') ?>
             </x-admin-box>
         <?php endforeach ?>
 
-        <x-save-bar save="Save Permissions" />
+        <x-save-bar save="<?= esc(lang('Groups.savePermissions'), 'attr') ?>" />
     </form>
 </x-settings-layout>
 <?php $this->endSection() ?>

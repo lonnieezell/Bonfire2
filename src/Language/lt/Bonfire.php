@@ -56,6 +56,8 @@ return [
     'noResults'       => 'Rezultatų nėra',
     'back'            => 'Atgal',
     'save'            => 'Išsaugoti',
+    'saveSettings'    => 'Išsaugoti nustatymus',
+    'settingsSaved'   => 'Nustatymai išsaugoti.',
     'discard'         => 'Atmesti',
     'unsavedChanges'  => 'Neišsaugoti pakeitimai',
     'selectedCount'   => 'Pasirinkta: {0}',
@@ -80,4 +82,13 @@ return [
 
     // Auth links
     'goToFrontpage' => 'Grįžti į titulinį',
+
+    // Site offline page:
+    'siteOfflineTitle' => 'Oi!',
+    'siteOffline'      => 'Svetainė laikinai neveikia. Užsukite šiek tiek vėliau.',
+
+    // Alerts and dashboard toolbar:
+    'close'        => 'Uždaryti',
+    'undoShortcut' => 'Atšaukti (Ctrl+Z)',
+    'redoShortcut' => 'Pakartoti (Shift+Ctrl+Z)',
 ];

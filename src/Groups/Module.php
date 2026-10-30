@@ -39,7 +39,7 @@ class Module extends BaseModule
         $widgets   = service('widgets');
         $statsItem = new StatsItem([
             'bgColor'    => 'bg-teal',
-            'title'      => 'User Groups',
+            'title'      => lang('Groups.groupsModTitle'),
             'value'      => count(setting('AuthGroups.groups')),
             'id'         => 'userGroups643',
             'url'        => ADMIN_AREA . '/settings/groups',

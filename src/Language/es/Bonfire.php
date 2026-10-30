@@ -56,6 +56,8 @@ return [
     'noResults'       => 'Sin resultados',
     'back'            => 'Volver',
     'save'            => 'Guardar',
+    'saveSettings'    => 'Guardar configuración',
+    'settingsSaved'   => 'La configuración se ha guardado.',
     'discard'         => 'Descartar',
     'unsavedChanges'  => 'Cambios sin guardar',
     'selectedCount'   => '{0} seleccionados',
@@ -80,4 +82,13 @@ return [
 
     // Auth links
     'goToFrontpage' => 'Ir a la página principal',
+
+    // Página de sitio fuera de línea:
+    'siteOfflineTitle' => '¡Vaya!',
+    'siteOffline'      => 'El sitio está temporalmente fuera de línea. Vuelve a consultarlo un poco más tarde.',
+
+    // Alertas y barra del tablero:
+    'close'        => 'Cerrar',
+    'undoShortcut' => 'Deshacer (Ctrl+Z)',
+    'redoShortcut' => 'Rehacer (Shift+Ctrl+Z)',
 ];

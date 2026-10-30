@@ -63,7 +63,7 @@ class ConsentSettingsController extends AdminController
         setting('Consent.consentMessage', $this->request->getPost('consentMessage'));
         setting('Consent.consents', $this->request->getPost('consents'));
 
-        alert('success', 'The settings have been saved.');
+        alert('success', lang('Bonfire.settingsSaved'));
 
         return redirect()->route('consent-settings');
     }

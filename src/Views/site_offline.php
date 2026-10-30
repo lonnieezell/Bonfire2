@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex">
 
-    <title>Whoops!</title>
+    <title><?= lang('Bonfire.siteOfflineTitle') ?></title>
 
     <style type="text/css">
         :root {
@@ -56,7 +56,7 @@
 
         <h1 class="headline"><?= setting('Site.siteName') ?></h1>
 
-        <p class="lead">The site is temporarily offline. Please check back a little bit later.</p>
+        <p class="lead"><?= lang('Bonfire.siteOffline') ?></p>
 
     </div>
 

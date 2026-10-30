@@ -57,6 +57,8 @@ return [
     'noResults'       => 'No results',
     'back'            => 'Back',
     'save'            => 'Save',
+    'saveSettings'    => 'Save Settings',
+    'settingsSaved'   => 'The settings have been saved.',
     'discard'         => 'Discard',
     'unsavedChanges'  => 'Unsaved changes',
     'selectedCount'   => '{0} selected',
@@ -149,4 +151,13 @@ return [
 
     // Auth links
     'goToFrontpage' => 'Return to Frontpage',
+
+    // Site offline page:
+    'siteOfflineTitle' => 'Whoops!',
+    'siteOffline'      => 'The site is temporarily offline. Please check back a little bit later.',
+
+    // Alerts and dashboard toolbar:
+    'close'        => 'Close',
+    'undoShortcut' => 'Undo (Ctrl+Z)',
+    'redoShortcut' => 'Redo (Shift+Ctrl+Z)',
 ];

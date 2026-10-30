@@ -2,15 +2,15 @@
 
 <?php $this->section('main') ?>
 <div x-data="{ copied: false, copy() { navigator.clipboard?.writeText(this.$refs.info.innerText).then(() => { this.copied = true; setTimeout(() => this.copied = false, 1500) }) } }">
-    <x-page-head title="System Info">
-        <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-outline-secondary" target="_blank">View PHP Info</a>
+    <x-page-head title="<?= esc(lang('Tools.systemInfoModTitle'), 'attr') ?>">
+        <a href="<?= site_url(ADMIN_AREA . '/tools/php-info') ?>" class="btn btn-outline-secondary" target="_blank"><?= lang('Tools.viewPhpInfo') ?></a>
         <button type="button" class="btn btn-outline-secondary" @click="copy()">
-            <i class="far fa-copy" aria-hidden="true"></i> <span x-text="copied ? 'Copied' : 'Copy as text'">Copy as text</span>
+            <i class="far fa-copy" aria-hidden="true"></i> <span x-text="copied ? <?= esc(json_encode(lang('Tools.copied')), 'attr') ?> : <?= esc(json_encode(lang('Tools.copyAsText')), 'attr') ?>"><?= lang('Tools.copyAsText') ?></span>
         </button>
     </x-page-head>
 
     <div class="bf-sysinfo" x-ref="info">
-        <x-admin-box title="Server">
+        <x-admin-box title="<?= esc(lang('Tools.server'), 'attr') ?>">
             <?php foreach ($server as $key => $value) : ?>
                 <div class="bf-kv">
                     <div class="bf-kv-key"><?= esc($key) ?></div>
@@ -19,16 +19,16 @@
             <?php endforeach ?>
         </x-admin-box>
 
-        <x-admin-box title="Filesystem">
+        <x-admin-box title="<?= esc(lang('Tools.filesystem'), 'attr') ?>">
             <?php if (! $allWritable) : ?>
                 <div class="bf-callout bf-callout-warn bf-callout-flush">
-                    Some files or folders in /writable are not writable. Bonfire needs to write logs, cache and uploads there.
+                    <?= lang('Tools.notWritableWarning') ?>
                 </div>
             <?php endif ?>
             <div class="bf-kv">
                 <div class="bf-kv-key"><i class="far fa-file" aria-hidden="true"></i> <span class="bf-mono">.env</span></div>
                 <div class="bf-kv-value">
-                    <x-status tone="<?= $envPresent ? 'ok' : 'warn' ?>" label="<?= $envPresent ? 'Present' : 'Missing' ?>" />
+                    <x-status tone="<?= $envPresent ? 'ok' : 'warn' ?>" label="<?= esc(lang($envPresent ? 'Tools.present' : 'Tools.missing'), 'attr') ?>" />
                 </div>
             </div>
             <?php foreach ($files as $file) : ?>
@@ -40,7 +40,7 @@
                         <?php endif ?>
                     </div>
                     <div class="bf-kv-value">
-                        <x-status tone="<?= $file['writable'] ? 'ok' : 'danger' ?>" label="<?= $file['writable'] ? 'Writable' : 'Not writable' ?>" />
+                        <x-status tone="<?= $file['writable'] ? 'ok' : 'danger' ?>" label="<?= esc(lang($file['writable'] ? 'Tools.writable' : 'Tools.notWritable'), 'attr') ?>" />
                     </div>
                 </div>
             <?php endforeach ?>

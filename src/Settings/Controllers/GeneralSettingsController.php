@@ -101,7 +101,7 @@ class GeneralSettingsController extends AdminController
             setting('Site.adminAccent', $this->request->getPost('adminAccent'));
         }
 
-        return redirect()->to(ADMIN_AREA . '/settings/general')->with('message', lang('Bonfire.resourcesSaved', ['settings']));
+        return redirect()->to(ADMIN_AREA . '/settings/general')->with('message', lang('Bonfire.settingsSaved'));
     }
 
     /**

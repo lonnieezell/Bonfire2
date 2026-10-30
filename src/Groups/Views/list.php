@@ -2,15 +2,15 @@
 
 <?php $this->section('main') ?>
 <x-settings-layout>
-    <x-admin-box title="User Groups" description="Groups work like traditional roles, but can also be more specific groupings of users that might not fit a role-based system.">
+    <x-admin-box title="<?= esc(lang('Groups.groupsModTitle'), 'attr') ?>" description="<?= esc(lang('Groups.groupsDescription'), 'attr') ?>">
         <div class="table-responsive">
             <table class="table bf-table">
                 <thead>
                     <tr>
-                        <th>Group</th>
-                        <th>Alias</th>
-                        <th class="text-end">Users</th>
-                        <th class="text-end">Permissions</th>
+                        <th><?= lang('Groups.group') ?></th>
+                        <th><?= lang('Groups.alias') ?></th>
+                        <th class="text-end"><?= lang('Groups.users') ?></th>
+                        <th class="text-end"><?= lang('Groups.permissions') ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -19,7 +19,7 @@
                             <td>
                                 <div class="bf-group-row-title">
                                     <a href="<?= site_url(ADMIN_AREA . '/settings/groups/' . $alias) ?>"><?= esc($group['title']) ?></a>
-                                    <?php if ($alias === $defaultGroup) : ?><span class="bf-pill">Default</span><?php endif ?>
+                                    <?php if ($alias === $defaultGroup) : ?><span class="bf-pill"><?= lang('Groups.default') ?></span><?php endif ?>
                                 </div>
                                 <div class="bf-muted small"><?= esc($group['description']) ?></div>
                             </td>

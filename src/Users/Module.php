@@ -60,7 +60,7 @@ class Module extends BaseModule
         $widgets   = service('widgets');
         $statsItem = new StatsItem([
             'bgColor' => 'bg-danger',
-            'title'   => 'Users in Recycler',
+            'title'   => lang('Users.usersInRecycler'),
             // assigning param directly possible, but it always executes the query, even if not on dashboard or the stats item not enabled, not optimal
             // 'value'   => (new UserModel())->onlyDeleted()->countAllResults(),
             'id'         => 'usersInRecycler693',

@@ -55,10 +55,10 @@
                 <small class="text-danger" x-show="failed" role="alert"><?= lang('Bonfire.layoutFailed') ?></small>
             </div>
             <div class="bf-dashboard-editbar-actions">
-                <button type="button" class="bf-icon-btn" @click="undo()" :disabled="! past.length" title="<?= esc(lang('Bonfire.undo'), 'attr') ?> (Ctrl+Z)" aria-label="<?= esc(lang('Bonfire.undo'), 'attr') ?>">
+                <button type="button" class="bf-icon-btn" @click="undo()" :disabled="! past.length" title="<?= esc(lang('Bonfire.undoShortcut'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.undo'), 'attr') ?>">
                     <i class="fas fa-rotate-left" aria-hidden="true"></i>
                 </button>
-                <button type="button" class="bf-icon-btn" @click="redo()" :disabled="! future.length" title="<?= esc(lang('Bonfire.redo'), 'attr') ?> (Shift+Ctrl+Z)" aria-label="<?= esc(lang('Bonfire.redo'), 'attr') ?>">
+                <button type="button" class="bf-icon-btn" @click="redo()" :disabled="! future.length" title="<?= esc(lang('Bonfire.redoShortcut'), 'attr') ?>" aria-label="<?= esc(lang('Bonfire.redo'), 'attr') ?>">
                     <i class="fas fa-rotate-right" aria-hidden="true"></i>
                 </button>
                 <span class="bf-dashboard-editbar-divider" aria-hidden="true"></span>
