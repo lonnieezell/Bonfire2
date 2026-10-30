@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../controllers_and_views/">
+        <link rel="prev" href="../tutorial_first_module/">
       
       
-        <link rel="next" href="../dashboard_widgets/">
+        <link rel="next" href="../menus/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Creating an Admin Module - Bonfire 2 (beta)</title>
+        <title>Module Structure - Bonfire 2</title>
       
     
     
@@ -71,7 +71,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="codeigniter" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#creating-an-admin-module" class="md-skip">
+        <a href="#module-structure" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://codeigniter.com" title="Bonfire 2 (beta)" class="md-header__button md-logo" aria-label="Bonfire 2 (beta)" data-md-component="logo">
+    <a href="https://codeigniter.com" title="Bonfire 2" class="md-header__button md-logo" aria-label="Bonfire 2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -110,13 +110,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Bonfire 2 (beta)
+            Bonfire 2
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Creating an Admin Module
+              Module Structure
             
           </span>
         </div>
@@ -129,7 +129,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="codeigniter" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
       <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -139,7 +139,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -239,13 +239,13 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://codeigniter.com" title="Bonfire 2 (beta)" class="md-nav__button md-logo" aria-label="Bonfire 2 (beta)" data-md-component="logo">
+    <a href="https://codeigniter.com" title="Bonfire 2" class="md-nav__button md-logo" aria-label="Bonfire 2" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
-    Bonfire 2 (beta)
+    Bonfire 2
   </label>
   
     <div class="md-nav__source">
@@ -389,14 +389,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../../intro/philosophy/" class="md-nav__link">
+      <a href="../../intro/app_structure/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Our Philosophy
+    Bonfire Application Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/ai_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working With AI Agents
   
 
     
@@ -473,70 +529,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../intro/app_structure/" class="md-nav__link">
+      <a href="../../intro/philosophy/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Bonfire Application Structure
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../intro/configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuration Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../intro/ai_agents/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Working With AI Agents
+    Our Philosophy
   
 
     
@@ -672,118 +672,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/assets/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Asset Management
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../modules/auth/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Authentication and Authorization
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../modules/meta_info/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Meta Info
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../modules/consent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Consent
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../modules/dashboard/" class="md-nav__link">
         
   
@@ -820,6 +708,34 @@
     
   
     Users
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authentication and Authorization
   
 
     
@@ -904,6 +820,90 @@
     
   
     Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/assets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Asset Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/consent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/meta_info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Meta Info
   
 
     
@@ -1009,34 +1009,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../building_sites/alerts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Alerts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../building_sites/assets/" class="md-nav__link">
         
   
@@ -1093,14 +1065,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../building_sites/consent/" class="md-nav__link">
+      <a href="../../building_sites/metadata/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Load Analytics Only After Visitors Consent
+    View Metadata
   
 
     
@@ -1121,14 +1093,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../building_sites/metadata/" class="md-nav__link">
+      <a href="../../building_sites/alerts/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    View Metadata
+    Alerts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_sites/consent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Analytics Only After Visitors Consent
   
 
     
@@ -1357,62 +1357,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../actions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Row and Bulk Actions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../controllers_and_views/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Admin Controllers, Views and Themes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1432,7 +1376,7 @@
   <span class="md-ellipsis">
     
   
-    Creating an Admin Module
+    Module Structure
   
 
     
@@ -1450,7 +1394,7 @@
   <span class="md-ellipsis">
     
   
-    Creating an Admin Module
+    Module Structure
   
 
     
@@ -1506,21 +1450,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Module File">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#adding-a-menu-item" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding a Menu Item
-      
-    </span>
-  </a>
-  
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#naming-a-page-in-the-breadcrumb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1528,11 +1460,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1563,14 +1490,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../dashboard_widgets/" class="md-nav__link">
+      <a href="../menus/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Dashboard Widgets
+    Menus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controllers_and_views/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Controllers, Views and Themes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Permissions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View Components
   
 
     
@@ -1619,14 +1630,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../localization/" class="md-nav__link">
+      <a href="../actions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Localization
+    Row and Bulk Actions
   
 
     
@@ -1647,42 +1658,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../menus/" class="md-nav__link">
+      <a href="../search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Menus
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../permissions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Permissions
+    Search
   
 
     
@@ -1759,14 +1742,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../search/" class="md-nav__link">
+      <a href="../dashboard_widgets/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Search
+    Dashboard Widgets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../localization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Localization
   
 
     
@@ -1795,34 +1806,6 @@
     
   
     Testing Your Admin Module
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../view_components/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    View Components
   
 
     
@@ -1900,21 +1883,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Module File">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#adding-a-menu-item" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding a Menu Item
-      
-    </span>
-  </a>
-  
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#naming-a-page-in-the-breadcrumb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1922,11 +1893,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2014,7 +1980,7 @@
   
 
 
-<h1 id="creating-an-admin-module">Creating an Admin Module</h1>
+<h1 id="module-structure">Module Structure</h1>
 <p>The bulk of your work in the admin area will likely be done creating new modules of code. Modules are groups of code
 centered around a single task or resource, like Users, Photos, etc. For the most part, admin modules are like any
 other bit of module CodeIgniter code, except for a new <code>Module.php</code> file that helps the module integrate
@@ -2090,7 +2056,6 @@ CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
 <div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">Acme\Blog</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">Bonfire\Core\BaseModule</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Bonfire\Menus\MenuItem</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">Module</span> <span class="k">extends</span> <span class="nx">BaseModule</span>
 <span class="p">{</span>
@@ -2100,29 +2065,8 @@ CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="adding-a-menu-item">Adding a Menu Item</h3>
-<p>The main side navigation in the admin consists of three primary menu collections:</p>
-<ul>
-<li>a main <code>Content</code> collection where you would place the main page for managing a resource (like Users)</li>
-<li>the <code>Settings</code> collection where your module's settings pages should live.</li>
-<li>the <code>Tools</code> collection which holds miscellaneous things that are helpful, but not needed on a daily basis.</li>
-</ul>
-<p>Menu items are added to the sidebar using the <code>menus</code> service. This example from the core Users module adds the
-Users page to the <code>content</code> collection:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$item</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MenuItem</span><span class="p">([</span>
-    <span class="s1">'title'</span>           <span class="o">=&gt;</span> <span class="nx">lang</span><span class="p">(</span><span class="s1">'Users.usersModTitle'</span><span class="p">),</span>
-    <span class="s1">'namedRoute'</span>      <span class="o">=&gt;</span> <span class="s1">'user-list'</span><span class="p">,</span>
-    <span class="s1">'fontAwesomeIcon'</span> <span class="o">=&gt;</span> <span class="s1">'fas fa-users'</span><span class="p">,</span>
-    <span class="s1">'permission'</span>      <span class="o">=&gt;</span> <span class="s1">'users.list'</span><span class="p">,</span>
-<span class="p">]);</span>
-<span class="nx">service</span><span class="p">(</span><span class="s1">'menus'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">menu</span><span class="p">(</span><span class="s1">'sidebar'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'content'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="nv">$item</span><span class="p">);</span>
-</code></pre></div>
-<p><code>namedRoute</code> must be a <a href="https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes">named route</a>
-defined in your module's <code>Config/Routes.php</code>. Users without <code>permission</code> don't see the item. See <a href="../menus/">Menus</a>
-for every key, collections, custom menus and reordering with <code>$menuWeights</code>.</p>
-<p>Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
-the active item (and its collection, when that collection is collapsible).</p>
-<h3 id="naming-a-page-in-the-breadcrumb">Naming a page in the breadcrumb</h3>
+<p>To add your module's pages to the sidebar from <code>initAdmin()</code>, see <a href="../menus/">Menus</a>.</p>
+<h2 id="naming-a-page-in-the-breadcrumb">Naming a page in the breadcrumb</h2>
 <p>A page below a menu item, like a single record's edit form, can add itself to the breadcrumb with a <code>crumb</code> view
 section. The breadcrumb then reads "active menu item › crumb". When the page's URL doesn't sit under any menu item,
 name the parent too with <code>crumbParent</code>:</p>
@@ -2170,7 +2114,7 @@ sections, and changing the theme's own files.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../controllers_and_views/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Admin Controllers, Views and Themes">
+          <a href="../tutorial_first_module/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial: Build Your First Admin Module">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2180,20 +2124,20 @@ sections, and changing the theme's own files.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Admin Controllers, Views and Themes
+                Tutorial: Build Your First Admin Module
               </div>
             </div>
           </a>
         
         
           
-          <a href="../dashboard_widgets/" class="md-footer__link md-footer__link--next" aria-label="Next: Dashboard Widgets">
+          <a href="../menus/" class="md-footer__link md-footer__link--next" aria-label="Next: Menus">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Dashboard Widgets
+                Menus
               </div>
             </div>
             <div class="md-footer__button md-icon">
