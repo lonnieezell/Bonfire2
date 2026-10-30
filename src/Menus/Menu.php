@@ -147,6 +147,7 @@ class Menu
     /**
      * Titles leading to the current page: the collection title (for
      * collapsible collections) and the title of the active item.
+     * Items outside a collection have only their own title.
      * Empty when no item matches.
      *
      * @return list<string>
@@ -159,21 +160,23 @@ class Menu
             return [];
         }
 
-        return $collection->isCollapsible()
+        return $collection?->isCollapsible()
             ? [$collection->title, $item->title()]
             : [$item->title()];
     }
 
     /**
-     * @return array{0: MenuCollection, 1: MenuItem}|array{}
+     * @return array{0: MenuCollection|null, 1: MenuItem}|array{}
      */
     private function findActive(): array
     {
         $active  = [];
         $longest = -1;
 
-        foreach ($this->collections() as $collection) {
-            foreach ($collection->items() as $item) {
+        foreach ($this->items as $entry) {
+            $collection = $entry instanceof MenuCollection ? $entry : null;
+
+            foreach ($collection?->items() ?? [$entry] as $item) {
                 $url = rtrim($item->url(), '/');
 
                 if (strlen($url) > $longest && url_is($url . '*') && $item->userCanSee()) {

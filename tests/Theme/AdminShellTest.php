@@ -2,7 +2,10 @@
 
 namespace Tests\Theme;
 
+use Bonfire\Menus\MenuItem;
 use Bonfire\Users\User;
+use Config\Services;
+use Tests\Support\Packages\Courier\Module as Courier;
 use Tests\Support\TestCase;
 
 /**
@@ -137,6 +140,29 @@ final class AdminShellTest extends TestCase
         $sidebar = $this->sidebarOf($this->actingAs($user)->get(ADMIN_AREA)->response()->getBody());
 
         $this->assertStringContainsString('href="' . url_to('user-settings') . '"', $sidebar);
+    }
+
+    public function testItemAddedOutsideACollectionShowsInTheSidebarPaletteAndBreadcrumb(): void
+    {
+        $url = ADMIN_AREA . '/users/' . $this->admin->id;
+
+        // Register the item from a module's initAdmin(), as the menu is rebuilt on every admin request.
+        Services::resetSingle('bonfire');
+        config('Bonfire')->packageModules = ['Tests\Support\Packages\Courier' => SUPPORTPATH . 'Packages/Courier'];
+        Courier::$onInitAdmin             = static fn () => service('menus')->menu('sidebar')
+            ->addItem(new MenuItem(['title' => 'My Profile', 'url' => $url]));
+
+        try {
+            $html = (string) $this->actingAs($this->admin)->get($url)->response()->getBody();
+        } finally {
+            Courier::$onInitAdmin             = null;
+            config('Bonfire')->packageModules = [];
+            Services::resetSingle('bonfire');
+        }
+
+        $this->assertMatchesRegularExpression('#<a[^>]*href="' . preg_quote(site_url($url), '#') . '"[^>]*aria-current="page"#', $this->sidebarOf($html));
+        $this->assertStringContainsString('"label":"My Profile"', $html);
+        $this->assertBreadcrumb($html, 'My Profile', 'Ada Lovelace');
     }
 
     public function testFlashedAlertsShowAsDismissibleToasts(): void

@@ -16,7 +16,19 @@ $activeItem  = isset($menu) ? $menu->activeItem() : null;
     </a>
 
     <?php if (isset($menu)) : ?>
-        <?php foreach ($menu->collections() as $collection) : ?>
+        <?php foreach ($menu->items() as $collection) : ?>
+            <?php if (! $collection instanceof Bonfire\Menus\MenuCollection) : ?>
+                <?php $item = $collection ?>
+                <?php if ($item->userCanSee()) : ?>
+                    <?php $active = $item === $activeItem ?>
+                    <a class="bf-nav-link <?= $active ? 'active' : '' ?>" href="<?= site_url($item->url) ?>" title="<?= esc($item->altText ?? strip_tags($item->title), 'attr') ?>" <?= $active ? 'aria-current="page"' : '' ?>>
+                        <?= $item->icon ?>
+                        <span class="bf-label"><?= $item->title ?></span>
+                    </a>
+                <?php endif ?>
+                <?php continue ?>
+            <?php endif ?>
+
             <?php if (! $collection->hasVisibleItems()) {
                 continue;
             } ?>
