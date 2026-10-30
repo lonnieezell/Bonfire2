@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+Items added straight to a menu with `Menu::addItem()`, outside any collection, now show in the sidebar, the command
+palette and the breadcrumb. Before, the Admin theme skipped them. If you published the Admin theme, copy the change
+from `Components/sidebar.php` and `_palette.php`.
+
 The admin's settings screens (General, Users, Email, Consent, User Groups), System Info, the consent banner, the
 site offline page and dashboard stat titles now take their text from language files, so they can be translated. New
 keys have Italian, Lithuanian and Russian translations, and Spanish ones for `Bonfire.php` and `Settings.php`. These
