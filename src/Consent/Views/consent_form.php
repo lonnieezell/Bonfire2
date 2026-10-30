@@ -1,21 +1,22 @@
-<div id="consent-popup" data-state="simple">
+<form id="consent-popup" data-state="simple" method="post" action="<?= url_to('consent-save') ?>"<?= $show ? '' : ' hidden' ?>>
+    <?= csrf_field() ?>
     <h1><?= lang('Consent.cookies') ?></h1>
-    <a href="#" id="consent-close">X</a>
+    <button type="submit" name="choice" value="close" id="consent-close" aria-label="<?= esc(lang('Consent.close'), 'attr') ?>">X</button>
 
     <div class="show-simple">
-        <p><?= esc($message) ?>
+        <p><?= esc($message) ?></p>
 
         <div>
-            <a href="#" id="consent-reject-all"><?= lang('Consent.rejectAll') ?></a>
-            <a href="#" id="consent-accept-all"><?= lang('Consent.acceptAll') ?></a>
+            <button type="submit" name="choice" value="reject" id="consent-reject-all"><?= lang('Consent.rejectAll') ?></button>
+            <button type="submit" name="choice" value="accept" id="consent-accept-all"><?= lang('Consent.acceptAll') ?></button>
         </div>
     </div>
 
     <div class="customize-btn">
-        <a href="#" id="consent-customize" class="consent-customize show-simple">
+        <button type="button" id="consent-customize" class="consent-customize">
             <span class="show-simple"><?= lang('Consent.customize') ?></span>
             <span class="show-custom"><?= lang('Consent.simplify') ?></span>
-        </a>
+        </button>
     </div>
 
     <div id="consents" class="show-custom">
@@ -24,8 +25,8 @@
             <?php foreach ($consents as $alias => $consent) : ?>
                 <tr>
                     <td>
-                        <input type="checkbox" name="<?= esc($alias, 'attr') ?>" class="consent-check"
-                            <?php if ($alias === 'required') : ?> checked disabled <?php endif ?>
+                        <input type="checkbox" name="consents[<?= esc($alias, 'attr') ?>]" value="1" class="consent-check"
+                            <?php if (! empty($consent['locked'])) : ?> checked disabled<?php elseif (! empty($choices[$alias])) : ?> checked<?php endif ?>
                         >
                     </td>
                     <td>
@@ -38,7 +39,7 @@
         </table>
 
         <div style="text-align: center">
-            <a href="#" id="consent-accept-custom"><?= lang('Consent.acceptSelected') ?></a>
+            <button type="submit" name="choice" value="custom" id="consent-accept-custom"><?= lang('Consent.acceptSelected') ?></button>
         </div>
     </div>
-</div>
+</form>

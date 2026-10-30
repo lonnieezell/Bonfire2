@@ -57,7 +57,7 @@ class Consent extends BaseConfig
      * Cookie Policy URL
      * --------------------------------------------------------------------------
      *
-     * A relative link on the site that displays the cookie policy.
+     * A full URL, or a relative link on the site, that displays the cookie policy.
      * This might be incorporated into the Privacy Policy,
      * but may also be separate.
      */
@@ -70,8 +70,11 @@ class Consent extends BaseConfig
      *
      * A title of the document that contains the cookie policy.
      * For example, 'Privacy Policy' or 'Cookie Policy'.
+     *
+     * This and the other text below may be a language key (File.key),
+     * which is translated, or literal text.
      */
-    public string $policyTitle = 'Cookie Policy';
+    public string $policyTitle = 'Consent.policyLinkTitle';
 
     /**
      * --------------------------------------------------------------------------
@@ -80,7 +83,7 @@ class Consent extends BaseConfig
      *
      * The initial message displayed to the visitor in the consent form.
      */
-    public string $consentMessage = 'This site uses cookies to distinguish you from other users. We may also use cookies to enhance your experience or provide more targeted advertising. For more information, please see our {policy_url}';
+    public string $consentMessage = 'Consent.message';
 
     /**
      * --------------------------------------------------------------------------
@@ -88,24 +91,25 @@ class Consent extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * The list of the types of consents that the user has to provide answers
-     * for. Each one can be accepted or rejected seaparte from the others.
+     * for. Each one can be accepted or rejected separately from the others,
+     * except a `locked` one, which is always accepted.
+     *
+     * Visitors who answered before are asked again when a new key is added.
+     * To change what an existing consent is for, give it a new key.
      */
     public array $consents = [
         'required' => [
-            'name' => 'Functionality',
-            'desc' => 'These cookies are required for the normal operation of this website.',
+            'locked' => true,
+            'name'   => 'Consent.requiredName',
+            'desc'   => 'Consent.requiredDesc',
         ],
         'performance' => [
-            'name' => 'Performance',
-            'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are,
-                and which pages are popular. This helps to improve the website for everyone. If you reject these
-                we will be unable to use your visits to make site improvements.',
+            'name' => 'Consent.performanceName',
+            'desc' => 'Consent.performanceDesc',
         ],
         'targeting' => [
-            'name' => 'Targeting',
-            'desc' => 'These are usually placed by third-party advertising networks, which may use information about
-                your visits to develop a profile of your interests. This information may be shared with other networks
-                or sites to deliver more relevant advertising across multiple sites.',
+            'name' => 'Consent.targetingName',
+            'desc' => 'Consent.targetingDesc',
         ],
     ];
 }

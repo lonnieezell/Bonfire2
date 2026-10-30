@@ -14,23 +14,44 @@ The Consent module allows you to define the types of consent that you would like
 ```php
 public array $consents = [
     'required' => [
-        'name' => 'Functionality',
-        'desc' => 'These cookies are required for the normal operation of this website.',
+        'locked' => true,
+        'name'   => 'Consent.requiredName',
+        'desc'   => 'Consent.requiredDesc',
     ],
     'performance' => [
-        'name' => 'Performance',
-        'desc' => 'These cookies help us measure how visitors use the site, what the traffic sources are,
-            and which pages are popular. This helps to improve the website for everyone. If you reject these
-            we will be unable to use your visits to make site improvements.',
+        'name' => 'Consent.performanceName',
+        'desc' => 'Consent.performanceDesc',
     ],
     'targeting' => [
-        'name' => 'Targeting',
-        'desc' => 'These are usually placed by third-party advertising networks, which may use information about
-            your visits to develop a profile of your interests. This information may be shared with other networks
-            or sites to deliver more relevant advertising across multiple sites.',
+        'name' => 'Consent.targetingName',
+        'desc' => 'Consent.targetingDesc',
     ],
 ];
 ```
+
+A consent marked `'locked' => true` is always accepted: its checkbox is checked and disabled, and the server ignores
+any attempt to reject it. Use it for cookies the site can't work without, like the session cookie.
+
+`name` and `desc` can be language keys (`File.key`), which are shown in the visitor's language, or literal text.
+
+### Adding or changing a consent
+
+When you add a key to `$consents`, visitors who answered before see the form again on their next visit. Their earlier
+answers are pre-filled and the new consent is unchecked.
+
+Consent is given for a stated purpose. If you change what an existing consent is used for, give it a **new key**
+instead of editing its description, so every visitor is asked about the new purpose:
+
+```php
+// Before: 'performance' covered analytics only.
+// After: analytics and session recordings need fresh consent.
+'performance_v2' => [
+    'name' => 'Performance',
+    'desc' => 'Analytics and anonymous session recordings that help us improve the site.',
+],
+```
+
+Then check the new key with `has_consent('performance_v2')`.
 
 ## Using the Helper
 
@@ -53,6 +74,36 @@ Pass the consent's key from `$consents`. Within a view you might wrap a Google A
 <?php endif ?>
 ```
 
+## Letting Visitors Change Their Consent
+
+Visitors must be able to withdraw consent as easily as they gave it. Put `consent_settings_link()` somewhere on every
+page, usually the footer:
+
+```php
+<footer>
+    <?= consent_settings_link() ?>
+</footer>
+```
+
+It renders a "Cookie settings" link that reopens the consent form with the visitor's current choices pre-filled. Pass
+your own text with `consent_settings_link('Privacy choices')`. It returns an empty string while consent is off.
+
+## How Consent Is Saved
+
+The consent form posts to the `consent-save` route (`POST /consent`), with a CSRF token when CSRF protection is on. The
+route:
+
+- saves the choices in the `bf_consent` cookie for the whole site (`path=/`, `SameSite=Lax`, `Secure` over HTTPS),
+  lasting `$consentLength` days;
+- appends a row to the `consent_records` table: a random `consent_id` (also kept in the cookie), the choices, the time,
+  and the user's ID when they are signed in. No IP address or user agent is stored;
+- redirects back, so scripts behind `has_consent()` start or stop on the reloaded page.
+
+Closing the form with its X keeps what the visitor accepted before and rejects everything else. For a first-time
+visitor, that rejects all non-locked consents.
+
+The records let you show when a browser or user consented, and to what. There is no admin screen for them.
+
 ## Customizing the Consent Form
 
 The consent form is a view that can be customized to fit your site's design. The view can be changed by editing the `Consent` config file:
@@ -60,6 +111,17 @@ The consent form is a view that can be customized to fit your site's design. The
 ```php
 public string $consentForm = 'Bonfire\Consent\Views\consent_form';
 ```
+
+A custom form must keep the contract of the default view:
+
+- a `<form>` with `id="consent-popup"` that posts to `url_to('consent-save')` and includes `csrf_field()`;
+- the `hidden` attribute when `$show` is false;
+- a checkbox named `consents[<alias>]` with value `1` for each consent, `checked` when `$choices[<alias>]` is set,
+  and `checked disabled` when the consent is `locked`;
+- submit buttons named `choice` with the value `accept`, `reject`, `custom` (save the checked boxes) or `close`.
+
+The view receives `$consents` (with `name` and `desc` already translated), `$choices` (the visitor's saved answers),
+`$show` and `$message`. `{policy_url}` in the output is replaced with the cookie policy link.
 
 You can also specify the CSS and Javascript files that are loaded with the form:
 
@@ -70,8 +132,9 @@ public string $consentFormScripts = 'Bonfire\Consent\Views\consent_scripts';
 
 ## Configuration
 
-All settings are available in the `Config\Consent` class. Everything except the form views can also be changed in the admin
-area under **Settings → Consent**, which saves the values to the database.
+All settings are available in the `Config\Consent` class. `$requireConsent`, `$consentLength` and `$policyUrl` can also
+be changed in the admin area under **Settings → Consent**, which saves the values to the database. The text (the message,
+the policy title and the consents) lives only in the config and language files, so it can be translated.
 
 **$requireConsent**
 
@@ -86,8 +149,8 @@ The number of days before a visitor is asked for their consent again. The defaul
 **$consentForm**
 
 The view that is displayed to site visitors that a) asks for their basic consent and b) allows them to accept/reject
-the various consents. The `required` consent is unable to be rejected and contains things like the Auth cookie that
-determines if you're logged in or not.
+the various consents. Locked consents can't be rejected; by default that is the `required` consent, which covers things
+like the Auth cookie that determines if you're logged in or not.
 
 **$consentFormStyles**
 **$consentFormScripts**
@@ -102,18 +165,24 @@ included in the Privacy Policy or Terms of Service pages, or similar. The defaul
 
 **$policyTitle**
 
-The link text used for the cookie policy link in the consent form. The default value is `Cookie Policy`.
+The link text used for the cookie policy link in the consent form. The default value is the `Consent.policyLinkTitle`
+language key ("Cookie Policy").
 
 **$consentMessage**
 
 The message shown to visitors at the top of the consent form. Put `{policy_url}` where the cookie policy link should
-appear; it is replaced with a link to `$policyUrl` that uses `$policyTitle` as its text.
+appear; it is replaced with a link to `$policyUrl` that uses `$policyTitle` as its text. The default value is the
+`Consent.message` language key.
+
+Like `$policyTitle` and each consent's `name` and `desc`, it can be a language key (`File.key`), which is translated, or
+literal text, which is shown as-is.
 
 **$consents**
 
 This is an array of the initial consents that will be asked for in the Consent Form. Each array item includes
 the alias the consent can be checked with, and the following items:
 
+- **locked**: Optional. `true` means the consent is always accepted.
 - **name**: The name as it is displayed to the visitors.
 - **desc**: The description of the consent that describes the purpose of the cookies/services and what might be
   no longer functional if the consent is rejected.

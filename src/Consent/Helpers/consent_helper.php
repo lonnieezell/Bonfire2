@@ -48,3 +48,42 @@ if (! function_exists('has_consent')) {
         return (bool) $permissions[$group];
     }
 }
+
+if (! function_exists('consent_choices')) {
+    /**
+     * The visitor's saved answers from the `bf_consent` cookie:
+     * `consent` (1 once answered), `consent_id`, and 0/1 per alias.
+     * Empty when they haven't answered.
+     *
+     * @return array<string, int|string>
+     */
+    function consent_choices(): array
+    {
+        $values = json_decode((string) ($_COOKIE['bf_consent'] ?? ''), true);
+
+        if (! is_array($values)) {
+            return [];
+        }
+
+        if (! preg_match('/^[0-9a-f]{32}$/', (string) ($values['consent_id'] ?? ''))) {
+            unset($values['consent_id']);
+        }
+
+        return $values;
+    }
+}
+
+if (! function_exists('consent_settings_link')) {
+    /**
+     * A link that reopens the consent form, so visitors can change
+     * or withdraw their consent. Empty while consent is off.
+     */
+    function consent_settings_link(?string $label = null): string
+    {
+        if (! setting('Consent.requireConsent')) {
+            return '';
+        }
+
+        return '<a href="#consent-popup" data-consent-open>' . esc($label ?? lang('Consent.settingsLink')) . '</a>';
+    }
+}

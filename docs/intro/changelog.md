@@ -69,6 +69,25 @@ keep using `--all`: `-n` filters history by namespace and would try to run those
 
 ## 30 October 2026 (breaking change)
 
+The consent form can now be reopened, so visitors can change or withdraw consent: put `consent_settings_link()` in
+your layout's footer. Saving posts to a new `consent-save` route, which sets the `bf_consent` cookie server-side,
+appends a row to a new `consent_records` table (no IP address or user agent) and reloads the page, so `has_consent()`
+checks apply at once. Visitors who answered before are asked again when you add a consent, and any consent can be
+marked `'locked' => true` (the default `required` consent is). The default text is translated. See
+[Consent](../modules/consent.md).
+
+Two things to do before you run `php spark migrate --all`:
+
+- **Text edited in Settings → Consent:** the message, policy title and consents are no longer editable there, and the
+  `ForgetConsentText` migration deletes their stored values so the config and language files take effect. Copy any
+  text you changed into `app/Config/Consent.php` first, which `php spark bf:install` published. Language keys
+  (`File.key`) are translated; anything else, like the English text already in your published config, is shown as-is.
+  Add `'locked' => true` to its `required` consent, since the form no longer treats that key specially.
+- **Custom `$consentForm` view:** the form is now a `<form>` that posts to `url_to('consent-save')`, with checkboxes
+  named `consents[<alias>]` and submit buttons named `choice`. See
+  [Customizing the Consent Form](../modules/consent.md#customizing-the-consent-form) for the full contract, and update
+  your view to match. A custom `$consentFormScripts` view should drop its cookie handling; see `consent_scripts.php`.
+
 A new `Settings.php` language file (`src/Settings/Language/`) holds the General Settings text. CodeIgniter merges
 language files of the same name, so if one of your modules has a `Settings.php` language file, its keys now merge with
 Bonfire's and a matching key changes Bonfire's text. Rename your file to avoid that.

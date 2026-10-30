@@ -1,6 +1,6 @@
 <!-- Consent -->
 <style>
-    #consent-close:checked + #consent-popup{display:none;}
+    #consent-popup[hidden] {display:none;}
     #consent-popup {
         position:fixed;
         top:30px;
@@ -13,11 +13,19 @@
         font-size: 0.85rem;
         line-height: 1.2;
     }
-    #consent-popup a {
+    #consent-popup a,
+    #consent-popup button {
         text-decoration: none;
     }
-    #consent-popup a:hover {
+    #consent-popup a:hover,
+    #consent-popup button:hover {
         text-decoration: underline;
+    }
+    #consent-popup button {
+        border: 0;
+        background: none;
+        font: inherit;
+        cursor: pointer;
     }
     #consent-popup h1{
         font-size:1.2em;
@@ -44,25 +52,25 @@
         font-weight:700;
         color:white;
     }
-    #consent-popup a#consent-reject-all,
-    #consent-popup a#consent-accept-all,
-    #consent-popup a#consent-accept-custom {
+    #consent-popup button#consent-reject-all,
+    #consent-popup button#consent-accept-all,
+    #consent-popup button#consent-accept-custom {
         display: inline-block;
         width: 49%;
         padding: 0.5em 1em;
         text-align: center;
     }
-    #consent-popup a#consent-reject-all {
+    #consent-popup button#consent-reject-all {
         /*margin-right: 1%;*/
         background-color: #252535;
         color: whitesmoke;
     }
-    #consent-popup a#consent-reject-all:hover ,
-    #consent-popup a#consent-accept-all:hover {
+    #consent-popup button#consent-reject-all:hover ,
+    #consent-popup button#consent-accept-all:hover {
         box-shadow: 0  0 5px 5px rgba(0,0,0,0.1);
     }
-    #consent-popup a#consent-accept-all,
-    #consent-popup a#consent-accept-custom {
+    #consent-popup button#consent-accept-all,
+    #consent-popup button#consent-accept-custom {
         background-color: whitesmoke;
         color: #252535;
     }
@@ -73,7 +81,7 @@
         margin-top: 1rem;
     }
 
-    #consent-popup .customize-btn a {
+    #consent-popup .customize-btn button {
         margin: 0 auto;
         width: auto;
         color: #252535;

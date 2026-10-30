@@ -45,33 +45,31 @@ class ConsentFilter implements FilterInterface
             return;
         }
 
-        // Get the existing consent cookie
-        if (! function_exists('get_cookie')) {
-            helper('cookie');
+        helper('consent');
+
+        // Shown until the visitor has answered every consent;
+        // otherwise hidden, for consent_settings_link() to open.
+        $choices  = consent_choices();
+        $consents = setting('Consent.consents');
+
+        foreach ($consents as &$consent) {
+            $consent['name'] = $this->text($consent['name']);
+            $consent['desc'] = $this->text($consent['desc']);
         }
+        unset($consent);
 
-        $cookie      = get_cookie('bf_consent');
-        $permissions = $cookie !== null
-            ? json_decode($cookie, true)
-            : [];
-
-        // Do we already have consent from the visitor?
-        // then nothing to do here...
-        if ($permissions['consent'] ?? false) {
-            return;
-        }
-
-        // Insert the consent form
         $html = view(setting('Consent.consentForm'), [
-            'consents' => setting('Consent.consents'),
-            'message'  => setting('Consent.consentMessage'),
+            'consents' => $consents,
+            'choices'  => $choices,
+            'show'     => empty($choices['consent']) || array_diff_key($consents, $choices) !== [],
+            'message'  => $this->text(setting('Consent.consentMessage')),
         ]);
         // Replace {policy_url} with the actual link.
         $link = setting('Consent.policyUrl');
         $link = str_starts_with((string) $link, 'http')
             ? $link
             : site_url($link);
-        $policyTitle = setting('Consent.policyTitle');
+        $policyTitle = esc($this->text(setting('Consent.policyTitle')));
         $html        = str_ireplace('{policy_url}', "<a href='{$link}' target='_blank'>{$policyTitle}</a>", $html);
 
         $cssFile = setting('Consent.consentFormStyles');
@@ -89,5 +87,14 @@ class ConsentFilter implements FilterInterface
         $response->setBody($output);
 
         return $response;
+    }
+
+    /**
+     * A value shaped like a language key (File.key) is translated;
+     * anything else is literal text from a published config.
+     */
+    private function text(string $value): string
+    {
+        return preg_match('/^\w+(\.\w+)+$/', $value) ? lang($value) : $value;
     }
 }
