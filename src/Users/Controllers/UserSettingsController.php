@@ -30,17 +30,17 @@ class UserSettingsController extends BaseController
         }
 
         $rememberOptions = [
-            '1 hour'   => HOUR,
-            '4 hours'  => 4 * HOUR,
-            '8 hours'  => 8 * HOUR,
-            '25 hours' => 24 * HOUR,
-            '1 week'   => WEEK,
-            '2 weeks'  => 2 * WEEK,
-            '3 weeks'  => 3 * WEEK,
-            '1 month'  => MONTH,
-            '2 months' => 2 * MONTH,
-            '6 months' => 6 * MONTH,
-            '1 year'   => 12 * MONTH,
+            lang('Users.rememberHours', [1])  => HOUR,
+            lang('Users.rememberHours', [4])  => 4 * HOUR,
+            lang('Users.rememberHours', [8])  => 8 * HOUR,
+            lang('Users.rememberHours', [24]) => 24 * HOUR,
+            lang('Users.rememberWeeks', [1])  => WEEK,
+            lang('Users.rememberWeeks', [2])  => 2 * WEEK,
+            lang('Users.rememberWeeks', [3])  => 3 * WEEK,
+            lang('Users.rememberMonths', [1]) => MONTH,
+            lang('Users.rememberMonths', [2]) => 2 * MONTH,
+            lang('Users.rememberMonths', [6]) => 6 * MONTH,
+            lang('Users.rememberYears', [1])  => 12 * MONTH,
         ];
 
         return $this->render($this->viewPrefix . 'user_settings', [

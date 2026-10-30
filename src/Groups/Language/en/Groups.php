@@ -10,5 +10,18 @@
  */
 
 return [
-    'groupsModTitle' => 'User Groups',
+    'groupsModTitle'    => 'User Groups',
+    'groupsDescription' => 'Groups work like traditional roles, but can also be more specific groupings of users that might not fit a role-based system.',
+    'group'             => 'Group',
+    'alias'             => 'Alias',
+    'users'             => 'Users',
+    'permissions'       => 'Permissions',
+    'default'           => 'Default',
+    'groupDetails'      => 'Group Details',
+    'details'           => 'Details',
+    'title'             => 'Title',
+    'description'       => 'Description',
+    'saveGroup'         => 'Save Group',
+    'permissionsIntro'  => 'Select the permissions this group should have.',
+    'savePermissions'   => 'Save Permissions',
 ];

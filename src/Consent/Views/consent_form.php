@@ -1,20 +1,20 @@
 <div id="consent-popup" data-state="simple">
-    <h1>Cookies</h1>
+    <h1><?= lang('Consent.cookies') ?></h1>
     <a href="#" id="consent-close">X</a>
 
     <div class="show-simple">
         <p><?= esc($message) ?>
 
         <div>
-            <a href="#" id="consent-reject-all">Reject Non-Essential</a>
-            <a href="#" id="consent-accept-all">Accept All</a>
+            <a href="#" id="consent-reject-all"><?= lang('Consent.rejectAll') ?></a>
+            <a href="#" id="consent-accept-all"><?= lang('Consent.acceptAll') ?></a>
         </div>
     </div>
 
     <div class="customize-btn">
         <a href="#" id="consent-customize" class="consent-customize show-simple">
-            <span class="show-simple">Customize Consent</span>
-            <span class="show-custom">Simplify Consent</span>
+            <span class="show-simple"><?= lang('Consent.customize') ?></span>
+            <span class="show-custom"><?= lang('Consent.simplify') ?></span>
         </a>
     </div>
 
@@ -38,7 +38,7 @@
         </table>
 
         <div style="text-align: center">
-            <a href="#" id="consent-accept-custom">Accept Selected</a>
+            <a href="#" id="consent-accept-custom"><?= lang('Consent.acceptSelected') ?></a>
         </div>
     </div>
 </div>

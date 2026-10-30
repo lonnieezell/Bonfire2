@@ -62,4 +62,18 @@ return [
     'problemNotWritable'      => '{0} is not writable',
     'problemEnvMissing'       => 'The .env file is missing',
     'problemHighLoad'         => 'Server load is {0}',
+    // system info
+    'viewPhpInfo'        => 'View PHP Info',
+    'copyAsText'         => 'Copy as text',
+    'copied'             => 'Copied',
+    'server'             => 'Server',
+    'filesystem'         => 'Filesystem',
+    'notWritableWarning' => 'Some files or folders in /writable are not writable. Bonfire needs to write logs, cache and uploads there.',
+    'present'            => 'Present',
+    'missing'            => 'Missing',
+    'writable'           => 'Writable',
+    'notWritable'        => 'Not writable',
+    // logs
+    'navigateFiles' => 'Navigation between files',
+    'stackTrace'    => 'Stack trace',
 ];

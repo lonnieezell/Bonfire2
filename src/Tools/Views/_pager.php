@@ -1,4 +1,4 @@
-<nav aria-label="Navigation between files">
+<nav aria-label="<?= esc(lang('Tools.navigateFiles'), 'attr') ?>">
     <ul class="pagination">
         <?php if ($prev['link']) : ?>
         <li

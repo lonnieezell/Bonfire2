@@ -55,7 +55,7 @@ $this->extend('master') ?>
                         <span class="bf-log-text"><?= esc($log['content']) ?></span>
                         <?php if (array_key_exists('extra', $log)) : ?>
                             <details class="bf-log-trace">
-                                <summary>Stack trace</summary>
+                                <summary><?= lang('Tools.stackTrace') ?></summary>
                                 <pre><?= esc(trim($log['extra'], " \n")) ?></pre>
                             </details>
                         <?php endif ?>
