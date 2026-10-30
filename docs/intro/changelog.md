@@ -24,6 +24,10 @@ explains how to take the site offline, who can still get in, and how to get back
 [View Components](../building_admin_modules/view_components.md) now lists the attributes of every component and has a
 Pager templates section covering `bonfire_full`, `bonfire_simple`, `bonfire_list_hx` and the rest.
 
+The docs map that `php spark bf:agents` writes into `AGENTS.md` now also points agents to the Auth, Consent, Meta Info
+and Asset Management references, the request flow, published themes and updating Bonfire. Re-run the command to pick
+it up.
+
 The `bonfire_simple` pager template no longer prints a stray `?>` above its links.
 
 A new page, [Testing Your Admin Module](../building_admin_modules/testing.md), shows how to write feature tests for a
