@@ -84,8 +84,16 @@ class UserSettingsController extends BaseController
 
         // Remember Me
         $sessionConfig                     = setting('Auth.sessionConfig');
-        $sessionConfig['allowRemembering'] = $this->request->getPost('allowRemember') ?? false;
-        $sessionConfig['rememberLength']   = $this->request->getPost('rememberLength');
+        $sessionConfig['allowRemembering'] = (bool) $this->request->getPost('allowRemember');
+
+        // The select posts a string, but Shield hands this value to
+        // Time::addSeconds(), which requires an int. Leave the stored
+        // length alone when "How long to remember..." (0) was posted.
+        $rememberLength = (int) $this->request->getPost('rememberLength');
+        if ($rememberLength > 0) {
+            $sessionConfig['rememberLength'] = $rememberLength;
+        }
+
         setting('Auth.sessionConfig', $sessionConfig);
 
         // Avatars

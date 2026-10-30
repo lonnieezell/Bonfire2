@@ -56,7 +56,7 @@ $avatarSizeFloor  = setting('Users.avatarResizeFloor') ?? 32;
                         <select name="rememberLength" id="rememberLength" class="form-select">
                             <option value="0"><?= lang('Users.rememberSelect') ?></option>
                             <?php foreach ($rememberOptions ?? [] as $title => $seconds) : ?>
-                                <option value="<?= $seconds ?>"<?= old('rememberLength', setting('Auth.sessionConfig')['rememberLength']) === (string) $seconds ? ' selected' : '' ?>><?= $title ?></option>
+                                <option value="<?= $seconds ?>"<?= (int) old('rememberLength', setting('Auth.sessionConfig')['rememberLength']) === $seconds ? ' selected' : '' ?>><?= $title ?></option>
                             <?php endforeach ?>
                         </select>
                     </x-setting-row>
