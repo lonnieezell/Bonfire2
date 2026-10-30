@@ -27,6 +27,9 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 |---|---|
 | Finding where config, themes and modules live | `intro/app_structure.md` |
 | Looking up a config key, its default and what it does | `intro/configuration.md` |
+| Understanding how filters, module discovery and themes fit into a request | `intro/request_flow.md` |
+| Updating Bonfire | `intro/installation.md#updating-bonfire` |
+| Handling theme changes after updating Bonfire | `intro/published_themes.md` |
 | Building a first admin module from scratch, step by step | `building_admin_modules/tutorial_first_module.md` |
 | Setting up module locations, `Module.php` or a page breadcrumb | `building_admin_modules/creating_an_admin_module.md` |
 | Looking up menu item keys, collections, custom menus or menu order | `building_admin_modules/menus.md` |
@@ -36,6 +39,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Adding filters to a list | `building_admin_modules/filters.md` |
 | Overriding Bonfire's text, adding a locale or translating a module | `building_admin_modules/localization.md` |
 | Adding permissions and granting them to groups | `building_admin_modules/permissions.md` |
+| Changing login, registration or redirect defaults, or customizing the auth pages | `modules/auth.md` |
 | Adding a tab to the user or group edit page | `building_admin_modules/resource_tabs.md` |
 | Adding results to the admin search | `building_admin_modules/search.md` |
 | Soft-deleting records into the Recycler | `building_admin_modules/recycler.md` |
@@ -44,10 +48,13 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Changing the default dashboard layout | `modules/dashboard.md` |
 | Showing flash alerts | `building_sites/alerts.md` |
 | Linking CSS and JS assets | `building_sites/assets.md` |
+| Configuring asset folders, versions and cache-busting | `modules/assets.md` |
 | Writing your own view components | `building_sites/components.md` |
 | Asking visitors for cookie consent | `building_sites/consent.md` |
+| Defining consent types, customizing the consent form, or consent config | `modules/consent.md` |
 | Setting page titles, meta tags, scripts and styles | `building_sites/metadata.md` |
 | Storing extra data on users or other entities | `building_sites/meta_info.md` |
+| Defining meta fields, or adding meta info to your own entities | `modules/meta_info.md` |
 | Reading and writing settings | `building_sites/settings.md` |
 | Formatting dates, form errors and other global helpers | `building_sites/common_functions.md` |
 | Taking the site offline for maintenance | `building_sites/common_functions.md#maintenance-mode` |
