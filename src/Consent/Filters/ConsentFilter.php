@@ -40,8 +40,8 @@ class ConsentFilter implements FilterInterface
     {
         helper('setting');
 
-        // Consent system disabled?
-        if (! setting('Consent.requireConsent')) {
+        // Consent system disabled, or not a full page (JSON, htmx partials, redirects)?
+        if (! setting('Consent.requireConsent') || ! str_contains((string) $response->getBody(), '</body>')) {
             return;
         }
 
@@ -50,13 +50,10 @@ class ConsentFilter implements FilterInterface
         // Shown until the visitor has answered every consent;
         // otherwise hidden, for consent_settings_link() to open.
         $choices  = consent_choices();
-        $consents = setting('Consent.consents');
-
-        foreach ($consents as &$consent) {
-            $consent['name'] = $this->text($consent['name']);
-            $consent['desc'] = $this->text($consent['desc']);
-        }
-        unset($consent);
+        $consents = array_map(
+            fn (array $consent) => ['name' => $this->text($consent['name']), 'desc' => $this->text($consent['desc'])] + $consent,
+            setting('Consent.consents'),
+        );
 
         $html = view(setting('Consent.consentForm'), [
             'consents' => $consents,

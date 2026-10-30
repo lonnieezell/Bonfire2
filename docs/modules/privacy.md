@@ -68,7 +68,7 @@ working. The `users` provider:
 - keeps rows in `auth_logins` and `auth_token_logins` for security audits, but replaces their `identifier` (usually the
   email address) with `deleted-user-{id}`.
 
-Erased users don't appear in the Recycler and can't be restored. See
+Erased users don't appear in the Recycler and can't be restored or purged. See
 [ADR 0006](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0006-erasure-anonymises-users.md) for the
 reasoning.
 

@@ -24,4 +24,5 @@ class ConsentRecordModel extends Model
     protected $allowedFields = ['consent_id', 'user_id', 'consents'];
     protected $useTimestamps = true;
     protected $updatedField  = '';
+    protected array $casts   = ['consents' => 'json-array'];
 }

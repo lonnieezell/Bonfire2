@@ -59,14 +59,16 @@ final class RecyclerTest extends TestCase
         $this->assertSame(1, service('recycler')->find('users')->deletedCount());
     }
 
-    public function testErasedUsersCannotBeRestored(): void
+    public function testErasedUsersCannotBeRestoredOrPurged(): void
     {
         $erased = $this->createUser();
         $this->eraseUser($erased);
 
         $this->actingAs($this->admin)->get(route_to('recycler-restore', 'users', $erased->id));
+        $this->actingAs($this->admin)->get(route_to('recycler-purge', 'users', $erased->id));
 
         $this->assertNull($this->users->find($erased->id));
+        $this->seeInDatabase('users', ['id' => $erased->id]);
     }
 
     public function testRestore()

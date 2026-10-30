@@ -38,16 +38,20 @@ class ActionRuns
             return RunOutcome::ran(false, lang('Actions.queueMissing'));
         }
 
-        if ($queueReady && ($action->queue === Queue::Always || ($action->queue === Queue::Auto && count($ids) > $action->queueAbove))) {
-            $runs  = model(ActionRunModel::class);
-            $runId = $runs->insert([
-                'list'    => $list,
-                'action'  => $action->name(),
-                'user_id' => $actor->id,
-                'ids'     => json_encode($ids),
-                'total'   => count($ids),
-                'status'  => RunStatus::Queued,
-            ]);
+        $queued = $queueReady && ($action->queue === Queue::Always || ($action->queue === Queue::Auto && count($ids) > $action->queueAbove));
+
+        // Runs in the request are recorded too, as the audit trail of who did what
+        $runs  = model(ActionRunModel::class);
+        $runId = $runs->insert([
+            'list'    => $list,
+            'action'  => $action->name(),
+            'user_id' => $actor->id,
+            'ids'     => json_encode($ids),
+            'total'   => count($ids),
+            'status'  => $queued ? RunStatus::Queued : RunStatus::Running,
+        ]);
+
+        if ($queued) {
             $pushed = service('queue')->push(RunAction::QUEUE, RunAction::NAME, ['run' => $runId]);
 
             if (! $pushed->getStatus()) {
@@ -59,17 +63,6 @@ class ActionRuns
 
             return RunOutcome::queued($runId);
         }
-
-        // Runs in the request are recorded too, as the audit trail of who did what
-        $runs  = model(ActionRunModel::class);
-        $runId = $runs->insert([
-            'list'    => $list,
-            'action'  => $action->name(),
-            'user_id' => $actor->id,
-            'ids'     => json_encode($ids),
-            'total'   => count($ids),
-            'status'  => RunStatus::Running,
-        ]);
 
         $context = new ActionContext(service('actions')->for($list)->source(), $action, $actor, $ids);
 

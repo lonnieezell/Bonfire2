@@ -25,27 +25,10 @@ if (! function_exists('has_consent')) {
             return true;
         }
 
-        if (! function_exists('get_cookie')) {
-            helper('cookie');
-        }
+        $choices = consent_choices();
 
-        $cookie = $_COOKIE['bf_consent'] ?? null;
-
-        if (empty($cookie)) {
-            return false;
-        }
-
-        $permissions = json_decode((string) $cookie, true);
-
-        if (! is_array($permissions) || ! array_key_exists($group, $permissions)) {
-            return false;
-        }
         // They must have given permission at one time...
-        if (! isset($permissions['consent']) || $permissions['consent'] === 0) {
-            return false;
-        }
-
-        return (bool) $permissions[$group];
+        return ! empty($choices['consent']) && ! empty($choices[$group]);
     }
 }
 
@@ -59,7 +42,7 @@ if (! function_exists('consent_choices')) {
      */
     function consent_choices(): array
     {
-        $values = json_decode((string) ($_COOKIE['bf_consent'] ?? ''), true);
+        $values = json_decode((string) service('superglobals')->cookie(config('Cookie')->prefix . 'bf_consent'), true);
 
         if (! is_array($values)) {
             return [];

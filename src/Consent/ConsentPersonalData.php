@@ -33,7 +33,7 @@ class ConsentPersonalData implements PersonalDataProvider, PrunesPersonalData
 
         return array_map(static fn (array $record) => [
             'consent_id' => $record['consent_id'],
-            'consents'   => json_decode($record['consents'], true),
+            'consents'   => $record['consents'],
             'created_at' => $record['created_at'],
         ], $records);
     }
@@ -55,11 +55,11 @@ class ConsentPersonalData implements PersonalDataProvider, PrunesPersonalData
             return 0;
         }
 
-        $db      = db_connect();
-        $records = model(ConsentRecordModel::class);
-        $latest  = $db->table('consent_records')->selectMax('id')->groupBy('consent_id');
+        $db     = db_connect();
+        $latest = $db->table('consent_records')->selectMax('id')->groupBy('consent_id');
 
-        $records->where('created_at <', Time::now()->subDays($days)->toDateTimeString())
+        model(ConsentRecordModel::class)
+            ->where('created_at <', Time::now()->subDays($days)->toDateTimeString())
             ->groupStart()
             // Wrapped in a derived table, as MySQL can't select from the table it deletes from
             ->whereNotIn('id', $db->newQuery()->fromSubquery($latest, 'latest')->select('id'))

@@ -45,7 +45,7 @@ class ConsentController extends BaseController
         model(ConsentRecordModel::class)->insert([
             'consent_id' => $consentId,
             'user_id'    => auth()->id(),
-            'consents'   => json_encode($values),
+            'consents'   => $values,
         ]);
 
         return redirect()->back()->setCookie(

@@ -36,8 +36,8 @@ final class UserExportTest extends TestCase
         model(LoginModel::class)->recordLoginAttempt('email_password', 'someone@example.com', false, '10.0.0.3', 'Firefox');
         model(TokenLoginModel::class)->recordLoginAttempt('access_token', 'token', true, '10.0.0.4', 'curl', $this->user->id);
         $this->user->generateAccessToken('cli');
-        model(ConsentRecordModel::class)->insert(['consent_id' => str_repeat('a', 32), 'user_id' => $this->user->id, 'consents' => '{"performance":1}']);
-        model(ConsentRecordModel::class)->insert(['consent_id' => str_repeat('b', 32), 'user_id' => null, 'consents' => '{"performance":0}']);
+        model(ConsentRecordModel::class)->insert(['consent_id' => str_repeat('a', 32), 'user_id' => $this->user->id, 'consents' => ['performance' => 1]]);
+        model(ConsentRecordModel::class)->insert(['consent_id' => str_repeat('b', 32), 'user_id' => null, 'consents' => ['performance' => 0]]);
 
         $response = $this->actingAs($this->admin)->get("admin/users/{$this->user->id}/export");
 

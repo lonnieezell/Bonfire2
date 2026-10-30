@@ -48,8 +48,8 @@ class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
             'meta'        => $user->allMetaKeyValue(),
             'avatar'      => $user->avatar,
             'identities'  => $identities,
-            'logins'      => $this->logins(model(LoginModel::class), $user),
-            'tokenLogins' => $this->logins(model(TokenLoginModel::class), $user),
+            'logins'      => $this->loginsOf(model(LoginModel::class), $user)->orderBy('date')->asArray()->findAll(),
+            'tokenLogins' => $this->loginsOf(model(TokenLoginModel::class), $user)->orderBy('date')->asArray()->findAll(),
         ];
     }
 
@@ -62,19 +62,15 @@ class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
     {
         $anonymous = "deleted-user-{$user->id}";
 
+        $now = Time::now()->toDateTimeString();
+
         foreach ([model(LoginModel::class), model(TokenLoginModel::class)] as $logins) {
-            $logins->where('user_id', $user->id);
-
-            if ($user->email !== null) {
-                $logins->orWhere('identifier', $user->email);
-            }
-
-            $logins->set('identifier', $anonymous)->update();
+            $this->loginsOf($logins, $user)->set('identifier', $anonymous)->update();
         }
 
         $user->deleteResourceMeta();
         model(UserIdentityModel::class)->where('user_id', $user->id)->delete();
-        model(RememberModel::class)->where('user_id', $user->id)->delete();
+        model(RememberModel::class)->purgeRememberTokens($user);
 
         model(UserModel::class)->builder()->where('id', $user->id)->update([
             'username'   => $anonymous,
@@ -82,8 +78,8 @@ class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
             'last_name'  => null,
             'avatar'     => null,
             'active'     => 0,
-            'deleted_at' => Time::now()->format('Y-m-d H:i:s'),
-            'erased_at'  => Time::now()->format('Y-m-d H:i:s'),
+            'deleted_at' => $now,
+            'erased_at'  => $now,
         ]);
 
         $avatar = $user->avatar;
@@ -113,9 +109,9 @@ class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
     }
 
     /**
-     * Logins by the user, and failed attempts with their email.
+     * Scopes $model to logins by the user, and failed attempts with their email.
      */
-    private function logins(LoginModel $model, User $user): array
+    private function loginsOf(LoginModel $model, User $user): LoginModel
     {
         $model->where('user_id', $user->id);
 
@@ -123,6 +119,6 @@ class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
             $model->orWhere('identifier', $user->email);
         }
 
-        return array_map(static fn ($login) => $login->toArray(), $model->orderBy('date')->findAll());
+        return $model;
     }
 }

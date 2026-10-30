@@ -83,15 +83,14 @@ class PersonalData
             }
 
             $db->transCommit();
+            $callbacks = $this->afterErase;
         } catch (Throwable $e) {
             $db->transRollback();
-            $this->afterErase = [];
 
             throw $e;
+        } finally {
+            $this->afterErase = [];
         }
-
-        $callbacks        = $this->afterErase;
-        $this->afterErase = [];
 
         foreach ($callbacks as $callback) {
             $callback();

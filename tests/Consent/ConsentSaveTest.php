@@ -3,6 +3,7 @@
 namespace Tests\Consent;
 
 use CodeIgniter\Config\Services;
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Test\TestResponse;
 use Tests\Support\TestCase;
 
@@ -41,7 +42,7 @@ final class ConsentSaveTest extends TestCase
         $this->assertSame('/', $cookie->getPath());
         $this->assertSame('Lax', $cookie->getSameSite());
         $this->assertFalse($cookie->isSecure());
-        $this->assertEqualsWithDelta(time() + 30 * DAY, $cookie->getExpiresTimestamp(), 5);
+        $this->assertEqualsWithDelta(Time::now()->getTimestamp() + 30 * DAY, $cookie->getExpiresTimestamp(), 5);
         $this->assertSame(['required' => 1, 'performance' => 1, 'targeting' => 1], $this->choices($response));
     }
 

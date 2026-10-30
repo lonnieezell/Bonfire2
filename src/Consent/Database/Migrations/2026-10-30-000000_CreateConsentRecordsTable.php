@@ -40,6 +40,7 @@ class CreateConsentRecordsTable extends Migration
         $this->forge->addPrimaryKey('id');
         $this->forge->addKey('consent_id');
         $this->forge->addKey('user_id');
+        $this->forge->addKey('created_at');
         $this->forge->createTable('consent_records', true);
     }
 

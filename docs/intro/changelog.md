@@ -11,7 +11,7 @@ provider in one transaction: the user's name is replaced with `deleted-user-{id}
 identities and remember tokens are deleted, their consent records are removed, and the account is deactivated,
 soft-deleted and marked with a new `erased_at` column. The row stays so content that points at it keeps working; login
 rows stay for security audits, without the email address. Erased users don't appear in the Recycler and can't be
-restored. It needs the new `users.erase` permission, which only `superadmin` has (through `users.*`). See
+restored or purged. It needs the new `users.erase` permission, which only `superadmin` has (through `users.*`). See
 [ADR 0006](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0006-erasure-anonymises-users.md).
 
 Actions that run in the request, not only queued ones, are now recorded in `action_runs`, so every run has an audit
