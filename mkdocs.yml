@@ -125,4 +125,5 @@ nav:
       - building_admin_modules/recycler.md
       - building_admin_modules/resource_tabs.md
       - building_admin_modules/search.md
+      - building_admin_modules/testing.md
       - building_admin_modules/view_components.md

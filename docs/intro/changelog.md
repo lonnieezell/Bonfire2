@@ -21,6 +21,10 @@ and the email activation and 2FA actions, and shows where to change each one. It
 `error()`, `render()`, `admin_accent()` and `site_offline()`, alongside `app_date()`. A new Maintenance mode section
 explains how to take the site offline, who can still get in, and how to get back in if you're locked out.
 
+A new page, [Testing Your Admin Module](../building_admin_modules/testing.md), shows how to write feature tests for a
+module in your app: a base test case that registers Bonfire's modules, giving test users your module's permissions,
+and testing access checks and htmx requests.
+
 Bonfire now registers each module under its real namespace, like `Bonfire\Users` or `App\Modules\Blog`, instead of
 `Bonfire\{Users}`, so `php spark migrate -n "Bonfire\Actions"` finds a module's migrations. `php spark migrate --all`
 is unaffected. Rows already in your `migrations` table keep the old `Bonfire\{…}` namespace, so on an existing install
