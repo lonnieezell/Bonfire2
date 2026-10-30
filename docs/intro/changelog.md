@@ -25,6 +25,11 @@ New admin guides cover the shipped screens: [Users](../modules/users.md) (includ
 A new page, [Menus](../building_admin_modules/menus.md), lists every `MenuItem` key, the collection and menu methods,
 custom menus, and reordering with `$menuWeights`.
 
+A menu item's `altText` now shows as its link's tooltip (`title`) in the sidebar, the settings nav and the dashboard
+quick links. Before, the Admin theme ignored it, and `MenuItem::altText()` threw a `TypeError` on an item without
+one; it now returns `null`. If you published the Admin theme, copy the change from `Components/sidebar.php` and
+`Components/settings-layout.php` into your copy.
+
 A menu item or collection given an `iconUrl` now shows its icon. The `<img>` tag used `href` instead of `src`.
 
 The [Authentication](../modules/auth.md) page now lists Bonfire's defaults for registration, magic links, redirects

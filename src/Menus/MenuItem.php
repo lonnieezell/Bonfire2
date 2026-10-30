@@ -20,13 +20,13 @@ namespace Bonfire\Menus;
 /**
  * Represents an individual item in a menu.
  *
- * @property string $altText
- * @property string $faIcon
- * @property string $icon
- * @property string $iconUrl
- * @property string $title
- * @property string $url
- * @property int    $weight
+ * @property string|null $altText
+ * @property string      $faIcon
+ * @property string      $icon
+ * @property string      $iconUrl
+ * @property string      $title
+ * @property string      $url
+ * @property int         $weight
  */
 class MenuItem
 {
@@ -189,7 +189,7 @@ class MenuItem
     /**
      * Gets altText of this Menu Item
      */
-    public function altText(): string
+    public function altText(): ?string
     {
         return $this->altText;
     }
