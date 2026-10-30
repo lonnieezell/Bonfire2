@@ -10,7 +10,7 @@ peers (Filament, Backpack, Symfony's EasyAdmin, Rails' Avo) are resource
 builders: one class per model describes its fields, filters and actions, and the
 package renders the list, form, search and bulk actions. Bonfire has no such
 layer. Its admin screens are hand-written controllers and views, helped by the
-`<x-…>` view components and `CrudGenerator`, which writes code the developer
+`<x-…>` view components and `make:module` (`ModuleGenerator`), which writes code the developer
 then maintains. `UserController` shows the cost: about 200 lines of list, form,
 save and permission plumbing for one model.
 
@@ -26,7 +26,7 @@ module cannot add routes from `Module.php`.
 
 **Resources are opt-in and additive.** A module may describe a model with a
 resource class instead of writing controllers and views. Hand-written modules,
-`Users` included, keep working unchanged, and `CrudGenerator` stays for
+`Users` included, keep working unchanged, and `make:module` stays for
 developers who want plain controllers.
 
 **A resource is one class.** `Bonfire\Resources\Resource` names the model, URL

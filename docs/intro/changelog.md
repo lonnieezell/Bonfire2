@@ -14,6 +14,10 @@ are machine-made, so corrections from native speakers are welcome.
 In Settings → Users, the "Remember for" option labelled "25 hours" kept users logged in for 24 hours. It now reads
 "24 hours".
 
+`php spark make:crud`, which never ran, is now `php spark make:module`. It writes a working admin module for an
+existing model: a list with search, a create and edit form, row and bulk delete, permissions and a feature test. See
+[Generating a Module](../building_admin_modules/generating_a_module.md).
+
 New admin guides cover the shipped screens: [Users](../modules/users.md) (including Settings → Users),
 [General Settings](../modules/settings.md), [Email Settings](../modules/email.md) and [Tools](../modules/tools.md)
 (System Info and Logs). [Bonfire Modules](../modules/index.md) now lists every shipped module.

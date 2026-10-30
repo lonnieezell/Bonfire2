@@ -8,6 +8,12 @@ New to Bonfire? Start here. This tutorial walks you from an empty folder to a wo
 
 [Start the tutorial](tutorial_first_module.md)
 
+## Generating a Module
+
+Already have a model? `php spark make:module` writes a module for it: a sidebar item, a list with search, a form to create and edit records, row and bulk delete, permissions and a feature test. This guide covers preparing the model, the command's options, and finishing the setup.
+
+[Read more about Generating a Module](generating_a_module.md)
+
 ## Module Structure
 
 Learn how modules are laid out and found, centered around a single task or resource, like Users, Photos, etc. This guide covers configuring module locations, shipping a module in a Composer package, the `Module.php` file, and naming a page in the breadcrumb.

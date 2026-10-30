@@ -31,6 +31,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Updating Bonfire | `intro/installation.md#updating-bonfire` |
 | Handling theme changes after updating Bonfire | `intro/published_themes.md` |
 | Building a first admin module from scratch, step by step | `building_admin_modules/tutorial_first_module.md` |
+| Generating a CRUD admin module for an existing model | `building_admin_modules/generating_a_module.md` |
 | Setting up module locations, `Module.php` or a page breadcrumb | `building_admin_modules/creating_an_admin_module.md` |
 | Looking up menu item keys, collections, custom menus or menu order | `building_admin_modules/menus.md` |
 | Writing admin controllers and views, or changing the admin theme | `building_admin_modules/controllers_and_views.md` |
