@@ -852,6 +852,8 @@
       
         
       
+        
+      
     
     
     
@@ -1132,6 +1134,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../modules/privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../modules/meta_info/" class="md-nav__link">
         
   
@@ -1171,6 +1201,8 @@
       
         
           
+        
+      
         
       
         
@@ -1385,6 +1417,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_sites/data_requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle a Data Export or Erasure Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_sites/settings/" class="md-nav__link">
         
   
@@ -1480,6 +1540,8 @@
       
         
           
+        
+      
         
       
         
@@ -1856,6 +1918,34 @@
     
   
     The Recycler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_admin_modules/personal_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Make Your Module's Data Exportable and Erasable
   
 
     
@@ -2278,6 +2368,25 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="30-october-2026">30 October 2026</h2>
+<p>The users list has an <strong>Erase personal data</strong> action, for one user or many. It runs every registered personal data
+provider in one transaction: the user's name is replaced with <code>deleted-user-{id}</code>, their avatar, meta, sign-in
+identities and remember tokens are deleted, their consent records are removed, and the account is deactivated,
+soft-deleted and marked with a new <code>erased_at</code> column. The row stays so content that points at it keeps working; login
+rows stay for security audits, without the email address. Erased users don't appear in the Recycler and can't be
+restored or purged. It needs the new <code>users.erase</code> permission, which only <code>superadmin</code> has (through <code>users.*</code>). See
+<a href="https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0006-erasure-anonymises-users.md">ADR 0006</a>.</p>
+<p>Actions that run in the request, not only queued ones, are now recorded in <code>action_runs</code>, so every run has an audit
+trail. With <strong>Include completed runs</strong> on, the Action runs dashboard widget lists them too.</p>
+<p>A user's edit screen has an <strong>Export data</strong> button that downloads everything the site holds about them as
+<code>user-{id}-data.json</code>: their account, meta, avatar, sign-in identities (without password or token hashes), login
+history and consent records. Each export is logged as a notice. It needs the new <code>users.export</code> permission, which
+<code>superadmin</code> has through <code>users.*</code>; run <code>php spark bonfire:permissions</code> to grant it to <code>admin</code>. Modules add their own
+data to the export by implementing <code>Bonfire\Privacy\PersonalDataProvider</code> and registering it with
+<code>service('personalData')-&gt;register()</code> from <code>initAdmin()</code>.</p>
+<p>Three consent banner fixes. An absolute cookie policy URL (<code>https://...</code>) is now used as-is; before, it was run
+through <code>site_url()</code>. The consent cookie now lasts <code>Consent.consentLength</code> days instead of a fixed 180, and is set
+for the whole site. Closing the banner with its X now rejects all non-essential cookies, so it stops reappearing on
+every page. If you published your own <code>consentFormScripts</code> view, copy the change from <code>consent_scripts.php</code>.</p>
 <p>Items added straight to a menu with <code>Menu::addItem()</code>, outside any collection, now show in the sidebar, the command
 palette and the breadcrumb. Before, the Admin theme skipped them. If you published the Admin theme, copy the change
 from <code>Components/sidebar.php</code> and <code>_palette.php</code>.</p>
@@ -2320,6 +2429,46 @@ and testing access checks and htmx requests.</p>
 is unaffected. Rows already in your <code>migrations</code> table keep the old <code>Bonfire\{…}</code> namespace, so on an existing install
 keep using <code>--all</code>: <code>-n</code> filters history by namespace and would try to run those migrations again.</p>
 <h2 id="30-october-2026-breaking-change">30 October 2026 (breaking change)</h2>
+<p>Bonfire now deletes personal data it no longer needs on a schedule. A new Privacy config sets how many days to keep
+it (<code>null</code> keeps it forever): login attempts and access token logins for 90 days, and consent records for 365 days once
+a newer answer replaced them or their consent expired. <code>php spark bf:privacy:prune</code> does the work, and modules prune
+their own data by implementing <code>Bonfire\Privacy\PrunesPersonalData</code>. System Info warns when pruning hasn't run for
+over a week.</p>
+<p>Bonfire now requires <code>codeigniter4/tasks</code>, and <code>codeigniter4/queue</code> moved from <code>suggest</code> to <code>require</code>. To schedule
+the prune on an existing install:</p>
+<ol>
+<li>Run <code>php spark tasks:publish</code> if you have no <code>app/Config/Tasks.php</code>, and remove the example tasks it contains.</li>
+<li>
+<p>Add this line to its <code>init()</code> method:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">\Bonfire\Bonfire</span><span class="o">::</span><span class="na">schedule</span><span class="p">(</span><span class="nv">$schedule</span><span class="p">);</span>
+</code></pre></div>
+</li>
+<li>
+<p>Run <code>php spark tasks:run</code> every minute from cron:</p>
+<div class="highlight"><pre><span></span><code>* * * * * cd /path/to/your/site &amp;&amp; php spark tasks:run &gt;&gt; /dev/null 2&gt;&amp;1
+</code></pre></div>
+</li>
+</ol>
+<p>New installs get steps 1 and 2 from <code>php spark bf:install</code>.</p>
+<p>The consent form can now be reopened, so visitors can change or withdraw consent: put <code>consent_settings_link()</code> in
+your layout's footer. Saving posts to a new <code>consent-save</code> route, which sets the <code>bf_consent</code> cookie server-side,
+appends a row to a new <code>consent_records</code> table (no IP address or user agent) and reloads the page, so <code>has_consent()</code>
+checks apply at once. Closing the form with its X keeps what the visitor accepted before and rejects the rest, so on
+a first visit it still rejects everything non-essential. Visitors who answered before are asked again when you add a consent, and any consent can be
+marked <code>'locked' =&gt; true</code> (the default <code>required</code> consent is). The default text is translated. See
+<a href="../../modules/consent/">Consent</a>.</p>
+<p>Two things to do before you run <code>php spark migrate --all</code>:</p>
+<ul>
+<li><strong>Text edited in Settings → Consent:</strong> the message, policy title and consents are no longer editable there, and the
+  <code>ForgetConsentText</code> migration deletes their stored values so the config and language files take effect. Copy any
+  text you changed into <code>app/Config/Consent.php</code> first, which <code>php spark bf:install</code> published. Language keys
+  (<code>File.key</code>) are translated; anything else, like the English text already in your published config, is shown as-is.
+  Add <code>'locked' =&gt; true</code> to its <code>required</code> consent, since the form no longer treats that key specially.</li>
+<li><strong>Custom <code>$consentForm</code> view:</strong> the form is now a <code>&lt;form&gt;</code> that posts to <code>url_to('consent-save')</code>, with checkboxes
+  named <code>consents[&lt;alias&gt;]</code> and submit buttons named <code>choice</code>. See
+  <a href="../../modules/consent/#customizing-the-consent-form">Customizing the Consent Form</a> for the full contract, and update
+  your view to match. A custom <code>$consentFormScripts</code> view should drop its cookie handling; see <code>consent_scripts.php</code>.</li>
+</ul>
 <p>A new <code>Settings.php</code> language file (<code>src/Settings/Language/</code>) holds the General Settings text. CodeIgniter merges
 language files of the same name, so if one of your modules has a <code>Settings.php</code> language file, its keys now merge with
 Bonfire's and a matching key changes Bonfire's text. Rename your file to avoid that.</p>

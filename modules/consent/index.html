@@ -14,7 +14,7 @@
         <link rel="prev" href="../assets/">
       
       
-        <link rel="next" href="../meta_info/">
+        <link rel="next" href="../privacy/">
       
       
         
@@ -618,6 +618,8 @@
       
         
       
+        
+      
     
     
     
@@ -938,6 +940,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Defining the Consent Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-or-changing-a-consent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding or changing a consent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -945,6 +964,28 @@
     <span class="md-ellipsis">
       
         Using the Helper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#letting-visitors-change-their-consent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Letting Visitors Change Their Consent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-consent-is-saved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Consent Is Saved
       
     </span>
   </a>
@@ -977,6 +1018,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1028,6 +1097,8 @@
       
         
           
+        
+      
         
       
         
@@ -1242,6 +1313,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_sites/data_requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle a Data Export or Erasure Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_sites/settings/" class="md-nav__link">
         
   
@@ -1337,6 +1436,8 @@
       
         
           
+        
+      
         
       
         
@@ -1733,6 +1834,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_admin_modules/personal_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Make Your Module's Data Exportable and Erasable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_admin_modules/resource_tabs/" class="md-nav__link">
         
   
@@ -1880,6 +2009,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Defining the Consent Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-or-changing-a-consent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding or changing a consent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1887,6 +2033,28 @@
     <span class="md-ellipsis">
       
         Using the Helper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#letting-visitors-change-their-consent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Letting Visitors Change Their Consent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-consent-is-saved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Consent Is Saved
       
     </span>
   </a>
@@ -1998,23 +2166,36 @@ cookies. It provides the mechanism for displaying the consent form, and recordin
 <p>The Consent module allows you to define the types of consent that you would like to collect from the user. These are defined in the <code>Config\Consent</code> class. The default consents are:</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$consents</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'required'</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Functionality'</span><span class="p">,</span>
-        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These cookies are required for the normal operation of this website.'</span><span class="p">,</span>
+        <span class="s1">'locked'</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+        <span class="s1">'name'</span>   <span class="o">=&gt;</span> <span class="s1">'Consent.requiredName'</span><span class="p">,</span>
+        <span class="s1">'desc'</span>   <span class="o">=&gt;</span> <span class="s1">'Consent.requiredDesc'</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s1">'performance'</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Performance'</span><span class="p">,</span>
-        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These cookies help us measure how visitors use the site, what the traffic sources are,</span>
-<span class="s1">            and which pages are popular. This helps to improve the website for everyone. If you reject these</span>
-<span class="s1">            we will be unable to use your visits to make site improvements.'</span><span class="p">,</span>
+        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Consent.performanceName'</span><span class="p">,</span>
+        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'Consent.performanceDesc'</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="s1">'targeting'</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Targeting'</span><span class="p">,</span>
-        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'These are usually placed by third-party advertising networks, which may use information about</span>
-<span class="s1">            your visits to develop a profile of your interests. This information may be shared with other networks</span>
-<span class="s1">            or sites to deliver more relevant advertising across multiple sites.'</span><span class="p">,</span>
+        <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Consent.targetingName'</span><span class="p">,</span>
+        <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'Consent.targetingDesc'</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">];</span>
 </code></pre></div>
+<p>A consent marked <code>'locked' =&gt; true</code> is always accepted: its checkbox is checked and disabled, and the server ignores
+any attempt to reject it. Use it for cookies the site can't work without, like the session cookie.</p>
+<p><code>name</code> and <code>desc</code> can be language keys (<code>File.key</code>), which are shown in the visitor's language, or literal text.</p>
+<h3 id="adding-or-changing-a-consent">Adding or changing a consent</h3>
+<p>When you add a key to <code>$consents</code>, visitors who answered before see the form again on their next visit. Their earlier
+answers are pre-filled and the new consent is unchecked.</p>
+<p>Consent is given for a stated purpose. If you change what an existing consent is used for, give it a <strong>new key</strong>
+instead of editing its description, so every visitor is asked about the new purpose:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Before: 'performance' covered analytics only.</span>
+<span class="c1">// After: analytics and session recordings need fresh consent.</span>
+<span class="s1">'performance_v2'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Performance'</span><span class="p">,</span>
+    <span class="s1">'desc'</span> <span class="o">=&gt;</span> <span class="s1">'Analytics and anonymous session recordings that help us improve the site.'</span><span class="p">,</span>
+<span class="p">],</span>
+</code></pre></div>
+<p>Then check the new key with <code>has_consent('performance_v2')</code>.</p>
 <h2 id="using-the-helper">Using the Helper</h2>
 <p>A helper method, <code>has_consent</code>, is provided so that you can easily meet the consent requirements when building your site.</p>
 <p>The helper is loaded automatically by the BaseController. As long as you extend the BaseController (or one of its
@@ -2029,17 +2210,51 @@ or analytics) and which cookies you set.</p>
 <span class="x">&lt;/script&gt;</span>
 <span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
 </code></pre></div>
+<h2 id="letting-visitors-change-their-consent">Letting Visitors Change Their Consent</h2>
+<p>Visitors must be able to withdraw consent as easily as they gave it. Put <code>consent_settings_link()</code> somewhere on every
+page, usually the footer:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">footer</span><span class="o">&gt;</span>
+    <span class="o">&lt;?=</span> <span class="nx">consent_settings_link</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;/footer&gt;</span>
+</code></pre></div>
+<p>It renders a "Cookie settings" link that reopens the consent form with the visitor's current choices pre-filled. Pass
+your own text with <code>consent_settings_link('Privacy choices')</code>. It returns an empty string while consent is off.</p>
+<p>Once a visitor has answered every consent, the hidden form is only added to pages that contain this link.</p>
+<h2 id="how-consent-is-saved">How Consent Is Saved</h2>
+<p>The consent form posts to the <code>consent-save</code> route (<code>POST /consent</code>), with a CSRF token when CSRF protection is on. The
+route:</p>
+<ul>
+<li>saves the choices in the <code>bf_consent</code> cookie for the whole site (<code>path=/</code>, <code>SameSite=Lax</code>, <code>Secure</code> over HTTPS),
+  lasting <code>$consentLength</code> days;</li>
+<li>appends a row to the <code>consent_records</code> table: a random <code>consent_id</code> (also kept in the cookie), the choices, the time,
+  and the user's ID when they are signed in. No IP address or user agent is stored;</li>
+<li>redirects back, so scripts behind <code>has_consent()</code> start or stop on the reloaded page.</li>
+</ul>
+<p>Closing the form with its X keeps what the visitor accepted before and rejects everything else. For a first-time
+visitor, that rejects all non-locked consents.</p>
+<p>The records let you show when a browser or user consented, and to what. There is no admin screen for them.</p>
 <h2 id="customizing-the-consent-form">Customizing the Consent Form</h2>
 <p>The consent form is a view that can be customized to fit your site's design. The view can be changed by editing the <code>Consent</code> config file:</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentForm</span> <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_form'</span><span class="p">;</span>
 </code></pre></div>
+<p>A custom form must keep the contract of the default view:</p>
+<ul>
+<li>a <code>&lt;form&gt;</code> with <code>id="consent-popup"</code> that posts to <code>url_to('consent-save')</code> and includes <code>csrf_field()</code>;</li>
+<li>the <code>hidden</code> attribute when <code>$show</code> is false;</li>
+<li>a checkbox named <code>consents[&lt;alias&gt;]</code> with value <code>1</code> for each consent, <code>checked</code> when <code>$choices[&lt;alias&gt;]</code> is set,
+  and <code>checked disabled</code> when the consent is <code>locked</code>;</li>
+<li>submit buttons named <code>choice</code> with the value <code>accept</code>, <code>reject</code>, <code>custom</code> (save the checked boxes) or <code>close</code>.</li>
+</ul>
+<p>The view receives <code>$consents</code> (with <code>name</code> and <code>desc</code> already translated), <code>$choices</code> (the visitor's saved answers),
+<code>$show</code> and <code>$message</code>. <code>{policy_url}</code> in the output is replaced with the cookie policy link.</p>
 <p>You can also specify the CSS and Javascript files that are loaded with the form:</p>
 <div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentFormStyles</span>  <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_styles'</span><span class="p">;</span>
 <span class="k">public</span> <span class="nx">string</span> <span class="nv">$consentFormScripts</span> <span class="o">=</span> <span class="s1">'Bonfire\Consent\Views\consent_scripts'</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="configuration">Configuration</h2>
-<p>All settings are available in the <code>Config\Consent</code> class. Everything except the form views can also be changed in the admin
-area under <strong>Settings → Consent</strong>, which saves the values to the database.</p>
+<p>All settings are available in the <code>Config\Consent</code> class. <code>$requireConsent</code>, <code>$consentLength</code> and <code>$policyUrl</code> can also
+be changed in the admin area under <strong>Settings → Consent</strong>, which saves the values to the database. The text (the message,
+the policy title and the consents) lives only in the config and language files, so it can be translated.</p>
 <p><strong>$requireConsent</strong></p>
 <p>This determines whether the consent system is enabled or not. If <code>true</code>, the consent form will be automatically
 inserted into all front-end views by the Consent controller filter. If <code>false</code>, the consent system will not display
@@ -2048,8 +2263,8 @@ and the helper will always return <code>true</code>. The default value is <code>
 <p>The number of days before a visitor is asked for their consent again. The default value is 180 days (6 months).</p>
 <p><strong>$consentForm</strong></p>
 <p>The view that is displayed to site visitors that a) asks for their basic consent and b) allows them to accept/reject
-the various consents. The <code>required</code> consent is unable to be rejected and contains things like the Auth cookie that
-determines if you're logged in or not.</p>
+the various consents. Locked consents can't be rejected; by default that is the <code>required</code> consent, which covers things
+like the Auth cookie that determines if you're logged in or not.</p>
 <p><strong>$consentFormStyles</strong>
 <strong>$consentFormScripts</strong></p>
 <p>The views that will be loaded that contain the CSS and Javascript, respectively. The contents of these views will
@@ -2058,14 +2273,19 @@ be inserted into each page upon page load.</p>
 <p>A URL (either full or relative) that points to the page that details the cookie policy. On many sites this will be
 included in the Privacy Policy or Terms of Service pages, or similar. The default value is <code>privacy</code>.</p>
 <p><strong>$policyTitle</strong></p>
-<p>The link text used for the cookie policy link in the consent form. The default value is <code>Cookie Policy</code>.</p>
+<p>The link text used for the cookie policy link in the consent form. The default value is the <code>Consent.policyLinkTitle</code>
+language key ("Cookie Policy").</p>
 <p><strong>$consentMessage</strong></p>
 <p>The message shown to visitors at the top of the consent form. Put <code>{policy_url}</code> where the cookie policy link should
-appear; it is replaced with a link to <code>$policyUrl</code> that uses <code>$policyTitle</code> as its text.</p>
+appear; it is replaced with a link to <code>$policyUrl</code> that uses <code>$policyTitle</code> as its text. The default value is the
+<code>Consent.message</code> language key.</p>
+<p>Like <code>$policyTitle</code> and each consent's <code>name</code> and <code>desc</code>, it can be a language key (<code>File.key</code>), which is translated, or
+literal text, which is shown as-is.</p>
 <p><strong>$consents</strong></p>
 <p>This is an array of the initial consents that will be asked for in the Consent Form. Each array item includes
 the alias the consent can be checked with, and the following items:</p>
 <ul>
+<li><strong>locked</strong>: Optional. <code>true</code> means the consent is always accepted.</li>
 <li><strong>name</strong>: The name as it is displayed to the visitors.</li>
 <li><strong>desc</strong>: The description of the consent that describes the purpose of the cookies/services and what might be
   no longer functional if the consent is rejected.</li>
@@ -2122,13 +2342,13 @@ the alias the consent can be checked with, and the following items:</p>
         
         
           
-          <a href="../meta_info/" class="md-footer__link md-footer__link--next" aria-label="Next: Meta Info">
+          <a href="../privacy/" class="md-footer__link md-footer__link--next" aria-label="Next: Privacy">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Meta Info
+                Privacy
               </div>
             </div>
             <div class="md-footer__button md-icon">

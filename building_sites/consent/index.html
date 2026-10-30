@@ -14,7 +14,7 @@
         <link rel="prev" href="../alerts/">
       
       
-        <link rel="next" href="../settings/">
+        <link rel="next" href="../data_requests/">
       
       
         
@@ -616,6 +616,8 @@
       
         
       
+        
+      
     
     
     
@@ -896,6 +898,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../modules/privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../modules/meta_info/" class="md-nav__link">
         
   
@@ -937,6 +967,8 @@
       
         
           
+        
+      
         
       
         
@@ -1215,10 +1247,49 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-let-visitors-change-their-mind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Let visitors change their mind
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data_requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle a Data Export or Erasure Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1326,6 +1397,8 @@
       
         
           
+        
+      
         
       
         
@@ -1722,6 +1795,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_admin_modules/personal_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Make Your Module's Data Exportable and Erasable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_admin_modules/resource_tabs/" class="md-nav__link">
         
   
@@ -1893,6 +1994,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-let-visitors-change-their-mind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Let visitors change their mind
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1975,8 +2087,8 @@ performance cookies. For every setting and how to customize the form, see the <a
 </code></pre></div>
 <p>While consent is off, <code>has_consent()</code> always returns <code>true</code> and no form is shown.</p>
 <h2 id="2-point-to-your-cookie-policy">2. Point to your cookie policy</h2>
-<p>On the same settings screen, set the cookie policy URL and title, or set <code>$policyUrl</code> and <code>$policyTitle</code> in the
-config file. The form links to this page.</p>
+<p>On the same settings screen, set the cookie policy URL, or set <code>$policyUrl</code> in the config file. The form links to
+this page. To change the link text, set <code>$policyTitle</code> in <code>app/Config/Consent.php</code>.</p>
 <h2 id="3-wrap-the-script-in-a-consent-check">3. Wrap the script in a consent check</h2>
 <p>In your view or layout, wrap the analytics tag in <code>has_consent()</code>, passing the consent's key:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nx">has_consent</span><span class="p">(</span><span class="s1">'performance'</span><span class="p">))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
@@ -1989,6 +2101,14 @@ config file. The form links to this page.</p>
 <p>The helper is loaded automatically in controllers that extend Bonfire's <code>BaseController</code>.</p>
 <p>Visitors who have not answered, or who rejected performance cookies, no longer load the script. The same check works
 in controllers, before you set a cookie or call a tracking service.</p>
+<h2 id="4-let-visitors-change-their-mind">4. Let visitors change their mind</h2>
+<p>Add the settings link to your layout's footer so visitors can reopen the form and withdraw consent:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?=</span> <span class="nx">consent_settings_link</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>When a visitor unchecks Performance and saves, the page reloads and <code>has_consent('performance')</code> returns <code>false</code>, so
+the analytics script is no longer loaded.</p>
+<p>If you later use performance cookies for something new, add a new consent key instead of rewording the old one. See
+<a href="../../modules/consent/#adding-or-changing-a-consent">Adding or changing a consent</a>.</p>
 
 
 
@@ -2041,13 +2161,13 @@ in controllers, before you set a cookie or call a tracking service.</p>
         
         
           
-          <a href="../settings/" class="md-footer__link md-footer__link--next" aria-label="Next: Settings">
+          <a href="../data_requests/" class="md-footer__link md-footer__link--next" aria-label="Next: Handle a Data Export or Erasure Request">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Settings
+                Handle a Data Export or Erasure Request
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -618,6 +618,8 @@
       
         
       
+        
+      
     
     
     
@@ -878,6 +880,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#export-a-users-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export a user's data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erase-users-personal-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erase users' personal data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings-users" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1122,6 +1146,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../meta_info/" class="md-nav__link">
         
   
@@ -1161,6 +1213,8 @@
       
         
           
+        
+      
         
       
         
@@ -1375,6 +1429,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_sites/data_requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle a Data Export or Erasure Request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_sites/settings/" class="md-nav__link">
         
   
@@ -1470,6 +1552,8 @@
       
         
           
+        
+      
         
       
         
@@ -1866,6 +1950,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_admin_modules/personal_data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Make Your Module's Data Exportable and Erasable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_admin_modules/resource_tabs/" class="md-nav__link">
         
   
@@ -2121,6 +2233,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#export-a-users-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export a user's data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erase-users-personal-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Erase users' personal data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#settings-users" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2348,6 +2482,14 @@ and whether they succeeded.</p>
 </ol>
 <p>You can't select yourself, and only users with <code>users.manage-admins</code> can delete users who manage admins.</p>
 <p>Deleted users go to the Recycler under <strong>Tools</strong>, where you can restore them or delete them for good.</p>
+<h2 id="export-a-users-data">Export a user's data</h2>
+<p>You need the <code>users.export</code> permission. Click <strong>Export data</strong> at the top of a user's edit screen to download everything
+the site holds about them as a JSON file. Only users with <code>users.manage-admins</code> can export users who manage admins.</p>
+<h2 id="erase-users-personal-data">Erase users' personal data</h2>
+<p>You need the <code>users.erase</code> permission. Tick the users in the list, or open the ⋯ menu on a user's row, choose <strong>Erase
+personal data</strong>, and type the number of users to confirm. Their accounts are anonymised and closed for good, and
+can't be restored from the Recycler.</p>
+<p>For both, see <a href="../../building_sites/data_requests/">Handle a Data Export or Erasure Request</a>.</p>
 <h2 id="settings-users">Settings → Users</h2>
 <p>Open <strong>Users</strong> under <strong>Settings</strong> in the sidebar. You need the <code>users.settings</code> permission. Click <strong>Save Settings</strong>
 when you're done.</p>
