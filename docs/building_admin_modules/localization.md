@@ -167,5 +167,5 @@ Translations of Bonfire itself are welcome, including partial ones. Put each fil
 package: `src/Language/{locale}/Bonfire.php` and `src/{Module}/Language/{locale}/{Module}.php`. Open a pull request
 on [GitHub](https://github.com/lonnieezell/Bonfire2).
 
-The shipped translations have gaps. Spanish has only `Bonfire.php`, `Actions.php` and `Settings.php` exist only in English, and the
+The shipped translations have gaps. Spanish has only `Bonfire.php` and `Settings.php`, `Actions.php` exists only in English, and the
 other files lack many of the newer English keys. Those show in English until someone translates them.

@@ -3,9 +3,9 @@
 namespace Tests\Language;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Tests\Support\TestCase;
 
 /**
  * @internal
@@ -15,11 +15,17 @@ final class ViewTextTest extends TestCase
     /**
      * Literal text that is not words to translate, such as file names.
      */
-    private const ALLOWED = ['.env'];
+    private const ALLOWED = ['.env', '.log ·'];
+
+    /**
+     * Attributes, of HTML and of the admin components, that hold text a visitor sees or hears.
+     */
+    private const TEXT_ATTRIBUTES = 'label|title|subtitle|description|placeholder|aria-label|alt|hint|save|backLabel';
 
     /**
      * Text a visitor can see or hear must come from lang(), so views
-     * may hold no literal words outside PHP.
+     * may hold no literal words outside PHP. Text built inside PHP,
+     * like an array of labels, is stripped before the scan and so is not checked.
      */
     #[DataProvider('provideViewHasNoLiteralText')]
     public function testViewHasNoLiteralText(string $path): void
@@ -28,23 +34,15 @@ final class ViewTextTest extends TestCase
         $html = preg_replace('/<\?(?:php|=).*?(?:\?>|\z)/s', ' ', $html);
         $html = preg_replace('/<(script|style)\b.*?<\/\1>|<!--.*?-->|&#?\w+;/s', ' ', $html);
 
-        $found = [];
-        $tag   = '/<[!\/]?[a-zA-Z][^>"\']*(?:(?:"[^"]*"|\'[^\']*\')[^>"\']*)*>/';
+        $tag = '/<[!\/]?[a-zA-Z][^>"\']*(?:(?:"[^"]*"|\'[^\']*\')[^>"\']*)*>/';
 
         preg_match_all($tag, $html, $tags);
+        preg_match_all('/\s(?:' . self::TEXT_ATTRIBUTES . ')=(?:"([^"]*)"|\'([^\']*)\')/', implode(' ', $tags[0]), $attributes);
 
-        foreach ($tags[0] as $element) {
-            preg_match_all('/\s(?:label|title|description|placeholder|aria-label|alt|hint|save|backLabel)="([^"]*[a-zA-Z]{2}[^"]*)"/', $element, $attributes);
-            array_push($found, ...$attributes[1]);
-        }
+        $texts = array_map(trim(...), [...$attributes[1], ...$attributes[2], ...preg_split($tag, $html)]);
+        $found = array_filter($texts, static fn ($text) => preg_match('/[a-zA-Z]{2}/', $text) && ! in_array($text, self::ALLOWED, true));
 
-        foreach (preg_split($tag, $html) as $text) {
-            if (preg_match('/[a-zA-Z]{2}/', $text) && ! in_array(trim($text), self::ALLOWED, true)) {
-                $found[] = trim($text);
-            }
-        }
-
-        $this->assertSame([], $found);
+        $this->assertSame([], array_values($found));
     }
 
     /**

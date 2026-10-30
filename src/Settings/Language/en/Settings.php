@@ -10,7 +10,6 @@
  */
 
 return [
-    'general'         => 'General',
     'siteName'        => 'Site Name',
     'siteNameDesc'    => 'Appears in admin, and is available throughout the site.',
     'siteOnline'      => 'Site Online',

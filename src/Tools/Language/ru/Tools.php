@@ -25,4 +25,18 @@ return [
     'deleteAllSuccess'      => 'Все файлы были успешно удалены.',
     'deleteError'           => 'Не удалось выполнить удаление.',
     'noLogsSelected'        => 'Ни один журнал не был выбран для удаления.',
+    // system info
+    'viewPhpInfo'        => 'Показать PHP Info',
+    'copyAsText'         => 'Копировать как текст',
+    'copied'             => 'Скопировано',
+    'server'             => 'Сервер',
+    'filesystem'         => 'Файловая система',
+    'notWritableWarning' => 'Некоторые файлы или папки в /writable недоступны для записи. Bonfire нужно записывать туда логи, кэш и загруженные файлы.',
+    'present'            => 'Есть',
+    'missing'            => 'Отсутствует',
+    'writable'           => 'Доступно для записи',
+    'notWritable'        => 'Недоступно для записи',
+    // logs
+    'navigateFiles' => 'Навигация между файлами',
+    'stackTrace'    => 'Трассировка стека',
 ];

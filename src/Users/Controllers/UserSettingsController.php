@@ -97,7 +97,7 @@ class UserSettingsController extends BaseController
             setting('Users.avatarSize', (int) $this->request->getPost('avatarSize'));
         }
 
-        alert('success', lang('Bonfire.resourcesSaved', ['settings']));
+        alert('success', lang('Bonfire.settingsSaved'));
 
         return redirect()->back();
     }

@@ -25,4 +25,18 @@ return [
     'deleteAllSuccess'      => 'Tutti i file sono stati eliminati con successo.',
     'deleteError'           => 'Impossibile eseguire l\'eliminazione.',
     'noLogsSelected'        => 'Nessun registro è stato selezionato per l\'eliminazione.',
+    // system info
+    'viewPhpInfo'        => 'Visualizza PHP Info',
+    'copyAsText'         => 'Copia come testo',
+    'copied'             => 'Copiato',
+    'server'             => 'Server',
+    'filesystem'         => 'Filesystem',
+    'notWritableWarning' => 'Alcuni file o cartelle in /writable non sono scrivibili. Bonfire deve scrivervi log, cache e file caricati.',
+    'present'            => 'Presente',
+    'missing'            => 'Mancante',
+    'writable'           => 'Scrivibile',
+    'notWritable'        => 'Non scrivibile',
+    // logs
+    'navigateFiles' => 'Navigazione tra i file',
+    'stackTrace'    => 'Stack trace',
 ];

@@ -80,7 +80,7 @@ class EmailSettingsController extends AdminController
         setting('Email.SMTPTimeout', (int) $this->request->getPost('SMTPTimeout'));
         setting('Email.SMTPKeepAlive', $this->request->getPost('SMTPKeepAlive'));
 
-        alert('success', lang('Bonfire.resourcesSaved', ['settings']));
+        alert('success', lang('Bonfire.settingsSaved'));
 
         return redirect()->back();
     }

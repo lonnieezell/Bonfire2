@@ -56,6 +56,8 @@ return [
     'noResults'       => 'Nessun risultato',
     'back'            => 'Indietro',
     'save'            => 'Salva',
+    'saveSettings'    => 'Salva impostazioni',
+    'settingsSaved'   => 'Le impostazioni sono state salvate.',
     'discard'         => 'Annulla',
     'unsavedChanges'  => 'Modifiche non salvate',
     'selectedCount'   => '{0} selezionati',
@@ -80,4 +82,12 @@ return [
 
     // Auth links
     'goToFrontpage' => 'Vai alla pagina principale',
+
+    // Site offline page:
+    'siteOfflineTitle' => 'Ops!',
+    'siteOffline'      => 'Il sito è temporaneamente non in linea. Riprova un po\' più tardi.',
+
+    'close'        => 'Chiudi',
+    'undoShortcut' => 'Annulla (Ctrl+Z)',
+    'redoShortcut' => 'Ripeti (Shift+Ctrl+Z)',
 ];

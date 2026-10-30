@@ -25,4 +25,18 @@ return [
     'deleteAllSuccess'      => 'Visi failai buvo sėkmingai ištrinti.',
     'deleteError'           => 'Nepavyksta ištrinti.',
     'noLogsSelected'        => 'Nepasirinkote failų ištrynimui.',
+    // system info
+    'viewPhpInfo'        => 'Peržiūrėti PHP info',
+    'copyAsText'         => 'Kopijuoti kaip tekstą',
+    'copied'             => 'Nukopijuota',
+    'server'             => 'Serveris',
+    'filesystem'         => 'Failų sistema',
+    'notWritableWarning' => 'Kai kurie /writable failai ar aplankai neturi rašymo teisių. Bonfire ten turi rašyti žurnalus, podėlį ir įkeltus failus.',
+    'present'            => 'Yra',
+    'missing'            => 'Trūksta',
+    'writable'           => 'Įrašomas',
+    'notWritable'        => 'Neįrašomas',
+    // logs
+    'navigateFiles' => 'Naršymas tarp failų',
+    'stackTrace'    => 'Iškvietimų dėklas',
 ];

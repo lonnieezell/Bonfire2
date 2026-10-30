@@ -5,7 +5,7 @@
     <form action="<?= site_url(ADMIN_AREA . '/settings/general') ?>" method="post">
         <?= csrf_field() ?>
 
-        <x-admin-box title="<?= esc(lang('Settings.general'), 'attr') ?>">
+        <x-admin-box title="<?= esc(lang('Bonfire.generalModTitle'), 'attr') ?>">
             <x-setting-row label="<?= esc(lang('Settings.siteName'), 'attr') ?>" for="siteName" description="<?= esc(lang('Settings.siteNameDesc'), 'attr') ?>">
                 <input type="text" class="form-control" name="siteName" id="siteName" value="<?= esc(old('siteName', setting('Site.siteName')), 'attr') ?>" />
             </x-setting-row>

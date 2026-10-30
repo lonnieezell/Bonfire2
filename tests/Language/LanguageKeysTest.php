@@ -2,7 +2,6 @@
 
 namespace Tests\Language;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Tests\Support\TestCase;
@@ -16,18 +15,10 @@ final class LanguageKeysTest extends TestCase
      * Every literal lang('File.key') call must resolve to an English line.
      * lang() hands the key back unchanged when it can't find one.
      */
-    #[DataProvider('provideLangKeyResolves')]
-    public function testLangKeyResolves(string $key, string $file): void
+    public function testEveryLangKeyResolves(): void
     {
-        $this->assertNotSame($key, lang($key), "{$key} in {$file} has no English line.");
-    }
-
-    /**
-     * @return iterable<string, array{string, string}>
-     */
-    public static function provideLangKeyResolves(): iterable
-    {
-        $root = dirname(__DIR__, 2);
+        $root    = dirname(__DIR__, 2);
+        $missing = [];
 
         foreach (['src', 'themes'] as $dir) {
             $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator("{$root}/{$dir}"));
@@ -39,12 +30,14 @@ final class LanguageKeysTest extends TestCase
 
                 preg_match_all('/\blang\(\s*[\'"]([A-Z]\w*\.[\w.]+)[\'"]\s*[,)]/', file_get_contents($file->getPathname()), $matches);
 
-                $relative = substr($file->getPathname(), strlen($root) + 1);
-
                 foreach (array_unique($matches[1]) as $key) {
-                    yield "{$key} ({$relative})" => [$key, $relative];
+                    if (lang($key) === $key) {
+                        $missing[] = $key . ' in ' . substr($file->getPathname(), strlen($root) + 1);
+                    }
                 }
             }
         }
+
+        $this->assertSame([], $missing);
     }
 }

@@ -58,6 +58,7 @@ return [
     'back'            => 'Back',
     'save'            => 'Save',
     'saveSettings'    => 'Save Settings',
+    'settingsSaved'   => 'The settings have been saved.',
     'discard'         => 'Discard',
     'unsavedChanges'  => 'Unsaved changes',
     'selectedCount'   => '{0} selected',
