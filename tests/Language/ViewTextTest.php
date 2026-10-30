@@ -54,7 +54,8 @@ final class ViewTextTest extends TestCase
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator("{$root}/src"));
 
         foreach ($files as $file) {
-            if ($file->getExtension() === 'php' && str_contains($file->getPathname(), '/Views/')) {
+            // Generator templates (.tpl.php) write code into apps; they are never rendered
+            if ($file->getExtension() === 'php' && str_contains($file->getPathname(), '/Views/') && ! str_ends_with($file->getPathname(), '.tpl.php')) {
                 yield substr($file->getPathname(), strlen($root) + 1) => [$file->getPathname()];
             }
         }

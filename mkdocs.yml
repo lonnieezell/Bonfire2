@@ -118,6 +118,7 @@ nav:
   - Building Admin Modules:
       - building_admin_modules/index.md
       - building_admin_modules/tutorial_first_module.md
+      - building_admin_modules/generating_a_module.md
       - building_admin_modules/creating_an_admin_module.md
       - building_admin_modules/menus.md
       - building_admin_modules/controllers_and_views.md
