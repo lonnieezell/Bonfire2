@@ -41,6 +41,12 @@ are machine-made, so corrections from native speakers are welcome.
 In Settings → Users, the "Remember for" option labelled "25 hours" kept users logged in for 24 hours. It now reads
 "24 hours".
 
+Logging in with **Remember me** no longer fails with a `TypeError` from `Time::addSeconds()`. Settings → Users saved
+the remember length as the string the select posted, and Shield passes it straight to `Time::addSeconds()`, which
+requires an int. The page now saves an int, the select shows the saved length as selected, and a migration casts
+values saved by older versions: `php spark migrate --all`. A saved `0` (the "How long to remember..." placeholder)
+becomes the 30-day default.
+
 `php spark make:crud`, which never ran, is now `php spark make:module`. It writes a working admin module for an
 existing model: a list with search, a create and edit form, row and bulk delete, permissions and a feature test. See
 [Generating a Module](../building_admin_modules/generating_a_module.md).

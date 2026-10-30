@@ -64,6 +64,30 @@ final class LoginTest extends TestCase
         $response->assertSessionHas('logged_in');
     }
 
+    public function testLoginWithRememberMe()
+    {
+        setting('Auth.sessionConfig', [
+            'field'              => 'logged_in',
+            'allowRemembering'   => true,
+            'rememberCookieName' => 'remember',
+            'rememberLength'     => WEEK,
+        ]);
+
+        /** @var User */
+        $user = fake(UserModel::class);
+        $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'alsdkfja;sldkfj']);
+
+        $response = $this->post(route_to('login'), [
+            'email'    => 'foo@example.com',
+            'password' => 'alsdkfja;sldkfj',
+            'remember' => '1',
+        ]);
+
+        $response->assertRedirectTo(site_url());
+        $response->assertSessionHas('logged_in');
+        $response->assertCookie('remember');
+    }
+
     public function testAllowRememberShowsUp()
     {
         // primitive perhaps, but works: make sure we are logged out first:

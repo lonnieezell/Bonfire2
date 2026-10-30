@@ -4,9 +4,12 @@ namespace Tests\Users;
 
 use Bonfire\Auth\Actions\Email2FA;
 use Bonfire\Auth\Actions\EmailActivator;
+use Bonfire\Users\Database\Migrations\CastRememberLengthToInt;
 use Bonfire\Users\User;
+use CodeIgniter\Config\Services;
 use CodeIgniter\Shield\Authentication\Passwords\DictionaryValidator;
 use CodeIgniter\Shield\Authentication\Passwords\PwnedValidator;
+use Config\Database;
 use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
@@ -64,6 +67,10 @@ final class AdminSettingsTest extends TestCase
         // Compared per key: the order depends on what earlier tests left in the settings cache.
         $this->assertSame('1', setting('Auth.actions')['login']);
         $this->assertSame('1', setting('Auth.actions')['register']);
+
+        // Shield passes the length to Time::addSeconds(), which wants an int.
+        $this->assertTrue(setting('Auth.sessionConfig')['allowRemembering']);
+        $this->assertSame(55, setting('Auth.sessionConfig')['rememberLength']);
     }
 
     public function testAvatarSizeCannotGoBelowAvatarResizeFloor(): void
@@ -112,8 +119,46 @@ final class AdminSettingsTest extends TestCase
         foreach ($settings as $key => $value) {
             $this->assertSame($value, setting($key), $key);
         }
-        $this->assertTrue((bool) setting('Auth.sessionConfig')['allowRemembering']);
-        $this->assertSame((string) WEEK, setting('Auth.sessionConfig')['rememberLength']);
+        $this->assertTrue(setting('Auth.sessionConfig')['allowRemembering']);
+        $this->assertSame(WEEK, setting('Auth.sessionConfig')['rememberLength']);
+    }
+
+    public function testTheSavedRememberLengthIsSelected(): void
+    {
+        setting('Auth.sessionConfig', ['rememberLength' => WEEK] + setting('Auth.sessionConfig'));
+
+        $html = $this->actingAs($this->user)->get('/admin/settings/users')->getBody();
+
+        $this->assertMatchesRegularExpression('#<option value="' . WEEK . '" selected>#', $html);
+    }
+
+    public function testMigrationCastsTheRememberLengthStringToAnInteger(): void
+    {
+        $this->seedSessionConfig([
+            'allowRemembering' => '1',
+            'rememberLength'   => (string) WEEK,
+        ]);
+
+        (new CastRememberLengthToInt(Database::forge()))->up();
+        Services::resetSingle('settings');
+
+        $sessionConfig = setting('Auth.sessionConfig');
+
+        $this->assertTrue($sessionConfig['allowRemembering']);
+        $this->assertSame(WEEK, $sessionConfig['rememberLength']);
+    }
+
+    public function testMigrationReplacesThePlaceholderLengthWithTheConfiguredDefault(): void
+    {
+        $this->seedSessionConfig(['rememberLength' => '0']);
+
+        (new CastRememberLengthToInt(Database::forge()))->up();
+        Services::resetSingle('settings');
+
+        $this->assertSame(
+            (int) config('Auth')->sessionConfig['rememberLength'],
+            setting('Auth.sessionConfig')['rememberLength'],
+        );
     }
 
     public function testSwitchedOffActionsAreSavedAsNone(): void
@@ -176,5 +221,21 @@ final class AdminSettingsTest extends TestCase
         $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/users'));
 
         $this->actingAs($this->user)->post('/admin/settings/users', $fields)->assertSessionMissing('errors');
+    }
+
+    /**
+     * @param array<string, mixed> $sessionConfig
+     */
+    private function seedSessionConfig(array $sessionConfig): void
+    {
+        $this->db->table('settings')->insert([
+            'class'      => config('Auth')::class,
+            'key'        => 'sessionConfig',
+            'value'      => serialize($sessionConfig + config('Auth')->sessionConfig),
+            'type'       => 'array',
+            'context'    => null,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
     }
 }
