@@ -1497,6 +1497,8 @@
       
         
       
+        
+      
     
     
     
@@ -1889,6 +1891,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../building_admin_modules/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Your Admin Module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../building_admin_modules/view_components/" class="md-nav__link">
         
   
@@ -2210,6 +2240,13 @@ explains how to take the site offline, who can still get in, and how to get back
 <p><a href="../../building_admin_modules/view_components/">View Components</a> now lists the attributes of every component and has a
 Pager templates section covering <code>bonfire_full</code>, <code>bonfire_simple</code>, <code>bonfire_list_hx</code> and the rest.</p>
 <p>The <code>bonfire_simple</code> pager template no longer prints a stray <code>?&gt;</code> above its links.</p>
+<p>A new page, <a href="../../building_admin_modules/testing/">Testing Your Admin Module</a>, shows how to write feature tests for a
+module in your app: a base test case that registers Bonfire's modules, giving test users your module's permissions,
+and testing access checks and htmx requests.</p>
+<p>Bonfire now registers each module under its real namespace, like <code>Bonfire\Users</code> or <code>App\Modules\Blog</code>, instead of
+<code>Bonfire\{Users}</code>, so <code>php spark migrate -n "Bonfire\Actions"</code> finds a module's migrations. <code>php spark migrate --all</code>
+is unaffected. Rows already in your <code>migrations</code> table keep the old <code>Bonfire\{…}</code> namespace, so on an existing install
+keep using <code>--all</code>: <code>-n</code> filters history by namespace and would try to run those migrations again.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
 <p>Four config keys now do what they say. <code>Users::$avatarResizeFloor</code> sets the smallest allowed avatar size,
 <code>Users::$avatarDirectory</code> also sets where avatar links point, and <code>Users::$avatarNameBasis = 'username'</code> takes an
