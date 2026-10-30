@@ -149,4 +149,5 @@ return [
         'email'       => 'El. p. adresas',
         'last_active' => 'Prisijungė',
     ],
+    'exportData' => 'Eksportuoti duomenis',
 ];

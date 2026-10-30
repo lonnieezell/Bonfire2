@@ -55,7 +55,7 @@ final class UserEditTest extends TestCase
             '#<label class="bf-group-card">\s*<input type="checkbox" name="groups\[\]" value="beta"[^>]*checked\s*>\s*<span class="bf-group-card-title">Beta User</span>\s*<span class="bf-group-card-desc">Has access to beta-level features.</span>\s*<span class="bf-group-card-meta">1 permission</span>#',
             $html,
         );
-        $this->assertStringContainsString('<span class="bf-group-card-meta">20 permissions</span>', $html);
+        $this->assertStringContainsString('<span class="bf-group-card-meta">21 permissions</span>', $html);
         $this->assertStringContainsString('class="bf-floating-bar" x-data="bfSaveBar"', $html);
     }
 

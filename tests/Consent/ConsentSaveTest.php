@@ -19,6 +19,7 @@ final class ConsentSaveTest extends TestCase
 
         service('superglobals')->setCookieArray([]);
         setting('Consent.requireConsent', true);
+        auth()->logout();
     }
 
     protected function tearDown(): void

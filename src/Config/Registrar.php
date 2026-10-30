@@ -101,6 +101,24 @@ class Registrar
         ];
     }
 
+    /**
+     * Permissions added since installs published Config\AuthGroups,
+     * granted once by `spark bonfire:permissions`.
+     */
+    public static function AuthGroups()
+    {
+        return [
+            'permissions' => [
+                'users.export' => "Can download a user's personal data",
+            ],
+            'moduleGrants' => [
+                'privacy' => [
+                    'admin' => ['users.export'],
+                ],
+            ],
+        ];
+    }
+
     public static function View()
     {
         return [

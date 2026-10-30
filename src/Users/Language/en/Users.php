@@ -180,4 +180,5 @@ return [
         'email'       => 'Email',
         'last_active' => 'Last Active',
     ],
+    'exportData' => 'Export data',
 ]; // <?= lang('Users.')

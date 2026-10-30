@@ -56,6 +56,8 @@ class Module extends BaseModule
             ->records(new ModelSource(UserModel::class))
             ->add(new DeleteUsers());
 
+        service('personalData')->register('users', new UserPersonalData());
+
         // Settings widgets stats on dashboard
         $widgets   = service('widgets');
         $statsItem = new StatsItem([

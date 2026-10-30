@@ -6,6 +6,13 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+A user's edit screen has an **Export data** button that downloads everything the site holds about them as
+`user-{id}-data.json`: their account, meta, avatar, sign-in identities (without password or token hashes), login
+history and consent records. Each export is logged as a notice. It needs the new `users.export` permission, which
+`superadmin` has through `users.*`; run `php spark bonfire:permissions` to grant it to `admin`. Modules add their own
+data to the export by implementing `Bonfire\Privacy\PersonalDataProvider` and registering it with
+`service('personalData')->register()` from `initAdmin()`.
+
 Three consent banner fixes. An absolute cookie policy URL (`https://...`) is now used as-is; before, it was run
 through `site_url()`. The consent cookie now lasts `Consent.consentLength` days instead of a fixed 180, and is set
 for the whole site. Closing the banner with its X now rejects all non-essential cookies, so it stops reappearing on

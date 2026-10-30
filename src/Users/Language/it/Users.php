@@ -149,4 +149,5 @@ return [
         'email'       => 'Indirizzo Email',
         'last_active' => 'Ultima Attività',
     ],
+    'exportData' => 'Esporta i dati',
 ];

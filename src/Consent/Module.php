@@ -33,5 +33,7 @@ class Module extends BaseModule
             'permission'      => 'consent.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+
+        service('personalData')->register('consent', new ConsentPersonalData());
     }
 }
