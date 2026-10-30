@@ -2025,7 +2025,7 @@ named <code>Users.php</code> in a <code>Language/{locale}/</code> folder.</p>
 <td>Shared admin text: save and delete messages, collection titles.</td>
 </tr>
 <tr>
-<td><code>Actions.php</code>, <code>Consent.php</code>, <code>Email.php</code>, <code>Groups.php</code>, <code>Recycler.php</code>, <code>Tools.php</code>, <code>Users.php</code>, <code>Widgets.php</code></td>
+<td><code>Actions.php</code>, <code>Consent.php</code>, <code>Email.php</code>, <code>Groups.php</code>, <code>Recycler.php</code>, <code>Settings.php</code>, <code>Tools.php</code>, <code>Users.php</code>, <code>Widgets.php</code></td>
 <td><code>src/{Module}/Language/{locale}/</code></td>
 <td>Each module's own text.</td>
 </tr>
@@ -2141,7 +2141,7 @@ the placeholders still in it.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Don't name your file after one of Bonfire's: <code>Bonfire</code>, <code>Actions</code>, <code>Auth</code>, <code>Consent</code>, <code>Email</code>, <code>Groups</code>,
-<code>Recycler</code>, <code>Tools</code>, <code>Users</code> or <code>Widgets</code>. CodeIgniter would merge your keys into Bonfire's, and a matching key
+<code>Recycler</code>, <code>Settings</code>, <code>Tools</code>, <code>Users</code> or <code>Widgets</code>. CodeIgniter would merge your keys into Bonfire's, and a matching key
 in your module would change Bonfire's text.</p>
 </div>
 <h2 id="check-your-translations">Check your translations</h2>
@@ -2153,7 +2153,7 @@ typo in the key or the file name.</p>
 <p>Translations of Bonfire itself are welcome, including partial ones. Put each file beside its English version in the
 package: <code>src/Language/{locale}/Bonfire.php</code> and <code>src/{Module}/Language/{locale}/{Module}.php</code>. Open a pull request
 on <a href="https://github.com/lonnieezell/Bonfire2">GitHub</a>.</p>
-<p>The shipped translations have gaps. Spanish has only <code>Bonfire.php</code>, <code>Actions.php</code> exists only in English, and the
+<p>The shipped translations have gaps. Spanish has only <code>Bonfire.php</code> and <code>Settings.php</code>, <code>Actions.php</code> exists only in English, and the
 other files lack many of the newer English keys. Those show in English until someone translates them.</p>
 
 

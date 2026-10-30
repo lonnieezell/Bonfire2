@@ -630,6 +630,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#30-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#29-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1985,6 +1996,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#30-october-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        30 October 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#29-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2226,6 +2248,12 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="30-october-2026">30 October 2026</h2>
+<p>The admin's settings screens (General, Users, Email, Consent, User Groups), System Info, the consent banner, the
+site offline page and dashboard stat titles now take their text from language files, so they can be translated. New
+keys have Italian, Lithuanian and Russian translations, and Spanish ones for <code>Bonfire.php</code> and <code>Settings.php</code>. These
+are machine-made, so corrections from native speakers are welcome.</p>
+<p>In Settings → Users, the "Remember for" option labelled "25 hours" kept users logged in for 24 hours. It now reads
+"24 hours".</p>
 <p>New admin guides cover the shipped screens: <a href="../../modules/users/">Users</a> (including Settings → Users),
 <a href="../../modules/settings/">General Settings</a>, <a href="../../modules/email/">Email Settings</a> and <a href="../../modules/tools/">Tools</a>
 (System Info and Logs). <a href="../../modules/">Bonfire Modules</a> now lists every shipped module.</p>
@@ -2250,6 +2278,10 @@ and testing access checks and htmx requests.</p>
 <code>Bonfire\{Users}</code>, so <code>php spark migrate -n "Bonfire\Actions"</code> finds a module's migrations. <code>php spark migrate --all</code>
 is unaffected. Rows already in your <code>migrations</code> table keep the old <code>Bonfire\{…}</code> namespace, so on an existing install
 keep using <code>--all</code>: <code>-n</code> filters history by namespace and would try to run those migrations again.</p>
+<h2 id="30-october-2026-breaking-change">30 October 2026 (breaking change)</h2>
+<p>A new <code>Settings.php</code> language file (<code>src/Settings/Language/</code>) holds the General Settings text. CodeIgniter merges
+language files of the same name, so if one of your modules has a <code>Settings.php</code> language file, its keys now merge with
+Bonfire's and a matching key changes Bonfire's text. Rename your file to avoid that.</p>
 <h2 id="29-october-2026">29 October 2026</h2>
 <p>Four config keys now do what they say. <code>Users::$avatarResizeFloor</code> sets the smallest allowed avatar size,
 <code>Users::$avatarDirectory</code> also sets where avatar links point, and <code>Users::$avatarNameBasis = 'username'</code> takes an
