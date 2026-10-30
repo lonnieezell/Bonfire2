@@ -27,7 +27,7 @@ class Namespaces
 
             $name = trim($row, DIRECTORY_SEPARATOR);
 
-            $namespaces["Bonfire\\{{$name}}"] = [realpath(__DIR__ . "/../{$name}")];
+            $namespaces["Bonfire\\{$name}"] = [realpath(__DIR__ . "/../{$name}")];
         }
 
         // Now define app modules nemespaces
@@ -44,7 +44,7 @@ class Namespaces
                 foreach ($map as $row) {
                     $name = trim($row, DIRECTORY_SEPARATOR);
 
-                    $namespaces[$baseName . "\\{{$name}}"] = [realpath($path . "/{$name}")];
+                    $namespaces[$baseName . "\\{$name}"] = [realpath($path . "/{$name}")];
                 }
             }
         }
