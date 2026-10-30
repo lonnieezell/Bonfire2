@@ -38,5 +38,6 @@ class ConsentPersonalData implements PersonalDataProvider
 
     public function erase(User $user): void
     {
+        model(ConsentRecordModel::class)->where('user_id', $user->id)->delete();
     }
 }

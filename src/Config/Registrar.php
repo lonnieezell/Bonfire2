@@ -110,6 +110,7 @@ class Registrar
         return [
             'permissions' => [
                 'users.export' => "Can download a user's personal data",
+                'users.erase'  => "Can erase a user's personal data",
             ],
             'moduleGrants' => [
                 'privacy' => [

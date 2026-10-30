@@ -6,6 +6,17 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 30 October 2026
 
+The users list has an **Erase personal data** action, for one user or many. It runs every registered personal data
+provider in one transaction: the user's name is replaced with `deleted-user-{id}`, their avatar, meta, sign-in
+identities and remember tokens are deleted, their consent records are removed, and the account is deactivated,
+soft-deleted and marked with a new `erased_at` column. The row stays so content that points at it keeps working; login
+rows stay for security audits, without the email address. Erased users don't appear in the Recycler and can't be
+restored. It needs the new `users.erase` permission, which only `superadmin` has (through `users.*`). See
+[ADR 0006](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0006-erasure-anonymises-users.md).
+
+Actions that run in the request, not only queued ones, are now recorded in `action_runs`, so every run has an audit
+trail. With **Include completed runs** on, the Action runs dashboard widget lists them too.
+
 A user's edit screen has an **Export data** button that downloads everything the site holds about them as
 `user-{id}-data.json`: their account, meta, avatar, sign-in identities (without password or token hashes), login
 history and consent records. Each export is logged as a notice. It needs the new `users.export` permission, which

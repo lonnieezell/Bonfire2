@@ -12,7 +12,11 @@
 namespace Bonfire\Users;
 
 use Bonfire\Privacy\PersonalDataProvider;
+use Bonfire\Users\Libraries\AvatarStorage;
+use Bonfire\Users\Models\UserModel;
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Models\LoginModel;
+use CodeIgniter\Shield\Models\RememberModel;
 use CodeIgniter\Shield\Models\TokenLoginModel;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
@@ -28,7 +32,7 @@ class UserPersonalData implements PersonalDataProvider
 
     public function export(User $user): array
     {
-        $account = model(Models\UserModel::class)->asArray()->withDeleted()->find($user->id);
+        $account = model(UserModel::class)->asArray()->withDeleted()->find($user->id);
         unset($account['avatar']);
 
         // Identities hold password hashes and token hashes in their secrets
@@ -48,8 +52,41 @@ class UserPersonalData implements PersonalDataProvider
         ];
     }
 
+    /**
+     * Anonymises the user rather than deleting the row, so content pointing
+     * at it keeps working. Login rows stay for security audits, without the
+     * email, until retention prunes them. See ADR 0006.
+     */
     public function erase(User $user): void
     {
+        $anonymous = "deleted-user-{$user->id}";
+
+        foreach ([model(LoginModel::class), model(TokenLoginModel::class)] as $logins) {
+            $logins->where('user_id', $user->id);
+
+            if ($user->email !== null) {
+                $logins->orWhere('identifier', $user->email);
+            }
+
+            $logins->set('identifier', $anonymous)->update();
+        }
+
+        $user->deleteResourceMeta();
+        model(UserIdentityModel::class)->where('user_id', $user->id)->delete();
+        model(RememberModel::class)->where('user_id', $user->id)->delete();
+
+        model(UserModel::class)->builder()->where('id', $user->id)->update([
+            'username'   => $anonymous,
+            'first_name' => null,
+            'last_name'  => null,
+            'avatar'     => null,
+            'active'     => 0,
+            'deleted_at' => Time::now()->format('Y-m-d H:i:s'),
+            'erased_at'  => Time::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        $avatar = $user->avatar;
+        service('personalData')->afterErase(static fn () => (new AvatarStorage())->delete($avatar));
     }
 
     /**

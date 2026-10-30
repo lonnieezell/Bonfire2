@@ -68,6 +68,27 @@ final class ActionRunsTest extends TestCase
         $this->assertSame($ids, $this->touch->touched);
     }
 
+    public function testRunsInTheRequestAreRecordedToo(): void
+    {
+        $ids = $this->users(2);
+
+        service('actionRuns')->dispatch('test-users', $this->touch, $this->admin, [$this->admin->id, ...$ids]);
+
+        $this->seeInDatabase('action_runs', [
+            'list'  => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => json_encode([$this->admin->id, ...$ids]),
+            'total' => 3, 'processed' => 2, 'skipped' => 1, 'status' => 'done', 'message' => '2 users touched. Skipped 1.',
+        ]);
+    }
+
+    public function testAFailedRunInTheRequestIsRecordedAsFailed(): void
+    {
+        $this->touch->fails = true;
+
+        service('actionRuns')->dispatch('test-users', $this->touch, $this->admin, $this->users(1));
+
+        $this->seeInDatabase('action_runs', ['list' => 'test-users', 'status' => 'failed', 'message' => lang('Bonfire.unknownError')]);
+    }
+
     public function testDispatchQueuesRunsAboveTheThreshold(): void
     {
         $this->touch->queueAbove = 1;

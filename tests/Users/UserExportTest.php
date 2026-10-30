@@ -62,12 +62,12 @@ final class UserExportTest extends TestCase
         $hash  = model('CodeIgniter\Shield\Models\UserIdentityModel')->getIdentityByType($this->user, 'email_password')->secret2;
 
         $body = $this->actingAs($this->admin)->get("admin/users/{$this->user->id}/export")->response()->getBody();
-        $this->assertStringContainsString('"identities"', $body);
+        $this->assertStringContainsString('"identities"', (string) $body);
 
-        $this->assertStringNotContainsString(json_encode($hash), $body);
-        $this->assertStringNotContainsString($token->secret, $body);
-        $this->assertStringNotContainsString(hash('sha256', $token->raw_token), $body);
-        $this->assertStringNotContainsString('secret', $body);
+        $this->assertStringNotContainsString(json_encode($hash), (string) $body);
+        $this->assertStringNotContainsString($token->secret, (string) $body);
+        $this->assertStringNotContainsString(hash('sha256', $token->raw_token), (string) $body);
+        $this->assertStringNotContainsString('secret', (string) $body);
     }
 
     public function testEachExportIsLogged(): void

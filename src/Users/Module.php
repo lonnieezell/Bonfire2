@@ -15,6 +15,7 @@ use Bonfire\Actions\ModelSource;
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 use Bonfire\Users\Actions\DeleteUsers;
+use Bonfire\Users\Actions\EraseUsers;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\Widgets\FailedLoginsWidget;
 use Bonfire\Users\Widgets\NewestUsersWidget;
@@ -54,7 +55,8 @@ class Module extends BaseModule
 
         service('actions')->for('users')
             ->records(new ModelSource(UserModel::class))
-            ->add(new DeleteUsers());
+            ->add(new DeleteUsers())
+            ->add(new EraseUsers());
 
         service('personalData')->register('users', new UserPersonalData());
 

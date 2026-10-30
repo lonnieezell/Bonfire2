@@ -60,17 +60,38 @@ class ActionRuns
             return RunOutcome::queued($runId);
         }
 
+        // Runs in the request are recorded too, as the audit trail of who did what
+        $runs  = model(ActionRunModel::class);
+        $runId = $runs->insert([
+            'list'    => $list,
+            'action'  => $action->name(),
+            'user_id' => $actor->id,
+            'ids'     => json_encode($ids),
+            'total'   => count($ids),
+            'status'  => RunStatus::Running,
+        ]);
+
         $context = new ActionContext(service('actions')->for($list)->source(), $action, $actor, $ids);
 
         try {
             $result = $action->handle($context);
         } catch (Throwable $e) {
             log_message('error', $e->getMessage());
+            $runs->update($runId, ['status' => RunStatus::Failed, 'message' => lang('Bonfire.unknownError')]);
 
             return RunOutcome::ran(false, lang('Bonfire.unknownError'));
         }
 
-        return RunOutcome::ran($context->succeeded($result), $context->summary($result));
+        $outcome = RunOutcome::ran($context->succeeded($result), $context->summary($result));
+
+        $runs->update($runId, [
+            'status'    => $outcome->succeeded ? RunStatus::Done : RunStatus::Failed,
+            'processed' => $context->processed(),
+            'skipped'   => $context->skipped(),
+            'message'   => $outcome->message,
+        ]);
+
+        return $outcome;
     }
 
     /**

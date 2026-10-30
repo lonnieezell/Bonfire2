@@ -3,6 +3,7 @@
 namespace Bonfire\Users\Models;
 
 use Bonfire\Recycler\Interfaces\CustomRecyclerQuery;
+use Bonfire\Recycler\Interfaces\CustomRecyclerRestore;
 use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\User;
 use CodeIgniter\Shield\Models\UserModel as ShieldUsers;
@@ -13,7 +14,7 @@ use Faker\Generator;
  * It extends Shield's UserModel, providing many auth
  * features built right in.
  */
-class UserModel extends ShieldUsers implements CustomRecyclerQuery
+class UserModel extends ShieldUsers implements CustomRecyclerQuery, CustomRecyclerRestore
 {
     protected $returnType    = User::class;
     protected $allowedFields = [
@@ -26,7 +27,7 @@ class UserModel extends ShieldUsers implements CustomRecyclerQuery
     /**
      * Performs additional setup when finding objects
      * for the recycler. This might pull in additional
-     * fields.
+     * fields. Erased users are left out: they stay deleted.
      */
     public function setupRecycler(): static
     {
@@ -40,7 +41,19 @@ class UserModel extends ShieldUsers implements CustomRecyclerQuery
                 order by last_used_at desc
                 limit 1
             ) as email
-        ");
+        ")->where("{$dbPrefix}users.erased_at");
+    }
+
+    /**
+     * Restores a deleted user, unless their personal data was erased.
+     */
+    public function recyclerRestore(int $id): bool
+    {
+        $this->onlyDeleted()->where('erased_at')->where('id', $id)
+            ->set(['deleted_at' => null])
+            ->update();
+
+        return $this->db->affectedRows() > 0;
     }
 
     public function fake(Generator &$faker): User
