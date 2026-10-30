@@ -87,6 +87,7 @@ return [
     'siteOfflineTitle' => 'Упс!',
     'siteOffline'      => 'Сайт временно недоступен. Пожалуйста, зайдите чуть позже.',
 
+    // Alerts and dashboard toolbar:
     'close'        => 'Закрыть',
     'undoShortcut' => 'Отменить (Ctrl+Z)',
     'redoShortcut' => 'Повторить (Shift+Ctrl+Z)',

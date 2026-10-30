@@ -9,8 +9,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 The admin's settings screens (General, Users, Email, Consent, User Groups), System Info, the consent banner, the
 site offline page and dashboard stat titles now take their text from language files, so they can be translated. New
 keys have Italian, Lithuanian and Russian translations, and Spanish ones for `Bonfire.php` and `Settings.php`. These
-are machine-made, so corrections from native speakers are welcome. A new `Settings.php` language file holds the General
-Settings text, so don't name a module's language file `Settings`.
+are machine-made, so corrections from native speakers are welcome.
+
+In Settings → Users, the "Remember for" option labelled "25 hours" kept users logged in for 24 hours. It now reads
+"24 hours".
 
 New admin guides cover the shipped screens: [Users](../modules/users.md) (including Settings → Users),
 [General Settings](../modules/settings.md), [Email Settings](../modules/email.md) and [Tools](../modules/tools.md)
@@ -40,6 +42,12 @@ Bonfire now registers each module under its real namespace, like `Bonfire\Users`
 `Bonfire\{Users}`, so `php spark migrate -n "Bonfire\Actions"` finds a module's migrations. `php spark migrate --all`
 is unaffected. Rows already in your `migrations` table keep the old `Bonfire\{…}` namespace, so on an existing install
 keep using `--all`: `-n` filters history by namespace and would try to run those migrations again.
+
+## 30 October 2026 (breaking change)
+
+A new `Settings.php` language file (`src/Settings/Language/`) holds the General Settings text. CodeIgniter merges
+language files of the same name, so if one of your modules has a `Settings.php` language file, its keys now merge with
+Bonfire's and a matching key changes Bonfire's text. Rename your file to avoid that.
 
 ## 29 October 2026
 

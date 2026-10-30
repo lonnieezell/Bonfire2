@@ -39,4 +39,18 @@ return [
     // logs
     'navigateFiles' => 'Naršymas tarp failų',
     'stackTrace'    => 'Iškvietimų dėklas',
+    'levelErrors'   => 'Klaidos',
+    'levelWarnings' => 'Įspėjimai',
+    'levelInfo'     => 'Informacija',
+    'levelDebug'    => 'Derinimas',
+    // system info server table
+    'phpVersion'  => 'PHP versija',
+    'ciVersion'   => 'CodeIgniter versija',
+    'sqlEngine'   => 'SQL variklis',
+    'serverOs'    => 'Serverio OS',
+    'serverLoad'  => 'Serverio apkrova',
+    'maxUpload'   => 'Didžiausias įkėlimas',
+    'maxPost'     => 'Didžiausias POST',
+    'memoryLimit' => 'Atminties riba',
+    'unknown'     => 'Nežinoma',
 ];

@@ -87,6 +87,7 @@ return [
     'siteOfflineTitle' => '¡Vaya!',
     'siteOffline'      => 'El sitio está temporalmente fuera de línea. Vuelve a consultarlo un poco más tarde.',
 
+    // Alertas y barra del tablero:
     'close'        => 'Cerrar',
     'undoShortcut' => 'Deshacer (Ctrl+Z)',
     'redoShortcut' => 'Rehacer (Shift+Ctrl+Z)',

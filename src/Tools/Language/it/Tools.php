@@ -39,4 +39,18 @@ return [
     // logs
     'navigateFiles' => 'Navigazione tra i file',
     'stackTrace'    => 'Stack trace',
+    'levelErrors'   => 'Errori',
+    'levelWarnings' => 'Avvisi',
+    'levelInfo'     => 'Info',
+    'levelDebug'    => 'Debug',
+    // system info server table
+    'phpVersion'  => 'Versione PHP',
+    'ciVersion'   => 'Versione CodeIgniter',
+    'sqlEngine'   => 'Motore SQL',
+    'serverOs'    => 'Sistema operativo',
+    'serverLoad'  => 'Carico del server',
+    'maxUpload'   => 'Upload massimo',
+    'maxPost'     => 'POST massimo',
+    'memoryLimit' => 'Limite di memoria',
+    'unknown'     => 'Sconosciuto',
 ];

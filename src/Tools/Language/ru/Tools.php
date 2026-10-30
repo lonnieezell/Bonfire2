@@ -39,4 +39,18 @@ return [
     // logs
     'navigateFiles' => 'Навигация между файлами',
     'stackTrace'    => 'Трассировка стека',
+    'levelErrors'   => 'Ошибки',
+    'levelWarnings' => 'Предупреждения',
+    'levelInfo'     => 'Информация',
+    'levelDebug'    => 'Отладка',
+    // system info server table
+    'phpVersion'  => 'Версия PHP',
+    'ciVersion'   => 'Версия CodeIgniter',
+    'sqlEngine'   => 'СУБД',
+    'serverOs'    => 'ОС сервера',
+    'serverLoad'  => 'Нагрузка на сервер',
+    'maxUpload'   => 'Макс. размер загрузки',
+    'maxPost'     => 'Макс. размер POST',
+    'memoryLimit' => 'Лимит памяти',
+    'unknown'     => 'Неизвестно',
 ];

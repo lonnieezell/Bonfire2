@@ -76,4 +76,16 @@ return [
     // logs
     'navigateFiles' => 'Navigation between files',
     'stackTrace'    => 'Stack trace',
+    'levelErrors'   => 'Errors',
+    'levelWarnings' => 'Warnings',
+    // system info server table
+    'phpVersion'  => 'PHP Version',
+    'ciVersion'   => 'CodeIgniter Version',
+    'sqlEngine'   => 'SQL Engine',
+    'serverOs'    => 'Server OS',
+    'serverLoad'  => 'Server Load',
+    'maxUpload'   => 'Max Upload',
+    'maxPost'     => 'Max POST',
+    'memoryLimit' => 'Memory Limit',
+    'unknown'     => 'Unknown',
 ];

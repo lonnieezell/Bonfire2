@@ -87,6 +87,7 @@ return [
     'siteOfflineTitle' => 'Oi!',
     'siteOffline'      => 'Svetainė laikinai neveikia. Užsukite šiek tiek vėliau.',
 
+    // Alerts and dashboard toolbar:
     'close'        => 'Uždaryti',
     'undoShortcut' => 'Atšaukti (Ctrl+Z)',
     'redoShortcut' => 'Pakartoti (Shift+Ctrl+Z)',

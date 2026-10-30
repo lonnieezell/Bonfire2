@@ -87,6 +87,7 @@ return [
     'siteOfflineTitle' => 'Ops!',
     'siteOffline'      => 'Il sito è temporaneamente non in linea. Riprova un po\' più tardi.',
 
+    // Alerts and dashboard toolbar:
     'close'        => 'Chiudi',
     'undoShortcut' => 'Annulla (Ctrl+Z)',
     'redoShortcut' => 'Ripeti (Shift+Ctrl+Z)',

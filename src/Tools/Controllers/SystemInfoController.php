@@ -41,14 +41,14 @@ class SystemInfoController extends AdminController
 
         return $this->render($this->viewPrefix . 'index', [
             'server' => [
-                'PHP Version'         => PHP_VERSION,
-                'CodeIgniter Version' => CodeIgniter::CI_VERSION,
-                'SQL Engine'          => $db->DBDriver . ' ' . $db->getVersion(),
-                'Server OS'           => php_uname('s') . ' ' . php_uname('r') . ' (' . php_uname('m') . ')',
-                'Server Load'         => $serverLoad !== null ? number_format($serverLoad, 1) : 'Unknown',
-                'Max Upload'          => ini_get('upload_max_filesize'),
-                'Max POST'            => ini_get('post_max_size'),
-                'Memory Limit'        => ini_get('memory_limit'),
+                lang('Tools.phpVersion')  => PHP_VERSION,
+                lang('Tools.ciVersion')   => CodeIgniter::CI_VERSION,
+                lang('Tools.sqlEngine')   => $db->DBDriver . ' ' . $db->getVersion(),
+                lang('Tools.serverOs')    => php_uname('s') . ' ' . php_uname('r') . ' (' . php_uname('m') . ')',
+                lang('Tools.serverLoad')  => $serverLoad !== null ? number_format($serverLoad, 1) : lang('Tools.unknown'),
+                lang('Tools.maxUpload')   => ini_get('upload_max_filesize'),
+                lang('Tools.maxPost')     => ini_get('post_max_size'),
+                lang('Tools.memoryLimit') => ini_get('memory_limit'),
             ],
             'envPresent'  => $health->envPresent(),
             'files'       => $files,

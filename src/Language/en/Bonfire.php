@@ -156,6 +156,7 @@ return [
     'siteOfflineTitle' => 'Whoops!',
     'siteOffline'      => 'The site is temporarily offline. Please check back a little bit later.',
 
+    // Alerts and dashboard toolbar:
     'close'        => 'Close',
     'undoShortcut' => 'Undo (Ctrl+Z)',
     'redoShortcut' => 'Redo (Shift+Ctrl+Z)',
