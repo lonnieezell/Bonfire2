@@ -154,10 +154,10 @@ service('menus')->menu('sidebar')->collection('tools')->removeItem(lang('Tools.l
 
 | Method | Does |
 |---|---|
-| `addItem(MenuItem $item)` | Adds an item outside any collection. Nothing renders these, see [Limitations](#limitations). |
+| `addItem(MenuItem $item)` | Adds an item outside any collection. The sidebar shows it as a plain link, in the order added among the collections. |
 | `items()` | Every top-level item and collection, in the order added. |
 | `activeItem()` | The visible item whose URL is the longest match for the start of the current URL, or `null`. |
-| `activeTrail()` | The titles for the breadcrumb: the collection's title (for collapsible collections) and the active item's title. Empty when nothing matches. |
+| `activeTrail()` | The titles for the breadcrumb: the collection's title (for collapsible collections) and the active item's title. An item outside a collection has only its own title. Empty when nothing matches. |
 
 The collection methods are listed under [Creating collections](#creating-collections).
 
@@ -229,6 +229,4 @@ The rendering described on this page is the stock Admin theme's: `Components/sid
 
 ## Limitations
 
-- Items added with `Menu::addItem()` don't appear in the sidebar, the palette or the breadcrumb. Put every item in a
-  collection ([#729](https://github.com/lonnieezell/Bonfire2/issues/729)).
 - Collapsible groups list item titles only, without icons.

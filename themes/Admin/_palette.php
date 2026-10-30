@@ -3,12 +3,14 @@
 // final row that submits the header's search form.
 $paletteItems = [['label' => lang('Bonfire.dashboard'), 'hint' => '', 'url' => site_url(ADMIN_AREA)]];
 
-foreach (service('menus')->menu('sidebar')->collections() as $collection) {
-    foreach ($collection->items() as $item) {
+foreach (service('menus')->menu('sidebar')->items() as $entry) {
+    $collection = $entry instanceof Bonfire\Menus\MenuCollection ? $entry : null;
+
+    foreach ($collection?->items() ?? [$entry] as $item) {
         if ($item->userCanSee()) {
             $paletteItems[] = [
                 'label' => html_entity_decode(strip_tags($item->title)),
-                'hint'  => html_entity_decode(strip_tags($collection->title)),
+                'hint'  => html_entity_decode(strip_tags($collection->title ?? '')),
                 'url'   => site_url($item->url),
             ];
         }
