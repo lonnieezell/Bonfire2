@@ -4,8 +4,6 @@
 [![GitHub license](https://img.shields.io/github/license/lonnieezell/Bonfire2)](https://github.com/lonnieezell/Bonfire2/blob/develop/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/lonnieezell/Bonfire2/pulls)
 
-THIS IS IN BETA CURRENTLY. More details at [Patreon](https://www.patreon.com/lonnieezell)
-
 This repo holds the primary code of [Bonfire](https://github.com/lonnieezell/Bonfire2), an admin panel for your new or existing CodeIgniter 4 projects.
 
 ## What is Bonfire?
