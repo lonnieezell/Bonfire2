@@ -11,19 +11,12 @@ composer create-project codeigniter4/appstarter my-app
 cd my-app
 ```
 
-You need to allow installation of development stability level packages by executing the following commands:
-
-```bash
-composer config minimum-stability dev
-composer config prefer-stable true
-```
-
 ## Install Bonfire
 
-Next you need to install Bonfire as a dependency in your project. From your command line type the following (omit `:dev-develop` if you want the current stable version):
+Next you need to install Bonfire as a dependency in your project. It needs PHP 8.2 or later and CodeIgniter 4.7 or later. From your command line type the following:
 
 ```bash
-composer require lonnieezell/bonfire:dev-develop
+composer require lonnieezell/bonfire
 ```
 
 This will download the latest version and all dependencies.

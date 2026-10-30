@@ -1,4 +1,4 @@
-site_name: Bonfire 2 (beta)
+site_name: Bonfire 2
 site_description: Bonfire 2 for CodeIgniter User Guide
 
 exclude_docs: |
@@ -14,8 +14,9 @@ theme:
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: deep-purple
+      scheme: codeigniter
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -23,7 +24,8 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: deep-purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -60,6 +62,8 @@ copyright: Copyright &copy; 2023 Lonnie Ezell
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
   - pymdownx.snippets:
       base_path: ["docs"]
       check_paths: false
@@ -83,47 +87,47 @@ nav:
   - Home: index.md
   - Welcome:
       - intro/installation.md
-      - intro/philosophy.md
-      - intro/request_flow.md
-      - intro/published_themes.md
       - intro/app_structure.md
       - intro/configuration.md
       - intro/ai_agents.md
+      - intro/request_flow.md
+      - intro/published_themes.md
+      - intro/philosophy.md
       - intro/changelog.md
   - Modules:
       - modules/index.md
-      - modules/assets.md
-      - modules/auth.md
-      - modules/meta_info.md
-      - modules/consent.md
       - modules/dashboard.md
       - modules/users.md
+      - modules/auth.md
       - modules/settings.md
       - modules/email.md
       - modules/tools.md
+      - modules/assets.md
+      - modules/consent.md
+      - modules/meta_info.md
   - Building Sites:
       - building_sites/index.md
-      - building_sites/alerts.md
       - building_sites/assets.md
       - building_sites/components.md
-      - building_sites/consent.md
       - building_sites/metadata.md
+      - building_sites/alerts.md
+      - building_sites/consent.md
       - building_sites/settings.md
       - building_sites/meta_info.md
       - building_sites/common_functions.md
   - Building Admin Modules:
       - building_admin_modules/index.md
       - building_admin_modules/tutorial_first_module.md
-      - building_admin_modules/actions.md
-      - building_admin_modules/controllers_and_views.md
       - building_admin_modules/creating_an_admin_module.md
-      - building_admin_modules/dashboard_widgets.md
-      - building_admin_modules/filters.md
-      - building_admin_modules/localization.md
       - building_admin_modules/menus.md
+      - building_admin_modules/controllers_and_views.md
       - building_admin_modules/permissions.md
+      - building_admin_modules/view_components.md
+      - building_admin_modules/filters.md
+      - building_admin_modules/actions.md
+      - building_admin_modules/search.md
       - building_admin_modules/recycler.md
       - building_admin_modules/resource_tabs.md
-      - building_admin_modules/search.md
+      - building_admin_modules/dashboard_widgets.md
+      - building_admin_modules/localization.md
       - building_admin_modules/testing.md
-      - building_admin_modules/view_components.md
