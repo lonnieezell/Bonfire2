@@ -14,6 +14,7 @@ namespace Bonfire;
 use Bonfire\Widgets\BaseWidget;
 use Bonfire\Widgets\Types\Charts\Charts;
 use Bonfire\Widgets\Types\Stats\Stats;
+use CodeIgniter\Tasks\Scheduler;
 
 include_once __DIR__ . '/Common.php';
 
@@ -41,6 +42,15 @@ class Bonfire
      * @var array
      */
     public $menus = [];
+
+    /**
+     * Registers Bonfire's scheduled tasks. Call it from the
+     * app's Config\Tasks::init(); `bf:install` adds the call.
+     */
+    public static function schedule(Scheduler $schedule): void
+    {
+        $schedule->command('bf:privacy:prune')->daily()->named('bf-privacy-prune');
+    }
 
     /**
      * Sets up admin menus, initializes modules.

@@ -12,6 +12,7 @@
 namespace Bonfire\Users;
 
 use Bonfire\Privacy\PersonalDataProvider;
+use Bonfire\Privacy\PrunesPersonalData;
 use Bonfire\Users\Libraries\AvatarStorage;
 use Bonfire\Users\Models\UserModel;
 use CodeIgniter\I18n\Time;
@@ -23,7 +24,7 @@ use CodeIgniter\Shield\Models\UserIdentityModel;
 /**
  * The user's account, meta, avatar, sign-in identities and login history.
  */
-class UserPersonalData implements PersonalDataProvider
+class UserPersonalData implements PersonalDataProvider, PrunesPersonalData
 {
     public function label(): string
     {
@@ -87,6 +88,28 @@ class UserPersonalData implements PersonalDataProvider
 
         $avatar = $user->avatar;
         service('personalData')->afterErase(static fn () => (new AvatarStorage())->delete($avatar));
+    }
+
+    /**
+     * Deletes login rows, and with them their IP addresses, once
+     * they're older than the retention for each login table.
+     */
+    public function prune(): int
+    {
+        $retention = config('Privacy')->retention;
+        $deleted   = 0;
+
+        foreach (['logins' => LoginModel::class, 'tokenLogins' => TokenLoginModel::class] as $key => $model) {
+            if (($retention[$key] ?? null) === null) {
+                continue;
+            }
+
+            $logins = model($model);
+            $logins->where('date <', Time::now()->subDays($retention[$key])->toDateTimeString())->delete();
+            $deleted += db_connect()->affectedRows();
+        }
+
+        return $deleted;
     }
 
     /**

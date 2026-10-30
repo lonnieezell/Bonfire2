@@ -87,6 +87,30 @@ keep using `--all`: `-n` filters history by namespace and would try to run those
 
 ## 30 October 2026 (breaking change)
 
+Bonfire now deletes personal data it no longer needs on a schedule. A new Privacy config sets how many days to keep
+it (`null` keeps it forever): login attempts and access token logins for 90 days, and consent records for 365 days once
+a newer answer replaced them or their consent expired. `php spark bf:privacy:prune` does the work, and modules prune
+their own data by implementing `Bonfire\Privacy\PrunesPersonalData`. System Info warns when pruning hasn't run for
+over a week.
+
+Bonfire now requires `codeigniter4/tasks`, and `codeigniter4/queue` moved from `suggest` to `require`. To schedule
+the prune on an existing install:
+
+1. Run `php spark tasks:publish` if you have no `app/Config/Tasks.php`, and remove the example tasks it contains.
+2. Add this line to its `init()` method:
+
+    ```php
+    \Bonfire\Bonfire::schedule($schedule);
+    ```
+
+3. Run `php spark tasks:run` every minute from cron:
+
+    ```
+    * * * * * cd /path/to/your/site && php spark tasks:run >> /dev/null 2>&1
+    ```
+
+New installs get steps 1 and 2 from `php spark bf:install`.
+
 The consent form can now be reopened, so visitors can change or withdraw consent: put `consent_settings_link()` in
 your layout's footer. Saving posts to a new `consent-save` route, which sets the `bf_consent` cookie server-side,
 appends a row to a new `consent_records` table (no IP address or user agent) and reloads the page, so `has_consent()`

@@ -14,6 +14,7 @@ namespace Bonfire\Tools\Controllers;
 use Bonfire\Core\AdminController;
 use Bonfire\Tools\Libraries\SystemHealth;
 use CodeIgniter\CodeIgniter;
+use CodeIgniter\I18n\Time;
 
 class SystemInfoController extends AdminController
 {
@@ -38,6 +39,7 @@ class SystemInfoController extends AdminController
         $health     = new SystemHealth();
         $serverLoad = $health->serverLoad();
         $files      = $health->files();
+        $lastPruned = service('personalData')->lastPruned();
 
         return $this->render($this->viewPrefix . 'index', [
             'server' => [
@@ -53,6 +55,9 @@ class SystemInfoController extends AdminController
             'envPresent'  => $health->envPresent(),
             'files'       => $files,
             'allWritable' => ! in_array(false, array_column($files, 'writable'), true),
+            // Pruning runs daily, so a week without it means the scheduler has stopped
+            'pruneStale' => $lastPruned === null || $lastPruned->isBefore(Time::now()->subDays(7)),
+            'lastPruned' => $lastPruned,
         ]);
     }
 

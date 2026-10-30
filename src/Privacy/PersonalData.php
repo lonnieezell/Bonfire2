@@ -13,6 +13,7 @@ namespace Bonfire\Privacy;
 
 use Bonfire\Users\User;
 use Closure;
+use CodeIgniter\I18n\Time;
 use Throwable;
 
 /**
@@ -105,5 +106,36 @@ class PersonalData
     public function afterErase(Closure $callback): void
     {
         $this->afterErase[] = $callback;
+    }
+
+    /**
+     * Deletes expired data with every provider that prunes,
+     * and remembers when it ran.
+     *
+     * @return array<string, int> Records deleted, keyed by alias
+     */
+    public function prune(): array
+    {
+        $counts = [];
+
+        foreach ($this->providers as $alias => $provider) {
+            if ($provider instanceof PrunesPersonalData) {
+                $counts[$alias] = $provider->prune();
+            }
+        }
+
+        setting('Privacy.lastPruned', Time::now()->toDateTimeString());
+
+        return $counts;
+    }
+
+    /**
+     * When prune() last ran, or null if it never has.
+     */
+    public function lastPruned(): ?Time
+    {
+        $time = setting('Privacy.lastPruned');
+
+        return $time === null ? null : Time::parse($time);
     }
 }

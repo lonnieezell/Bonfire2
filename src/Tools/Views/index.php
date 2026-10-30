@@ -9,6 +9,12 @@
         </button>
     </x-page-head>
 
+    <?php if ($pruneStale) : ?>
+        <div class="bf-callout bf-callout-warn" id="privacy-prune-warning">
+            <?= $lastPruned === null ? lang('Tools.pruneNeverRun') : lang('Tools.pruneStale', [$lastPruned->humanize()]) ?>
+        </div>
+    <?php endif ?>
+
     <div class="bf-sysinfo" x-ref="info">
         <x-admin-box title="<?= esc(lang('Tools.server'), 'attr') ?>">
             <?php foreach ($server as $key => $value) : ?>
