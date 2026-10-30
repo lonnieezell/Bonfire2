@@ -2,7 +2,7 @@
 
 The admin sidebar is a menu. Your module adds pages to it from its `Module::initAdmin()`, and it can build menus of its
 own. This page lists every menu class, key and method. For where `initAdmin()` sits in a module, see
-[Creating an Admin Module](creating_an_admin_module.md#adding-a-menu-item).
+[Module Structure](creating_an_admin_module.md#the-module-file).
 
 ## How menus fit together
 

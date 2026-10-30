@@ -1,4 +1,4 @@
-# Creating an Admin Module
+# Module Structure
 
 The bulk of your work in the admin area will likely be done creating new modules of code. Modules are groups of code
 centered around a single task or resource, like Users, Photos, etc. For the most part, admin modules are like any
@@ -102,7 +102,6 @@ CodeIgniter's page cache, and CLI commands that don't boot Bonfire themselves.
 namespace Acme\Blog;
 
 use Bonfire\Core\BaseModule;
-use Bonfire\Menus\MenuItem;
 
 class Module extends BaseModule
 {
@@ -113,35 +112,9 @@ class Module extends BaseModule
 }
 ```
 
-### Adding a Menu Item
+To add your module's pages to the sidebar from `initAdmin()`, see [Menus](menus.md).
 
-The main side navigation in the admin consists of three primary menu collections:
-
-- a main `Content` collection where you would place the main page for managing a resource (like Users)
-- the `Settings` collection where your module's settings pages should live.
-- the `Tools` collection which holds miscellaneous things that are helpful, but not needed on a daily basis.
-
-Menu items are added to the sidebar using the `menus` service. This example from the core Users module adds the
-Users page to the `content` collection:
-
-```php
-$item = new MenuItem([
-    'title'           => lang('Users.usersModTitle'),
-    'namedRoute'      => 'user-list',
-    'fontAwesomeIcon' => 'fas fa-users',
-    'permission'      => 'users.list',
-]);
-service('menus')->menu('sidebar')->collection('content')->addItem($item);
-```
-
-`namedRoute` must be a [named route](https://codeigniter.com/user_guide/incoming/routing.html#using-named-routes)
-defined in your module's `Config/Routes.php`. Users without `permission` don't see the item. See [Menus](menus.md)
-for every key, collections, custom menus and reordering with `$menuWeights`.
-
-Every menu item the user may see also shows up in the ⌘K / Ctrl+K command palette, and the header's breadcrumb names
-the active item (and its collection, when that collection is collapsible).
-
-### Naming a page in the breadcrumb
+## Naming a page in the breadcrumb
 
 A page below a menu item, like a single record's edit form, can add itself to the breadcrumb with a `crumb` view
 section. The breadcrumb then reads "active menu item › crumb". When the page's URL doesn't sit under any menu item,

@@ -662,7 +662,7 @@ Your Blog module is a complete, if small, admin screen:
 
 - Add row and bulk actions, such as deleting posts into the Recycler: [Actions](actions.md)
 - Browse the other admin components, like `<x-save-bar>` for edit forms: [View Components](view_components.md)
-- Add a settings page under **Settings**: [Creating an Admin Module](creating_an_admin_module.md)
+- Add a settings page under **Settings**: [Menus](menus.md)
 - Add tabs to an edit page: [Resource Tabs](resource_tabs.md)
 - Put post stats on the dashboard: [Dashboard Widgets](dashboard_widgets.md)
 - Change how the Recycler lists, restores or purges posts: [Recycler](recycler.md)

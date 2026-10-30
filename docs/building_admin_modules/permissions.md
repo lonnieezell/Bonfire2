@@ -84,7 +84,7 @@ In a view, hide the controls a user can't use:
 ```
 
 To show a menu item only to users with a permission, give it a `permission` key. See
-[Creating an admin module](creating_an_admin_module.md#adding-a-menu-item).
+[Menus](menus.md#keys).
 
 ```php
 $item = new MenuItem([

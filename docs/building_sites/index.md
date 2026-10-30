@@ -14,12 +14,6 @@ keep an eye out for.
 There is also an example frontpage with a full-blown App theme [bonfire2-frontpage-theme](https://github.com/dgvirtual/bonfire2-frontpage-theme)
 for you to look at.
 
-## Alerts
-
-Bonfire uses [Tatter\Alerts](https://github.com/tattersoftware/codeigniter4-alerts) to provide support for simple alerts. This section covers how to use alerts and flash messages.
-
-[Read more about Alerts](alerts.md)
-
 ## Assets
 
 Bonfire provides a simple assets system that allows you to serve CSS/JS assets from anywhere, handle browser caching, and cache-busting with updated assets.
@@ -32,17 +26,23 @@ View Components allow you to create custom HTML elements to use within your view
 
 [Read more about View Components](components.md)
 
-## Consent
-
-The Consent module helps you manage collecting consent from users before storing any cookies through an opt-in system for all non-required cookies.
-
-[Read more about Consent](consent.md)
-
 ## View Metadata
 
 Bonfire provides a `Metadata` service that simplifies working with the meta information, scripts, and styles in your application.
 
 [Read more about View Metadata](metadata.md)
+
+## Alerts
+
+Bonfire uses [Tatter\Alerts](https://github.com/tattersoftware/codeigniter4-alerts) to provide support for simple alerts. This section covers how to use alerts and flash messages.
+
+[Read more about Alerts](alerts.md)
+
+## Consent
+
+The Consent module helps you manage collecting consent from users before storing any cookies through an opt-in system for all non-required cookies.
+
+[Read more about Consent](consent.md)
 
 ## Settings
 

@@ -76,7 +76,7 @@ layout and its `<x-…>` view components wrap your view. Those theme folders are
 
 ## Related pages
 
-- [Creating an Admin Module](../building_admin_modules/creating_an_admin_module.md): set up module locations and write
+- [Module Structure](../building_admin_modules/creating_an_admin_module.md): set up module locations and write
   a `Module.php`.
 - [Permissions](../building_admin_modules/permissions.md): the `admin.access` and `site.viewOffline` permissions.
 - [Admin Controllers, Views and Themes](../building_admin_modules/controllers_and_views.md): render a page inside a

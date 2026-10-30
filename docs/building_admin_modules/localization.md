@@ -127,7 +127,7 @@ return [
 ```
 
 Bonfire finds the folder once your module is loaded through `Config\Bonfire::$appModules` (see
-[Creating an Admin Module](creating_an_admin_module.md)). Use the strings anywhere in the module, including menu
+[Module Structure](creating_an_admin_module.md)). Use the strings anywhere in the module, including menu
 items:
 
 ```php
