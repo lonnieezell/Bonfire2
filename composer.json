@@ -17,7 +17,8 @@
     "codeigniter4/shield": "^1.4",
     "tatter/alerts": "^3.1",
     "codeigniter4/tasks": "^1.0",
-    "codeigniter4/queue": "^1.0"
+    "codeigniter4/queue": "^1.0",
+    "myth/postal": "^1.0"
   },
   "require-dev": {
     "codeigniter4/devkit": "^1.3",
