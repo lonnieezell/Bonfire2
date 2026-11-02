@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 2 November 2026 (breaking change)
 
+**Mail Previews' Send to me refuses a looping failover chain and hides secrets in errors.** A chain that loops now shows an
+error and sends nothing, where before it crashed PHP. A failed send shows the error with the mailer's known secrets, and
+those of its failover children, removed, the same as the test send in Settings → Email.
+
 **Branded Markdown activation and two-factor emails.** New installs send them with your site name and accent color, and
 a plain text part. This doesn't change your emails when you update: your published `app/Config/Auth.php` keeps its
 HTML views until you add `action_email_activate_markdown` and `action_email_2fa_markdown` to `$views`. An app that never
