@@ -2174,8 +2174,9 @@ its subject, and the rest of the list still works.</p>
 <li>the <code>Mails/</code> folder of every Bonfire module: core, app and package</li>
 <li>the namespaces in <code>Config\Postal::$mailableNamespaces</code>, which by default is <code>App\Mails</code> in <code>app/Mails</code></li>
 </ul>
-<p>Bonfire's own activation and two-factor emails are under <strong>Auth</strong>. The magic link is still sent by Shield and isn't a
-Mailable, so it has no preview.</p>
+<p>Bonfire's own activation and two-factor emails are under <strong>Auth</strong>. They show the
+<a href="../email/#your-email-templates">version your <code>Auth</code> config selects</a>, with your site's real name and accent color. The
+magic link is still sent by Shield and isn't a Mailable, so it has no preview.</p>
 <h2 id="a-preview">A preview</h2>
 <p>Click an email to open it. There are three tabs:</p>
 <table>
