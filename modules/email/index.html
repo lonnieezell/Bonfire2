@@ -908,6 +908,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#the-legacy-mail-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The legacy mail bridge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The legacy mail bridge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leaving-the-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leaving the bridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2039,6 +2067,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#the-legacy-mail-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The legacy mail bridge
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The legacy mail bridge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leaving-the-bridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leaving the bridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2234,6 +2290,69 @@ two-factor login codes. Open <strong>Email</strong> under <strong>Settings</stro
 </tr>
 </tbody>
 </table>
+<h2 id="the-legacy-mail-bridge">The legacy mail bridge</h2>
+<p>Bonfire's mail is moving to <a href="https://github.com/lonnieezell/postal">Postal</a>, which reads its mailers from
+<code>app/Config/Mailer.php</code>. Postal's own default mailer is <code>null</code>, which discards every message without an error. So an
+install without that file doesn't lose the mail it sends through Postal Mailables, Bonfire adds a mailer named <code>legacy</code>
+and makes it the default. You don't have to do anything for this.</p>
+<p>The <code>legacy</code> mailer sends through the transport your existing settings describe. They are read each time a message
+is sent, the same way as before: a value in the Settings table wins, then <code>email.*</code> in <code>.env</code>, then
+<code>app/Config/Email.php</code>. With nothing set anywhere, mail goes through PHP's <code>mail()</code> function.</p>
+<p>Mail sent with <code>service('email')</code> or Shield's <code>emailer()</code>, which is how Bonfire's activation and two-factor emails go
+out today, doesn't pass through the bridge and logs no notice. Without a Mailer config it already uses those same
+settings.</p>
+<div class="admonition warning">
+<p class="admonition-title">Deprecated</p>
+<p>The bridge is removed in Bonfire 2.0. Until you leave it, the first send through it in each request logs a
+deprecation notice. Notices are only written if <code>Config\Logger::$threshold</code> includes them.</p>
+</div>
+<h3 id="leaving-the-bridge">Leaving the bridge</h3>
+<p>The bridge turns off as soon as your app has its own <code>Config\Mailer</code> class, so set that file up before you deploy it.</p>
+<ol>
+<li>Run <code>php spark publish</code> to create <code>app/Config/Mailer.php</code>, or create it by hand.</li>
+<li>
+<p>Set <code>$default</code> and define the mailer in that file. This one matches an SMTP server from the settings above:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="k">namespace</span> <span class="nx">Config</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Myth\Postal\Config\Mailer</span> <span class="k">as</span> <span class="nx">PostalMailer</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Mailer</span> <span class="k">extends</span> <span class="nx">PostalMailer</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nx">string</span> <span class="nv">$default</span> <span class="o">=</span> <span class="s1">'smtp'</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">array</span> <span class="nv">$mailers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'smtp'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'transport'</span>  <span class="o">=&gt;</span> <span class="s1">'smtp'</span><span class="p">,</span>
+            <span class="s1">'host'</span>       <span class="o">=&gt;</span> <span class="s1">'smtp.example.com'</span><span class="p">,</span>
+            <span class="s1">'port'</span>       <span class="o">=&gt;</span> <span class="mi">587</span><span class="p">,</span>
+            <span class="s1">'encryption'</span> <span class="o">=&gt;</span> <span class="s1">'tls'</span><span class="p">,</span>
+            <span class="s1">'authType'</span>   <span class="o">=&gt;</span> <span class="s1">'login'</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">];</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mailers</span><span class="p">[</span><span class="s1">'smtp'</span><span class="p">][</span><span class="s1">'username'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">env</span><span class="p">(</span><span class="s1">'SMTP_USER'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mailers</span><span class="p">[</span><span class="s1">'smtp'</span><span class="p">][</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">env</span><span class="p">(</span><span class="s1">'SMTP_PASS'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Put the credentials in <code>.env</code>.</p>
+</li>
+</ol>
+<div class="admonition danger">
+<p class="admonition-title">The published file discards mail until you edit it</p>
+<p>The file <code>php spark publish</code> creates inherits <code>$default = 'null'</code>. Bonfire steps aside for any app Mailer config,
+even one left at <code>null</code>, so mail is discarded from then on, with no error, until you set <code>$default</code>.</p>
+</div>
+<p>The deprecation notice points to <code>php spark bonfire:email-env</code>, which will print these values for your install. That
+command isn't available yet, so use the steps above for now.</p>
 
 
 

@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#30-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2105,6 +2116,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#30-october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2367,6 +2389,16 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="2-november-2026-breaking-change">2 November 2026 (breaking change)</h2>
+<p>Mail keeps working after this update, and you don't have to do anything. Without an <code>app/Config/Mailer.php</code>, Bonfire
+now makes a deprecated <code>legacy</code> mailer the default. It sends through the transport your <code>setting('Email.*')</code> values
+describe, read at send time, so a Mailable no longer lands in Postal's <code>null</code> mailer, which discards it.</p>
+<p>The breaking part: if your app sends Postal Mailables and has no <code>app/Config/Mailer.php</code>, those messages used to be
+discarded and now really go out, through PHP's <code>mail()</code> if nothing is configured. To keep discarding them, for example
+in development, publish a <code>Mailer.php</code> with <code>$default = 'null'</code>. Once that file exists, Bonfire steps aside completely.</p>
+<p>The bridge logs a deprecation notice and is removed in 2.0. See
+<a href="../../modules/email/#the-legacy-mail-bridge">The legacy mail bridge</a> for how to leave it, and
+<a href="https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0008-zero-touch-postal-upgrade.md">ADR 0008</a> for why.</p>
 <h2 id="30-october-2026">30 October 2026</h2>
 <p>The users list has an <strong>Erase personal data</strong> action, for one user or many. It runs every registered personal data
 provider in one transaction: the user's name is replaced with <code>deleted-user-{id}</code>, their avatar, meta, sign-in
