@@ -2403,6 +2403,16 @@ in development, publish a <code>Mailer.php</code> with <code>$default = 'null'</
 <code>app/Config/Mailer.php</code> snippet for your install, and labels where each value comes from. <code>--purge</code> then deletes the
 transport settings from the settings table, including any plain text SMTP password, and refuses to run until the app
 has its own Mailer config. See <a href="../../modules/email/#moving-mail-settings-into-code">Moving mail settings into code</a>.</p>
+<p>Bonfire now sends its mail through Postal, which it requires. Mail keeps working: you don't have to change anything for
+your activation, two-factor and magic link emails to go out. But the SMTP fields are leaving Settings → Email, so
+run <code>php spark bonfire:email-env</code> to move that config into code.</p>
+<p>The activation and two-factor emails are now the Postal Mailables <code>Bonfire\Auth\Mails\ActivationMail</code> and
+<code>TwoFactorMail</code>. They still render the views named in <code>Auth.views</code>, so customised templates keep working. The activation
+email is now always sent as HTML; before, it followed <code>Email.mailType</code> and came out as HTML source with the default
+<code>text</code>. The magic link still goes through Shield.</p>
+<p>The From name and address in Settings → Email are now the site-wide default: a Mailable without a From gets them, and
+one with its own From keeps it. See
+<a href="../../modules/email/#how-bonfire-sends-mail">How Bonfire sends mail</a>.</p>
 <h2 id="30-october-2026">30 October 2026</h2>
 <p>The users list has an <strong>Erase personal data</strong> action, for one user or many. It runs every registered personal data
 provider in one transaction: the user's name is replaced with <code>deleted-user-{id}</code>, their avatar, meta, sign-in

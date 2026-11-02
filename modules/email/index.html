@@ -909,6 +909,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-bonfire-sends-mail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Bonfire sends mail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Bonfire sends mail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#your-email-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your email templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-from-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The From address
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-legacy-mail-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2096,6 +2135,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-bonfire-sends-mail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Bonfire sends mail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Bonfire sends mail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#your-email-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your email templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-from-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The From address
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-legacy-mail-bridge" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2346,17 +2424,55 @@ two-factor login codes. Open <strong>Email</strong> under <strong>Settings</stro
 </tr>
 </tbody>
 </table>
+<h2 id="how-bonfire-sends-mail">How Bonfire sends mail</h2>
+<p>Bonfire sends its mail through <a href="https://github.com/lonnieezell/postal">Postal</a>, which is installed with it.</p>
+<table>
+<thead>
+<tr>
+<th>Email</th>
+<th>How it's sent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account activation</td>
+<td>The Postal Mailable <code>Bonfire\Auth\Mails\ActivationMail</code></td>
+</tr>
+<tr>
+<td>Two-factor login code</td>
+<td>The Postal Mailable <code>Bonfire\Auth\Mails\TwoFactorMail</code></td>
+</tr>
+<tr>
+<td>Magic link</td>
+<td>Shield's own <code>emailer()</code>, which Postal handles</td>
+</tr>
+</tbody>
+</table>
+<p>All three go through the same mailer: the default one in <code>app/Config/Mailer.php</code>, or without that file, the
+<a href="#the-legacy-mail-bridge">legacy mail bridge</a> for the two Mailables and the same saved settings for the magic link.</p>
+<h3 id="your-email-templates">Your email templates</h3>
+<p>The Mailables render the views named in <code>Auth.views</code>, under <code>action_email_activate_email</code> and <code>action_email_2fa_email</code>,
+with the same <code>$code</code>, <code>$user</code>, <code>$ipAddress</code>, <code>$userAgent</code> and <code>$date</code> as before. If you customised those views, they
+keep working. The two emails are always sent as HTML.</p>
+<p>Both Mailables implement Postal's <code>Previewable</code>, so they can be rendered with sample data, an unsaved user and a fake
+code, without touching the database. A preview reads <code>Auth.views</code> from your <code>Auth</code> config only, not the settings table.</p>
+<h3 id="the-from-address">The From address</h3>
+<p>The <strong>From</strong> name and address on this screen are the site-wide default. A Mailable without a From gets them, including
+Bonfire's and your own. A Mailable that sets its own From keeps it. Without a From here, the activation and two-factor
+emails fail with an error instead of going out.</p>
+<p>Mail sent with <code>service('email')</code> doesn't use this default. It needs a From before it reaches Postal: from <code>setFrom()</code>,
+or else from <code>fromEmail</code> in <code>Config\Email</code>. Without one, <code>send()</code> returns <code>false</code>.</p>
 <h2 id="the-legacy-mail-bridge">The legacy mail bridge</h2>
-<p>Bonfire's mail is moving to <a href="https://github.com/lonnieezell/postal">Postal</a>, which reads its mailers from
+<p>Bonfire sends its mail through <a href="https://github.com/lonnieezell/postal">Postal</a>, which reads its mailers from
 <code>app/Config/Mailer.php</code>. Postal's own default mailer is <code>null</code>, which discards every message without an error. So an
 install without that file doesn't lose the mail it sends through Postal Mailables, Bonfire adds a mailer named <code>legacy</code>
 and makes it the default. You don't have to do anything for this.</p>
 <p>The <code>legacy</code> mailer sends through the transport your existing settings describe. They are read each time a message
 is sent, the same way as before: a value in the Settings table wins, then <code>email.*</code> in <code>.env</code>, then
 <code>app/Config/Email.php</code>. With nothing set anywhere, mail goes through PHP's <code>mail()</code> function.</p>
-<p>Mail sent with <code>service('email')</code> or Shield's <code>emailer()</code>, which is how Bonfire's activation and two-factor emails go
-out today, doesn't pass through the bridge and logs no notice. Without a Mailer config it already uses those same
-settings.</p>
+<p>Bonfire's activation and two-factor emails go through it. Mail sent with <code>service('email')</code> or Shield's <code>emailer()</code>,
+which is how the magic link email goes out, doesn't pass through the bridge and logs no notice. Without a Mailer config,
+<code>emailer()</code> already uses those same settings.</p>
 <div class="admonition warning">
 <p class="admonition-title">Deprecated</p>
 <p>The bridge is removed in Bonfire 2.0. Until you leave it, the first send through it in each request logs a
