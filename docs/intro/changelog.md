@@ -4,6 +4,13 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 2 November 2026
+
+`php spark bonfire:email-env` helps you move mail transport settings out of the database. It prints `.env` lines and an
+`app/Config/Mailer.php` snippet for your install, and labels where each value comes from. `--purge` then deletes the
+transport settings from the settings table, including any plain text SMTP password, and refuses to run until the app
+has its own Mailer config. See [Moving mail settings into code](../modules/email.md#moving-mail-settings-into-code).
+
 ## 30 October 2026
 
 The users list has an **Erase personal data** action, for one user or many. It runs every registered personal data
