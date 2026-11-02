@@ -77,11 +77,11 @@ class EmailEnv extends BaseCommand
         $this->printEnv($mailer);
         $this->printSnippet($mailer);
 
-        if (! array_key_exists('purge', $params) && ! CLI::getOption('purge')) {
+        if (! array_key_exists('purge', $params)) {
             return EXIT_SUCCESS;
         }
 
-        return $this->purge(array_key_exists('force', $params) || CLI::getOption('force'));
+        return $this->purge(array_key_exists('force', $params));
     }
 
     /**
@@ -130,6 +130,11 @@ class EmailEnv extends BaseCommand
      */
     private function nothingToMigrate(array $sources, array $values): bool
     {
+        // Rows under a context never reach setting(), but they still hold passwords to purge.
+        if ($this->rows()->countAllResults() > 0) {
+            return false;
+        }
+
         foreach (self::FRAMEWORK_DEFAULTS as $key => $default) {
             if ($sources[$key] !== 'Config\Email' || $values[$key] !== $default) {
                 return false;
@@ -278,7 +283,7 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        if (! $force && CLI::prompt('Delete these transport settings from the database?', ['n', 'y']) !== 'y') {
+        if (! $force && CLI::prompt('Delete these transport settings from the database, including any stored under a context?', ['n', 'y']) !== 'y') {
             CLI::write('Nothing was purged.');
 
             return EXIT_SUCCESS;

@@ -322,10 +322,28 @@ final class EmailEnvTest extends TestCase
     public function testPurgeAlsoRemovesRowsStoredUnderAContext(): void
     {
         $this->useOwnMailerConfig();
-        setting('Email.SMTPHost', 'smtp.example.com');
         service('settings')->set('Email.SMTPPass', 'hunter2', 'tenant-1');
 
         service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]);
+
+        $this->assertStringNotContainsString('Nothing to migrate', $this->getStreamFilterBuffer());
+        $this->assertSame(0, $this->transportRowCount());
+    }
+
+    public function testContextRowsAloneStillRefuseWhileTheBridgeIsActive(): void
+    {
+        service('settings')->set('Email.SMTPPass', 'hunter2', 'tenant-1');
+
+        $this->assertSame(EXIT_ERROR, service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]));
+        $this->assertSame(1, $this->transportRowCount());
+    }
+
+    public function testPurgeAndForceWorkAsCommandLineOptions(): void
+    {
+        $this->useOwnMailerConfig();
+        $this->seedTransportRows();
+
+        command('bonfire:email-env --purge --force');
 
         $this->assertSame(0, $this->transportRowCount());
     }

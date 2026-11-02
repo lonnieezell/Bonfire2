@@ -92,8 +92,8 @@ php spark bonfire:email-env --purge
 ```
 
 It asks first; add `--force` to skip the question. It removes the transport keys only: `protocol`, `mailPath`,
-`SMTPHost`, `SMTPPort`, `SMTPUser`, `SMTPPass`, `SMTPCrypto`, `SMTPTimeout` and `SMTPKeepAlive`. Your From name and
-address stay. Values in `Config\Email` or `.env` aren't touched, so if your credentials are in `.env` `email.*` keys, you
+`SMTPHost`, `SMTPPort`, `SMTPUser`, `SMTPPass`, `SMTPCrypto`, `SMTPTimeout` and `SMTPKeepAlive`, including any stored
+under a settings context. Your From name and address stay. Values in `Config\Email` or `.env` aren't touched, so if your credentials are in `.env` `email.*` keys, you
 only need to rename them.
 
 `--purge` refuses to run while the app has no Mailer config of its own, even with `--force`, because those settings are
