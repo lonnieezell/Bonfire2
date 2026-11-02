@@ -936,6 +936,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#moving-mail-settings-into-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Moving mail settings into code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Moving mail settings into code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#removing-the-old-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing the old settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2095,6 +2123,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#moving-mail-settings-into-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Moving mail settings into code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Moving mail settings into code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#removing-the-old-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing the old settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2351,8 +2407,41 @@ deprecation notice. Notices are only written if <code>Config\Logger::$threshold<
 <p>The file <code>php spark publish</code> creates inherits <code>$default = 'null'</code>. Bonfire steps aside for any app Mailer config,
 even one left at <code>null</code>, so mail is discarded from then on, with no error, until you set <code>$default</code>.</p>
 </div>
-<p>The deprecation notice points to <code>php spark bonfire:email-env</code>, which will print these values for your install. That
-command isn't available yet, so use the steps above for now.</p>
+<p>The deprecation notice points to <code>php spark bonfire:email-env</code>, which prints these values for your install. See
+<a href="#moving-mail-settings-into-code">Moving mail settings into code</a>.</p>
+<h2 id="moving-mail-settings-into-code">Moving mail settings into code</h2>
+<p>Mail transport settings are moving out of the database, to <code>.env</code> and an <code>app/Config/Mailer.php</code> file for
+<a href="https://github.com/lonnieezell/postal">Postal</a>. This command prints both for your install:</p>
+<div class="highlight"><pre><span></span><code><span class="go">php spark bonfire:email-env</span>
+</code></pre></div>
+<p>It writes no files. It reads each value through <code>setting()</code> and prints:</p>
+<ul>
+<li>where each value comes from: <code>database</code>, <code>Config\Email</code>, or <code>.env</code></li>
+<li>the <code>.env</code> lines, such as <code>mailer.mailers.smtp.host</code>, which replace any <code>email.*</code> transport keys you have. Keep
+  <code>email.fromEmail</code> and <code>email.fromName</code>: your From address is still read from them</li>
+<li>a <code>Mailer.php</code> that defines a matching <code>smtp</code>, <code>sendmail</code> or <code>mail</code> mailer and makes it the default. The username
+  and password are blank there, because they are set by the <code>.env</code> lines</li>
+</ul>
+<p>With no database rows and only framework defaults in <code>Config\Email</code>, it prints "Nothing to migrate".</p>
+<div class="admonition warning">
+<p class="admonition-title">Some values don't survive <code>.env</code></p>
+<p>CodeIgniter trims quotes from the ends of a config override, turns the words <code>true</code> and <code>false</code> into booleans,
+expands <code>${name}</code>, and reads <code>.env</code> one line at a time. The command prints a warning under any line this affects.
+Change that value, or set it from <code>env('...')</code> in the constructor of your <code>Mailer.php</code>.</p>
+</div>
+<h3 id="removing-the-old-settings">Removing the old settings</h3>
+<p>SMTP passwords are stored in the settings table as plain text. Once the new <code>Mailer.php</code> is in place, delete them:</p>
+<div class="highlight"><pre><span></span><code><span class="go">php spark bonfire:email-env --purge</span>
+</code></pre></div>
+<p>It asks first; add <code>--force</code> to skip the question. It removes the transport keys only: <code>protocol</code>, <code>mailPath</code>,
+<code>SMTPHost</code>, <code>SMTPPort</code>, <code>SMTPUser</code>, <code>SMTPPass</code>, <code>SMTPCrypto</code>, <code>SMTPTimeout</code> and <code>SMTPKeepAlive</code>, including any stored
+under a settings context. The command only prints values it would send with, so it reports how many rows are under a
+context without showing them: copy any you still need before purging. Your From name and address stay. Values in
+<code>Config\Email</code> or <code>.env</code> aren't touched, so if your credentials are in <code>.env</code> <code>email.*</code> keys, you only need to rename
+them.</p>
+<p><code>--purge</code> refuses to run while the app has no Mailer config of its own, even with <code>--force</code>, because those settings are
+still what your mail is sent with. Purging them would fall back to the <code>Config\Email</code> defaults and send through PHP's
+<code>mail()</code>.</p>
 
 
 
