@@ -1773,6 +1773,10 @@ input[type="checkbox"]:indeterminate {
     font-variant-numeric: tabular-nums;
 }
 
+.bf-stat-alert .bf-stat-value {
+    color: var(--bf-danger);
+}
+
 .bf-stat-value:has(table) {
     font-size: 13px;
     font-weight: 400;

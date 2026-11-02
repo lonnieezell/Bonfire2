@@ -125,9 +125,10 @@ final class WidgetRegistryTest extends TestCase
 
         $ids = array_map(static fn (array $widgets) => array_map(static fn ($widget) => $widget->id(), $widgets), service('dashboard')->grouped());
 
-        $this->assertSame([lang('Actions.actionsModTitle'), lang('Bonfire.dashboard'), lang('Bonfire.toolsModTitle'), lang('Groups.groupsModTitle'), lang('Users.usersModTitle')], array_keys($ids));
+        $this->assertSame([lang('Actions.actionsModTitle'), lang('Bonfire.dashboard'), lang('Email.emailModTitle'), lang('Bonfire.toolsModTitle'), lang('Groups.groupsModTitle'), lang('Users.usersModTitle')], array_keys($ids));
         $this->assertSame(['actions:runs'], $ids[lang('Actions.actionsModTitle')]);
         $this->assertSame(['cell:Bonfire\Dashboard\DashboardCells::quickLinks'], $ids[lang('Bonfire.dashboard')]);
+        $this->assertEqualsCanonicalizing(['stats:mailSent625', 'stats:mailFailed625'], $ids[lang('Email.emailModTitle')]);
         $this->assertEqualsCanonicalizing(['tools:recentErrors', 'tools:systemHealth', 'logs:logActivity', 'recycler:summary'], $ids[lang('Bonfire.toolsModTitle')]);
         $this->assertSame(['stats:userGroups643'], $ids[lang('Groups.groupsModTitle')]);
         $this->assertEqualsCanonicalizing(['users:byGroup', 'users:newest', 'users:failedLogins', 'users:recentlyActive', 'stats:usersInRecycler693'], $ids[lang('Users.usersModTitle')]);
