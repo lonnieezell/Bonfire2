@@ -52,6 +52,7 @@ has none.
 | `logs.view` | Read the logs and see the log widgets | ✓ | ✓ | ✓ | |
 | `logs.manage` | Delete logs | ✓ | | ✓ | |
 | `email.preview` | Open [Mail Previews](../modules/mail_previews.md) and send a preview to themselves | ✓ | ✓ | | |
+| `email.log` | Open the [Mail Outbox](../modules/mail_outbox.md) | ✓ | | | |
 | `me.edit` | Edit their own profile | ✓ | ✓ | ✓ | |
 | `me.security` | Change their own password | ✓ | ✓ | ✓ | |
 

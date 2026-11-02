@@ -122,6 +122,16 @@ $warningText = [
             </x-setting-row>
         </x-admin-box>
 
+        <x-admin-box title="<?= esc(lang('Email.outboxRetention'), 'attr') ?>" description="<?= esc(lang('Email.outboxRetentionDesc'), 'attr') ?>">
+            <x-setting-row label="<?= esc(lang('Email.logRetentionDays'), 'attr') ?>" for="logRetentionDays">
+                <input type="number" min="0" max="3650" class="form-control bf-input-narrow" name="logRetentionDays" id="logRetentionDays" value="<?= esc(old('logRetentionDays', (string) $retentionDays, false), 'attr') ?>" />
+                <p class="small mb-0"><?= lang('Email.logRetentionHint') ?></p>
+                <?php if (has_error('logRetentionDays')) : ?>
+                    <p class="text-danger small mb-0"><?= error('logRetentionDays') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+        </x-admin-box>
+
         <x-save-bar save="<?= esc(lang('Bonfire.saveSettings'), 'attr') ?>" />
     </form>
 </x-settings-layout>

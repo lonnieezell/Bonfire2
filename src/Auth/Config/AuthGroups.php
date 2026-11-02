@@ -82,6 +82,7 @@ class AuthGroups extends ShieldAuthGroups
         'logs.view'           => 'Can view the logs',
         'logs.manage'         => 'Can manage the logs',
         'email.preview'       => 'Can preview Mailables and send the previews to themselves',
+        'email.log'           => 'Can read the Mail Outbox',
         'me.edit'             => "Can edit user's own settings",
         'me.security'         => "Can change user's own password",
     ];

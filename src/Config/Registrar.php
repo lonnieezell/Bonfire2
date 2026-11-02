@@ -112,6 +112,7 @@ class Registrar
                 'users.export'  => "Can download a user's personal data",
                 'users.erase'   => "Can erase a user's personal data",
                 'email.preview' => 'Can preview Mailables and send the previews to themselves',
+                'email.log'     => 'Can read the Mail Outbox',
             ],
             'moduleGrants' => [
                 'privacy' => [

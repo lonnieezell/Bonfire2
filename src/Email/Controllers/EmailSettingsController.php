@@ -13,6 +13,7 @@ namespace Bonfire\Email\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Email\MailerDashboard;
+use Bonfire\Email\Outbox;
 
 class EmailSettingsController extends AdminController
 {
@@ -36,6 +37,7 @@ class EmailSettingsController extends AdminController
             'mailers'       => $dashboard->mailers(),
             'warnings'      => $dashboard->warnings(),
             'defaultMailer' => config('Mailer')->default,
+            'retentionDays' => Outbox::retentionDays(),
             'address'       => auth()->user()->email,
             'testResult'    => session('testResult'),
         ]);
@@ -53,6 +55,8 @@ class EmailSettingsController extends AdminController
         $rules = [
             'fromName'  => 'required|string|min_length[2]',
             'fromEmail' => 'required|valid_email',
+            // Left out, it keeps what it was
+            'logRetentionDays' => 'permit_empty|is_natural|less_than_equal_to[3650]',
         ];
 
         if (! $this->validate($rules)) {
@@ -61,6 +65,12 @@ class EmailSettingsController extends AdminController
 
         setting('Email.fromName', $this->request->getPost('fromName'));
         setting('Email.fromEmail', $this->request->getPost('fromEmail'));
+
+        $retention = (string) $this->request->getPost('logRetentionDays');
+
+        if ($retention !== '') {
+            setting('Email.logRetentionDays', (int) $retention);
+        }
 
         alert('success', lang('Bonfire.settingsSaved'));
 

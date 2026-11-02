@@ -48,6 +48,12 @@ Mail Previews, under **Tools**, shows your site's emails with sample data and se
 
 [Read more about Mail Previews](mail_previews.md)
 
+## Mail Outbox
+
+Mail Outbox, under **Tools**, logs every email your site sends and every send that fails, without the message bodies.
+
+[Read more about the Mail Outbox](mail_outbox.md)
+
 ## Tools
 
 The Tools module adds System Info, a summary of the server and its writable folders, and a viewer for the site's log

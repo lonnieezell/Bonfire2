@@ -21,6 +21,16 @@ each one, and a **Send to me** button that mails it to your own address through 
 `email.*` to `superadmin` and `email.preview` to `admin`. Until you do, the screen stays hidden. See
 [Mail Previews](../modules/mail_previews.md).
 
+**Tools → Mail Outbox** logs every email your site sends and every send that fails: the addresses, subject, status,
+error, attachment names and the Mailable that built it, never the message body, because magic link and password reset
+emails carry live login tokens. Filter it by status, mailer, recipient and date. **Settings → Email** has a new **Days
+to keep** (`Email.logRetentionDays`, 30 to start with); `0` turns the log off. `php spark email:prune` deletes older
+rows, and about one send in a hundred prunes too. The Outbox needs the new `email.log` permission, granted to
+`superadmin` only. **Run `php spark migrate --all`** to create the `email_log` table, and **`php spark
+bonfire:permissions`** to grant the permission. Until you do, the screen stays hidden, and a missing table never stops
+an email from sending. Every row is logged under the default mailer, because Postal doesn't tell listeners which named
+mailer sent a message. See [Mail Outbox](../modules/mail_outbox.md).
+
 Mail keeps working after this update, and you don't have to do anything. Without an `app/Config/Mailer.php`, Bonfire
 now makes a deprecated `legacy` mailer the default. It sends through the transport your `setting('Email.*')` values
 describe, read at send time, so a Mailable no longer lands in Postal's `null` mailer, which discards it.

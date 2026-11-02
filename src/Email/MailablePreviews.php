@@ -77,6 +77,25 @@ final readonly class MailablePreviews
     }
 
     /**
+     * The URL slug of each of $classes that is one of this install's Mailables. A
+     * class renamed or deleted since it was logged has none.
+     *
+     * @param list<string> $classes
+     *
+     * @return array<string, string> class => slug
+     */
+    public function slugsFor(array $classes): array
+    {
+        $slugs = [];
+
+        foreach (array_intersect($classes, $this->previewer->discover()) as $class) {
+            $slugs[$class] = self::slug($class);
+        }
+
+        return $slugs;
+    }
+
+    /**
      * @param class-string<Mailable&Previewable> $class
      */
     public function render(string $class): MailablePreview
