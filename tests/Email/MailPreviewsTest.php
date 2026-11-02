@@ -232,6 +232,7 @@ final class MailPreviewsTest extends TestCase
         $this->assertSame([], $email->bcc);
         $this->assertSame(['X-Campaign' => 'welcome'], $email->headers);
         $this->assertNull($email->returnPath);
+        $this->assertSame('support@example.com', $email->replyTo?->email);
         $this->assertSame('site@example.com', $email->from?->email);
         $this->assertSame(WelcomeMail::class, $email->mailableClass);
     }
