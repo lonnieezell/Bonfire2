@@ -48,6 +48,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Adding a dashboard widget, stat card or chart | `building_admin_modules/dashboard_widgets.md` |
 | Writing feature tests for an admin module | `building_admin_modules/testing.md` |
 | Changing the default dashboard layout | `modules/dashboard.md` |
+| Previewing a Mailable in the admin, or making one previewable | `modules/mail_previews.md` |
 | Showing flash alerts | `building_sites/alerts.md` |
 | Linking CSS and JS assets | `building_sites/assets.md` |
 | Configuring asset folders, versions and cache-busting | `modules/assets.md` |

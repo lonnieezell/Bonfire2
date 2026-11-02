@@ -33,5 +33,12 @@ class Module extends BaseModule
             'permission'      => 'admin.settings',
         ]);
         $sidebar->menu('sidebar')->collection('settings')->addItem($item);
+
+        $sidebar->menu('sidebar')->collection('tools')->addItem(new MenuItem([
+            'title'           => lang('Email.previewsModTitle'),
+            'namedRoute'      => 'mail-previews',
+            'fontAwesomeIcon' => 'fas fa-envelope-open-text',
+            'permission'      => 'email.preview',
+        ]));
     }
 }

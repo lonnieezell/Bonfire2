@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 2 November 2026 (breaking change)
 
+**Tools → Mail Previews** shows your Mailables in the admin, in every environment: the HTML, plain text and raw MIME of
+each one, and a **Send to me** button that mails it to your own address through a mailer you choose. It needs the new
+`email.preview` permission. You publish your own `AuthGroups`, so **run `php spark bonfire:permissions`**, which grants
+`email.*` to `superadmin` and `email.preview` to `admin`. Until you do, the screen stays hidden. See
+[Mail Previews](../modules/mail_previews.md).
+
 Mail keeps working after this update, and you don't have to do anything. Without an `app/Config/Mailer.php`, Bonfire
 now makes a deprecated `legacy` mailer the default. It sends through the transport your `setting('Email.*')` values
 describe, read at send time, so a Mailable no longer lands in Postal's `null` mailer, which discards it.

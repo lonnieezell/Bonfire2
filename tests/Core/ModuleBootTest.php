@@ -79,6 +79,20 @@ final class ModuleBootTest extends TestCase
         $this->assertSame([], CourierModule::$calls);
     }
 
+    public function testModulesMapsEveryDiscoveredNamespaceToItsDirectory(): void
+    {
+        $bonfire = new Bonfire();
+        $bonfire->boot(true);
+
+        $modules = $bonfire->modules();
+
+        $this->assertSame(realpath(SUPPORTPATH . 'Packages/Courier'), realpath($modules['Tests\Support\Packages\Courier']));
+        $this->assertDirectoryExists($modules['Bonfire\Users']);
+        // Auth has no Module.php, but its Mails folder still has to be found
+        $this->assertFileDoesNotExist($modules['Bonfire\Auth'] . '/Module.php');
+        $this->assertDirectoryExists($modules['Bonfire\Auth'] . '/Mails');
+    }
+
     public function testAppModulesAreDiscoveredFromTheCache(): void
     {
         $this->withTestCharts();
