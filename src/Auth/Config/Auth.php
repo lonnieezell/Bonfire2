@@ -35,20 +35,22 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      */
     public array $views = [
-        'layout'                      => 'master',
-        'email_layout'                => '\Bonfire\Views\email',
-        'login'                       => '\Bonfire\Views\Auth\login',
-        'register'                    => '\Bonfire\Views\Auth\register',
-        'forgotPassword'              => '\CodeIgniter\Shield\Views\forgot_password',
-        'resetPassword'               => '\CodeIgniter\Shield\Views\reset_password',
-        'action_email_2fa'            => '\Bonfire\Views\Auth\email_2fa_show',
-        'action_email_2fa_verify'     => '\Bonfire\Views\Auth\email_2fa_verify',
-        'action_email_2fa_email'      => '\CodeIgniter\Shield\Views\Email\email_2fa_email',
-        'action_email_activate_show'  => '\Bonfire\Views\Auth\email_activate_show',
-        'action_email_activate_email' => '\CodeIgniter\Shield\Views\Email\email_activate_email',
-        'magic-link-login'            => '\Bonfire\Views\Auth\magic_link_form',
-        'magic-link-message'          => '\Bonfire\Views\Auth\magic_link_message',
-        'magic-link-email'            => '\Bonfire\Views\Auth\magic_link_email',
+        'layout'                         => 'master',
+        'email_layout'                   => '\Bonfire\Views\email',
+        'login'                          => '\Bonfire\Views\Auth\login',
+        'register'                       => '\Bonfire\Views\Auth\register',
+        'forgotPassword'                 => '\CodeIgniter\Shield\Views\forgot_password',
+        'resetPassword'                  => '\CodeIgniter\Shield\Views\reset_password',
+        'action_email_2fa'               => '\Bonfire\Views\Auth\email_2fa_show',
+        'action_email_2fa_verify'        => '\Bonfire\Views\Auth\email_2fa_verify',
+        'action_email_2fa_email'         => '\CodeIgniter\Shield\Views\Email\email_2fa_email',
+        'action_email_2fa_markdown'      => '\Bonfire\Views\Mail\two_factor_email',
+        'action_email_activate_show'     => '\Bonfire\Views\Auth\email_activate_show',
+        'action_email_activate_email'    => '\CodeIgniter\Shield\Views\Email\email_activate_email',
+        'action_email_activate_markdown' => '\Bonfire\Views\Mail\activation_email',
+        'magic-link-login'               => '\Bonfire\Views\Auth\magic_link_form',
+        'magic-link-message'             => '\Bonfire\Views\Auth\magic_link_message',
+        'magic-link-email'               => '\Bonfire\Views\Auth\magic_link_email',
     ];
 
     /**

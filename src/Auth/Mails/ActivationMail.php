@@ -27,4 +27,9 @@ final class ActivationMail extends AuthCodeMail implements Previewable
     {
         return 'action_email_activate_email';
     }
+
+    protected function markdownViewKey(): string
+    {
+        return 'action_email_activate_markdown';
+    }
 }

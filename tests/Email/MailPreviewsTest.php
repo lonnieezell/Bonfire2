@@ -171,6 +171,21 @@ final class MailPreviewsTest extends TestCase
         ];
     }
 
+    public function testAuthMailablePreviewShowsTheMarkdownVersionWithTheSitesBranding(): void
+    {
+        setting('Site.siteName', 'Acme Inc');
+        setting('Site.adminAccent', '#123abc');
+
+        $response = $this->actingAs($this->admin)->get(route_to('mail-preview', 'Bonfire.Auth.Mails.ActivationMail'));
+
+        $srcdoc = $this->iframe($response)->getAttribute('srcdoc');
+
+        $response->assertOK();
+        $this->assertStringContainsString('Acme Inc', $srcdoc);
+        $this->assertStringContainsString('#123abc', $srcdoc);
+        $this->assertStringNotContainsString('mail-panel', $this->panels($response)['text']);
+    }
+
     public function testHtmlIsSandboxedWithNoScriptExecution(): void
     {
         $response = $this->actingAs($this->admin)->get(route_to('mail-preview', self::WELCOME));
