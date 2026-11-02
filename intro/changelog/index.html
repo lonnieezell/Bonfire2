@@ -867,6 +867,8 @@
       
         
       
+        
+      
     
     
     
@@ -1071,6 +1073,34 @@
     
   
     Mail Previews
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/mail_outbox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mail Outbox
   
 
     
@@ -2433,6 +2463,15 @@ each one, and a <strong>Send to me</strong> button that mails it to your own add
 <code>email.preview</code> permission. You publish your own <code>AuthGroups</code>, so <strong>run <code>php spark bonfire:permissions</code></strong>, which grants
 <code>email.*</code> to <code>superadmin</code> and <code>email.preview</code> to <code>admin</code>. Until you do, the screen stays hidden. See
 <a href="../../modules/mail_previews/">Mail Previews</a>.</p>
+<p><strong>Tools → Mail Outbox</strong> logs every email your site sends and every send that fails: the addresses, subject, status,
+error, attachment names and the Mailable that built it, never the message body, because magic link and password reset
+emails carry live login tokens. Filter it by status, mailer, recipient and date. <strong>Settings → Email</strong> has a new <strong>Days
+to keep</strong> (<code>Email.logRetentionDays</code>, 30 to start with); <code>0</code> turns the log off. <code>php spark email:prune</code> deletes older
+rows, and about one send in a hundred prunes too. The Outbox needs the new <code>email.log</code> permission, granted to
+<code>superadmin</code> only. <strong>Run <code>php spark migrate --all</code></strong> to create the <code>email_log</code> table, and <strong><code>php spark
+bonfire:permissions</code></strong> to grant the permission. Until you do, the screen stays hidden, and a missing table never stops
+an email from sending. Every row is logged under the default mailer, because Postal doesn't tell listeners which named
+mailer sent a message. See <a href="../../modules/mail_outbox/">Mail Outbox</a>.</p>
 <p>Mail keeps working after this update, and you don't have to do anything. Without an <code>app/Config/Mailer.php</code>, Bonfire
 now makes a deprecated <code>legacy</code> mailer the default. It sends through the transport your <code>setting('Email.*')</code> values
 describe, read at send time, so a Mailable no longer lands in Postal's <code>null</code> mailer, which discards it.</p>
