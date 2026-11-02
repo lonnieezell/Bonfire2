@@ -63,6 +63,12 @@ address, and click **Send test**. The result appears above the form.
 
 Click **Save Settings** to save them. They're the default for all mail. See [The From address](#the-from-address).
 
+## Outbox
+
+| Setting | What it does |
+| --- | --- |
+| Days to keep | How long the [Mail Outbox](mail_outbox.md) keeps a row. 30 to start with, up to 3650. `0` turns the Outbox off. |
+
 ## How Bonfire sends mail
 
 Bonfire sends its mail through [Postal](https://github.com/lonnieezell/postal), which is installed with it.

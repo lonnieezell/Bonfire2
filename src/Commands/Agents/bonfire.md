@@ -49,6 +49,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Writing feature tests for an admin module | `building_admin_modules/testing.md` |
 | Changing the default dashboard layout | `modules/dashboard.md` |
 | Previewing a Mailable in the admin, or making one previewable | `modules/mail_previews.md` |
+| Reading the log of sent and failed mail, or its retention | `modules/mail_outbox.md` |
 | Showing flash alerts | `building_sites/alerts.md` |
 | Linking CSS and JS assets | `building_sites/assets.md` |
 | Configuring asset folders, versions and cache-busting | `modules/assets.md` |

@@ -40,5 +40,12 @@ class Module extends BaseModule
             'fontAwesomeIcon' => 'fas fa-envelope-open-text',
             'permission'      => 'email.preview',
         ]));
+
+        $sidebar->menu('sidebar')->collection('tools')->addItem(new MenuItem([
+            'title'           => lang('Email.outboxModTitle'),
+            'namedRoute'      => 'mail-outbox',
+            'fontAwesomeIcon' => 'fas fa-paper-plane',
+            'permission'      => 'email.log',
+        ]));
     }
 }

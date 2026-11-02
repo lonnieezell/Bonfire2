@@ -2,6 +2,7 @@
 
 namespace Tests\Settings;
 
+use Bonfire\Email\Outbox;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -9,6 +10,7 @@ use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use DOMDocument;
 use DOMXPath;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Email\RecordingTransport;
 use Tests\Support\Email\UsesAppMailers;
 use Tests\Support\SubmitsForms;
@@ -55,7 +57,7 @@ final class EmailSettingsTest extends TestCase
         $html   = $this->page();
         $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/email'));
 
-        $this->assertEqualsCanonicalizing(['fromEmail', 'fromName'], array_diff(array_keys($fields), [csrf_token()]));
+        $this->assertEqualsCanonicalizing(['fromEmail', 'fromName', 'logRetentionDays'], array_diff(array_keys($fields), [csrf_token()]));
 
         $fields['fromName'] = 'Grace';
 
@@ -63,6 +65,73 @@ final class EmailSettingsTest extends TestCase
 
         $this->assertSame('Grace', setting('Email.fromName'));
         $this->assertSame('ada@example.com', setting('Email.fromEmail'));
+    }
+
+    public function testOutboxRetentionDefaultsToThirtyDaysAndSaves(): void
+    {
+        setting('Email.fromName', 'Ada');
+
+        $html   = $this->page();
+        $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/email'));
+
+        $this->assertSame('30', $fields['logRetentionDays']);
+
+        $fields['logRetentionDays'] = '7';
+
+        $this->actingAs($this->user)->post('/admin/settings/email', $fields)->assertSessionMissing('errors');
+
+        $this->assertSame(7, Outbox::retentionDays());
+        $this->assertSame('7', $this->formFields($this->page(), site_url(ADMIN_AREA . '/settings/email'))['logRetentionDays']);
+    }
+
+    public function testARetentionOfZeroSavesAndTurnsTheOutboxOff(): void
+    {
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'         => 'Ada',
+            'fromEmail'        => 'ada@example.com',
+            'logRetentionDays' => '0',
+        ])->assertSessionMissing('errors');
+
+        $this->assertSame(0, Outbox::retentionDays());
+    }
+
+    #[DataProvider('provideARetentionThatIsNotAWholeNumberOfDaysIsRejected')]
+    public function testARetentionThatIsNotAWholeNumberOfDaysIsRejected(string $days): void
+    {
+        setting('Email.logRetentionDays', 14);
+
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'         => 'Ada',
+            'fromEmail'        => 'ada@example.com',
+            'logRetentionDays' => $days,
+        ])->assertSessionHas('errors');
+
+        $this->assertSame(14, Outbox::retentionDays());
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function provideARetentionThatIsNotAWholeNumberOfDaysIsRejected(): iterable
+    {
+        return [
+            'negative' => ['-1'],
+            'text'     => ['forever'],
+            'decimal'  => ['1.5'],
+            'huge'     => ['99999'],
+        ];
+    }
+
+    public function testLeavingRetentionOutKeepsIt(): void
+    {
+        setting('Email.logRetentionDays', 14);
+
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'  => 'Ada',
+            'fromEmail' => 'ada@example.com',
+        ])->assertSessionMissing('errors');
+
+        $this->assertSame(14, Outbox::retentionDays());
     }
 
     public function testFromIsValidated(): void
