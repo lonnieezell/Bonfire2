@@ -4,7 +4,19 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 2 November 2026
+## 2 November 2026 (breaking change)
+
+Mail keeps working after this update, and you don't have to do anything. Without an `app/Config/Mailer.php`, Bonfire
+now makes a deprecated `legacy` mailer the default. It sends through the transport your `setting('Email.*')` values
+describe, read at send time, so a Mailable no longer lands in Postal's `null` mailer, which discards it.
+
+The breaking part: if your app sends Postal Mailables and has no `app/Config/Mailer.php`, those messages used to be
+discarded and now really go out, through PHP's `mail()` if nothing is configured. To keep discarding them, for example
+in development, publish a `Mailer.php` with `$default = 'null'`. Once that file exists, Bonfire steps aside completely.
+
+The bridge logs a deprecation notice and is removed in 2.0. See
+[The legacy mail bridge](../modules/email.md#the-legacy-mail-bridge) for how to leave it, and
+[ADR 0008](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0008-zero-touch-postal-upgrade.md) for why.
 
 `php spark bonfire:email-env` helps you move mail transport settings out of the database. It prints `.env` lines and an
 `app/Config/Mailer.php` snippet for your install, and labels where each value comes from. `--purge` then deletes the

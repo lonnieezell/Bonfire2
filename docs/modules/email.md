@@ -59,6 +59,74 @@ These are shown when **Protocol** is **SMTP**.
 | Timeout | How many seconds to wait for the mail server before giving up. |
 | Persistent connection | Keeps the connection to the mail server open between emails. Helps when the site sends many emails at once. |
 
+## The legacy mail bridge
+
+Bonfire's mail is moving to [Postal](https://github.com/lonnieezell/postal), which reads its mailers from
+`app/Config/Mailer.php`. Postal's own default mailer is `null`, which discards every message without an error. So an
+install without that file doesn't lose the mail it sends through Postal Mailables, Bonfire adds a mailer named `legacy`
+and makes it the default. You don't have to do anything for this.
+
+The `legacy` mailer sends through the transport your existing settings describe. They are read each time a message
+is sent, the same way as before: a value in the Settings table wins, then `email.*` in `.env`, then
+`app/Config/Email.php`. With nothing set anywhere, mail goes through PHP's `mail()` function.
+
+Mail sent with `service('email')` or Shield's `emailer()`, which is how Bonfire's activation and two-factor emails go
+out today, doesn't pass through the bridge and logs no notice. Without a Mailer config it already uses those same
+settings.
+
+!!! warning "Deprecated"
+
+    The bridge is removed in Bonfire 2.0. Until you leave it, the first send through it in each request logs a
+    deprecation notice. Notices are only written if `Config\Logger::$threshold` includes them.
+
+### Leaving the bridge
+
+The bridge turns off as soon as your app has its own `Config\Mailer` class, so set that file up before you deploy it.
+
+1. Run `php spark publish` to create `app/Config/Mailer.php`, or create it by hand.
+2. Set `$default` and define the mailer in that file. This one matches an SMTP server from the settings above:
+
+    ```php
+    <?php
+
+    namespace Config;
+
+    use Myth\Postal\Config\Mailer as PostalMailer;
+
+    class Mailer extends PostalMailer
+    {
+        public string $default = 'smtp';
+
+        public array $mailers = [
+            'smtp' => [
+                'transport'  => 'smtp',
+                'host'       => 'smtp.example.com',
+                'port'       => 587,
+                'encryption' => 'tls',
+                'authType'   => 'login',
+            ],
+        ];
+
+        public function __construct()
+        {
+            parent::__construct();
+
+            $this->mailers['smtp']['username'] = env('SMTP_USER');
+            $this->mailers['smtp']['password'] = env('SMTP_PASS');
+        }
+    }
+    ```
+
+3. Put the credentials in `.env`.
+
+!!! danger "The published file discards mail until you edit it"
+
+    The file `php spark publish` creates inherits `$default = 'null'`. Bonfire steps aside for any app Mailer config,
+    even one left at `null`, so mail is discarded from then on, with no error, until you set `$default`.
+
+The deprecation notice points to `php spark bonfire:email-env`, which prints these values for your install. See
+[Moving mail settings into code](#moving-mail-settings-into-code).
+
 ## Moving mail settings into code
 
 Mail transport settings are moving out of the database, to `.env` and an `app/Config/Mailer.php` file for
