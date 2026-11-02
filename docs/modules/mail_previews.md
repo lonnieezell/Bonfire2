@@ -33,7 +33,9 @@ Click an email to open it. There are three tabs:
 ## Send to me
 
 **Send to me** sends the preview to your own account's email address and nobody else. The email's own To, Cc and Bcc
-addresses are dropped, and there's no way to enter another address.
+addresses are dropped, along with its return path, and there's no way to enter another address. The one exception is
+your own code: an `email.composing` or `email.sending` listener that adds a recipient, such as a site-wide archive,
+still runs, because a preview goes through the normal send.
 
 Choose which of the mailers in `Config\Mailer` to send through. This overrides any mailer the Mailable names itself. The
 default mailer is selected to start with.
@@ -87,26 +89,11 @@ directly in `Mails/` are found, not those in subfolders.
 `email.preview` is granted to the `superadmin` group (through `email.*`) and the `admin` group. Anyone without it sees
 no menu item and gets a 404 from these pages.
 
-An install has its own copy of `app/Config/AuthGroups.php`, so after updating Bonfire the screen stays hidden until you add
-the permission there:
+An install has its own copy of `app/Config/AuthGroups.php`, so after updating Bonfire the screen stays hidden until you
+grant the permission:
 
-```php
-public array $permissions = [
-    // ...
-    'email.preview' => 'Can preview Mailables and send the previews to themselves',
-];
-
-public array $matrix = [
-    'superadmin' => [
-        // ...
-        'email.*',
-    ],
-    'admin' => [
-        // ...
-        'email.preview',
-    ],
-];
+```console
+php spark bonfire:permissions
 ```
 
-If you've saved group permissions from the admin, the matrix in the settings table wins over this file. Then also grant
-the permission from **Settings → Groups** once it's listed in `$permissions`.
+This adds the grants above once. You can also grant `email.preview` to any group from **Settings → Groups**.

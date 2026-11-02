@@ -80,7 +80,7 @@ final class MailPreviewsTest extends TestCase
         $mailer                                 = config('Mailer');
         [$mailer->mailers, $mailer->transports] = $this->mailerConfig;
 
-        foreach (['auth', 'bonfire', 'mailer', 'menus', 'widgets'] as $service) {
+        foreach (['auth', 'bonfire', 'mailer', 'menus', 'settings', 'widgets'] as $service) {
             Services::resetSingle($service);
         }
 
@@ -208,8 +208,33 @@ final class MailPreviewsTest extends TestCase
         $this->assertSame(['admin@example.com'], $this->addresses($email->to));
         $this->assertSame([], $email->cc);
         $this->assertSame([], $email->bcc);
+        $this->assertSame(['X-Campaign' => 'welcome'], $email->headers);
+        $this->assertNull($email->returnPath);
         $this->assertSame('site@example.com', $email->from?->email);
         $this->assertSame(WelcomeMail::class, $email->mailableClass);
+    }
+
+    public function testThePermissionsCommandGrantsPreviewsToAnInstallThatLacksThem(): void
+    {
+        $user = $this->createUser();
+        $user->addGroup('admin');
+
+        $matrix = config('AuthGroups')->matrix;
+
+        foreach (['superadmin', 'admin'] as $group) {
+            $matrix[$group] = array_values(array_diff($matrix[$group], ['email.*', 'email.preview']));
+        }
+
+        setting('AuthGroups.matrix', $matrix);
+        setting('AuthGroups.appliedGrants', []);
+
+        $this->assertFalse($user->can('email.preview'));
+        $this->assertFalse($this->admin->can('email.preview'));
+
+        command('bonfire:permissions');
+
+        $this->assertTrue($user->can('email.preview'));
+        $this->assertTrue($this->admin->can('email.preview'));
     }
 
     public function testSendFormOffersEachMailerAndHasNoRecipientField(): void
@@ -218,7 +243,7 @@ final class MailPreviewsTest extends TestCase
         $xpath    = $this->xpath($response);
         $form     = $xpath->query('//form[@data-send-to-me]')->item(0);
 
-        $this->assertSame(strtolower(route_to('mail-preview-send', self::WELCOME)), strtolower(parse_url($form->getAttribute('action'), PHP_URL_PATH)));
+        $this->assertSame(url_to('mail-preview-send', self::WELCOME), $form->getAttribute('action'));
         $this->assertSame('post', $form->getAttribute('method'));
 
         $options = [];

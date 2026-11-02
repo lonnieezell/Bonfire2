@@ -40,14 +40,14 @@ final readonly class MailablePreviews
     /**
      * Every Mailable with its subject or, if it throws while building, its error.
      *
-     * @return array<string, list<array{class: class-string, slug: string, name: string, subject: string|null, error: string|null}>> by module
+     * @return array<string, list<array{slug: string, name: string, subject: string|null, error: string|null}>> by module
      */
     public function grouped(): array
     {
         $groups = [];
 
         foreach ($this->previewer->discover() as $class) {
-            $entry = ['class' => $class, 'slug' => self::slug($class), 'name' => self::name($class), 'subject' => null, 'error' => null];
+            $entry = ['slug' => self::slug($class), 'name' => self::name($class), 'subject' => null, 'error' => null];
 
             try {
                 $entry['subject'] = $this->previewer->subject($class);
@@ -105,9 +105,17 @@ final readonly class MailablePreviews
                 return SendResult::fail(lang('Email.previewNoFrom'));
             }
 
-            $email->to  = [];
-            $email->cc  = [];
-            $email->bcc = [];
+            // Sendmail and mail() read recipients from the headers too, and a bounce goes to the return path.
+            $email->to         = [];
+            $email->cc         = [];
+            $email->bcc        = [];
+            $email->returnPath = null;
+            $email->rawMessage = null;
+            $email->headers    = array_filter(
+                $email->headers,
+                static fn (string $name): bool => ! in_array(strtolower($name), ['to', 'cc', 'bcc'], true),
+                ARRAY_FILTER_USE_KEY,
+            );
             $email->to($address);
 
             return service('mailer')->mailer($mailer)->send($email);

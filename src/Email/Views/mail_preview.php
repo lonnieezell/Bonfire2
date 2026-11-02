@@ -1,7 +1,7 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
-<x-page-head back="<?= route_to('mail-previews') ?>" backLabel="<?= esc(lang('Email.previewsModTitle'), 'attr') ?>" title="<?= esc($preview->subject ?? $preview->class, 'attr') ?>" subtitle="<?= esc($preview->class, 'attr') ?>"></x-page-head>
+<x-page-head back="<?= esc(url_to('mail-previews'), 'attr') ?>" backLabel="<?= esc(lang('Email.previewsModTitle'), 'attr') ?>" title="<?= esc($preview->subject ?? $preview->class, 'attr') ?>" subtitle="<?= esc($preview->class, 'attr') ?>"></x-page-head>
 
 <?php if ($preview->error !== null) : ?>
     <x-admin-box>
@@ -9,7 +9,7 @@
     </x-admin-box>
 <?php else : ?>
     <x-admin-box title="<?= esc(lang('Email.previewSendToMe'), 'attr') ?>" description="<?= esc(lang('Email.previewSendToMeDesc', [$address]), 'attr') ?>">
-        <form action="<?= route_to('mail-preview-send', $slug) ?>" method="post" class="d-flex gap-2" data-send-to-me>
+        <form action="<?= url_to('mail-preview-send', $slug) ?>" method="post" class="d-flex gap-2" data-send-to-me>
             <?= csrf_field() ?>
             <select name="mailer" class="form-select bf-input-narrow" aria-label="<?= esc(lang('Email.previewMailer'), 'attr') ?>">
                 <?php foreach ($mailers as $mailer) : ?>

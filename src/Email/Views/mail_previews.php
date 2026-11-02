@@ -22,7 +22,7 @@
                 <tbody>
                     <?php foreach ($mails as $mail) : ?>
                         <tr data-mailable="<?= esc($mail['slug'], 'attr') ?>">
-                            <td><a href="<?= route_to('mail-preview', $mail['slug']) ?>"><?= esc($mail['name']) ?></a></td>
+                            <td><a href="<?= url_to('mail-preview', $mail['slug']) ?>"><?= esc($mail['name']) ?></a></td>
                             <?php if ($mail['error'] !== null) : ?>
                                 <td class="text-danger" data-error><?= esc($mail['error']) ?></td>
                             <?php else : ?>

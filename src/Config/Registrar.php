@@ -109,12 +109,17 @@ class Registrar
     {
         return [
             'permissions' => [
-                'users.export' => "Can download a user's personal data",
-                'users.erase'  => "Can erase a user's personal data",
+                'users.export'  => "Can download a user's personal data",
+                'users.erase'   => "Can erase a user's personal data",
+                'email.preview' => 'Can preview Mailables and send the previews to themselves',
             ],
             'moduleGrants' => [
                 'privacy' => [
                     'admin' => ['users.export'],
+                ],
+                'email' => [
+                    'superadmin' => ['email.*'],
+                    'admin'      => ['email.preview'],
                 ],
             ],
         ];

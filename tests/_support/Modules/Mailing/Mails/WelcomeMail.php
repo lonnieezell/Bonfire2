@@ -27,5 +27,12 @@ final class WelcomeMail extends Mailable implements Previewable
             ->subject('Welcome aboard')
             ->html(self::HTML)
             ->text('Welcome, in plain text');
+
+        // Sendmail and mail() read recipients from the headers.
+        $this->email->header('to', 'header-to@example.com')
+            ->header('Cc', 'header-cc@example.com')
+            ->header('BCC', 'header-bcc@example.com')
+            ->header('X-Campaign', 'welcome')
+            ->returnPath('bounces@example.com');
     }
 }
