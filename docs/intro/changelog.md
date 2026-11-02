@@ -6,6 +6,9 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 2 November 2026 (breaking change)
 
+**Mail Previews' Send to me drops more recipient headers.** `Resent-*` headers and `Disposition-Notification-To` are
+removed from the preview, so sendmail can't deliver it, or a read receipt, to anyone but you. Reply-To is kept.
+
 **Mail Previews' Send to me refuses a looping failover chain and hides secrets in errors.** A chain that loops now shows an
 error and sends nothing, where before it crashed PHP. A failed send shows the error with the mailer's known secrets, and
 those of its failover children, removed, the same as the test send in Settings → Email.

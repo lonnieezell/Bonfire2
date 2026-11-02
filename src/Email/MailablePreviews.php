@@ -120,7 +120,8 @@ final readonly class MailablePreviews
                 return SendResult::fail(lang('Email.previewNoFrom'));
             }
 
-            // Sendmail and mail() read recipients from the headers too, and a bounce goes to the return path.
+            // Sendmail and mail() read recipients from the headers too (Resent-* included), and a bounce goes to
+            // the return path. A read receipt would go to the original address.
             $email->to         = [];
             $email->cc         = [];
             $email->bcc        = [];
@@ -128,7 +129,8 @@ final readonly class MailablePreviews
             $email->rawMessage = null;
             $email->headers    = array_filter(
                 $email->headers,
-                static fn (string $name): bool => ! in_array(strtolower($name), ['to', 'cc', 'bcc'], true),
+                static fn (string $name): bool => ! in_array(strtolower($name), ['to', 'cc', 'bcc', 'disposition-notification-to'], true)
+                    && ! str_starts_with(strtolower($name), 'resent-'),
                 ARRAY_FILTER_USE_KEY,
             );
             $email->to($address);
