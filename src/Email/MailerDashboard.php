@@ -155,6 +155,25 @@ final readonly class MailerDashboard
      */
     public function sendTest(string $name, string $address): SendResult
     {
+        // The email.composing listener fills it in. Without one, transports would
+        // report success for a message most servers reject.
+        if (trim((string) setting('Email.fromEmail')) === '') {
+            return SendResult::fail(lang('Email.previewNoFrom'));
+        }
+
+        return $this->deliver($name, (new Email())
+            ->to($address)
+            ->subject(lang('Email.testSubject'))
+            ->text(lang('Email.testBody')));
+    }
+
+    /**
+     * Sends the email through the named mailer, refusing one that is not defined
+     * or whose chain loops. Failures come back in the result, never as exceptions,
+     * with known secrets removed.
+     */
+    public function deliver(string $name, Email $email): SendResult
+    {
         if (! isset($this->config->mailers[$name])) {
             return SendResult::fail(lang('Email.previewUnknownMailer'));
         }
@@ -164,19 +183,8 @@ final readonly class MailerDashboard
             return SendResult::fail(lang('Email.mailerLoops'));
         }
 
-        // The email.composing listener fills it in. Without one, transports would
-        // report success for a message most servers reject.
-        if (trim((string) setting('Email.fromEmail')) === '') {
-            return SendResult::fail(lang('Email.previewNoFrom'));
-        }
-
         try {
-            $result = service('mailer')->mailer($name)->send(
-                (new Email())
-                    ->to($address)
-                    ->subject(lang('Email.testSubject'))
-                    ->text(lang('Email.testBody')),
-            );
+            $result = service('mailer')->mailer($name)->send($email);
         } catch (Throwable $e) {
             return SendResult::fail($this->scrub($name, $e->getMessage()));
         }

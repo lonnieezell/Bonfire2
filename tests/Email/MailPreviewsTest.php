@@ -6,6 +6,7 @@ namespace Tests\Email;
 
 use Bonfire\Auth\Mails\ActivationMail;
 use Bonfire\Auth\Mails\TwoFactorMail;
+use Bonfire\Email\MailablePreviews;
 use Bonfire\Users\User;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\I18n\Time;
@@ -16,6 +17,7 @@ use DOMElement;
 use DOMXPath;
 use Myth\Postal\Address;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\Email\FailingTransport;
 use Tests\Support\Email\RecordingTransport;
 use Tests\Support\Mails\BrokenMail;
 use Tests\Support\Modules\Mailing\Mails\WelcomeMail;
@@ -300,6 +302,61 @@ final class MailPreviewsTest extends TestCase
         $this->send(self::WELCOME, ['mailer' => 'second'])->assertRedirect();
 
         $this->assertSame([], RecordingTransport::$sent);
+    }
+
+    public function testSendingThroughALoopingChainFailsInsteadOfOverflowingTheStack(): void
+    {
+        $mailer                    = config('Mailer');
+        $mailer->mailers['loop-a'] = ['transport' => 'failover', 'chain' => ['loop-b']];
+        $mailer->mailers['loop-b'] = ['transport' => 'failover', 'chain' => ['loop-a']];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'loop-a');
+
+        $this->assertFalse($result->success);
+        $this->assertNotSame('', (string) $result->error);
+        $this->assertSame([], RecordingTransport::$sent);
+    }
+
+    /**
+     * @param array<string, mixed> $definition
+     */
+    #[DataProvider('provideFailuresHaveKnownSecretsRemoved')]
+    public function testFailuresHaveKnownSecretsRemoved(array $definition, string $expected): void
+    {
+        $mailer                      = config('Mailer');
+        $mailer->transports['fails'] = FailingTransport::class;
+        $mailer->mailers['leaky']    = ['transport' => 'fails', ...$definition];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'leaky');
+
+        $this->assertFalse($result->success);
+        $this->assertSame($expected, $result->error);
+    }
+
+    public static function provideFailuresHaveKnownSecretsRemoved(): iterable
+    {
+        yield 'returned by the transport' => [
+            ['password' => 'hunter2', 'error' => 'Login hunter2 refused'],
+            'Login *** refused',
+        ];
+
+        yield 'thrown by the transport' => [
+            ['apiKey' => 'abc123', 'error' => 'Bad key abc123', 'throw' => true],
+            'Bad key ***',
+        ];
+    }
+
+    public function testFailuresHaveTheSecretsOfFailoverChildrenRemoved(): void
+    {
+        $mailer                      = config('Mailer');
+        $mailer->transports['fails'] = FailingTransport::class;
+        $mailer->mailers['leaky']    = ['transport' => 'fails', 'password' => 'hunter2', 'error' => 'Login hunter2 refused'];
+        $mailer->mailers['chain']    = ['transport' => 'failover', 'chain' => ['leaky']];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'chain');
+
+        $this->assertFalse($result->success);
+        $this->assertStringNotContainsString('hunter2', (string) $result->error);
     }
 
     public function testSendingAMailableThatThrowsRedirectsWithoutSending(): void

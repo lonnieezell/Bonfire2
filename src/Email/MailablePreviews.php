@@ -112,10 +112,6 @@ final readonly class MailablePreviews
      */
     public function send(string $class, string $address, string $mailer): SendResult
     {
-        if (! array_key_exists($mailer, config('Mailer')->mailers)) {
-            return SendResult::fail(lang('Email.previewUnknownMailer'));
-        }
-
         try {
             $email = $class::previewInstance()->render();
 
@@ -137,7 +133,7 @@ final readonly class MailablePreviews
             );
             $email->to($address);
 
-            return service('mailer')->mailer($mailer)->send($email);
+            return (new MailerDashboard())->deliver($mailer, $email);
         } catch (Throwable $e) {
             return SendResult::fail($e->getMessage());
         }
