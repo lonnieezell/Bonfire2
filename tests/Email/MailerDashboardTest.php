@@ -135,6 +135,11 @@ final class MailerDashboardTest extends TestCase
             ['dsn' => ['smtp://***@mail.example.com', 'shown']],
         ];
 
+        yield 'a URL password holding a space is removed whole' => [
+            ['dsn' => 'smtp://user:pa ss@mail.example.com'],
+            ['dsn' => ['smtp://***@mail.example.com', 'shown']],
+        ];
+
         yield 'a URL without credentials is left alone' => [
             ['endpoint' => 'https://api.example.com/send'],
             ['endpoint' => ['https://api.example.com/send', 'shown']],
@@ -181,6 +186,21 @@ final class MailerDashboardTest extends TestCase
         $this->assertSame([true, true, true, false, false], array_column($mailers, 'loops'));
     }
 
+    public function testFlagsAChainThatCannotSendBecauseOfAChild(): void
+    {
+        $mailers = $this->dashboard([
+            'missing' => ['transport' => 'failover', 'chain' => ['leaf', 'gone']],
+            'badKid'  => ['transport' => 'failover', 'chain' => ['odd']],
+            'empty'   => ['transport' => 'failover', 'chain' => []],
+            'nested'  => ['transport' => 'failover', 'chain' => ['missing']],
+            'fine'    => ['transport' => 'failover', 'chain' => ['leaf']],
+            'odd'     => ['transport' => 'nope'],
+            'leaf'    => ['transport' => 'log'],
+        ])->mailers();
+
+        $this->assertSame([true, true, true, true, false, false, false], array_column($mailers, 'brokenChain'));
+    }
+
     public function testFlagsAnUnregisteredTransport(): void
     {
         $mailers = $this->dashboard([
@@ -212,6 +232,26 @@ final class MailerDashboardTest extends TestCase
         yield 'a renamed null default' => [['off' => ['transport' => 'null']], 'off', ['nullDefault']];
 
         yield 'undefined default' => [['main' => ['transport' => 'log']], 'gone', ['undefinedDefault']];
+
+        yield 'a failover default led by a null mailer' => [
+            ['main' => ['transport' => 'failover', 'chain' => ['off', 'log']], 'off' => ['transport' => 'null'], 'log' => ['transport' => 'log']],
+            'main',
+            ['nullDefault'],
+        ];
+
+        yield 'an unregistered default' => [['main' => ['transport' => 'nope']], 'main', ['brokenDefault']];
+
+        yield 'a looping default' => [
+            ['a' => ['transport' => 'failover', 'chain' => ['b']], 'b' => ['transport' => 'failover', 'chain' => ['a']]],
+            'a',
+            ['brokenDefault'],
+        ];
+
+        yield 'a default whose chain lists a missing mailer' => [
+            ['a' => ['transport' => 'failover', 'chain' => ['gone']]],
+            'a',
+            ['brokenDefault'],
+        ];
     }
 
     public function testWarnsAboutLeftoverRowsOnlyOnceTheAppHasItsOwnConfig(): void
@@ -319,6 +359,16 @@ final class MailerDashboardTest extends TestCase
         yield 'a longer secret holding a shorter one' => [
             ['password' => 'hunter', 'token' => 'hunter2', 'error' => 'hunter2 and hunter'],
             '*** and ***',
+        ];
+
+        yield 'a URL password holding a colon' => [
+            ['dsn' => 'smtp://user:pa:ss@mail.example.com', 'error' => 'Bad password pa:ss, pass'],
+            'Bad password ***, pass',
+        ];
+
+        yield 'short and numeric values under secret keys stay readable' => [
+            ['tokenTtl' => 5, 'auth' => 'on', 'error' => 'SMTP 535 five on'],
+            'SMTP 535 five on',
         ];
 
         yield 'URL credentials, encoded or not' => [

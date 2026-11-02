@@ -5,6 +5,7 @@ $warningText = [
     'bridge'           => lang('Email.warningBridge'),
     'leftoverRows'     => lang('Email.warningLeftoverRows'),
     'nullDefault'      => lang('Email.warningNullDefault'),
+    'brokenDefault'    => lang('Email.warningBrokenDefault', [$defaultMailer]),
     'undefinedDefault' => lang('Email.warningUndefinedDefault', [$defaultMailer]),
 ];
 ?>
@@ -30,6 +31,9 @@ $warningText = [
 
                 <?php if ($mailer['unknownTransport']) : ?>
                     <div class="bf-callout bf-callout-warn" data-problem="unknownTransport"><?= lang('Email.mailerUnknownTransport') ?></div>
+                <?php endif ?>
+                <?php if ($mailer['brokenChain']) : ?>
+                    <div class="bf-callout bf-callout-warn" data-problem="brokenChain"><?= lang('Email.mailerBrokenChain') ?></div>
                 <?php endif ?>
                 <?php if ($mailer['loops']) : ?>
                     <div class="bf-callout bf-callout-warn" data-problem="loops"><?= lang('Email.mailerLoops') ?></div>
@@ -105,13 +109,13 @@ $warningText = [
 
         <x-admin-box title="<?= esc(lang('Email.from'), 'attr') ?>" description="<?= esc(lang('Email.fromDesc'), 'attr') ?>">
             <x-setting-row label="<?= esc(lang('Email.fromName'), 'attr') ?>" for="fromName">
-                <input type="text" class="form-control" name="fromName" id="fromName" value="<?= esc(old('fromName', setting('Email.fromName'))) ?>">
+                <input type="text" class="form-control" name="fromName" id="fromName" value="<?= esc(old('fromName', setting('Email.fromName'), false), 'attr') ?>">
                 <?php if (has_error('fromName')) : ?>
                     <p class="text-danger small mb-0"><?= error('fromName') ?></p>
                 <?php endif ?>
             </x-setting-row>
             <x-setting-row label="<?= esc(lang('Email.fromEmail'), 'attr') ?>" for="fromEmail">
-                <input type="email" class="form-control" name="fromEmail" id="fromEmail" value="<?= esc(old('fromEmail', setting('Email.fromEmail'))) ?>" />
+                <input type="email" class="form-control" name="fromEmail" id="fromEmail" value="<?= esc(old('fromEmail', setting('Email.fromEmail'), false), 'attr') ?>" />
                 <?php if (has_error('fromEmail')) : ?>
                     <p class="text-danger small mb-0"><?= error('fromEmail') ?></p>
                 <?php endif ?>

@@ -32,10 +32,15 @@ final readonly class MailerDashboard
     private const SECRET_KEYS = '/pass|secret|key|token|credential|auth/i';
 
     /**
-     * The credentials part of a URL. It runs up to the last @ of the URL, because a
-     * raw password can hold a slash or an @ and hiding too much is the safe mistake.
+     * The credentials part of a URL. It runs up to the last @ of the value, because
+     * a raw password can hold anything and hiding too much is the safe mistake.
      */
-    private const URL_CREDENTIALS = '#([a-z][a-z0-9+.-]*://)(\S*)@#i';
+    private const URL_CREDENTIALS = '#([a-z][a-z0-9+.-]*://)(.*)@#is';
+
+    /**
+     * The shortest value worth removing from an error message.
+     */
+    private const MIN_SECRET_LENGTH = 4;
 
     public function __construct(private PostalMailer $config)
     {
@@ -52,6 +57,7 @@ final readonly class MailerDashboard
      *     unknownTransport: bool,
      *     chain: list<array{name: string, defined: bool}>|null,
      *     loops: bool,
+     *     brokenChain: bool,
      *     settings: list<array{key: string, value: string, masked: bool}>
      * }>
      */
@@ -81,8 +87,9 @@ final readonly class MailerDashboard
                     fn (string $child): array => ['name' => $child, 'defined' => isset($this->config->mailers[$child])],
                     $chain,
                 ),
-                'loops'    => $this->loops($name),
-                'settings' => $this->rows($definition),
+                'loops'       => $this->loops($name),
+                'brokenChain' => $chain !== null && ! $this->loops($name) && ! $this->canSend($name),
+                'settings'    => $this->rows($definition),
             ];
         }
 
@@ -92,20 +99,22 @@ final readonly class MailerDashboard
     /**
      * What's wrong with the mail setup as a whole.
      *
-     * @return list<'bridge'|'leftoverRows'|'nullDefault'|'undefinedDefault'>
+     * @return list<'bridge'|'brokenDefault'|'leftoverRows'|'nullDefault'|'undefinedDefault'>
      */
     public function warnings(): array
     {
         $warnings = [];
 
-        if ($this->config::class === PostalMailer::class) {
+        if (LegacySettingsTransport::isActive()) {
             $warnings[] = 'bridge';
-        } elseif (LegacySettingsTransport::storedRows()->countAllResults() > 0) {
+        } elseif (StoredTransportSettings::rows()->countAllResults() > 0) {
             $warnings[] = 'leftoverRows';
         }
 
         if (! isset($this->config->mailers[$this->config->default])) {
             $warnings[] = 'undefinedDefault';
+        } elseif (! $this->canSend($this->config->default)) {
+            $warnings[] = 'brokenDefault';
         } elseif ($this->delivery($this->config->default) === 'discarded') {
             $warnings[] = 'nullDefault';
         }
@@ -114,12 +123,19 @@ final readonly class MailerDashboard
     }
 
     /**
-     * What this mailer does with a message it reports as sent.
+     * What this mailer does with a message it reports as sent. A chain goes by the
+     * first mailer it tries, since a later one's outcome can't be told in advance.
      *
      * @return 'discarded'|'logged'|'sent'
      */
     public function delivery(string $name): string
     {
+        $first = $this->loops($name) ? null : ($this->chain($name)[0] ?? null);
+
+        if ($first !== null) {
+            return $this->delivery($first);
+        }
+
         $class = (string) $this->transportClass($name);
 
         return match (true) {
@@ -216,7 +232,8 @@ final readonly class MailerDashboard
                 $leaves = [$value];
 
                 array_walk_recursive($leaves, static function (mixed $leaf) use (&$secrets): void {
-                    if (is_string($leaf) || is_int($leaf) || is_float($leaf)) {
+                    // A shorter value, such as a TTL or an on/off word, would only garble the message.
+                    if ((is_string($leaf) || is_int($leaf) || is_float($leaf)) && strlen((string) $leaf) >= self::MIN_SECRET_LENGTH) {
                         $secrets[] = (string) $leaf;
                     }
                 });
@@ -224,7 +241,7 @@ final readonly class MailerDashboard
                 $secrets = [...$secrets, ...$this->secretsIn($value)];
             } elseif (is_string($value) && preg_match_all(self::URL_CREDENTIALS, $value, $matches) > 0) {
                 foreach ($matches[2] as $credentials) {
-                    $password  = substr((string) strrchr(':' . $credentials, ':'), 1);
+                    $password  = explode(':', $credentials, 2)[1] ?? $credentials;
                     $secrets[] = $credentials;
                     $secrets[] = rawurldecode($credentials);
                     $secrets[] = $password;
@@ -324,6 +341,31 @@ final readonly class MailerDashboard
         $chain = $this->config->mailers[$name]['chain'] ?? [];
 
         return is_array($chain) ? array_values(array_map(strval(...), array_filter($chain, is_scalar(...)))) : [];
+    }
+
+    /**
+     * Whether Postal can build this mailer: it resolves every child up front, so
+     * one bad child stops the whole chain, even when an earlier one would work.
+     */
+    private function canSend(string $name): bool
+    {
+        if ($this->transportClass($name) === null || $this->loops($name)) {
+            return false;
+        }
+
+        $chain = $this->chain($name);
+
+        if ($chain === []) {
+            return false;
+        }
+
+        foreach ($chain ?? [] as $child) {
+            if (! $this->canSend($child)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -19,7 +19,8 @@ inside a URL are hidden too, so `smtp://user:password@host` shows as `smtp://***
 !!! warning "What masking can't catch"
 
     Masking goes by the setting's name, so usernames, hosts and paths show in full. So does a secret under any other
-    name, or one in a URL's path or query string, such as `https://hooks.example.com/abc123`. Give secrets in a custom
+    name, one in a URL's path or query string, such as `https://hooks.example.com/abc123`, or one in a value with no
+    `scheme://`, such as `user:password@host`. Give secrets in a custom
     transport a name the pattern matches. `authType` shows as **Set** even though it only names a login method, because
     its name matches `auth`.
 
@@ -31,11 +32,13 @@ A failover mailer lists the mailers it tries, in order, with a link to each.
 | --- | --- | --- |
 | The legacy mailer is in use | The app has no `app/Config/Mailer.php`, so mail goes through the [legacy mail bridge](#the-legacy-mail-bridge). | Run `php spark bonfire:email-env` and follow [Moving mail settings into code](#moving-mail-settings-into-code). |
 | Old mail settings are still stored | The app has its own Mailer config, but the settings table still holds old transport values, possibly a plain text password. | Run `php spark bonfire:email-env --purge`. |
-| The default mailer discards mail | The default mailer uses the `null` transport, so nothing is sent and nothing reports an error. | Set `$default` in `app/Config/Mailer.php`. |
+| The default mailer discards mail | The default mailer, or the first mailer in its failover chain, uses the `null` transport, so nothing is sent and nothing reports an error. | Set `$default` in `app/Config/Mailer.php`. |
 | The default mailer isn't defined | `$default` names a mailer that isn't in `$mailers`, so sends fail. | Fix `$default` or add the mailer. |
+| The default mailer can't send | Its transport isn't registered, or its failover chain is empty, loops, or has a mailer that can't be built. | Fix the problem shown on that mailer. |
 
 A mailer also shows a warning if its transport isn't registered in `$transports`, or if its failover chain loops back
-on itself. A chain entry that isn't defined is marked and has no link.
+on itself, is empty, or has a mailer that can't be built. Postal builds the whole chain before it sends, so one bad
+mailer stops all of them, even an earlier one that would work. A chain entry that isn't defined has no link.
 
 ## Send a test message
 
@@ -44,10 +47,11 @@ address, and click **Send test**. The result appears above the form.
 
 - It uses the saved From name and address, so save any changes to them first. Without a From address it fails.
 - A failure shows the mailer's error, with the secrets the screen knows about replaced by `***`. An encoded secret
-  can't be recognised, so it would still show.
+  can't be recognised, and values under 4 characters are left alone, so those would still show.
 - The `null` transport and the `log` transport report success without delivering anything, so the result says the
-  message was discarded or logged.
-- A failover mailer reports success if any mailer in its chain sent the message. It doesn't say which one did.
+  message was discarded or logged. A failover mailer goes by the first mailer in its chain.
+- A failover mailer reports success if any mailer in its chain accepted the message. It doesn't say which one did. If a
+  real mailer fails and a later `null` or `log` mailer takes over, the result still says the message was sent.
 - It can't send through a failover chain that loops.
 
 ## From

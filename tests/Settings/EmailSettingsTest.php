@@ -76,6 +76,18 @@ final class EmailSettingsTest extends TestCase
         $this->assertSame('ada@example.com', setting('Email.fromEmail'));
     }
 
+    public function testRejectedFromFieldsComeBackAsTyped(): void
+    {
+        $this->actingAs($this->user)->post('/admin/settings/email', [
+            'fromName'  => 'Smith & Co',
+            'fromEmail' => 'nope',
+        ]);
+
+        $field = $this->xpath($this->pageAfterRedirect())->query('//input[@name="fromName"]')->item(0);
+
+        $this->assertSame('Smith & Co', $field?->getAttribute('value'));
+    }
+
     public function testSavingIgnoresTransportFields(): void
     {
         $this->actingAs($this->user)->post('/admin/settings/email', [
@@ -177,6 +189,7 @@ final class EmailSettingsTest extends TestCase
         $this->assertCount(1, $xpath->query('//*[@data-warning="undefinedDefault"]'));
         $this->assertCount(1, $xpath->query('//*[@data-mailer="odd"]//*[@data-problem="unknownTransport"]'));
         $this->assertCount(1, $xpath->query('//*[@data-mailer="a"]//*[@data-problem="loops"]'));
+        $this->assertCount(1, $xpath->query('//*[@data-mailer="both"]//*[@data-problem="brokenChain"]'));
     }
 
     public function testFailoverChainsLinkToDefinedChildrenOnly(): void
@@ -254,6 +267,18 @@ final class EmailSettingsTest extends TestCase
         setting('Email.fromEmail', 'site@example.com');
 
         $this->sendTestMail('main', 'a@example.com, b@example.com')->assertSessionHas('errors');
+
+        $this->assertSame([], RecordingTransport::$sent);
+    }
+
+    public function testTestSendRejectsFieldsThatAreNotStrings(): void
+    {
+        $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
+        setting('Email.fromEmail', 'site@example.com');
+
+        foreach ([['mailer' => ['main'], 'recipient' => 'a@example.com'], ['mailer' => 'main', 'recipient' => ['a@example.com']]] as $fields) {
+            $this->actingAs($this->user)->post(route_to('email-test-send'), [csrf_token() => csrf_hash(), ...$fields])->assertSessionHas('errors');
+        }
 
         $this->assertSame([], RecordingTransport::$sent);
     }
