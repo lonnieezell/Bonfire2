@@ -18,6 +18,11 @@ The bridge logs a deprecation notice and is removed in 2.0. See
 [The legacy mail bridge](../modules/email.md#the-legacy-mail-bridge) for how to leave it, and
 [ADR 0008](https://github.com/lonnieezell/Bonfire2/blob/develop/docs/adr/0008-zero-touch-postal-upgrade.md) for why.
 
+`php spark bonfire:email-env` helps you move mail transport settings out of the database. It prints `.env` lines and an
+`app/Config/Mailer.php` snippet for your install, and labels where each value comes from. `--purge` then deletes the
+transport settings from the settings table, including any plain text SMTP password, and refuses to run until the app
+has its own Mailer config. See [Moving mail settings into code](../modules/email.md#moving-mail-settings-into-code).
+
 ## 30 October 2026
 
 The users list has an **Erase personal data** action, for one user or many. It runs every registered personal data

@@ -124,5 +124,49 @@ The bridge turns off as soon as your app has its own `Config\Mailer` class, so s
     The file `php spark publish` creates inherits `$default = 'null'`. Bonfire steps aside for any app Mailer config,
     even one left at `null`, so mail is discarded from then on, with no error, until you set `$default`.
 
-The deprecation notice points to `php spark bonfire:email-env`, which will print these values for your install. That
-command isn't available yet, so use the steps above for now.
+The deprecation notice points to `php spark bonfire:email-env`, which prints these values for your install. See
+[Moving mail settings into code](#moving-mail-settings-into-code).
+
+## Moving mail settings into code
+
+Mail transport settings are moving out of the database, to `.env` and an `app/Config/Mailer.php` file for
+[Postal](https://github.com/lonnieezell/postal). This command prints both for your install:
+
+```console
+php spark bonfire:email-env
+```
+
+It writes no files. It reads each value through `setting()` and prints:
+
+- where each value comes from: `database`, `Config\Email`, or `.env`
+- the `.env` lines, such as `mailer.mailers.smtp.host`, which replace any `email.*` transport keys you have. Keep
+  `email.fromEmail` and `email.fromName`: your From address is still read from them
+- a `Mailer.php` that defines a matching `smtp`, `sendmail` or `mail` mailer and makes it the default. The username
+  and password are blank there, because they are set by the `.env` lines
+
+With no database rows and only framework defaults in `Config\Email`, it prints "Nothing to migrate".
+
+!!! warning "Some values don't survive `.env`"
+
+    CodeIgniter trims quotes from the ends of a config override, turns the words `true` and `false` into booleans,
+    expands `${name}`, and reads `.env` one line at a time. The command prints a warning under any line this affects.
+    Change that value, or set it from `env('...')` in the constructor of your `Mailer.php`.
+
+### Removing the old settings
+
+SMTP passwords are stored in the settings table as plain text. Once the new `Mailer.php` is in place, delete them:
+
+```console
+php spark bonfire:email-env --purge
+```
+
+It asks first; add `--force` to skip the question. It removes the transport keys only: `protocol`, `mailPath`,
+`SMTPHost`, `SMTPPort`, `SMTPUser`, `SMTPPass`, `SMTPCrypto`, `SMTPTimeout` and `SMTPKeepAlive`, including any stored
+under a settings context. The command only prints values it would send with, so it reports how many rows are under a
+context without showing them: copy any you still need before purging. Your From name and address stay. Values in
+`Config\Email` or `.env` aren't touched, so if your credentials are in `.env` `email.*` keys, you only need to rename
+them.
+
+`--purge` refuses to run while the app has no Mailer config of its own, even with `--force`, because those settings are
+still what your mail is sent with. Purging them would fall back to the `Config\Email` defaults and send through PHP's
+`mail()`.
