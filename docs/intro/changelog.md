@@ -4,6 +4,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 3 November 2026
+
+**Mail Previews' Send to me no longer claims a discarded or logged mail was sent.** Sending through the `null` mailer now
+says the message was discarded, and through `log` that it was written to the log, the same as the test send in
+Settings → Email. A failover chain is judged by its first mailer.
+
 ## 2 November 2026 (breaking change)
 
 **Mail Previews' Send to me drops more recipient headers.** `Resent-*` headers and `Disposition-Notification-To` are
