@@ -2203,7 +2203,9 @@ magic link is still sent by Shield and isn't a Mailable, so it has no preview.</
 </table>
 <h2 id="send-to-me">Send to me</h2>
 <p><strong>Send to me</strong> sends the preview to your own account's email address and nobody else. The email's own To, Cc and Bcc
-addresses are dropped, along with its return path, and there's no way to enter another address. The one exception is
+addresses are dropped, along with its return path, any <code>Resent-*</code> headers and any read-receipt request
+(<code>Disposition-Notification-To</code>), and there's no way to enter another address. The email's Reply-To stays, since it's part
+of what you're previewing, so a reply to a preview goes to the Mailable's own reply-to address. The one exception is
 your own code: an <code>email.composing</code> or <code>email.sending</code> listener that adds a recipient, such as a site-wide archive,
 still runs, because a preview goes through the normal send.</p>
 <p>Choose which of the mailers in <code>Config\Mailer</code> to send through. This overrides any mailer the Mailable names itself. The
