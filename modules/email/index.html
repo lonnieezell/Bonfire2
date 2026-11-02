@@ -850,55 +850,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#set-up-smtp" class="md-nav__link">
+  <a href="#mailers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Set up SMTP
+        Mailers
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Settings
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Settings">
+    <nav class="md-nav" aria-label="Mailers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#from" class="md-nav__link">
+  <a href="#warnings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delivery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delivery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smtp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SMTP
+        Warnings
       
     </span>
   </a>
@@ -907,6 +874,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#send-a-test-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Send a test message
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2104,55 +2093,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#set-up-smtp" class="md-nav__link">
+  <a href="#mailers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Set up SMTP
+        Mailers
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Settings
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Settings">
+    <nav class="md-nav" aria-label="Mailers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#from" class="md-nav__link">
+  <a href="#warnings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#delivery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delivery
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#smtp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SMTP
+        Warnings
       
     </span>
   </a>
@@ -2161,6 +2117,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#send-a-test-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Send a test message
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2333,49 +2311,80 @@
 
 
 <h1 id="email-settings">Email Settings</h1>
-<p>The Email settings screen controls how your site sends email, such as password resets, email verification codes and
+<p>The Email settings screen shows how your site sends email, such as password resets, email verification codes and
 two-factor login codes. Open <strong>Email</strong> under <strong>Settings</strong> in the sidebar. You need the <code>admin.settings</code> permission.</p>
-<p>Change what you need, then click <strong>Save Settings</strong>.</p>
-<h2 id="set-up-smtp">Set up SMTP</h2>
-<p>Most email providers, such as Mailgun, Postmark, Amazon SES or your web host, give you SMTP details to send through.</p>
-<ol>
-<li>Under <strong>From</strong>, enter the name and address your emails come from. Use an address your provider lets you send
-   from.</li>
-<li>Under <strong>Delivery</strong>, choose <strong>SMTP</strong>.</li>
-<li>Enter the <strong>Host</strong>, <strong>Username</strong> and <strong>Password</strong> your provider gave you.</li>
-<li>
-<p>Choose the <strong>Port</strong> and <strong>Encryption</strong> your provider asks for. The usual pairs are:</p>
+<p>You can't change mailers or their credentials here. They live in <code>app/Config/Mailer.php</code> and <code>.env</code>, and Bonfire never
+stores them. See the <a href="https://lonnieezell.github.io/postal/">Postal docs</a> for how to configure a mailer. This screen
+lets you check that setup, send a test message, and set the From name and address.</p>
+<h2 id="mailers">Mailers</h2>
+<p>The screen lists every mailer in <code>config('Mailer')</code>, with its transport and settings, and marks the default.</p>
+<p>A setting whose name matches <code>pass</code>, <code>secret</code>, <code>key</code>, <code>token</code>, <code>credential</code> or <code>auth</code>, in any case and at any depth,
+shows only <strong>Set</strong> or <strong>Empty</strong>. So SES's <code>credentials</code> and <code>dkim.privateKey</code> never show their values, and neither do
+those of a custom transport. The masking happens on the server, so the values aren't in the page at all. Credentials
+inside a URL are hidden too, so <code>smtp://user:password@host</code> shows as <code>smtp://***@host</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">What masking can't catch</p>
+<p>Masking goes by the setting's name, so usernames, hosts and paths show in full. So does a secret under any other
+name, one in a URL's path or query string, such as <code>https://hooks.example.com/abc123</code>, or one in a value with no
+<code>scheme://</code>, such as <code>user:password@host</code>. Give secrets in a custom
+transport a name the pattern matches. <code>authType</code> shows as <strong>Set</strong> even though it only names a login method, because
+its name matches <code>auth</code>.</p>
+</div>
+<p>A failover mailer lists the mailers it tries, in order, with a link to each.</p>
+<h3 id="warnings">Warnings</h3>
 <table>
 <thead>
 <tr>
-<th>Port</th>
-<th>Encryption</th>
+<th>Warning</th>
+<th>What it means</th>
+<th>What to do</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>587</td>
-<td>TLS</td>
+<td>The legacy mailer is in use</td>
+<td>The app has no <code>app/Config/Mailer.php</code>, so mail goes through the <a href="#the-legacy-mail-bridge">legacy mail bridge</a>.</td>
+<td>Run <code>php spark bonfire:email-env</code> and follow <a href="#moving-mail-settings-into-code">Moving mail settings into code</a>.</td>
 </tr>
 <tr>
-<td>465</td>
-<td>SSL</td>
+<td>Old mail settings are still stored</td>
+<td>The app has its own Mailer config, but the settings table still holds old transport values, possibly a plain text password.</td>
+<td>Run <code>php spark bonfire:email-env --purge</code>.</td>
 </tr>
 <tr>
-<td>25 or 2525</td>
-<td>None or TLS</td>
+<td>The default mailer discards mail</td>
+<td>The default mailer, or the first mailer in its failover chain, uses the <code>null</code> transport, so nothing is sent and nothing reports an error.</td>
+<td>Set <code>$default</code> in <code>app/Config/Mailer.php</code>.</td>
+</tr>
+<tr>
+<td>The default mailer isn't defined</td>
+<td><code>$default</code> names a mailer that isn't in <code>$mailers</code>, so sends fail.</td>
+<td>Fix <code>$default</code> or add the mailer.</td>
+</tr>
+<tr>
+<td>The default mailer can't send</td>
+<td>Its transport isn't registered, or its failover chain is empty, loops, or has a mailer that can't be built.</td>
+<td>Fix the problem shown on that mailer.</td>
 </tr>
 </tbody>
 </table>
-<p>If your provider uses another port, choose <strong>other</strong> and type it in.</p>
-</li>
-<li>
-<p>Click <strong>Save Settings</strong>.</p>
-</li>
-</ol>
-<p>To check the settings, send yourself an email from the site, for example with "forgot password" on the login page.</p>
-<h2 id="settings">Settings</h2>
-<h3 id="from">From</h3>
+<p>A mailer also shows a warning if its transport isn't registered in <code>$transports</code>, or if its failover chain loops back
+on itself, is empty, or has a mailer that can't be built. Postal builds the whole chain before it sends, so one bad
+mailer stops all of them, even an earlier one that would work. A chain entry that isn't defined has no link.</p>
+<h2 id="send-a-test-message">Send a test message</h2>
+<p><strong>Test send</strong> sends a fixed message to check a mailer. Choose the mailer, type the recipient, which starts as your own
+address, and click <strong>Send test</strong>. The result appears above the form.</p>
+<ul>
+<li>It uses the saved From name and address, so save any changes to them first. Without a From address it fails.</li>
+<li>A failure shows the mailer's error, with the secrets the screen knows about replaced by <code>***</code>. An encoded secret
+  can't be recognised, and values under 4 characters are left alone, so those would still show.</li>
+<li>The <code>null</code> transport and the <code>log</code> transport report success without delivering anything, so the result says the
+  message was discarded or logged. A failover mailer goes by the first mailer in its chain.</li>
+<li>A failover mailer reports success if any mailer in its chain accepted the message. It doesn't say which one did. If a
+  real mailer fails and a later <code>null</code> or <code>log</code> mailer takes over, the result still says the message was sent.</li>
+<li>It can't send through a failover chain that loops.</li>
+</ul>
+<h2 id="from">From</h2>
 <table>
 <thead>
 <tr>
@@ -2394,66 +2403,7 @@ two-factor login codes. Open <strong>Email</strong> under <strong>Settings</stro
 </tr>
 </tbody>
 </table>
-<h3 id="delivery">Delivery</h3>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Protocol</td>
-<td>How mail is sent: <strong>SMTP</strong> through a mail server, <strong>Mail</strong> through PHP's <code>mail()</code> function, or <strong>Sendmail</strong> through the server's sendmail program.</td>
-</tr>
-<tr>
-<td>Sendmail path</td>
-<td>Where the sendmail program is, such as <code>/usr/sbin/sendmail</code>. Shown for <strong>Sendmail</strong>.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Mail</strong> has no options of its own and only works on Linux servers that are set up to send mail.</p>
-<h3 id="smtp">SMTP</h3>
-<p>These are shown when <strong>Protocol</strong> is <strong>SMTP</strong>.</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Host</td>
-<td>The mail server's address, such as <code>smtp.example.com</code>.</td>
-</tr>
-<tr>
-<td>Port</td>
-<td>The mail server's port: 25, 587, 465, 2525, or <strong>other</strong> to type your own.</td>
-</tr>
-<tr>
-<td>Username</td>
-<td>The login for the mail server.</td>
-</tr>
-<tr>
-<td>Password</td>
-<td>The password for the mail server. It's stored in the settings table as plain text.</td>
-</tr>
-<tr>
-<td>Encryption</td>
-<td><strong>None</strong>, <strong>TLS</strong> or <strong>SSL</strong>. Use what your provider asks for.</td>
-</tr>
-<tr>
-<td>Timeout</td>
-<td>How many seconds to wait for the mail server before giving up.</td>
-</tr>
-<tr>
-<td>Persistent connection</td>
-<td>Keeps the connection to the mail server open between emails. Helps when the site sends many emails at once.</td>
-</tr>
-</tbody>
-</table>
+<p>Click <strong>Save Settings</strong> to save them. They're the default for all mail. See <a href="#the-from-address">The From address</a>.</p>
 <h2 id="how-bonfire-sends-mail">How Bonfire sends mail</h2>
 <p>Bonfire sends its mail through <a href="https://github.com/lonnieezell/postal">Postal</a>, which is installed with it.</p>
 <table>
@@ -2501,6 +2451,9 @@ and makes it the default. You don't have to do anything for this.</p>
 <p>The <code>legacy</code> mailer sends through the transport your existing settings describe. They are read each time a message
 is sent, the same way as before: a value in the Settings table wins, then <code>email.*</code> in <code>.env</code>, then
 <code>app/Config/Email.php</code>. With nothing set anywhere, mail goes through PHP's <code>mail()</code> function.</p>
+<p>The Email settings screen shows the <code>legacy</code> mailer with the settings it would send with, masked like any other, under
+a deprecation warning. You can't edit them there. To change one before you leave the bridge, set it in <code>.env</code> or
+<code>app/Config/Email.php</code>, or remove its row from the settings table, since a row wins.</p>
 <p>Bonfire's activation and two-factor emails go through it. Mail sent with <code>service('email')</code> or Shield's <code>emailer()</code>,
 which is how the magic link email goes out, doesn't pass through the bridge and logs no notice. Without a Mailer config,
 <code>emailer()</code> already uses those same settings.</p>
@@ -2514,7 +2467,7 @@ deprecation notice. Notices are only written if <code>Config\Logger::$threshold<
 <ol>
 <li>Run <code>php spark publish</code> to create <code>app/Config/Mailer.php</code>, or create it by hand.</li>
 <li>
-<p>Set <code>$default</code> and define the mailer in that file. This one matches an SMTP server from the settings above:</p>
+<p>Set <code>$default</code> and define the mailer in that file. This one defines an SMTP server:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">namespace</span> <span class="nx">Config</span><span class="p">;</span>

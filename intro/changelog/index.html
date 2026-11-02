@@ -2420,6 +2420,14 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="2-november-2026-breaking-change">2 November 2026 (breaking change)</h2>
+<p><strong>Settings → Email no longer edits mail transports.</strong> The protocol, SMTP and sendmail fields are gone: mail is configured
+in <code>app/Config/Mailer.php</code> and <code>.env</code>. The page now lists every mailer with its transport and settings, marks the
+default, links failover chains to their mailers, and shows secrets only as <strong>Set</strong> or <strong>Empty</strong>. It warns while the
+legacy bridge is active, while old transport rows are still in the settings table, and when the default mailer discards
+mail or isn't defined. You can still edit the From name and address, and a new <strong>Test send</strong> mails a fixed message to an
+address you type, through a mailer you choose. Installs on the bridge keep sending as before, but change these settings
+in <code>.env</code> or <code>app/Config/Email.php</code>, or move to <code>Mailer.php</code> with <code>php spark bonfire:email-env</code>. See
+<a href="../../modules/email/">Email Settings</a>.</p>
 <p><strong>Tools → Mail Previews</strong> shows your Mailables in the admin, in every environment: the HTML, plain text and raw MIME of
 each one, and a <strong>Send to me</strong> button that mails it to your own address through a mailer you choose. It needs the new
 <code>email.preview</code> permission. You publish your own <code>AuthGroups</code>, so <strong>run <code>php spark bonfire:permissions</code></strong>, which grants
@@ -2439,7 +2447,7 @@ in development, publish a <code>Mailer.php</code> with <code>$default = 'null'</
 transport settings from the settings table, including any plain text SMTP password, and refuses to run until the app
 has its own Mailer config. See <a href="../../modules/email/#moving-mail-settings-into-code">Moving mail settings into code</a>.</p>
 <p>Bonfire now sends its mail through Postal, which it requires. Mail keeps working: you don't have to change anything for
-your activation, two-factor and magic link emails to go out. But the SMTP fields are leaving Settings → Email, so
+your activation, two-factor and magic link emails to go out. But the SMTP fields have left Settings → Email, so
 run <code>php spark bonfire:email-env</code> to move that config into code.</p>
 <p>The activation and two-factor emails are now the Postal Mailables <code>Bonfire\Auth\Mails\ActivationMail</code> and
 <code>TwoFactorMail</code>. They still render the views named in <code>Auth.views</code>, so customised templates keep working. The activation
