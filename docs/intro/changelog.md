@@ -37,6 +37,11 @@ bonfire:permissions`** to grant the permission. Until you do, the screen stays h
 an email from sending. Every row is logged under the default mailer, because Postal doesn't tell listeners which named
 mailer sent a message. See [Mail Outbox](../modules/mail_outbox.md).
 
+Two new dashboard stat cards, **Mail sent, last 7 days** and **Mail failed, last 7 days**, come from the Outbox. The failed
+card turns red while its count is above zero and links to the Outbox filtered to failures. They need `email.log` and are
+hidden while **Days to keep** is `0`. A stat card can now turn red while its value is above zero with the new
+`highlightNonZero` key, and take its value from a closure with `addValueUsing()`. See [Mail Outbox](../modules/mail_outbox.md#on-the-dashboard).
+
 Mail keeps working after this update, and you don't have to do anything. Without an `app/Config/Mailer.php`, Bonfire
 now makes a deprecated `legacy` mailer the default. It sends through the transport your `setting('Email.*')` values
 describe, read at send time, so a Mailable no longer lands in Postal's `null` mailer, which discards it.
