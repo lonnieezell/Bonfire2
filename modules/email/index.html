@@ -14,7 +14,7 @@
         <link rel="prev" href="../settings/">
       
       
-        <link rel="next" href="../tools/">
+        <link rel="next" href="../mail_previews/">
       
       
         
@@ -620,6 +620,8 @@
       
         
       
+        
+      
     
     
     
@@ -1007,6 +1009,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mail_previews/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mail Previews
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2455,7 +2485,8 @@ two-factor login codes. Open <strong>Email</strong> under <strong>Settings</stro
 with the same <code>$code</code>, <code>$user</code>, <code>$ipAddress</code>, <code>$userAgent</code> and <code>$date</code> as before. If you customised those views, they
 keep working. The two emails are always sent as HTML.</p>
 <p>Both Mailables implement Postal's <code>Previewable</code>, so they can be rendered with sample data, an unsaved user and a fake
-code, without touching the database. A preview reads <code>Auth.views</code> from your <code>Auth</code> config only, not the settings table.</p>
+code, without touching the database. A preview reads <code>Auth.views</code> from your <code>Auth</code> config only, not the settings table.
+See them under <a href="../mail_previews/">Mail Previews</a>.</p>
 <h3 id="the-from-address">The From address</h3>
 <p>The <strong>From</strong> name and address on this screen are the site-wide default. A Mailable without a From gets them, including
 Bonfire's and your own. A Mailable that sets its own From keeps it. Without a From here, the activation and two-factor
@@ -2610,13 +2641,13 @@ still what your mail is sent with. Purging them would fall back to the <code>Con
         
         
           
-          <a href="../tools/" class="md-footer__link md-footer__link--next" aria-label="Next: Tools">
+          <a href="../mail_previews/" class="md-footer__link md-footer__link--next" aria-label="Next: Mail Previews">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Tools
+                Mail Previews
               </div>
             </div>
             <div class="md-footer__button md-icon">

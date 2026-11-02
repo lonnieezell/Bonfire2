@@ -865,6 +865,8 @@
       
         
       
+        
+      
     
     
     
@@ -1041,6 +1043,34 @@
     
   
     Email Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/mail_previews/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mail Previews
   
 
     
@@ -2390,6 +2420,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="2-november-2026-breaking-change">2 November 2026 (breaking change)</h2>
+<p><strong>Tools → Mail Previews</strong> shows your Mailables in the admin, in every environment: the HTML, plain text and raw MIME of
+each one, and a <strong>Send to me</strong> button that mails it to your own address through a mailer you choose. It needs the new
+<code>email.preview</code> permission. You publish your own <code>AuthGroups</code>, so <strong>run <code>php spark bonfire:permissions</code></strong>, which grants
+<code>email.*</code> to <code>superadmin</code> and <code>email.preview</code> to <code>admin</code>. Until you do, the screen stays hidden. See
+<a href="../../modules/mail_previews/">Mail Previews</a>.</p>
 <p>Mail keeps working after this update, and you don't have to do anything. Without an <code>app/Config/Mailer.php</code>, Bonfire
 now makes a deprecated <code>legacy</code> mailer the default. It sends through the transport your <code>setting('Email.*')</code> values
 describe, read at send time, so a Mailable no longer lands in Postal's <code>null</code> mailer, which discards it.</p>
