@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bonfire\Auth\Actions;
 
+use Bonfire\Auth\Mails\TwoFactorMail;
 use Bonfire\View\Themeable;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -85,23 +86,11 @@ class Email2FA extends ShieldEmail2FA
         $date      = Time::now()->toDateTimeString();
 
         // Send the user an email with the code
-        helper('email');
-        $email = emailer(['mailType' => 'html'])
-            ->setFrom(setting('Email.fromEmail'), setting('Email.fromName') ?? '');
-        $email->setTo($user->email);
-        $email->setSubject(lang('Auth.email2FASubject'));
-        $email->setMessage($this->view(
-            setting('Auth.views')['action_email_2fa_email'],
-            ['code' => $identity->secret, 'user' => $user, 'ipAddress' => $ipAddress, 'userAgent' => $userAgent, 'date' => $date],
-            ['debug' => false],
-        ));
+        $result = (new TwoFactorMail($user, $identity->secret, $ipAddress, $userAgent, $date))->send();
 
-        if ($email->send(false) === false) {
-            throw new RuntimeException('Cannot send email for user: ' . $user->email . "\n" . $email->printDebugger(['headers']));
+        if (! $result->success) {
+            throw new RuntimeException('Cannot send email for user: ' . $user->email . "\n" . $result->error);
         }
-
-        // Clear the email
-        $email->clear();
 
         return $this->render(config('Auth')->views['action_email_2fa_verify'], ['user' => $user]);
     }
