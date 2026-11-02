@@ -8,6 +8,7 @@ use Bonfire\Auth\Mails\ActivationMail;
 use Bonfire\Auth\Mails\TwoFactorMail;
 use Bonfire\Users\User;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use DOMDocument;
@@ -74,6 +75,7 @@ final class MailPreviewsTest extends TestCase
 
     protected function tearDown(): void
     {
+        Time::setTestNow();
         cache()->delete('app-modules-search');
         config('Bonfire')->appModules           = [];
         config('Postal')->mailableNamespaces    = $this->namespaces;
@@ -142,6 +144,9 @@ final class MailPreviewsTest extends TestCase
     #[DataProvider('provideAuthMailablesPreview')]
     public function testAuthMailablesPreview(string $slug, string $class, string $subject): void
     {
+        // The sample mail prints the current time, so both renders must share a clock
+        Time::setTestNow('2026-01-15 12:00:00');
+
         $response = $this->actingAs($this->admin)->get(route_to('mail-preview', $slug));
 
         $response->assertOK();
