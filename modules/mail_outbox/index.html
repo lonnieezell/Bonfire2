@@ -930,6 +930,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#on-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#keeping-it-small" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2044,6 +2055,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#on-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#keeping-it-small" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2237,6 +2259,12 @@ site that sends everything through its default.</p>
 <p>The newest sends come first, a page at a time.</p>
 <p>A row whose Mailable can be previewed links to its <a href="../mail_previews/">preview</a>, if you also have <code>email.preview</code>. A
 Mailable that has since been renamed or deleted, or doesn't implement <code>Previewable</code>, shows its name without a link.</p>
+<h2 id="on-the-dashboard">On the dashboard</h2>
+<p>Two stat cards, <strong>Mail sent, last 7 days</strong> and <strong>Mail failed, last 7 days</strong>, count the Outbox's sends from the past
+seven days. Add them from the dashboard's widget library, under <strong>Email</strong>. The failed card turns red while its count is
+above zero, and each card's detail link opens the Outbox filtered to that status.</p>
+<p>You need <code>email.log</code> to see the cards, and they're missing from the library while <strong>Days to keep</strong> is <code>0</code>. The counts
+are only queried while the dashboard shows a card.</p>
 <h2 id="keeping-it-small">Keeping it small</h2>
 <p><strong>Settings → Email</strong> has <strong>Days to keep</strong>, which is <code>Email.logRetentionDays</code>. It starts at 30. Rows older than that are
 deleted, and:</p>

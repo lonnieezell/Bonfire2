@@ -2371,7 +2371,7 @@ is rendered.</p>
 <h2 id="stat-cards-and-charts">Stat cards and charts</h2>
 <p>For a single number or a chart of one table, add an item to <code>service('widgets')</code> instead of writing a class. Each
 item becomes a widget with the id <code>stats:</code> or <code>charts:</code> plus its own <code>id</code>.</p>
-<p>Give an item its value with <code>addValue()</code>, <code>addValueByFreeQuery()</code> or <code>addDataset()</code>. They store the query and run it
+<p>Give an item its value with <code>addValue()</code>, <code>addValueByFreeQuery()</code>, <code>addValueUsing()</code> or <code>addDataset()</code>. They store the query and run it
 only when the dashboard shows the widget, to a viewer who holds its permission. A <code>value</code> passed to the constructor
 is built every time your module boots, on every admin page.</p>
 <h3 id="stat-cards">Stat cards</h3>
@@ -2429,6 +2429,10 @@ is built every time your module boots, on every admin page.</p>
 <td>A value built now, on every admin page. The card prints it unescaped, so it may be HTML. Prefer the methods below.</td>
 </tr>
 <tr>
+<td><code>highlightNonZero</code></td>
+<td><code>true</code> turns the value red while it is above 0, for a count of things gone wrong.</td>
+</tr>
+<tr>
 <td><code>bgColor</code></td>
 <td>Accepted, but no longer changes the card.</td>
 </tr>
@@ -2439,6 +2443,8 @@ is built every time your module boots, on every admin page.</p>
 <code>$tableName</code> whose <code>deleted_at</code> is null, so the table needs a <code>deleted_at</code> column. <code>$whereString</code> adds a condition.
 <code>$selectMode</code> <code>avg</code>, <code>max</code>, <code>min</code> or <code>sum</code> takes that of the table's <code>value</code> column in place of counting.</p>
 <p><strong><code>addValueByFreeQuery(string $query)</code></strong> runs <code>$query</code> and shows the first column of its first row.</p>
+<p><strong><code>addValueUsing(Closure $value)</code></strong> shows whatever <code>$value</code> returns, for a count the two above can't express, such as
+one that goes through a model. Make the closure <code>static</code>, so it doesn't keep your module alive.</p>
 <h3 id="charts">Charts</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Widgets\Types\Charts\ChartsItem</span><span class="p">;</span>
 
