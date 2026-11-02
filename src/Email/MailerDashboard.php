@@ -21,8 +21,8 @@ use Throwable;
 
 /**
  * What Settings -> Email shows about the configured mailers. Secrets are masked
- * here on the server, so the view never receives one. It only reads the config:
- * no transport is built, so a broken config can't stop the page from rendering.
+ * here on the server, so the view never receives one. Listing builds no transport,
+ * so a broken mailer config can't stop the page from rendering.
  */
 final readonly class MailerDashboard
 {
@@ -42,8 +42,11 @@ final readonly class MailerDashboard
      */
     private const MIN_SECRET_LENGTH = 4;
 
-    public function __construct(private PostalMailer $config)
+    private PostalMailer $config;
+
+    public function __construct()
     {
+        $this->config = config('Mailer');
     }
 
     /**
@@ -69,6 +72,7 @@ final readonly class MailerDashboard
             $name       = (string) $name;
             $definition = $this->definition($name);
             $chain      = $this->chain($name);
+            $loops      = $this->loops($name);
             $transport  = $definition['transport'] ?? '';
 
             unset($definition['transport']);
@@ -87,8 +91,8 @@ final readonly class MailerDashboard
                     fn (string $child): array => ['name' => $child, 'defined' => isset($this->config->mailers[$child])],
                     $chain,
                 ),
-                'loops'       => $this->loops($name),
-                'brokenChain' => $chain !== null && ! $this->loops($name) && ! $this->canSend($name),
+                'loops'       => $loops,
+                'brokenChain' => $chain !== null && ! $loops && ! $this->canSend($name),
                 'settings'    => $this->rows($definition),
             ];
         }
@@ -157,20 +161,18 @@ final readonly class MailerDashboard
 
         // Postal would recurse until PHP dies, which nothing here could catch.
         if ($this->loops($name)) {
-            return SendResult::fail(lang('Email.testLoop'));
+            return SendResult::fail(lang('Email.mailerLoops'));
         }
 
-        $from = trim((string) setting('Email.fromEmail'));
-
-        // Transports would report success for a message most servers reject.
-        if ($from === '') {
+        // The email.composing listener fills it in. Without one, transports would
+        // report success for a message most servers reject.
+        if (trim((string) setting('Email.fromEmail')) === '') {
             return SendResult::fail(lang('Email.previewNoFrom'));
         }
 
         try {
             $result = service('mailer')->mailer($name)->send(
                 (new Email())
-                    ->from($from, (string) setting('Email.fromName'))
                     ->to($address)
                     ->subject(lang('Email.testSubject'))
                     ->text(lang('Email.testBody')),
@@ -184,11 +186,12 @@ final readonly class MailerDashboard
 
     /**
      * Removes this mailer's secrets, and those of its failover children, from a
-     * message. It can't recognise one a transport has encoded.
+     * message. It can't recognise one a transport has encoded, and it leaves very
+     * short values, such as a TTL or an on/off word, which would only garble it.
      */
     public function scrub(string $name, string $message): string
     {
-        $secrets = $this->secrets($name);
+        $secrets = array_filter($this->secrets($name), static fn (string $secret): bool => strlen($secret) >= self::MIN_SECRET_LENGTH);
 
         // Longest first, so a secret holding a shorter one goes whole.
         usort($secrets, static fn (string $a, string $b): int => strlen($b) <=> strlen($a));
@@ -210,7 +213,7 @@ final readonly class MailerDashboard
             }
         }
 
-        return array_values(array_unique(array_filter($secrets, static fn (string $secret): bool => $secret !== '')));
+        return $secrets;
     }
 
     /**
@@ -232,8 +235,7 @@ final readonly class MailerDashboard
                 $leaves = [$value];
 
                 array_walk_recursive($leaves, static function (mixed $leaf) use (&$secrets): void {
-                    // A shorter value, such as a TTL or an on/off word, would only garble the message.
-                    if ((is_string($leaf) || is_int($leaf) || is_float($leaf)) && strlen((string) $leaf) >= self::MIN_SECRET_LENGTH) {
+                    if (is_string($leaf) || is_int($leaf) || is_float($leaf)) {
                         $secrets[] = (string) $leaf;
                     }
                 });
@@ -306,9 +308,17 @@ final readonly class MailerDashboard
             return LegacySettingsTransport::resolvedMailer();
         }
 
-        $definition = $this->config->mailers[$name] ?? [];
+        return $this->entry($name);
+    }
 
-        return is_array($definition) ? $definition : [];
+    /**
+     * @return array<array-key, mixed> Empty if the mailer is undefined or malformed.
+     */
+    private function entry(string $name): array
+    {
+        $entry = $this->config->mailers[$name] ?? [];
+
+        return is_array($entry) ? $entry : [];
     }
 
     private function isBridged(string $name): bool
@@ -321,8 +331,7 @@ final readonly class MailerDashboard
      */
     private function transportClass(string $name): ?string
     {
-        $definition = $this->config->mailers[$name] ?? null;
-        $transport  = is_array($definition) ? ($definition['transport'] ?? null) : null;
+        $transport = $this->entry($name)['transport'] ?? null;
 
         return is_string($transport) ? ($this->config->transports[$transport] ?? null) : null;
     }
@@ -338,7 +347,7 @@ final readonly class MailerDashboard
             return null;
         }
 
-        $chain = $this->config->mailers[$name]['chain'] ?? [];
+        $chain = $this->entry($name)['chain'] ?? [];
 
         return is_array($chain) ? array_values(array_map(strval(...), array_filter($chain, is_scalar(...)))) : [];
     }

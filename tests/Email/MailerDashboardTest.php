@@ -8,11 +8,10 @@ use Bonfire\Email\LegacySettingsTransport;
 use Bonfire\Email\MailerDashboard;
 use CodeIgniter\Config\Factories;
 use Config\Services;
-use Myth\Postal\Config\Mailer as PostalMailer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
-use Tests\Support\Email\FailingTransport;
 use Tests\Support\Email\RecordingTransport;
+use Tests\Support\Email\UsesAppMailers;
 use Tests\Support\TestCase;
 
 /**
@@ -20,6 +19,8 @@ use Tests\Support\TestCase;
  */
 final class MailerDashboardTest extends TestCase
 {
+    use UsesAppMailers;
+
     protected $refresh = true;
 
     protected function setUp(): void
@@ -303,6 +304,16 @@ final class MailerDashboardTest extends TestCase
         $this->assertSame('The Site', $email->from->name);
     }
 
+    public function testTestSendTakesAFromInTheFormRealMailAccepts(): void
+    {
+        setting('Email.fromEmail', 'The Site <site@example.com>');
+
+        $result = $this->dashboard(['first' => ['transport' => 'recording']], 'first')->sendTest('first', 'someone@example.com');
+
+        $this->assertTrue($result->success);
+        $this->assertSame('site@example.com', RecordingTransport::$sent[0]['email']->from->email);
+    }
+
     public function testTestSendRefusesAMailerThatIsNotDefined(): void
     {
         $result = $this->dashboard(['first' => ['transport' => 'recording']], 'first')->sendTest('gone', 'someone@example.com');
@@ -366,6 +377,11 @@ final class MailerDashboardTest extends TestCase
             'Bad password ***, pass',
         ];
 
+        yield 'a short URL password stays readable' => [
+            ['dsn' => 'smtp://x:a@mail.example.com', 'error' => 'A bad day'],
+            'A bad day',
+        ];
+
         yield 'short and numeric values under secret keys stay readable' => [
             ['tokenTtl' => 5, 'auth' => 'on', 'error' => 'SMTP 535 five on'],
             'SMTP 535 five on',
@@ -391,8 +407,6 @@ final class MailerDashboardTest extends TestCase
     public function testBridgeFailuresHaveTheResolvedPasswordRemoved(): void
     {
         setting('Email.protocol', 'smtp');
-        setting('Email.SMTPHost', 'localhost');
-        setting('Email.SMTPPort', 1);
         setting('Email.SMTPUser', 'mailer');
         setting('Email.SMTPPass', 'hunter2');
 
@@ -421,25 +435,16 @@ final class MailerDashboardTest extends TestCase
         Factories::reset('config');
         LegacySettingsTransport::register();
 
-        return new MailerDashboard(config('Mailer'));
+        return new MailerDashboard();
     }
 
     /**
-     * Makes this the app's own Mailer config, so the bridge steps aside.
-     *
      * @param array<string, mixed> $mailers
      */
     private function dashboard(array $mailers, string $default = 'null'): MailerDashboard
     {
-        $config                          = new class () extends PostalMailer {};
-        $config->mailers                 = $mailers;
-        $config->default                 = $default;
-        $config->transports['recording'] = RecordingTransport::class;
-        $config->transports['failing']   = FailingTransport::class;
+        $this->useAppMailers($mailers, $default);
 
-        Factories::injectMock('config', 'Mailer', $config);
-        Services::resetSingle('mailer');
-
-        return new MailerDashboard($config);
+        return new MailerDashboard();
     }
 }

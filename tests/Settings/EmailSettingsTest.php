@@ -9,9 +9,8 @@ use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use DOMDocument;
 use DOMXPath;
-use Myth\Postal\Config\Mailer as PostalMailer;
-use Tests\Support\Email\FailingTransport;
 use Tests\Support\Email\RecordingTransport;
+use Tests\Support\Email\UsesAppMailers;
 use Tests\Support\SubmitsForms;
 use Tests\Support\TestCase;
 
@@ -21,6 +20,7 @@ use Tests\Support\TestCase;
 final class EmailSettingsTest extends TestCase
 {
     use SubmitsForms;
+    use UsesAppMailers;
 
     protected $refresh = true;
     private User $user;
@@ -30,6 +30,7 @@ final class EmailSettingsTest extends TestCase
         parent::setUp();
 
         RecordingTransport::reset();
+        setting('Email.fromEmail', 'site@example.com');
 
         $this->user = $this->createUser(['email' => 'admin@example.com']);
         $this->user->addGroup('superadmin');
@@ -54,7 +55,7 @@ final class EmailSettingsTest extends TestCase
         $html   = $this->page();
         $fields = $this->formFields($html, site_url(ADMIN_AREA . '/settings/email'));
 
-        $this->assertSame(['fromEmail', 'fromName'], $this->sortedKeysWithoutCsrf($fields));
+        $this->assertEqualsCanonicalizing(['fromEmail', 'fromName'], array_diff(array_keys($fields), [csrf_token()]));
 
         $fields['fromName'] = 'Grace';
 
@@ -223,7 +224,6 @@ final class EmailSettingsTest extends TestCase
             'first'  => ['transport' => 'recording', 'label' => 'first'],
             'second' => ['transport' => 'recording', 'label' => 'second'],
         ], 'first');
-        setting('Email.fromEmail', 'site@example.com');
 
         $response = $this->sendTestMail('second', 'someone@example.com');
 
@@ -241,7 +241,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendSaysWhenAMailerDidNotDeliver(): void
     {
         $this->useAppMailers(['off' => ['transport' => 'null']], 'off');
-        setting('Email.fromEmail', 'site@example.com');
 
         $this->sendTestMail('off', 'someone@example.com');
 
@@ -251,7 +250,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendShowsTheErrorInlineWithoutSecrets(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'failing', 'password' => 'hunter2', 'error' => 'Refused <b>hunter2</b>']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         $this->sendTestMail('main', 'someone@example.com');
 
@@ -264,7 +262,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendValidatesTheRecipient(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         $this->sendTestMail('main', 'a@example.com, b@example.com')->assertSessionHas('errors');
 
@@ -274,7 +271,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendRejectsFieldsThatAreNotStrings(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         foreach ([['mailer' => ['main'], 'recipient' => 'a@example.com'], ['mailer' => 'main', 'recipient' => ['a@example.com']]] as $fields) {
             $this->actingAs($this->user)->post(route_to('email-test-send'), [csrf_token() => csrf_hash(), ...$fields])->assertSessionHas('errors');
@@ -286,7 +282,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendRefusesAnUnknownMailer(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         $this->sendTestMail('gone', 'someone@example.com');
 
@@ -297,7 +292,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendNeedsAdminSettingsPermission(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         $user = $this->createUser();
         $user->addGroup('admin');
@@ -314,7 +308,6 @@ final class EmailSettingsTest extends TestCase
     public function testTestSendWithoutACsrfTokenSendsNothing(): void
     {
         $this->useAppMailers(['main' => ['transport' => 'recording']], 'main');
-        setting('Email.fromEmail', 'site@example.com');
 
         $this->actingAs($this->user)->post(route_to('email-test-send'), [
             'mailer'    => 'main',
@@ -366,23 +359,6 @@ final class EmailSettingsTest extends TestCase
         $this->assertCount(0, $this->xpath($this->page())->query('//*[@data-warning="leftoverRows"]'));
     }
 
-    /**
-     * Makes these the app's own Mailer config, so the bridge steps aside.
-     *
-     * @param array<string, mixed> $mailers
-     */
-    private function useAppMailers(array $mailers, string $default): void
-    {
-        $config                          = new class () extends PostalMailer {};
-        $config->mailers                 = $mailers;
-        $config->default                 = $default;
-        $config->transports['recording'] = RecordingTransport::class;
-        $config->transports['failing']   = FailingTransport::class;
-
-        Factories::injectMock('config', 'Mailer', $config);
-        Services::resetSingle('mailer');
-    }
-
     private function page(): string
     {
         return (string) $this->actingAs($this->user)->get('/admin/settings/email')->getBody();
@@ -413,19 +389,5 @@ final class EmailSettingsTest extends TestCase
         @$dom->loadHTML($html);
 
         return new DOMXPath($dom);
-    }
-
-    /**
-     * @param array<string, mixed> $fields
-     *
-     * @return list<string>
-     */
-    private function sortedKeysWithoutCsrf(array $fields): array
-    {
-        $keys = array_values(array_diff(array_keys($fields), [csrf_token()]));
-
-        sort($keys);
-
-        return $keys;
     }
 }

@@ -44,7 +44,6 @@ return [
     'testDiscarded' => 'This mailer discards mail: nothing was delivered.',
     'testLogged'    => 'This mailer writes mail to the log: nothing was delivered.',
     'testNotSent'   => 'The test message was not sent.',
-    'testLoop'      => 'This failover chain loops back on itself, so it cannot send.',
     'testSubject'   => 'Bonfire test message',
     'testBody'      => 'This is a test message from Settings -> Email. Receiving it means this mailer works.',
 

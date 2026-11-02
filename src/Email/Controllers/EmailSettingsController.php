@@ -30,7 +30,7 @@ class EmailSettingsController extends AdminController
             return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
         }
 
-        $dashboard = new MailerDashboard(config('Mailer'));
+        $dashboard = new MailerDashboard();
 
         return $this->render($this->viewPrefix . 'email_settings', [
             'mailers'       => $dashboard->mailers(),
@@ -87,7 +87,7 @@ class EmailSettingsController extends AdminController
 
         $mailer    = (string) $this->request->getPost('mailer');
         $recipient = (string) $this->request->getPost('recipient');
-        $dashboard = new MailerDashboard(config('Mailer'));
+        $dashboard = new MailerDashboard();
         $result    = $dashboard->sendTest($mailer, $recipient);
         $outcome   = $result->success ? $dashboard->delivery($mailer) : 'failed';
 
