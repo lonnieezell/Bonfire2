@@ -84,13 +84,62 @@ All three go through the same mailer: the default one in `app/Config/Mailer.php`
 
 ### Your email templates
 
-The Mailables render the views named in `Auth.views`, under `action_email_activate_email` and `action_email_2fa_email`,
-with the same `$code`, `$user`, `$ipAddress`, `$userAgent` and `$date` as before. If you customised those views, they
-keep working. The two emails are always sent as HTML.
+The activation and two-factor emails come in two versions. Which one is sent depends on the keys in `$views` in your
+`app/Config/Auth.php`:
+
+| Version | Keys | Who gets it |
+| --- | --- | --- |
+| Branded Markdown, with a plain text part | `action_email_activate_markdown`, `action_email_2fa_markdown` | New installs. It's used whenever the key is there. |
+| HTML only | `action_email_activate_email`, `action_email_2fa_email` | Installs whose `$views` doesn't have the Markdown keys, which includes every install from before they were added. |
+
+The two emails switch separately, since each has its own key.
+
+The Markdown version shows your site name from Settings → General, under a band in your accent color. The code is in a
+panel, and there's no button, because the pages for entering a code only work in the session that asked for it.
+
+#### Switching to the Markdown version
+
+Updating Bonfire doesn't change your emails, because your published `app/Config/Auth.php` keeps the `$views` it was
+installed with. To switch, add the two keys to it:
+
+```php
+public array $views = [
+    // ...
+    'action_email_activate_markdown' => '\Bonfire\Views\Mail\activation_email',
+    'action_email_2fa_markdown'      => '\Bonfire\Views\Mail\two_factor_email',
+];
+```
+
+Remove them to go back to the HTML version. If you've saved `Auth.views` in the settings table, that row wins over the
+file for sent mail, so change it there too. An app that never published `Auth.php` inherits Bonfire's `$views`, so it
+gets the Markdown version as soon as it updates. Publish the file and leave these keys out to keep the HTML version.
+
+#### Customizing the Markdown version
+
+Point a key at your own view. It's a [Postal Markdown view](https://lonnieezell.github.io/postal/markdown-mailables/),
+and gets two variables: `$code`, and `$details`, the username, IP address, device and date as label and value pairs.
+
+A visitor chooses their own user agent and username, and `esc()` wouldn't stop `[Reset your password](https://evil.example)`
+from becoming a link in a security email. So the values in `$details` are Markdown code spans, which can't form a link
+in the HTML, and empty ones are left out. The text part still shows the words and any URL in them, as plain text.
+
+PHP drops a newline right after a closing `?>`, so leave an extra blank line after one. To share a partial between
+views, call `view('partial', ['code' => $code], ['debug' => false])`, or view debug comments can end up in the mail.
+
+To change the page around the content, add an `action_email_markdown_layout` key that names your own layout view. It
+gets the content as `$content`. Without the key, Bonfire's layout is used.
+
+#### HTML views
+
+The HTML views get `$code`, `$user`, `$ipAddress`, `$userAgent` and `$date`, as they always have, and are sent as HTML
+only. If you customised them, they keep working.
+
+#### Previews
 
 Both Mailables implement Postal's `Previewable`, so they can be rendered with sample data, an unsaved user and a fake
-code, without touching the database. A preview reads `Auth.views` from your `Auth` config only, not the settings table.
-See them under [Mail Previews](mail_previews.md).
+code. A preview writes nothing. It reads `Auth.views` from your `Auth` config only, not the settings table, so it decides
+between the two versions from the file. The Markdown version's branding is read from your real settings. See them under
+[Mail Previews](mail_previews.md).
 
 ### The From address
 

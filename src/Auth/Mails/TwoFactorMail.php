@@ -27,4 +27,9 @@ final class TwoFactorMail extends AuthCodeMail implements Previewable
     {
         return 'action_email_2fa_email';
     }
+
+    protected function markdownViewKey(): string
+    {
+        return 'action_email_2fa_markdown';
+    }
 }

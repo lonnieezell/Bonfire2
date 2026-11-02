@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 2 November 2026 (breaking change)
 
+**Branded Markdown activation and two-factor emails.** New installs send them with your site name and accent color, and
+a plain text part. This doesn't change your emails when you update: your published `app/Config/Auth.php` keeps its
+HTML views until you add `action_email_activate_markdown` and `action_email_2fa_markdown` to `$views`. An app that never
+published `Auth.php` does switch on update. The magic link email stays as it is. See
+[Your email templates](../modules/email.md#your-email-templates).
+
 **Settings → Email no longer edits mail transports.** The protocol, SMTP and sendmail fields are gone: mail is configured
 in `app/Config/Mailer.php` and `.env`. The page now lists every mailer with its transport and settings, marks the
 default, links failover chains to their mailers, and shows secrets only as **Set** or **Empty**. It warns while the

@@ -17,8 +17,9 @@ The list shows previewable Mailables from:
 - the `Mails/` folder of every Bonfire module: core, app and package
 - the namespaces in `Config\Postal::$mailableNamespaces`, which by default is `App\Mails` in `app/Mails`
 
-Bonfire's own activation and two-factor emails are under **Auth**. The magic link is still sent by Shield and isn't a
-Mailable, so it has no preview.
+Bonfire's own activation and two-factor emails are under **Auth**. They show the
+[version your `Auth` config selects](email.md#your-email-templates), with your site's real name and accent color. The
+magic link is still sent by Shield and isn't a Mailable, so it has no preview.
 
 ## A preview
 
