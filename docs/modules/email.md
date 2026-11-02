@@ -59,9 +59,39 @@ These are shown when **Protocol** is **SMTP**.
 | Timeout | How many seconds to wait for the mail server before giving up. |
 | Persistent connection | Keeps the connection to the mail server open between emails. Helps when the site sends many emails at once. |
 
+## How Bonfire sends mail
+
+Bonfire sends its mail through [Postal](https://github.com/lonnieezell/postal), which is installed with it.
+
+| Email | How it's sent |
+| --- | --- |
+| Account activation | The Postal Mailable `Bonfire\Auth\Mails\ActivationMail` |
+| Two-factor login code | The Postal Mailable `Bonfire\Auth\Mails\TwoFactorMail` |
+| Magic link | Shield's own `emailer()`, which Postal handles |
+
+All three go through the same mailer: the default one in `app/Config/Mailer.php`, or without that file, the
+[legacy mail bridge](#the-legacy-mail-bridge) for the two Mailables and the same saved settings for the magic link.
+
+### Your email templates
+
+The Mailables render the views named in `Auth.views`, under `action_email_activate_email` and `action_email_2fa_email`,
+with the same `$code`, `$user`, `$ipAddress`, `$userAgent` and `$date` as before. If you customised those views, they
+keep working. The two emails are always sent as HTML.
+
+Both Mailables implement Postal's `Previewable`, so they can be rendered with sample data, an unsaved user and a fake
+code, without touching the database. A preview reads `Auth.views` from your `Auth` config only, not the settings table.
+
+### The From address
+
+The **From** name and address on this screen are the site-wide default. A Mailable without a From gets them, including
+Bonfire's and your own. A Mailable that sets its own From keeps it.
+
+Mail sent with `service('email')` doesn't use this default. It needs a From before it reaches Postal: from `setFrom()`,
+or else from `fromEmail` in `Config\Email`. Without one, `send()` returns `false`.
+
 ## The legacy mail bridge
 
-Bonfire's mail is moving to [Postal](https://github.com/lonnieezell/postal), which reads its mailers from
+Bonfire sends its mail through [Postal](https://github.com/lonnieezell/postal), which reads its mailers from
 `app/Config/Mailer.php`. Postal's own default mailer is `null`, which discards every message without an error. So an
 install without that file doesn't lose the mail it sends through Postal Mailables, Bonfire adds a mailer named `legacy`
 and makes it the default. You don't have to do anything for this.
@@ -70,9 +100,9 @@ The `legacy` mailer sends through the transport your existing settings describe.
 is sent, the same way as before: a value in the Settings table wins, then `email.*` in `.env`, then
 `app/Config/Email.php`. With nothing set anywhere, mail goes through PHP's `mail()` function.
 
-Mail sent with `service('email')` or Shield's `emailer()`, which is how Bonfire's activation and two-factor emails go
-out today, doesn't pass through the bridge and logs no notice. Without a Mailer config it already uses those same
-settings.
+Bonfire's activation and two-factor emails go through it. Mail sent with `service('email')` or Shield's `emailer()`,
+which is how the magic link email goes out, doesn't pass through the bridge and logs no notice. Without a Mailer config,
+`emailer()` already uses those same settings.
 
 !!! warning "Deprecated"
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bonfire\Auth\Actions;
 
+use Bonfire\Auth\Mails\ActivationMail;
 use Bonfire\View\Themeable;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -66,18 +67,11 @@ class EmailActivator extends ShieldEmailActivator
         $date      = Time::now()->toDateTimeString();
 
         // Send the email
-        helper('email');
-        $email = emailer()->setFrom(setting('Email.fromEmail'), setting('Email.fromName') ?? '');
-        $email->setTo($userEmail);
-        $email->setSubject(lang('Auth.emailActivateSubject'));
-        $email->setMessage($this->view(setting('Auth.views')['action_email_activate_email'], ['code' => $code, 'user' => $user, 'ipAddress' => $ipAddress, 'userAgent' => $userAgent, 'date' => $date]));
+        $result = (new ActivationMail($user, $code, $ipAddress, $userAgent, $date))->send();
 
-        if ($email->send(false) === false) {
-            throw new RuntimeException('Cannot send email for user: ' . $user->email . "\n" . $email->printDebugger(['headers']));
+        if (! $result->success) {
+            throw new RuntimeException('Cannot send email for user: ' . $user->email . "\n" . $result->error);
         }
-
-        // Clear the email
-        $email->clear();
 
         // Display the info page: original
         // return $this->view(setting('Auth.views')['action_email_activate_show'], ['user' => $user]);

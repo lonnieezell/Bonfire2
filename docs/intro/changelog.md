@@ -23,6 +23,19 @@ The bridge logs a deprecation notice and is removed in 2.0. See
 transport settings from the settings table, including any plain text SMTP password, and refuses to run until the app
 has its own Mailer config. See [Moving mail settings into code](../modules/email.md#moving-mail-settings-into-code).
 
+Bonfire now sends its mail through Postal, which it requires. Mail keeps working: you don't have to change anything for
+your activation, two-factor and magic link emails to go out. But the SMTP fields are leaving Settings → Email, so
+run `php spark bonfire:email-env` to move that config into code.
+
+The activation and two-factor emails are now the Postal Mailables `Bonfire\Auth\Mails\ActivationMail` and
+`TwoFactorMail`. They still render the views named in `Auth.views`, so customised templates keep working. The activation
+email is now always sent as HTML; before, it followed `Email.mailType` and came out as HTML source with the default
+`text`. The magic link still goes through Shield.
+
+The From name and address in Settings → Email are now the site-wide default: a Mailable without a From gets them, and
+one with its own From keeps it. See
+[How Bonfire sends mail](../modules/email.md#how-bonfire-sends-mail).
+
 ## 30 October 2026
 
 The users list has an **Erase personal data** action, for one user or many. It runs every registered personal data
