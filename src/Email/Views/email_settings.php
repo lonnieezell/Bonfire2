@@ -1,13 +1,105 @@
-<?php
-$this->extend('master');
+<?php $this->extend('master') ?>
 
-$ports = ['25', '587', '465', '2525'];
-$port  = (string) old('SMTPPort', setting('Email.SMTPPort'));
-$other = $port === 'other' || ($port !== '' && ! in_array($port, $ports, true));
+<?php
+$warningText = [
+    'bridge'           => lang('Email.warningBridge'),
+    'leftoverRows'     => lang('Email.warningLeftoverRows'),
+    'nullDefault'      => lang('Email.warningNullDefault'),
+    'undefinedDefault' => lang('Email.warningUndefinedDefault', [$defaultMailer]),
+];
 ?>
 
 <?php $this->section('main') ?>
 <x-settings-layout>
+    <x-admin-box title="<?= esc(lang('Email.mailers'), 'attr') ?>" description="<?= esc(lang('Email.mailersDesc'), 'attr') ?>">
+        <?php foreach ($warnings as $warning) : ?>
+            <div class="bf-callout bf-callout-warn" data-warning="<?= esc($warning, 'attr') ?>"><?= esc($warningText[$warning]) ?></div>
+        <?php endforeach ?>
+        <div class="bf-callout bf-callout-info"><a href="https://lonnieezell.github.io/postal/" target="_blank" rel="noopener"><?= lang('Email.mailersDocs') ?></a></div>
+    </x-admin-box>
+
+    <?php foreach ($mailers as $mailer) : ?>
+        <div id="mailer-<?= esc(rawurlencode($mailer['name']), 'attr') ?>" data-mailer="<?= esc($mailer['name'], 'attr') ?>">
+            <x-admin-box title="<?= esc($mailer['name'], 'attr') ?>" description="<?= esc($mailer['transport'], 'attr') ?>">
+                <?php if ($mailer['isDefault']) : ?>
+                    <span data-default-mailer><x-status tone="ok" label="<?= esc(lang('Email.mailerDefault'), 'attr') ?>" /></span>
+                <?php endif ?>
+                <?php if ($mailer['bridged']) : ?>
+                    <span data-bridged-mailer><x-status tone="warn" label="<?= esc(lang('Email.mailerBridged'), 'attr') ?>" /></span>
+                <?php endif ?>
+
+                <?php if ($mailer['unknownTransport']) : ?>
+                    <div class="bf-callout bf-callout-warn" data-problem="unknownTransport"><?= lang('Email.mailerUnknownTransport') ?></div>
+                <?php endif ?>
+                <?php if ($mailer['loops']) : ?>
+                    <div class="bf-callout bf-callout-warn" data-problem="loops"><?= lang('Email.mailerLoops') ?></div>
+                <?php endif ?>
+
+                <?php if ($mailer['chain'] !== null) : ?>
+                    <p class="mb-1"><?= lang('Email.mailerChain') ?></p>
+                    <ol>
+                        <?php foreach ($mailer['chain'] as $child) : ?>
+                            <li>
+                                <?php if ($child['defined']) : ?>
+                                    <a href="#mailer-<?= esc(rawurlencode($child['name']), 'attr') ?>" data-chain-child="<?= esc($child['name'], 'attr') ?>"><?= esc($child['name']) ?></a>
+                                <?php else : ?>
+                                    <span data-chain-missing="<?= esc($child['name'], 'attr') ?>"><?= esc($child['name']) ?> (<?= lang('Email.mailerChainMissing') ?>)</span>
+                                <?php endif ?>
+                            </li>
+                        <?php endforeach ?>
+                    </ol>
+                <?php endif ?>
+
+                <?php if ($mailer['settings'] !== []) : ?>
+                    <table class="table bf-table">
+                        <tbody>
+                            <?php foreach ($mailer['settings'] as $setting) : ?>
+                                <tr data-setting="<?= esc($setting['key'], 'attr') ?>">
+                                    <th scope="row"><?= esc($setting['key']) ?></th>
+                                    <td>
+                                        <?php if ($setting['masked']) : ?>
+                                            <x-status tone="<?= $setting['value'] === 'set' ? 'ok' : 'muted' ?>" label="<?= esc(lang($setting['value'] === 'set' ? 'Email.maskSet' : 'Email.maskEmpty'), 'attr') ?>" />
+                                        <?php else : ?>
+                                            <?= esc($setting['value']) ?>
+                                        <?php endif ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                <?php elseif ($mailer['chain'] === null) : ?>
+                    <p class="mb-0"><?= lang('Email.mailerNoSettings') ?></p>
+                <?php endif ?>
+            </x-admin-box>
+        </div>
+    <?php endforeach ?>
+
+    <x-admin-box title="<?= esc(lang('Email.testSend'), 'attr') ?>" description="<?= esc(lang('Email.testSendDesc'), 'attr') ?>">
+        <?php if ($testResult !== null) : ?>
+            <div class="bf-callout <?= $testResult['outcome'] === 'failed' ? 'bf-callout-warn' : 'bf-callout-info' ?>" data-test-result="<?= esc($testResult['outcome'], 'attr') ?>"><?= esc($testResult['message']) ?></div>
+        <?php endif ?>
+        <form action="<?= url_to('email-test-send') ?>" method="post">
+            <?= csrf_field() ?>
+            <x-setting-row label="<?= esc(lang('Email.testMailer'), 'attr') ?>" for="testMailer">
+                <select name="mailer" id="testMailer" class="form-select bf-input-narrow">
+                    <?php foreach ($mailers as $mailer) : ?>
+                        <option value="<?= esc($mailer['name'], 'attr') ?>"<?= $mailer['name'] === old('mailer', $defaultMailer, false) ? ' selected' : '' ?>><?= esc($mailer['name']) ?></option>
+                    <?php endforeach ?>
+                </select>
+                <?php if (has_error('mailer')) : ?>
+                    <p class="text-danger small mb-0"><?= error('mailer') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <x-setting-row label="<?= esc(lang('Email.testRecipient'), 'attr') ?>" for="testRecipient">
+                <input type="email" class="form-control" name="recipient" id="testRecipient" value="<?= esc(old('recipient', $address, false), 'attr') ?>">
+                <?php if (has_error('recipient')) : ?>
+                    <p class="text-danger small mb-0"><?= error('recipient') ?></p>
+                <?php endif ?>
+            </x-setting-row>
+            <x-button><?= lang('Email.testButton') ?></x-button>
+        </form>
+    </x-admin-box>
+
     <form action="<?= site_url(ADMIN_AREA . '/settings/email') ?>" method="post">
         <?= csrf_field() ?>
 
@@ -24,80 +116,6 @@ $other = $port === 'other' || ($port !== '' && ! in_array($port, $ports, true));
                     <p class="text-danger small mb-0"><?= error('fromEmail') ?></p>
                 <?php endif ?>
             </x-setting-row>
-        </x-admin-box>
-
-        <x-admin-box title="<?= esc(lang('Email.delivery'), 'attr') ?>" description="<?= esc(lang('Email.deliveryDesc'), 'attr') ?>">
-            <div x-data="{ protocol: '<?= esc(old('protocol', $activeTab), 'js') ?>', otherPort: <?= $other ? 'true' : 'false' ?> }">
-                <x-setting-row label="<?= esc(lang('Email.protocol'), 'attr') ?>">
-                    <div @change="protocol = $event.target.value">
-                        <x-segmented name="protocol" label="<?= esc(lang('Email.protocol'), 'attr') ?>" value="<?= esc(old('protocol', setting('Email.protocol'))) ?>" options='{"smtp":"SMTP","mail":"Mail","sendmail":"Sendmail"}' />
-                    </div>
-                </x-setting-row>
-
-                <div x-show="protocol === 'mail'" x-cloak>
-                    <div class="bf-callout bf-callout-info"><?= lang('Email.mailInfo') ?></div>
-                </div>
-
-                <div x-show="protocol === 'sendmail'" x-cloak>
-                    <x-setting-row label="<?= esc(lang('Email.mailPath'), 'attr') ?>" for="mailPath" description="<?= esc(lang('Email.mailPathDesc'), 'attr') ?>">
-                        <input type="text" name="mailPath" id="mailPath" class="form-control" value="<?= esc(old('mailPath', setting('Email.mailPath'))) ?>">
-                        <?php if (has_error('mailPath')) : ?>
-                            <p class="text-danger small mb-0"><?= error('mailPath') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                </div>
-
-                <div x-show="protocol === 'smtp'">
-                    <x-setting-row label="<?= esc(lang('Email.host'), 'attr') ?>" for="SMTPHost">
-                        <input type="text" name="SMTPHost" id="SMTPHost" class="form-control" value="<?= esc(old('SMTPHost', setting('Email.SMTPHost'))) ?>">
-                        <?php if (has_error('SMTPHost')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPHost') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.port'), 'attr') ?>" for="SMTPPort">
-                        <div class="d-flex gap-2">
-                            <select name="SMTPPort" id="SMTPPort" class="form-select bf-input-narrow" @change="otherPort = $event.target.value === 'other'">
-                                <?php foreach ($ports as $option) : ?>
-                                    <option value="<?= $option ?>"<?= ! $other && $port === $option ? ' selected' : '' ?>><?= $option ?></option>
-                                <?php endforeach ?>
-                                <option value="other"<?= $other ? ' selected' : '' ?>><?= lang('Email.portOther') ?></option>
-                            </select>
-                            <input type="text" name="SMTPPortOther" class="form-control bf-input-narrow" aria-label="<?= esc(lang('Email.portOtherLabel'), 'attr') ?>" x-show="otherPort"
-                                   value="<?= esc(old('SMTPPortOther', $other && $port !== 'other' ? $port : '')) ?>">
-                        </div>
-                        <?php if (has_error('SMTPPort') || has_error('SMTPPortOther')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPPort') ?: error('SMTPPortOther') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.username'), 'attr') ?>" for="SMTPUser">
-                        <input type="text" name="SMTPUser" id="SMTPUser" class="form-control" value="<?= esc(old('SMTPUser', setting('Email.SMTPUser'))) ?>">
-                        <?php if (has_error('SMTPUser')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPUser') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.password'), 'attr') ?>" for="SMTPPass">
-                        <input type="password" name="SMTPPass" id="SMTPPass" class="form-control" value="<?= esc(old('SMTPPass', setting('Email.SMTPPass'))) ?>">
-                        <?php if (has_error('SMTPPass')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPPass') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.encryption'), 'attr') ?>">
-                        <x-segmented name="SMTPCrypto" label="<?= esc(lang('Email.encryption'), 'attr') ?>" value="<?= esc((string) old('SMTPCrypto', setting('Email.SMTPCrypto'))) ?>" options="<?= esc(json_encode(['' => lang('Email.encryptionNone'), 'tls' => 'TLS', 'ssl' => 'SSL']), 'attr') ?>" />
-                        <?php if (has_error('SMTPCrypto')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPCrypto') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.timeout'), 'attr') ?>" for="SMTPTimeout" description="<?= esc(lang('Email.timeoutDesc'), 'attr') ?>">
-                        <input type="number" name="SMTPTimeout" id="SMTPTimeout" class="form-control bf-input-narrow" value="<?= esc(old('SMTPTimeout', setting('Email.SMTPTimeout'))) ?>">
-                        <?php if (has_error('SMTPTimeout')) : ?>
-                            <p class="text-danger small mb-0"><?= error('SMTPTimeout') ?></p>
-                        <?php endif ?>
-                    </x-setting-row>
-                    <x-setting-row label="<?= esc(lang('Email.keepAlive'), 'attr') ?>" for="SMTPKeepAlive">
-                        <x-switch name="SMTPKeepAlive" id="SMTPKeepAlive" checked="<?= old('SMTPKeepAlive', setting('Email.SMTPKeepAlive')) ? '1' : '0' ?>" />
-                    </x-setting-row>
-                </div>
-            </div>
         </x-admin-box>
 
         <x-save-bar save="<?= esc(lang('Bonfire.saveSettings'), 'attr') ?>" />

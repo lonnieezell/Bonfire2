@@ -11,6 +11,7 @@
 
 namespace Bonfire\Email;
 
+use CodeIgniter\Database\BaseBuilder;
 use Myth\Postal\Config\Mailer as PostalMailer;
 use Myth\Postal\Email;
 use Myth\Postal\LegacyConfigMapper;
@@ -26,6 +27,22 @@ use Myth\Postal\Transport\TransportInterface;
  */
 final class LegacySettingsTransport implements TransportInterface
 {
+    /**
+     * The transport settings as a new CodeIgniter install's Config\Email has them.
+     * These are the keys the old Settings page saved, and `--purge` deletes.
+     */
+    public const FRAMEWORK_DEFAULTS = [
+        'protocol'      => 'mail',
+        'mailPath'      => '/usr/sbin/sendmail',
+        'SMTPHost'      => '',
+        'SMTPPort'      => 25,
+        'SMTPUser'      => '',
+        'SMTPPass'      => '',
+        'SMTPCrypto'    => 'tls',
+        'SMTPTimeout'   => 5,
+        'SMTPKeepAlive' => false,
+    ];
+
     /**
      * The Config\Email keys Postal's mapper reads.
      */
@@ -70,6 +87,37 @@ final class LegacySettingsTransport implements TransportInterface
         $config->default                      = 'legacy';
     }
 
+    /**
+     * The mailer definition the current settings describe.
+     *
+     * @return array<string, mixed>
+     */
+    public static function resolvedMailer(): array
+    {
+        helper('setting');
+
+        $flat = [];
+
+        foreach (self::SETTINGS as $key) {
+            $flat[$key] = setting('Email.' . $key);
+        }
+
+        return LegacyConfigMapper::toMailer($flat);
+    }
+
+    /**
+     * The transport rows in every context, so no stored password is left behind.
+     */
+    public static function storedRows(): BaseBuilder
+    {
+        $config = config('Settings');
+
+        return db_connect($config->database['group'])
+            ->table($config->database['table'])
+            ->where('class', config('Email')::class)
+            ->whereIn('key', array_keys(self::FRAMEWORK_DEFAULTS));
+    }
+
     public function send(Email $email): SendResult
     {
         if (! $this->noticeLogged) {
@@ -92,15 +140,7 @@ final class LegacySettingsTransport implements TransportInterface
      */
     private function transport(): TransportInterface
     {
-        helper('setting');
-
-        $flat = [];
-
-        foreach (self::SETTINGS as $key) {
-            $flat[$key] = setting('Email.' . $key);
-        }
-
-        $mailer = LegacyConfigMapper::toMailer($flat);
+        $mailer = self::resolvedMailer();
 
         if ($this->transport === null || $mailer !== $this->mailer) {
             $class = config('Mailer')->transports[$mailer['transport']];

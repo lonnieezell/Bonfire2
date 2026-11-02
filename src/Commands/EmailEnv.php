@@ -11,9 +11,9 @@
 
 namespace Bonfire\Commands;
 
+use Bonfire\Email\LegacySettingsTransport;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use CodeIgniter\Database\BaseBuilder;
 use Config\Services;
 use Myth\Postal\Config\Mailer as PostalMailer;
 use Myth\Postal\LegacyConfigMapper;
@@ -24,20 +24,7 @@ use Myth\Postal\LegacyConfigMapper;
  */
 class EmailEnv extends BaseCommand
 {
-    /**
-     * The transport settings as a new CodeIgniter install's Config\Email has them.
-     */
-    private const FRAMEWORK_DEFAULTS = [
-        'protocol'      => 'mail',
-        'mailPath'      => '/usr/sbin/sendmail',
-        'SMTPHost'      => '',
-        'SMTPPort'      => 25,
-        'SMTPUser'      => '',
-        'SMTPPass'      => '',
-        'SMTPCrypto'    => 'tls',
-        'SMTPTimeout'   => 5,
-        'SMTPKeepAlive' => false,
-    ];
+    private const FRAMEWORK_DEFAULTS = LegacySettingsTransport::FRAMEWORK_DEFAULTS;
 
     /**
      * Other keys Postal's mapper reads. They are not ones the Settings page
@@ -58,7 +45,7 @@ class EmailEnv extends BaseCommand
     {
         helper('setting');
 
-        $rows = $this->rows()->select('key, context')->get()->getResultArray();
+        $rows = LegacySettingsTransport::storedRows()->select('key, context')->get()->getResultArray();
 
         // Rows under a context never reach setting(), but they still hold passwords to purge.
         $stored = array_column(array_filter($rows, static fn (array $row): bool => $row['context'] === null), 'key');
@@ -291,7 +278,7 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        if ($this->rows()->delete() === false) {
+        if (LegacySettingsTransport::storedRows()->delete() === false) {
             CLI::error('Could not delete the transport settings. They are still in the database.');
 
             return EXIT_ERROR;
@@ -303,18 +290,5 @@ class EmailEnv extends BaseCommand
         CLI::write('Purged the transport settings from the database.', 'green');
 
         return EXIT_SUCCESS;
-    }
-
-    /**
-     * The transport rows in every context, so no stored password is left behind.
-     */
-    private function rows(): BaseBuilder
-    {
-        $config = config('Settings');
-
-        return db_connect($config->database['group'])
-            ->table($config->database['table'])
-            ->where('class', config('Email')::class)
-            ->whereIn('key', array_keys(self::FRAMEWORK_DEFAULTS));
     }
 }
