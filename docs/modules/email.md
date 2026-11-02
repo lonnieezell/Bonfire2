@@ -84,7 +84,8 @@ code, without touching the database. A preview reads `Auth.views` from your `Aut
 ### The From address
 
 The **From** name and address on this screen are the site-wide default. A Mailable without a From gets them, including
-Bonfire's and your own. A Mailable that sets its own From keeps it.
+Bonfire's and your own. A Mailable that sets its own From keeps it. Without a From here, the activation and two-factor
+emails fail with an error instead of going out.
 
 Mail sent with `service('email')` doesn't use this default. It needs a From before it reaches Postal: from `setFrom()`,
 or else from `fromEmail` in `Config\Email`. Without one, `send()` returns `false`.

@@ -58,6 +58,18 @@ final class DefaultFromTest extends TestCase
         $this->assertSame('', $from->name);
     }
 
+    public function testASettingsFromWithADisplayNameUsesItsAddress(): void
+    {
+        setting('Email.fromEmail', 'Old Name <site@example.com>');
+        setting('Email.fromName', 'The Site');
+
+        $this->mailable()->send();
+
+        $from = $this->mail->sent()[0]->from;
+        $this->assertSame('site@example.com', $from?->email);
+        $this->assertSame('The Site', $from->name);
+    }
+
     public function testAMessageWithItsOwnFromKeepsIt(): void
     {
         setting('Email.fromEmail', 'site@example.com');

@@ -5,6 +5,7 @@ namespace Bonfire\Config;
 use Bonfire\Core\Namespaces;
 use Bonfire\Email\LegacySettingsTransport;
 use CodeIgniter\Events\Events;
+use Myth\Postal\Address;
 use Myth\Postal\Email;
 
 /**
@@ -29,7 +30,8 @@ Events::on('email.composing', static function (Email $email): void {
 
     helper('setting');
 
-    $address = (string) setting('Email.fromEmail');
+    // fromEmail may be "Name <address>" outside the settings form, as setFrom() allows.
+    $address = Address::fromString((string) setting('Email.fromEmail'))->email;
 
     if ($address !== '') {
         $email->from($address, (string) setting('Email.fromName'));

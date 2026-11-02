@@ -15,6 +15,7 @@ use Bonfire\Users\User;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Entities\User as ShieldUser;
 use Myth\Postal\Mailable;
+use Myth\Postal\SendResult;
 
 /**
  * An email that gives a user a code for an auth action. It renders the view
@@ -53,6 +54,19 @@ abstract class AuthCodeMail extends Mailable
     }
 
     /**
+     * Fails without a Settings From. Transports would otherwise report success
+     * for a message most servers reject, and the user would never get the code.
+     */
+    public function send(): SendResult
+    {
+        if (trim((string) setting('Email.fromEmail')) === '') {
+            return SendResult::fail('No From address: set one in Settings -> Email.');
+        }
+
+        return parent::send();
+    }
+
+    /**
      * The message's subject line.
      */
     abstract protected function subjectLine(): string;
@@ -74,6 +88,6 @@ abstract class AuthCodeMail extends Mailable
                 'ipAddress' => $this->ipAddress,
                 'userAgent' => $this->userAgent,
                 'date'      => $this->date,
-            ], ['debug' => false]));
+            ], ['debug' => false, 'saveData' => false]));
     }
 }

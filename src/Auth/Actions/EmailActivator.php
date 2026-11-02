@@ -50,8 +50,7 @@ class EmailActivator extends ShieldEmailActivator
             throw new RuntimeException('Cannot get the pending login User.');
         }
 
-        $userEmail = $user->email;
-        if ($userEmail === null) {
+        if ($user->email === null) {
             throw new LogicException(
                 'Email Activation needs user email address. user_id: ' . $user->id,
             );

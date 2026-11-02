@@ -12,6 +12,7 @@ use CodeIgniter\Config\Factories;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Settings\Settings;
 use Config\Services;
+use Myth\Postal\Mailer;
 use Myth\Postal\Preview\MailablePreviewer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
@@ -26,6 +27,7 @@ final class AuthMailsTest extends TestCase
 
     protected function tearDown(): void
     {
+        Services::resetSingle('mailer');
         Services::resetSingle('settings');
         Factories::reset('config');
 
@@ -41,10 +43,7 @@ final class AuthMailsTest extends TestCase
         service('autoloader')->addNamespace('Tests\Support\Views', SUPPORTPATH . 'Views');
         config('Auth')->views[$viewKey] = '\Tests\Support\Views\auth_mail_probe';
 
-        $user = new User(['username' => 'freddy101', 'email' => 'fred@example.com']);
-        $mail = new $class($user, '654321', '10.0.0.9', 'Test Agent', '2026-11-02 10:00:00');
-
-        $email = $mail->render();
+        $email = $this->mail($class)->render();
 
         $this->assertSame(
             ['code' => '654321', 'username' => 'freddy101', 'ipAddress' => '10.0.0.9', 'userAgent' => 'Test Agent', 'date' => '2026-11-02 10:00:00'],
@@ -65,10 +64,7 @@ final class AuthMailsTest extends TestCase
         service('autoloader')->addNamespace('Tests\Support\Views', SUPPORTPATH . 'Views');
         setting('Auth.views', [$viewKey => '\Tests\Support\Views\auth_mail_probe'] + config('Auth')->views);
 
-        $user = new User(['username' => 'freddy101', 'email' => 'fred@example.com']);
-        $mail = new $class($user, '654321', '10.0.0.9', 'Test Agent', '2026-11-02 10:00:00');
-
-        $this->assertSame('654321', json_decode((string) $mail->render()->htmlBody, true)['code']);
+        $this->assertSame('654321', json_decode((string) $this->mail($class)->render()->htmlBody, true)['code']);
     }
 
     /**
@@ -102,6 +98,32 @@ final class AuthMailsTest extends TestCase
     }
 
     /**
+     * @param class-string<AuthCodeMail> $class
+     */
+    #[DataProvider('mails')]
+    public function testItFailsInsteadOfSendingWithoutAFrom(string $class): void
+    {
+        $sent = Mailer::fake();
+        setting('Email.fromEmail', '');
+
+        $result = $this->mail($class)->send();
+
+        $this->assertFalse($result->success);
+        $sent->assertSentCount(0);
+    }
+
+    /**
+     * @param class-string<AuthCodeMail> $class
+     */
+    #[DataProvider('mails')]
+    public function testRenderingDoesNotLeaveTheCodeInTheSharedRenderer(string $class): void
+    {
+        $this->mail($class)->render();
+
+        $this->assertArrayNotHasKey('code', service('renderer')->getData());
+    }
+
+    /**
      * @return array<string, array{class-string<AuthCodeMail>, string, string}>
      */
     public static function mails(): iterable
@@ -117,5 +139,15 @@ final class AuthMailsTest extends TestCase
         $previewer = new MailablePreviewer(['Bonfire\Auth\Mails' => dirname(__DIR__, 2) . '/src/Auth/Mails']);
 
         $this->assertSame([ActivationMail::class, TwoFactorMail::class], $previewer->discover());
+    }
+
+    /**
+     * @param class-string<AuthCodeMail> $class
+     */
+    private function mail(string $class): AuthCodeMail
+    {
+        $user = new User(['username' => 'freddy101', 'email' => 'fred@example.com']);
+
+        return new $class($user, '654321', '10.0.0.9', 'Test Agent', '2026-11-02 10:00:00');
     }
 }

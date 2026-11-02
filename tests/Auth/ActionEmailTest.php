@@ -11,7 +11,6 @@ use Bonfire\Users\User;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Config\Services;
-use Myth\Postal\Email;
 use Myth\Postal\Mailer;
 use Myth\Postal\Transport\FakeTransport;
 use Tests\Support\TestCase;
@@ -90,9 +89,7 @@ final class ActionEmailTest extends TestCase
     {
         $this->useActionAndFrom('login', Email2FA::class);
 
-        /** @var User $user */
-        $user = fake(UserModel::class, ['username' => 'freddy101']);
-        $user->createEmailIdentity(['email' => 'fred@example.com', 'password' => 'secret123abc!@']);
+        $this->createUser(['username' => 'freddy101', 'email' => 'fred@example.com', 'password' => 'secret123abc!@']);
 
         $this->post(route_to('login'), ['email' => 'fred@example.com', 'password' => 'secret123abc!@'])->assertRedirect();
 
@@ -108,7 +105,8 @@ final class ActionEmailTest extends TestCase
     private function assertTheOneMailSentIs(string $mailable): void
     {
         $this->mail->assertSentCount(1);
-        $this->mail->assertSent($mailable, static fn (Email $email): bool => $email->to[0]->email === 'fred@example.com');
+        $this->mail->assertSent($mailable);
+        $this->mail->assertSentTo('fred@example.com');
 
         // The Mailables don't set a From: the Settings one is filled in on send.
         $email = $this->mail->sent()[0];
