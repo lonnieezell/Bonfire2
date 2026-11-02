@@ -58,14 +58,17 @@ class EmailEnv extends BaseCommand
     {
         helper('setting');
 
-        $sources = $this->sources();
-        $values  = [];
+        $rows = $this->rows()->select('key, context')->get()->getResultArray();
+
+        // Rows under a context never reach setting(), but they still hold passwords to purge.
+        $stored = array_column(array_filter($rows, static fn (array $row): bool => $row['context'] === null), 'key');
+        $values = [];
 
         foreach ([...array_keys(self::FRAMEWORK_DEFAULTS), ...self::MAPPER_ONLY_KEYS] as $key) {
             $values[$key] = setting('Email.' . $key);
         }
 
-        if ($this->nothingToMigrate($sources, $values)) {
+        if ($rows === [] && $this->onlyFrameworkDefaults($values)) {
             CLI::write('Nothing to migrate');
 
             return EXIT_SUCCESS;
@@ -73,7 +76,7 @@ class EmailEnv extends BaseCommand
 
         $mailer = LegacyConfigMapper::toMailer($values);
 
-        $this->printSources($sources);
+        $this->printSources($this->sources($stored), count($rows) - count($stored));
         $this->printEnv($mailer);
         $this->printSnippet($mailer);
 
@@ -81,18 +84,18 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        return $this->purge(array_key_exists('force', $params));
+        return $this->purge($rows !== [], array_key_exists('force', $params));
     }
 
     /**
      * Where setting() gets each value from: a row wins, then .env, then the file.
      *
+     * @param list<string> $stored Keys with a row setting() can read
+     *
      * @return array<string, string>
      */
-    private function sources(): array
+    private function sources(array $stored): array
     {
-        $stored = array_column($this->rows()->where('context')->get()->getResultArray(), 'key');
-
         $sources = [];
 
         foreach (array_keys(self::FRAMEWORK_DEFAULTS) as $key) {
@@ -125,18 +128,12 @@ class EmailEnv extends BaseCommand
     }
 
     /**
-     * @param array<string, string> $sources
-     * @param array<string, mixed>  $values
+     * @param array<string, mixed> $values
      */
-    private function nothingToMigrate(array $sources, array $values): bool
+    private function onlyFrameworkDefaults(array $values): bool
     {
-        // Rows under a context never reach setting(), but they still hold passwords to purge.
-        if ($this->rows()->countAllResults() > 0) {
-            return false;
-        }
-
         foreach (self::FRAMEWORK_DEFAULTS as $key => $default) {
-            if ($sources[$key] !== 'Config\Email' || $values[$key] !== $default) {
+            if ($this->envKey($key) !== null || $values[$key] !== $default) {
                 return false;
             }
         }
@@ -147,12 +144,16 @@ class EmailEnv extends BaseCommand
     /**
      * @param array<string, string> $sources
      */
-    private function printSources(array $sources): void
+    private function printSources(array $sources, int $contextRows): void
     {
         CLI::write('Where each value comes from (only database rows can be purged):');
 
         foreach ($sources as $key => $source) {
             CLI::write('  ' . str_pad($key, 15) . $source);
+        }
+
+        if ($contextRows > 0) {
+            CLI::write("Not shown: {$contextRows} row(s) stored under a settings context. --purge deletes them too, so copy any you still need first.");
         }
 
         CLI::newLine();
@@ -163,7 +164,7 @@ class EmailEnv extends BaseCommand
      */
     private function printEnv(array $mailer): void
     {
-        CLI::write('.env (replaces any email.* keys):');
+        CLI::write('.env (replaces any email.* transport keys; keep email.fromEmail and email.fromName):');
 
         $name    = $mailer['transport'];
         $printed = false;
@@ -205,14 +206,15 @@ class EmailEnv extends BaseCommand
 
     /**
      * BaseConfig trims quotes and turns the words true and false into booleans,
-     * and DotEnv expands ${name} even inside quotes.
+     * DotEnv expands ${name} even inside quotes, and it reads one line at a time.
      */
     private function changedByEnvRoute(string $value): bool
     {
         return trim($value, '\'"') !== $value
             || $value === 'true'
             || $value === 'false'
-            || str_contains($value, '${');
+            || str_contains($value, '${')
+            || strpbrk($value, "\r\n") !== false;
     }
 
     /**
@@ -269,18 +271,18 @@ class EmailEnv extends BaseCommand
         return $code;
     }
 
-    private function purge(bool $force): int
+    private function purge(bool $hasRows, bool $force): int
     {
+        if (! $hasRows) {
+            CLI::write('No transport settings in the database to purge.');
+
+            return EXIT_SUCCESS;
+        }
+
         if (config('Mailer')::class === PostalMailer::class) {
             CLI::error('Not purging: the legacy mail bridge still reads these settings, and without them mail would go through PHP mail(). Create app/Config/Mailer.php from the snippet above first.');
 
             return EXIT_ERROR;
-        }
-
-        if ($this->rows()->countAllResults() === 0) {
-            CLI::write('No transport settings in the database to purge.');
-
-            return EXIT_SUCCESS;
         }
 
         if (! $force && CLI::prompt('Delete these transport settings from the database, including any stored under a context?', ['n', 'y']) !== 'y') {
@@ -289,7 +291,11 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        $this->rows()->delete();
+        if ($this->rows()->delete() === false) {
+            CLI::error('Could not delete the transport settings. They are still in the database.');
+
+            return EXIT_ERROR;
+        }
 
         // The settings service still holds what it read before the delete.
         Services::resetSingle('settings');

@@ -70,10 +70,9 @@ final class EmailEnvTest extends TestCase
      * class as an app would, so this fails if the keys stop reaching the config.
      *
      * @param array<string, mixed> $settings
-     * @param array{name: string}  $expected
      */
     #[DataProvider('providePrintedEnvAndSnippetBuildTheBridgesMailer')]
-    public function testPrintedEnvAndSnippetBuildTheBridgesMailer(array $settings, array $expected): void
+    public function testPrintedEnvAndSnippetBuildTheBridgesMailer(array $settings, string $name): void
     {
         foreach ($settings as $key => $value) {
             setting('Email.' . $key, $value);
@@ -86,13 +85,13 @@ final class EmailEnvTest extends TestCase
         $this->loadEnv($output);
         $config = $this->loadSnippet($output);
 
-        $this->assertSame($expected['name'], $config->default);
-        $this->assertSame([$expected['name']], array_keys($config->mailers));
-        $this->assertSame(LegacyConfigMapper::toMailer($settings), $config->mailers[$expected['name']]);
+        $this->assertSame($name, $config->default);
+        $this->assertSame([$name], array_keys($config->mailers));
+        $this->assertSame(LegacyConfigMapper::toMailer($settings), $config->mailers[$name]);
     }
 
     /**
-     * @return array<string, array{array<string, mixed>, array<string, mixed>}>
+     * @return array<string, array{array<string, mixed>, string}>
      */
     public static function providePrintedEnvAndSnippetBuildTheBridgesMailer(): iterable
     {
@@ -108,19 +107,19 @@ final class EmailEnvTest extends TestCase
                     'SMTPTimeout'   => 9,
                     'SMTPKeepAlive' => true,
                 ],
-                ['name' => 'smtp'],
+                'smtp',
             ],
             'smtp without credentials' => [
                 ['protocol' => 'smtp', 'SMTPHost' => 'relay.internal', 'SMTPPort' => '25'],
-                ['name' => 'smtp'],
+                'smtp',
             ],
             'sendmail' => [
                 ['protocol' => 'sendmail', 'mailPath' => '/opt/bin/send mail'],
-                ['name' => 'sendmail'],
+                'sendmail',
             ],
             'mail' => [
                 ['protocol' => 'mail', 'SMTPHost' => 'ignored.example.com'],
-                ['name' => 'mail'],
+                'mail',
             ],
         ];
     }
@@ -176,6 +175,7 @@ final class EmailEnvTest extends TestCase
             'leading quote'  => ["'secret"],
             'boolean word'   => ['true'],
             'nested env'     => ['pa${HOME}ss'],
+            'line break'     => ["sec\nret"],
         ];
     }
 
@@ -214,7 +214,6 @@ final class EmailEnvTest extends TestCase
     {
         setting('Email.SMTPPass', 'from-db');
         $this->setEnv('email.SMTPUser', 'env-user');
-        Factories::reset('config');
         config('Email')->SMTPHost = 'file.example.com';
         config('Email')->protocol = 'smtp';
 
@@ -232,7 +231,6 @@ final class EmailEnvTest extends TestCase
     public function testDatabaseWinsOverEnvInTheLabelAndTheValue(): void
     {
         $this->setEnv('email.SMTPHost', 'env.example.com');
-        Factories::reset('config');
 
         setting('Email.protocol', 'smtp');
         setting('Email.SMTPHost', 'db.example.com');
@@ -248,15 +246,21 @@ final class EmailEnvTest extends TestCase
     public function testEnvOnlyInstallIsToldThereIsNothingToPurge(): void
     {
         $this->setEnv('email.SMTPHost', 'env.example.com');
-        Factories::reset('config');
         $this->useOwnMailerConfig();
 
-        $this->assertSame(EXIT_SUCCESS, service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]));
+        $this->assertSame(EXIT_SUCCESS, $this->purgeForced());
 
         $output = $this->getStreamFilterBuffer();
 
         $this->assertStringNotContainsString('Nothing to migrate', $output);
         $this->assertStringContainsString('to purge', $output);
+    }
+
+    public function testPurgeWithNoRowsSucceedsWhileTheBridgeIsActive(): void
+    {
+        $this->setEnv('email.SMTPHost', 'env.example.com');
+
+        $this->assertSame(EXIT_SUCCESS, $this->purgeForced());
     }
 
     public function testConfigFileValuesAreMigrated(): void
@@ -301,7 +305,7 @@ final class EmailEnvTest extends TestCase
         setting('Email.fromEmail', 'site@example.com');
         setting('Site.siteName', 'Kept');
 
-        $this->assertSame(EXIT_SUCCESS, service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]));
+        $this->assertSame(EXIT_SUCCESS, $this->purgeForced());
 
         $this->assertSame(0, $this->transportRowCount());
         $this->assertSame(1, $this->db->table('settings')->where('key', 'fromName')->countAllResults());
@@ -314,7 +318,7 @@ final class EmailEnvTest extends TestCase
         $this->useOwnMailerConfig();
         setting('Email.SMTPPass', 'hunter2');
 
-        service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]);
+        $this->purgeForced();
 
         $this->assertSame('', setting('Email.SMTPPass'));
     }
@@ -324,7 +328,7 @@ final class EmailEnvTest extends TestCase
         $this->useOwnMailerConfig();
         service('settings')->set('Email.SMTPPass', 'hunter2', 'tenant-1');
 
-        service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]);
+        $this->purgeForced();
 
         $this->assertStringNotContainsString('Nothing to migrate', $this->getStreamFilterBuffer());
         $this->assertSame(0, $this->transportRowCount());
@@ -334,7 +338,7 @@ final class EmailEnvTest extends TestCase
     {
         service('settings')->set('Email.SMTPPass', 'hunter2', 'tenant-1');
 
-        $this->assertSame(EXIT_ERROR, service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]));
+        $this->assertSame(EXIT_ERROR, $this->purgeForced());
         $this->assertSame(1, $this->transportRowCount());
     }
 
@@ -419,6 +423,14 @@ final class EmailEnvTest extends TestCase
 
         $_ENV[$key] = $_SERVER[$key] = $value;
         putenv("{$key}={$value}");
+
+        // BaseConfig reads the environment when a config is built.
+        Factories::reset('config');
+    }
+
+    private function purgeForced(): int
+    {
+        return service('commands')->run('bonfire:email-env', ['purge' => null, 'force' => null]);
     }
 
     private function loadEnv(string $output): void
