@@ -59,15 +59,41 @@ final class LegacySettingsTransport implements TransportInterface
      */
     public static function register(): void
     {
-        $config = config('Mailer');
-
-        if ($config::class !== PostalMailer::class) {
+        if (! self::isActive()) {
             return;
         }
+
+        $config = config('Mailer');
 
         $config->transports['bonfire-legacy'] = self::class;
         $config->mailers['legacy']            = ['transport' => 'bonfire-legacy'];
         $config->default                      = 'legacy';
+    }
+
+    /**
+     * Whether the app is without a Mailer config of its own.
+     */
+    public static function isActive(): bool
+    {
+        return config('Mailer')::class === PostalMailer::class;
+    }
+
+    /**
+     * The mailer definition the current settings describe.
+     *
+     * @return array<string, mixed>
+     */
+    public static function resolvedMailer(): array
+    {
+        helper('setting');
+
+        $flat = [];
+
+        foreach (self::SETTINGS as $key) {
+            $flat[$key] = setting('Email.' . $key);
+        }
+
+        return LegacyConfigMapper::toMailer($flat);
     }
 
     public function send(Email $email): SendResult
@@ -92,15 +118,7 @@ final class LegacySettingsTransport implements TransportInterface
      */
     private function transport(): TransportInterface
     {
-        helper('setting');
-
-        $flat = [];
-
-        foreach (self::SETTINGS as $key) {
-            $flat[$key] = setting('Email.' . $key);
-        }
-
-        $mailer = LegacyConfigMapper::toMailer($flat);
+        $mailer = self::resolvedMailer();
 
         if ($this->transport === null || $mailer !== $this->mailer) {
             $class = config('Mailer')->transports[$mailer['transport']];

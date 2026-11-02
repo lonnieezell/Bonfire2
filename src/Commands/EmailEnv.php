@@ -11,11 +11,11 @@
 
 namespace Bonfire\Commands;
 
+use Bonfire\Email\LegacySettingsTransport;
+use Bonfire\Email\StoredTransportSettings;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
-use CodeIgniter\Database\BaseBuilder;
 use Config\Services;
-use Myth\Postal\Config\Mailer as PostalMailer;
 use Myth\Postal\LegacyConfigMapper;
 
 /**
@@ -24,21 +24,6 @@ use Myth\Postal\LegacyConfigMapper;
  */
 class EmailEnv extends BaseCommand
 {
-    /**
-     * The transport settings as a new CodeIgniter install's Config\Email has them.
-     */
-    private const FRAMEWORK_DEFAULTS = [
-        'protocol'      => 'mail',
-        'mailPath'      => '/usr/sbin/sendmail',
-        'SMTPHost'      => '',
-        'SMTPPort'      => 25,
-        'SMTPUser'      => '',
-        'SMTPPass'      => '',
-        'SMTPCrypto'    => 'tls',
-        'SMTPTimeout'   => 5,
-        'SMTPKeepAlive' => false,
-    ];
-
     /**
      * Other keys Postal's mapper reads. They are not ones the Settings page
      * saved, so they are neither labelled nor purged.
@@ -58,13 +43,13 @@ class EmailEnv extends BaseCommand
     {
         helper('setting');
 
-        $rows = $this->rows()->select('key, context')->get()->getResultArray();
+        $rows = StoredTransportSettings::rows()->select('key, context')->get()->getResultArray();
 
         // Rows under a context never reach setting(), but they still hold passwords to purge.
         $stored = array_column(array_filter($rows, static fn (array $row): bool => $row['context'] === null), 'key');
         $values = [];
 
-        foreach ([...array_keys(self::FRAMEWORK_DEFAULTS), ...self::MAPPER_ONLY_KEYS] as $key) {
+        foreach ([...array_keys(StoredTransportSettings::FRAMEWORK_DEFAULTS), ...self::MAPPER_ONLY_KEYS] as $key) {
             $values[$key] = setting('Email.' . $key);
         }
 
@@ -98,7 +83,7 @@ class EmailEnv extends BaseCommand
     {
         $sources = [];
 
-        foreach (array_keys(self::FRAMEWORK_DEFAULTS) as $key) {
+        foreach (array_keys(StoredTransportSettings::FRAMEWORK_DEFAULTS) as $key) {
             $envKey = $this->envKey($key);
 
             $sources[$key] = match (true) {
@@ -132,7 +117,7 @@ class EmailEnv extends BaseCommand
      */
     private function onlyFrameworkDefaults(array $values): bool
     {
-        foreach (self::FRAMEWORK_DEFAULTS as $key => $default) {
+        foreach (StoredTransportSettings::FRAMEWORK_DEFAULTS as $key => $default) {
             if ($this->envKey($key) !== null || $values[$key] !== $default) {
                 return false;
             }
@@ -279,7 +264,7 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        if (config('Mailer')::class === PostalMailer::class) {
+        if (LegacySettingsTransport::isActive()) {
             CLI::error('Not purging: the legacy mail bridge still reads these settings, and without them mail would go through PHP mail(). Create app/Config/Mailer.php from the snippet above first.');
 
             return EXIT_ERROR;
@@ -291,7 +276,7 @@ class EmailEnv extends BaseCommand
             return EXIT_SUCCESS;
         }
 
-        if ($this->rows()->delete() === false) {
+        if (StoredTransportSettings::rows()->delete() === false) {
             CLI::error('Could not delete the transport settings. They are still in the database.');
 
             return EXIT_ERROR;
@@ -303,18 +288,5 @@ class EmailEnv extends BaseCommand
         CLI::write('Purged the transport settings from the database.', 'green');
 
         return EXIT_SUCCESS;
-    }
-
-    /**
-     * The transport rows in every context, so no stored password is left behind.
-     */
-    private function rows(): BaseBuilder
-    {
-        $config = config('Settings');
-
-        return db_connect($config->database['group'])
-            ->table($config->database['table'])
-            ->where('class', config('Email')::class)
-            ->whereIn('key', array_keys(self::FRAMEWORK_DEFAULTS));
     }
 }

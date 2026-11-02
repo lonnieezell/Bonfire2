@@ -37,8 +37,8 @@ date formats.
 
 ## Email
 
-The Email settings screen controls how the site sends email: the sender's name and address, and the SMTP, Mail or
-Sendmail delivery details.
+The Email settings screen shows the mailers your site is configured with, with their secrets masked, and warns about
+problems. It sets the sender's name and address and sends a test message through the mailer you choose.
 
 [Read more about Email Settings](email.md)
 

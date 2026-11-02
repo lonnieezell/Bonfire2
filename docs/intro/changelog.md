@@ -6,6 +6,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 2 November 2026 (breaking change)
 
+**Settings → Email no longer edits mail transports.** The protocol, SMTP and sendmail fields are gone: mail is configured
+in `app/Config/Mailer.php` and `.env`. The page now lists every mailer with its transport and settings, marks the
+default, links failover chains to their mailers, and shows secrets only as **Set** or **Empty**. It warns while the
+legacy bridge is active, while old transport rows are still in the settings table, and when the default mailer discards
+mail or isn't defined. You can still edit the From name and address, and a new **Test send** mails a fixed message to an
+address you type, through a mailer you choose. Installs on the bridge keep sending as before, but change these settings
+in `.env` or `app/Config/Email.php`, or move to `Mailer.php` with `php spark bonfire:email-env`. See
+[Email Settings](../modules/email.md).
+
 **Tools → Mail Previews** shows your Mailables in the admin, in every environment: the HTML, plain text and raw MIME of
 each one, and a **Send to me** button that mails it to your own address through a mailer you choose. It needs the new
 `email.preview` permission. You publish your own `AuthGroups`, so **run `php spark bonfire:permissions`**, which grants
@@ -30,7 +39,7 @@ transport settings from the settings table, including any plain text SMTP passwo
 has its own Mailer config. See [Moving mail settings into code](../modules/email.md#moving-mail-settings-into-code).
 
 Bonfire now sends its mail through Postal, which it requires. Mail keeps working: you don't have to change anything for
-your activation, two-factor and magic link emails to go out. But the SMTP fields are leaving Settings → Email, so
+your activation, two-factor and magic link emails to go out. But the SMTP fields have left Settings → Email, so
 run `php spark bonfire:email-env` to move that config into code.
 
 The activation and two-factor emails are now the Postal Mailables `Bonfire\Auth\Mails\ActivationMail` and

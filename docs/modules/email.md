@@ -1,63 +1,67 @@
 # Email Settings
 
-The Email settings screen controls how your site sends email, such as password resets, email verification codes and
+The Email settings screen shows how your site sends email, such as password resets, email verification codes and
 two-factor login codes. Open **Email** under **Settings** in the sidebar. You need the `admin.settings` permission.
 
-Change what you need, then click **Save Settings**.
+You can't change mailers or their credentials here. They live in `app/Config/Mailer.php` and `.env`, and Bonfire never
+stores them. See the [Postal docs](https://lonnieezell.github.io/postal/) for how to configure a mailer. This screen
+lets you check that setup, send a test message, and set the From name and address.
 
-## Set up SMTP
+## Mailers
 
-Most email providers, such as Mailgun, Postmark, Amazon SES or your web host, give you SMTP details to send through.
+The screen lists every mailer in `config('Mailer')`, with its transport and settings, and marks the default.
 
-1. Under **From**, enter the name and address your emails come from. Use an address your provider lets you send
-   from.
-2. Under **Delivery**, choose **SMTP**.
-3. Enter the **Host**, **Username** and **Password** your provider gave you.
-4. Choose the **Port** and **Encryption** your provider asks for. The usual pairs are:
+A setting whose name matches `pass`, `secret`, `key`, `token`, `credential` or `auth`, in any case and at any depth,
+shows only **Set** or **Empty**. So SES's `credentials` and `dkim.privateKey` never show their values, and neither do
+those of a custom transport. The masking happens on the server, so the values aren't in the page at all. Credentials
+inside a URL are hidden too, so `smtp://user:password@host` shows as `smtp://***@host`.
 
-    | Port | Encryption |
-    | --- | --- |
-    | 587 | TLS |
-    | 465 | SSL |
-    | 25 or 2525 | None or TLS |
+!!! warning "What masking can't catch"
 
-    If your provider uses another port, choose **other** and type it in.
+    Masking goes by the setting's name, so usernames, hosts and paths show in full. So does a secret under any other
+    name, one in a URL's path or query string, such as `https://hooks.example.com/abc123`, or one in a value with no
+    `scheme://`, such as `user:password@host`. Give secrets in a custom
+    transport a name the pattern matches. `authType` shows as **Set** even though it only names a login method, because
+    its name matches `auth`.
 
-5. Click **Save Settings**.
+A failover mailer lists the mailers it tries, in order, with a link to each.
 
-To check the settings, send yourself an email from the site, for example with "forgot password" on the login page.
+### Warnings
 
-## Settings
+| Warning | What it means | What to do |
+| --- | --- | --- |
+| The legacy mailer is in use | The app has no `app/Config/Mailer.php`, so mail goes through the [legacy mail bridge](#the-legacy-mail-bridge). | Run `php spark bonfire:email-env` and follow [Moving mail settings into code](#moving-mail-settings-into-code). |
+| Old mail settings are still stored | The app has its own Mailer config, but the settings table still holds old transport values, possibly a plain text password. | Run `php spark bonfire:email-env --purge`. |
+| The default mailer discards mail | The default mailer, or the first mailer in its failover chain, uses the `null` transport, so nothing is sent and nothing reports an error. | Set `$default` in `app/Config/Mailer.php`. |
+| The default mailer isn't defined | `$default` names a mailer that isn't in `$mailers`, so sends fail. | Fix `$default` or add the mailer. |
+| The default mailer can't send | Its transport isn't registered, or its failover chain is empty, loops, or has a mailer that can't be built. | Fix the problem shown on that mailer. |
 
-### From
+A mailer also shows a warning if its transport isn't registered in `$transports`, or if its failover chain loops back
+on itself, is empty, or has a mailer that can't be built. Postal builds the whole chain before it sends, so one bad
+mailer stops all of them, even an earlier one that would work. A chain entry that isn't defined has no link.
+
+## Send a test message
+
+**Test send** sends a fixed message to check a mailer. Choose the mailer, type the recipient, which starts as your own
+address, and click **Send test**. The result appears above the form.
+
+- It uses the saved From name and address, so save any changes to them first. Without a From address it fails.
+- A failure shows the mailer's error, with the secrets the screen knows about replaced by `***`. An encoded secret
+  can't be recognised, and values under 4 characters are left alone, so those would still show.
+- The `null` transport and the `log` transport report success without delivering anything, so the result says the
+  message was discarded or logged. A failover mailer goes by the first mailer in its chain.
+- A failover mailer reports success if any mailer in its chain accepted the message. It doesn't say which one did. If a
+  real mailer fails and a later `null` or `log` mailer takes over, the result still says the message was sent.
+- It can't send through a failover chain that loops.
+
+## From
 
 | Setting | What it does |
 | --- | --- |
 | Name | The sender name emails show, such as your site's name. Required, at least 2 characters. |
 | Email | The address emails are sent from. Required. |
 
-### Delivery
-
-| Setting | What it does |
-| --- | --- |
-| Protocol | How mail is sent: **SMTP** through a mail server, **Mail** through PHP's `mail()` function, or **Sendmail** through the server's sendmail program. |
-| Sendmail path | Where the sendmail program is, such as `/usr/sbin/sendmail`. Shown for **Sendmail**. |
-
-**Mail** has no options of its own and only works on Linux servers that are set up to send mail.
-
-### SMTP
-
-These are shown when **Protocol** is **SMTP**.
-
-| Setting | What it does |
-| --- | --- |
-| Host | The mail server's address, such as `smtp.example.com`. |
-| Port | The mail server's port: 25, 587, 465, 2525, or **other** to type your own. |
-| Username | The login for the mail server. |
-| Password | The password for the mail server. It's stored in the settings table as plain text. |
-| Encryption | **None**, **TLS** or **SSL**. Use what your provider asks for. |
-| Timeout | How many seconds to wait for the mail server before giving up. |
-| Persistent connection | Keeps the connection to the mail server open between emails. Helps when the site sends many emails at once. |
+Click **Save Settings** to save them. They're the default for all mail. See [The From address](#the-from-address).
 
 ## How Bonfire sends mail
 
@@ -102,6 +106,10 @@ The `legacy` mailer sends through the transport your existing settings describe.
 is sent, the same way as before: a value in the Settings table wins, then `email.*` in `.env`, then
 `app/Config/Email.php`. With nothing set anywhere, mail goes through PHP's `mail()` function.
 
+The Email settings screen shows the `legacy` mailer with the settings it would send with, masked like any other, under
+a deprecation warning. You can't edit them there. To change one before you leave the bridge, set it in `.env` or
+`app/Config/Email.php`, or remove its row from the settings table, since a row wins.
+
 Bonfire's activation and two-factor emails go through it. Mail sent with `service('email')` or Shield's `emailer()`,
 which is how the magic link email goes out, doesn't pass through the bridge and logs no notice. Without a Mailer config,
 `emailer()` already uses those same settings.
@@ -116,7 +124,7 @@ which is how the magic link email goes out, doesn't pass through the bridge and 
 The bridge turns off as soon as your app has its own `Config\Mailer` class, so set that file up before you deploy it.
 
 1. Run `php spark publish` to create `app/Config/Mailer.php`, or create it by hand.
-2. Set `$default` and define the mailer in that file. This one matches an SMTP server from the settings above:
+2. Set `$default` and define the mailer in that file. This one defines an SMTP server:
 
     ```php
     <?php
