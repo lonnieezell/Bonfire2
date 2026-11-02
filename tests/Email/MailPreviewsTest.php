@@ -237,6 +237,37 @@ final class MailPreviewsTest extends TestCase
         $this->assertSame(WelcomeMail::class, $email->mailableClass);
     }
 
+    /**
+     * @param array<string, mixed> $definition
+     */
+    #[DataProvider('provideSendToMeSaysWhatReallyHappensToTheMessage')]
+    public function testSendToMeSaysWhatReallyHappensToTheMessage(array $definition, string $alert): void
+    {
+        $mailer                = config('Mailer');
+        $mailer->mailers['m']  = $definition;
+        $mailer->mailers['no'] = ['transport' => 'null'];
+
+        $this->send(self::WELCOME, ['mailer' => 'm'])->assertRedirectTo(route_to('mail-preview', self::WELCOME));
+
+        // The alert type picks the toast's colour: success only when mail went out.
+        foreach (['success', 'info'] as $type) {
+            $this->assertSame($type === $alert, session()->has($type), "alert {$type}");
+        }
+    }
+
+    public static function provideSendToMeSaysWhatReallyHappensToTheMessage(): iterable
+    {
+        yield 'null discards' => [['transport' => 'null'], 'info'];
+
+        yield 'log writes to the log' => [['transport' => 'log'], 'info'];
+
+        yield 'chain follows a first mailer that discards' => [['transport' => 'failover', 'chain' => ['no', 'second']], 'info'];
+
+        yield 'chain follows a first mailer that sends' => [['transport' => 'failover', 'chain' => ['second', 'no']], 'success'];
+
+        yield 'a mailer that sends' => [['transport' => 'recording'], 'success'];
+    }
+
     public function testThePermissionsCommandGrantsPreviewsToAnInstallThatLacksThem(): void
     {
         $user = $this->createUser();

@@ -13,6 +13,7 @@ namespace Bonfire\Email\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Email\MailablePreviews;
+use Bonfire\Email\MailerDashboard;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
@@ -78,13 +79,18 @@ class MailPreviewsController extends AdminController
         $class    = $previews->find($slug) ?? throw PageNotFoundException::forPageNotFound();
         $address  = (string) auth()->user()->email;
 
-        $result = $previews->send($class, $address, (string) $this->request->getPost('mailer'));
+        $mailer = (string) $this->request->getPost('mailer');
+        $result = $previews->send($class, $address, $mailer);
 
-        // Alerts print their content as is.
-        if ($result->success) {
-            alert('success', esc(lang('Email.previewSent', [$address])));
-        } else {
+        // Alerts print their content as is. A mailer can report success and still deliver nothing.
+        if (! $result->success) {
             alert('danger', esc($result->error ?? lang('Email.previewNotSent')));
+        } else {
+            match ((new MailerDashboard())->delivery($mailer)) {
+                'discarded' => alert('info', esc(lang('Email.testDiscarded'))),
+                'logged'    => alert('info', esc(lang('Email.testLogged'))),
+                'sent'      => alert('success', esc(lang('Email.previewSent', [$address]))),
+            };
         }
 
         return redirect()->route('mail-preview', [$slug]);
