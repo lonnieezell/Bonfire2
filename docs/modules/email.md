@@ -63,12 +63,16 @@ These are shown when **Protocol** is **SMTP**.
 
 Bonfire's mail is moving to [Postal](https://github.com/lonnieezell/postal), which reads its mailers from
 `app/Config/Mailer.php`. Postal's own default mailer is `null`, which discards every message without an error. So an
-install without that file doesn't lose its activation and two-factor emails, Bonfire adds a mailer named `legacy` and
-makes it the default. You don't have to do anything for this.
+install without that file doesn't lose the mail it sends through Postal Mailables, Bonfire adds a mailer named `legacy`
+and makes it the default. You don't have to do anything for this.
 
 The `legacy` mailer sends through the transport your existing settings describe. They are read each time a message
-is sent, in the same order as before: the Settings table, then `app/Config/Email.php`, then `email.*` in `.env`. With
-nothing saved anywhere, mail goes through PHP's `mail()` function.
+is sent, the same way as before: a value in the Settings table wins, then `email.*` in `.env`, then
+`app/Config/Email.php`. With nothing set anywhere, mail goes through PHP's `mail()` function.
+
+Mail sent with `service('email')` or Shield's `emailer()`, which is how Bonfire's activation and two-factor emails go
+out today, doesn't pass through the bridge and logs no notice. Without a Mailer config it already uses those same
+settings.
 
 !!! warning "Deprecated"
 
