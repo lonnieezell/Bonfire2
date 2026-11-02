@@ -32,6 +32,13 @@ class Bonfire
     private array $moduleConfigs = [];
 
     /**
+     * The directory of each discovered module, keyed by namespace.
+     *
+     * @var array<string, string>
+     */
+    private array $modules = [];
+
+    /**
      * Are we currently in the admin area?
      *
      * @var bool
@@ -73,6 +80,17 @@ class Bonfire
         $this->discoverAppModules();
         $this->discoverPackageModules();
         $this->initModules();
+    }
+
+    /**
+     * The core, app and package modules boot() found, including
+     * those without a Module.php. Empty until Bonfire has booted.
+     *
+     * @return array<string, string> namespace => directory
+     */
+    public function modules(): array
+    {
+        return $this->modules;
     }
 
     /**
@@ -224,6 +242,8 @@ class Bonfire
     private function loadModules(array $modules)
     {
         foreach ($modules as $namespace => $dir) {
+            $this->modules[$namespace] = $dir;
+
             if (! is_file($dir . '/Module.php')) {
                 continue;
             }

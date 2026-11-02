@@ -80,6 +80,7 @@ keep working. The two emails are always sent as HTML.
 
 Both Mailables implement Postal's `Previewable`, so they can be rendered with sample data, an unsaved user and a fake
 code, without touching the database. A preview reads `Auth.views` from your `Auth` config only, not the settings table.
+See them under [Mail Previews](mail_previews.md).
 
 ### The From address
 

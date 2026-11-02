@@ -42,6 +42,12 @@ Sendmail delivery details.
 
 [Read more about Email Settings](email.md)
 
+## Mail Previews
+
+Mail Previews, under **Tools**, shows your site's emails with sample data and sends a preview to you.
+
+[Read more about Mail Previews](mail_previews.md)
+
 ## Tools
 
 The Tools module adds System Info, a summary of the server and its writable folders, and a viewer for the site's log

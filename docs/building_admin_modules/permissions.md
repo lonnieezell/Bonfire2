@@ -51,6 +51,7 @@ has none.
 | `recycler.view` | Open the Recycler | ✓ | | ✓ | |
 | `logs.view` | Read the logs and see the log widgets | ✓ | ✓ | ✓ | |
 | `logs.manage` | Delete logs | ✓ | | ✓ | |
+| `email.preview` | Open [Mail Previews](../modules/mail_previews.md) and send a preview to themselves | ✓ | ✓ | | |
 | `me.edit` | Edit their own profile | ✓ | ✓ | ✓ | |
 | `me.security` | Change their own password | ✓ | ✓ | ✓ | |
 
