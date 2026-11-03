@@ -60,6 +60,11 @@ class Namespaces
         $prefixesEnd   = array_slice($prefixes, array_search('Tests\\Support', $keys, true) + 1);
         $prefixes      = array_merge($prefixesStart, $namespaces, $prefixesEnd);
 
+        // Route files load in this order, and Content's fallback route must come after all the others.
+        $content = $prefixes['Bonfire\\Content'];
+        unset($prefixes['Bonfire\\Content']);
+        $prefixes['Bonfire\\Content'] = $content;
+
         $rp->setValue($autoloader, $prefixes);
     }
 }

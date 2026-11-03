@@ -64,7 +64,10 @@ final class EntryParser
             throw new ContentException('The filename needs to start with a date (2026-10-27.my-post.md), or the front matter needs a `published_at`.');
         }
 
+        $uri = $collection->uriFor($slug);
+
         self::assertFits('slug', $slug, 255);
+        self::assertFits('uri', (string) $uri, 255);
         self::assertFits('title', $title, 255);
         self::assertFits('blueprint', (string) $blueprint, 100);
 
@@ -73,6 +76,7 @@ final class EntryParser
             'collection'   => $collection->handle,
             'blueprint'    => $blueprint,
             'slug'         => $slug,
+            'uri'          => $uri,
             'status'       => $status,
             'published_at' => $publishedAt,
             'title'        => $title,

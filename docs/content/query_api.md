@@ -44,6 +44,11 @@ $pager = $query->pager();
     It finds drafts and scheduled entries too. To find only live entries, use
     `content()->collection('blog')->published()->find($id)`.
 
+## Finding an entry by URI
+
+`content()->findByUri('/blog/hello-world')` returns the published entry at a URI, or `null` for a draft, a scheduled entry
+or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-by-uri), but the collection needs a `route`.
+
 ## Entries
 
 Queries return `Bonfire\Content\Entry` objects:
@@ -53,6 +58,7 @@ $entry->id;           // the UUID
 $entry->collection;   // 'blog'
 $entry->blueprint;    // 'post', or null
 $entry->slug;         // 'hello-world'
+$entry->uri;          // '/blog/hello-world', or null if the collection has no route
 $entry->status;       // 'published' or 'draft'
 $entry->publishedAt;  // '2026-10-27 00:00:00', or null
 $entry->title;        // 'Hello world'
@@ -61,4 +67,10 @@ $entry->data;         // all the front matter, as an array
 
 $entry->field('tagline');            // one front matter value, or null
 $entry->field('tagline', 'Welcome'); // or a default
+
+$entry->content();                   // the body as HTML
 ```
+
+`content()` renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
+apart from the tags GitHub disallows, such as `<script>`, so treat a body as code you trust. Links to `javascript:` and
+similar are dropped. Use `$entry->body` to render it your own way.

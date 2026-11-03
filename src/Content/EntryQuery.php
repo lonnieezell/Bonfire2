@@ -12,7 +12,6 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
-use CodeIgniter\I18n\Time;
 use CodeIgniter\Pager\Pager;
 
 /**
@@ -108,11 +107,7 @@ final class EntryQuery
         $model->where('collection', $this->collection->handle);
 
         if ($this->published) {
-            $model->where('status', 'published')
-                ->groupStart()
-                ->where('published_at')
-                ->orWhere('published_at <=', Time::now()->toDateTimeString())
-                ->groupEnd();
+            $model->published();
         }
 
         return $model;

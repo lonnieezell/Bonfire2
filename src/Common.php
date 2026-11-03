@@ -1,6 +1,7 @@
 <?php
 
 use Bonfire\Content\Content;
+use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
 
@@ -125,6 +126,16 @@ if (! function_exists('content')) {
      */
     function content(): Content
     {
-        return new Content(config('Content')->contentPath);
+        static $checkedForChanges = false;
+
+        $contentPath = config('Content')->contentPath;
+
+        // An edited content file shows up on the next request without a reindex.
+        if (ENVIRONMENT === 'development' && ! $checkedForChanges) {
+            $checkedForChanges = true;
+            (new StaleCheck($contentPath))->run();
+        }
+
+        return new Content($contentPath);
     }
 }

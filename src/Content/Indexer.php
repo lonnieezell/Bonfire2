@@ -98,7 +98,7 @@ final readonly class Indexer
      */
     private function readFiles(): array
     {
-        $records = $errors = [];
+        $records = $errors = $uris = [];
 
         foreach ($this->filesIn('collections', '.yaml') as $configFile) {
             try {
@@ -111,7 +111,8 @@ final readonly class Indexer
 
             foreach ($this->filesIn("collections/{$collection->handle}", '.md') as $path) {
                 try {
-                    $record                 = $this->readEntry($collection, $path, $records);
+                    $record = $this->readEntry($collection, $path, $records);
+                    $this->claimUri($uris, $record['uri'], $path);
                     $records[$record['id']] = $record;
                 } catch (ContentException $e) {
                     $errors[$path] = $e->getMessage();
@@ -142,6 +143,27 @@ final readonly class Indexer
         }
 
         return $record + ['path' => $path, 'mtime' => (int) filemtime($this->root . $path)];
+    }
+
+    /**
+     * @param array<string, string> $uris the paths of the entries read so far. By lowercase
+     *                                    URI, because the index's collation may not tell case apart.
+     *
+     * @throws ContentException when another entry has this URI
+     */
+    private function claimUri(array &$uris, ?string $uri, string $path): void
+    {
+        if ($uri === null) {
+            return;
+        }
+
+        $key = mb_strtolower($uri);
+
+        if (isset($uris[$key])) {
+            throw new ContentException("Its URI {$uri} is already used by {$uris[$key]}.");
+        }
+
+        $uris[$key] = $path;
     }
 
     /**

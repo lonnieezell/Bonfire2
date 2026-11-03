@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 3 November 2026
 
+**Content: serve entries on your front end.** Set `$autoRoute = true` in `app/Config/Content.php`, give a collection a
+`route`, and a `template` or a `controller`, and run `php spark content:reindex`. Your routes always win, and only
+published entries are served. `content()->findByUri()` does the same lookup for routes of your own, and
+`$entry->content()` renders the Markdown. Nothing changes unless you turn this on. See
+[Routing](../content/routing.md).
+
 **Content: read file-based content from your code.** Keep entries as Markdown with YAML front matter under `content/`,
 index them with `php spark content:reindex`, and query them with
 `content()->collection('blog')->published()->paginate()`. Run `php spark migrate --all` to create the index tables.

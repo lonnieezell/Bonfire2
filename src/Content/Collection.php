@@ -34,6 +34,9 @@ final readonly class Collection
         public string $sortField,
         public string $sortDirection,
         public array $blueprints,
+        public ?string $route,
+        public ?string $template,
+        public ?string $controller,
     ) {
     }
 
@@ -63,6 +66,12 @@ final readonly class Collection
 
         [$field, $direction] = self::parseSort($config['sort'] ?? ($dated ? 'published_at desc' : 'title asc'));
 
+        $route      = self::stringOption($config, 'route');
+        $template   = self::stringOption($config, 'template');
+        $controller = self::stringOption($config, 'controller');
+
+        self::assertRouting($route, $template, $controller);
+
         return new self(
             $handle,
             is_scalar($config['title'] ?? null) ? (string) $config['title'] : $handle,
@@ -70,7 +79,61 @@ final readonly class Collection
             $field,
             $direction,
             array_values(array_filter((array) ($config['blueprints'] ?? []), is_string(...))),
+            $route,
+            $template,
+            $controller,
         );
+    }
+
+    /**
+     * The URI of an entry with this slug, or null if the collection has no route.
+     */
+    public function uriFor(string $slug): ?string
+    {
+        return $this->route === null ? null : self::normalizeUri(str_replace('{slug}', $slug, $this->route));
+    }
+
+    /**
+     * The form URIs have in the index.
+     */
+    public static function normalizeUri(string $uri): string
+    {
+        return '/' . trim($uri, '/');
+    }
+
+    /**
+     * @param array<array-key, mixed> $config
+     *
+     * @throws ContentException when the option is set to anything but a string
+     */
+    private static function stringOption(array $config, string $key): ?string
+    {
+        $value = $config[$key] ?? null;
+
+        if ($value !== null && (! is_string($value) || $value === '')) {
+            throw new ContentException("`{$key}` must be a string.");
+        }
+
+        return $value;
+    }
+
+    /**
+     * @throws ContentException when the collection can't be routed this way
+     */
+    private static function assertRouting(?string $route, ?string $template, ?string $controller): void
+    {
+        // Without a slug, every entry would get the same URI.
+        if ($route !== null && (! str_contains($route, '{slug}') || preg_match('/[{}]/', str_replace('{slug}', '', $route)) === 1)) {
+            throw new ContentException('`route` must contain {slug}, and no other placeholder.');
+        }
+
+        if ($template !== null && $controller !== null) {
+            throw new ContentException('A collection can declare a `template` or a `controller`, not both.');
+        }
+
+        if ($controller !== null && preg_match('/^[\w\\\\]+::\w+$/', $controller) !== 1) {
+            throw new ContentException('`controller` must look like App\\Controllers\\Blog::show.');
+        }
     }
 
     /**

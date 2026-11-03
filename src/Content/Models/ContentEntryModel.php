@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content\Models;
 
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 
 /**
@@ -26,4 +27,18 @@ class ContentEntryModel extends Model
         'id', 'collection', 'blueprint', 'slug', 'uri', 'parent_id', 'sort', 'status', 'published_at',
         'title', 'data', 'body', 'path', 'hash', 'mtime',
     ];
+
+    /**
+     * Keeps entries that are published and whose published_at, if any, has passed.
+     */
+    public function published(): self
+    {
+        $this->where('status', 'published')
+            ->groupStart()
+            ->where('published_at')
+            ->orWhere('published_at <=', Time::now()->toDateTimeString())
+            ->groupEnd();
+
+        return $this;
+    }
 }
