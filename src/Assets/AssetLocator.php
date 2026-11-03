@@ -75,23 +75,21 @@ final readonly class AssetLocator
     {
         foreach ($segments as $segment) {
             // Never let a URL climb out of a configured folder.
-            if ($segment === '..' || str_contains($segment, "\0") || str_contains($segment, '\\')) {
+            if (preg_match('#^\.\.$|[\\\\/\0]#', $segment) === 1) {
                 return null;
             }
         }
 
         $requested = array_pop($segments);
-        $fileparts = explode('.', (string) $requested);
-        $count     = count($fileparts);
 
         // Must be at least a name and extension
-        if ($requested === null || $count < 2) {
+        if ($requested === null || ! str_contains($requested, '.')) {
             return null;
         }
 
         // De-bust the filename
         $parts    = explode($this->separator(), $requested);
-        $filename = count($parts) === 2 ? $parts[0] . '.' . $fileparts[$count - 1] : $requested;
+        $filename = count($parts) === 2 ? $parts[0] . '.' . pathinfo($requested, PATHINFO_EXTENSION) : $requested;
         $path     = $this->path($segments, $filename);
 
         return $path !== null && is_file($path) ? $path : null;
