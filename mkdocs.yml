@@ -108,6 +108,10 @@ nav:
       - modules/consent.md
       - modules/privacy.md
       - modules/meta_info.md
+  - Content:
+      - content/index.md
+      - content/collections.md
+      - content/query_api.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/assets.md

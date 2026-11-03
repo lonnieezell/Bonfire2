@@ -1,0 +1,5 @@
+title: Blog
+dated: true
+sort: published_at desc
+blueprints:
+  - post

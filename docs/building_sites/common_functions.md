@@ -11,6 +11,7 @@ Bonfire loads these helpers from `src/Common.php` on every request, so you can c
 | [`render()`](#render) | A view rendered with a given theme |
 | [`admin_accent()`](#admin_accent) | The admin theme's accent color |
 | [`site_offline()`](#site_offline) | Whether the site is in maintenance mode |
+| [`content()`](../content/query_api.md) | The content query API |
 
 ## app_date()
 
