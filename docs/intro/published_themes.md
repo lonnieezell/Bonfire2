@@ -48,9 +48,11 @@ The warning is a pointer to the changelog. Bonfire changes nothing on its own.
 
 ## What "re-publish" means
 
-When the changelog says to re-publish a theme or copy a file, there is no command for it. You bring the new files
-from `vendor/lonnieezell/bonfire/themes/` into `themes/` and keep your own edits. If you never edited the theme, you
-can copy the whole folder over. If you did, you merge the two by hand.
+When the changelog says to re-publish a theme or copy a file, you bring the new files from
+`vendor/lonnieezell/bonfire/themes/` into `themes/` and keep your own edits. If you did edit the theme, you merge the
+two by hand. If you never edited it, you can copy the whole folder over, or run `php spark bf:install -f`, which does
+the same but also asks its install questions again. Without `-f`, `php spark bf:install` leaves every theme file you
+already have as it is and only adds the ones that are missing.
 
 How much work that is depends on how much of Bonfire's theme you've changed. If you keep your changes in a theme of
 your own, such as `themes/MyAdmin` for your own controllers, the `Admin` copy stays close to Bonfire's and is easy to

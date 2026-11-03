@@ -4,6 +4,22 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 3 November 2026 (breaking change)
+
+**`php spark bf:install` no longer overwrites theme files you already have.** Running it again used to copy Bonfire's
+themes over `themes/`, discarding your edits to `Admin`, `App` and `Auth`. It now copies only the files that are missing
+and says how many it left alone. To replace your files with Bonfire's anyway, run `php spark bf:install -f`; that also
+discards your changes, so commit them first. If you counted on a second run to refresh the themes after an update, add
+`-f` or [merge the files by hand](published_themes.md#what-re-publish-means).
+
+**`php spark bf:install` says when it could not make a change.** It edits `.env`, `app/Config/*.php` and `composer.json`
+by looking for the text the framework ships. When that text is not there, for example after a CodeIgniter update, the
+installer used to skip the edit and still report success. It now names each file it could not update, what it looked
+for, and exits with an error. Config files it cannot copy correctly are not written. The SQLite3 option for
+`app/Config/Database.php` was one of these edits that did nothing on CodeIgniter 4.7. Running the installer again no
+longer adds `app.indexPage` or the SQLite3 `.env` lines a second time, keeps an existing encryption key, and keeps the
+final newline in `.env`.
+
 ## 3 November 2026
 
 **Content: read file-based content from your code.** Keep entries as Markdown with YAML front matter under `content/`,

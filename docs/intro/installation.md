@@ -38,7 +38,12 @@ This will:
 - Remove the `index.php` from your urls
 - Prompt you for your database credentials and database name, saving that to the `.env` file
 - Copy all of the Bonfire module config files into your `app/Config` directory.
-- Copy the theme directories to `ROOTPATH/themes`
+- Copy the theme directories to `ROOTPATH/themes`, leaving any file that is there already as it is
+
+If the installer cannot make one of its edits, for example because a file no longer has the text it looks for, it says
+which file and what to change by hand, and exits with an error. Running it again is safe: it keeps your `.env` values and
+your theme files. To replace your theme files with Bonfire's, run `php spark bf:install -f`, which discards your
+changes to them.
 
 Then it will present you with a recommendation on creating the database via command
 
