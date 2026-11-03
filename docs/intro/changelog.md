@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 3 November 2026
 
+**Content: read file-based content from your code.** Keep entries as Markdown with YAML front matter under `content/`,
+index them with `php spark content:reindex`, and query them with
+`content()->collection('blog')->published()->paginate()`. Run `php spark migrate --all` to create the index tables.
+Nothing changes until you do this: there's no admin screen or routing yet. See [Content](../content/index.md).
+
 **One Mailable file that can't be loaded no longer breaks Mail Previews.** A parse error or a missing parent class in a
 file in a Mails folder used to give a 500 on Tools → Mail Previews and on every preview and send. The list now shows that
 Mailable with its error, its preview page shows the same error, and the others work as before.

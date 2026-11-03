@@ -1,5 +1,6 @@
 <?php
 
+use Bonfire\Content\Content;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
 
@@ -115,5 +116,15 @@ if (! function_exists('admin_accent')) {
         return is_string($accent) && preg_match('/^#[0-9a-fA-F]{6}$/', $accent) === 1
             ? $accent
             : '#D9622B';
+    }
+}
+
+if (! function_exists('content')) {
+    /**
+     * The entry point of the content query API.
+     */
+    function content(): Content
+    {
+        return new Content(config('Content')->contentPath);
     }
 }

@@ -22,6 +22,7 @@ use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
 use Bonfire\Config\Themes;
 use Bonfire\Consent\Config\Consent;
+use Bonfire\Content\Config\Content;
 use Bonfire\Core\BreakingChanges;
 use Bonfire\Dashboard\Config\Dashboard;
 use Bonfire\Privacy\Config\Privacy;
@@ -98,6 +99,7 @@ class Install extends BaseCommand
         Site::class,
         Themes::class,
         Consent::class,
+        Content::class,
         Dashboard::class,
         Privacy::class,
         Recycler::class,
