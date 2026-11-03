@@ -2376,9 +2376,11 @@ its own. It tells you when a release needs you to look:</p>
 </ul>
 <p>The warning is a pointer to the changelog. Bonfire changes nothing on its own.</p>
 <h2 id="what-re-publish-means">What "re-publish" means</h2>
-<p>When the changelog says to re-publish a theme or copy a file, there is no command for it. You bring the new files
-from <code>vendor/lonnieezell/bonfire/themes/</code> into <code>themes/</code> and keep your own edits. If you never edited the theme, you
-can copy the whole folder over. If you did, you merge the two by hand.</p>
+<p>When the changelog says to re-publish a theme or copy a file, you bring the new files from
+<code>vendor/lonnieezell/bonfire/themes/</code> into <code>themes/</code> and keep your own edits. If you did edit the theme, you merge the
+two by hand. If you never edited it, you can copy the whole folder over, or run <code>php spark bf:install -f</code>, which does
+the same but also asks its install questions again. Without <code>-f</code>, <code>php spark bf:install</code> leaves every theme file you
+already have as it is and only adds the ones that are missing.</p>
 <p>How much work that is depends on how much of Bonfire's theme you've changed. If you keep your changes in a theme of
 your own, such as <code>themes/MyAdmin</code> for your own controllers, the <code>Admin</code> copy stays close to Bonfire's and is easy to
 replace.</p>

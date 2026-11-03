@@ -2388,8 +2388,12 @@ From the project root, type:</p>
 <li>Remove the <code>index.php</code> from your urls</li>
 <li>Prompt you for your database credentials and database name, saving that to the <code>.env</code> file</li>
 <li>Copy all of the Bonfire module config files into your <code>app/Config</code> directory.</li>
-<li>Copy the theme directories to <code>ROOTPATH/themes</code></li>
+<li>Copy the theme directories to <code>ROOTPATH/themes</code>, leaving any file that is there already as it is</li>
 </ul>
+<p>If the installer cannot make one of its edits, for example because a file no longer has the text it looks for, it says
+which file and what to change by hand, and exits with an error. Running it again is safe: it keeps your <code>.env</code> values and
+your theme files. To replace your theme files with Bonfire's, run <code>php spark bf:install -f</code>, which discards your
+changes to them.</p>
 <p>Then it will present you with a recommendation on creating the database via command</p>
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>db:create<span class="w"> </span>&lt;database<span class="w"> </span>name&gt;
 </code></pre></div>
