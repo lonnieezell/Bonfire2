@@ -86,6 +86,26 @@ final readonly class Collection
     }
 
     /**
+     * Every collection with a valid config, by handle. One that can't be loaded is logged and left out.
+     *
+     * @return list<self>
+     */
+    public static function all(string $contentRoot): array
+    {
+        $collections = [];
+
+        foreach (glob(rtrim($contentRoot, '/') . '/collections/*.yaml') ?: [] as $file) {
+            try {
+                $collections[] = self::load($contentRoot, basename($file, '.yaml'));
+            } catch (ContentException $e) {
+                log_message('error', 'Content: collection {file}: {message}', ['file' => basename($file), 'message' => $e->getMessage()]);
+            }
+        }
+
+        return $collections;
+    }
+
+    /**
      * The URI of an entry with this slug, or null if the collection has no route.
      */
     public function uriFor(string $slug): ?string

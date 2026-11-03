@@ -3,7 +3,9 @@
 Content lets you keep pages and posts as Markdown and YAML files in your repository, and query them from your own
 controllers and views. The files are the source of truth. The database holds an index that you can always rebuild.
 
-This part of Content only reads: there's no admin screen yet. To serve entries as pages, see [Routing](routing.md).
+You can edit entries in the admin, where each collection has a list and a form built from its blueprint: see
+[Editing entries](admin.md), [Blueprints](blueprints.md) and [Field types](field_types.md). To serve entries as pages,
+see [Routing](routing.md).
 
 ## File layout
 

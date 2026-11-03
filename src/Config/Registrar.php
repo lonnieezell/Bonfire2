@@ -113,8 +113,18 @@ class Registrar
                 'users.erase'   => "Can erase a user's personal data",
                 'email.preview' => 'Can preview Mailables and send the previews to themselves',
                 'email.log'     => 'Can read the Mail Outbox',
+
+                'content.access'    => 'Can see the Content menu and the lists of entries',
+                'content.edit'      => 'Can create and edit Content entries',
+                'content.publish'   => 'Can publish Content entries and set when they go live',
+                'content.delete'    => 'Can delete Content entries',
+                'content.structure' => 'Can change the structure of Content, such as collections and blueprints',
             ],
             'moduleGrants' => [
+                'content' => [
+                    'superadmin' => ['content.*'],
+                    'admin'      => ['content.*'],
+                ],
                 'privacy' => [
                     'admin' => ['users.export'],
                 ],

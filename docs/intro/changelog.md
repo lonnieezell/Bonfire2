@@ -4,6 +4,22 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 4 November 2026
+
+**Content: edit entries in the admin.** **Content** in the sidebar has an item for each collection, with a list of its
+entries and a form to create and edit them. The form is built from the collection's blueprint in
+`resources/blueprints/collections/<collection>/<blueprint>.yaml`, with `text`, `textarea`, `markdown`, `slug`, `toggle`
+and `date` fields. Saving checks the input, writes the entry's Markdown file in one step and updates the index. It
+refuses to save if the file changed on disk since the form was opened. Comments in an entry's front matter don't survive
+a save. Publishing, and setting `published_at`, need their own permission. Nothing changes for a site that has no
+collections. See [Editing entries](../content/admin.md), [Blueprints](../content/blueprints.md) and
+[Field types](../content/field_types.md).
+
+There are five new permissions: `content.access`, `content.edit`, `content.publish`, `content.delete` and
+`content.structure`. The last two are held back for later and nothing uses them yet. If you published your own
+`AuthGroups`, add them there, or **run `php spark bonfire:permissions`**, which declares them and grants `content.*` to
+`superadmin` and `admin`. Until you do, Content stays hidden from those groups.
+
 ## 3 November 2026 (breaking change)
 
 **`php spark bf:install` no longer overwrites theme files you already have.** Running it again used to copy Bonfire's
