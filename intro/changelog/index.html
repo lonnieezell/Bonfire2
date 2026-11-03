@@ -2472,6 +2472,9 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="3-november-2026">3 November 2026</h2>
+<p><strong>One Mailable file that can't be loaded no longer breaks Mail Previews.</strong> A parse error or a missing parent class in a
+file in a Mails folder used to give a 500 on Tools → Mail Previews and on every preview and send. The list now shows that
+Mailable with its error, its preview page shows the same error, and the others work as before.</p>
 <p><strong>Mail Previews' Send to me no longer claims a discarded or logged mail was sent.</strong> Sending through the <code>null</code> mailer now
 says the message was discarded, and through <code>log</code> that it was written to the log, the same as the test send in
 Settings → Email. A failover chain is judged by its first mailer.</p>
