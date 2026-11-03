@@ -26,6 +26,11 @@ final readonly class MailablePreviews
 {
     private MailablePreviewer $previewer;
 
+    /**
+     * @var array<string, string> namespace => directory
+     */
+    private array $namespaces;
+
     public function __construct()
     {
         $namespaces = [];
@@ -34,7 +39,8 @@ final readonly class MailablePreviews
             $namespaces[$namespace . '\Mails'] = $dir . '/Mails';
         }
 
-        $this->previewer = new MailablePreviewer([...$namespaces, ...config('Postal')->mailableNamespaces]);
+        $this->namespaces = [...$namespaces, ...config('Postal')->mailableNamespaces];
+        $this->previewer  = new MailablePreviewer($this->namespaces);
     }
 
     /**
@@ -46,7 +52,9 @@ final readonly class MailablePreviews
     {
         $groups = [];
 
-        foreach ($this->previewer->discover() as $class) {
+        [$found, $unloadable] = $this->scan();
+
+        foreach ($found as $class) {
             $entry = ['slug' => self::slug($class), 'name' => self::name($class), 'subject' => null, 'error' => null];
 
             try {
@@ -58,6 +66,10 @@ final readonly class MailablePreviews
             $groups[self::module($class)][] = $entry;
         }
 
+        foreach ($unloadable as $class => $error) {
+            $groups[self::module($class)][] = ['slug' => self::slug($class), 'name' => self::name($class), 'subject' => null, 'error' => $error];
+        }
+
         ksort($groups);
 
         return $groups;
@@ -65,7 +77,8 @@ final readonly class MailablePreviews
 
     /**
      * The class a URL slug names, if it is one of this install's Mailables. Only
-     * discovered classes qualify, so a URL can't reach one anywhere else.
+     * discovered classes qualify, so a URL can't reach one anywhere else. That
+     * includes a file that can't be loaded, so its error can be shown.
      *
      * @return class-string<Mailable&Previewable>|null
      */
@@ -73,7 +86,9 @@ final readonly class MailablePreviews
     {
         $class = str_replace('.', '\\', $slug);
 
-        return in_array($class, $this->previewer->discover(), true) ? $class : null;
+        [$found, $unloadable] = $this->scan();
+
+        return in_array($class, $found, true) || isset($unloadable[$class]) ? $class : null;
     }
 
     /**
@@ -88,7 +103,7 @@ final readonly class MailablePreviews
     {
         $slugs = [];
 
-        foreach (array_intersect($classes, $this->previewer->discover()) as $class) {
+        foreach (array_intersect($classes, $this->scan()[0]) as $class) {
             $slugs[$class] = self::slug($class);
         }
 
@@ -100,7 +115,12 @@ final readonly class MailablePreviews
      */
     public function render(string $class): MailablePreview
     {
-        return $this->previewer->render($class);
+        try {
+            return $this->previewer->render($class);
+        } catch (Throwable $e) {
+            // Loading the class is what threw, as find() only lets Mailables through.
+            return new MailablePreview(class: $class, error: $e);
+        }
     }
 
     /**
@@ -139,6 +159,38 @@ final readonly class MailablePreviews
         } catch (Throwable $e) {
             return SendResult::fail($e->getMessage());
         }
+    }
+
+    /**
+     * What MailablePreviewer::discover() finds, but a file that throws while
+     * loading (a parse error, a missing parent class) is reported instead of
+     * taking every other Mailable down with it.
+     *
+     * @return array{list<class-string<Mailable&Previewable>>, array<class-string, string>} the Mailables, and the error of each class that can't be loaded
+     */
+    private function scan(): array
+    {
+        $found      = [];
+        $unloadable = [];
+
+        foreach ($this->namespaces as $namespace => $path) {
+            foreach (glob(rtrim($path, '/\\') . DIRECTORY_SEPARATOR . '*.php') ?: [] as $file) {
+                $class = rtrim($namespace, '\\') . '\\' . basename($file, '.php');
+
+                try {
+                    if ($this->previewer->isPreviewable($class)) {
+                        $found[] = $class;
+                    }
+                } catch (Throwable $e) {
+                    $unloadable[$class] = $e->getMessage();
+                }
+            }
+        }
+
+        sort($found);
+        ksort($unloadable);
+
+        return [$found, $unloadable];
     }
 
     /**

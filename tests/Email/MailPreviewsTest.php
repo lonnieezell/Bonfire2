@@ -28,12 +28,14 @@ use Tests\Support\TestCase;
  */
 final class MailPreviewsTest extends TestCase
 {
-    private const WELCOME = 'Tests.Support.Modules.Mailing.Mails.WelcomeMail';
-    private const RECEIPT = 'Tests.Support.Mails.ReceiptMail';
-    private const BROKEN  = 'Tests.Support.Mails.BrokenMail';
+    private const WELCOME    = 'Tests.Support.Modules.Mailing.Mails.WelcomeMail';
+    private const RECEIPT    = 'Tests.Support.Mails.ReceiptMail';
+    private const BROKEN     = 'Tests.Support.Mails.BrokenMail';
+    private const UNLOADABLE = 'Tests.Unloadable.Mails.UnloadableMail';
 
     protected $refresh = true;
     private User $admin;
+    private ?string $unloadableDir = null;
 
     /**
      * @var array<string, string>
@@ -77,6 +79,13 @@ final class MailPreviewsTest extends TestCase
 
     protected function tearDown(): void
     {
+        if ($this->unloadableDir !== null) {
+            service('autoloader')->removeNamespace('Tests\Unloadable\Mails');
+            array_map(unlink(...), glob($this->unloadableDir . '/*.php') ?: []);
+            rmdir($this->unloadableDir);
+            $this->unloadableDir = null;
+        }
+
         Time::setTestNow();
         cache()->delete('app-modules-search');
         config('Bonfire')->appModules           = [];
@@ -129,6 +138,52 @@ final class MailPreviewsTest extends TestCase
         $response->assertOK();
         $this->assertSame(BrokenMail::ERROR, $this->cellOf($response, self::BROKEN, 'error'));
         $this->assertSame('Your receipt', $this->cellOf($response, self::RECEIPT, 'subject'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testAMailableFileThatCannotBeLoadedShowsItsErrorWithoutBreakingTheList(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $response = $this->actingAs($this->admin)->get(route_to('mail-previews'));
+
+        $response->assertOK();
+        $this->assertNotSame('', $this->cellOf($response, self::UNLOADABLE, 'error'));
+        $this->assertSame('Welcome aboard', $this->cellOf($response, self::WELCOME, 'subject'));
+        $this->assertSame('Your receipt', $this->cellOf($response, self::RECEIPT, 'subject'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testPreviewOfAMailableFileThatCannotBeLoadedShowsItsErrorAndNoSendForm(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $response = $this->actingAs($this->admin)->get(route_to('mail-preview', self::UNLOADABLE));
+
+        $response->assertOK();
+        $this->assertNotSame('', trim($this->xpath($response)->query('//*[@data-preview-error]')->item(0)->textContent));
+        $this->assertCount(0, $this->xpath($response)->query('//form[@data-send-to-me]'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testOtherMailablesCanStillBePreviewedAndSentBesideAFileThatCannotBeLoaded(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $this->send(self::WELCOME, ['mailer' => 'second'])->assertRedirect();
+
+        $this->assertCount(1, RecordingTransport::$sent);
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function provideUnloadableMailables(): iterable
+    {
+        return [
+            'parse error'          => ["final class UnloadableMail {\n    public function oops( {\n}\n"],
+            'missing parent class' => ["final class UnloadableMail extends \\Tests\\Unloadable\\NoSuchParent\n{\n}\n"],
+        ];
     }
 
     public function testPreviewOfAMailableThatThrowsShowsItsErrorAndNoSendForm(): void
@@ -510,6 +565,22 @@ final class MailPreviewsTest extends TestCase
         libxml_clear_errors();
 
         return new DOMXPath($dom);
+    }
+
+    /**
+     * Puts a Mailable file that throws when loaded into the Mails folders. Each test
+     * can scan it once: PHP reports a failed include only the first time.
+     *
+     * @param string $source the PHP file body, after the opening tag and namespace
+     */
+    private function addUnloadableMailable(string $source): void
+    {
+        $this->unloadableDir = sys_get_temp_dir() . '/bf-unloadable-' . bin2hex(random_bytes(4));
+        mkdir($this->unloadableDir);
+        file_put_contents($this->unloadableDir . '/UnloadableMail.php', "<?php\n\nnamespace Tests\\Unloadable\\Mails;\n\n" . $source);
+
+        service('autoloader')->addNamespace('Tests\Unloadable\Mails', $this->unloadableDir);
+        config('Postal')->mailableNamespaces['Tests\Unloadable\Mails'] = $this->unloadableDir;
     }
 
     private function cellOf(TestResponse $response, string $slug, string $cell): string
