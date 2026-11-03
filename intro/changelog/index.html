@@ -1289,6 +1289,8 @@
       
         
       
+        
+      
     
     
     
@@ -1381,6 +1383,34 @@
     
   
     Query API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Routing
   
 
     
@@ -2601,6 +2631,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="3-november-2026">3 November 2026</h2>
+<p><strong>Content: serve entries on your front end.</strong> Set <code>$autoRoute = true</code> in <code>app/Config/Content.php</code>, give a collection a
+<code>route</code>, and a <code>template</code> or a <code>controller</code>, and run <code>php spark content:reindex</code>. Your routes always win, and only
+published entries are served. <code>content()-&gt;findByUri()</code> does the same lookup for routes of your own, and
+<code>$entry-&gt;content()</code> renders the Markdown. Nothing changes unless you turn this on. See
+<a href="../../content/routing/">Routing</a>.</p>
 <p><strong>Content: read file-based content from your code.</strong> Keep entries as Markdown with YAML front matter under <code>content/</code>,
 index them with <code>php spark content:reindex</code>, and query them with
 <code>content()-&gt;collection('blog')-&gt;published()-&gt;paginate()</code>. Run <code>php spark migrate --all</code> to create the index tables.

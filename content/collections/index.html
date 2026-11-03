@@ -1033,6 +1033,8 @@
       
         
       
+        
+      
     
     
     
@@ -1205,6 +1207,34 @@
     
   
     Query API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Routing
   
 
     
@@ -2283,6 +2313,21 @@ its entries in <code>content/collections/&lt;handle&gt;/</code>. Handles use let
 <td><code>blueprints</code></td>
 <td>None</td>
 <td>The blueprints its entries can use. The first is the default.</td>
+</tr>
+<tr>
+<td><code>route</code></td>
+<td>None</td>
+<td>The URI of its entries, such as <code>/blog/{slug}</code>. See <a href="../routing/">Routing</a>.</td>
+</tr>
+<tr>
+<td><code>template</code></td>
+<td>None</td>
+<td>The view that renders its entries, such as <code>blog/show</code>.</td>
+</tr>
+<tr>
+<td><code>controller</code></td>
+<td>None</td>
+<td>The method that handles its entries, such as <code>App\Controllers\Blog::show</code>. Can't be set with <code>template</code>.</td>
 </tr>
 </tbody>
 </table>

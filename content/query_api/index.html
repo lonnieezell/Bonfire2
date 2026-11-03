@@ -14,7 +14,7 @@
         <link rel="prev" href="../collections/">
       
       
-        <link rel="next" href="../../building_sites/">
+        <link rel="next" href="../routing/">
       
       
         
@@ -1033,6 +1033,8 @@
       
         
       
+        
+      
     
     
     
@@ -1216,6 +1218,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#finding-an-entry-by-uri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding an entry by URI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1230,6 +1243,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2196,6 +2237,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#finding-an-entry-by-uri" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding an entry by URI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2336,12 +2388,16 @@ exist or its config is invalid.</p>
 <p>It finds drafts and scheduled entries too. To find only live entries, use
 <code>content()-&gt;collection('blog')-&gt;published()-&gt;find($id)</code>.</p>
 </div>
+<h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
+<p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
+or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
 <h2 id="entries">Entries</h2>
 <p>Queries return <code>Bonfire\Content\Entry</code> objects:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>           <span class="c1">// the UUID</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">;</span>   <span class="c1">// 'blog'</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">blueprint</span><span class="p">;</span>    <span class="c1">// 'post', or null</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">slug</span><span class="p">;</span>         <span class="c1">// 'hello-world'</span>
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">uri</span><span class="p">;</span>          <span class="c1">// '/blog/hello-world', or null if the collection has no route</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">status</span><span class="p">;</span>       <span class="c1">// 'published' or 'draft'</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">publishedAt</span><span class="p">;</span>  <span class="c1">// '2026-10-27 00:00:00', or null</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">;</span>        <span class="c1">// 'Hello world'</span>
@@ -2350,7 +2406,12 @@ exist or its config is invalid.</p>
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">);</span>            <span class="c1">// one front matter value, or null</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">,</span> <span class="s1">'Welcome'</span><span class="p">);</span> <span class="c1">// or a default</span>
+
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">();</span>                   <span class="c1">// the body as HTML</span>
 </code></pre></div>
+<p><code>content()</code> renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
+apart from the tags GitHub disallows, such as <code>&lt;script&gt;</code>, so treat a body as code you trust. Links to <code>javascript:</code> and
+similar are dropped. Use <code>$entry-&gt;body</code> to render it your own way.</p>
 
 
 
@@ -2403,13 +2464,13 @@ exist or its config is invalid.</p>
         
         
           
-          <a href="../../building_sites/" class="md-footer__link md-footer__link--next" aria-label="Next: Building Sites">
+          <a href="../routing/" class="md-footer__link md-footer__link--next" aria-label="Next: Routing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Building Sites
+                Routing
               </div>
             </div>
             <div class="md-footer__button md-icon">
