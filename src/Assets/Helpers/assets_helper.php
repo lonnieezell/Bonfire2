@@ -10,6 +10,9 @@ declare(strict_types=1);
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  */
+
+use Bonfire\Assets\AssetLocator;
+
 if (! defined('asset_link')) {
     /**
      * Generates the HTML tag with URL to serve an asset to the client
@@ -24,7 +27,7 @@ if (! defined('asset_link')) {
     function asset_link(string $location, string $type, mixed $attributes = null): string
     {
         $tag = '';
-        $url = asset($location, $type);
+        $url = esc(asset($location, $type));
 
         $additionalAttr = '';
         $defaultAttr    = $type === 'css' ? "rel='stylesheet'" : '';
@@ -40,7 +43,7 @@ if (! defined('asset_link')) {
                     $defaultAttr = '';
                 }
 
-                $additionalAttr .= "{$key}='{$value}' ";
+                $additionalAttr .= esc((string) $key) . "='" . esc((string) $value) . "' ";
             }
         }
 
@@ -64,61 +67,10 @@ if (! defined('asset')) {
      * Generates the URL to serve an asset to the client
      *
      * @param string $location Relative URL to asset file
-     * @param string $type     'file|version' string
+     * @param string $type     css, js
      */
     function asset(string $location, string $type): string
     {
-        $location     = trim($location, ' /');
-        $relativePath = parse_url($location, PHP_URL_PATH);
-
-        if (str_contains($location, '://') || $relativePath === false || $relativePath === '') {
-            throw new InvalidArgumentException('$location must be a relative URL to the file.');
-        }
-
-        // Add a cache-busting fingerprint to the filename
-        $config   = config('Assets');
-        $segments = explode('/', ltrim($location, '/'));
-        $filename = array_pop($segments);
-        $pathinfo = pathinfo($filename);
-        $ext      = $pathinfo['extension'] ?? '';
-        $name     = $pathinfo['filename'];
-
-        if ($filename === '' || $name === '' || $ext === '') {
-            throw new RuntimeException('You must provide a valid filename and extension to the asset() helper.');
-        }
-
-        $fingerprint  = '';
-        $separator    = $config->separator ?? '~~';
-        $tempSegments = $segments;
-        array_shift($tempSegments);
-        $path = rtrim((string) $config->folders[current($segments)], ' /') . '/' . implode(
-            '/',
-            $tempSegments,
-        ) . '/' . $filename;
-
-        if (! file_exists($path)) { // Possible case of missing asset
-            $fingerprint = $separator . 'asset-is-missing';
-            log_message('warning', 'Missing asset: ' . $path);
-        } elseif ($config->bustingType === 'version') { // Asset version-based cache-busting
-            $fingerprint = match (ENVIRONMENT) {
-                'testing', 'development' => $separator . time(),
-                default                  => $separator . $config->versions[$type],
-            };
-        } elseif ($config->bustingType === 'file') { // Mod time-based cache-busting
-            $filetime = filemtime($path);
-            if (! $filetime) {
-                throw new RuntimeException('Unable to get modification time of asset file: ' . $filename);
-            }
-            $fingerprint = $separator . $filetime;
-        }
-
-        $filename = $name . $fingerprint . '.' . $ext;
-
-        // Stitch the location back together
-        $segments[] = $filename;
-        $location   = implode('/', $segments);
-        $url        = "/assets/{$location}";
-
-        return base_url($url);
+        return (new AssetLocator())->url($location, $type);
     }
 }
