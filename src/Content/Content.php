@@ -41,4 +41,16 @@ final readonly class Content
 
         return $row === null ? null : Entry::fromRow($row);
     }
+
+    /**
+     * Finds the published entry at a URI. Drafts and scheduled entries are treated as missing.
+     */
+    public function findByUri(string $uri): ?Entry
+    {
+        $uri = Collection::normalizeUri($uri);
+        $row = (new ContentEntryModel())->published()->where('uri', $uri)->first();
+
+        // A case-insensitive collation also matches other spellings of the URI.
+        return $row === null || $row['uri'] !== $uri ? null : Entry::fromRow($row);
+    }
 }

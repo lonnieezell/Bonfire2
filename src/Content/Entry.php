@@ -11,6 +11,8 @@
 
 namespace Bonfire\Content;
 
+use League\CommonMark\GithubFlavoredMarkdownConverter;
+
 /**
  * An indexed entry: its columns, its front matter and its raw Markdown body.
  */
@@ -24,6 +26,7 @@ final readonly class Entry
         public string $collection,
         public ?string $blueprint,
         public string $slug,
+        public ?string $uri,
         public string $status,
         public ?string $publishedAt,
         public string $title,
@@ -42,6 +45,7 @@ final readonly class Entry
             $row['collection'],
             $row['blueprint'],
             $row['slug'],
+            $row['uri'],
             $row['status'],
             $row['published_at'],
             $row['title'],
@@ -56,5 +60,14 @@ final readonly class Entry
     public function field(string $name, mixed $default = null): mixed
     {
         return $this->data[$name] ?? $default;
+    }
+
+    /**
+     * The Markdown body as HTML. Raw HTML in the body passes through, apart from the tags
+     * GitHub's rules disallow, so only render bodies you trust.
+     */
+    public function content(): string
+    {
+        return (new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false]))->convert($this->body)->getContent();
     }
 }

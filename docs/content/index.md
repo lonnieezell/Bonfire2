@@ -3,7 +3,7 @@
 Content lets you keep pages and posts as Markdown and YAML files in your repository, and query them from your own
 controllers and views. The files are the source of truth. The database holds an index that you can always rebuild.
 
-This part of Content only reads: there's no admin screen or front-end routing yet.
+This part of Content only reads: there's no admin screen yet. To serve entries as pages, see [Routing](routing.md).
 
 ## File layout
 

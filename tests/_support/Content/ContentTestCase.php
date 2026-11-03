@@ -3,6 +3,8 @@
 namespace Tests\Support\Content;
 
 use Bonfire\Content\Config\Content;
+use Bonfire\Content\Indexer;
+use Bonfire\Content\ReindexResult;
 use CodeIgniter\Config\Factories;
 use Tests\Support\TestCase;
 
@@ -40,6 +42,16 @@ abstract class ContentTestCase extends TestCase
         Factories::reset('config');
 
         parent::tearDown();
+    }
+
+    /**
+     * Gives the blog collection these config lines, and reindexes.
+     */
+    protected function reindexBlogWith(string $config): ReindexResult
+    {
+        $this->writeFile('collections/blog.yaml', "title: Blog\ndated: true\n{$config}");
+
+        return (new Indexer($this->site))->reindex();
     }
 
     /**

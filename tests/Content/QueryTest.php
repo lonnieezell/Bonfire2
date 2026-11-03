@@ -156,6 +156,32 @@ final class QueryTest extends ContentTestCase
         $this->assertSame('2026-01-10 00:00:00', $entry->publishedAt);
     }
 
+    public function testContentRendersTheBodyAsGithubFlavoredMarkdown(): void
+    {
+        $this->writeFile(
+            'collections/blog/2026-01-10.first-post.md',
+            "---\nid: " . self::FIRST_POST . "\n---\n| a |\n|---|\n| b |\n",
+        );
+        (new Indexer($this->site))->reindex();
+
+        $entry = content()->find(self::FIRST_POST);
+        $this->assertInstanceOf(Entry::class, $entry);
+
+        $this->assertStringContainsString('<table>', $entry->content());
+        $this->assertSame("| a |\n|---|\n| b |\n", $entry->body);
+    }
+
+    public function testContentDropsUnsafeLinks(): void
+    {
+        $this->writeFile(
+            'collections/blog/2026-01-10.first-post.md',
+            "---\nid: " . self::FIRST_POST . "\n---\n[click](javascript:alert(1))\n",
+        );
+        (new Indexer($this->site))->reindex();
+
+        $this->assertStringNotContainsString('javascript:', content()->find(self::FIRST_POST)->content());
+    }
+
     /**
      * @param list<Entry> $entries
      *
