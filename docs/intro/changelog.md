@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 3 November 2026
 
+**Asset URLs are built and read by one class.** `asset()` and the `/assets/...` route now share `AssetLocator`, so the
+URL format can't drift between them. The URLs themselves are unchanged. `asset()` now marks a path in an unknown folder
+as a missing asset instead of raising a PHP warning, the route refuses `..` segments, and `asset_link()` escapes the
+URL and any attributes you pass it.
+
 **Content: serve entries on your front end.** Set `$autoRoute = true` in `app/Config/Content.php`, give a collection a
 `route`, and a `template` or a `controller`, and run `php spark content:reindex`. Your routes always win, and only
 published entries are served. `content()->findByUri()` does the same lookup for routes of your own, and
