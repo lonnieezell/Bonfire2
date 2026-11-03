@@ -2666,6 +2666,10 @@ for, and exits with an error. Config files it cannot copy correctly are not writ
 longer adds <code>app.indexPage</code> or the SQLite3 <code>.env</code> lines a second time, keeps an existing encryption key, and keeps the
 final newline in <code>.env</code>.</p>
 <h2 id="3-november-2026">3 November 2026</h2>
+<p><strong>Asset URLs are built and read by one class.</strong> <code>asset()</code> and the <code>/assets/...</code> route now share <code>AssetLocator</code>, so the
+URL format can't drift between them. The URLs themselves are unchanged. <code>asset()</code> now marks a path in an unknown folder
+as a missing asset instead of raising a PHP warning, the route refuses <code>..</code> segments, and <code>asset_link()</code> escapes the
+URL and any attributes you pass it.</p>
 <p><strong>Content: serve entries on your front end.</strong> Set <code>$autoRoute = true</code> in <code>app/Config/Content.php</code>, give a collection a
 <code>route</code>, and a <code>template</code> or a <code>controller</code>, and run <code>php spark content:reindex</code>. Your routes always win, and only
 published entries are served. <code>content()-&gt;findByUri()</code> does the same lookup for routes of your own, and
