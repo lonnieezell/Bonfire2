@@ -1,9 +1,11 @@
 <?php $this->extend('master') ?>
 
 <?php $this->section('main') ?>
+<div id="recycler">
 <x-page-head title="<?= lang('Recycler.recyclerModTitle') ?>" count="<?= $pager->getTotal() ?>">
     <?php if (count($resources) > 1) : ?>
-        <select name="r" class="form-select" aria-label="<?= lang('Recycler.resourceType') ?>" x-on:change="sendRecyclerGetRequest($event.target.value)">
+        <select name="r" id="recycler-resource" class="form-select" aria-label="<?= lang('Recycler.resourceType') ?>"
+                hx-get="<?= url_to('recycler') ?>" hx-target="#recycler" hx-select="#recycler" hx-swap="outerHTML" hx-push-url="true">
             <?php foreach ($resources as $alias => $details) : ?>
                 <option value="<?= strtolower((string) $alias) ?>" <?= $currentResource->alias() === (string) $alias ? 'selected' : '' ?>><?= esc($details->label()) ?></option>
             <?php endforeach ?>
@@ -54,4 +56,5 @@
         <x-empty-state title="<?= lang('Recycler.notFound', [esc($currentResource->alias())]) ?>" />
     <?php endif ?>
 </x-admin-box>
+</div>
 <?php $this->endSection() ?>

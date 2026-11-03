@@ -33,22 +33,6 @@ document.body.addEventListener('htmx:afterSettle', function () {
     attachSelectAllListener();
 });
 
-// function for recycler get requests issued directly from select box
-function sendRecyclerGetRequest(selectedValue) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('r', selectedValue);
-    fetch(url.toString()).then(response => {
-        if (response.ok) {
-            return response.text();
-        }
-        throw new Error('Network response was not ok.');
-    }).then(html => {
-        document.body.innerHTML = html; // Replace the whole page content
-        window.history.pushState(null, null, url.toString()); // Update the URL
-    }).catch(error => {
-        console.error('Error fetching data:', error);
-    });
-}
 // Color mode, remembered per viewer. master.php applies it before first paint.
 window.bfTheme = {
     set(mode) {

@@ -4,6 +4,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 3 November 2026
+
+**The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
+nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
+
 ## 2 November 2026 (breaking change)
 
 **Branded Markdown activation and two-factor emails.** New installs send them with your site name and accent color, and
