@@ -63,6 +63,20 @@ final readonly class Entry
     }
 
     /**
+     * The entries an `entries` field links to, in the order the file lists them. A target that is missing or in the
+     * trash is skipped, and so is a field that isn't a list of ids. Drafts and scheduled entries are returned,
+     * so check `$status` before showing one.
+     *
+     * @return list<Entry>
+     */
+    public function entries(string $name): array
+    {
+        $ids = $this->data[$name] ?? null;
+
+        return is_array($ids) ? content()->findMany(array_values(array_filter($ids, is_string(...)))) : [];
+    }
+
+    /**
      * The Markdown body as HTML. Raw HTML in the body passes through, apart from the tags
      * GitHub's rules disallow, so only render bodies you trust.
      */

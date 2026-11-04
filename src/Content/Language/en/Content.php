@@ -37,6 +37,16 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Field types
+    'selectInvalid'  => 'Choose one of the options.',
+    'integerInvalid' => 'Enter a whole number.',
+    'integerMin'     => 'Enter a number that is at least {0}.',
+    'integerMax'     => 'Enter a number that is at most {0}.',
+    'entriesInvalid' => 'Choose entries that exist, from the collections this field allows.',
+    'entriesTooMany' => 'Choose no more than {0}.',
+    'entriesLimit'   => 'Choose up to {0}.',
+    'entriesNone'    => 'There are no entries to choose from.',
+
     // Terms field
     'noTerms'     => 'No terms yet.',
     'unknownTerm' => '{0} (no such term)',

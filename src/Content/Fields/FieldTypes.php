@@ -23,12 +23,16 @@ final class FieldTypes
         'slug'     => SlugField::class,
         'toggle'   => ToggleField::class,
         'date'     => DateField::class,
+        'datetime' => DatetimeField::class,
+        'select'   => SelectField::class,
+        'integer'  => IntegerField::class,
+        'entries'  => EntriesField::class,
         'terms'    => TermsField::class,
     ];
 
     public static function has(string $type): bool
     {
-        return isset(self::TYPES[$type]);
+        return isset(self::all()[$type]);
     }
 
     /**
@@ -36,14 +40,33 @@ final class FieldTypes
      */
     public static function names(): array
     {
-        return array_keys(self::TYPES);
+        return array_map(strval(...), array_keys(self::all()));
     }
 
     public static function get(string $type): FieldType
     {
-        $class = self::TYPES[$type];
+        $class = self::all()[$type];
 
         return new $class();
+    }
+
+    /**
+     * The built-in types and the ones registered in Config\Content, by handle. A registered class that
+     * isn't a FieldType is left out, so a blueprint that uses it is refused.
+     *
+     * @return array<string, class-string<FieldType>>
+     */
+    private static function all(): array
+    {
+        $types = self::TYPES;
+
+        foreach (config('Content')->fieldTypes as $handle => $class) {
+            if (is_string($class) && is_a($class, FieldType::class, true)) {
+                $types[$handle] = $class;
+            }
+        }
+
+        return $types;
     }
 
     /**

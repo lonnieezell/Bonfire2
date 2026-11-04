@@ -16,6 +16,12 @@ have a list, a form to create them and a form to edit them in the admin, which n
 and with `$autoRoute` on a taxonomy can serve a page for each term from a `route` and a `template`. Nothing changes for a
 site that has no taxonomies. See [Taxonomies](../content/taxonomies.md).
 
+**Content: more field types, and your own.** Blueprints can use `select` (one option, or several with
+`multiple: true`), `integer`, `datetime` and `entries`, which links to entries of the collections you name. Read the
+links with `$entry->entries('related')`, which skips a target that has since been deleted or trashed, or look entries up
+with `content()->findMany($ids)`. Register a field type of your own in `$fieldTypes` in `app/Config/Content.php`. See
+[Field types](../content/field_types.md) and [Custom field types](../content/custom_field_types.md).
+
 **Content: edit entries in the admin.** **Content** in the sidebar has an item for each collection, with a list of its
 entries and a form to create and edit them. The form is built from the collection's blueprint in
 `resources/blueprints/collections/<collection>/<blueprint>.yaml`, with `text`, `textarea`, `markdown`, `slug`, `toggle`
