@@ -37,6 +37,16 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Field types
+    'selectInvalid'  => 'Choose one of the options.',
+    'integerInvalid' => 'Enter a whole number.',
+    'integerMin'     => 'Enter a number that is at least {0}.',
+    'integerMax'     => 'Enter a number that is at most {0}.',
+    'entriesInvalid' => 'Choose entries that exist, from the collections this field allows.',
+    'entriesTooMany' => 'Choose no more than {0}.',
+    'entriesLimit'   => 'Choose up to {0}.',
+    'entriesNone'    => 'There are no entries to choose from.',
+
     // Refusals
     'noBlueprint'        => 'This collection has no blueprint for its entries to use.',
     'cannotPublish'      => 'You don\'t have permission to publish entries or to change when they go live.',

@@ -12,6 +12,7 @@
 namespace Bonfire\Content\Fields;
 
 use Bonfire\Content\Field;
+use Closure;
 
 /**
  * What a blueprint field type does. A form value is always a string, as the browser posted it.
@@ -37,7 +38,7 @@ abstract class FieldType
     /**
      * The CodeIgniter validation rules, which are the blueprint's `validate:` and whatever the type needs on top.
      *
-     * @return list<string>|string
+     * @return list<Closure|string>|string
      */
     public function rules(Field $field): array|string
     {
@@ -69,14 +70,17 @@ abstract class FieldType
     }
 
     /**
-     * The field's rules plus more, whether `validate:` was a string or a list.
+     * The field's rules plus more, whether `validate:` was a string or a list. A rule that is a Closure
+     * (value, data, &error) needs the list.
      *
-     * @return list<string>|string
+     * @return list<Closure|string>|string
      */
-    protected function withRules(Field $field, string ...$more): array|string
+    protected function withRules(Field $field, Closure|string ...$more): array|string
     {
-        if (is_array($field->validate)) {
-            return [...$field->validate, ...$more];
+        if (is_array($field->validate) || array_filter($more, is_object(...)) !== []) {
+            $rules = is_array($field->validate) ? $field->validate : array_values(array_filter(explode('|', $field->validate), static fn (string $rule): bool => $rule !== ''));
+
+            return [...$rules, ...$more];
         }
 
         return implode('|', array_filter([$field->validate, ...$more], static fn (string $rule): bool => $rule !== ''));
