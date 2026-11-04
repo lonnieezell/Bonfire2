@@ -1325,6 +1325,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1372,6 +1376,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1613,6 +1645,34 @@
     
   
     Pages and structures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/constraints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Constraints and known gaps
   
 
     
@@ -2855,6 +2915,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="4-november-2026">4 November 2026</h2>
+<p><strong>Content: getting started and constraints.</strong> <a href="../../content/getting_started/">Getting started</a> walks you from a fresh
+install to a published blog post. <a href="../../content/">Content</a> now explains the file-first model and when to run
+<code>php spark content:reindex</code>, which belongs in your deploy. <a href="../../content/constraints/">Constraints and known gaps</a> lists
+what Content doesn't do yet: it needs the content directory on one server or shared storage, it doesn't redirect old
+URIs, it drops YAML comments when the admin saves, it doesn't use git, and it has no per-collection permissions.</p>
 <p><strong>Content: pages and structures.</strong> Give a collection <code>structure: true</code> (and optionally <code>max_depth</code>) and its entries
 form a tree, kept in <code>content/trees/collections/&lt;handle&gt;.yaml</code>. The reindex gives each entry a <code>parent_id</code>, a <code>sort</code> and
 a URI built from its parents, such as <code>/about/team</code>, which the front-end route serves. Renaming a page or moving it
