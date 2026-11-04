@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#4-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#3-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1302,6 +1313,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1366,6 +1383,90 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/admin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editing entries in the admin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/blueprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blueprints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/field_types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Field types
   
 
     
@@ -2357,6 +2458,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#4-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#3-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2652,6 +2764,19 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="4-november-2026">4 November 2026</h2>
+<p><strong>Content: edit entries in the admin.</strong> <strong>Content</strong> in the sidebar has an item for each collection, with a list of its
+entries and a form to create and edit them. The form is built from the collection's blueprint in
+<code>resources/blueprints/collections/&lt;collection&gt;/&lt;blueprint&gt;.yaml</code>, with <code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>slug</code>, <code>toggle</code>
+and <code>date</code> fields. Saving checks the input, writes the entry's Markdown file in one step and updates the index. It
+refuses to save if the file changed on disk since the form was opened. Comments in an entry's front matter don't survive
+a save. Publishing, and setting <code>published_at</code>, need their own permission. Nothing changes for a site that has no
+collections. See <a href="../../content/admin/">Editing entries</a>, <a href="../../content/blueprints/">Blueprints</a> and
+<a href="../../content/field_types/">Field types</a>.</p>
+<p>There are five new permissions: <code>content.access</code>, <code>content.edit</code>, <code>content.publish</code>, <code>content.delete</code> and
+<code>content.structure</code>. The last two are held back for later and nothing uses them yet. If you published your own
+<code>AuthGroups</code>, add them there, or <strong>run <code>php spark bonfire:permissions</code></strong>, which declares them and grants <code>content.*</code> to
+<code>superadmin</code> and <code>admin</code>. Until you do, Content stays hidden from those groups.</p>
 <h2 id="3-november-2026-breaking-change">3 November 2026 (breaking change)</h2>
 <p><strong><code>php spark bf:install</code> no longer overwrites theme files you already have.</strong> Running it again used to copy Bonfire's
 themes over <code>themes/</code>, discarding your edits to <code>Admin</code>, <code>App</code> and <code>Auth</code>. It now copies only the files that are missing
