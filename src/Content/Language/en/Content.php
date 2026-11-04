@@ -47,6 +47,25 @@ return [
     'structureEmpty'    => 'There are no entries to arrange yet.',
     'structureConflict' => 'The tree file was changed after you opened it, so your changes were not saved. Reload the structure to see the other change, then make yours again.',
 
+    // Navigation
+    'navigationMenu'     => 'navigation menu',
+    'editNavigation'     => 'Edit menu',
+    'saveNavigation'     => 'Save menu',
+    'navigationHint'     => 'Drag an item to reorder it, or onto another item to nest it. Add an entry, or a link to anywhere.',
+    'navigationEmpty'    => 'This menu has no items yet.',
+    'navigationConflict' => 'The tree file was changed after you opened it, so your changes were not saved. Reload the menu to see the other change, then make yours again.',
+    'navigationReload'   => 'Reload the menu',
+    'addEntry'           => 'Add an entry',
+    'addEntryButton'     => 'Add entry',
+    'addLink'            => 'Add a link',
+    'addLinkButton'      => 'Add link',
+    'chooseEntry'        => 'Choose an entry…',
+    'linkTitle'          => 'Link text',
+    'linkUrl'            => 'URL',
+    'itemTitle'          => 'Title',
+    'itemTitleOverride'  => 'Leave empty to use the entry\'s title.',
+    'removeItem'         => 'Remove',
+
     // Field types
     'selectInvalid'  => 'Choose one of the options.',
     'integerInvalid' => 'Enter a whole number.',

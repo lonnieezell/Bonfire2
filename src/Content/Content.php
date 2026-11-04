@@ -111,6 +111,35 @@ final readonly class Content
     }
 
     /**
+     * A navigation menu as a tree of `title`, `url`, `active` and `children`. An item for an entry takes its
+     * title and URL from the entry, so a renamed slug changes the URL. An item for an entry that isn't published,
+     * or is in the trash, is left out with the items below it. A tree file that can't be read is logged, and gives no items.
+     *
+     * @param string|null $currentPath the path of the page being shown, which is the request's unless given
+     *
+     * @return list<array{title: string, url: string|null, active: bool, children: list<mixed>}>
+     *
+     * @throws ContentException when the navigation doesn't exist or its config is invalid
+     */
+    public function navigation(string $handle, ?string $currentPath = null): array
+    {
+        $navigation = Navigation::load($this->contentRoot, $handle);
+
+        try {
+            $tree = NavigationTree::parse($navigation->rawTree($this->contentRoot));
+        } catch (ContentException $e) {
+            log_message('error', 'Content: navigation tree {handle}: {message}', ['handle' => $handle, 'message' => $e->getMessage()]);
+
+            return [];
+        }
+
+        $ids     = $tree->entryIds();
+        $entries = $ids === [] ? [] : array_column((new ContentEntryModel())->published()->whereIn('id', $ids)->findAll(), null, 'id');
+
+        return $tree->items($entries, $currentPath ?? service('request')->getPath());
+    }
+
+    /**
      * @param list<string> $termIds
      *
      * @return array<string, int> the published entries of each term that has any, by term id

@@ -139,3 +139,15 @@ if (! function_exists('content')) {
         return new Content($contentPath);
     }
 }
+
+if (! function_exists('navigation')) {
+    /**
+     * A navigation menu as a tree of `title`, `url`, `active` and `children`.
+     *
+     * @return list<array{title: string, url: string|null, active: bool, children: list<mixed>}>
+     */
+    function navigation(string $handle): array
+    {
+        return content()->navigation($handle);
+    }
+}

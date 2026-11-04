@@ -119,6 +119,7 @@ nav:
       - content/query_api.md
       - content/routing.md
       - content/structure.md
+      - content/navigation.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/assets.md

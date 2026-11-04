@@ -5,7 +5,8 @@ controllers and views. The files are the source of truth. The database holds an 
 
 You can edit entries in the admin, where each collection has a list and a form built from its blueprint: see
 [Editing entries](admin.md), [Blueprints](blueprints.md) and [Field types](field_types.md). To serve entries as pages,
-see [Routing](routing.md). To keep pages in a tree with nested URIs, see [Pages and structures](structure.md).
+see [Routing](routing.md). To keep pages in a tree with nested URIs, see [Pages and structures](structure.md). To build the
+menus of your site, see [Navigation menus](navigation.md).
 
 ## File layout
 

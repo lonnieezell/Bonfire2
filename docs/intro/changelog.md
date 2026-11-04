@@ -6,6 +6,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 4 November 2026
 
+**Content: navigation menus.** Build front-end menus by hand in the admin. A menu has a config at
+`content/navigation/<handle>.yaml` (`title`, `max_depth` and the `collections` it can link to), and its items are kept in
+`content/trees/navigation/<handle>.yaml`. An item is an entry, whose title and URL come from the entry, or a link with its
+own title. Users with `content.structure` get a drag and drop editor for each menu under **Content**, with pickers for
+entries and links. `navigation('main')` returns the menu as a tree of `title`, `url`, `active` and `children`, and leaves
+out entries that aren't published or are in the trash. Renaming an entry's slug changes its URL in the menu without editing
+the tree file. The App theme has a sample partial, `_navigation.php`. Nothing changes for a site that has no menus. See
+[Navigation menus](../content/navigation.md).
+
 **Content: pages and structures.** Give a collection `structure: true` (and optionally `max_depth`) and its entries
 form a tree, kept in `content/trees/collections/<handle>.yaml`. The reindex gives each entry a `parent_id`, a `sort` and
 a URI built from its parents, such as `/about/team`, which the front-end route serves. Renaming a page or moving it

@@ -11,6 +11,9 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->get('taxonomies/(:segment)/(:segment)', 'TermAdminController::edit/$1/$2', ['as' => 'content-term-edit']);
     $routes->post('taxonomies/(:segment)/(:segment)', 'TermAdminController::update/$1/$2');
 
+    $routes->get('navigation/(:segment)', 'NavigationAdminController::edit/$1', ['as' => 'content-navigation']);
+    $routes->post('navigation/(:segment)', 'NavigationAdminController::save/$1');
+
     $routes->post('content/preview', 'EntryAdminController::preview', ['as' => 'content-preview']);
     $routes->get('content/(:segment)', 'EntryAdminController::list/$1', ['as' => 'content-list']);
     $routes->get('content/(:segment)/new', 'EntryAdminController::create/$1', ['as' => 'content-new']);
