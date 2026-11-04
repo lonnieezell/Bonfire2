@@ -97,7 +97,7 @@ final readonly class Structure
     /**
      * @throws ContentException when it isn't a nested list of entries, each `id` a UUID and optionally `children`
      */
-    public static function fromData(mixed $data): self
+    private static function fromData(mixed $data): self
     {
         return new self(self::nodes($data));
     }
@@ -122,23 +122,22 @@ final readonly class Structure
      */
     public function ids(): array
     {
-        return self::idsIn($this->nodes);
+        $ids = [];
+        self::collectIds($this->nodes, $ids);
+
+        return $ids;
     }
 
     /**
      * @param list<array{id: string, children: list<mixed>}> $nodes
-     *
-     * @return list<string>
+     * @param list<string>                                   $ids
      */
-    private static function idsIn(array $nodes): array
+    private static function collectIds(array $nodes, array &$ids): void
     {
-        $ids = [];
-
         foreach ($nodes as $node) {
-            $ids = [...$ids, $node['id'], ...self::idsIn($node['children'])];
+            $ids[] = $node['id'];
+            self::collectIds($node['children'], $ids);
         }
-
-        return $ids;
     }
 
     /**

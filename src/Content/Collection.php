@@ -130,6 +130,19 @@ final readonly class Collection
     }
 
     /**
+     * The index column holds 255 characters. The parser checks the URI of an entry in a plain collection, but
+     * a structured collection's URIs come from the tree, so those that set them check here.
+     *
+     * @throws ContentException when the URI wouldn't fit
+     */
+    public static function assertUriFits(?string $uri): void
+    {
+        if (mb_strlen((string) $uri) > 255) {
+            throw new ContentException('The URI is longer than 255 characters.');
+        }
+    }
+
+    /**
      * The form URIs have in the index.
      */
     public static function normalizeUri(string $uri): string

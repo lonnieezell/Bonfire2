@@ -155,10 +155,7 @@ final readonly class Indexer
             $record = $columns + $records[$id];
 
             try {
-                if (mb_strlen((string) $record['uri']) > 255) {
-                    throw new ContentException('Its URI is longer than 255 characters.');
-                }
-
+                Collection::assertUriFits($record['uri']);
                 $this->claimUri($uris, $record['uri'], $record['path']);
                 $records[$id] = $record;
             } catch (ContentException $e) {

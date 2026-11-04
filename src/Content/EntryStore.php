@@ -73,6 +73,8 @@ final readonly class EntryStore
         // The tree puts a new entry last at the root.
         if ($collection->structure) {
             $record['uri'] = $collection->uriFor((string) $record['slug']);
+
+            Collection::assertUriFits($record['uri']);
         }
 
         return $this->locked($collection, function () use ($collection, $record, $raw, $path): array {
@@ -232,9 +234,14 @@ final readonly class EntryStore
      */
     private function arrangeTree(Collection $collection, Structure $tree): void
     {
-        $slugs = $this->slugs($collection);
-        $tree  = $tree->arrange($slugs);
-        $uris  = array_filter(array_column($tree->place($collection, $slugs), 'uri'));
+        $model  = new ContentEntryModel();
+        $rows   = array_column($model->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
+        $slugs  = array_column($rows, 'slug', 'id');
+        $tree   = $tree->arrange($slugs);
+        $placed = $tree->place($collection, $slugs);
+        $uris   = array_filter(array_column($placed, 'uri'));
+
+        array_map(Collection::assertUriFits(...), $uris);
 
         // The reindex would drop one of two entries with a URI, so the tree isn't saved with them.
         $lower = array_map(mb_strtolower(...), $uris);
@@ -246,13 +253,10 @@ final readonly class EntryStore
 
         $this->write(Structure::path($collection->handle), $tree->toYaml());
 
-        $model = new ContentEntryModel();
-        $db    = $model->db;
-        $rows  = array_column($model->where('collection', $collection->handle)->findAll(), null, 'id');
-
+        $db = $model->db;
         $db->transStart();
 
-        foreach ($tree->place($collection, $slugs) as $id => $columns) {
+        foreach ($placed as $id => $columns) {
             $now = array_replace($columns, array_intersect_key($rows[$id], $columns));
 
             if (array_map(strval(...), $columns) !== array_map(strval(...), $now)) {

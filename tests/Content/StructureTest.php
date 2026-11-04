@@ -7,6 +7,7 @@ use Bonfire\Content\ContentException;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\ReindexResult;
+use Bonfire\Content\Structure;
 use Bonfire\Users\User;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Test\TestResponse;
@@ -103,7 +104,9 @@ final class StructureTest extends ContentTestCase
             fn (string $id): bool => $this->placement($id)[0] === null,
         );
         $this->assertCount(3, $roots);
-        $this->assertSame([1, 2, 3], $this->sortedRootSorts([self::HOME, self::HISTORY, self::JOBS]));
+        $sorts = array_map(fn (string $id): int => (int) $this->placement($id)[1], [self::HOME, self::HISTORY, self::JOBS]);
+        sort($sorts);
+        $this->assertSame([1, 2, 3], $sorts);
         $this->assertSame('/history', $this->placement(self::HISTORY)[2]);
     }
 
@@ -514,19 +517,6 @@ final class StructureTest extends ContentTestCase
         return [$row['parent_id'], $row['sort'] === null ? null : (int) $row['sort'], $row['uri']];
     }
 
-    /**
-     * @param list<string> $ids
-     *
-     * @return list<int>
-     */
-    private function sortedRootSorts(array $ids): array
-    {
-        $sorts = array_map(fn (string $id): int => (int) $this->placement($id)[1], $ids);
-        sort($sorts);
-
-        return $sorts;
-    }
-
     private function treeFile(): string
     {
         return (string) file_get_contents($this->site . self::TREE_FILE);
@@ -541,7 +531,7 @@ final class StructureTest extends ContentTestCase
     {
         return $this->actingAs($this->admin)->post(route_to('content-structure', 'pages'), [
             'tree' => json_encode($tree),
-            'hash' => hash('sha256', $openedOn ?? $this->treeFile()),
+            'hash' => Structure::hash($openedOn ?? $this->treeFile()),
         ]);
     }
 

@@ -42,20 +42,23 @@
         const form = document.querySelector('[data-tree-form]');
         const root = form.querySelector('[data-tree]');
 
-        if (! root || typeof Sortable === 'undefined') {
+        if (! root) {
             return;
         }
 
-        for (const list of [root, ...root.querySelectorAll('[data-children]')]) {
-            Sortable.create(list, {
-                group: 'bf-content-tree',
-                handle: '[data-handle]',
-                animation: 150,
-                fallbackOnBody: true,
-                swapThreshold: 0.65,
-                // The save bar shows once the form changes.
-                onEnd: () => form.dispatchEvent(new Event('input', { bubbles: true })),
-            });
+        // Without SortableJS (a blocked CDN) the list can't be moved, but a save still posts it as it is.
+        if (typeof Sortable !== 'undefined') {
+            for (const list of [root, ...root.querySelectorAll('[data-children]')]) {
+                Sortable.create(list, {
+                    group: 'bf-content-tree',
+                    handle: '[data-handle]',
+                    animation: 150,
+                    fallbackOnBody: true,
+                    swapThreshold: 0.65,
+                    // The save bar shows once the form changes.
+                    onEnd: () => form.dispatchEvent(new Event('input', { bubbles: true })),
+                });
+            }
         }
 
         const read = (list) => [...list.children].map((item) => ({
