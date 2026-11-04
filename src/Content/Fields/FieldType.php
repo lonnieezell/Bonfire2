@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content\Fields;
 
+use Bonfire\Content\ContentException;
 use Bonfire\Content\Field;
 use Closure;
 
@@ -59,6 +60,23 @@ abstract class FieldType
     public function fromFrontMatter(mixed $stored, Field $field): string
     {
         return is_scalar($stored) ? (string) $stored : '';
+    }
+
+    /**
+     * The front matter key that holds the field's value, which is the field's handle unless the type says otherwise.
+     */
+    public function key(Field $field): string
+    {
+        return $field->handle;
+    }
+
+    /**
+     * Checks the options the blueprint gave the field.
+     *
+     * @throws ContentException when the field can't be used
+     */
+    public function check(Field $field): void
+    {
     }
 
     /**

@@ -18,7 +18,6 @@ use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\EntryStore;
 use Bonfire\Content\Fields\DateField;
-use Bonfire\Content\Fields\FieldTypes;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\SaveConflictException;
 use Bonfire\Content\Structure;
@@ -509,17 +508,7 @@ class EntryAdminController extends AdminController
     private function renderForm(Collection $collection, Blueprint $blueprint, EntryForm $form, array $shown, int $httpStatus = 200): string
     {
         $errors = $shown['errors'] ?? [];
-        $rows   = [];
-
-        foreach ($form->fields() as [$field, $type]) {
-            $rows[] = [
-                'field'    => $field,
-                'view'     => FieldTypes::view($field->type),
-                'value'    => $shown['values'][$field->handle] ?? '',
-                'error'    => $errors[$field->handle] ?? null,
-                'disabled' => ! $form->isEditable($type),
-            ];
-        }
+        $rows   = $form->rows($shown['values'], $errors);
 
         $this->response->setStatusCode($httpStatus);
 

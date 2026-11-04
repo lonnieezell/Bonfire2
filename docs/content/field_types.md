@@ -15,6 +15,7 @@ is saved in the front matter.
 | [`select`](#select) | A dropdown, or a list to pick several from | A string, or a list of them |
 | [`integer`](#integer) | A number | A number |
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
+| [`terms`](#terms) | A checkbox for each term | A list of slugs |
 
 You can add types of your own. See [Custom field types](custom_field_types.md).
 
@@ -115,6 +116,25 @@ exist, is in the trash, belongs to another collection, or takes the field over `
 Read the links back with [`$entry->entries('related')`](query_api.md#entries), which returns entry objects. A link whose
 entry has been deleted or trashed since is skipped without an error, and saving the form drops it from the file.
 
+## terms
+
+The terms of a [taxonomy](taxonomies.md) an entry has, chosen from the terms that exist. `taxonomy` is required and names
+the taxonomy:
+
+```yaml
+- handle: tags
+  type: terms
+  taxonomy: tags
+```
+
+The input is a checkbox for each term. The front matter holds the checked slugs as a list under the taxonomy's handle, not
+under the field's handle, because that is where the reindex looks: `tags: [php, laravel]`. Unchecking every term saves
+`tags: []`. A slug in the file that no term has is shown as "(no such term)", checked, so that saving doesn't drop it.
+Anything posted that isn't a slug is dropped. Use one `terms` field for each taxonomy, and don't name a taxonomy `id`,
+`status`, `published_at`, `blueprint`, `title` or `body`, which the entry uses itself: the blueprint is refused.
+
+For the entries to be indexed with their terms, the collection has to list the taxonomy in its `taxonomies`.
+
 ## Changing an input
 
 Each type's input is a partial in `src/Content/Views/fields`. To change one, copy it to
@@ -134,5 +154,7 @@ A type is a class that extends `Bonfire\Content\Fields\FieldType`. The built-in 
 | `toFrontMatter($input, $field)` | The value to write to the file, from a valid value. |
 | `fromFrontMatter($stored, $field)` | The value the form shows, from what the file holds. |
 | `storedInFrontMatter()` | `false` for a type that isn't a front matter key, like `slug`. |
+| `key($field)` | The front matter key that holds the value. The field's handle, except for `terms`. |
+| `check($field)` | Throws a `ContentException` if the blueprint gave the field options it can't use. |
 
 To write your own, see [Custom field types](custom_field_types.md).

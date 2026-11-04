@@ -238,6 +238,77 @@ final class FrontEndRoutingTest extends ContentTestCase
         $this->get('blog/first-post')->assertSee('First post');
     }
 
+    // Term pages
+
+    public function testATermPageRendersItsTemplateWithThePublishedEntriesOfTheTerm(): void
+    {
+        $this->serveTags();
+
+        $result = $this->get('tags/php');
+
+        $result->assertOK();
+        $result->assertSee('Tagged PHP in Tags');
+        $result->assertSee('First post', 'li');
+        $result->assertSee('Second post', 'li');
+        $result->assertDontSee('Draft post');
+        $result->assertDontSee('Future post');
+        $this->get('tags/laravel/')->assertDontSee('Second post');
+    }
+
+    public function testAnUnknownTermIsA404(): void
+    {
+        $this->serveTags();
+
+        $this->assertNotFound('tags/ghost');
+        $this->assertNotFound('tags');
+        $this->assertNotFound('tags/php/extra');
+    }
+
+    public function testATaxonomyWithoutATemplateHasNoTermPages(): void
+    {
+        $this->serveTags("route: /tags/{slug}\n");
+
+        $this->assertNotFound('tags/php');
+    }
+
+    public function testATaxonomyWithoutARouteHasNoTermPages(): void
+    {
+        $this->serveTags("template: tags/show\n");
+
+        $this->assertNotFound('tags/php');
+    }
+
+    public function testWithoutAutoRouteThereAreNoTermPages(): void
+    {
+        $this->serveTags();
+        config('Content')->autoRoute = false;
+
+        $this->assertNotFound('tags/php');
+    }
+
+    public function testAnEntryAtTheSameUriBeatsTheTermPage(): void
+    {
+        $this->serveTags();
+        $this->writeFile('collections/blog.yaml', "title: Blog\ndated: true\nroute: /tags/{slug}\ntemplate: blog/show\ntaxonomies:\n  - tags\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->writeFile('collections/blog/2026-04-01.php.md', "---\nid: 99999999-9999-4999-8999-999999999999\ntitle: An entry\n---\nBody.\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->get('tags/php')->assertSee('From the theme: An entry');
+    }
+
+    /**
+     * Serves the tags taxonomy, with these config lines.
+     */
+    private function serveTags(string $config = "route: /tags/{slug}\ntemplate: tags/show\n"): void
+    {
+        $this->useTags($config);
+        (new Indexer($this->site))->reindex();
+
+        config('Content')->autoRoute = true;
+    }
+
     /**
      * Serves the blog collection, with these config lines.
      */

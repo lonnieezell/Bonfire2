@@ -43,7 +43,7 @@ final class EntryParser
         [$frontMatter, $body] = self::split($raw);
 
         $id = $frontMatter['id'] ?? null;
-        if (! is_string($id) || preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $id) !== 1) {
+        if (! ContentFiles::isUuid($id)) {
             throw new ContentException('The front matter needs an `id` that is a UUID.');
         }
 

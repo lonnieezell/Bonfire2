@@ -48,6 +48,8 @@ Keep slugs in a routed collection to letters, numbers, `-` and `_`, because the 
 reads a `+` in a path as a space, so `c++-tips.md` can't be reached at `/blog/c++-tips`, and it refuses characters outside
 `$permittedURIChars` in `app/Config/App.php`, such as those in `café.md`.
 
+A [taxonomy](taxonomies.md#term-pages) can have pages for its terms in the same way, with a `route` and a `template`.
+
 ## What gets served
 
 Only entries with the `published` status whose `published_at` has passed, or that have none, are served. Anything else

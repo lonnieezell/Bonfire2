@@ -24,6 +24,7 @@ blueprints:
 | `controller` | None | The method that handles its entries, such as `App\Controllers\Blog::show`. Can't be set with `template`. |
 | `structure` | `false` | Keeps the entries in a tree, with URIs that follow their parents. See [Pages and structures](structure.md). |
 | `max_depth` | None | How many levels a structured collection's tree can have. |
+| `taxonomies` | None | The [taxonomies](taxonomies.md) its entries can be tagged with, such as `[tags]`. |
 
 ## Entries
 

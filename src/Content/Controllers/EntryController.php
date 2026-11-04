@@ -14,6 +14,7 @@ namespace Bonfire\Content\Controllers;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
+use Bonfire\Content\Taxonomy;
 use Bonfire\Core\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -29,8 +30,13 @@ class EntryController extends BaseController
     public function show()
     {
         // Routed for any verb to come after every other route, but only GET is served.
-        $entry      = $this->request->getMethod() === 'GET' ? content()->findByUri(rawurldecode($this->request->getPath())) : null;
+        $uri        = $this->request->getMethod() === 'GET' ? rawurldecode($this->request->getPath()) : null;
+        $entry      = $uri === null ? null : content()->findByUri($uri);
         $collection = $entry === null ? null : $this->collectionOf($entry);
+
+        if ($uri !== null && $entry === null && ($page = $this->termPage($uri)) !== null) {
+            return $page;
+        }
 
         if ($collection?->controller !== null) {
             return $this->handOff($collection->controller, $entry);
@@ -41,6 +47,24 @@ class EntryController extends BaseController
         }
 
         throw PageNotFoundException::forPageNotFound();
+    }
+
+    /**
+     * The page of the term at this URI, if a taxonomy with a route and a template has one.
+     * The template gets the `term`, its `taxonomy` and its published `entries`.
+     */
+    private function termPage(string $uri): ?string
+    {
+        foreach (Taxonomy::all(config('Content')->contentPath) as $taxonomy) {
+            $slug = $taxonomy->template === null ? null : $taxonomy->slugAt($uri);
+            $term = $slug === null ? null : content()->term($taxonomy->handle, $slug);
+
+            if ($term !== null) {
+                return render($this->theme, (string) $taxonomy->template, ['term' => $term, 'taxonomy' => $taxonomy, 'entries' => $term->entries()]);
+            }
+        }
+
+        return null;
     }
 
     /**

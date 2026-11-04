@@ -13,15 +13,19 @@ Everything lives under the content root, which is `content/` in your project by 
 
 ```
 content/
-└── collections/
-    ├── blog.yaml                       the blog collection's config
-    └── blog/
-        ├── 2026-10-27.hello-world.md   an entry
-        └── 2026-11-01.second-post.md
+├── collections/
+│   ├── blog.yaml                       the blog collection's config
+│   └── blog/
+│       ├── 2026-10-27.hello-world.md   an entry
+│       └── 2026-11-01.second-post.md
+└── taxonomies/
+    ├── tags.yaml                       the tags taxonomy's config
+    └── tags/
+        └── php.yaml                    a term
 ```
 
 Change the location with `$contentPath` in `app/Config/Content.php`. See [Collections](collections.md) for the config
-file and the entry format.
+file and the entry format, and [Taxonomies](taxonomies.md) for tags and categories.
 
 ## Building the index
 
@@ -37,8 +41,9 @@ Then index your files, and again whenever they change, such as when you deploy:
 php spark content:reindex
 ```
 
-The command prints how many rows it added, updated and removed, and how many it left alone. It reads every file, so a
-change to a collection's config reaches its entries, but it only writes rows that differ.
+The command prints how many entry rows it added, updated and removed, and how many it left alone. It reads every file, so a
+change to a collection's config reaches its entries, but it only writes rows that differ. It also brings the
+[taxonomies](taxonomies.md)' terms, and which entries have them, in line with the files.
 
 If the content root has no `collections` folder, such as when shared storage isn't mounted, or the index can't be
 written, the index stays as it was and the command exits with an error code.

@@ -111,6 +111,7 @@ nav:
   - Content:
       - content/index.md
       - content/collections.md
+      - content/taxonomies.md
       - content/admin.md
       - content/blueprints.md
       - content/field_types.md
