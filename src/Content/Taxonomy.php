@@ -29,6 +29,11 @@ final readonly class Taxonomy
      */
     public const HANDLE = '/^[A-Za-z0-9_-]{1,100}$/';
 
+    /**
+     * Handles a taxonomy can't have, because an entry already keeps something else under that front matter key.
+     */
+    public const TAKEN_KEYS = [...Blueprint::RESERVED, 'title', Blueprint::BODY];
+
     public function __construct(
         public string $handle,
         public string $title,

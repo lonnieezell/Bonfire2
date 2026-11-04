@@ -11,11 +11,7 @@
  */
 
 // Straight from the index, because the entry counts that content()->terms() adds aren't needed here.
-$rows = (new Bonfire\Content\Models\ContentTermModel())
-    ->where('taxonomy', Bonfire\Content\Fields\TermsField::taxonomy($field))
-    ->orderBy('title')
-    ->orderBy('slug')
-    ->findAll();
+$rows = (new Bonfire\Content\Models\ContentTermModel())->inTaxonomy(Bonfire\Content\Fields\TermsField::taxonomy($field), 'slug, title');
 
 $terms = array_column($rows, 'title', 'slug');
 

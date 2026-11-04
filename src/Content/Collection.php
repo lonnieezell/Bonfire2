@@ -74,6 +74,12 @@ final readonly class Collection
 
         self::assertRouting($route, $template, $controller);
 
+        $taxonomies = array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...))));
+
+        if (($taken = array_intersect($taxonomies, Taxonomy::TAKEN_KEYS)) !== []) {
+            throw new ContentException('`taxonomies` can\'t list ' . implode(', ', $taken) . ', which an entry already uses for something else.');
+        }
+
         return new self(
             $handle,
             is_scalar($config['title'] ?? null) ? (string) $config['title'] : $handle,
@@ -84,7 +90,7 @@ final readonly class Collection
             $route,
             $template,
             $controller,
-            array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...)))),
+            $taxonomies,
         );
     }
 

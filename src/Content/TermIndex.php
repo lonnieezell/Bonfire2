@@ -76,10 +76,12 @@ final class TermIndex
     {
         $inserts = [];
 
+        $db = db_connect();
+
         foreach (array_chunk(array_keys($desired), self::CHUNK) as $entryIds) {
             $current = [];
 
-            foreach (db_connect()->table('content_entry_terms')->whereIn('entry_id', $entryIds)->get()->getResultArray() as $row) {
+            foreach ($db->table('content_entry_terms')->whereIn('entry_id', $entryIds)->get()->getResultArray() as $row) {
                 $current[$row['entry_id']][] = $row['term_id'];
             }
 
@@ -87,7 +89,7 @@ final class TermIndex
                 $have = $current[$entryId] ?? [];
 
                 if (($stale = array_diff($have, $desired[$entryId])) !== []) {
-                    db_connect()->table('content_entry_terms')->where('entry_id', $entryId)->whereIn('term_id', array_values($stale))->delete();
+                    $db->table('content_entry_terms')->where('entry_id', $entryId)->whereIn('term_id', array_values($stale))->delete();
                 }
 
                 foreach (array_diff($desired[$entryId], $have) as $termId) {
@@ -97,7 +99,7 @@ final class TermIndex
         }
 
         if ($inserts !== []) {
-            db_connect()->table('content_entry_terms')->insertBatch($inserts);
+            $db->table('content_entry_terms')->insertBatch($inserts);
         }
     }
 

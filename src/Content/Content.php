@@ -43,7 +43,7 @@ final readonly class Content
     public function terms(string $taxonomy): array
     {
         $taxonomy = Taxonomy::load($this->contentRoot, $taxonomy);
-        $rows     = (new ContentTermModel())->where('taxonomy', $taxonomy->handle)->orderBy('title')->orderBy('slug')->findAll();
+        $rows     = (new ContentTermModel())->inTaxonomy($taxonomy->handle);
         $counts   = $this->countEntries(array_column($rows, 'id'));
 
         return array_map(static fn (array $row): Term => Term::fromRow($row, $counts[$row['id']] ?? 0), $rows);

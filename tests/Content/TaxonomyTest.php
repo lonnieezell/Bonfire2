@@ -50,6 +50,15 @@ final class TaxonomyTest extends ContentTestCase
         $this->assertSame([], Collection::load($this->site, 'blog')->taxonomies);
     }
 
+    public function testACollectionCantUseATaxonomyNamedAfterAKeyEntriesUse(): void
+    {
+        $this->writeFile('collections/blog.yaml', "title: Blog\ntaxonomies:\n  - status\n");
+
+        $this->expectException(ContentException::class);
+        $this->expectExceptionMessage('status');
+        Collection::load($this->site, 'blog');
+    }
+
     public function testATaxonomyHasATitleAndAnOptionalRouteAndTemplate(): void
     {
         $this->writeFile('taxonomies/tags.yaml', "title: Tags\nroute: /tags/{slug}\ntemplate: tags/show\n");

@@ -24,6 +24,18 @@ class ContentTermModel extends Model
     protected $allowedFields    = ['id', 'taxonomy', 'slug', 'title', 'data', 'path', 'hash', 'mtime'];
 
     /**
+     * A taxonomy's terms, by title.
+     *
+     * @param string $columns the columns to read, all of them unless the caller needs fewer
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function inTaxonomy(string $taxonomy, string $columns = '*'): array
+    {
+        return $this->select($columns)->where('taxonomy', $taxonomy)->orderBy('title')->orderBy('slug')->findAll();
+    }
+
+    /**
      * The row of the term with this slug.
      *
      * @return array<string, mixed>|null

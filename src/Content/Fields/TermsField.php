@@ -11,7 +11,6 @@
 
 namespace Bonfire\Content\Fields;
 
-use Bonfire\Content\Blueprint;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Field;
 use Bonfire\Content\Taxonomy;
@@ -37,7 +36,7 @@ final class TermsField extends FieldType
         }
 
         // The taxonomy's handle is a front matter key, so it can't be one the entry already uses.
-        if (in_array($taxonomy, [...Blueprint::RESERVED, 'title', Blueprint::BODY], true)) {
+        if (in_array($taxonomy, Taxonomy::TAKEN_KEYS, true)) {
             throw new ContentException("Field `{$field->handle}`: its terms are saved under `{$taxonomy}`, which the entry uses for something else. Name the taxonomy differently.");
         }
     }
