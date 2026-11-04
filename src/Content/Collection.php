@@ -38,6 +38,8 @@ final readonly class Collection
         public ?string $route,
         public ?string $template,
         public ?string $controller,
+        public bool $structure = false,
+        public ?int $maxDepth = null,
         public array $taxonomies = [],
     ) {
     }
@@ -74,6 +76,17 @@ final readonly class Collection
 
         self::assertRouting($route, $template, $controller);
 
+        $structure = $config['structure'] ?? false;
+        $maxDepth  = $config['max_depth'] ?? null;
+
+        if (! is_bool($structure)) {
+            throw new ContentException('`structure` must be true or false.');
+        }
+
+        if ($maxDepth !== null && (! is_int($maxDepth) || $maxDepth < 1)) {
+            throw new ContentException('`max_depth` must be a whole number of at least 1.');
+        }
+
         $taxonomies = array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...))));
 
         if (($taken = array_intersect($taxonomies, Taxonomy::TAKEN_KEYS)) !== []) {
@@ -90,6 +103,8 @@ final readonly class Collection
             $route,
             $template,
             $controller,
+            $structure,
+            $maxDepth,
             $taxonomies,
         );
     }
@@ -134,11 +149,25 @@ final readonly class Collection
     }
 
     /**
-     * The URI of an entry with this slug, or null if the collection has no route.
+     * The URI of an entry with this slug, or null if the collection has no route. In a structured collection
+     * the slug is the entry's whole path, such as `about/team`.
      */
     public function uriFor(string $slug): ?string
     {
         return $this->route === null ? null : self::normalizeUri(str_replace('{slug}', $slug, $this->route));
+    }
+
+    /**
+     * The index column holds 255 characters. The parser checks the URI of an entry in a plain collection, but
+     * a structured collection's URIs come from the tree, so those that set them check here.
+     *
+     * @throws ContentException when the URI wouldn't fit
+     */
+    public static function assertUriFits(?string $uri): void
+    {
+        if (mb_strlen((string) $uri) > 255) {
+            throw new ContentException('The URI is longer than 255 characters.');
+        }
     }
 
     /**

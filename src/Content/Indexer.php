@@ -131,12 +131,21 @@ final readonly class Indexer
             foreach ($this->filesIn("collections/{$collection->handle}", '.md') as $path) {
                 try {
                     $record = $this->readEntry($collection, $path, $records);
-                    $this->claimUri($uris, $record['uri'], $path);
+
+                    // A structured collection's URIs come from the tree, which needs all its entries.
+                    if (! $collection->structure) {
+                        $this->claimUri($uris, $record['uri'], $path);
+                    }
+
                     $records[$record['id']]     = $record;
                     $collections[$record['id']] = $collection;
                 } catch (ContentException $e) {
                     $errors[$path] = $e->getMessage();
                 }
+            }
+
+            if ($collection->structure) {
+                $this->place($collection, $records, $errors, $uris);
             }
         }
 
@@ -174,6 +183,39 @@ final readonly class Indexer
         }
 
         return [$records, $errors];
+    }
+
+    /**
+     * Gives a structured collection's entries the parent, position and URI its tree file says. A tree
+     * that can't be read is reported and leaves every entry at the root.
+     *
+     * @param array<string, array<string, int|string|null>> $records
+     * @param array<string, string>                         $errors
+     * @param array<string, string>                         $uris
+     */
+    private function place(Collection $collection, array &$records, array &$errors, array &$uris): void
+    {
+        try {
+            $structure = Structure::parse(Structure::raw($this->root, $collection->handle));
+        } catch (ContentException $e) {
+            $errors[Structure::path($collection->handle)] = $e->getMessage();
+            $structure                                    = new Structure([]);
+        }
+
+        $own = array_filter($records, static fn (array $record): bool => $record['collection'] === $collection->handle);
+
+        foreach ($structure->place($collection, array_column($own, 'slug', 'id')) as $id => $columns) {
+            $record = $columns + $records[$id];
+
+            try {
+                Collection::assertUriFits($record['uri']);
+                $this->claimUri($uris, $record['uri'], $record['path']);
+                $records[$id] = $record;
+            } catch (ContentException $e) {
+                $errors[$record['path']] = $e->getMessage();
+                unset($records[$id]);
+            }
+        }
     }
 
     /**

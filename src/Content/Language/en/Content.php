@@ -37,6 +37,16 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Structure
+    'structure'         => 'structure',
+    'editStructure'     => 'Edit structure',
+    'saveStructure'     => 'Save structure',
+    'structureHint'     => 'Drag a page to reorder it, or onto another page to nest it. The URL of a page follows its parents.',
+    'structureHandle'   => 'Drag to move',
+    'structureReload'   => 'Reload the structure',
+    'structureEmpty'    => 'There are no entries to arrange yet.',
+    'structureConflict' => 'The tree file was changed after you opened it, so your changes were not saved. Reload the structure to see the other change, then make yours again.',
+
     // Field types
     'selectInvalid'  => 'Choose one of the options.',
     'integerInvalid' => 'Enter a whole number.',

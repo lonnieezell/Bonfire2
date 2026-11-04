@@ -6,6 +6,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 4 November 2026
 
+**Content: pages and structures.** Give a collection `structure: true` (and optionally `max_depth`) and its entries
+form a tree, kept in `content/trees/collections/<handle>.yaml`. The reindex gives each entry a `parent_id`, a `sort` and
+a URI built from its parents, such as `/about/team`, which the front-end route serves. Renaming a page or moving it
+updates the URIs below it. There are **no redirects** for the old URIs in this version. Users with `content.structure`
+get an **Edit structure** screen with drag and drop, which refuses a tree deeper than `max_depth` or one that changed
+on disk since it was opened. New entries go last at the root, and entries the tree file doesn't name are indexed there
+too. See [Pages and structures](../content/structure.md).
+
 **Content: taxonomies and terms.** Tags, categories and other taxonomies are now files. A taxonomy has a config at
 `content/taxonomies/<handle>.yaml`, and each term is a YAML file in `content/taxonomies/<handle>/`. A collection opts in
 with `taxonomies: [tags]`, and keeps an entry's terms as slugs in its front matter (`tags: [php]`). A new `terms` blueprint

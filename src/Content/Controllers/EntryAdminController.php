@@ -18,7 +18,9 @@ use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\EntryStore;
 use Bonfire\Content\Fields\DateField;
+use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\SaveConflictException;
+use Bonfire\Content\Structure;
 use Bonfire\Core\AdminController;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\Exceptions\RedirectException;
@@ -63,7 +65,47 @@ class EntryAdminController extends AdminController
             'entries'    => $entries,
             'pager'      => $query->pager(),
             'canEdit'    => auth()->user()->can('content.edit'),
+            'canArrange' => $collection->structure && auth()->user()->can('content.structure'),
         ]);
+    }
+
+    /**
+     * The tree editor of a structured collection.
+     */
+    public function structure(string $handle): string
+    {
+        $this->requireStructure();
+
+        $collection             = $this->structured($handle);
+        [$tree, $hash, $notice] = $this->readTree($collection);
+
+        return $this->renderTree($collection, $tree, $hash, $notice);
+    }
+
+    /**
+     * Saves the posted tree, unless the tree file has changed since the editor was opened.
+     *
+     * @return RedirectResponse|string
+     */
+    public function saveStructure(string $handle)
+    {
+        $this->requireStructure();
+
+        $collection = $this->structured($handle);
+        $post       = $this->request->getPost();
+        $hash       = is_string($post['hash'] ?? null) ? $post['hash'] : '';
+        $tree       = null;
+
+        try {
+            $tree = Structure::fromJson(is_string($post['tree'] ?? null) ? $post['tree'] : '');
+            (new EntryStore(config('Content')->contentPath))->saveTree($collection, $tree, $hash);
+        } catch (SaveConflictException) {
+            return $this->renderTree($collection, $tree ?? $this->readTree($collection)[0], $hash, lang('Content.structureConflict'), true, 409);
+        } catch (ContentException $e) {
+            return $this->renderTree($collection, $tree ?? $this->readTree($collection)[0], $hash, $e->getMessage(), false, 422);
+        }
+
+        return redirect()->to(route_to('content-structure', $collection->handle))->with('message', lang('Bonfire.resourceSaved', [lang('Content.structure')]));
     }
 
     /**
@@ -258,6 +300,69 @@ class EntryAdminController extends AdminController
         if (! auth()->user()->can('content.edit')) {
             $this->deny();
         }
+    }
+
+    /**
+     * @throws RedirectException when the user can't arrange content
+     */
+    private function requireStructure(): void
+    {
+        if (! auth()->user()->can('content.structure')) {
+            $this->deny();
+        }
+    }
+
+    /**
+     * @throws PageNotFoundException when the collection has no structure
+     */
+    private function structured(string $handle): Collection
+    {
+        $collection = $this->collection($handle);
+
+        if (! $collection->structure) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $collection;
+    }
+
+    /**
+     * The tree file as it is now. One that can't be read shows as a flat list, with the reason, and saving replaces it.
+     *
+     * @return array{Structure, string, string|null} the tree, the hash of the file and what is wrong with it
+     */
+    private function readTree(Collection $collection): array
+    {
+        $raw = Structure::raw(config('Content')->contentPath, $collection->handle);
+
+        try {
+            return [Structure::parse($raw), Structure::hash($raw), null];
+        } catch (ContentException $e) {
+            return [new Structure([]), Structure::hash($raw), $e->getMessage()];
+        }
+    }
+
+    private function renderTree(Collection $collection, Structure $tree, string $hash, ?string $notice, bool $conflict = false, int $httpStatus = 200): string
+    {
+        $entries = array_column((new ContentEntryModel())->select('id, slug, title, status')->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
+
+        service('viewMeta')->addScript([
+            'src'            => 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
+            'integrity'      => 'sha256-bQqDH8GbS66FF5etM5MVfoYa+3hiRZwRImNZsn4sQzc=',
+            'crossorigin'    => 'anonymous',
+            'referrerpolicy' => 'no-referrer',
+        ]);
+
+        $this->response->setStatusCode($httpStatus);
+
+        return $this->render($this->viewPrefix . 'entry_tree', [
+            'collection' => $collection,
+            'nodes'      => $tree->arrange(array_column($entries, 'slug', 'id'))->nodes,
+            'entries'    => $entries,
+            'hash'       => $hash,
+            'notice'     => $notice,
+            'conflict'   => $conflict,
+        ]);
     }
 
     /**

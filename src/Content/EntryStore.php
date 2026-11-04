@@ -72,16 +72,32 @@ final readonly class EntryStore
         $raw    = self::serialise(['id' => ContentFiles::uuid(), ...$frontMatter], $body);
         $record = $this->record($collection, $raw, $path);
 
+        // The tree puts a new entry last at the root.
+        if ($collection->structure) {
+            $record['uri'] = $collection->uriFor((string) $record['slug']);
+
+            Collection::assertUriFits($record['uri']);
+        }
+
         return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path): array {
             // The index may still hold a row for a file that was deleted outside the app, and two rows can't share a path.
             if (is_file($this->root . $path) || (new ContentEntryModel())->withDeleted()->where('path', $path)->countAllResults() > 0) {
                 throw new ContentException('An entry with this slug already exists.');
             }
 
+            // A tree file that can't be read is found before the entry is written, and is never overwritten here.
+            $tree = $collection->structure ? Structure::parse(Structure::raw($this->root, $collection->handle)) : null;
+
             $this->assertUriFree($record);
             $this->files->write($path, $raw);
 
-            return $this->index($collection, $record, $path);
+            $record = $this->index($collection, $record, $path);
+
+            if ($tree !== null) {
+                $this->arrangeTree($collection, $tree);
+            }
+
+            return $record;
         });
     }
 
@@ -103,6 +119,11 @@ final readonly class EntryStore
         $raw    = self::serialise($frontMatter, $body);
         $record = $this->record($collection, $raw, $path);
 
+        // The file doesn't say where the entry sits, so the index row keeps it.
+        if ($collection->structure) {
+            unset($record['uri'], $record['parent_id'], $record['sort']);
+        }
+
         return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path, $expectedHash): array {
             $onDisk = is_file($this->root . $path) ? file_get_contents($this->root . $path) : false;
 
@@ -113,6 +134,34 @@ final readonly class EntryStore
             $this->files->write($path, $raw);
 
             return $this->index($collection, $record, $path);
+        });
+    }
+
+    /**
+     * Rewrites a structured collection's tree file and gives every entry its new parent, position and URI,
+     * if the tree file is still the one the editor was opened on.
+     *
+     * @param string $expectedHash the hash of the tree file the editor was opened on
+     *
+     * @throws ContentException      when the tree is deeper than `max_depth` or names an entry the collection doesn't have
+     * @throws SaveConflictException when the tree file has changed since the editor was opened
+     */
+    public function saveTree(Collection $collection, Structure $tree, string $expectedHash): void
+    {
+        if ($collection->maxDepth !== null && $tree->depth() > $collection->maxDepth) {
+            throw new ContentException("The tree is deeper than the collection's max_depth of {$collection->maxDepth}.");
+        }
+
+        $this->files->locked($collection->handle, function () use ($collection, $tree, $expectedHash): void {
+            if (! hash_equals(Structure::hash(Structure::raw($this->root, $collection->handle)), $expectedHash)) {
+                throw new SaveConflictException('The tree file changed after you opened it.');
+            }
+
+            if (array_diff($tree->ids(), array_keys($this->slugs($collection))) !== []) {
+                throw new ContentException('The tree names an entry that is not in this collection.');
+            }
+
+            $this->arrangeTree($collection, $tree);
         });
     }
 
@@ -193,5 +242,58 @@ final readonly class EntryStore
         }
 
         return $record;
+    }
+
+    /**
+     * Writes the tree with every entry in it once, then updates the index rows whose place changed.
+     */
+    private function arrangeTree(Collection $collection, Structure $tree): void
+    {
+        $model  = new ContentEntryModel();
+        $rows   = array_column($model->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
+        $slugs  = array_column($rows, 'slug', 'id');
+        $tree   = $tree->arrange($slugs);
+        $placed = $tree->place($collection, $slugs);
+        $uris   = array_filter(array_column($placed, 'uri'));
+
+        array_map(Collection::assertUriFits(...), $uris);
+
+        // The reindex would drop one of two entries with a URI, so the tree isn't saved with them.
+        $lower = array_map(mb_strtolower(...), $uris);
+        $taken = $uris === [] ? 0 : (new ContentEntryModel())->withDeleted()->where('collection !=', $collection->handle)->whereIn('uri', $uris)->countAllResults();
+
+        if ($taken > 0 || count($lower) !== count(array_unique($lower))) {
+            throw new ContentException('The tree would give two entries the same URI.');
+        }
+
+        $this->files->write(Structure::path($collection->handle), $tree->toYaml());
+
+        $db = $model->db;
+        $db->transStart();
+
+        foreach ($placed as $id => $columns) {
+            $now = array_replace($columns, array_intersect_key($rows[$id], $columns));
+
+            if (array_map(strval(...), $columns) !== array_map(strval(...), $now)) {
+                $model->update($id, $columns);
+            }
+        }
+
+        if ($db->transComplete() === false) {
+            // Otherwise the failure fails every later transaction on this connection.
+            $db->resetTransStatus();
+
+            throw new ContentException('The tree file was saved, but the index could not be updated. Run content:reindex.');
+        }
+    }
+
+    /**
+     * @return array<string, string> the slug of each of the collection's indexed entries, by id
+     */
+    private function slugs(Collection $collection): array
+    {
+        $rows = (new ContentEntryModel())->select('id, slug')->where('collection', $collection->handle)->orderBy('id')->findAll();
+
+        return array_column($rows, 'slug', 'id');
     }
 }

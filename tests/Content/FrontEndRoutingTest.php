@@ -64,6 +64,27 @@ final class FrontEndRoutingTest extends ContentTestCase
         $result->assertSee('<em>post</em>');
     }
 
+    public function testANestedUriOfAStructuredCollectionIsServed(): void
+    {
+        $team  = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa3';
+        $about = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa2';
+
+        mkdir($this->site . 'collections/pages');
+        mkdir($this->site . 'trees/collections', 0775, true);
+        $this->writeFile('collections/pages/about.md', "---\nid: {$about}\ntitle: About\n---\n");
+        $this->writeFile('collections/pages/team.md', "---\nid: {$team}\ntitle: Team\n---\n");
+        $this->writeFile('trees/collections/pages.yaml', "- id: {$about}\n  children:\n    - id: {$team}\n");
+        $this->serveBlog("route: /blog/{slug}\ntemplate: blog/show\n");
+        $this->writeFile('collections/pages.yaml', "title: Pages\nstructure: true\nroute: /{slug}\ncontroller: " . BlogController::class . "::show\n");
+        (new Indexer($this->site))->reindex();
+        $this->resetRouting();
+
+        $result = $this->get('about/team');
+        $result->assertStatus(201);
+        $result->assertJSONExact(['slug' => 'team']);
+        $this->assertNotFound('team');
+    }
+
     public function testATemplateFallsBackToAppViews(): void
     {
         file_put_contents(self::APP_VIEW, 'From app views: <?= esc($entry->title) ?>');
