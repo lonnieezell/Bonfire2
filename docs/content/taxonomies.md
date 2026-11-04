@@ -50,7 +50,7 @@ color: blue
 | `title` | No | The term's title, up to 255 characters. Defaults to the slug. |
 
 The file name, without `.yaml`, is the term's slug: letters, numbers, `-` and `_`. Any other keys are yours, and you read
-them with [`field()`](query_api.md#terms). The admin only saves the keys of the taxonomy's blueprint, and keeps the rest
+them with [`field()`](query_api.md#taxonomies). The admin only saves the keys of the taxonomy's blueprint, and keeps the rest
 as they were.
 
 ## Tagging entries
