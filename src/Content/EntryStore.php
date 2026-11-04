@@ -71,7 +71,8 @@ final readonly class EntryStore
         $record = $this->record($collection, $raw, $path);
 
         return $this->locked($collection, function () use ($record, $raw, $path): array {
-            if (is_file($this->root . $path)) {
+            // The index may still hold a row for a file that was deleted outside the app, and two rows can't share a path.
+            if (is_file($this->root . $path) || (new ContentEntryModel())->withDeleted()->where('path', $path)->countAllResults() > 0) {
                 throw new ContentException('An entry with this slug already exists.');
             }
 

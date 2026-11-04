@@ -30,6 +30,7 @@ final readonly class Blueprint
      */
     public const RESERVED = ['id', 'status', 'published_at', 'blueprint'];
 
+    private const NAME   = '/^[A-Za-z0-9_-]{1,100}$/';
     private const HANDLE = '/^[A-Za-z][A-Za-z0-9_]{0,99}$/';
 
     /**
@@ -51,7 +52,7 @@ final readonly class Blueprint
         $path = rtrim($blueprintPath, '/') . "/collections/{$collection}/{$handle}.yaml";
 
         // Both names can come from a request.
-        if (preg_match('/^[A-Za-z0-9_-]{1,100}$/', $collection) !== 1 || preg_match('/^[A-Za-z0-9_-]{1,100}$/', $handle) !== 1 || ! is_file($path)) {
+        if (preg_match(self::NAME, $collection) !== 1 || preg_match(self::NAME, $handle) !== 1 || ! is_file($path)) {
             throw new ContentException("Unknown blueprint: {$collection}/{$handle}");
         }
 

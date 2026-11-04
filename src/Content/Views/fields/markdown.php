@@ -8,7 +8,6 @@
  * @var string                $id
  * @var string                $value
  * @var bool                  $disabled
- * @var bool                  $isNew
  */
 $rows = is_int($field->options['rows'] ?? null) ? $field->options['rows'] : 16;
 ?>

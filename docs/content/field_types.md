@@ -51,7 +51,7 @@ timezone. A value that isn't a date is refused.
 Each type's input is a partial in `src/Content/Views/fields`. To change one, copy it to
 `app/Views/content/fields/<type>.php`, for example `app/Views/content/fields/text.php`. Bonfire uses your copy for every
 field of that type. The partial gets the variables listed at the top of the file it replaces: `$field`, `$name`, `$id`,
-`$value`, `$disabled` and `$isNew`. It must name its input `$name`, and give it `$id` so the label points to it.
+`$value` and `$disabled`. It must name its input `$name`, and give it `$id` so the label points to it.
 
 ## The contract
 

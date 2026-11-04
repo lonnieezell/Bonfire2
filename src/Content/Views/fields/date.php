@@ -8,7 +8,6 @@
  * @var string                $id
  * @var string                $value     2026-10-27, or 2026-10-27 09:30:00 with a time
  * @var bool                  $disabled
- * @var bool                  $isNew
  */
 $withTime = Bonfire\Content\Fields\DateField::hasTime($field);
 ?>

@@ -7,7 +7,6 @@
  * @var string                $id       the input's id, which the label points to
  * @var string                $value
  * @var bool                  $disabled
- * @var bool                  $isNew
  */
 ?>
 <input type="text" name="<?= esc($name, 'attr') ?>" id="<?= esc($id, 'attr') ?>" class="form-control" value="<?= esc($value, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>

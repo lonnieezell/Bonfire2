@@ -9,7 +9,6 @@
  * @var string                $id
  * @var string                $value
  * @var bool                  $disabled   true once the entry exists, because the slug names its file
- * @var bool                  $isNew
  */
 $sourceId = 'field-' . Bonfire\Content\Fields\SlugField::source($field);
 ?>

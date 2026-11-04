@@ -192,6 +192,11 @@ class EntryAdminController extends AdminController
 
         [$values, $status, $publishedAt, $errors, $denied] = $this->check($form, $post, $entry->status, $entry->publishedAt);
 
+        // Without a publish date in the front matter, a dated entry takes the one in its file name, so it can't be cleared.
+        if ($collection->dated && $publishedAt === null) {
+            $errors['published_at'] = lang('Content.datedNeedsDate');
+        }
+
         $hash  = is_string($post['hash'] ?? null) ? $post['hash'] : '';
         $shown = ['entry' => $entry, 'hash' => $hash, 'values' => $values, 'status' => $status, 'publishedAt' => $publishedAt ?? '', 'errors' => $errors];
 

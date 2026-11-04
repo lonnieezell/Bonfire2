@@ -286,6 +286,34 @@ final class EntryAdminTest extends ContentTestCase
         $this->assertSame([], glob($this->site . 'collections/pages/*'));
     }
 
+    public function testAStaleIndexRowForADeletedFileBlocksANewEntryAtItsPath(): void
+    {
+        unlink($this->site . 'collections/blog/2026-01-10.first-post.md');
+
+        $response = $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), ['fields' => ['title' => 'First post'], 'published_at' => '2026-01-10T00:00']);
+
+        $response->assertOK();
+        $this->assertCount(1, $this->query($response, '//*[@data-notice]'));
+        $this->assertSame(1, (new ContentEntryModel())->where('path', 'collections/blog/2026-01-10.first-post.md')->countAllResults());
+    }
+
+    public function testThePublishDateOfAnEntryInADatedCollectionCannotBeCleared(): void
+    {
+        $path   = $this->site . 'collections/blog/2026-01-10.first-post.md';
+        $before = file_get_contents($path);
+
+        $form   = $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', self::FIRST));
+        $fields = $this->submittedForm($form->getBody(), url_to('content-edit', 'blog', self::FIRST));
+
+        $fields['published_at'] = '';
+
+        $response = $this->actingAs($this->admin)->post(route_to('content-edit', 'blog', self::FIRST), $fields);
+
+        $response->assertOK();
+        $this->assertCount(1, $this->query($response, '//*[@data-error="published_at"]'));
+        $this->assertSame($before, file_get_contents($path));
+    }
+
     public function testNoTemporaryFileIsLeftBehind(): void
     {
         $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), ['fields' => ['title' => 'Tidy']])->assertRedirect();

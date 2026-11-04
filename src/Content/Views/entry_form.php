@@ -31,7 +31,6 @@
                     'id'       => 'field-' . $field->handle,
                     'value'    => $row['value'],
                     'disabled' => $row['disabled'],
-                    'isNew'    => $entry === null,
                 ], ['saveData' => false]) ?>
                 <?php if ($field->instructions !== null) : ?>
                     <div class="form-text"><?= esc($field->instructions) ?></div>

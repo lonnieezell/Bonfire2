@@ -7,7 +7,6 @@
  * @var string                $id
  * @var string                $value     1 for on, 0 for off
  * @var bool                  $disabled
- * @var bool                  $isNew
  */
 ?>
 <x-switch name="<?= esc($name, 'attr') ?>" id="<?= esc($id, 'attr') ?>" label="<?= esc($field->label, 'attr') ?>" checked="<?= $value === '1' ? '1' : '0' ?>" <?= $disabled ? 'disabled' : '' ?> />

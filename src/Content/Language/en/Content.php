@@ -26,7 +26,6 @@ return [
     // Form
     'editEntry'       => 'Edit entry',
     'saveEntry'       => 'Save entry',
-    'backToList'      => 'Back to the list',
     'publishing'      => 'Publishing',
     'status'          => 'Status',
     'publishedAt'     => 'Publish date',
@@ -37,13 +36,12 @@ return [
     'write'           => 'Write',
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
-    'on'              => 'On',
-    'off'             => 'Off',
 
     // Refusals
     'noBlueprint'        => 'This collection has no blueprint for its entries to use.',
     'cannotPublish'      => 'You don\'t have permission to publish entries or to change when they go live.',
     'noSlug'             => 'A slug could not be made from the title. Type one in the slug field, or give the entry a title with letters or numbers in it.',
+    'datedNeedsDate'     => 'An entry in a dated collection needs a publish date.',
     'invalidStatus'      => 'The status must be draft or published.',
     'invalidPublishedAt' => 'The publish date is not a valid date and time.',
     'conflict'           => 'This entry was changed after you opened it, so your changes were not saved. Reload the entry to see the other change, then make yours again.',
