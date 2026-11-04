@@ -1323,6 +1323,8 @@
       
         
       
+        
+      
     
     
     
@@ -1583,6 +1585,34 @@
     
   
     Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pages and structures
   
 
     
@@ -2825,6 +2855,13 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="4-november-2026">4 November 2026</h2>
+<p><strong>Content: pages and structures.</strong> Give a collection <code>structure: true</code> (and optionally <code>max_depth</code>) and its entries
+form a tree, kept in <code>content/trees/collections/&lt;handle&gt;.yaml</code>. The reindex gives each entry a <code>parent_id</code>, a <code>sort</code> and
+a URI built from its parents, such as <code>/about/team</code>, which the front-end route serves. Renaming a page or moving it
+updates the URIs below it. There are <strong>no redirects</strong> for the old URIs in this version. Users with <code>content.structure</code>
+get an <strong>Edit structure</strong> screen with drag and drop, which refuses a tree deeper than <code>max_depth</code> or one that changed
+on disk since it was opened. New entries go last at the root, and entries the tree file doesn't name are indexed there
+too. See <a href="../../content/structure/">Pages and structures</a>.</p>
 <p><strong>Content: taxonomies and terms.</strong> Tags, categories and other taxonomies are now files. A taxonomy has a config at
 <code>content/taxonomies/&lt;handle&gt;.yaml</code>, and each term is a YAML file in <code>content/taxonomies/&lt;handle&gt;/</code>. A collection opts in
 with <code>taxonomies: [tags]</code>, and keeps an entry's terms as slugs in its front matter (<code>tags: [php]</code>). A new <code>terms</code> blueprint
