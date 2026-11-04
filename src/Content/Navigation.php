@@ -22,7 +22,7 @@ final readonly class Navigation
     /**
      * What a navigation's handle, which is its file name, can be.
      */
-    public const HANDLE = '/^[A-Za-z0-9_-]{1,100}$/';
+    public const HANDLE = '/^[A-Za-z0-9_-]{1,100}\z/';
 
     /**
      * @param list<string> $collections the handles of the collections its items can link to, empty for any

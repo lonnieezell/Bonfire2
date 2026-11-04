@@ -134,7 +134,7 @@ final readonly class Content
         }
 
         $ids     = $tree->entryIds();
-        $entries = $ids === [] ? [] : array_column((new ContentEntryModel())->published()->whereIn('id', $ids)->findAll(), null, 'id');
+        $entries = $ids === [] ? [] : array_column((new ContentEntryModel())->published()->select('id, title, uri')->whereIn('id', $ids)->findAll(), null, 'id');
 
         return $tree->items($entries, $currentPath ?? service('request')->getPath());
     }

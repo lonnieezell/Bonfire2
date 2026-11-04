@@ -100,12 +100,13 @@ class NavigationAdminController extends AdminController
      */
     private function readTree(Navigation $navigation): array
     {
-        $raw = $navigation->rawTree(config('Content')->contentPath);
+        $raw  = $navigation->rawTree(config('Content')->contentPath);
+        $hash = NavigationTree::hash($raw);
 
         try {
-            return [NavigationTree::parse($raw), NavigationTree::hash($raw), null];
+            return [NavigationTree::parse($raw), $hash, null];
         } catch (ContentException $e) {
-            return [new NavigationTree([]), NavigationTree::hash($raw), $e->getMessage()];
+            return [new NavigationTree([]), $hash, $e->getMessage()];
         }
     }
 

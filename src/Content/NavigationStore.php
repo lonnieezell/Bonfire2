@@ -70,7 +70,7 @@ final readonly class NavigationStore
         }
 
         // The model leaves out entries in the trash.
-        if (count($model->findAll()) !== count($ids)) {
+        if ($model->countAllResults() !== count($ids)) {
             throw new ContentException('The menu links an entry that does not exist, or is not in a collection this navigation allows.');
         }
     }

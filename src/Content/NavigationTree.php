@@ -142,7 +142,7 @@ final readonly class NavigationTree
                 $title = $node['title'] ?? $entries[$node['entry']]['title'];
                 $url   = $entries[$node['entry']]['uri'];
             } else {
-                $title = (string) $node['title'];
+                $title = $node['title'];
                 $url   = $node['url'];
             }
 
@@ -177,7 +177,7 @@ final readonly class NavigationTree
                 continue;
             }
 
-            $kept[] = ['children' => $children] + $node;
+            $kept[] = [...$node, 'children' => $children];
         }
 
         return $kept;
