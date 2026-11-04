@@ -44,6 +44,12 @@ $pager = $query->pager();
     It finds drafts and scheduled entries too. To find only live entries, use
     `content()->collection('blog')->published()->find($id)`.
 
+## Finding several entries
+
+`content()->findMany($ids)` takes a list of UUIDs and returns their entries in that order. An id with no entry, or whose
+entry is in the trash, is left out, so the list can be shorter than the one you gave. Like `find()`, it returns drafts
+and scheduled entries too.
+
 ## Finding an entry by URI
 
 `content()->findByUri('/blog/hello-world')` returns the published entry at a URI, or `null` for a draft, a scheduled entry
@@ -69,7 +75,12 @@ $entry->field('tagline');            // one front matter value, or null
 $entry->field('tagline', 'Welcome'); // or a default
 
 $entry->content();                   // the body as HTML
+
+$entry->entries('related');          // the entries an `entries` field links to
 ```
+
+`entries()` returns the entries in the order the file lists them, and skips a link whose entry is missing or in the
+trash. It also returns drafts, so check `$linked->status` before you show one. See [Field types](field_types.md#entries).
 
 `content()` renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
 apart from the tags GitHub disallows, such as `<script>`, so treat a body as code you trust. Links to `javascript:` and

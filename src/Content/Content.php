@@ -43,6 +43,33 @@ final readonly class Content
     }
 
     /**
+     * Finds entries by their UUIDs, in the order given. An id with no entry, or whose entry is in the trash, is skipped.
+     *
+     * @param list<string> $ids
+     *
+     * @return list<Entry>
+     */
+    public function findMany(array $ids): array
+    {
+        $ids = array_values(array_unique(array_map(strtolower(...), $ids)));
+
+        if ($ids === []) {
+            return [];
+        }
+
+        $rows    = array_column((new ContentEntryModel())->whereIn('id', $ids)->findAll(), null, 'id');
+        $entries = [];
+
+        foreach ($ids as $id) {
+            if (isset($rows[$id])) {
+                $entries[] = Entry::fromRow($rows[$id]);
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
      * Finds the published entry at a URI. Drafts and scheduled entries are treated as missing.
      */
     public function findByUri(string $uri): ?Entry
