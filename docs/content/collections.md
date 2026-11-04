@@ -22,6 +22,7 @@ blueprints:
 | `route` | None | The URI of its entries, such as `/blog/{slug}`. See [Routing](routing.md). |
 | `template` | None | The view that renders its entries, such as `blog/show`. |
 | `controller` | None | The method that handles its entries, such as `App\Controllers\Blog::show`. Can't be set with `template`. |
+| `taxonomies` | None | The [taxonomies](taxonomies.md) its entries can be tagged with, such as `[tags]`. |
 
 ## Entries
 

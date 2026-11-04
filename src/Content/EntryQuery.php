@@ -12,6 +12,7 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
+use Bonfire\Content\Models\ContentTermModel;
 use CodeIgniter\Pager\Pager;
 
 /**
@@ -27,6 +28,11 @@ final class EntryQuery
      */
     private array $order = [];
 
+    /**
+     * @var list<array{string, string}> the taxonomy and slug of each term asked for
+     */
+    private array $terms = [];
+
     private ?Pager $pager = null;
 
     public function __construct(private readonly Collection $collection)
@@ -39,6 +45,26 @@ final class EntryQuery
     public function published(): self
     {
         $this->published = true;
+
+        return $this;
+    }
+
+    /**
+     * Keeps entries that have a term, whether or not they're published. Calling it again keeps only
+     * entries that have every term asked for. A term that doesn't exist matches nothing.
+     *
+     * @param string $taxonomy a taxonomy the collection uses
+     * @param string $slug     the term's slug
+     *
+     * @throws ContentException when the collection doesn't use the taxonomy
+     */
+    public function whereTerm(string $taxonomy, string $slug): self
+    {
+        if (! in_array($taxonomy, $this->collection->taxonomies, true)) {
+            throw new ContentException("Collection {$this->collection->handle} doesn't use the taxonomy '{$taxonomy}'. Add it to the collection's `taxonomies`.");
+        }
+
+        $this->terms[] = [$taxonomy, $slug];
 
         return $this;
     }
@@ -108,6 +134,16 @@ final class EntryQuery
 
         if ($this->published) {
             $model->published();
+        }
+
+        foreach ($this->terms as [$taxonomy, $slug]) {
+            $term = (new ContentTermModel())->lookup($taxonomy, $slug);
+
+            if ($term === null) {
+                $model->where('1 = 0', null, false);
+            } else {
+                $model->whereIn('id', TermIndex::entryIdsOf($term['id']));
+            }
         }
 
         return $model;

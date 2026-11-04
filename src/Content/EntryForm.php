@@ -45,6 +45,31 @@ final readonly class EntryForm
     }
 
     /**
+     * What the form shows for each field.
+     *
+     * @param array<string, string> $values by handle
+     * @param array<string, string> $errors by handle
+     *
+     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool}>
+     */
+    public function rows(array $values, array $errors): array
+    {
+        $rows = [];
+
+        foreach ($this->fields() as [$field, $type]) {
+            $rows[] = [
+                'field'    => $field,
+                'view'     => FieldTypes::view($field->type),
+                'value'    => $values[$field->handle] ?? '',
+                'error'    => $errors[$field->handle] ?? null,
+                'disabled' => ! $this->isEditable($type),
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
      * Whether the user can type into the field. A slug is the name of an existing entry's file.
      */
     public function isEditable(FieldType $type): bool
@@ -67,7 +92,7 @@ final readonly class EntryForm
             $stored = match (true) {
                 $field->handle === Blueprint::BODY => $body,
                 ! $type->storedInFrontMatter()     => $slug,
-                default                            => $data[$field->handle] ?? null,
+                default                            => $data[$type->key($field)] ?? null,
             };
 
             $values[$field->handle] = $type->fromFrontMatter($stored, $field);
@@ -173,10 +198,11 @@ final readonly class EntryForm
             }
 
             $value = $type->toFrontMatter($values[$field->handle], $field);
+            $key   = $type->key($field);
 
             // A field left empty doesn't add a key to the file.
-            if (array_key_exists($field->handle, $existing) || ($value !== null && $value !== '')) {
-                $frontMatter[$field->handle] = $value;
+            if (array_key_exists($key, $existing) || ! in_array($value, [null, '', []], true)) {
+                $frontMatter[$key] = $value;
             }
         }
 

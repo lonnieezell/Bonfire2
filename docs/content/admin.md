@@ -11,11 +11,11 @@ screens are at `/admin/content/<collection>`.
 
 | Permission | What it allows |
 |---|---|
-| `content.access` | Seeing the Content menu and each collection's list. Every other Content screen needs it too. |
+| `content.access` | Seeing the Content menu and each collection's list. Every other entry screen needs it too. |
 | `content.edit` | Creating and editing entries, and the Markdown preview. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
 | `content.delete` | Reserved. Nothing uses it yet. |
-| `content.structure` | Reserved. Nothing uses it yet. |
+| `content.structure` | Listing, creating and editing the terms of a [taxonomy](taxonomies.md#editing-terms-in-the-admin). It doesn't need `content.access`. |
 
 `superadmin` and `admin` have all of them. A user without `content.access` doesn't see the menu, and the routes send them
 back to the dashboard with a "not authorized" message.

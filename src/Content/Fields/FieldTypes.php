@@ -23,6 +23,7 @@ final class FieldTypes
         'slug'     => SlugField::class,
         'toggle'   => ToggleField::class,
         'date'     => DateField::class,
+        'terms'    => TermsField::class,
     ];
 
     public static function has(string $type): bool

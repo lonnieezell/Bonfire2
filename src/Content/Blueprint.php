@@ -56,6 +56,41 @@ final readonly class Blueprint
             throw new ContentException("Unknown blueprint: {$collection}/{$handle}");
         }
 
+        return self::fromFile($path, $collection, $handle);
+    }
+
+    /**
+     * The blueprint of a taxonomy's terms, from resources/blueprints/taxonomies/<taxonomy>.yaml. Without that file,
+     * a term has a title and a slug.
+     *
+     * @throws ContentException when the file is invalid
+     */
+    public static function loadTerm(string $blueprintPath, string $taxonomy): self
+    {
+        $path = rtrim($blueprintPath, '/') . "/taxonomies/{$taxonomy}.yaml";
+
+        if (preg_match(self::NAME, $taxonomy) === 1 && is_file($path)) {
+            $blueprint = self::fromFile($path, $taxonomy, $taxonomy);
+
+            // A term file is only YAML, so there's nowhere to keep a body.
+            if ($blueprint->field(self::BODY) !== null) {
+                throw new ContentException("Blueprint {$taxonomy} can't have a `body` field, because a term has no body.");
+            }
+
+            return $blueprint;
+        }
+
+        return new self($taxonomy, $taxonomy, $taxonomy, [
+            new Field('title', 'text', 'Title', 'required|max_length[255]', null, []),
+            new Field('slug', 'slug', 'Slug', '', null, []),
+        ]);
+    }
+
+    /**
+     * @throws ContentException
+     */
+    private static function fromFile(string $path, string $collection, string $handle): self
+    {
         try {
             $config = Yaml::parseFile($path);
         } catch (ParseException $e) {
@@ -66,13 +101,26 @@ final readonly class Blueprint
             throw new ContentException("Blueprint {$handle} needs a `fields` list.");
         }
 
-        $fields = [];
+        $fields = $keys = [];
 
         foreach ($config['fields'] as $position => $definition) {
             $field = self::fromDefinition($handle, $position + 1, $definition);
 
             if (isset($fields[$field->handle])) {
                 throw new ContentException("Blueprint {$handle} has two fields named `{$field->handle}`.");
+            }
+
+            $type = FieldTypes::get($field->type);
+
+            // A type may save its value under another key than the handle, and two fields can't share one.
+            if ($type->storedInFrontMatter()) {
+                $key = $type->key($field);
+
+                if (isset($keys[$key])) {
+                    throw new ContentException("Blueprint {$handle}: fields `{$keys[$key]}` and `{$field->handle}` both save to `{$key}`.");
+                }
+
+                $keys[$key] = $field->handle;
             }
 
             $fields[$field->handle] = $field;
@@ -124,7 +172,7 @@ final readonly class Blueprint
 
         $options = array_diff_key($definition, array_flip(['handle', 'type', 'label', 'validate', 'instructions']));
 
-        return new Field(
+        $field = new Field(
             $handle,
             $definition['type'],
             is_scalar($definition['label'] ?? null) ? (string) $definition['label'] : ucfirst(str_replace('_', ' ', $handle)),
@@ -132,5 +180,9 @@ final readonly class Blueprint
             is_scalar($definition['instructions'] ?? null) ? (string) $definition['instructions'] : null,
             $options,
         );
+
+        FieldTypes::get($field->type)->check($field);
+
+        return $field;
     }
 }

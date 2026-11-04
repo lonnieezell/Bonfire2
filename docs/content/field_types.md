@@ -11,6 +11,7 @@ is saved in the front matter.
 | [`slug`](#slug) | One line, filled from the title | The file's name |
 | [`toggle`](#toggle) | A switch | `true` or `false` |
 | [`date`](#date) | A date, or a date and time | A string |
+| [`terms`](#terms) | A checkbox for each term | A list of slugs |
 
 A field left empty doesn't add a key to the file, though a key that is already there keeps its empty value.
 
@@ -46,6 +47,25 @@ A switch, which saves `true` or `false`.
 A date, saved as `2026-10-27`. With `time: true` it is a date and time, saved as `2026-10-27 09:30:00`, in your app's
 timezone. A value that isn't a date is refused.
 
+## terms
+
+The terms of a [taxonomy](taxonomies.md) an entry has, chosen from the terms that exist. `taxonomy` is required and names
+the taxonomy:
+
+```yaml
+- handle: tags
+  type: terms
+  taxonomy: tags
+```
+
+The input is a checkbox for each term. The front matter holds the checked slugs as a list under the taxonomy's handle, not
+under the field's handle, because that is where the reindex looks: `tags: [php, laravel]`. Unchecking every term saves
+`tags: []`. A slug in the file that no term has is shown as "(no such term)", checked, so that saving doesn't drop it.
+Anything posted that isn't a slug is dropped. Use one `terms` field for each taxonomy, and don't name a taxonomy `id`,
+`status`, `published_at`, `blueprint`, `title` or `body`, which the entry uses itself: the blueprint is refused.
+
+For the entries to be indexed with their terms, the collection has to list the taxonomy in its `taxonomies`.
+
 ## Changing an input
 
 Each type's input is a partial in `src/Content/Views/fields`. To change one, copy it to
@@ -60,10 +80,12 @@ A type is a class in `Bonfire\Content\Fields` that extends `FieldType`:
 | Method | What it does |
 |---|---|
 | `partial()` | The name of the input partial. |
-| `prepare($input, $field, $submitted)` | Tidies the posted value before it's validated. Everything posted is text. |
+| `prepare($input, $field, $submitted)` | Tidies the posted value before it's validated, and returns text. Most inputs post text, but `terms` posts a list. |
 | `rules($field)` | The validation rules: the blueprint's `validate` and any the type needs. |
 | `toFrontMatter($input, $field)` | The value to write to the file, from a valid value. |
 | `fromFrontMatter($stored, $field)` | The value the form shows, from what the file holds. |
 | `storedInFrontMatter()` | `false` for a type that isn't a front matter key, like `slug`. |
+| `key($field)` | The front matter key that holds the value. The field's handle, except for `terms`. |
+| `check($field)` | Throws a `ContentException` if the blueprint gave the field options it can't use. |
 
-The types a blueprint can use are the six above. Bonfire doesn't load types from your app yet.
+The types a blueprint can use are the seven above. Bonfire doesn't load types from your app yet.
