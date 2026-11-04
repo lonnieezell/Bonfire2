@@ -14,7 +14,7 @@
         <link rel="prev" href="../blueprints/">
       
       
-        <link rel="next" href="../query_api/">
+        <link rel="next" href="../custom_field_types/">
       
       
         
@@ -1041,6 +1041,8 @@
       
         
       
+        
+      
     
     
     
@@ -1307,6 +1309,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#datetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        datetime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        integer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        entries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1332,6 +1378,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_field_types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom field types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2381,6 +2455,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#datetime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        datetime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#select" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        select
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        integer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        entries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2517,8 +2635,29 @@ is saved in the front matter.</p>
 <td>A date, or a date and time</td>
 <td>A string</td>
 </tr>
+<tr>
+<td><a href="#datetime"><code>datetime</code></a></td>
+<td>A date and time</td>
+<td>A string</td>
+</tr>
+<tr>
+<td><a href="#select"><code>select</code></a></td>
+<td>A dropdown, or a list to pick several from</td>
+<td>A string, or a list of them</td>
+</tr>
+<tr>
+<td><a href="#integer"><code>integer</code></a></td>
+<td>A number</td>
+<td>A number</td>
+</tr>
+<tr>
+<td><a href="#entries"><code>entries</code></a></td>
+<td>Entries to link to</td>
+<td>A list of UUIDs</td>
+</tr>
 </tbody>
 </table>
+<p>You can add types of your own. See <a href="../custom_field_types/">Custom field types</a>.</p>
 <p>A field left empty doesn't add a key to the file, though a key that is already there keeps its empty value.</p>
 <h2 id="text">text</h2>
 <p>A single line of text.</p>
@@ -2539,13 +2678,72 @@ start with.</p>
 <h2 id="date">date</h2>
 <p>A date, saved as <code>2026-10-27</code>. With <code>time: true</code> it is a date and time, saved as <code>2026-10-27 09:30:00</code>, in your app's
 timezone. A value that isn't a date is refused.</p>
+<h2 id="datetime">datetime</h2>
+<p>A date and time, saved as <code>2026-10-27 09:30:00</code> in your app's timezone. It is a <code>date</code> field with <code>time: true</code>, under
+its own name. A value that isn't a date and time is refused.</p>
+<h2 id="select">select</h2>
+<p>One option from a list, saved as a string. With <code>multiple: true</code> it is a list to pick several from, saved as a list.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mood</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">  </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">happy</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">sad</span><span class="p p-Indicator">]</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genre</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">  </span><span class="nt">options</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Science fiction</span>
+<span class="w">    </span><span class="nt">fan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fantasy</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span>
+<span class="w">  </span><span class="nt">multiple</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">php</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">yaml</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">css</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p><code>options</code> is a list of values, or a map of value to label. The value is what the file holds and the label is what the
+form shows. A value that isn't one of the options is refused. Values are saved as text, so an option <code>1</code> is saved as
+<code>'1'</code>. Add <code>required</code> to <code>validate</code> to make an empty choice an error.</p>
+<h2 id="integer">integer</h2>
+<p>A whole number, saved as a number. <code>min</code> and <code>max</code> bound it. A value that isn't a whole number, or is outside the bounds,
+is refused.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rating</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">  </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
+<h2 id="entries">entries</h2>
+<p>Links to other entries, saved as a list of their UUIDs.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">related</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">entries</span>
+<span class="w">  </span><span class="nt">collections</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pages</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">blog</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">max_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>collections</code></td>
+<td>The collections the form offers entries from, and accepts. Every collection when it's left out.</td>
+</tr>
+<tr>
+<td><code>max_items</code></td>
+<td>The most entries that can be linked. With <code>1</code> the form shows a dropdown instead of checkboxes.</td>
+</tr>
+</tbody>
+</table>
+<p>The form lists every entry of those collections, drafts too, with a checkbox each. That suits collections of a few
+hundred entries. For more, <a href="#changing-an-input">change the input</a>. A save is refused if it links an entry that doesn't
+exist, is in the trash, belongs to another collection, or takes the field over <code>max_items</code>.</p>
+<p>Read the links back with <a href="../query_api/#entries"><code>$entry-&gt;entries('related')</code></a>, which returns entry objects. A link whose
+entry has been deleted or trashed since is skipped without an error, and saving the form drops it from the file.</p>
 <h2 id="changing-an-input">Changing an input</h2>
 <p>Each type's input is a partial in <code>src/Content/Views/fields</code>. To change one, copy it to
 <code>app/Views/content/fields/&lt;type&gt;.php</code>, for example <code>app/Views/content/fields/text.php</code>. Bonfire uses your copy for every
 field of that type. The partial gets the variables listed at the top of the file it replaces: <code>$field</code>, <code>$name</code>, <code>$id</code>,
 <code>$value</code> and <code>$disabled</code>. It must name its input <code>$name</code>, and give it <code>$id</code> so the label points to it.</p>
 <h2 id="the-contract">The contract</h2>
-<p>A type is a class in <code>Bonfire\Content\Fields</code> that extends <code>FieldType</code>:</p>
+<p>A type is a class that extends <code>Bonfire\Content\Fields\FieldType</code>. The built-in types are classes like this too:</p>
 <table>
 <thead>
 <tr>
@@ -2560,7 +2758,7 @@ field of that type. The partial gets the variables listed at the top of the file
 </tr>
 <tr>
 <td><code>prepare($input, $field, $submitted)</code></td>
-<td>Tidies the posted value before it's validated. Everything posted is text.</td>
+<td>Tidies the posted value before it's validated, and returns text.</td>
 </tr>
 <tr>
 <td><code>rules($field)</code></td>
@@ -2580,7 +2778,7 @@ field of that type. The partial gets the variables listed at the top of the file
 </tr>
 </tbody>
 </table>
-<p>The types a blueprint can use are the six above. Bonfire doesn't load types from your app yet.</p>
+<p>To write your own, see <a href="../custom_field_types/">Custom field types</a>.</p>
 
 
 
@@ -2633,13 +2831,13 @@ field of that type. The partial gets the variables listed at the top of the file
         
         
           
-          <a href="../query_api/" class="md-footer__link md-footer__link--next" aria-label="Next: Query API">
+          <a href="../custom_field_types/" class="md-footer__link md-footer__link--next" aria-label="Next: Custom field types">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Query API
+                Custom field types
               </div>
             </div>
             <div class="md-footer__button md-icon">

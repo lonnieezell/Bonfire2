@@ -1319,6 +1319,8 @@
       
         
       
+        
+      
     
     
     
@@ -1467,6 +1469,34 @@
     
   
     Field types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/custom_field_types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom field types
   
 
     
@@ -2765,6 +2795,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="4-november-2026">4 November 2026</h2>
+<p><strong>Content: more field types, and your own.</strong> Blueprints can use <code>select</code> (one option, or several with
+<code>multiple: true</code>), <code>integer</code>, <code>datetime</code> and <code>entries</code>, which links to entries of the collections you name. Read the
+links with <code>$entry-&gt;entries('related')</code>, which skips a target that has since been deleted or trashed, or look entries up
+with <code>content()-&gt;findMany($ids)</code>. Register a field type of your own in <code>$fieldTypes</code> in <code>app/Config/Content.php</code>. See
+<a href="../../content/field_types/">Field types</a> and <a href="../../content/custom_field_types/">Custom field types</a>.</p>
 <p><strong>Content: edit entries in the admin.</strong> <strong>Content</strong> in the sidebar has an item for each collection, with a list of its
 entries and a form to create and edit them. The form is built from the collection's blueprint in
 <code>resources/blueprints/collections/&lt;collection&gt;/&lt;blueprint&gt;.yaml</code>, with <code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>slug</code>, <code>toggle</code>

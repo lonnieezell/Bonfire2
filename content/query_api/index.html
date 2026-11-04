@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../field_types/">
+        <link rel="prev" href="../custom_field_types/">
       
       
         <link rel="next" href="../routing/">
@@ -1041,6 +1041,8 @@
       
         
       
+        
+      
     
     
     
@@ -1206,6 +1208,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_field_types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom field types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1301,6 +1331,17 @@
     <span class="md-ellipsis">
       
         Finding an entry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-several-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding several entries
       
     </span>
   </a>
@@ -2327,6 +2368,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#finding-several-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding several entries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#finding-an-entry-by-uri" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2478,6 +2530,10 @@ exist or its config is invalid.</p>
 <p>It finds drafts and scheduled entries too. To find only live entries, use
 <code>content()-&gt;collection('blog')-&gt;published()-&gt;find($id)</code>.</p>
 </div>
+<h2 id="finding-several-entries">Finding several entries</h2>
+<p><code>content()-&gt;findMany($ids)</code> takes a list of UUIDs and returns their entries in that order. An id with no entry, or whose
+entry is in the trash, is left out, so the list can be shorter than the one you gave. Like <code>find()</code>, it returns drafts
+and scheduled entries too.</p>
 <h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
 <p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
 or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
@@ -2498,7 +2554,11 @@ or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">,</span> <span class="s1">'Welcome'</span><span class="p">);</span> <span class="c1">// or a default</span>
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">();</span>                   <span class="c1">// the body as HTML</span>
+
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">(</span><span class="s1">'related'</span><span class="p">);</span>          <span class="c1">// the entries an `entries` field links to</span>
 </code></pre></div>
+<p><code>entries()</code> returns the entries in the order the file lists them, and skips a link whose entry is missing or in the
+trash. It also returns drafts, so check <code>$linked-&gt;status</code> before you show one. See <a href="../field_types/#entries">Field types</a>.</p>
 <p><code>content()</code> renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
 apart from the tags GitHub disallows, such as <code>&lt;script&gt;</code>, so treat a body as code you trust. Links to <code>javascript:</code> and
 similar are dropped. Use <code>$entry-&gt;body</code> to render it your own way.</p>
@@ -2537,7 +2597,7 @@ similar are dropped. Use <code>$entry-&gt;body</code> to render it your own way.
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../field_types/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Field types">
+          <a href="../custom_field_types/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Custom field types">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2547,7 +2607,7 @@ similar are dropped. Use <code>$entry-&gt;body</code> to render it your own way.
                 Previous
               </span>
               <div class="md-ellipsis">
-                Field types
+                Custom field types
               </div>
             </div>
           </a>
