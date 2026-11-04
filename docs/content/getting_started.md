@@ -87,7 +87,7 @@ title: Hello world
 This is my *first* post.
 ```
 
-The `id` must be a UUID that no other entry has, so make a new one for each file. The date in the file name is when the
+The `id` must be a UUID that no other entry has, so make a new one for each file, such as with `uuidgen`. The date in the file name is when the
 post goes live, so use today's date or an earlier one, or the post is a 404 until that day. Entries without a `status` are
 published. See [Entries](collections.md#entries).
 

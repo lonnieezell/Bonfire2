@@ -19,7 +19,7 @@ final class GettingStartedTest extends ContentTestCase
 {
     private const DOCS = __DIR__ . '/../../docs/content/';
 
-    private string $themes;
+    private string $themes = '';
 
     protected function setUp(): void
     {
@@ -44,8 +44,10 @@ final class GettingStartedTest extends ContentTestCase
     protected function tearDown(): void
     {
         Time::setTestNow();
-        delete_files($this->themes, true, false, true);
-        rmdir($this->themes);
+        if (is_dir($this->themes)) {
+            delete_files($this->themes, true, false, true);
+            rmdir($this->themes);
+        }
 
         self::setPrivateProperty(Theme::class, 'themeInfo', []);
         $this->resetRouting();
