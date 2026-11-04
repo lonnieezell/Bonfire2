@@ -6,6 +6,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 4 November 2026
 
+**Content: pages and structures.** Give a collection `structure: true` (and optionally `max_depth`) and its entries
+form a tree, kept in `content/trees/collections/<handle>.yaml`. The reindex gives each entry a `parent_id`, a `sort` and
+a URI built from its parents, such as `/about/team`, which the front-end route serves. Renaming a page or moving it
+updates the URIs below it. There are **no redirects** for the old URIs in this version. Users with `content.structure`
+get an **Edit structure** screen with drag and drop, which refuses a tree deeper than `max_depth` or one that changed
+on disk since it was opened. New entries go last at the root, and entries the tree file doesn't name are indexed there
+too. `content.structure` is now used. See [Pages and structures](../content/structure.md).
+
 **Content: more field types, and your own.** Blueprints can use `select` (one option, or several with
 `multiple: true`), `integer`, `datetime` and `entries`, which links to entries of the collections you name. Read the
 links with `$entry->entries('related')`, which skips a target that has since been deleted or trashed, or look entries up

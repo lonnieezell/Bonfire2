@@ -2,6 +2,9 @@
 
 <?php $this->section('main') ?>
 <x-page-head title="<?= esc($collection->title, 'attr') ?>" count="<?= $pager->getTotal() ?>">
+    <?php if ($canArrange) : ?>
+        <a href="<?= url_to('content-structure', $collection->handle) ?>" class="btn btn-outline-secondary" data-structure><i class="fas fa-sitemap" aria-hidden="true"></i> <?= lang('Content.editStructure') ?></a>
+    <?php endif ?>
     <?php if ($canEdit) : ?>
         <a href="<?= url_to('content-new', $collection->handle) ?>" class="btn btn-primary" data-new><i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Content.newEntry') ?></a>
     <?php endif ?>

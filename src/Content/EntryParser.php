@@ -64,7 +64,8 @@ final class EntryParser
             throw new ContentException('The filename needs to start with a date (2026-10-27.my-post.md), or the front matter needs a `published_at`.');
         }
 
-        $uri = $collection->uriFor($slug);
+        // In a structured collection the tree decides the URI, so the indexer sets it.
+        $uri = $collection->structure ? null : $collection->uriFor($slug);
 
         self::assertFits('slug', $slug, 255);
         self::assertFits('uri', (string) $uri, 255);
@@ -77,6 +78,8 @@ final class EntryParser
             'blueprint'    => $blueprint,
             'slug'         => $slug,
             'uri'          => $uri,
+            'parent_id'    => null,
+            'sort'         => null,
             'status'       => $status,
             'published_at' => $publishedAt,
             'title'        => $title,

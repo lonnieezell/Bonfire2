@@ -15,7 +15,7 @@ screens are at `/admin/content/<collection>`.
 | `content.edit` | Creating and editing entries, and the Markdown preview. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
 | `content.delete` | Reserved. Nothing uses it yet. |
-| `content.structure` | Reserved. Nothing uses it yet. |
+| `content.structure` | Arranging the entries of a structured collection in its tree editor. See [Pages and structures](structure.md). |
 
 `superadmin` and `admin` have all of them. A user without `content.access` doesn't see the menu, and the routes send them
 back to the dashboard with a "not authorized" message.

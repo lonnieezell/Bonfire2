@@ -37,6 +37,8 @@ final readonly class Collection
         public ?string $route,
         public ?string $template,
         public ?string $controller,
+        public bool $structure = false,
+        public ?int $maxDepth = null,
     ) {
     }
 
@@ -72,6 +74,17 @@ final readonly class Collection
 
         self::assertRouting($route, $template, $controller);
 
+        $structure = $config['structure'] ?? false;
+        $maxDepth  = $config['max_depth'] ?? null;
+
+        if (! is_bool($structure)) {
+            throw new ContentException('`structure` must be true or false.');
+        }
+
+        if ($maxDepth !== null && (! is_int($maxDepth) || $maxDepth < 1)) {
+            throw new ContentException('`max_depth` must be a whole number of at least 1.');
+        }
+
         return new self(
             $handle,
             is_scalar($config['title'] ?? null) ? (string) $config['title'] : $handle,
@@ -82,6 +95,8 @@ final readonly class Collection
             $route,
             $template,
             $controller,
+            $structure,
+            $maxDepth,
         );
     }
 
@@ -106,7 +121,8 @@ final readonly class Collection
     }
 
     /**
-     * The URI of an entry with this slug, or null if the collection has no route.
+     * The URI of an entry with this slug, or null if the collection has no route. In a structured collection
+     * the slug is the entry's whole path, such as `about/team`.
      */
     public function uriFor(string $slug): ?string
     {
