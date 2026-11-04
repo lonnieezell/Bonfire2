@@ -72,7 +72,7 @@ final readonly class EntryStore
         $raw    = self::serialise(['id' => ContentFiles::uuid(), ...$frontMatter], $body);
         $record = $this->record($collection, $raw, $path);
 
-        return $this->locked($collection, function () use ($collection, $record, $raw, $path): array {
+        return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path): array {
             // The index may still hold a row for a file that was deleted outside the app, and two rows can't share a path.
             if (is_file($this->root . $path) || (new ContentEntryModel())->withDeleted()->where('path', $path)->countAllResults() > 0) {
                 throw new ContentException('An entry with this slug already exists.');
@@ -103,7 +103,7 @@ final readonly class EntryStore
         $raw    = self::serialise($frontMatter, $body);
         $record = $this->record($collection, $raw, $path);
 
-        return $this->locked($collection, function () use ($collection, $record, $raw, $path, $expectedHash): array {
+        return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path, $expectedHash): array {
             $onDisk = is_file($this->root . $path) ? file_get_contents($this->root . $path) : false;
 
             if ($onDisk === false || ! hash_equals(hash('sha256', $onDisk), $expectedHash)) {
@@ -193,19 +193,5 @@ final readonly class EntryStore
         }
 
         return $record;
-    }
-
-    /**
-     * Runs a save with the collection locked.
-     *
-     * @template T
-     *
-     * @param callable(): T $save
-     *
-     * @return T
-     */
-    private function locked(Collection $collection, callable $save): mixed
-    {
-        return $this->files->locked($collection->handle, $save);
     }
 }

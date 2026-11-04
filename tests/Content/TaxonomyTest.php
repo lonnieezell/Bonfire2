@@ -57,7 +57,6 @@ final class TaxonomyTest extends ContentTestCase
         $taxonomy = Taxonomy::load($this->site, 'tags');
 
         $this->assertSame('Tags', $taxonomy->title);
-        $this->assertSame('/tags/php', $taxonomy->uriFor('php'));
         $this->assertSame('php', $taxonomy->slugAt('/tags/php/'));
         $this->assertNull($taxonomy->slugAt('/tags'));
         $this->assertNull($taxonomy->slugAt('/other/php'));

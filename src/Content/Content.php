@@ -92,7 +92,7 @@ final readonly class Content
     {
         $counts = [];
 
-        foreach (array_chunk($termIds, 500) as $chunk) {
+        foreach (array_chunk($termIds, TermIndex::CHUNK) as $chunk) {
             $rows = (new ContentEntryModel())
                 ->published()
                 ->select('content_entry_terms.term_id AS term_id, COUNT(*) AS entries')

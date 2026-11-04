@@ -26,12 +26,14 @@ class Module extends BaseModule
     public function initAdmin()
     {
         // Reading every collection's config is for those who'll see the menu.
-        if (! auth()->user()?->can('content.access')) {
+        $user = auth()->user();
+
+        if (! $user?->can('content.access')) {
             return;
         }
 
         $collections = Collection::all(config('Content')->contentPath);
-        $taxonomies  = auth()->user()->can('content.structure') ? Taxonomy::all(config('Content')->contentPath) : [];
+        $taxonomies  = $user->can('content.structure') ? Taxonomy::all(config('Content')->contentPath) : [];
 
         if ($collections === [] && $taxonomies === []) {
             return;

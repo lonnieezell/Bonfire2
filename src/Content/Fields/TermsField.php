@@ -88,6 +88,6 @@ final class TermsField extends FieldType
     {
         $taxonomy = $field->options['taxonomy'] ?? null;
 
-        return is_string($taxonomy) && preg_match('/^[A-Za-z0-9_-]{1,100}$/', $taxonomy) === 1 ? $taxonomy : '';
+        return is_string($taxonomy) && preg_match(Taxonomy::HANDLE, $taxonomy) === 1 ? $taxonomy : '';
     }
 }

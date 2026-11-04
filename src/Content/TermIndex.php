@@ -21,7 +21,10 @@ use CodeIgniter\Database\BaseBuilder;
  */
 final class TermIndex
 {
-    private const CHUNK = 500;
+    /**
+     * How many ids go in one query, to stay under the database's limit on parameters.
+     */
+    public const CHUNK = 500;
 
     /**
      * A subquery for the ids of the entries that have a term, to use in whereIn().
@@ -44,6 +47,10 @@ final class TermIndex
      */
     public static function termIdsOf(Collection $collection, array $record, ?array $terms = null): array
     {
+        if ($collection->taxonomies === []) {
+            return [];
+        }
+
         $data = json_decode((string) $record['data'], true);
         $ids  = [];
 

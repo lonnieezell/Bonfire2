@@ -10,8 +10,6 @@
  * @var bool                  $disabled
  */
 
-$terms = [];
-
 // Straight from the index, because the entry counts that content()->terms() adds aren't needed here.
 $rows = (new Bonfire\Content\Models\ContentTermModel())
     ->where('taxonomy', Bonfire\Content\Fields\TermsField::taxonomy($field))
@@ -19,9 +17,7 @@ $rows = (new Bonfire\Content\Models\ContentTermModel())
     ->orderBy('slug')
     ->findAll();
 
-foreach ($rows as $row) {
-    $terms[$row['slug']] = $row['title'];
-}
+$terms = array_column($rows, 'title', 'slug');
 
 $chosen = array_filter(explode(',', $value));
 

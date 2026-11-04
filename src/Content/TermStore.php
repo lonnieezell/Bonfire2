@@ -70,11 +70,6 @@ final readonly class TermStore
             throw new ContentException('A term\'s slug is letters, numbers, - and _.');
         }
 
-        // The admin's route for a new term would take the term's edit page.
-        if ($slug === 'new') {
-            throw new ContentException('A term can\'t have the slug "new".');
-        }
-
         $path   = "taxonomies/{$taxonomy->handle}/{$slug}.yaml";
         $raw    = self::serialise(['id' => ContentFiles::uuid(), ...$data]);
         $record = $this->record($taxonomy, $raw, $path);

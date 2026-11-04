@@ -24,6 +24,11 @@ final readonly class Taxonomy
      */
     public const SLUG = '/^[\p{L}\p{N}_-]{1,255}$/u';
 
+    /**
+     * What a taxonomy's handle, which is its file name and a front matter key, can be.
+     */
+    public const HANDLE = '/^[A-Za-z0-9_-]{1,100}$/';
+
     public function __construct(
         public string $handle,
         public string $title,
@@ -40,7 +45,7 @@ final readonly class Taxonomy
         $path = rtrim($contentRoot, '/') . "/taxonomies/{$handle}.yaml";
 
         // The handle may come from a request, and it's a column of the index.
-        if (preg_match('/^[A-Za-z0-9_-]{1,100}$/', $handle) !== 1 || ! is_file($path)) {
+        if (preg_match(self::HANDLE, $handle) !== 1 || ! is_file($path)) {
             throw new ContentException("Unknown taxonomy: {$handle}");
         }
 
@@ -90,14 +95,6 @@ final readonly class Taxonomy
         }
 
         return $taxonomies;
-    }
-
-    /**
-     * The URI of the term with this slug, or null if the taxonomy has no route.
-     */
-    public function uriFor(string $slug): ?string
-    {
-        return $this->route === null ? null : Collection::normalizeUri(str_replace('{slug}', $slug, $this->route));
     }
 
     /**

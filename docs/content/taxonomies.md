@@ -117,7 +117,8 @@ has nowhere to keep a body, so a blueprint with a `body` field is refused.
 
 Saving a term writes its file whole to a temporary file and renames it into place, then updates its row in the index. It
 doesn't check whether the file changed since the form was opened, so the last save wins, and comments in the file are
-dropped. A term can't have the slug `new`, which the admin uses for its form.
+dropped. A date written without quotes becomes a number when the term is saved, so quote dates. A term can't have the
+slug `new`, which the admin uses for its form, and the reindex reports a file with that name.
 
 Entries that were tagged with a slug before its term existed are linked to the term on the next reindex.
 

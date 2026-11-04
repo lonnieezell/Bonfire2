@@ -47,6 +47,11 @@ final class TermParser
             throw new ContentException('The file name needs to be a slug of letters, numbers, - and _.');
         }
 
+        // The admin's route for a new term would take the term's edit page.
+        if ($slug === 'new') {
+            throw new ContentException('A term can\'t have the slug "new".');
+        }
+
         $title = is_scalar($data['title'] ?? null) ? (string) $data['title'] : $slug;
 
         if (mb_strlen($title) > 255) {

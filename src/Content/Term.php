@@ -20,7 +20,7 @@ final readonly class Term
 {
     /**
      * @param array<array-key, mixed> $data  the keys of the term's file, which are its blueprint's fields
-     * @param int|null                $count how many published entries have the term, or null if it wasn't counted
+     * @param int                     $count how many published entries have the term
      */
     public function __construct(
         public string $id,
@@ -28,14 +28,14 @@ final readonly class Term
         public string $slug,
         public string $title,
         public array $data,
-        public ?int $count = null,
+        public int $count,
     ) {
     }
 
     /**
      * @param array<string, mixed> $row a content_terms row
      */
-    public static function fromRow(array $row, ?int $count = null): self
+    public static function fromRow(array $row, int $count): self
     {
         return new self(
             $row['id'],

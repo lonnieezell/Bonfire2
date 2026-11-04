@@ -48,7 +48,6 @@ return [
     'saveTerm'       => 'Save term',
     'colSlug'        => 'Slug',
     'colEntries'     => 'Entries',
-    'termsEmpty'     => 'No terms yet.',
     'termsEmptyHint' => 'Create the first one. If the files are already there, run php spark content:reindex.',
     'termNoSlug'     => 'A slug could not be made from the title. Type one in the slug field, or give the term a title with letters or numbers in it.',
 

@@ -7,7 +7,7 @@
 
 <x-admin-box>
     <?php if ($terms === []) : ?>
-        <x-empty-state title="<?= esc(lang('Content.termsEmpty'), 'attr') ?>" hint="<?= esc(lang('Content.termsEmptyHint'), 'attr') ?>" />
+        <x-empty-state title="<?= esc(lang('Content.noTerms'), 'attr') ?>" hint="<?= esc(lang('Content.termsEmptyHint'), 'attr') ?>" />
     <?php else : ?>
         <div class="table-responsive">
             <table class="table bf-table">
