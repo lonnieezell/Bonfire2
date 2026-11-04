@@ -1043,6 +1043,8 @@
       
         
       
+        
+      
     
     
     
@@ -1107,6 +1109,34 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../taxonomies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxonomies
   
 
     
@@ -1346,6 +1376,17 @@
     <span class="md-ellipsis">
       
         entries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terms
       
     </span>
   </a>
@@ -2499,6 +2540,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2655,6 +2707,11 @@ is saved in the front matter.</p>
 <td>Entries to link to</td>
 <td>A list of UUIDs</td>
 </tr>
+<tr>
+<td><a href="#terms"><code>terms</code></a></td>
+<td>A checkbox for each term</td>
+<td>A list of slugs</td>
+</tr>
 </tbody>
 </table>
 <p>You can add types of your own. See <a href="../custom_field_types/">Custom field types</a>.</p>
@@ -2737,6 +2794,19 @@ hundred entries. For more, <a href="#changing-an-input">change the input</a>. A 
 exist, is in the trash, belongs to another collection, or takes the field over <code>max_items</code>.</p>
 <p>Read the links back with <a href="../query_api/#entries"><code>$entry-&gt;entries('related')</code></a>, which returns entry objects. A link whose
 entry has been deleted or trashed since is skipped without an error, and saving the form drops it from the file.</p>
+<h2 id="terms">terms</h2>
+<p>The terms of a <a href="../taxonomies/">taxonomy</a> an entry has, chosen from the terms that exist. <code>taxonomy</code> is required and names
+the taxonomy:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terms</span>
+<span class="w">  </span><span class="nt">taxonomy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags</span>
+</code></pre></div>
+<p>The input is a checkbox for each term. The front matter holds the checked slugs as a list under the taxonomy's handle, not
+under the field's handle, because that is where the reindex looks: <code>tags: [php, laravel]</code>. Unchecking every term saves
+<code>tags: []</code>. A slug in the file that no term has is shown as "(no such term)", checked, so that saving doesn't drop it.
+Anything posted that isn't a slug is dropped. Use one <code>terms</code> field for each taxonomy, and don't name a taxonomy <code>id</code>,
+<code>status</code>, <code>published_at</code>, <code>blueprint</code>, <code>title</code> or <code>body</code>, which the entry uses itself: the blueprint is refused.</p>
+<p>For the entries to be indexed with their terms, the collection has to list the taxonomy in its <code>taxonomies</code>.</p>
 <h2 id="changing-an-input">Changing an input</h2>
 <p>Each type's input is a partial in <code>src/Content/Views/fields</code>. To change one, copy it to
 <code>app/Views/content/fields/&lt;type&gt;.php</code>, for example <code>app/Views/content/fields/text.php</code>. Bonfire uses your copy for every
@@ -2775,6 +2845,14 @@ field of that type. The partial gets the variables listed at the top of the file
 <tr>
 <td><code>storedInFrontMatter()</code></td>
 <td><code>false</code> for a type that isn't a front matter key, like <code>slug</code>.</td>
+</tr>
+<tr>
+<td><code>key($field)</code></td>
+<td>The front matter key that holds the value. The field's handle, except for <code>terms</code>.</td>
+</tr>
+<tr>
+<td><code>check($field)</code></td>
+<td>Throws a <code>ContentException</code> if the blueprint gave the field options it can't use.</td>
 </tr>
 </tbody>
 </table>

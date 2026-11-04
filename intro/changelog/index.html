@@ -1321,6 +1321,8 @@
       
         
       
+        
+      
     
     
     
@@ -1385,6 +1387,34 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/taxonomies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxonomies
   
 
     
@@ -2795,6 +2825,15 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="4-november-2026">4 November 2026</h2>
+<p><strong>Content: taxonomies and terms.</strong> Tags, categories and other taxonomies are now files. A taxonomy has a config at
+<code>content/taxonomies/&lt;handle&gt;.yaml</code>, and each term is a YAML file in <code>content/taxonomies/&lt;handle&gt;/</code>. A collection opts in
+with <code>taxonomies: [tags]</code>, and keeps an entry's terms as slugs in its front matter (<code>tags: [php]</code>). A new <code>terms</code> blueprint
+field type tags entries from the admin. <code>php spark content:reindex</code> now fills the <code>content_terms</code> and
+<code>content_entry_terms</code> tables from the files, and <code>content()-&gt;collection('blog')-&gt;whereTerm('tags', 'php')</code>
+finds the published entries with a term. <code>content()-&gt;terms('tags')</code> lists the terms with their number of published entries. Terms
+have a list, a form to create them and a form to edit them in the admin, which need the <code>content.structure</code> permission,
+and with <code>$autoRoute</code> on a taxonomy can serve a page for each term from a <code>route</code> and a <code>template</code>. Nothing changes for a
+site that has no taxonomies. See <a href="../../content/taxonomies/">Taxonomies</a>.</p>
 <p><strong>Content: more field types, and your own.</strong> Blueprints can use <code>select</code> (one option, or several with
 <code>multiple: true</code>), <code>integer</code>, <code>datetime</code> and <code>entries</code>, which links to entries of the collections you name. Read the
 links with <code>$entry-&gt;entries('related')</code>, which skips a target that has since been deleted or trashed, or look entries up

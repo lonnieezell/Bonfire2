@@ -1043,6 +1043,8 @@
       
         
       
+        
+      
     
     
     
@@ -1107,6 +1109,34 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../taxonomies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxonomies
   
 
     
@@ -1353,6 +1383,17 @@
     <span class="md-ellipsis">
       
         Finding an entry by URI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#taxonomies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Taxonomies
       
     </span>
   </a>
@@ -2390,6 +2431,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#taxonomies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Taxonomies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2494,6 +2546,10 @@ exist or its config is invalid.</p>
 <td>Keeps entries with the <code>published</code> status, and leaves out those with a future <code>published_at</code>.</td>
 </tr>
 <tr>
+<td><code>whereTerm($taxonomy, $slug)</code></td>
+<td>Keeps published entries that have the term. See <a href="#taxonomies">Taxonomies</a>.</td>
+</tr>
+<tr>
 <td><code>orderBy($field, $direction = 'asc')</code></td>
 <td>Replaces the collection's sort. <code>$field</code> is <code>title</code>, <code>slug</code> or <code>published_at</code>.</td>
 </tr>
@@ -2537,6 +2593,28 @@ and scheduled entries too.</p>
 <h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
 <p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
 or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
+<h2 id="taxonomies">Taxonomies</h2>
+<p><code>whereTerm()</code> keeps the published entries that have a <a href="../taxonomies/">term</a>, the same as <code>published()</code> does, and it
+composes with the rest of the query:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$posts</span> <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'blog'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">whereTerm</span><span class="p">(</span><span class="s1">'tags'</span><span class="p">,</span> <span class="s1">'php'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">orderBy</span><span class="p">(</span><span class="s1">'title'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</code></pre></div>
+<p>Calling it again keeps only entries that have every term asked for. A term that doesn't exist matches nothing. It throws
+<code>ContentException</code> if the collection doesn't list the taxonomy in its <code>taxonomies</code>.</p>
+<p><code>content()-&gt;terms($taxonomy)</code> returns a taxonomy's terms by title, and <code>content()-&gt;term($taxonomy, $slug)</code> returns one
+term or <code>null</code>. Both throw <code>ContentException</code> if the taxonomy doesn't exist. Each is a <code>Bonfire\Content\Term</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$term</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>        <span class="c1">// the UUID</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">taxonomy</span><span class="p">;</span>  <span class="c1">// 'tags'</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">slug</span><span class="p">;</span>      <span class="c1">// 'php'</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">;</span>     <span class="c1">// 'PHP'</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">;</span>      <span class="c1">// all the keys of the term's file, as an array</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">count</span><span class="p">;</span>     <span class="c1">// how many published entries have it, in any collection</span>
+
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'color'</span><span class="p">);</span>       <span class="c1">// one value from the file, or null</span>
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'color'</span><span class="p">,</span> <span class="s1">'red'</span><span class="p">);</span> <span class="c1">// or a default</span>
+
+<span class="nv">$term</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">();</span>            <span class="c1">// its published entries, most recent first</span>
+</code></pre></div>
+<p><code>count</code> and <code>entries()</code> only include entries that are published and whose <code>published_at</code> has passed.</p>
 <h2 id="entries">Entries</h2>
 <p>Queries return <code>Bonfire\Content\Entry</code> objects:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>           <span class="c1">// the UUID</span>

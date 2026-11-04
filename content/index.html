@@ -1043,6 +1043,8 @@
       
         
       
+        
+      
     
     
     
@@ -1107,6 +1109,34 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="taxonomies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxonomies
   
 
     
@@ -2313,14 +2343,18 @@ see <a href="routing/">Routing</a>.</p>
 <h2 id="file-layout">File layout</h2>
 <p>Everything lives under the content root, which is <code>content/</code> in your project by default.</p>
 <div class="highlight"><pre><span></span><code>content/
-└── collections/
-    ├── blog.yaml                       the blog collection's config
-    └── blog/
-        ├── 2026-10-27.hello-world.md   an entry
-        └── 2026-11-01.second-post.md
+├── collections/
+│   ├── blog.yaml                       the blog collection's config
+│   └── blog/
+│       ├── 2026-10-27.hello-world.md   an entry
+│       └── 2026-11-01.second-post.md
+└── taxonomies/
+    ├── tags.yaml                       the tags taxonomy's config
+    └── tags/
+        └── php.yaml                    a term
 </code></pre></div>
 <p>Change the location with <code>$contentPath</code> in <code>app/Config/Content.php</code>. See <a href="collections/">Collections</a> for the config
-file and the entry format.</p>
+file and the entry format, and <a href="taxonomies/">Taxonomies</a> for tags and categories.</p>
 <h2 id="building-the-index">Building the index</h2>
 <p>Run the migrations once to create the index tables:</p>
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>migrate<span class="w"> </span>--all
@@ -2328,8 +2362,9 @@ file and the entry format.</p>
 <p>Then index your files, and again whenever they change, such as when you deploy:</p>
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>content:reindex
 </code></pre></div>
-<p>The command prints how many rows it added, updated and removed, and how many it left alone. It reads every file, so a
-change to a collection's config reaches its entries, but it only writes rows that differ.</p>
+<p>The command prints how many entry rows it added, updated and removed, and how many it left alone. It reads every file, so a
+change to a collection's config reaches its entries, but it only writes rows that differ. It also brings the
+<a href="taxonomies/">taxonomies</a>' terms, and which entries have them, in line with the files.</p>
 <p>If the content root has no <code>collections</code> folder, such as when shared storage isn't mounted, or the index can't be
 written, the index stays as it was and the command exits with an error code.</p>
 <p>A file that can't be indexed is listed with the reason, and the rest are still indexed. This doesn't count as a failed

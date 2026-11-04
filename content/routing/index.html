@@ -1043,6 +1043,8 @@
       
         
       
+        
+      
     
     
     
@@ -1107,6 +1109,34 @@
     
   
     Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../taxonomies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Taxonomies
   
 
     
@@ -2517,6 +2547,7 @@ dates. URIs that differ only by case count as the same URI.</p>
 <p>Keep slugs in a routed collection to letters, numbers, <code>-</code> and <code>_</code>, because the reindex doesn't check them. CodeIgniter
 reads a <code>+</code> in a path as a space, so <code>c++-tips.md</code> can't be reached at <code>/blog/c++-tips</code>, and it refuses characters outside
 <code>$permittedURIChars</code> in <code>app/Config/App.php</code>, such as those in <code>café.md</code>.</p>
+<p>A <a href="../taxonomies/#term-pages">taxonomy</a> can have pages for its terms in the same way, with a <code>route</code> and a <code>template</code>.</p>
 <h2 id="what-gets-served">What gets served</h2>
 <p>Only entries with the <code>published</code> status whose <code>published_at</code> has passed, or that have none, are served. Anything else
 gets a 404 before any template or controller runs.</p>
