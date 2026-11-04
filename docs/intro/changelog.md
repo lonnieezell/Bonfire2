@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 4 November 2026
 
+**Content: getting started and constraints.** [Getting started](../content/getting_started.md) walks you from a fresh
+install to a published blog post. [Content](../content/index.md) now explains the file-first model and when to run
+`php spark content:reindex`, which belongs in your deploy. [Constraints and known gaps](../content/constraints.md) lists
+what Content doesn't do yet: it needs the content directory on one server or shared storage, it doesn't redirect old
+URIs, it drops YAML comments when the admin saves, it doesn't use git, and it has no per-collection permissions.
+
 **Content: pages and structures.** Give a collection `structure: true` (and optionally `max_depth`) and its entries
 form a tree, kept in `content/trees/collections/<handle>.yaml`. The reindex gives each entry a `parent_id`, a `sort` and
 a URI built from its parents, such as `/about/team`, which the front-end route serves. Renaming a page or moving it
