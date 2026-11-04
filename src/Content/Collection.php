@@ -148,7 +148,7 @@ final readonly class Collection
      *
      * @throws ContentException when the option is set to anything but a string
      */
-    private static function stringOption(array $config, string $key): ?string
+    public static function stringOption(array $config, string $key): ?string
     {
         $value = $config[$key] ?? null;
 

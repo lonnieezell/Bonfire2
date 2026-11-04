@@ -22,10 +22,12 @@ use Symfony\Component\Yaml\Yaml;
 final readonly class EntryStore
 {
     private string $root;
+    private ContentFiles $files;
 
     public function __construct(string $contentRoot)
     {
-        $this->root = rtrim($contentRoot, '/') . '/';
+        $this->root  = rtrim($contentRoot, '/') . '/';
+        $this->files = new ContentFiles($contentRoot);
     }
 
     /**
@@ -67,17 +69,17 @@ final readonly class EntryStore
         $filename = "{$prefix}{$slug}.md";
         $path     = "collections/{$collection->handle}/{$filename}";
 
-        $raw    = self::serialise(['id' => self::uuid(), ...$frontMatter], $body);
+        $raw    = self::serialise(['id' => ContentFiles::uuid(), ...$frontMatter], $body);
         $record = $this->record($collection, $raw, $path);
 
-        return $this->locked($collection, function () use ($collection, $record, $raw, $path): array {
+        return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path): array {
             // The index may still hold a row for a file that was deleted outside the app, and two rows can't share a path.
             if (is_file($this->root . $path) || (new ContentEntryModel())->withDeleted()->where('path', $path)->countAllResults() > 0) {
                 throw new ContentException('An entry with this slug already exists.');
             }
 
             $this->assertUriFree($record);
-            $this->write($path, $raw);
+            $this->files->write($path, $raw);
 
             return $this->index($collection, $record, $path);
         });
@@ -101,14 +103,14 @@ final readonly class EntryStore
         $raw    = self::serialise($frontMatter, $body);
         $record = $this->record($collection, $raw, $path);
 
-        return $this->locked($collection, function () use ($collection, $record, $raw, $path, $expectedHash): array {
+        return $this->files->locked($collection->handle, function () use ($collection, $record, $raw, $path, $expectedHash): array {
             $onDisk = is_file($this->root . $path) ? file_get_contents($this->root . $path) : false;
 
             if ($onDisk === false || ! hash_equals(hash('sha256', $onDisk), $expectedHash)) {
                 throw new SaveConflictException('The entry\'s file changed after you opened it.');
             }
 
-            $this->write($path, $raw);
+            $this->files->write($path, $raw);
 
             return $this->index($collection, $record, $path);
         });
@@ -191,66 +193,5 @@ final readonly class EntryStore
         }
 
         return $record;
-    }
-
-    private function write(string $path, string $raw): void
-    {
-        $file = $this->root . $path;
-        $dir  = dirname($file);
-
-        if (! is_dir($dir) && ! mkdir($dir, 0775, true) && ! is_dir($dir)) {
-            throw new ContentException('The collection\'s folder could not be created.');
-        }
-
-        $temp = tempnam($dir, '.entry-');
-
-        if ($temp === false) {
-            throw new ContentException('The entry could not be written.');
-        }
-
-        // tempnam() makes a file only its owner can read.
-        chmod($temp, is_file($file) ? fileperms($file) & 0o777 : 0o666 & ~umask());
-
-        if (file_put_contents($temp, $raw) !== strlen($raw) || ! rename($temp, $file)) {
-            @unlink($temp);
-
-            throw new ContentException('The entry could not be written.');
-        }
-    }
-
-    /**
-     * Runs a save with the collection locked, so that two saves can't both pass their checks and one overwrite the other,
-     * or two new entries take the same URI. One lock for the collection, so locks don't pile up as entries do.
-     *
-     * @template T
-     *
-     * @param callable(): T $save
-     *
-     * @return T
-     */
-    private function locked(Collection $collection, callable $save): mixed
-    {
-        $lock = WRITEPATH . 'cache/content-' . hash('sha256', $this->root . $collection->handle) . '.lock';
-        $file = @fopen($lock, 'cb');
-
-        if ($file === false || ! flock($file, LOCK_EX)) {
-            throw new ContentException('The entry could not be locked for writing.');
-        }
-
-        try {
-            return $save();
-        } finally {
-            flock($file, LOCK_UN);
-            fclose($file);
-        }
-    }
-
-    private static function uuid(): string
-    {
-        $bytes    = random_bytes(16);
-        $bytes[6] = chr((ord($bytes[6]) & 0x0F) | 0x40);
-        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80);
-
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
     }
 }

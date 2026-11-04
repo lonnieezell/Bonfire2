@@ -62,7 +62,7 @@ final readonly class Taxonomy
             throw new ContentException('A taxonomy config must be a YAML mapping.');
         }
 
-        $route = self::stringOption($config, 'route');
+        $route = Collection::stringOption($config, 'route');
 
         // Without a slug, every term would get the same URI.
         if ($route !== null && (! str_contains($route, '{slug}') || preg_match('/[{}]/', str_replace('{slug}', '', $route)) === 1)) {
@@ -73,24 +73,8 @@ final readonly class Taxonomy
             $handle,
             is_scalar($config['title'] ?? null) ? (string) $config['title'] : $handle,
             $route,
-            self::stringOption($config, 'template'),
+            Collection::stringOption($config, 'template'),
         );
-    }
-
-    /**
-     * @param array<array-key, mixed> $config
-     *
-     * @throws ContentException when the option is set to anything but a string
-     */
-    private static function stringOption(array $config, string $key): ?string
-    {
-        $value = $config[$key] ?? null;
-
-        if ($value !== null && (! is_string($value) || $value === '')) {
-            throw new ContentException("`{$key}` must be a string.");
-        }
-
-        return $value;
     }
 
     /**
