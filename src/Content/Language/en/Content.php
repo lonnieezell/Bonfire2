@@ -47,6 +47,20 @@ return [
     'entriesLimit'   => 'Choose up to {0}.',
     'entriesNone'    => 'There are no entries to choose from.',
 
+    // Terms field
+    'noTerms'     => 'No terms yet.',
+    'unknownTerm' => '{0} (no such term)',
+
+    // Taxonomies
+    'term'           => 'term',
+    'newTerm'        => 'New term',
+    'editTerm'       => 'Edit term',
+    'saveTerm'       => 'Save term',
+    'colSlug'        => 'Slug',
+    'colEntries'     => 'Entries',
+    'termsEmptyHint' => 'Create the first one. If the files are already there, run php spark content:reindex.',
+    'termNoSlug'     => 'A slug could not be made from the title. Type one in the slug field, or give the term a title with letters or numbers in it.',
+
     // Refusals
     'noBlueprint'        => 'This collection has no blueprint for its entries to use.',
     'cannotPublish'      => 'You don\'t have permission to publish entries or to change when they go live.',

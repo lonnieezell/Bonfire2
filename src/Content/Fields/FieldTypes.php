@@ -27,6 +27,7 @@ final class FieldTypes
         'select'   => SelectField::class,
         'integer'  => IntegerField::class,
         'entries'  => EntriesField::class,
+        'terms'    => TermsField::class,
     ];
 
     public static function has(string $type): bool

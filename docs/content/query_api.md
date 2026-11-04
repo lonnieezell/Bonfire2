@@ -15,6 +15,7 @@ exist or its config is invalid.
 | Method | What it does |
 |---|---|
 | `published()` | Keeps entries with the `published` status, and leaves out those with a future `published_at`. |
+| `whereTerm($taxonomy, $slug)` | Keeps published entries that have the term. See [Taxonomies](#taxonomies). |
 | `orderBy($field, $direction = 'asc')` | Replaces the collection's sort. `$field` is `title`, `slug` or `published_at`. |
 | `get()` | Returns every matching entry. |
 | `paginate($perPage = 20, $group = 'default', $page = null)` | Returns one page of entries. |
@@ -54,6 +55,37 @@ and scheduled entries too.
 
 `content()->findByUri('/blog/hello-world')` returns the published entry at a URI, or `null` for a draft, a scheduled entry
 or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-by-uri), but the collection needs a `route`.
+
+## Taxonomies
+
+`whereTerm()` keeps the published entries that have a [term](taxonomies.md), the same as `published()` does, and it
+composes with the rest of the query:
+
+```php
+$posts = content()->collection('blog')->whereTerm('tags', 'php')->orderBy('title')->get();
+```
+
+Calling it again keeps only entries that have every term asked for. A term that doesn't exist matches nothing. It throws
+`ContentException` if the collection doesn't list the taxonomy in its `taxonomies`.
+
+`content()->terms($taxonomy)` returns a taxonomy's terms by title, and `content()->term($taxonomy, $slug)` returns one
+term or `null`. Both throw `ContentException` if the taxonomy doesn't exist. Each is a `Bonfire\Content\Term`:
+
+```php
+$term->id;        // the UUID
+$term->taxonomy;  // 'tags'
+$term->slug;      // 'php'
+$term->title;     // 'PHP'
+$term->data;      // all the keys of the term's file, as an array
+$term->count;     // how many published entries have it, in any collection
+
+$term->field('color');       // one value from the file, or null
+$term->field('color', 'red'); // or a default
+
+$term->entries();            // its published entries, most recent first
+```
+
+`count` and `entries()` only include entries that are published and whose `published_at` has passed.
 
 ## Entries
 

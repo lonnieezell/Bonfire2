@@ -66,6 +66,28 @@ abstract class ContentTestCase extends TestCase
     }
 
     /**
+     * Gives the blog a `tags` taxonomy with the terms php and laravel, and tags the first and second post
+     * php, the first one laravel too, and the draft and the future post php. The blueprint gets a tags field.
+     *
+     * @param string $taxonomyConfig lines for the taxonomy's config
+     */
+    protected function useTags(string $taxonomyConfig = ''): void
+    {
+        mkdir($this->site . 'taxonomies/tags', 0777, true);
+        $this->writeFile('taxonomies/tags.yaml', "title: Tags\n{$taxonomyConfig}");
+        $this->writeFile('taxonomies/tags/php.yaml', "id: aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa\ntitle: PHP\ncolor: blue\n");
+        $this->writeFile('taxonomies/tags/laravel.yaml', "id: bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb\ntitle: Laravel\n");
+        $this->writeFile('collections/blog.yaml', "title: Blog\ndated: true\nsort: published_at desc\nblueprints:\n  - post\ntaxonomies:\n  - tags\n");
+
+        foreach (['2026-01-10.first-post' => '[php, laravel]', '2026-02-15.second-post' => '[php]', '2026-03-01.draft-post' => '[php]', '2099-01-01.future-post' => '[php]'] as $file => $tags) {
+            $path = "collections/blog/{$file}.md";
+            $this->writeFile($path, preg_replace('/^(id: .*)$/m', "$1\ntags: {$tags}", (string) file_get_contents($this->site . $path), 1));
+        }
+
+        file_put_contents($this->blueprints . 'collections/blog/post.yaml', "  - handle: tags\n    type: terms\n    taxonomy: tags\n", FILE_APPEND);
+    }
+
+    /**
      * Writes a file in the test's copy of the site.
      */
     protected function writeFile(string $path, string $contents): void

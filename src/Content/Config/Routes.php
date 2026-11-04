@@ -5,6 +5,12 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], static function ($routes) {
+    $routes->get('taxonomies/(:segment)', 'TermAdminController::list/$1', ['as' => 'content-terms']);
+    $routes->get('taxonomies/(:segment)/new', 'TermAdminController::create/$1', ['as' => 'content-term-new']);
+    $routes->post('taxonomies/(:segment)/new', 'TermAdminController::store/$1');
+    $routes->get('taxonomies/(:segment)/(:segment)', 'TermAdminController::edit/$1/$2', ['as' => 'content-term-edit']);
+    $routes->post('taxonomies/(:segment)/(:segment)', 'TermAdminController::update/$1/$2');
+
     $routes->post('content/preview', 'EntryAdminController::preview', ['as' => 'content-preview']);
     $routes->get('content/(:segment)', 'EntryAdminController::list/$1', ['as' => 'content-list']);
     $routes->get('content/(:segment)/new', 'EntryAdminController::create/$1', ['as' => 'content-new']);

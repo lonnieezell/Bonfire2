@@ -6,6 +6,16 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 4 November 2026
 
+**Content: taxonomies and terms.** Tags, categories and other taxonomies are now files. A taxonomy has a config at
+`content/taxonomies/<handle>.yaml`, and each term is a YAML file in `content/taxonomies/<handle>/`. A collection opts in
+with `taxonomies: [tags]`, and keeps an entry's terms as slugs in its front matter (`tags: [php]`). A new `terms` blueprint
+field type tags entries from the admin. `php spark content:reindex` now fills the `content_terms` and
+`content_entry_terms` tables from the files, and `content()->collection('blog')->whereTerm('tags', 'php')`
+finds the published entries with a term. `content()->terms('tags')` lists the terms with their number of published entries. Terms
+have a list, a form to create them and a form to edit them in the admin, which need the `content.structure` permission,
+and with `$autoRoute` on a taxonomy can serve a page for each term from a `route` and a `template`. Nothing changes for a
+site that has no taxonomies. See [Taxonomies](../content/taxonomies.md).
+
 **Content: more field types, and your own.** Blueprints can use `select` (one option, or several with
 `multiple: true`), `integer`, `datetime` and `entries`, which links to entries of the collections you name. Read the
 links with `$entry->entries('related')`, which skips a target that has since been deleted or trashed, or look entries up

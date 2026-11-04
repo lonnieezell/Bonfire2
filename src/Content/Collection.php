@@ -26,6 +26,7 @@ final readonly class Collection
 
     /**
      * @param list<string> $blueprints
+     * @param list<string> $taxonomies the handles of the taxonomies its entries can be tagged with
      */
     public function __construct(
         public string $handle,
@@ -37,6 +38,7 @@ final readonly class Collection
         public ?string $route,
         public ?string $template,
         public ?string $controller,
+        public array $taxonomies = [],
     ) {
     }
 
@@ -72,6 +74,12 @@ final readonly class Collection
 
         self::assertRouting($route, $template, $controller);
 
+        $taxonomies = array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...))));
+
+        if (($taken = array_intersect($taxonomies, Taxonomy::TAKEN_KEYS)) !== []) {
+            throw new ContentException('`taxonomies` can\'t list ' . implode(', ', $taken) . ', which an entry already uses for something else.');
+        }
+
         return new self(
             $handle,
             is_scalar($config['title'] ?? null) ? (string) $config['title'] : $handle,
@@ -82,7 +90,27 @@ final readonly class Collection
             $route,
             $template,
             $controller,
+            $taxonomies,
         );
+    }
+
+    /**
+     * The term slugs an entry's front matter has for each of the taxonomies the collection uses.
+     * A taxonomy's slugs are in the front matter key named after it.
+     *
+     * @param array<array-key, mixed> $data the entry's front matter
+     *
+     * @return array<string, list<string>> by taxonomy handle
+     */
+    public function termSlugsIn(array $data): array
+    {
+        $slugs = [];
+
+        foreach ($this->taxonomies as $taxonomy) {
+            $slugs[$taxonomy] = array_values(array_unique(array_filter((array) ($data[$taxonomy] ?? []), is_string(...))));
+        }
+
+        return $slugs;
     }
 
     /**
@@ -126,7 +154,7 @@ final readonly class Collection
      *
      * @throws ContentException when the option is set to anything but a string
      */
-    private static function stringOption(array $config, string $key): ?string
+    public static function stringOption(array $config, string $key): ?string
     {
         $value = $config[$key] ?? null;
 
