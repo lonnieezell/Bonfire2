@@ -22,23 +22,34 @@ abstract class ContentTestCase extends TestCase
      */
     protected string $site;
 
+    /**
+     * The test's copy of the blueprints in ./blueprints, with a trailing slash.
+     */
+    protected string $blueprints;
+
     protected function setUp(): void
     {
         parent::setUp();
         helper('filesystem');
 
-        $this->site = sys_get_temp_dir() . '/bonfire-content-' . bin2hex(random_bytes(6)) . '/';
+        $this->site       = sys_get_temp_dir() . '/bonfire-content-' . bin2hex(random_bytes(6)) . '/';
+        $this->blueprints = sys_get_temp_dir() . '/bonfire-blueprints-' . bin2hex(random_bytes(6)) . '/';
         directory_mirror(__DIR__ . '/site', $this->site);
+        directory_mirror(__DIR__ . '/blueprints', $this->blueprints);
 
-        $config              = new Content();
-        $config->contentPath = $this->site;
+        $config                = new Content();
+        $config->contentPath   = $this->site;
+        $config->blueprintPath = $this->blueprints;
         Factories::injectMock('config', 'Content', $config);
     }
 
     protected function tearDown(): void
     {
-        delete_files($this->site, true, false, true);
-        rmdir($this->site);
+        foreach ([$this->site, $this->blueprints] as $dir) {
+            delete_files($dir, true, false, true);
+            rmdir($dir);
+        }
+
         Factories::reset('config');
 
         parent::tearDown();

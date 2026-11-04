@@ -111,6 +111,9 @@ nav:
   - Content:
       - content/index.md
       - content/collections.md
+      - content/admin.md
+      - content/blueprints.md
+      - content/field_types.md
       - content/query_api.md
       - content/routing.md
   - Building Sites:
