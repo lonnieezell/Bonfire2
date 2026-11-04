@@ -15,7 +15,7 @@ exist or its config is invalid.
 | Method | What it does |
 |---|---|
 | `published()` | Keeps entries with the `published` status, and leaves out those with a future `published_at`. |
-| `whereTerm($taxonomy, $slug)` | Keeps entries that have the term. See [Taxonomies](#taxonomies). |
+| `whereTerm($taxonomy, $slug)` | Keeps published entries that have the term. See [Taxonomies](#taxonomies). |
 | `orderBy($field, $direction = 'asc')` | Replaces the collection's sort. `$field` is `title`, `slug` or `published_at`. |
 | `get()` | Returns every matching entry. |
 | `paginate($perPage = 20, $group = 'default', $page = null)` | Returns one page of entries. |
@@ -52,11 +52,11 @@ or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-b
 
 ## Taxonomies
 
-`whereTerm()` keeps the entries that have a [term](taxonomies.md). It composes with the rest of the query, so combine it
-with `published()` for anything public:
+`whereTerm()` keeps the published entries that have a [term](taxonomies.md), the same as `published()` does, and it
+composes with the rest of the query:
 
 ```php
-$posts = content()->collection('blog')->published()->whereTerm('tags', 'php')->get();
+$posts = content()->collection('blog')->whereTerm('tags', 'php')->orderBy('title')->get();
 ```
 
 Calling it again keeps only entries that have every term asked for. A term that doesn't exist matches nothing. It throws

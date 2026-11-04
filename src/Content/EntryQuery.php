@@ -50,7 +50,7 @@ final class EntryQuery
     }
 
     /**
-     * Keeps entries that have a term, whether or not they're published. Calling it again keeps only
+     * Keeps published entries that have a term, as published() does. Calling it again keeps only
      * entries that have every term asked for. A term that doesn't exist matches nothing.
      *
      * @param string $taxonomy a taxonomy the collection uses
@@ -66,7 +66,7 @@ final class EntryQuery
 
         $this->terms[] = [$taxonomy, $slug];
 
-        return $this;
+        return $this->published();
     }
 
     /**

@@ -95,11 +95,11 @@ index in the same request.
 
 ## Querying
 
-`whereTerm()` keeps the entries of a collection that have a term. See [Query API](query_api.md#taxonomies) for it, and
+`whereTerm()` keeps the published entries of a collection that have a term. See [Query API](query_api.md#taxonomies) for it, and
 for listing a taxonomy's terms with their entry counts.
 
 ```php
-$posts = content()->collection('blog')->published()->whereTerm('tags', 'php')->get();
+$posts = content()->collection('blog')->whereTerm('tags', 'php')->get();
 $tags  = content()->terms('tags'); // each with ->count
 ```
 

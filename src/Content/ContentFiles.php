@@ -12,8 +12,8 @@
 namespace Bonfire\Content;
 
 /**
- * What the stores need to write files under the content root: whole-file writes, a lock per
- * collection or taxonomy, and ids.
+ * What the term store needs to write files under the content root: whole-file writes, a lock per
+ * taxonomy, and ids.
  */
 final readonly class ContentFiles
 {

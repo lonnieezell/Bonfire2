@@ -21,7 +21,25 @@
     <input type="hidden" name="blueprint" value="<?= esc($blueprint->handle, 'attr') ?>">
 
     <x-admin-box>
-        <?= view('Bonfire\Content\Views\form_fields', ['rows' => $rows], ['saveData' => false]) ?>
+        <?php foreach ($rows as $row) : ?>
+            <?php $field = $row['field'] ?>
+            <div class="form-group mb-3" data-field="<?= esc($field->handle, 'attr') ?>">
+                <label for="field-<?= esc($field->handle, 'attr') ?>" class="form-label"><?= esc($field->label) ?></label>
+                <?= view($row['view'], [
+                    'field'    => $field,
+                    'name'     => 'fields[' . $field->handle . ']',
+                    'id'       => 'field-' . $field->handle,
+                    'value'    => $row['value'],
+                    'disabled' => $row['disabled'],
+                ], ['saveData' => false]) ?>
+                <?php if ($field->instructions !== null) : ?>
+                    <div class="form-text"><?= esc($field->instructions) ?></div>
+                <?php endif ?>
+                <?php if ($row['error'] !== null) : ?>
+                    <p class="text-danger" data-error="<?= esc($field->handle, 'attr') ?>"><?= esc($row['error']) ?></p>
+                <?php endif ?>
+            </div>
+        <?php endforeach ?>
     </x-admin-box>
 
     <x-admin-box title="<?= esc(lang('Content.publishing'), 'attr') ?>">

@@ -272,11 +272,13 @@ final class TaxonomyTest extends ContentTestCase
         $this->assertSame(['first-post'], array_map(static fn (Entry $entry): string => $entry->slug, $laravel));
     }
 
-    public function testWhereTermWithoutPublishedAlsoReturnsDraftsAndFutureEntries(): void
+    public function testWhereTermAloneLeavesOutDraftsAndFutureEntries(): void
     {
         (new Indexer($this->site))->reindex();
 
-        $this->assertCount(4, content()->collection('blog')->whereTerm('tags', 'php')->get());
+        $entries = content()->collection('blog')->whereTerm('tags', 'php')->get();
+
+        $this->assertSame(['second-post', 'first-post'], array_map(static fn (Entry $entry): string => $entry->slug, $entries));
     }
 
     public function testWhereTermAndsRepeatedTermsAndMatchesNothingForAnUnknownTerm(): void
