@@ -9,6 +9,7 @@ use Bonfire\Content\EntryForm;
 use Bonfire\Content\Field;
 use Bonfire\Content\Fields\EntriesField;
 use Bonfire\Content\Fields\FieldTypes;
+use Bonfire\Content\Fields\IntegerField;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Users\User;
@@ -201,6 +202,14 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame([], $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '5']])));
     }
 
+    public function testAClosureRuleKeepsAPipeInsideBracketsInTheBlueprintsRules(): void
+    {
+        $rules = (new IntegerField())->rules(new Field('n', 'integer', 'N', 'required|regex_match[/^(1|2)$/]|max_length[3]', null, []));
+
+        $this->assertIsArray($rules);
+        $this->assertSame(['required', 'regex_match[/^(1|2)$/]', 'max_length[3]', 'permit_empty'], array_slice($rules, 0, 4));
+    }
+
     public function testAnIntegerLeftEmptyAddsNoKeyAndClearsOneThatIsThere(): void
     {
         $form   = $this->form();
@@ -249,6 +258,14 @@ final class MoreFieldTypesTest extends ContentTestCase
 
         $anything = array_map(static fn (Entry $entry): string => $entry->collection, EntriesField::choices($this->blueprint()->field('anything')));
         $this->assertSame(['blog', 'pages'], array_values(array_unique($anything)));
+    }
+
+    public function testEntriesTakesASingleCollectionNamedWithoutAList(): void
+    {
+        $field = new Field('r', 'entries', 'R', '', null, ['collections' => 'pages']);
+
+        $this->assertSame(['pages'], EntriesField::collections($field));
+        $this->assertSame([self::ABOUT, self::CONTACT, self::OLD], array_map(static fn (Entry $entry): string => $entry->id, EntriesField::choices($field)));
     }
 
     public function testEntriesKeepsTheIdsAsAListInTheFrontMatter(): void

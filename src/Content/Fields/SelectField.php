@@ -73,19 +73,19 @@ final class SelectField extends FieldType
     public static function choices(Field $field): array
     {
         $options = $field->options['options'] ?? [];
-        $choices = [];
 
         if (! is_array($options)) {
             return [];
         }
 
-        foreach ($options as $value => $label) {
-            if (! is_scalar($label)) {
-                continue;
-            }
+        // A list names the values, and a map names their labels.
+        $isList  = array_is_list($options);
+        $choices = [];
 
-            // A list names the values, and a map names their labels.
-            $choices[array_is_list($options) ? (string) $label : (string) $value] = (string) $label;
+        foreach ($options as $value => $label) {
+            if (is_scalar($label)) {
+                $choices[(string) ($isList ? $label : $value)] = (string) $label;
+            }
         }
 
         return $choices;

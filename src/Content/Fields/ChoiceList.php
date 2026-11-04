@@ -61,6 +61,6 @@ final class ChoiceList
      */
     public static function fromFrontMatter(mixed $stored): array
     {
-        return self::fromInput(is_array($stored) ? array_map(static fn (mixed $item): mixed => is_scalar($item) ? (string) $item : null, $stored) : (is_scalar($stored) ? (string) $stored : null));
+        return self::fromInput(array_map(static fn (mixed $item): ?string => is_scalar($item) ? (string) $item : null, (array) $stored));
     }
 }

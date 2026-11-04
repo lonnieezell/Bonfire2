@@ -89,9 +89,10 @@ final class EntriesField extends FieldType
      */
     public static function collections(Field $field): array
     {
-        $collections = $field->options['collections'] ?? [];
+        $named = $field->options['collections'] ?? [];
 
-        return is_array($collections) ? array_values(array_filter($collections, is_string(...))) : [];
+        // `collections: posts` names one collection, and must not widen to every collection.
+        return array_values(array_filter(is_array($named) ? $named : [$named], static fn (mixed $handle): bool => is_string($handle) && $handle !== ''));
     }
 
     public static function maxItems(Field $field): ?int
@@ -109,15 +110,14 @@ final class EntriesField extends FieldType
      */
     public static function choices(Field $field): array
     {
-        $root    = config('Content')->contentPath;
-        $handles = self::collections($field) ?: array_map(static fn (Collection $collection): string => $collection->handle, Collection::all($root));
+        $handles = self::collections($field) ?: array_map(static fn (Collection $collection): string => $collection->handle, Collection::all(config('Content')->contentPath));
         $entries = [];
 
         foreach ($handles as $handle) {
             try {
-                $entries = [...$entries, ...content()->collection($handle)->get()];
+                array_push($entries, ...content()->collection($handle)->get());
             } catch (ContentException) {
-                continue;
+                // A collection that doesn't exist offers nothing.
             }
         }
 

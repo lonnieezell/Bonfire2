@@ -77,12 +77,22 @@ abstract class FieldType
      */
     protected function withRules(Field $field, Closure|string ...$more): array|string
     {
-        if (is_array($field->validate) || array_filter($more, is_object(...)) !== []) {
-            $rules = is_array($field->validate) ? $field->validate : array_values(array_filter(explode('|', $field->validate), static fn (string $rule): bool => $rule !== ''));
+        $needsList = is_array($field->validate) || array_filter($more, is_object(...)) !== [];
 
-            return [...$rules, ...$more];
+        if ($needsList) {
+            return [...(is_array($field->validate) ? $field->validate : self::splitRules($field->validate)), ...$more];
         }
 
         return implode('|', array_filter([$field->validate, ...$more], static fn (string $rule): bool => $rule !== ''));
+    }
+
+    /**
+     * A `a|b[x|y]` string as its rules. A pipe inside brackets belongs to the rule.
+     *
+     * @return list<string>
+     */
+    private static function splitRules(string $rules): array
+    {
+        return array_values(array_filter(preg_split('/\|(?![^\[]*\])/', $rules) ?: [], static fn (string $rule): bool => $rule !== ''));
     }
 }

@@ -30,7 +30,9 @@ final class IntegerField extends FieldType
     {
         $input = trim(parent::prepare($input, $field, $submitted));
 
-        return ($number = filter_var($input, FILTER_VALIDATE_INT)) === false ? $input : (string) $number;
+        $number = filter_var($input, FILTER_VALIDATE_INT);
+
+        return $number === false ? $input : (string) $number;
     }
 
     public function rules(Field $field): array|string
@@ -43,15 +45,23 @@ final class IntegerField extends FieldType
 
             if ($number === false) {
                 $error = lang('Content.integerInvalid');
-            } elseif ($min !== null && $number < $min) {
-                $error = lang('Content.integerMin', [$min]);
-            } elseif ($max !== null && $number > $max) {
-                $error = lang('Content.integerMax', [$max]);
-            } else {
-                return true;
+
+                return false;
             }
 
-            return false;
+            if ($min !== null && $number < $min) {
+                $error = lang('Content.integerMin', [$min]);
+
+                return false;
+            }
+
+            if ($max !== null && $number > $max) {
+                $error = lang('Content.integerMax', [$max]);
+
+                return false;
+            }
+
+            return true;
         });
     }
 
