@@ -1547,6 +1547,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#previews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previews
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#seeing-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2722,6 +2733,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#previews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previews
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#seeing-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2917,7 +2939,8 @@ authorization check or a JSON response:</p>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it. The class must
+<p>What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it, except to a
+<a href="#previews">draft preview</a>. The class must
 extend <code>CodeIgniter\Controller</code>. The method doesn't need to be routable itself.</p>
 <p>A malformed <code>controller</code> value is reported by the reindex, but a class or method that doesn't exist is an error when the
 page is requested.</p>
@@ -2956,6 +2979,15 @@ latest ones, so for a large collection serve your own cut with the <a href="../q
 <p>Bonfire then serves every collection's feed at <code>/feed/{collection}</code>, such as <code>/feed/blog</code>, and a collection that doesn't
 exist gets a 404. It's independent of <code>$autoRoute</code>, and with <code>$feedRoute</code> off, the default, Bonfire adds no route.</p>
 <p>Your routes always win. A route of yours for <code>feed/blog</code>, or for the pattern <code>feed/(:segment)</code>, takes the request.</p>
+<h2 id="previews">Previews</h2>
+<p><a href="../admin/#previewing-a-draft">Previewing a draft</a> in the admin gives a signed link to <code>/content-preview/{id}</code>, which runs
+the same code as the fallback route once the entry is found: the collection's controller gets the entry, or its template
+is rendered with <code>$entry</code> and <code>$collection</code>. The difference is how the entry is found. The link names the entry by its
+id, so a draft or scheduled entry is shown, and only a link with a valid signature that hasn't expired is served. Any other
+request still gets a 404 for a draft or scheduled entry.</p>
+<p>Bonfire marks the response <code>X-Robots-Tag: noindex</code> and <code>Cache-Control: no-store</code>, and turns page caching off for it, even if
+your controller asks for it with <code>cachePage()</code>. It does that after your controller returns, so a controller or template
+that sets those itself is overridden.</p>
 <h2 id="seeing-changes">Seeing changes</h2>
 <p>In production, run <code>php spark content:reindex</code> when you deploy. A changed file or <code>route</code> doesn't take effect until you do.
 If a collection's config is missing or broken by then, its entries get a 404 and the reason is logged.</p>

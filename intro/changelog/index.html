@@ -3060,6 +3060,11 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: draft preview.</strong> An entry's form has a <strong>Preview</strong> button for users with <code>content.edit</code>. It gives a signed link,
+good for 24 hours, that shows the entry through the collection's <code>template</code> or <code>controller</code> whatever its status, to anyone
+who has the link and with no login, so a client can review a draft. The response is <code>noindex</code> and never cached, and a
+collection with neither a template nor a controller has no preview. Links are signed with the app's encryption key. See
+<a href="../../content/admin/#previewing-a-draft">Previewing a draft</a>.</p>
 <p><strong>Content: page caching.</strong> A collection with <code>cache: 3600</code> in its config has its routed pages served to guests from the cache
 for that many seconds. It's off unless a collection sets it. Only <code>GET</code> requests with no query string from guests that the
 fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the

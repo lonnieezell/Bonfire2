@@ -1368,6 +1368,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#previewing-a-draft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previewing a draft
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#deleting-and-restoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2661,6 +2672,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#previewing-a-draft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previewing a draft
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#deleting-and-restoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2782,7 +2804,7 @@ screens are at <code>/admin/content/&lt;collection&gt;</code>.</p>
 </tr>
 <tr>
 <td><code>content.edit</code></td>
-<td>Creating and editing entries, and the Markdown preview.</td>
+<td>Creating and editing entries, the Markdown preview, and making <a href="#previewing-a-draft">draft preview links</a>.</td>
 </tr>
 <tr>
 <td><code>content.publish</code></td>
@@ -2862,6 +2884,15 @@ collection.</p>
 <p>A <code>markdown</code> field has <strong>Write</strong> and <strong>Preview</strong> tabs. Preview sends the text to the server, which renders it with
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs <code>content.edit</code>.</p>
+<h2 id="previewing-a-draft">Previewing a draft</h2>
+<p><strong>Preview</strong> at the top of an entry's form gives you a link to the entry as it will look on the site, through the
+collection's <code>template</code> or <code>controller</code>, whether it's a draft, scheduled or published. It needs <code>content.edit</code>, and a
+collection with neither a template nor a controller doesn't offer it. The link doesn't need a <code>route</code> or <code>$autoRoute</code>.</p>
+<p>The link is signed with the app's encryption key (run <code>php spark key:generate</code> if it has none) and works for 24 hours.
+<strong>Anyone who has it can open it without logging in</strong>, so you can send it to a client to review a draft. After it
+expires, or if its address is changed in any way, or it is used for another entry, it gets a 404. A link doesn't stop
+working when the entry is published, only when it expires or the entry goes to the trash. See
+<a href="../routing/#previews">Previews</a> for what the page gets.</p>
 <h2 id="deleting-and-restoring">Deleting and restoring</h2>
 <p>A user with <code>content.delete</code> sees <strong>Delete</strong> on each row of the list and at the top of the entry's form. It asks first.</p>
 <p>Deleting moves the file to <code>content/.trash/&lt;collection&gt;/&lt;filename&gt;</code> as it is on disk, and marks the entry's row as
