@@ -17,6 +17,7 @@ return [
     'newEntry'        => 'New entry',
     'colTitle'        => 'Title',
     'colStatus'       => 'Status',
+    'colCollection'   => 'Collection',
     'colDate'         => 'Date',
     'statusDraft'     => 'Draft',
     'statusPublished' => 'Published',
