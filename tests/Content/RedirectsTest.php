@@ -345,10 +345,16 @@ final class RedirectsTest extends ContentTestCase
         $this->writeFile('collections/pages.yaml', "title: Pages\nstructure: true\nblueprints:\n  - page\nroute: /{slug}\ncontroller: " . BlogController::class . "::show\n");
         mkdir($this->site . 'collections/pages');
         mkdir($this->blueprints . 'collections/pages');
-        file_put_contents($this->blueprints . 'collections/pages/page.yaml', "title: Page\nfields:\n  - handle: title\n    type: text\n    validate: required\n  - handle: slug\n    type: slug\n  - handle: body\n    type: markdown\n");
+        file_put_contents($this->blueprints . 'collections/pages/page.yaml', implode("\n", [
+            'title: Page',
+            'fields:',
+            '  - {handle: title, type: text, validate: required}',
+            '  - {handle: slug, type: slug}',
+            '',
+        ]));
 
         foreach ([self::HOME => 'home', self::ABOUT => 'about', self::TEAM => 'team', self::HISTORY => 'history', self::JOBS => 'jobs'] as $id => $slug) {
-            $this->writeFile("collections/pages/{$slug}.md", "---\nid: {$id}\ntitle: " . ucfirst($slug) . "\n---\nBody of {$slug}.\n");
+            $this->writeFile("collections/pages/{$slug}.md", sprintf("---\nid: %s\ntitle: %s\n---\n", $id, ucfirst($slug)));
         }
     }
 
