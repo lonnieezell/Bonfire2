@@ -20,6 +20,12 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: draft preview.** An entry's form has a **Preview** button for users with `content.edit`. It gives a signed link,
+good for 24 hours, that shows the entry through the collection's `template` or `controller` whatever its status, to anyone
+who has the link and with no login, so a client can review a draft. The response is `noindex` and never cached, and a
+collection with neither a template nor a controller has no preview. Links are signed with the app's encryption key. See
+[Previewing a draft](../content/admin.md#previewing-a-draft).
+
 **Content: page caching.** A collection with `cache: 3600` in its config has its routed pages served to guests from the cache
 for that many seconds. It's off unless a collection sets it. Only `GET` requests with no query string from guests that the
 fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
@@ -30,7 +36,6 @@ See [Caching](../content/routing.md#caching).
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
 index or migration, work with auto-routing off, and have no routes. See [Globals](../content/globals.md).
-
 
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in

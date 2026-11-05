@@ -152,7 +152,8 @@ class Blog extends BaseController
 }
 ```
 
-What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it. The class must
+What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it, except to a
+[draft preview](#previews). The class must
 extend `CodeIgniter\Controller`. The method doesn't need to be routable itself.
 
 A malformed `controller` value is reported by the reindex, but a class or method that doesn't exist is an error when the
@@ -210,6 +211,18 @@ Bonfire then serves every collection's feed at `/feed/{collection}`, such as `/f
 exist gets a 404. It's independent of `$autoRoute`, and with `$feedRoute` off, the default, Bonfire adds no route.
 
 Your routes always win. A route of yours for `feed/blog`, or for the pattern `feed/(:segment)`, takes the request.
+
+## Previews
+
+[Previewing a draft](admin.md#previewing-a-draft) in the admin gives a signed link to `/content-preview/{id}`, which runs
+the same code as the fallback route once the entry is found: the collection's controller gets the entry, or its template
+is rendered with `$entry` and `$collection`. The difference is how the entry is found. The link names the entry by its
+id, so a draft or scheduled entry is shown, and only a link with a valid signature that hasn't expired is served. Any other
+request still gets a 404 for a draft or scheduled entry.
+
+Bonfire marks the response `X-Robots-Tag: noindex` and `Cache-Control: no-store`, and turns page caching off for it, even if
+your controller asks for it with `cachePage()`. It does that after your controller returns, so a controller or template
+that sets those itself is overridden.
 
 ## Seeing changes
 
