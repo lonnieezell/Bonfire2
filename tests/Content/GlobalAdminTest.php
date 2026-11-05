@@ -267,7 +267,6 @@ final class GlobalAdminTest extends ContentTestCase
 
         $this->actingAs($this->admin)->post(route_to('content-global', 'site'), $fields)->assertRedirect();
 
-        $this->assertSame(['site.yaml'], array_map(basename(...), glob($this->site . 'globals/{,.}*.yaml', GLOB_BRACE)));
         $this->assertSame(['.', '..', 'site.yaml'], scandir($this->site . 'globals'));
     }
 

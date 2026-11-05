@@ -30,7 +30,7 @@ final readonly class GlobalSet
         public string $handle,
         private array $data,
         public ?Blueprint $blueprint,
-        public string $hash = '',
+        public string $hash,
     ) {
     }
 
