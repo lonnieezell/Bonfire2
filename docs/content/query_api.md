@@ -113,6 +113,11 @@ or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-b
 `navigation('main')` returns a [menu](navigation.md#showing-a-menu) built in the admin as a tree of items, each with a
 `title`, `url`, `active` and `children`. It's the same as `content()->navigation('main')`.
 
+## Globals
+
+`globals('site')->field('name')` reads a value from a [set of globals](globals.md), cast by its blueprint. It isn't part
+of `content()`, because globals are read from their files and aren't queried.
+
 ## Taxonomies
 
 `whereTerm()` keeps the published entries that have a [term](taxonomies.md), the same as `published()` does, and it

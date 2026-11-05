@@ -42,7 +42,8 @@ content/
 
 A structured collection also has a tree file, at `content/trees/collections/<handle>.yaml`. See
 [Pages and structures](structure.md#the-tree-file). A [navigation menu](navigation.md) has a config at
-`content/navigation/<handle>.yaml` and its items at `content/trees/navigation/<handle>.yaml`.
+`content/navigation/<handle>.yaml` and its items at `content/trees/navigation/<handle>.yaml`. A set of
+[globals](globals.md) is a file at `content/globals/<handle>.yaml`.
 
 Blueprints are not in the content root. They live at `resources/blueprints/`.
 

@@ -120,6 +120,8 @@ final readonly class ContentFiles
     /**
      * Runs a save with the group of files locked, so that two saves can't both pass their checks and one overwrite the other,
      * or two new files take the same URI. One lock for the group, so locks don't pile up as files do.
+     * Every save, trash, restore, purge and tree move comes through here, so the cached pages are cleared
+     * after each, even a refused one, since a change that failed halfway may still have changed files.
      *
      * @template T
      *
@@ -144,6 +146,7 @@ final readonly class ContentFiles
         } finally {
             flock($file, LOCK_UN);
             fclose($file);
+            PageCache::clear();
         }
     }
 

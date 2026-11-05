@@ -14,9 +14,11 @@ namespace Bonfire\Content\Controllers;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
+use Bonfire\Content\PageCache;
 use Bonfire\Content\PreviewLink;
 use Bonfire\Content\Taxonomy;
 use Bonfire\Core\BaseController;
+use Closure;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\I18n\Time;
@@ -33,7 +35,9 @@ class EntryController extends BaseController
     public function show()
     {
         // Routed for any verb to come after every other route, but only GET is served.
-        $uri        = $this->request->getMethod() === 'GET' ? rawurldecode($this->request->getPath()) : null;
+        $uri = $this->request->getMethod() === 'GET' ? rawurldecode($this->request->getPath()) : null;
+        // Before the entry is read, so a save that clears the cache after the read can't leave this request's older page in the new generation.
+        $cache      = $uri === null || $this->request->getUri()->getQuery() !== '' ? null : new PageCache();
         $entry      = $uri === null ? null : content()->findByUri($uri);
         $collection = $entry === null ? null : $this->collectionOf($entry);
 
@@ -41,11 +45,11 @@ class EntryController extends BaseController
             return $page;
         }
 
-        if ($entry !== null && $collection !== null) {
-            return $this->serve($entry, $collection);
+        if ($entry === null || $collection === null || ($collection->controller === null && $collection->template === null)) {
+            throw PageNotFoundException::forPageNotFound();
         }
 
-        throw PageNotFoundException::forPageNotFound();
+        return $this->cached($collection, $cache, $uri, fn () => $this->serve($entry, $collection));
     }
 
     /**
@@ -95,6 +99,44 @@ class EntryController extends BaseController
         }
 
         throw PageNotFoundException::forPageNotFound();
+    }
+
+    /**
+     * Gives a guest the collection's cached page for this URI, and caches the page when it has to be made. Only
+     * a 200 is kept, so a 404 or a redirect is made again. A request with a query string is never cached, because
+     * the page may depend on it, and neither is one from a logged-in user.
+     *
+     * @param Closure(): mixed $render
+     *
+     * @return mixed
+     */
+    private function cached(Collection $collection, ?PageCache $cache, string $uri, Closure $render)
+    {
+        if ($collection->cache === null || $cache === null || auth()->loggedIn()) {
+            return $render();
+        }
+
+        $path = Collection::normalizeUri($uri);
+        $page = $cache->get($path);
+
+        if ($page !== null) {
+            if ($page['contentType'] !== null) {
+                $this->response->setHeader('Content-Type', $page['contentType']);
+            }
+
+            return $this->response->setBody($page['body']);
+        }
+
+        $result = $render();
+
+        // A string has the status of the response the controller was given, which is this one.
+        if (is_string($result) && $this->response->getStatusCode() === 200) {
+            $cache->put($path, $result, null, $collection->cache);
+        } elseif ($result instanceof ResponseInterface && $result->getStatusCode() === 200 && is_string($result->getBody())) {
+            $cache->put($path, $result->getBody(), $result->getHeaderLine('Content-Type') ?: null, $collection->cache);
+        }
+
+        return $result;
     }
 
     /**
