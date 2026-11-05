@@ -93,8 +93,8 @@ class Documentation
     }
 
     /**
-     * @param array{title: string|null, path: string}          $page
-     * @param list<array{title: string, uri: string}>          $nav
+     * @param array{title: string|null, path: string} $page
+     * @param list<array{title: string, uri: string}> $nav
      *
      * @return array{title: string, html: string, nav: list<array{title: string, uri: string}>, uri: string}
      */

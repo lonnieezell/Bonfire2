@@ -12,8 +12,8 @@
 namespace Tests\Docs;
 
 use Bonfire\Docs\Libraries\MarkdownRenderer;
-use Tests\Support\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\TestCase;
 
 /**
  * @internal
