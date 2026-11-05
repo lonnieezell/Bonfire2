@@ -39,4 +39,10 @@ class Content extends BaseConfig
      * App routes always win over it.
      */
     public bool $autoRoute = false;
+
+    /**
+     * Whether Bonfire serves a collection's feed at /feed/{collection}.
+     * App routes always win over it.
+     */
+    public bool $feedRoute = false;
 }

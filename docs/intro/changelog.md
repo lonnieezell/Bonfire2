@@ -20,6 +20,10 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
+RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
+`app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).
+
 **Content: collection index pages.** [Listing a collection](../content/query_api.md#listing-a-collection) shows a route
 and view of your own that list a collection's published entries a page at a time, with pager links from
 `$query->pager()->links()`. Bonfire adds no index route, and `paginate()` still returns a plain list.
