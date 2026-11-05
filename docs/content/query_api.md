@@ -83,6 +83,11 @@ Your route wins over the [fallback route](routing.md#turning-it-on), so `/blog` 
 To change how the links look, pass `links()` the name of a [pager template](https://codeigniter.com/user_guide/libraries/pagination.html#customizing-the-pagination-links)
 as its second argument: `$pager->links('default', 'my_pager')`.
 
+### Feeds
+
+`content()->feed($handle)` returns a response with the collection's published entries as an RSS feed, for you to return
+from a route. See [Feeds](routing.md#feeds).
+
 ## Finding an entry
 
 `content()->find($id)` returns an entry from any collection by its UUID, or `null`.

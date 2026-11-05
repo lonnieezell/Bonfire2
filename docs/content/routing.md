@@ -127,6 +127,41 @@ $routes->get('blog/(:segment)', static function (string $slug) {
 
 The collection still needs a `route`, since that's what gives its entries URIs.
 
+## Feeds
+
+`content()->feed('blog')` returns a response with a collection's published entries as an
+[RSS 2.0](https://www.rssboard.org/rss-specification) feed. Return it from a route of your own, at any URL:
+
+```php
+$routes->get('blog/feed.xml', static fn () => content()->feed('blog'));
+```
+
+The response has the content type `application/rss+xml; charset=UTF-8`. The feed has the collection's `title` as its
+title and description, and the site's URL as its link. Each entry becomes an item with its `title`, a `link` and `guid`
+that are its URI as a full URL, and a `pubDate` from its `published_at`. Titles are escaped, and characters that XML can't
+hold are dropped, so the feed stays well-formed. The feed has no item descriptions, because an entry's fields and body
+are yours to render.
+
+It includes the same entries as `published()`: no drafts, scheduled entries or trashed entries. They come in the
+collection's `sort` order, which is newest first for a [dated](collections.md) collection. An entry with no URI is left
+out, so a collection with no `route` gives a feed with no items. `feed()` includes every published entry, not just the
+latest ones, so for a large collection serve your own cut with the [query API](query_api.md) instead.
+
+`feed()` throws `Bonfire\Content\ContentException` if the collection doesn't exist or its config is invalid.
+
+### The built-in route
+
+If you don't need a URL of your own, turn on `$feedRoute` in `app/Config/Content.php`:
+
+```php
+public bool $feedRoute = true;
+```
+
+Bonfire then serves every collection's feed at `/feed/{collection}`, such as `/feed/blog`, and a collection that doesn't
+exist gets a 404. It's independent of `$autoRoute`, and with `$feedRoute` off, the default, Bonfire adds no route.
+
+Your routes always win. A route of yours for `feed/blog`, or for the pattern `feed/(:segment)`, takes the request.
+
 ## Seeing changes
 
 In production, run `php spark content:reindex` when you deploy. A changed file or `route` doesn't take effect until you do.

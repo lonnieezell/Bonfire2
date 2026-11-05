@@ -13,6 +13,7 @@ namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\Models\ContentTermModel;
+use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * The content query API, available as content().
@@ -31,6 +32,22 @@ final readonly class Content
     public function collection(string $handle): EntryQuery
     {
         return new EntryQuery(Collection::load($this->contentRoot, $handle));
+    }
+
+    /**
+     * An RSS feed of a collection's published entries, in the collection's order. An entry with no URI is left out.
+     * Return it from a route of your own.
+     *
+     * @throws ContentException when the collection doesn't exist or its config is invalid
+     */
+    public function feed(string $handle): ResponseInterface
+    {
+        $collection = Collection::load($this->contentRoot, $handle);
+        $entries    = (new EntryQuery($collection))->published()->get();
+
+        return service('response')
+            ->setContentType(Feed::CONTENT_TYPE, 'UTF-8')
+            ->setBody(Feed::rss($collection, $entries));
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use Bonfire\Content\Controllers\EntryController;
+use Bonfire\Content\Controllers\FeedController;
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
@@ -25,6 +26,11 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->get('content/(:segment)/(:segment)', 'EntryAdminController::edit/$1/$2', ['as' => 'content-edit']);
     $routes->post('content/(:segment)/(:segment)', 'EntryAdminController::update/$1/$2');
 });
+
+if (config('Content')->feedRoute) {
+    // Before the fallback route below, which would take the URL. A route of the app's with the same pattern is kept.
+    $routes->get('feed/(:segment)', [FeedController::class, 'show']);
+}
 
 if (config('Content')->autoRoute) {
     // This file loads last (see Bonfire\Core\Namespaces), and add() goes after the routes for a single verb.
