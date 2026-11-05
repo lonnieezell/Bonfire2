@@ -87,6 +87,29 @@ final readonly class Blueprint
     }
 
     /**
+     * The blueprint of a global set's values, from resources/blueprints/globals/<handle>.yaml, or null without that file.
+     *
+     * @throws ContentException when the file is invalid
+     */
+    public static function loadGlobal(string $blueprintPath, string $handle): ?self
+    {
+        $path = rtrim($blueprintPath, '/') . "/globals/{$handle}.yaml";
+
+        if (preg_match(self::NAME, $handle) !== 1 || ! is_file($path)) {
+            return null;
+        }
+
+        $blueprint = self::fromFile($path, $handle, $handle);
+
+        // A global set is only YAML, so there's nowhere to keep a body.
+        if ($blueprint->field(self::BODY) !== null) {
+            throw new ContentException("Blueprint {$handle} can't have a `body` field, because a global set has no body.");
+        }
+
+        return $blueprint;
+    }
+
+    /**
      * @throws ContentException
      */
     private static function fromFile(string $path, string $collection, string $handle): self

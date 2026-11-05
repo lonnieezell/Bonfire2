@@ -26,6 +26,12 @@ fallback route serves with a 200 are cached. Saving, trashing, restoring or purg
 structure, saving a term or menu, and any reindex (including `content:reindex`) clear all of Content's cached pages.
 See [Caching](../content/routing.md#caching).
 
+**Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
+`resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
+value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
+index or migration, work with auto-routing off, and have no routes. See [Globals](../content/globals.md).
+
+
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
 `app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).
@@ -72,6 +78,10 @@ its URL from the entry, so renaming a slug changes the menu by itself. The App t
 
 **The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
 nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
+
+**Lithuanian translations completed.** `Content.php` and `Docs.php` now have Lithuanian files, and the remaining keys
+were added to `Bonfire.php`, `Email.php`, `Tools.php`, `Users.php` and `Widgets.php`: the dashboard editor, Mail
+Previews and Outbox, the mailer list, the log viewer and system health, and the users and chart widget settings.
 
 ## 4 November 2026
 
