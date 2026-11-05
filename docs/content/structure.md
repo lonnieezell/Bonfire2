@@ -49,7 +49,7 @@ The tree file is optional and forgiving:
 
 - An entry the file doesn't name is still indexed, at the end of the root, in the order of its file path. Nothing is lost
   by adding an entry file by hand.
-- An id with no entry file is skipped, and its children move up to where it was.
+- An id with no entry file, in `collections/` or `.trash/`, is skipped, and its children move up to where it was.
 - An id named twice keeps its first place.
 - A file that isn't valid is reported by the reindex, and every entry goes to the root until you fix it.
 
@@ -80,8 +80,8 @@ or onto another page's list to nest it, then save. The editor uses SortableJS, w
 
 Saving posts the whole tree. Bonfire then:
 
-- refuses a tree deeper than `max_depth`, one that names an entry the collection doesn't have, or one that would give
-  two entries the same URI, such as with an entry of another collection,
+- refuses a tree deeper than `max_depth`, one that names an entry the collection doesn't have, one that puts a live page
+  under a page in the trash, or one that would give two entries the same URI, such as with an entry of another collection,
 - refuses it if the tree file changed on disk since the editor was opened, the same hash check as [entry
   forms](admin.md#when-the-file-changed). Reload the structure and make your changes again,
 - writes the tree file in one step, through a temporary file that is renamed into place, and
@@ -98,3 +98,25 @@ know yet.
 
 A new entry made in the admin goes last at the root. The tree file is rewritten to include it, along with any entries it
 didn't name yet. Open the editor to put it elsewhere. Editing an entry keeps its place.
+
+## Deleting and restoring pages
+
+[Deleting](admin.md#deleting-and-restoring) works on whole branches, because a live page's ancestors are always live. No
+page ever gets a temporary URI.
+
+- **Deleting** a page takes every page below it to the trash too. The confirmation says how many, and the delete is
+  refused if that number has changed by the time you confirm.
+- **Restoring** a page also restores every trashed page the tree file places below it, even one trashed separately
+  earlier. It's all or nothing: if any of them has its original path or URI taken, nothing is restored and the message
+  names what's in the way.
+- **Restoring a page whose parent is still in the trash** is refused, with a message naming the parent. Restore the parent.
+- **Purging** a page removes only that page. Pages below it stay in the trash and move up to its spot. If you restore
+  them, their URIs come from that new position.
+
+Trashed ids stay in the tree file, so a restored page returns to its exact spot. Deleting doesn't rewrite the file, and
+the admin's other tree writes keep the ids. URIs and sort positions are worked out from live pages only, except that a
+trashed page holds the URI it would come back to, even after `content:reindex --fresh`.
+
+The tree editor shows trashed pages as muted rows marked "In trash". They're hidden until you press **Show trashed**,
+which appears when the collection has some. Hidden rows are still saved with the tree, so hiding them can't lose their
+position, and they count toward `max_depth`.

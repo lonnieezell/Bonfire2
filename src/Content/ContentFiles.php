@@ -12,7 +12,7 @@
 namespace Bonfire\Content;
 
 /**
- * What the stores need to write files under the content root: whole-file writes, a lock per
+ * What the stores need to write files under the content root: whole-file writes, moves, a lock per
  * collection or taxonomy, and ids.
  */
 final readonly class ContentFiles
@@ -30,6 +30,22 @@ final readonly class ContentFiles
     public static function isUuid(mixed $id): bool
     {
         return is_string($id) && preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $id) === 1;
+    }
+
+    /**
+     * Where an entry's file goes in the trash: `collections/<handle>/<file>` to `.trash/<handle>/<file>`.
+     */
+    public static function trashPath(string $path): string
+    {
+        return '.trash/' . substr($path, strlen('collections/'));
+    }
+
+    /**
+     * Where a file in the trash came from, which is trashPath() the other way.
+     */
+    public static function livePath(string $trashPath): string
+    {
+        return 'collections/' . substr($trashPath, strlen('.trash/'));
     }
 
     public static function uuid(): string
@@ -53,9 +69,7 @@ final readonly class ContentFiles
         $file = $this->root . $path;
         $dir  = dirname($file);
 
-        if (! is_dir($dir) && ! mkdir($dir, 0775, true) && ! is_dir($dir)) {
-            throw new ContentException('The folder could not be created.');
-        }
+        $this->makeFolder($dir);
 
         $temp = tempnam($dir, '.entry-');
 
@@ -70,6 +84,36 @@ final readonly class ContentFiles
             @unlink($temp);
 
             throw new ContentException('The file could not be written.');
+        }
+    }
+
+    /**
+     * Moves files, all of them or none: a move that fails puts back those already moved.
+     *
+     * @param array<string, string> $moves where each file goes by where it is, from the content root
+     *
+     * @throws ContentException
+     */
+    public function move(array $moves): void
+    {
+        $moved = [];
+
+        try {
+            foreach ($moves as $from => $to) {
+                $this->makeFolder(dirname($this->root . $to));
+
+                if (! @rename($this->root . $from, $this->root . $to)) {
+                    throw new ContentException("{$from} could not be moved.");
+                }
+
+                $moved[$to] = $from;
+            }
+        } catch (ContentException $e) {
+            foreach ($moved as $to => $from) {
+                @rename($this->root . $to, $this->root . $from);
+            }
+
+            throw $e;
         }
     }
 
@@ -100,6 +144,16 @@ final readonly class ContentFiles
         } finally {
             flock($file, LOCK_UN);
             fclose($file);
+        }
+    }
+
+    /**
+     * @throws ContentException
+     */
+    private function makeFolder(string $dir): void
+    {
+        if (! is_dir($dir) && ! @mkdir($dir, 0775, true) && ! is_dir($dir)) {
+            throw new ContentException('The folder could not be created.');
         }
     }
 }

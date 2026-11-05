@@ -65,8 +65,8 @@ Anyone you give `content.edit` can edit every collection. Give it only to people
 
 These are covered where they apply, and are listed here so you can find them:
 
-- **Entries can't be deleted in the admin.** `content.delete` is reserved and nothing uses it yet. Delete the file, then
-  run `php spark content:reindex`.
+- **The trash belongs to one machine** if you keep `.trash/` out of git, as we suggest. A fresh clone and a reindex lose
+  that machine's Recycler contents. See [The trash and git](admin.md#the-trash-and-git).
 - **Terms have no stale-file check.** If you save a term whose file changed since the form opened, the last save wins.
   Entries do check. See [When the file changed](admin.md#when-the-file-changed) and
   [Editing terms in the admin](taxonomies.md#editing-terms-in-the-admin).

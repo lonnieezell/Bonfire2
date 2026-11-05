@@ -32,7 +32,7 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Psr\Log\LoggerInterface;
 
 /**
- * Content in the admin: a list of each collection's entries, and forms to write them from their blueprints.
+ * Content in the admin: a list of each collection's entries, forms to write them from their blueprints, and deleting them.
  */
 class EntryAdminController extends AdminController
 {
@@ -61,12 +61,15 @@ class EntryAdminController extends AdminController
         $collection = $this->collection($handle);
         $query      = content()->collection($collection->handle);
         $entries    = $query->paginate(setting('Site.perPage'));
+        $canDelete  = auth()->user()->can('content.delete');
 
         return $this->render($this->viewPrefix . 'entry_list', [
             'collection' => $collection,
             'entries'    => $entries,
             'pager'      => $query->pager(),
             'canEdit'    => auth()->user()->can('content.edit'),
+            'canDelete'  => $canDelete,
+            'below'      => $canDelete ? $this->entryStore()->descendantCounts($collection, array_map(static fn (Entry $entry): string => $entry->id, $entries)) : [],
             'canArrange' => $collection->structure && auth()->user()->can('content.structure'),
         ]);
     }
@@ -100,7 +103,7 @@ class EntryAdminController extends AdminController
 
         try {
             $tree = Structure::fromJson(is_string($post['tree'] ?? null) ? $post['tree'] : '');
-            (new EntryStore(config('Content')->contentPath))->saveTree($collection, $tree, $hash);
+            $this->entryStore()->saveTree($collection, $tree, $hash);
         } catch (SaveConflictException) {
             return $this->renderTree($collection, $tree ?? $this->readTree($collection)[0], $hash, lang('Content.structureConflict'), true, 409);
         } catch (ContentException $e) {
@@ -177,7 +180,7 @@ class EntryAdminController extends AdminController
         }
 
         try {
-            $record = (new EntryStore(config('Content')->contentPath))->create($collection, $slug, $frontMatter, $body, $publishedAt);
+            $record = $this->entryStore()->create($collection, $slug, $frontMatter, $body, $publishedAt);
         } catch (ContentException $e) {
             return $this->renderForm($collection, $blueprint, $form, $shown + ['notice' => $e->getMessage()]);
         }
@@ -225,7 +228,8 @@ class EntryAdminController extends AdminController
         $collection = $this->collection($handle);
 
         try {
-            [$current, $entry, $blueprint] = $this->load($collection, $id);
+            // A form opened before the entry was trashed gets the conflict, not a 404.
+            [$current, $entry, $blueprint] = $this->load($collection, $id, true);
         } catch (ContentException $e) {
             return $this->failed($collection, $e);
         }
@@ -246,6 +250,11 @@ class EntryAdminController extends AdminController
         // What the form can't change is shown as it is.
         $shown['values'] += $form->valuesOf($entry->data, $entry->body, $entry->slug);
 
+        // Fixing what's invalid wouldn't help, because the entry went to the trash after the form was opened.
+        if (($current['deleted_at'] ?? null) !== null) {
+            return $this->renderForm($collection, $blueprint, $form, $shown + ['notice' => lang('Content.conflict'), 'conflict' => true, 'trashed' => true], 409);
+        }
+
         if ($errors !== []) {
             return $this->renderForm($collection, $blueprint, $form, $shown, $denied ? 403 : 200);
         }
@@ -254,7 +263,7 @@ class EntryAdminController extends AdminController
         $frontMatter          = $this->withPublishing($frontMatter, $status, $publishedAt, $entry->publishedAt);
 
         try {
-            (new EntryStore(config('Content')->contentPath))->update($collection, $current, $frontMatter, $body, $hash);
+            $this->entryStore()->update($collection, $current, $frontMatter, $body, $hash);
         } catch (SaveConflictException) {
             return $this->renderForm($collection, $blueprint, $form, $shown + ['notice' => lang('Content.conflict'), 'conflict' => true], 409);
         } catch (ContentException $e) {
@@ -262,6 +271,30 @@ class EntryAdminController extends AdminController
         }
 
         return $this->saved($collection, $entry->id);
+    }
+
+    /**
+     * Moves an entry, and the pages below it, to the trash, unless there are more or fewer of them than the user was told.
+     */
+    public function delete(string $handle, string $id): RedirectResponse
+    {
+        if (! auth()->user()->can('content.delete')) {
+            $this->deny();
+        }
+
+        $collection = $this->collection($handle);
+
+        try {
+            $found = $this->entryStore()->trash($collection, $id, (int) $this->request->getPost('descendants'));
+        } catch (ContentException $e) {
+            return $this->failed($collection, $e);
+        }
+
+        if (! $found) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return redirect()->to(route_to('content-list', $collection->handle))->with('message', lang('Content.trashed'));
     }
 
     /**
@@ -346,7 +379,7 @@ class EntryAdminController extends AdminController
 
     private function renderTree(Collection $collection, Structure $tree, string $hash, ?string $notice, bool $conflict = false, int $httpStatus = 200): string
     {
-        $entries = array_column((new ContentEntryModel())->select('id, slug, title, status')->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
+        $entries = array_column((new ContentEntryModel())->withDeleted()->select('id, slug, title, status, deleted_at')->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
 
         $this->addSortableScript();
 
@@ -356,6 +389,7 @@ class EntryAdminController extends AdminController
             'collection' => $collection,
             'nodes'      => $tree->arrange(array_column($entries, 'slug', 'id'))->nodes,
             'entries'    => $entries,
+            'trashed'    => count(array_filter(array_column($entries, 'deleted_at'))),
             'hash'       => $hash,
             'notice'     => $notice,
             'conflict'   => $conflict,
@@ -398,9 +432,9 @@ class EntryAdminController extends AdminController
      * @throws ContentException
      * @throws PageNotFoundException when the collection has no such entry
      */
-    private function load(Collection $collection, string $id): array
+    private function load(Collection $collection, string $id, bool $orTrashed = false): array
     {
-        $current = (new EntryStore(config('Content')->contentPath))->read($collection, $id);
+        $current = $this->entryStore()->read($collection, $id, $orTrashed);
 
         if ($current === null) {
             throw PageNotFoundException::forPageNotFound();
@@ -489,6 +523,11 @@ class EntryAdminController extends AdminController
         return $frontMatter;
     }
 
+    private function entryStore(): EntryStore
+    {
+        return new EntryStore(config('Content')->contentPath);
+    }
+
     private function saved(Collection $collection, string $id): RedirectResponse
     {
         return redirect()->to(route_to('content-edit', $collection->handle, $id))->with('message', lang('Bonfire.resourceSaved', [lang('Content.entry')]));
@@ -496,16 +535,20 @@ class EntryAdminController extends AdminController
 
     private function failed(Collection $collection, ContentException $e): RedirectResponse
     {
-        return redirect()->to(route_to('content-list', $collection->handle))->with('error', $e->getMessage());
+        // An alert doesn't escape what it shows, and this can name an entry.
+        return redirect()->to(route_to('content-list', $collection->handle))->with('error', esc($e->getMessage()));
     }
 
     /**
-     * @param array{values: array<string, string>, status: string, errors?: array<string, string>, entry?: Entry, hash?: string, publishedAt?: string, notice?: string, conflict?: bool} $shown
+     * @param array{values: array<string, string>, status: string, errors?: array<string, string>, entry?: Entry, hash?: string, publishedAt?: string, notice?: string, conflict?: bool, trashed?: bool} $shown
      */
     private function renderForm(Collection $collection, Blueprint $blueprint, EntryForm $form, array $shown, int $httpStatus = 200): string
     {
         $errors = $shown['errors'] ?? [];
         $rows   = $form->rows($shown['values'], $errors);
+        $entry  = $shown['entry'] ?? null;
+
+        $canDelete = $entry !== null && ! ($shown['trashed'] ?? false) && auth()->user()->can('content.delete');
 
         $this->response->setStatusCode($httpStatus);
 
@@ -513,7 +556,7 @@ class EntryAdminController extends AdminController
             'collection'  => $collection,
             'blueprint'   => $blueprint,
             'rows'        => $rows,
-            'entry'       => $shown['entry'] ?? null,
+            'entry'       => $entry,
             'hash'        => $shown['hash'] ?? '',
             'status'      => $shown['status'],
             'publishedAt' => $shown['publishedAt'] ?? '',
@@ -521,6 +564,8 @@ class EntryAdminController extends AdminController
             'notice'      => $shown['notice'] ?? null,
             'conflict'    => $shown['conflict'] ?? false,
             'canPublish'  => auth()->user()->can('content.publish'),
+            'canDelete'   => $canDelete,
+            'below'       => $canDelete ? $this->entryStore()->descendantCounts($collection, [$entry->id])[$entry->id] : 0,
         ]);
     }
 }

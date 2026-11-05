@@ -21,14 +21,14 @@ class RecyclerHooksModel extends UserModel implements CustomRecyclerQuery, Custo
         return $this->where('username !=', 'hidden');
     }
 
-    public function recyclerRestore(int $id): bool
+    public function recyclerRestore(int|string $id): bool
     {
         self::$calls[] = "restore {$id}";
 
         return true;
     }
 
-    public function recyclerPurge(int $id): bool
+    public function recyclerPurge(int|string $id): bool
     {
         self::$calls[] = "purge {$id}";
 

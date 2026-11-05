@@ -14,7 +14,7 @@ screens are at `/admin/content/<collection>`.
 | `content.access` | Seeing the Content menu and each collection's list. Every other entry screen needs it too. |
 | `content.edit` | Creating and editing entries, and the Markdown preview. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
-| `content.delete` | Reserved. Nothing uses it yet. |
+| `content.delete` | Moving an entry to the trash. See [Deleting and restoring](#deleting-and-restoring). Restoring and purging need `recycler.view` instead. |
 | `content.structure` | Arranging the entries of a structured collection in its tree editor (see [Pages and structures](structure.md)), and listing, creating and editing the terms of a [taxonomy](taxonomies.md#editing-terms-in-the-admin). Neither needs `content.access`. |
 
 `superadmin` and `admin` have all of them. A user without `content.access` doesn't see the menu, and the routes send them
@@ -89,3 +89,44 @@ collection.
 A `markdown` field has **Write** and **Preview** tabs. Preview sends the text to the server, which renders it with
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs `content.edit`.
+
+## Deleting and restoring
+
+A user with `content.delete` sees **Delete** on each row of the list and at the top of the entry's form. It asks first.
+
+Deleting moves the file to `content/.trash/<collection>/<filename>` as it is on disk, and marks the entry's row as
+deleted. The entry leaves the list, the front end, queries, navigation menus and `entries` fields. Someone who still has
+the form open gets the [conflict message](#when-the-file-changed) when they save. If `.trash/` already holds a file with
+that name, the delete is refused and nothing is overwritten.
+
+Trashed entries are listed in the Recycler under **Tools**, as **Content entries**. Restoring and purging there need only
+`recycler.view`, like the Recycler's other resources.
+
+- **Restore** moves the file back and the entry reappears. It's refused, with a message saying why, if its original path
+  or URI has been taken, or its file is missing from the trash.
+- **Purge** deletes the file and the row for good. If the file is already gone, it just clears the row.
+
+A trashed entry keeps its slug and URI, so a new entry can't take them until you restore or purge it. For what deleting
+does to pages in a tree, see [Pages and structures](structure.md#deleting-and-restoring-pages).
+
+### The trash and git
+
+`.trash/` is ordinary files under your content directory. You probably don't want them in version control, so add this
+to your `.gitignore`, adjusting the path if your content lives elsewhere:
+
+```
+content/.trash/
+```
+
+The consequence is that the Recycler's contents belong to one machine. After a fresh clone and a reindex, the entries
+that were in that machine's trash aren't there. The reindex treats the location of the file as the truth:
+
+| On disk | Result of a reindex |
+|---|---|
+| Only in `.trash/` | The entry is trashed, even if it was live. |
+| Only in `collections/` | The entry is live, even if it was trashed. |
+| The same id in both | The live one wins. The trash copy is reported as an error and left alone. |
+| In neither | The row is removed. |
+| In `.trash/`, but its collection's config is gone | Reported, with no row. It comes back when the config does. |
+
+After `content:reindex --fresh`, the date an entry was deleted comes from the time on its file in `.trash/`.

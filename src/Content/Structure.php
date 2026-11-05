@@ -100,6 +100,49 @@ final readonly class Structure
     }
 
     /**
+     * The ids below an entry, at any depth.
+     *
+     * @return list<string>
+     */
+    public function below(string $id): array
+    {
+        $ids = [];
+        self::collectIds(self::locate($this->nodes, $id, null)['node']['children'] ?? [], $ids);
+
+        return $ids;
+    }
+
+    /**
+     * The id of the entry directly above this one, or null at the root or when the tree doesn't name it.
+     */
+    public function parentOf(string $id): ?string
+    {
+        return self::locate($this->nodes, $id, null)['parent'] ?? null;
+    }
+
+    /**
+     * @param list<array{id: string, children: list<mixed>}> $nodes
+     *
+     * @return array{node: array{id: string, children: list<mixed>}, parent: string|null}|null
+     */
+    private static function locate(array $nodes, string $id, ?string $parent): ?array
+    {
+        foreach ($nodes as $node) {
+            if ($node['id'] === $id) {
+                return ['node' => $node, 'parent' => $parent];
+            }
+
+            $found = self::locate($node['children'], $id, $node['id']);
+
+            if ($found !== null) {
+                return $found;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param list<array{id: string, children: list<mixed>}> $nodes
      * @param list<string>                                   $ids
      */

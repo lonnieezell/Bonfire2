@@ -52,14 +52,15 @@ final readonly class StaleCheck
     /**
      * Takes in every file, because editing a file in place doesn't change its directory's mtime.
      * The size catches a second edit within the same second, and the row count an emptied index.
+     * The trash counts too, because where a file is decides whether its entry is live.
      */
     private function signature(string $collections): string
     {
         helper('filesystem');
 
-        $stamps = [(new ContentEntryModel())->countAllResults()];
+        $stamps = [(new ContentEntryModel())->withDeleted()->countAllResults()];
 
-        foreach (get_filenames($collections, true, false, false) as $path) {
+        foreach ([...get_filenames($collections, true, false, false), ...get_filenames(dirname($collections) . '/.trash', true, false, false)] as $path) {
             $stamps[] = $path . ':' . filemtime($path) . ':' . filesize($path);
         }
 

@@ -20,5 +20,5 @@ interface CustomRecyclerPurge
     /**
      * @return bool Whether the record was purged
      */
-    public function recyclerPurge(int $id): bool;
+    public function recyclerPurge(int|string $id): bool;
 }

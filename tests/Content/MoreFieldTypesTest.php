@@ -288,7 +288,6 @@ final class MoreFieldTypesTest extends ContentTestCase
         $cases = [
             'an entry of another collection' => [[self::FIRST], 'entriesInvalid'],
             'an entry that does not exist'   => [['99999999-9999-4999-8999-999999999999'], 'entriesInvalid'],
-            'an entry in the trash'          => [[self::OLD], 'entriesInvalid'],
             'a good id with a bad one'       => [[self::ABOUT, 'nope'], 'entriesInvalid'],
             'more than max_items'            => [[self::ABOUT, self::CONTACT, self::OLD], 'entriesTooMany'],
         ];
@@ -399,7 +398,7 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame($before, glob($this->site . 'collections/blog/*'));
     }
 
-    public function testATrashedTargetIsNotOfferedAndAStaleLinkIsDroppedOnSave(): void
+    public function testATrashedLinkStaysOnSave(): void
     {
         $this->writeFile('collections/blog/2026-05-05.links.md', "---\nid: 77777777-7777-4777-8777-777777777777\ntitle: Links\nrelated:\n  - " . self::OLD . "\n  - " . self::ABOUT . "\n---\nBody.\n");
         (new Indexer($this->site))->reindex();
@@ -408,11 +407,11 @@ final class MoreFieldTypesTest extends ContentTestCase
         $edit   = $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', '77777777-7777-4777-8777-777777777777'));
         $fields = $this->formFields($edit->getBody(), url_to('content-edit', 'blog', '77777777-7777-4777-8777-777777777777'));
 
-        $this->assertSame([self::ABOUT], $this->values($this->xpath($edit, '//input[@name="fields[related][]"][@checked]')));
+        $this->assertEqualsCanonicalizing([self::OLD, self::ABOUT], $this->values($this->xpath($edit, '//input[@name="fields[related][]"][@checked]')));
 
         $this->actingAs($this->admin)->post(route_to('content-edit', 'blog', '77777777-7777-4777-8777-777777777777'), $fields)->assertRedirect();
 
-        $this->assertSame([self::ABOUT], Entry::fromRow((new ContentEntryModel())->find('77777777-7777-4777-8777-777777777777'))->data['related']);
+        $this->assertEqualsCanonicalizing([self::OLD, self::ABOUT], Entry::fromRow((new ContentEntryModel())->find('77777777-7777-4777-8777-777777777777'))->data['related']);
     }
 
     // Field types of an app's own

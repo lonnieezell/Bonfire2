@@ -15,7 +15,7 @@
     </div>
 <?php endif ?>
 
-<form action="<?= $action ?>" method="post" data-tree-form>
+<form action="<?= $action ?>" method="post" data-tree-form x-data="{ showTrashed: false }">
     <?= csrf_field() ?>
     <input type="hidden" name="hash" value="<?= esc($hash, 'attr') ?>">
     <input type="hidden" name="tree" value="">
@@ -24,6 +24,9 @@
         <?php if ($nodes === []) : ?>
             <x-empty-state title="<?= esc(lang('Content.structureEmpty'), 'attr') ?>" />
         <?php else : ?>
+            <?php if ($trashed > 0) : ?>
+                <button type="button" class="btn btn-sm btn-outline-secondary mb-3" data-toggle-trashed @click="showTrashed = ! showTrashed" :aria-pressed="showTrashed"><?= lang('Content.showTrashed', [$trashed]) ?></button>
+            <?php endif ?>
             <ul class="list-group" data-tree>
                 <?= view('Bonfire\Content\Views\entry_tree_nodes', ['nodes' => $nodes, 'entries' => $entries], ['saveData' => false]) ?>
             </ul>

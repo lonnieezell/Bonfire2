@@ -20,5 +20,5 @@ interface CustomRecyclerRestore
     /**
      * @return bool Whether the record was restored
      */
-    public function recyclerRestore(int $id): bool;
+    public function recyclerRestore(int|string $id): bool;
 }

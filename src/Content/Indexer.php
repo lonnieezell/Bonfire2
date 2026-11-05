@@ -20,6 +20,9 @@ use Bonfire\Content\Models\ContentTermModel;
  * entries, but only rows that differ are written. A file that can't be indexed is
  * reported and has no row, the same as after a rebuild. The terms get the same treatment, and every entry's
  * rows in the term pivot are made to match the term slugs in its front matter.
+ *
+ * Where the file is decides whether its entry is live or trashed. A file in `.trash/<handle>/` gives a trashed row,
+ * with the path the file would have under `collections/`, and live files go first, so one can never push out the other.
  */
 final readonly class Indexer
 {
@@ -55,7 +58,7 @@ final readonly class Indexer
         }
 
         $termIds = $this->syncTerms($terms);
-        $rows    = array_column($entries->findAll(), null, 'id');
+        $rows    = array_column($entries->withDeleted()->findAll(), null, 'id');
 
         $stale = array_diff_key($rows, $records);
 
@@ -68,6 +71,11 @@ final readonly class Indexer
         $added = $updated = $unchanged = 0;
 
         foreach ($records as $id => $record) {
+            // An entry that stays in the trash keeps the date it went there. Only a rebuild has to take it from the file.
+            if ($record['deleted_at'] !== null && ($rows[$id]['deleted_at'] ?? null) !== null) {
+                $record['deleted_at'] = $rows[$id]['deleted_at'];
+            }
+
             if (! isset($rows[$id])) {
                 $entries->insert($record);
                 $added++;
@@ -99,7 +107,8 @@ final readonly class Indexer
     }
 
     /**
-     * Compares as strings, because the database may return numbers as strings, and leaves
+     * Compares as strings, because the database may return numbers as strings, and a null as
+     * an empty string, which is how a live row and a trashed record differ. It leaves
      * out mtime, because a fresh checkout changes it on files that are the same.
      *
      * @param array<string, mixed>           $row
@@ -117,7 +126,7 @@ final readonly class Indexer
      */
     private function readFiles(): array
     {
-        $records = $errors = $uris = $collections = [];
+        $records = $errors = $uris = $collections = $loaded = [];
 
         foreach ($this->filesIn('collections', '.yaml') as $configFile) {
             try {
@@ -127,6 +136,8 @@ final readonly class Indexer
 
                 continue;
             }
+
+            $loaded[$collection->handle] = $collection;
 
             foreach ($this->filesIn("collections/{$collection->handle}", '.md') as $path) {
                 try {
@@ -149,7 +160,61 @@ final readonly class Indexer
             }
         }
 
+        foreach ($loaded as $collection) {
+            $this->readTrash($collection, $records, $errors, $collections);
+        }
+
+        foreach (glob($this->root . '.trash/*', GLOB_ONLYDIR) ?: [] as $folder) {
+            if (! isset($loaded[basename($folder)])) {
+                foreach ($this->filesIn('.trash/' . basename($folder), '.md') as $path) {
+                    $errors[$path] = 'Its collection has no valid config, so it has no row until the config is back.';
+                }
+            }
+        }
+
         return [$records, $errors, $collections];
+    }
+
+    /**
+     * Reads a collection's trash, after every live file. These don't claim URIs: a trashed entry holds its URI against
+     * pages that want it later, but one that a live entry has is the restore's to refuse, and the row has to survive for that.
+     *
+     * @param array<string, array<string, int|string|null>> $records
+     * @param array<string, string>                         $errors
+     * @param array<string, Collection>                     $collections
+     */
+    private function readTrash(Collection $collection, array &$records, array &$errors, array &$collections): void
+    {
+        $trashed = [];
+
+        foreach ($this->filesIn(".trash/{$collection->handle}", '.md') as $path) {
+            try {
+                $record = $this->readEntry($collection, $path, $records);
+
+                $records[$record['id']]     = ['path' => ContentFiles::livePath($path), 'deleted_at' => date('Y-m-d H:i:s', (int) $record['mtime'])] + $record;
+                $collections[$record['id']] = $collection;
+                $trashed[$record['id']]     = true;
+            } catch (ContentException $e) {
+                $errors[$path] = $e->getMessage();
+            }
+        }
+
+        if (! $collection->structure || $trashed === []) {
+            return;
+        }
+
+        $own = array_filter($records, static fn (array $record): bool => $record['collection'] === $collection->handle);
+
+        // Where each would come back, from the whole tree, so that a rebuild keeps the URI it holds.
+        foreach (array_intersect_key($this->structureOf($collection, $errors)->place($collection, array_column($own, 'slug', 'id')), $trashed) as $id => $columns) {
+            try {
+                Collection::assertUriFits($columns['uri']);
+                $records[$id] = $columns + $records[$id];
+            } catch (ContentException $e) {
+                $errors[ContentFiles::trashPath((string) $records[$id]['path'])] = $e->getMessage();
+                unset($records[$id]);
+            }
+        }
     }
 
     /**
@@ -195,12 +260,7 @@ final readonly class Indexer
      */
     private function place(Collection $collection, array &$records, array &$errors, array &$uris): void
     {
-        try {
-            $structure = Structure::parse(Structure::raw($this->root, $collection->handle));
-        } catch (ContentException $e) {
-            $errors[Structure::path($collection->handle)] = $e->getMessage();
-            $structure                                    = new Structure([]);
-        }
+        $structure = $this->structureOf($collection, $errors);
 
         $own = array_filter($records, static fn (array $record): bool => $record['collection'] === $collection->handle);
 
@@ -215,6 +275,22 @@ final readonly class Indexer
                 $errors[$record['path']] = $e->getMessage();
                 unset($records[$id]);
             }
+        }
+    }
+
+    /**
+     * The collection's tree file. One that can't be read is reported, and is an empty tree.
+     *
+     * @param array<string, string> $errors
+     */
+    private function structureOf(Collection $collection, array &$errors): Structure
+    {
+        try {
+            return Structure::parse(Structure::raw($this->root, $collection->handle));
+        } catch (ContentException $e) {
+            $errors[Structure::path($collection->handle)] = $e->getMessage();
+
+            return new Structure([]);
         }
     }
 
@@ -290,7 +366,7 @@ final readonly class Indexer
             throw new ContentException("Its id is already used by {$records[$record['id']]['path']}.");
         }
 
-        return $record + ['path' => $path, 'mtime' => (int) filemtime($this->root . $path)];
+        return $record + ['path' => $path, 'mtime' => (int) filemtime($this->root . $path), 'deleted_at' => null];
     }
 
     /**
