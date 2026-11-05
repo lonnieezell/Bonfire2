@@ -12,6 +12,8 @@ use CodeIgniter\Model;
  */
 class ModuleGenerator extends BaseCommand
 {
+    use RendersTemplates;
+
     /**
      * The Command's Group
      *
@@ -208,16 +210,7 @@ class ModuleGenerator extends BaseCommand
      */
     private function render(string $template, array $data): string
     {
-        $render = static function (string $__file, array $__data): string {
-            extract($__data);
-            ob_start();
-
-            include $__file;
-
-            return ob_get_clean();
-        };
-
-        return str_replace(['<@php', '<@='], ['<?php', '<?='], $render(__DIR__ . "/Views/module/{$template}.tpl.php", $data));
+        return $this->renderTemplate(__DIR__ . "/Views/module/{$template}.tpl.php", $data);
     }
 
     /**

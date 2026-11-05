@@ -62,6 +62,21 @@ final class QueryTest extends ContentTestCase
         $this->assertSame(['about'], $this->slugs(content()->collection('pages')->published()->get()));
     }
 
+    public function testIsPublishedMatchesWhatPublishedKeeps(): void
+    {
+        $published = [];
+
+        foreach (content()->collection('blog')->get() as $entry) {
+            $published[$entry->slug] = $entry->isPublished();
+        }
+
+        ksort($published);
+        $this->assertSame(['draft-post' => false, 'first-post' => true, 'future-post' => false, 'second-post' => true], $published);
+
+        $undated = new Entry('id', 'blog', null, 'undated', null, 'published', null, 'Undated', '', []);
+        $this->assertTrue($undated->isPublished());
+    }
+
     public function testACollectionOnlySeesItsOwnEntries(): void
     {
         $this->writeFile('collections/pages.yaml', "title: Pages\n");

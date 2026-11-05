@@ -121,6 +121,7 @@ nav:
       - content/query_api.md
       - content/routing.md
       - content/seo.md
+      - content/scaffolding.md
       - content/structure.md
       - content/navigation.md
       - content/globals.md

@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content;
 
+use CodeIgniter\I18n\Time;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 
 /**
@@ -52,6 +53,15 @@ final readonly class Entry
             $row['body'],
             json_decode($row['data'], true, flags: JSON_THROW_ON_ERROR),
         );
+    }
+
+    /**
+     * Whether the entry is served: it has the `published` status, and its `published_at` has passed or it has none.
+     * The same rule as `published()` on a query.
+     */
+    public function isPublished(): bool
+    {
+        return $this->status === 'published' && ($this->publishedAt === null || $this->publishedAt <= Time::now()->toDateTimeString());
     }
 
     /**

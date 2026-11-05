@@ -20,6 +20,16 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: scaffolding.** `php spark content:scaffold <collection>` writes starting index and show views for a
+collection into `app/Views/<collection>/`, built from its blueprints' fields. The index view uses the pagination recipe and
+the show view calls `content_seo()`. `--controller` also writes a controller for the collection to hand off to. It never
+overwrites a file, says which ones it skipped, and prints the config line and the index route to add. See
+[Scaffolding](../content/scaffolding.md).
+
+**Content: `$entry->isPublished()`.** It says whether an entry has the `published` status and its `published_at` has
+passed, the same rule as `published()`, so you can check the entries an `entries` field links to, which include drafts.
+See [Entries](../content/query_api.md#entries).
+
 **Content: SEO values.** `$entry->seo()` returns an entry's title, description, canonical URL and Open Graph values. A
 blueprint's `seo` key maps the fields that feed the title and description, which default to `title` and the body's first
 paragraph. `content_seo($entry)` adds them to the page's `<head>` through `viewMeta`, escaped. `Config\Content::$autoSeo`,
