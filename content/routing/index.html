@@ -1519,6 +1519,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sitemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitemap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#feeds" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2705,6 +2716,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sitemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitemap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#feeds" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2957,6 +2979,21 @@ page is requested.</p>
 <span class="p">});</span>
 </code></pre></div>
 <p>The collection still needs a <code>route</code>, since that's what gives its entries URIs.</p>
+<h2 id="sitemap">Sitemap</h2>
+<p><code>content()-&gt;sitemap()</code> returns a response with a <a href="https://www.sitemaps.org/protocol.html">sitemap</a> of the site's content, so
+you can serve it from any route of your own:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'sitemap.xml'</span><span class="p">,</span> <span class="k">static</span> <span class="nx">fn</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sitemap</span><span class="p">());</span>
+</code></pre></div>
+<p>The response has the <code>application/xml</code> content type. It lists every collection, with one <code>&lt;loc&gt;</code> for each entry that is
+published, as <a href="#what-gets-served">What gets served</a> describes. Drafts, scheduled entries and trashed entries are left out,
+and so is an entry with no URI, such as one in a collection with no <code>route</code>. A location is the entry's URI added to your
+<code>site_url()</code>, in alphabetical order.</p>
+<p>Instead of writing the route, set <code>$sitemap</code> in <code>app/Config/Content.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">bool</span> <span class="nv">$sitemap</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<p>Bonfire then serves the sitemap at <code>/sitemap.xml</code>. It's off by default, and works with <code>$autoRoute</code> on or off. Your own
+routes win over it, so a route of yours for <code>sitemap.xml</code> replaces it.</p>
+<p>A sitemap file is limited to 50,000 URLs, and <code>content()-&gt;sitemap()</code> doesn't split a larger site into several files.</p>
 <h2 id="feeds">Feeds</h2>
 <p><code>content()-&gt;feed('blog')</code> returns a response with a collection's published entries as an
 <a href="https://www.rssboard.org/rss-specification">RSS 2.0</a> feed. Return it from a route of your own, at any URL:</p>

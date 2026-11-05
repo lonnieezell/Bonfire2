@@ -1480,6 +1480,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sitemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitemap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#navigation-menus" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2677,6 +2688,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sitemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sitemap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#navigation-menus" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2899,6 +2921,9 @@ and scheduled entries too.</p>
 <h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
 <p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
 or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
+<h2 id="sitemap">Sitemap</h2>
+<p><code>content()-&gt;sitemap()</code> returns a response with a sitemap of every collection's published entries that have a URI. See
+<a href="../routing/#sitemap">Sitemap</a>.</p>
 <h2 id="navigation-menus">Navigation menus</h2>
 <p><code>navigation('main')</code> returns a <a href="../navigation/#showing-a-menu">menu</a> built in the admin as a tree of items, each with a
 <code>title</code>, <code>url</code>, <code>active</code> and <code>children</code>. It's the same as <code>content()-&gt;navigation('main')</code>.</p>

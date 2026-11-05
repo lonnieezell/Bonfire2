@@ -3060,6 +3060,10 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: sitemap.</strong> <a href="../../content/routing/#sitemap"><code>content()-&gt;sitemap()</code></a> returns a response with a sitemap of every
+collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
+<code>$sitemap = true</code> in <code>app/Config/Content.php</code> to have Bonfire serve it at <code>/sitemap.xml</code>. It's off by default, and your own
+routes win over it.</p>
 <p><strong>Content: editing globals in the admin.</strong> Each set of globals that has a blueprint gets an item in the Content menu and a
 form built from the blueprint, with the same field types and validation as entries. It needs <code>content.access</code> and
 <code>content.edit</code>. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.
