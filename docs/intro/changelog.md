@@ -14,6 +14,9 @@ its URL from the entry, so renaming a slug changes the menu by itself. The App t
 `themes/App/_navigation.php`, which a theme you already published needs to copy. See
 [Navigation menus](../content/navigation.md).
 
+**The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
+nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
+
 ## 4 November 2026
 
 **Content: getting started and constraints.** [Getting started](../content/getting_started.md) walks you from a fresh

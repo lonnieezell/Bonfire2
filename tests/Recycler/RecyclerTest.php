@@ -210,6 +210,26 @@ final class RecyclerTest extends TestCase
         $this->assertStringNotContainsString('confirm(', $html);
     }
 
+    public function testResourceChooserSwapsTheRecyclerAndStartsOnTheFirstPage(): void
+    {
+        service('recycler')->register('hooks', 'Hooks', RecyclerHooksModel::class, ['username']);
+
+        // The raw body: the DOM-parsed getBody() drops Alpine's @-attributes.
+        $html = (string) $this->actingAs($this->admin)->get(route_to('recycler') . '?page=2')->response()->getBody();
+
+        $this->assertStringContainsString('<div id="recycler">', $html);
+        $this->assertSame(1, preg_match('#<select\b[^>]*\bname="r"[^>]*>#', $html, $matches));
+
+        $select = $matches[0];
+        $this->assertStringContainsString('id="recycler-resource"', $select);
+        $this->assertStringContainsString('hx-get="' . url_to('recycler') . '"', $select);
+        $this->assertStringContainsString('hx-target="#recycler"', $select);
+        $this->assertStringContainsString('hx-select="#recycler"', $select);
+        $this->assertStringContainsString('hx-swap="outerHTML"', $select);
+        $this->assertStringContainsString('hx-push-url="true"', $select);
+        $this->assertStringNotContainsString('x-on:change', $select);
+    }
+
     public function testEmptyRecyclerShowsAnEmptyState(): void
     {
         $html = $this->actingAs($this->admin)->get(route_to('recycler'))->getBody();
