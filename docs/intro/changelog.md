@@ -20,6 +20,12 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: draft preview.** An entry's form has a **Preview** button for users with `content.edit`. It gives a signed link,
+good for 24 hours, that shows the entry through the collection's `template` or `controller` whatever its status, to anyone
+who has the link and with no login, so a client can review a draft. The response is `noindex` and never cached, and a
+collection with neither a template nor a controller has no preview. Links are signed with the app's encryption key. See
+[Previewing a draft](../content/admin.md#previewing-a-draft).
+
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
 `app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).

@@ -110,6 +110,14 @@ final readonly class Collection
     }
 
     /**
+     * Whether there is a template or a controller to show a draft through.
+     */
+    public function previewable(): bool
+    {
+        return $this->template !== null || $this->controller !== null;
+    }
+
+    /**
      * The term slugs an entry's front matter has for each of the taxonomies the collection uses.
      * A taxonomy's slugs are in the front matter key named after it.
      *

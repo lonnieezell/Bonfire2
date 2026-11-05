@@ -5,6 +5,9 @@
 <?php $this->section('main') ?>
 <?php $action = $entry === null ? url_to('content-new', $collection->handle) : url_to('content-edit', $collection->handle, $entry->id) ?>
 <x-page-head back="<?= url_to('content-list', $collection->handle) ?>" backLabel="<?= esc($collection->title, 'attr') ?>" title="<?= esc(lang($entry === null ? 'Content.newEntry' : 'Content.editEntry'), 'attr') ?>">
+    <?php if ($canPreview) : ?>
+        <a href="<?= url_to('content-preview-link', $collection->handle, $entry->id) ?>" class="btn btn-outline-secondary" data-preview-link><i class="fas fa-eye" aria-hidden="true"></i> <?= lang('Content.preview') ?></a>
+    <?php endif ?>
     <?php if ($canDelete) : ?>
         <?= view('Bonfire\Content\Views\entry_delete', ['handle' => $collection->handle, 'id' => $entry->id, 'below' => $below], ['saveData' => false]) ?>
     <?php endif ?>

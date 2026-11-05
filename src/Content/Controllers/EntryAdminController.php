@@ -19,6 +19,7 @@ use Bonfire\Content\EntryForm;
 use Bonfire\Content\EntryStore;
 use Bonfire\Content\Fields\DateField;
 use Bonfire\Content\Models\ContentEntryModel;
+use Bonfire\Content\PreviewLink;
 use Bonfire\Content\SaveConflictException;
 use Bonfire\Content\Structure;
 use Bonfire\Core\AdminController;
@@ -27,6 +28,7 @@ use CodeIgniter\HTTP\Exceptions\RedirectException;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\I18n\Time;
 use DateTimeImmutable;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Psr\Log\LoggerInterface;
@@ -271,6 +273,39 @@ class EntryAdminController extends AdminController
         }
 
         return $this->saved($collection, $entry->id);
+    }
+
+    /**
+     * Makes a signed link to the entry as the site shows it, for anyone to open until it expires.
+     *
+     * @return RedirectResponse|string
+     */
+    public function previewLink(string $handle, string $id)
+    {
+        $this->requireEdit();
+
+        $collection = $this->collection($handle);
+        $row        = $collection->previewable() ? $this->entryStore()->read($collection, $id) : null;
+
+        if ($row === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $entry   = Entry::fromRow($row);
+        $expires = Time::now()->getTimestamp() + PreviewLink::LIFETIME;
+
+        try {
+            $link = PreviewLink::create($entry, $expires);
+        } catch (ContentException $e) {
+            return $this->failed($collection, $e);
+        }
+
+        return $this->render($this->viewPrefix . 'entry_preview', [
+            'collection' => $collection,
+            'entry'      => $entry,
+            'link'       => $link,
+            'expires'    => Time::createFromTimestamp($expires),
+        ]);
     }
 
     /**
@@ -564,6 +599,7 @@ class EntryAdminController extends AdminController
             'notice'      => $shown['notice'] ?? null,
             'conflict'    => $shown['conflict'] ?? false,
             'canPublish'  => auth()->user()->can('content.publish'),
+            'canPreview'  => $entry !== null && ! ($shown['trashed'] ?? false) && $collection->previewable() && auth()->user()->can('content.edit'),
             'canDelete'   => $canDelete,
             'below'       => $canDelete ? $this->entryStore()->descendantCounts($collection, [$entry->id])[$entry->id] : 0,
         ]);

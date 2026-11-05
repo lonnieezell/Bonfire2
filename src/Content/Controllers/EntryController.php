@@ -14,13 +14,16 @@ namespace Bonfire\Content\Controllers;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
+use Bonfire\Content\PreviewLink;
 use Bonfire\Content\Taxonomy;
 use Bonfire\Core\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\I18n\Time;
 
 /**
  * The fallback route: resolves a request to its published entry, then hands it to
- * the collection's template or controller.
+ * the collection's template or controller. The signed draft preview ends the same way.
  */
 class EntryController extends BaseController
 {
@@ -38,11 +41,56 @@ class EntryController extends BaseController
             return $page;
         }
 
-        if ($collection?->controller !== null) {
+        if ($entry !== null && $collection !== null) {
+            return $this->serve($entry, $collection);
+        }
+
+        throw PageNotFoundException::forPageNotFound();
+    }
+
+    /**
+     * Shows an entry whatever its status, to anyone with a link that Bonfire signed for it, and that hasn't expired.
+     * The response is marked noindex and is never cached.
+     *
+     * @return mixed whatever the collection's controller returns, or the rendered template
+     */
+    public function preview(string $id)
+    {
+        $valid      = PreviewLink::isValid($id, $this->request->getGet('expires'), $this->request->getGet('signature'), Time::now()->getTimestamp());
+        $entry      = $valid ? content()->find($id) : null;
+        $collection = $entry === null ? null : $this->collectionOf($entry);
+
+        if ($entry === null || $collection === null || ! $collection->previewable()) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        try {
+            $result = $this->serve($entry, $collection);
+        } finally {
+            // A controller of the developer's may have asked for the page to be cached.
+            service('responsecache')->setTtl(0);
+        }
+
+        // A controller's own response, or else the one CodeIgniter makes of a string.
+        ($result instanceof ResponseInterface ? $result : $this->response)->noCache()->setHeader('X-Robots-Tag', 'noindex');
+
+        return $result;
+    }
+
+    /**
+     * Hands the entry to the collection's controller, or renders it with the collection's template.
+     *
+     * @return mixed
+     *
+     * @throws PageNotFoundException when the collection has neither
+     */
+    private function serve(Entry $entry, Collection $collection)
+    {
+        if ($collection->controller !== null) {
             return $this->handOff($collection->controller, $entry);
         }
 
-        if ($collection?->template !== null) {
+        if ($collection->template !== null) {
             return render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]);
         }
 
