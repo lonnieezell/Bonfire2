@@ -95,7 +95,7 @@ is rendered.
 For a single number or a chart of one table, add an item to `service('widgets')` instead of writing a class. Each
 item becomes a widget with the id `stats:` or `charts:` plus its own `id`.
 
-Give an item its value with `addValue()`, `addValueByFreeQuery()` or `addDataset()`. They store the query and run it
+Give an item its value with `addValue()`, `addValueByFreeQuery()`, `addValueUsing()` or `addDataset()`. They store the query and run it
 only when the dashboard shows the widget, to a viewer who holds its permission. A `value` passed to the constructor
 is built every time your module boots, on every admin page.
 
@@ -129,6 +129,7 @@ public function initAdmin()
 | `permission` | Hides the card from admins who lack it, like a widget's `permission()`. |
 | `module` | The library heading it is listed under. Without it, it is listed under Stats. |
 | `value` | A value built now, on every admin page. The card prints it unescaped, so it may be HTML. Prefer the methods below. |
+| `highlightNonZero` | `true` turns the value red while it is above 0, for a count of things gone wrong. |
 | `bgColor` | Accepted, but no longer changes the card. |
 
 A stat card is ¼ wide and has one setting, showing the "View Detail" link.
@@ -138,6 +139,9 @@ A stat card is ¼ wide and has one setting, showing the "View Detail" link.
 `$selectMode` `avg`, `max`, `min` or `sum` takes that of the table's `value` column in place of counting.
 
 **`addValueByFreeQuery(string $query)`** runs `$query` and shows the first column of its first row.
+
+**`addValueUsing(Closure $value)`** shows whatever `$value` returns, for a count the two above can't express, such as
+one that goes through a model. Make the closure `static`, so it doesn't keep your module alive.
 
 ### Charts
 

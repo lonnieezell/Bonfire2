@@ -56,6 +56,15 @@ The newest sends come first, a page at a time.
 A row whose Mailable can be previewed links to its [preview](mail_previews.md), if you also have `email.preview`. A
 Mailable that has since been renamed or deleted, or doesn't implement `Previewable`, shows its name without a link.
 
+## On the dashboard
+
+Two stat cards, **Mail sent, last 7 days** and **Mail failed, last 7 days**, count the Outbox's sends from the past
+seven days. Add them from the dashboard's widget library, under **Email**. The failed card turns red while its count is
+above zero, and each card's detail link opens the Outbox filtered to that status.
+
+You need `email.log` to see the cards, and they're missing from the library while **Days to keep** is `0`. The counts
+are only queried while the dashboard shows a card.
+
 ## Keeping it small
 
 **Settings → Email** has **Days to keep**, which is `Email.logRetentionDays`. It starts at 30. Rows older than that are

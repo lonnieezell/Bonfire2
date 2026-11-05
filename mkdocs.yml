@@ -108,6 +108,20 @@ nav:
       - modules/consent.md
       - modules/privacy.md
       - modules/meta_info.md
+  - Content:
+      - content/index.md
+      - content/getting_started.md
+      - content/collections.md
+      - content/taxonomies.md
+      - content/admin.md
+      - content/blueprints.md
+      - content/field_types.md
+      - content/custom_field_types.md
+      - content/query_api.md
+      - content/routing.md
+      - content/structure.md
+      - content/navigation.md
+      - content/constraints.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/assets.md

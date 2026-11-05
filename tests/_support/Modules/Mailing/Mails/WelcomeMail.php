@@ -21,6 +21,7 @@ final class WelcomeMail extends Mailable implements Previewable
     protected function build(): void
     {
         $this->to('customer@example.com')
+            ->replyTo('support@example.com')
             ->cc('copy@example.com')
             ->bcc('hidden@example.com')
             ->transport('first')
@@ -28,10 +29,14 @@ final class WelcomeMail extends Mailable implements Previewable
             ->html(self::HTML)
             ->text('Welcome, in plain text');
 
-        // Sendmail and mail() read recipients from the headers.
+        // Sendmail and mail() read recipients from the headers, Resent-* included.
         $this->email->header('to', 'header-to@example.com')
             ->header('Cc', 'header-cc@example.com')
             ->header('BCC', 'header-bcc@example.com')
+            ->header('Resent-To', 'resent-to@example.com')
+            ->header('RESENT-cc', 'resent-cc@example.com')
+            ->header('resent-Bcc', 'resent-bcc@example.com')
+            ->header('Disposition-Notification-To', 'receipts@example.com')
             ->header('X-Campaign', 'welcome')
             ->returnPath('bounces@example.com');
     }

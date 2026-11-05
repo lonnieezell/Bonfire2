@@ -11,6 +11,7 @@
 
 namespace Bonfire\Assets\Controllers;
 
+use Bonfire\Assets\AssetLocator;
 use CodeIgniter\Controller;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -38,35 +39,12 @@ class AssetController extends Controller
      */
     public function serve(...$segments)
     {
-        /**
-         * De-bust the filename
-         *
-         * @var string
-         */
-        $filename     = array_pop($segments);
-        $origFilename = $filename;
-        $fileparts    = explode('.', $filename);
-        $count        = count($fileparts);
-        // Must be at least a name and extension
-        if ($count < 2) {
-            throw PageNotFoundException::forPageNotFound();
-        }
-        $ext = $fileparts[$count - 1];
+        $path = (new AssetLocator())->locate($segments);
 
-        // To keep backward compatibility, we will assume there might not be
-        // a separator defined in user's config
-        $separator             = config('Assets')->separator ?? '~~';
-        $parts                 = explode($separator, $filename);
-        $filename              = count($parts) === 2 ? $parts[0] . '.' . $ext : $origFilename;
-        $baseAssetFolders      = config('Assets')->folders; // get list of folders with assets
-        $targetBaseAssetFolder = array_shift($segments); // from segments choose the first one as main folder
-        $folder                = $baseAssetFolders[$targetBaseAssetFolder] ?? ROOTPATH . '/somer^3andomWhatever'; // point to folder in the website or a non-existent folder within root path
-
-        $path = $folder . '/' . implode('/', $segments) . '/' . $filename;
-        if (! is_file($path) || empty($folder)) {
+        if ($path === null) {
             throw PageNotFoundException::forPageNotFound();
         }
 
-        return $this->response->download($origFilename, file_get_contents($path), true)->inline();
+        return $this->response->download(end($segments), file_get_contents($path), true)->inline();
     }
 }

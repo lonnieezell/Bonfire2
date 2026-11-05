@@ -2,16 +2,15 @@
 
 namespace Bonfire\Commands\Install;
 
-use Bonfire\Assets\Config\Assets;
 use CodeIgniter\Autoloader\FileLocator;
 use CodeIgniter\CLI\CLI;
+use InvalidArgumentException;
 
 /**
- * ContentReplacer
+ * Publishes Bonfire's config classes and themes into the app.
  *
- * Aids in replacing text within a string.
- * Used to update the config files when
- * they've been copied.
+ * What a config copy should say is decided by ContentEdits; this class
+ * only reads and writes the files.
  */
 class Publisher
 {
@@ -25,13 +24,13 @@ class Publisher
 
     /**
      * Set the destination path.
+     *
+     * @throws InvalidArgumentException when the directory does not exist
      */
     public function setDestination(string $destination): self
     {
         if (! is_dir($destination)) {
-            CLI::error('The destination directory does not exist.');
-
-            exit(1);
+            throw new InvalidArgumentException('The destination directory does not exist.');
         }
 
         $this->destination = $destination;
@@ -39,58 +38,45 @@ class Publisher
         return $this;
     }
 
-    public function publishClass(string $className): void
+    /**
+     * Copies a Bonfire config class into the destination as the app's own.
+     * A copy that could not be made correctly is not written.
+     *
+     * @return list<string> What went wrong, empty when the file was published or already there.
+     */
+    public function publishClass(string $className): array
     {
         $file = $this->locator->locateFile($className);
 
         if (! $file) {
             CLI::error("The class '{$className}' could not be found.");
 
-            return;
+            return ["The class '{$className}' could not be found."];
         }
 
         // Don't overwrite existing files
         if (file_exists($this->destination . $file)) {
             CLI::error("The file '{$file}' already exists. Skipping.");
 
-            return;
+            return [];
         }
 
-        $namespace    = explode('\\', $className);
-        $rawClassName = array_pop($namespace);
-        $namespace    = implode('\\', $namespace);
+        $rawClassName = array_slice(explode('\\', $className), -1)[0];
 
-        $content = file_get_contents($file);
+        $edit = ContentEdits::publishedConfig(file_get_contents($file), $className);
 
-        $replace = [
-            $namespace                                                      => 'Config',
-            'BaseConfig'                                                    => 'Bonfire' . $rawClassName,
-            'use CodeIgniter\Config\BaseConfig;'                            => "use {$className} as Bonfire{$rawClassName};",
-            'use CodeIgniter\Shield\Config\Auth as ShieldAuth;'             => 'use Bonfire\Auth\Config\Auth as BonfireAuth;',
-            'use CodeIgniter\Shield\Config\AuthGroups as ShieldAuthGroups;' => 'use Bonfire\Auth\Config\AuthGroups as BonfireAuthGroups;',
-            'use CodeIgniter\Shield\Config\AuthToken as ShieldAuthToken;'   => 'use Bonfire\Auth\Config\AuthToken as BonfireAuthToken;',
-            'use Tatter\Alerts\Config\Alerts as AlertsConfig;'              => 'use Bonfire\Config\Alerts as BonfireAlerts;',
-            'class Alerts extends AlertsConfig'                             => 'class Alerts extends BonfireAlerts',
-            "class {$rawClassName} extends Shield{$rawClassName}"           => "class {$rawClassName} extends Bonfire{$rawClassName}",
-        ];
+        if (! $edit->complete()) {
+            $message = "Config\\{$rawClassName} was not published. Bonfire's {$rawClassName} no longer has the text the installer expects: "
+                . implode(', ', $edit->missing);
 
-        if ($className === Assets::class) {
-            $replace["__DIR__ . '/../../../themes"] = "ROOTPATH . '/themes";
+            CLI::error('  ' . $message);
+
+            return [$message];
         }
 
-        $content = $this->replace($content, $replace);
+        $this->writeFile($this->destination . $rawClassName . '.php', $edit->content);
 
-        $destination = $this->destination . $rawClassName . '.php';
-
-        $this->writeFile($destination, $content);
-    }
-
-    /**
-     * @param array $replaces [search => replace]
-     */
-    public function replace(string $content, array $replaces): string
-    {
-        return strtr($content, $replaces);
+        return [];
     }
 
     /**
@@ -129,28 +115,77 @@ class Publisher
         }
     }
 
-    public function copyDirectory($source, $destination)
+    /**
+     * Copies one file, such as a theme file, to `$destination`.
+     *
+     * A file that is there already is the app's own copy, which may have been
+     * edited, so it is left alone unless `$overwrite` is set.
+     *
+     * @return 'copied'|'failed'|'overwritten'|'skipped'
+     */
+    public function publishFile(string $source, string $destination, bool $overwrite = false): string
     {
-        if (is_dir($source)) {
-            @mkdir($destination);
-            $directory = dir($source);
+        $exists = file_exists($destination);
 
-            while (false !== ($readdirectory = $directory->read())) {
-                if ($readdirectory === '.' || $readdirectory === '..') {
-                    continue;
-                }
-                $PathDir = $source . '/' . $readdirectory;
-                if (is_dir($PathDir)) {
-                    $this->copyDirectory($PathDir, $destination . '/' . $readdirectory);
+        if ($exists && ! $overwrite) {
+            return 'skipped';
+        }
 
-                    continue;
-                }
-                copy($PathDir, $destination . '/' . $readdirectory);
+        $directory = dirname($destination);
+
+        if (! is_dir($directory) && ! @mkdir($directory, 0777, true) && ! is_dir($directory)) {
+            return 'failed';
+        }
+
+        if (! @copy($source, $destination)) {
+            return 'failed';
+        }
+
+        return $exists ? 'overwritten' : 'copied';
+    }
+
+    /**
+     * Copies every file under `$source` into `$destination`, keeping the
+     * folder layout. See publishFile() for files that exist already.
+     *
+     * @return array{copied: int, skipped: int, failed: list<string>} Files written, files left
+     *                                                                as they were, and files that could not be written.
+     *
+     * @throws InvalidArgumentException when `$source` is not a directory
+     */
+    public function copyDirectory(string $source, string $destination, bool $overwrite = false): array
+    {
+        if (! is_dir($source)) {
+            throw new InvalidArgumentException("The source directory '{$source}' does not exist.");
+        }
+
+        $result = ['copied' => 0, 'skipped' => 0, 'failed' => []];
+
+        foreach (scandir($source) ?: [] as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
             }
 
-            $directory->close();
-        } else {
-            copy($source, $destination);
+            $from = $source . '/' . $entry;
+            $to   = $destination . '/' . $entry;
+
+            if (is_dir($from)) {
+                $nested = $this->copyDirectory($from, $to, $overwrite);
+
+                $result['copied'] += $nested['copied'];
+                $result['skipped'] += $nested['skipped'];
+                array_push($result['failed'], ...$nested['failed']);
+
+                continue;
+            }
+
+            match ($this->publishFile($from, $to, $overwrite)) {
+                'skipped' => $result['skipped']++,
+                'failed'  => $result['failed'][] = $to,
+                default   => $result['copied']++,
+            };
         }
+
+        return $result;
     }
 }

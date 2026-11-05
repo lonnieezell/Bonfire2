@@ -92,6 +92,11 @@ class StatsItem implements Item
     protected ?string $module = null;
 
     /**
+     * Whether the card is highlighted while its value is above 0.
+     */
+    protected bool $highlightNonZero = false;
+
+    /**
      * The query addValue() or addValueByFreeQuery() stored, run when the value is first read unless it is set first.
      */
     private ?Closure $fetch = null;
@@ -142,6 +147,13 @@ class StatsItem implements Item
     public function setPermission(?string $permission): StatsItem
     {
         $this->permission = $permission;
+
+        return $this;
+    }
+
+    public function setHighlightNonZero(bool $highlightNonZero): StatsItem
+    {
+        $this->highlightNonZero = $highlightNonZero;
 
         return $this;
     }
@@ -208,6 +220,14 @@ class StatsItem implements Item
         }
 
         return $this->value;
+    }
+
+    /**
+     * Reading this runs the stored query, so ask it only of a card that is shown.
+     */
+    public function highlighted(): bool
+    {
+        return $this->highlightNonZero && (float) $this->value() > 0;
     }
 
     public function faIcon(): ?string
@@ -285,6 +305,18 @@ class StatsItem implements Item
             // Assuming the query returns a single value in the first column
             return self::format(reset($result));
         };
+
+        return $this;
+    }
+
+    /**
+     * Stores a count that addValue() can't express, run when the value is first read: only an item the dashboard shows runs it.
+     *
+     * @param Closure(): (float|int|string) $value Make it static, or it keeps the object that built it alive.
+     */
+    public function addValueUsing(Closure $value): StatsItem
+    {
+        $this->fetch = static fn (): string => self::format($value());
 
         return $this;
     }

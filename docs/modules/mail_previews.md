@@ -34,7 +34,9 @@ Click an email to open it. There are three tabs:
 ## Send to me
 
 **Send to me** sends the preview to your own account's email address and nobody else. The email's own To, Cc and Bcc
-addresses are dropped, along with its return path, and there's no way to enter another address. The one exception is
+addresses are dropped, along with its return path, any `Resent-*` headers and any read-receipt request
+(`Disposition-Notification-To`), and there's no way to enter another address. The email's Reply-To stays, since it's part
+of what you're previewing, so a reply to a preview goes to the Mailable's own reply-to address. The one exception is
 your own code: an `email.composing` or `email.sending` listener that adds a recipient, such as a site-wide archive,
 still runs, because a preview goes through the normal send.
 

@@ -6,6 +6,7 @@ namespace Tests\Email;
 
 use Bonfire\Auth\Mails\ActivationMail;
 use Bonfire\Auth\Mails\TwoFactorMail;
+use Bonfire\Email\MailablePreviews;
 use Bonfire\Users\User;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\I18n\Time;
@@ -16,6 +17,7 @@ use DOMElement;
 use DOMXPath;
 use Myth\Postal\Address;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\Email\FailingTransport;
 use Tests\Support\Email\RecordingTransport;
 use Tests\Support\Mails\BrokenMail;
 use Tests\Support\Modules\Mailing\Mails\WelcomeMail;
@@ -26,12 +28,14 @@ use Tests\Support\TestCase;
  */
 final class MailPreviewsTest extends TestCase
 {
-    private const WELCOME = 'Tests.Support.Modules.Mailing.Mails.WelcomeMail';
-    private const RECEIPT = 'Tests.Support.Mails.ReceiptMail';
-    private const BROKEN  = 'Tests.Support.Mails.BrokenMail';
+    private const WELCOME    = 'Tests.Support.Modules.Mailing.Mails.WelcomeMail';
+    private const RECEIPT    = 'Tests.Support.Mails.ReceiptMail';
+    private const BROKEN     = 'Tests.Support.Mails.BrokenMail';
+    private const UNLOADABLE = 'Tests.Unloadable.Mails.UnloadableMail';
 
     protected $refresh = true;
     private User $admin;
+    private ?string $unloadableDir = null;
 
     /**
      * @var array<string, string>
@@ -75,6 +79,13 @@ final class MailPreviewsTest extends TestCase
 
     protected function tearDown(): void
     {
+        if ($this->unloadableDir !== null) {
+            service('autoloader')->removeNamespace('Tests\Unloadable\Mails');
+            array_map(unlink(...), glob($this->unloadableDir . '/*.php') ?: []);
+            rmdir($this->unloadableDir);
+            $this->unloadableDir = null;
+        }
+
         Time::setTestNow();
         cache()->delete('app-modules-search');
         config('Bonfire')->appModules           = [];
@@ -127,6 +138,52 @@ final class MailPreviewsTest extends TestCase
         $response->assertOK();
         $this->assertSame(BrokenMail::ERROR, $this->cellOf($response, self::BROKEN, 'error'));
         $this->assertSame('Your receipt', $this->cellOf($response, self::RECEIPT, 'subject'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testAMailableFileThatCannotBeLoadedShowsItsErrorWithoutBreakingTheList(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $response = $this->actingAs($this->admin)->get(route_to('mail-previews'));
+
+        $response->assertOK();
+        $this->assertNotSame('', $this->cellOf($response, self::UNLOADABLE, 'error'));
+        $this->assertSame('Welcome aboard', $this->cellOf($response, self::WELCOME, 'subject'));
+        $this->assertSame('Your receipt', $this->cellOf($response, self::RECEIPT, 'subject'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testPreviewOfAMailableFileThatCannotBeLoadedShowsItsErrorAndNoSendForm(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $response = $this->actingAs($this->admin)->get(route_to('mail-preview', self::UNLOADABLE));
+
+        $response->assertOK();
+        $this->assertNotSame('', trim($this->xpath($response)->query('//*[@data-preview-error]')->item(0)->textContent));
+        $this->assertCount(0, $this->xpath($response)->query('//form[@data-send-to-me]'));
+    }
+
+    #[DataProvider('provideUnloadableMailables')]
+    public function testOtherMailablesCanStillBePreviewedAndSentBesideAFileThatCannotBeLoaded(string $source): void
+    {
+        $this->addUnloadableMailable($source);
+
+        $this->send(self::WELCOME, ['mailer' => 'second'])->assertRedirect();
+
+        $this->assertCount(1, RecordingTransport::$sent);
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function provideUnloadableMailables(): iterable
+    {
+        return [
+            'parse error'          => ["final class UnloadableMail {\n    public function oops( {\n}\n"],
+            'missing parent class' => ["final class UnloadableMail extends \\Tests\\Unloadable\\NoSuchParent\n{\n}\n"],
+        ];
     }
 
     public function testPreviewOfAMailableThatThrowsShowsItsErrorAndNoSendForm(): void
@@ -230,8 +287,40 @@ final class MailPreviewsTest extends TestCase
         $this->assertSame([], $email->bcc);
         $this->assertSame(['X-Campaign' => 'welcome'], $email->headers);
         $this->assertNull($email->returnPath);
+        $this->assertSame('support@example.com', $email->replyTo?->email);
         $this->assertSame('site@example.com', $email->from?->email);
         $this->assertSame(WelcomeMail::class, $email->mailableClass);
+    }
+
+    /**
+     * @param array<string, mixed> $definition
+     */
+    #[DataProvider('provideSendToMeSaysWhatReallyHappensToTheMessage')]
+    public function testSendToMeSaysWhatReallyHappensToTheMessage(array $definition, string $alert): void
+    {
+        $mailer                = config('Mailer');
+        $mailer->mailers['m']  = $definition;
+        $mailer->mailers['no'] = ['transport' => 'null'];
+
+        $this->send(self::WELCOME, ['mailer' => 'm'])->assertRedirectTo(route_to('mail-preview', self::WELCOME));
+
+        // The alert type picks the toast's colour: success only when mail went out.
+        foreach (['success', 'info'] as $type) {
+            $this->assertSame($type === $alert, session()->has($type), "alert {$type}");
+        }
+    }
+
+    public static function provideSendToMeSaysWhatReallyHappensToTheMessage(): iterable
+    {
+        yield 'null discards' => [['transport' => 'null'], 'info'];
+
+        yield 'log writes to the log' => [['transport' => 'log'], 'info'];
+
+        yield 'chain follows a first mailer that discards' => [['transport' => 'failover', 'chain' => ['no', 'second']], 'info'];
+
+        yield 'chain follows a first mailer that sends' => [['transport' => 'failover', 'chain' => ['second', 'no']], 'success'];
+
+        yield 'a mailer that sends' => [['transport' => 'recording'], 'success'];
     }
 
     public function testThePermissionsCommandGrantsPreviewsToAnInstallThatLacksThem(): void
@@ -300,6 +389,61 @@ final class MailPreviewsTest extends TestCase
         $this->send(self::WELCOME, ['mailer' => 'second'])->assertRedirect();
 
         $this->assertSame([], RecordingTransport::$sent);
+    }
+
+    public function testSendingThroughALoopingChainFailsInsteadOfOverflowingTheStack(): void
+    {
+        $mailer                    = config('Mailer');
+        $mailer->mailers['loop-a'] = ['transport' => 'failover', 'chain' => ['loop-b']];
+        $mailer->mailers['loop-b'] = ['transport' => 'failover', 'chain' => ['loop-a']];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'loop-a');
+
+        $this->assertFalse($result->success);
+        $this->assertNotSame('', (string) $result->error);
+        $this->assertSame([], RecordingTransport::$sent);
+    }
+
+    /**
+     * @param array<string, mixed> $definition
+     */
+    #[DataProvider('provideFailuresHaveKnownSecretsRemoved')]
+    public function testFailuresHaveKnownSecretsRemoved(array $definition, string $expected): void
+    {
+        $mailer                      = config('Mailer');
+        $mailer->transports['fails'] = FailingTransport::class;
+        $mailer->mailers['leaky']    = ['transport' => 'fails', ...$definition];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'leaky');
+
+        $this->assertFalse($result->success);
+        $this->assertSame($expected, $result->error);
+    }
+
+    public static function provideFailuresHaveKnownSecretsRemoved(): iterable
+    {
+        yield 'returned by the transport' => [
+            ['password' => 'hunter2', 'error' => 'Login hunter2 refused'],
+            'Login *** refused',
+        ];
+
+        yield 'thrown by the transport' => [
+            ['apiKey' => 'abc123', 'error' => 'Bad key abc123', 'throw' => true],
+            'Bad key ***',
+        ];
+    }
+
+    public function testFailuresHaveTheSecretsOfFailoverChildrenRemoved(): void
+    {
+        $mailer                      = config('Mailer');
+        $mailer->transports['fails'] = FailingTransport::class;
+        $mailer->mailers['leaky']    = ['transport' => 'fails', 'password' => 'hunter2', 'error' => 'Login hunter2 refused'];
+        $mailer->mailers['chain']    = ['transport' => 'failover', 'chain' => ['leaky']];
+
+        $result = (new MailablePreviews())->send(WelcomeMail::class, 'admin@example.com', 'chain');
+
+        $this->assertFalse($result->success);
+        $this->assertStringNotContainsString('hunter2', (string) $result->error);
     }
 
     public function testSendingAMailableThatThrowsRedirectsWithoutSending(): void
@@ -421,6 +565,22 @@ final class MailPreviewsTest extends TestCase
         libxml_clear_errors();
 
         return new DOMXPath($dom);
+    }
+
+    /**
+     * Puts a Mailable file that throws when loaded into the Mails folders. Each test
+     * can scan it once: PHP reports a failed include only the first time.
+     *
+     * @param string $source the PHP file body, after the opening tag and namespace
+     */
+    private function addUnloadableMailable(string $source): void
+    {
+        $this->unloadableDir = sys_get_temp_dir() . '/bf-unloadable-' . bin2hex(random_bytes(4));
+        mkdir($this->unloadableDir);
+        file_put_contents($this->unloadableDir . '/UnloadableMail.php', "<?php\n\nnamespace Tests\\Unloadable\\Mails;\n\n" . $source);
+
+        service('autoloader')->addNamespace('Tests\Unloadable\Mails', $this->unloadableDir);
+        config('Postal')->mailableNamespaces['Tests\Unloadable\Mails'] = $this->unloadableDir;
     }
 
     private function cellOf(TestResponse $response, string $slug, string $cell): string

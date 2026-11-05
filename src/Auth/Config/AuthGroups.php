@@ -85,6 +85,11 @@ class AuthGroups extends ShieldAuthGroups
         'email.log'           => 'Can read the Mail Outbox',
         'me.edit'             => "Can edit user's own settings",
         'me.security'         => "Can change user's own password",
+        'content.access'      => 'Can see the Content menu and the lists of entries',
+        'content.edit'        => 'Can create and edit Content entries',
+        'content.publish'     => 'Can publish Content entries and set when they go live',
+        'content.delete'      => 'Can delete Content entries',
+        'content.structure'   => 'Can change the structure of Content, such as collections and blueprints',
     ];
 
     /**
@@ -107,6 +112,7 @@ class AuthGroups extends ShieldAuthGroups
             'site.*',
             'logs.*',
             'email.*',
+            'content.*',
             'me.*',
         ],
         'admin' => [
@@ -123,6 +129,7 @@ class AuthGroups extends ShieldAuthGroups
             'consent.*',
             'logs.view',
             'email.preview',
+            'content.*',
             'me.*',
         ],
         'developer' => [

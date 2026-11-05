@@ -1,0 +1,19 @@
+title: Post
+fields:
+  - handle: title
+    type: text
+    label: Title
+    validate: required|max_length[60]
+  - handle: slug
+    type: slug
+  - handle: tagline
+    type: text
+    instructions: One line under the title.
+  - handle: summary
+    type: textarea
+  - handle: featured
+    type: toggle
+  - handle: event_date
+    type: date
+  - handle: body
+    type: markdown

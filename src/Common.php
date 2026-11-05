@@ -1,5 +1,8 @@
 <?php
 
+use Bonfire\Content\Content;
+use Bonfire\Content\NavigationItem;
+use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
 
@@ -115,5 +118,37 @@ if (! function_exists('admin_accent')) {
         return is_string($accent) && preg_match('/^#[0-9a-fA-F]{6}$/', $accent) === 1
             ? $accent
             : '#D9622B';
+    }
+}
+
+if (! function_exists('content')) {
+    /**
+     * The entry point of the content query API.
+     */
+    function content(): Content
+    {
+        static $checkedForChanges = false;
+
+        $contentPath = config('Content')->contentPath;
+
+        // An edited content file shows up on the next request without a reindex.
+        if (ENVIRONMENT === 'development' && ! $checkedForChanges) {
+            $checkedForChanges = true;
+            (new StaleCheck($contentPath))->run();
+        }
+
+        return new Content($contentPath);
+    }
+}
+
+if (! function_exists('navigation')) {
+    /**
+     * A menu built in the admin, as a tree of items for a site to show.
+     *
+     * @return list<NavigationItem>
+     */
+    function navigation(string $handle): array
+    {
+        return content()->navigation($handle);
     }
 }

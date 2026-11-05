@@ -15,6 +15,8 @@ use Bonfire\Assets\Config\Assets;
 use Bonfire\Auth\Config\Auth;
 use Bonfire\Auth\Config\AuthGroups;
 use Bonfire\Auth\Config\AuthToken;
+use Bonfire\Commands\Install\ContentEdits;
+use Bonfire\Commands\Install\Edit;
 use Bonfire\Commands\Install\Publisher;
 use Bonfire\Commands\Install\TasksConfig;
 use Bonfire\Config\Alerts;
@@ -22,6 +24,7 @@ use Bonfire\Config\Bonfire;
 use Bonfire\Config\Site;
 use Bonfire\Config\Themes;
 use Bonfire\Consent\Config\Consent;
+use Bonfire\Content\Config\Content;
 use Bonfire\Core\BreakingChanges;
 use Bonfire\Dashboard\Config\Dashboard;
 use Bonfire\Privacy\Config\Privacy;
@@ -33,6 +36,7 @@ use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Encryption\Encryption;
 use Config\Autoload as AutoloadConfig;
+use InvalidArgumentException;
 use ReflectionException;
 
 class Install extends BaseCommand
@@ -86,7 +90,15 @@ class Install extends BaseCommand
      */
     protected $options = [
         '--continue' => 'Execute the second install step.',
+        '-f'         => 'Overwrite theme files that already exist, discarding your changes to them.',
     ];
+
+    /**
+     * What this run could not do, shown again at the end.
+     *
+     * @var list<string>
+     */
+    private array $problems = [];
 
     private array $configFiles = [
         Alerts::class,
@@ -98,6 +110,7 @@ class Install extends BaseCommand
         Site::class,
         Themes::class,
         Consent::class,
+        Content::class,
         Dashboard::class,
         Privacy::class,
         Recycler::class,
@@ -114,7 +127,10 @@ class Install extends BaseCommand
         helper('filesystem');
 
         if (! CLI::getOption('continue')) {
-            $this->ensureEnvFile();
+            if (! $this->ensureEnvFile()) {
+                return EXIT_ERROR;
+            }
+
             $this->setAppUrl();
             $this->removeIndexDotPhp();
             $this->setEncryptionKey();
@@ -145,6 +161,62 @@ class Install extends BaseCommand
         $this->seedBreakingChangesState();
 
         CLI::newLine();
+
+        if ($this->problems !== []) {
+            CLI::error('Some changes could not be made, so the install is not complete:');
+
+            foreach ($this->problems as $problem) {
+                CLI::error('  - ' . $problem);
+            }
+
+            CLI::newLine();
+
+            return EXIT_ERROR;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+    /**
+     * Reads a file, lets `$transform` decide the edit, and writes the result
+     * when it changed. Text the edit could not find is reported, not ignored.
+     *
+     * @param callable(string): Edit $transform
+     */
+    private function applyEdit(string $path, callable $transform): ?Edit
+    {
+        $cleanPath = clean_path($path);
+        $content   = is_file($path) ? file_get_contents($path) : false;
+
+        if ($content === false) {
+            $this->fail("Could not read {$cleanPath}.");
+
+            return null;
+        }
+
+        $edit = $transform($content);
+
+        if (! $edit->complete()) {
+            $this->fail("{$cleanPath}: did not find `" . implode('`, `', $edit->missing) . '`, so it was not updated. Make the change by hand.');
+
+            return $edit;
+        }
+
+        if ($edit->changed() && ! write_file($path, $edit->content)) {
+            $this->fail("Error updating {$cleanPath}.");
+        }
+
+        return $edit;
+    }
+
+    /**
+     * Shows a problem now and again in the summary at the end.
+     */
+    private function fail(string $problem): void
+    {
+        $this->problems[] = $problem;
+
+        CLI::error('  ' . $problem);
     }
 
     /**
@@ -174,8 +246,10 @@ class Install extends BaseCommand
 
     /**
      * Copies the env file, if .env does not exist
+     *
+     * @return bool False when there is no .env and no `env` to make it from.
      */
-    private function ensureEnvFile()
+    private function ensureEnvFile(): bool
     {
         CLI::print('Creating .env file...', 'yellow');
 
@@ -185,18 +259,20 @@ class Install extends BaseCommand
 
             CLI::print('Exists', 'green');
 
-            return;
+            return true;
         }
 
         if (! file_exists(ROOTPATH . 'env')) {
             CLI::error('The original `env` file is not found.');
 
-            exit();
+            return false;
         }
 
         // Create the .env file
         if (! copy(ROOTPATH . 'env', ROOTPATH . '.env')) {
             CLI::error('Error copying the env file');
+
+            return false;
         }
 
         CLI::print('Done', 'green');
@@ -204,7 +280,9 @@ class Install extends BaseCommand
         CLI::write('Setting initial environment', 'yellow');
 
         // Set to development environment
-        $this->updateEnvFile('# CI_ENVIRONMENT = production', 'CI_ENVIRONMENT = development');
+        $this->updateEnvFile('CI_ENVIRONMENT', 'development');
+
+        return true;
     }
 
     private function setAppUrl()
@@ -216,7 +294,7 @@ class Install extends BaseCommand
             $url = 'http://' . $url;
         }
 
-        $this->updateEnvFile("# app.baseURL = ''", "app.baseURL = '{$url}'");
+        $this->updateEnvFile('app.baseURL', "'{$url}'");
     }
 
     private function setDatabase()
@@ -242,52 +320,83 @@ class Install extends BaseCommand
         }
         $prefix = CLI::prompt('Table prefix, if any (like bf_)');
 
-        $this->updateEnvFile('# database.default.DBDriver = MySQLi', "database.default.DBDriver = {$driver}");
-        $this->updateEnvFile('# database.default.database = ci4', "database.default.database = {$name}");
+        $this->updateEnvFile('database.default.DBDriver', $driver);
+        $this->updateEnvFile('database.default.database', $name);
         if ($driver !== 'SQLite3') {
-            $this->updateEnvFile('# database.default.hostname = localhost', "database.default.hostname = {$host}");
-            $this->updateEnvFile('# database.default.username = root', "database.default.username = {$user}");
-            $this->updateEnvFile('# database.default.password = root', "database.default.password = {$pass}");
+            $this->updateEnvFile('database.default.hostname', $host);
+            $this->updateEnvFile('database.default.username', $user);
+            $this->updateEnvFile('database.default.password', $pass);
         } else {
             CLI::newLine();
             CLI::write('Updating SQLite3 database config', 'yellow');
 
-            $orig = "'port'     => 3306," . PHP_EOL . '    ];';
-            $new  = "'port'     => 3306,"
-                . PHP_EOL . "        'foreignKeys' => true,"
-                . PHP_EOL . "        'busyTimeout' => 1000,"
-                . PHP_EOL . '    ];';
-            $this->updateConfigFile('Database', $orig, $new);
+            $this->applyEdit(
+                APPPATH . 'Config/Database.php',
+                static fn (string $config): Edit => ContentEdits::sqliteDatabaseConfig($config),
+            );
 
-            $orig2 = '# database.default.port = 3306';
-            $new2  = '# database.default.port = 3306'
+            $orig = '# database.default.port = 3306';
+            $new  = $orig
                 . PHP_EOL . 'database.default.foreignKeys = true'
                 . PHP_EOL . 'database.default.busyTimeout = 1000';
-            $this->updateEnvFile($orig2, $new2);
+            $this->applyEdit(
+                ROOTPATH . '.env',
+                static fn (string $env): Edit => ContentEdits::replaceText($env, $orig, $new),
+            );
         }
-        $this->updateEnvFile('# database.default.DBPrefix =', "database.default.DBPrefix = {$prefix}");
+        $this->updateEnvFile('database.default.DBPrefix', $prefix);
     }
 
     private function publishConfigFiles()
     {
         $publisher = new Publisher();
-        $publisher->setDestination(APPPATH . 'Config/');
+
+        try {
+            $publisher->setDestination(APPPATH . 'Config/');
+        } catch (InvalidArgumentException $e) {
+            $this->fail($e->getMessage());
+
+            return;
+        }
 
         CLI::newLine();
         CLI::write('Publishing config files', 'yellow');
 
         foreach ($this->configFiles as $className) {
-            $publisher->publishClass($className);
+            array_push($this->problems, ...$publisher->publishClass($className));
         }
     }
 
+    /**
+     * Copies Bonfire's themes. Theme files you already have are yours, and
+     * are left alone unless you ran the installer with -f.
+     */
     private function publishThemes()
     {
         $source      = BFPATH . '../themes';
         $destination = APPPATH . '../themes';
 
-        $publisher = new Publisher();
-        $publisher->copyDirectory($source, $destination);
+        try {
+            $result = (new Publisher())->copyDirectory($source, $destination, (bool) CLI::getOption('f'));
+        } catch (InvalidArgumentException $e) {
+            $this->fail($e->getMessage());
+
+            return;
+        }
+
+        CLI::write("  Themes: {$result['copied']} files copied.", 'green');
+
+        foreach ($result['failed'] as $path) {
+            $this->fail('Could not copy ' . clean_path($path) . '.');
+        }
+
+        if ($result['skipped'] > 0) {
+            CLI::write(
+                "  Themes: {$result['skipped']} files already exist and were left as they are."
+                . ' Run `php spark bf:install -f` to overwrite them, which discards your changes.',
+                'yellow',
+            );
+        }
     }
 
     private function setEncryptionKey()
@@ -296,8 +405,11 @@ class Install extends BaseCommand
         CLI::newLine();
         CLI::write('Generating encryption key', 'yellow');
         $key = bin2hex(Encryption::createKey());
-        $this->updateEnvFile('# encryption.key =', "encryption.key = hex2bin:{$key}");
-        CLI::write('Encryption key saved to .env file', 'green');
+
+        if ($this->updateEnvFile('encryption.key', "hex2bin:{$key}")?->changed()) {
+            CLI::write('Encryption key saved to .env file', 'green');
+        }
+
         CLI::newLine();
     }
 
@@ -351,55 +463,50 @@ class Install extends BaseCommand
     }
 
     /**
-     * Replaces text within the .env file.
+     * Sets a key in the .env file. A key that is set already keeps its value,
+     * so that running the installer again does not, for one, replace the
+     * encryption key; the installer says so rather than dropping your answer.
      */
-    private function updateEnvFile(string $find, string $replace)
+    private function updateEnvFile(string $key, string $value): ?Edit
     {
-        $env = file_get_contents(ROOTPATH . '.env');
-        $env = str_replace($find, $replace, $env);
-        write_file(ROOTPATH . '.env', $env);
-    }
+        $edit = $this->applyEdit(
+            ROOTPATH . '.env',
+            static fn (string $env): Edit => ContentEdits::setEnv($env, $key, $value),
+        );
 
-    /**
-     * Replaces text within the config file.
-     */
-    private function updateConfigFile(string $filename, string $find, string $replace)
-    {
-        $file = file_get_contents(APPPATH . 'Config/' . $filename . '.php');
-        $conf = str_replace($find, $replace, $file);
-        write_file(APPPATH . 'Config/' . $filename . '.php', $conf);
+        if ($edit?->complete() && ! $edit->changed()) {
+            CLI::write("  {$key} is set in .env already, so it was kept. Edit .env to change it.", 'yellow');
+        }
+
+        return $edit;
     }
 
     private function setAutoloadHelpers(): void
     {
-        $file = 'Config/Autoload.php';
-
-        $path      = APPPATH . $file;
+        $path      = APPPATH . 'Config/Autoload.php';
         $cleanPath = clean_path($path);
 
         $config     = new AutoloadConfig();
-        $helpers    = $config->helpers;
-        $newHelpers = array_unique(array_merge($helpers, ['auth', 'setting']));
+        $newHelpers = array_values(array_unique(array_merge($config->helpers, ['auth', 'setting'])));
 
-        $pattern = '/^ {4}public \$helpers = \[.*];/mu';
-        $replace = '    public $helpers = [\'' . implode("', '", $newHelpers) . "'];";
-        $content = file_get_contents($path);
-        $output  = preg_replace($pattern, $replace, $content);
+        $edit = $this->applyEdit(
+            $path,
+            static fn (string $content): Edit => ContentEdits::autoloadHelpers($content, $newHelpers),
+        );
 
-        // check if the content is updated
-        if ($output === $content) {
+        if ($edit === null || ! $edit->complete()) {
+            return;
+        }
+
+        if (! $edit->changed()) {
             CLI::write(CLI::color('  Autoload Setup: ', 'green') . 'Everything is fine.');
 
             return;
         }
 
-        if (write_file($path, $output)) {
-            CLI::write(CLI::color('  Updated: ', 'green') . $cleanPath);
+        CLI::write(CLI::color('  Updated: ', 'green') . $cleanPath);
 
-            $this->removeHelperLoadingInBaseController();
-        } else {
-            error("  Error updating file '{$cleanPath}'.");
-        }
+        $this->removeHelperLoadingInBaseController();
     }
 
     /**
@@ -442,25 +549,23 @@ class Install extends BaseCommand
 
     private function setSecurityCSRF(): void
     {
-        $file     = 'Config/Security.php';
-        $replaces = [
-            '$csrfProtection = \'cookie\';' => '$csrfProtection = \'session\';',
-        ];
+        $edit = $this->applyEdit(
+            APPPATH . 'Config/Security.php',
+            static fn (string $content): Edit => ContentEdits::replaceText(
+                $content,
+                '$csrfProtection = \'cookie\';',
+                '$csrfProtection = \'session\';',
+            ),
+        );
 
-        $path      = APPPATH . $file;
-        $cleanPath = clean_path($path);
-
-        if (! is_file($path)) {
-            error("  Not found file '{$cleanPath}'.");
-
-            return;
+        if ($edit?->changed()) {
+            CLI::write(CLI::color('  Updated: ', 'green') . clean_path(APPPATH . 'Config/Security.php'));
         }
-
-        $this->replace($file, $replaces);
     }
 
     /**
-     * Replace for setupHelper()
+     * Cleans up the helper loading older installs added to BaseController.
+     * Most apps have none of it, so finding nothing to change is normal here.
      *
      * @param string $file     Relative file path like 'Controllers/BaseController.php'.
      * @param array  $replaces [search => replace]
@@ -484,7 +589,7 @@ class Install extends BaseCommand
             return;
         }
 
-        error("  Error updating {$cleanPath}.");
+        $this->fail("Error updating {$cleanPath}.");
     }
 
     /**
@@ -492,38 +597,22 @@ class Install extends BaseCommand
      */
     private function updateComposerJson()
     {
-        $composerJsonPath = ROOTPATH . 'composer.json';
+        $path = ROOTPATH . 'composer.json';
 
-        if (! file_exists($composerJsonPath)) {
+        if (! file_exists($path)) {
             CLI::write('composer.json not found.', 'red');
 
             return;
         }
 
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true);
+        $edit = $this->applyEdit(
+            $path,
+            static fn (string $json): Edit => ContentEdits::composerUpdateScript($json, 'php spark notify:breaking-changes'),
+        );
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            CLI::write('Error decoding composer.json: ' . json_last_error_msg(), 'red');
-
-            return;
+        if ($edit?->changed()) {
+            CLI::write('composer.json updated successfully.', 'green');
         }
-
-        // Ensure the scripts section exists
-        $composerJson['scripts'] ??= [];
-
-        // Ensure the post-update-cmd section exists
-        $composerJson['scripts']['post-update-cmd'] ??= [];
-
-        // Add the Bonfire update script if it's not already present
-        $bonfireUpdateScript = 'php spark notify:breaking-changes';
-        if (! in_array($bonfireUpdateScript, $composerJson['scripts']['post-update-cmd'], true)) {
-            $composerJson['scripts']['post-update-cmd'][] = $bonfireUpdateScript;
-        }
-
-        // Save the updated composer.json
-        file_put_contents($composerJsonPath, json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-
-        CLI::write('composer.json updated successfully.', 'green');
     }
 
     /**
@@ -531,26 +620,24 @@ class Install extends BaseCommand
      */
     private function updateWelcomeMessage()
     {
-        $filePath      = APPPATH . 'Views/welcome_message.php';
-        $searchString  = '<!-- CONTENT -->';
-        $replaceString = "<?php require_once(ROOTPATH . 'themes/App/_tmp_bonfire_links_include.php'); ?>";
+        $path = APPPATH . 'Views/welcome_message.php';
 
-        if (! file_exists($filePath)) {
+        if (! file_exists($path)) {
             // this can happen if the themes were not copied
             return;
         }
 
-        $content = file_get_contents($filePath);
-        if (! str_contains($content, $searchString)) {
-            // this can happen if the content of the file were changed upstream
-            return;
-        }
+        $edit = $this->applyEdit(
+            $path,
+            static fn (string $content): Edit => ContentEdits::replaceText(
+                $content,
+                '<!-- CONTENT -->',
+                "<?php require_once(ROOTPATH . 'themes/App/_tmp_bonfire_links_include.php'); ?>",
+            ),
+        );
 
-        $updatedContent = str_replace($searchString, $replaceString, $content);
-        if (write_file($filePath, $updatedContent)) {
+        if ($edit?->changed()) {
             CLI::write('Updated welcome_message.php successfully.', 'green');
-        } else {
-            CLI::error('Error updating welcome_message.php.');
         }
     }
 
@@ -563,19 +650,8 @@ class Install extends BaseCommand
 
             return;
         }
-        $envFile = ROOTPATH . '.env';
-        $lines   = file($envFile, FILE_IGNORE_NEW_LINES);
 
-        $newLines = [];
-
-        foreach ($lines as $line) {
-            if (str_starts_with($line, 'app.baseURL')) {
-                $newLines[] = "app.indexPage = ''";
-            }
-            $newLines[] = $line;
-        }
-
-        file_put_contents($envFile, implode(PHP_EOL, $newLines));
+        $this->applyEdit(ROOTPATH . '.env', ContentEdits::removeIndexPage(...));
     }
 
     private function getAppUrl(): string

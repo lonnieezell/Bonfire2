@@ -87,4 +87,6 @@ return [
     'outboxRetentionDesc' => 'The Outbox logs who each email went to and whether it was sent, never what it said.',
     'logRetentionDays'    => 'Days to keep',
     'logRetentionHint'    => '0 turns the Outbox off.',
+    'statsSent'           => 'Mail sent, last 7 days',
+    'statsFailed'         => 'Mail failed, last 7 days',
 ];

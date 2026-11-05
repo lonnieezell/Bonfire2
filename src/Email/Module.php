@@ -12,7 +12,11 @@
 namespace Bonfire\Email;
 
 use Bonfire\Core\BaseModule;
+use Bonfire\Email\Models\EmailLogModel;
 use Bonfire\Menus\MenuItem;
+use Bonfire\Widgets\Types\Stats\StatsItem;
+use CodeIgniter\I18n\Time;
+use Throwable;
 
 /**
  * Email Module setup
@@ -47,5 +51,50 @@ class Module extends BaseModule
             'fontAwesomeIcon' => 'fas fa-paper-plane',
             'permission'      => 'email.log',
         ]));
+
+        $this->addOutboxStats();
+    }
+
+    /**
+     * Sent and failed counts for the last 7 days, while the Outbox is on.
+     */
+    private function addOutboxStats(): void
+    {
+        if (Outbox::retentionDays() === 0) {
+            return;
+        }
+
+        $stats = service('widgets')->widget('stats')->collection('stats');
+        $since = Time::today()->subDays(7);
+
+        $stats->addItem($this->outboxStat('sent', 'mailSent625', 'fas fa-paper-plane', $since));
+        $stats->addItem($this->outboxStat('failed', 'mailFailed625', 'fas fa-triangle-exclamation', $since));
+    }
+
+    /**
+     * Counts from midnight, so the card and the Outbox its link opens, which filters by date, agree.
+     */
+    private function outboxStat(string $status, string $id, string $icon, Time $since): StatsItem
+    {
+        $from = $since->toDateTimeString();
+
+        return (new StatsItem([
+            'id'               => $id,
+            'title'            => lang('Email.stats' . ucfirst($status)),
+            'url'              => ADMIN_AREA . '/tools/mail/outbox?' . http_build_query(['status' => $status, 'date_from' => $since->toDateString()]),
+            'faIcon'           => $icon,
+            'permission'       => 'email.log',
+            'module'           => lang('Email.emailModTitle'),
+            'highlightNonZero' => $status === 'failed',
+        ]))->addValueUsing(static function () use ($status, $from): int {
+            // Like the Outbox's own writes, a missing table must not take the page down.
+            try {
+                return (new EmailLogModel())->filter(['status' => $status])->where('created_at >=', $from)->countAllResults();
+            } catch (Throwable $e) {
+                log_message('error', 'The Outbox could not be counted: {message}', ['message' => $e->getMessage()]);
+
+                return 0;
+            }
+        });
     }
 }

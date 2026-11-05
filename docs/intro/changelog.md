@@ -4,12 +4,115 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 3 November 2026
+## 5 November 2026
+
+**Content: navigation menus.** Add a config at `content/navigation/<handle>.yaml` and users with `content.structure` get
+an editor under **Content** in the sidebar, to build a menu from entries and typed-in links. The items live in
+`content/trees/navigation/<handle>.yaml`. `navigation('main')` returns them as a tree with `title`, `url`, `active` and
+`children`, and leaves out an item, and those below it, when its entry isn't live. An item that links to an entry takes
+its URL from the entry, so renaming a slug changes the menu by itself. The App theme has a sample partial at
+`themes/App/_navigation.php`, which a theme you already published needs to copy. See
+[Navigation menus](../content/navigation.md).
 
 **The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
 nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
 
+## 4 November 2026
+
+**Content: getting started and constraints.** [Getting started](../content/getting_started.md) walks you from a fresh
+install to a published blog post. [Content](../content/index.md) now explains the file-first model and when to run
+`php spark content:reindex`, which belongs in your deploy. [Constraints and known gaps](../content/constraints.md) lists
+what Content doesn't do yet: it needs the content directory on one server or shared storage, it doesn't redirect old
+URIs, it drops YAML comments when the admin saves, it doesn't use git, and it has no per-collection permissions.
+
+**Content: pages and structures.** Give a collection `structure: true` (and optionally `max_depth`) and its entries
+form a tree, kept in `content/trees/collections/<handle>.yaml`. The reindex gives each entry a `parent_id`, a `sort` and
+a URI built from its parents, such as `/about/team`, which the front-end route serves. Renaming a page or moving it
+updates the URIs below it. There are **no redirects** for the old URIs in this version. Users with `content.structure`
+get an **Edit structure** screen with drag and drop, which refuses a tree deeper than `max_depth` or one that changed
+on disk since it was opened. New entries go last at the root, and entries the tree file doesn't name are indexed there
+too. See [Pages and structures](../content/structure.md).
+
+**Content: taxonomies and terms.** Tags, categories and other taxonomies are now files. A taxonomy has a config at
+`content/taxonomies/<handle>.yaml`, and each term is a YAML file in `content/taxonomies/<handle>/`. A collection opts in
+with `taxonomies: [tags]`, and keeps an entry's terms as slugs in its front matter (`tags: [php]`). A new `terms` blueprint
+field type tags entries from the admin. `php spark content:reindex` now fills the `content_terms` and
+`content_entry_terms` tables from the files, and `content()->collection('blog')->whereTerm('tags', 'php')`
+finds the published entries with a term. `content()->terms('tags')` lists the terms with their number of published entries. Terms
+have a list, a form to create them and a form to edit them in the admin, which need the `content.structure` permission,
+and with `$autoRoute` on a taxonomy can serve a page for each term from a `route` and a `template`. Nothing changes for a
+site that has no taxonomies. See [Taxonomies](../content/taxonomies.md).
+
+**Content: more field types, and your own.** Blueprints can use `select` (one option, or several with
+`multiple: true`), `integer`, `datetime` and `entries`, which links to entries of the collections you name. Read the
+links with `$entry->entries('related')`, which skips a target that has since been deleted or trashed, or look entries up
+with `content()->findMany($ids)`. Register a field type of your own in `$fieldTypes` in `app/Config/Content.php`. See
+[Field types](../content/field_types.md) and [Custom field types](../content/custom_field_types.md).
+
+**Content: edit entries in the admin.** **Content** in the sidebar has an item for each collection, with a list of its
+entries and a form to create and edit them. The form is built from the collection's blueprint in
+`resources/blueprints/collections/<collection>/<blueprint>.yaml`, with `text`, `textarea`, `markdown`, `slug`, `toggle`
+and `date` fields. Saving checks the input, writes the entry's Markdown file in one step and updates the index. It
+refuses to save if the file changed on disk since the form was opened. Comments in an entry's front matter don't survive
+a save. Publishing, and setting `published_at`, need their own permission. Nothing changes for a site that has no
+collections. See [Editing entries](../content/admin.md), [Blueprints](../content/blueprints.md) and
+[Field types](../content/field_types.md).
+
+There are five new permissions: `content.access`, `content.edit`, `content.publish`, `content.delete` and
+`content.structure`. The last two are held back for later and nothing uses them yet. If you published your own
+`AuthGroups`, add them there, or **run `php spark bonfire:permissions`**, which declares them and grants `content.*` to
+`superadmin` and `admin`. Until you do, Content stays hidden from those groups.
+
+## 3 November 2026 (breaking change)
+
+**`php spark bf:install` no longer overwrites theme files you already have.** Running it again used to copy Bonfire's
+themes over `themes/`, discarding your edits to `Admin`, `App` and `Auth`. It now copies only the files that are missing
+and says how many it left alone. To replace your files with Bonfire's anyway, run `php spark bf:install -f`; that also
+discards your changes, so commit them first. If you counted on a second run to refresh the themes after an update, add
+`-f` or [merge the files by hand](published_themes.md#what-re-publish-means).
+
+**`php spark bf:install` says when it could not make a change.** It edits `.env`, `app/Config/*.php` and `composer.json`
+by looking for the text the framework ships. When that text is not there, for example after a CodeIgniter update, the
+installer used to skip the edit and still report success. It now names each file it could not update, what it looked
+for, and exits with an error. Config files it cannot copy correctly are not written. The SQLite3 option for
+`app/Config/Database.php` was one of these edits that did nothing on CodeIgniter 4.7. Running the installer again no
+longer adds `app.indexPage` or the SQLite3 `.env` lines a second time, keeps an existing encryption key, and keeps the
+final newline in `.env`.
+
+## 3 November 2026
+
+**Asset URLs are built and read by one class.** `asset()` and the `/assets/...` route now share `AssetLocator`, so the
+URL format can't drift between them. The URLs themselves are unchanged. `asset()` now marks a path in an unknown folder
+as a missing asset instead of raising a PHP warning, the route refuses `..` segments, and `asset_link()` escapes the
+URL and any attributes you pass it.
+
+**Content: serve entries on your front end.** Set `$autoRoute = true` in `app/Config/Content.php`, give a collection a
+`route`, and a `template` or a `controller`, and run `php spark content:reindex`. Your routes always win, and only
+published entries are served. `content()->findByUri()` does the same lookup for routes of your own, and
+`$entry->content()` renders the Markdown. Nothing changes unless you turn this on. See
+[Routing](../content/routing.md).
+
+**Content: read file-based content from your code.** Keep entries as Markdown with YAML front matter under `content/`,
+index them with `php spark content:reindex`, and query them with
+`content()->collection('blog')->published()->paginate()`. Run `php spark migrate --all` to create the index tables.
+Nothing changes until you do this: there's no admin screen or routing yet. See [Content](../content/index.md).
+
+**One Mailable file that can't be loaded no longer breaks Mail Previews.** A parse error or a missing parent class in a
+file in a Mails folder used to give a 500 on Tools → Mail Previews and on every preview and send. The list now shows that
+Mailable with its error, its preview page shows the same error, and the others work as before.
+
+**Mail Previews' Send to me no longer claims a discarded or logged mail was sent.** Sending through the `null` mailer now
+says the message was discarded, and through `log` that it was written to the log, the same as the test send in
+Settings → Email. A failover chain is judged by its first mailer.
+
 ## 2 November 2026 (breaking change)
+
+**Mail Previews' Send to me drops more recipient headers.** `Resent-*` headers and `Disposition-Notification-To` are
+removed from the preview, so sendmail can't deliver it, or a read receipt, to anyone but you. Reply-To is kept.
+
+**Mail Previews' Send to me refuses a looping failover chain and hides secrets in errors.** A chain that loops now shows an
+error and sends nothing, where before it crashed PHP. A failed send shows the error with the mailer's known secrets, and
+those of its failover children, removed, the same as the test send in Settings → Email.
 
 **Branded Markdown activation and two-factor emails.** New installs send them with your site name and accent color, and
 a plain text part. This doesn't change your emails when you update: your published `app/Config/Auth.php` keeps its
@@ -41,6 +144,11 @@ rows, and about one send in a hundred prunes too. The Outbox needs the new `emai
 bonfire:permissions`** to grant the permission. Until you do, the screen stays hidden, and a missing table never stops
 an email from sending. Every row is logged under the default mailer, because Postal doesn't tell listeners which named
 mailer sent a message. See [Mail Outbox](../modules/mail_outbox.md).
+
+Two new dashboard stat cards, **Mail sent, last 7 days** and **Mail failed, last 7 days**, come from the Outbox. The failed
+card turns red while its count is above zero and links to the Outbox filtered to failures. They need `email.log` and are
+hidden while **Days to keep** is `0`. A stat card can now turn red while its value is above zero with the new
+`highlightNonZero` key, and take its value from a closure with `addValueUsing()`. See [Mail Outbox](../modules/mail_outbox.md#on-the-dashboard).
 
 Mail keeps working after this update, and you don't have to do anything. Without an `app/Config/Mailer.php`, Bonfire
 now makes a deprecated `legacy` mailer the default. It sends through the transport your `setting('Email.*')` values
