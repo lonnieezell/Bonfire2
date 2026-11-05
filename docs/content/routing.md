@@ -76,6 +76,55 @@ It receives `$entry` and `$collection`, and can extend the theme's layout like a
 `$entry` is described under [Entries](query_api.md#entries). `$collection` is a `Bonfire\Content\Collection`, with public
 properties such as `$collection->title` and `$collection->handle`.
 
+## Caching
+
+A collection can have its pages served from the cache. It's off unless the collection sets `cache`, the number of seconds
+a page is kept:
+
+```yaml
+title: Blog
+route: /blog/{slug}
+template: blog/show
+cache: 3600
+```
+
+A guest's repeat `GET` of one of its pages then comes from your app's cache, without rendering the template or running
+your controller. It's the response body that is kept, with the `Content-Type` of a controller's response, so a
+controller that sets a cookie or other headers doesn't have them replayed. `cache` must be a whole number of seconds, at
+least 1, or the collection's config is invalid.
+
+Only some requests are cached:
+
+- Only pages that the fallback route serves, so a route of your own is never cached, even at an entry's URI.
+- Only `GET` requests with no query string. A page may depend on the query string, for example to paginate, so those
+  are rendered every time.
+- Only requests from guests. A logged-in user always gets a fresh page, so an editor sees a change at once, and the page
+  they get is not kept for guests.
+- Only pages that rendered with a 200 status. A 404, a redirect or an error is never cached.
+- [Term pages](taxonomies.md#term-pages) aren't, since they belong to a taxonomy and not to a collection.
+
+The admin's Markdown preview isn't served by the fallback route, so it's never cached either.
+
+Don't cache a collection whose pages differ between guests, such as those with a form that holds a CSRF token, or that show
+something from the session. Every guest would get the first guest's copy. A page is kept by its path alone, so the same
+goes for one that changes with a request header such as `Accept` or `HX-Request`, or with the host.
+
+### What clears it
+
+Anything that changes Content clears **all** of its cached pages, not just the one that changed, because a renamed page
+changes the menus and `entries` links on other pages. These all clear it:
+
+- Saving an entry, creating one, or moving pages in the structure editor.
+- Moving an entry to the trash, restoring it and purging it.
+- Saving a term or a navigation menu.
+- `content:reindex`, and the automatic reindex in development.
+
+A changed file that isn't reindexed doesn't, because the index is what's served. Nor does time passing: a scheduled entry
+whose `published_at` arrives shows on cached pages that list it only once they expire, after `cache` seconds at most.
+
+Clearing is done by changing a generation number in the cache, so the old pages are left to expire and the cache is never
+emptied. With the `dummy` cache handler nothing is kept, so every request renders.
+
 ## Handing off to a controller
 
 Use a controller when you need something between finding the entry and rendering the page, such as extra queries, an
@@ -103,7 +152,8 @@ class Blog extends BaseController
 }
 ```
 
-What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it. The class must
+What the method returns is the response, the same as for a route of your own. Bonfire adds nothing to it, except to a
+[draft preview](#previews). The class must
 extend `CodeIgniter\Controller`. The method doesn't need to be routable itself.
 
 A malformed `controller` value is reported by the reindex, but a class or method that doesn't exist is an error when the
@@ -151,6 +201,53 @@ Bonfire then serves the sitemap at `/sitemap.xml`. It's off by default, and work
 routes win over it, so a route of yours for `sitemap.xml` replaces it.
 
 A sitemap file is limited to 50,000 URLs, and `content()->sitemap()` doesn't split a larger site into several files.
+
+## Feeds
+
+`content()->feed('blog')` returns a response with a collection's published entries as an
+[RSS 2.0](https://www.rssboard.org/rss-specification) feed. Return it from a route of your own, at any URL:
+
+```php
+$routes->get('blog/feed.xml', static fn () => content()->feed('blog'));
+```
+
+The response has the content type `application/rss+xml; charset=UTF-8`. The feed has the collection's `title` as its
+title and description, and the site's URL as its link. Each entry becomes an item with its `title`, a `link` and `guid`
+that are its URI as a full URL, and a `pubDate` from its `published_at`. Titles are escaped, and characters that XML can't
+hold are dropped, so the feed stays well-formed. The feed has no item descriptions, because an entry's fields and body
+are yours to render.
+
+It includes the same entries as `published()`: no drafts, scheduled entries or trashed entries. They come in the
+collection's `sort` order, which is newest first for a [dated](collections.md) collection. An entry with no URI is left
+out, so a collection with no `route` gives a feed with no items. `feed()` includes every published entry, not just the
+latest ones, so for a large collection serve your own cut with the [query API](query_api.md) instead.
+
+`feed()` throws `Bonfire\Content\ContentException` if the collection doesn't exist or its config is invalid.
+
+### The built-in route
+
+If you don't need a URL of your own, turn on `$feedRoute` in `app/Config/Content.php`:
+
+```php
+public bool $feedRoute = true;
+```
+
+Bonfire then serves every collection's feed at `/feed/{collection}`, such as `/feed/blog`, and a collection that doesn't
+exist gets a 404. It's independent of `$autoRoute`, and with `$feedRoute` off, the default, Bonfire adds no route.
+
+Your routes always win. A route of yours for `feed/blog`, or for the pattern `feed/(:segment)`, takes the request.
+
+## Previews
+
+[Previewing a draft](admin.md#previewing-a-draft) in the admin gives a signed link to `/content-preview/{id}`, which runs
+the same code as the fallback route once the entry is found: the collection's controller gets the entry, or its template
+is rendered with `$entry` and `$collection`. The difference is how the entry is found. The link names the entry by its
+id, so a draft or scheduled entry is shown, and only a link with a valid signature that hasn't expired is served. Any other
+request still gets a 404 for a draft or scheduled entry.
+
+Bonfire marks the response `X-Robots-Tag: noindex` and `Cache-Control: no-store`, and turns page caching off for it, even if
+your controller asks for it with `cachePage()`. It does that after your controller returns, so a controller or template
+that sets those itself is overridden.
 
 ## Seeing changes
 

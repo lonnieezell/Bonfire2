@@ -35,6 +35,22 @@ final readonly class Content
     }
 
     /**
+     * An RSS feed of a collection's published entries, in the collection's order. An entry with no URI is left out.
+     * Return it from a route of your own.
+     *
+     * @throws ContentException when the collection doesn't exist or its config is invalid
+     */
+    public function feed(string $handle): ResponseInterface
+    {
+        $collection = Collection::load($this->contentRoot, $handle);
+        $entries    = (new EntryQuery($collection))->published()->get();
+
+        return service('response')
+            ->setContentType(Feed::CONTENT_TYPE, 'UTF-8')
+            ->setBody(Feed::rss($collection, $entries));
+    }
+
+    /**
      * A taxonomy's terms, by title, each with the number of published entries that have it.
      *
      * @return list<Term>

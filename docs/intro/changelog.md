@@ -25,6 +25,32 @@ collection's published entries, which you can serve from any route of your own. 
 `$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
 routes win over it.
 
+**Content: editing globals in the admin.** Each set of globals that has a blueprint gets an item in the Content menu and a
+form built from the blueprint, with the same field types and validation as entries. It needs `content.access` and
+`content.edit`. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.
+See [Globals](../content/globals.md#editing-in-the-admin).
+
+**Content: draft preview.** An entry's form has a **Preview** button for users with `content.edit`. It gives a signed link,
+good for 24 hours, that shows the entry through the collection's `template` or `controller` whatever its status, to anyone
+who has the link and with no login, so a client can review a draft. The response is `noindex` and never cached, and a
+collection with neither a template nor a controller has no preview. Links are signed with the app's encryption key. See
+[Previewing a draft](../content/admin.md#previewing-a-draft).
+
+**Content: page caching.** A collection with `cache: 3600` in its config has its routed pages served to guests from the cache
+for that many seconds. It's off unless a collection sets it. Only `GET` requests with no query string from guests that the
+fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
+structure, saving a term or menu, and any reindex (including `content:reindex`) clear all of Content's cached pages.
+See [Caching](../content/routing.md#caching).
+
+**Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
+`resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
+value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
+index or migration, work with auto-routing off, and have no routes. See [Globals](../content/globals.md).
+
+**Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
+RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
+`app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).
+
 **Content: collection index pages.** [Listing a collection](../content/query_api.md#listing-a-collection) shows a route
 and view of your own that list a collection's published entries a page at a time, with pager links from
 `$query->pager()->links()`. Bonfire adds no index route, and `paginate()` still returns a plain list.
@@ -67,6 +93,10 @@ its URL from the entry, so renaming a slug changes the menu by itself. The App t
 
 **The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
 nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
+
+**Lithuanian translations completed.** `Content.php` and `Docs.php` now have Lithuanian files, and the remaining keys
+were added to `Bonfire.php`, `Email.php`, `Tools.php`, `Users.php` and `Widgets.php`: the dashboard editor, Mail
+Previews and Outbox, the mailer list, the log viewer and system health, and the users and chart widget settings.
 
 ## 4 November 2026
 

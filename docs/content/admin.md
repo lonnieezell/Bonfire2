@@ -12,7 +12,7 @@ screens are at `/admin/content/<collection>`.
 | Permission | What it allows |
 |---|---|
 | `content.access` | Seeing the Content menu and each collection's list. Every other entry screen needs it too. |
-| `content.edit` | Creating and editing entries, and the Markdown preview. |
+| `content.edit` | Creating and editing entries, and the Markdown preview. and making [draft preview links](#previewing-a-draft). Also editing [globals](globals.md#editing-in-the-admin), which needs `content.access` too. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
 | `content.delete` | Moving an entry to the trash. See [Deleting and restoring](#deleting-and-restoring). Restoring and purging need `recycler.view` instead. |
 | `content.structure` | Arranging the entries of a structured collection in its tree editor (see [Pages and structures](structure.md)), and listing, creating and editing the terms of a [taxonomy](taxonomies.md#editing-terms-in-the-admin). Neither needs `content.access`. |
@@ -100,6 +100,18 @@ collection.
 A `markdown` field has **Write** and **Preview** tabs. Preview sends the text to the server, which renders it with
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs `content.edit`.
+
+## Previewing a draft
+
+**Preview** at the top of an entry's form gives you a link to the entry as it will look on the site, through the
+collection's `template` or `controller`, whether it's a draft, scheduled or published. It needs `content.edit`, and a
+collection with neither a template nor a controller doesn't offer it. The link doesn't need a `route` or `$autoRoute`.
+
+The link is signed with the app's encryption key (run `php spark key:generate` if it has none) and works for 24 hours.
+**Anyone who has it can open it without logging in**, so you can send it to a client to review a draft. After it
+expires, or if its address is changed in any way, or it is used for another entry, it gets a 404. A link doesn't stop
+working when the entry is published, only when it expires or the entry goes to the trash. See
+[Previews](routing.md#previews) for what the page gets.
 
 ## Deleting and restoring
 

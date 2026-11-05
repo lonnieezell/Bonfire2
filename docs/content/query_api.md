@@ -83,6 +83,11 @@ Your route wins over the [fallback route](routing.md#turning-it-on), so `/blog` 
 To change how the links look, pass `links()` the name of a [pager template](https://codeigniter.com/user_guide/libraries/pagination.html#customizing-the-pagination-links)
 as its second argument: `$pager->links('default', 'my_pager')`.
 
+### Feeds
+
+`content()->feed($handle)` returns a response with the collection's published entries as an RSS feed, for you to return
+from a route. See [Feeds](routing.md#feeds).
+
 ## Finding an entry
 
 `content()->find($id)` returns an entry from any collection by its UUID, or `null`.
@@ -112,6 +117,11 @@ or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-b
 
 `navigation('main')` returns a [menu](navigation.md#showing-a-menu) built in the admin as a tree of items, each with a
 `title`, `url`, `active` and `children`. It's the same as `content()->navigation('main')`.
+
+## Globals
+
+`globals('site')->field('name')` reads a value from a [set of globals](globals.md), cast by its blueprint. It isn't part
+of `content()`, because globals are read from their files and aren't queried.
 
 ## Taxonomies
 
