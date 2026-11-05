@@ -88,6 +88,52 @@ as its second argument: `$pager->links('default', 'my_pager')`.
 `content()->feed($handle)` returns a response with the collection's published entries as an RSS feed, for you to return
 from a route. See [Feeds](routing.md#feeds).
 
+## Searching
+
+`content()->search($term)` starts a query on the published entries that have the term in their title or Markdown body,
+across every collection. Pass a collection's handle as the second argument to search only that one, which throws
+`Bonfire\Content\ContentException` if the collection doesn't exist. Bonfire adds no search route or page, because the
+page is yours to design.
+
+```php
+$query   = content()->search($term);            // every collection
+$query   = content()->search($term, 'blog');    // only the blog
+$results = $query->paginate(10);
+$pager   = $query->pager();
+```
+
+It returns the same query as `collection()`, so `get()`, `paginate()` and `pager()` work as they do there, and
+`orderBy()` changes the order. Results are ordered by title, whichever collections they come from.
+
+- It only returns what `published()` keeps. Drafts, scheduled entries and entries in the trash are never found.
+- It's a `LIKE` match on the title and the raw Markdown body, so the term is found inside words, and a `*` in the term
+  matches a `*` in the body. A `%` or `_` in the term matches itself, and a quote is safe.
+- A blank term finds nothing.
+- `whereTerm()` needs a query on one collection, so it throws unless you narrowed the search to one.
+
+This route and view list the results a page at a time. The pager links keep `?q=`:
+
+```php
+$routes->get('search', static function (): string {
+    $term  = (string) service('request')->getGet('q');
+    $query = content()->search($term);
+
+    return view('search', [
+        'term'    => $term,
+        'results' => $query->paginate(10),
+        'pager'   => $query->pager(),
+    ]);
+});
+```
+
+```php
+<?php foreach ($results as $entry): ?>
+    <h2><a href="<?= esc($entry->uri) ?>"><?= esc($entry->title) ?></a></h2>
+<?php endforeach ?>
+
+<?= $pager->links() ?>
+```
+
 ## Finding an entry
 
 `content()->find($id)` returns an entry from any collection by its UUID, or `null`.

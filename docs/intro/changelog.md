@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: front-end search.** `content()->search($term)` returns a query on the published entries of every collection
+that have the term in their title or body, and `content()->search($term, 'blog')` narrows it to one collection. It works
+with `paginate()` and `pager()`, and Bonfire adds no search page, so build your own. See
+[Searching](../content/query_api.md#searching).
+
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
 `app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).
