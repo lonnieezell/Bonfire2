@@ -32,12 +32,13 @@ final class Feed
                 continue;
             }
 
-            $link = self::text(site_url(ltrim($entry->uri, '/')));
+            $link    = self::text(site_url($entry->uri));
+            $pubDate = $entry->publishedAt === null ? '' : '      <pubDate>' . (new DateTimeImmutable($entry->publishedAt))->format(DATE_RSS) . "</pubDate>\n";
             $items .= "    <item>\n"
                 . '      <title>' . self::text($entry->title) . "</title>\n"
                 . "      <link>{$link}</link>\n"
                 . "      <guid isPermaLink=\"true\">{$link}</guid>\n"
-                . ($entry->publishedAt === null ? '' : '      <pubDate>' . (new DateTimeImmutable($entry->publishedAt))->format(DATE_RSS) . "</pubDate>\n")
+                . $pubDate
                 . "    </item>\n";
         }
 
@@ -61,6 +62,6 @@ final class Feed
     {
         $value = preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', mb_scrub($value));
 
-        return htmlspecialchars((string) $value, ENT_XML1 | ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return esc((string) $value);
     }
 }
