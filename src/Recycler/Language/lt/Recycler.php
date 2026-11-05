@@ -9,6 +9,7 @@ return [
     'restoreMsgTitle' => 'Atkurti',
     'purgeMsgTitle'   => 'Ištrinti amžiams',
     'purgeMsgContent' => 'Ištrinti įrašą visam laikui?',
+    'purgeConfirm'    => 'Taip, ištrinti',
     'resultLabel'     => '{0, plural,
                 =0 {# įrašų}
                 =1 {# įrašas}
@@ -17,4 +18,8 @@ return [
                 other {# įrašų}
             }',
     'actions' => 'Veiksmai',
+    // dashboard widget
+    'summaryCard'    => 'Kiek ištrintų įrašų turi kiekvienas resursas',
+    'openRecycler'   => 'Atidaryti šiukšliadėžę',
+    'nothingDeleted' => 'Šiukšliadėžė tuščia.',
 ];

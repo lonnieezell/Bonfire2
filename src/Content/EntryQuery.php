@@ -17,7 +17,8 @@ use CodeIgniter\Pager\Pager;
 
 /**
  * A query on one collection's entries, ordered by the collection's sort unless
- * orderBy() says otherwise.
+ * orderBy() says otherwise. A search, from content()->search(), covers every collection or the one it was narrowed to,
+ * and is ordered by title.
  */
 final class EntryQuery
 {
@@ -35,7 +36,11 @@ final class EntryQuery
 
     private ?Pager $pager = null;
 
-    public function __construct(private readonly Collection $collection)
+    /**
+     * @param Collection|null $collection null for a search across every collection
+     * @param string|null     $search     keeps entries with this text in the title or body
+     */
+    public function __construct(private readonly ?Collection $collection, private readonly ?string $search = null)
     {
     }
 
@@ -56,10 +61,14 @@ final class EntryQuery
      * @param string $taxonomy a taxonomy the collection uses
      * @param string $slug     the term's slug
      *
-     * @throws ContentException when the collection doesn't use the taxonomy
+     * @throws ContentException when the collection doesn't use the taxonomy, or the query has no collection
      */
     public function whereTerm(string $taxonomy, string $slug): self
     {
+        if ($this->collection === null) {
+            throw new ContentException('whereTerm() needs a query on one collection. Narrow the search to a collection, or start with content()->collection().');
+        }
+
         if (! in_array($taxonomy, $this->collection->taxonomies, true)) {
             throw new ContentException("Collection {$this->collection->handle} doesn't use the taxonomy '{$taxonomy}'. Add it to the collection's `taxonomies`.");
         }
@@ -130,10 +139,17 @@ final class EntryQuery
     private function model(): ContentEntryModel
     {
         $model = new ContentEntryModel();
-        $model->where('collection', $this->collection->handle);
+
+        if ($this->collection !== null) {
+            $model->where('collection', $this->collection->handle);
+        }
 
         if ($this->published) {
             $model->published();
+        }
+
+        if ($this->search !== null) {
+            $model->matching($this->search);
         }
 
         foreach ($this->terms as [$taxonomy, $slug]) {
@@ -156,7 +172,11 @@ final class EntryQuery
     {
         $model = $this->model();
 
-        foreach ($this->order ?: [[$this->collection->sortField, $this->collection->sortDirection]] as [$field, $direction]) {
+        $default = $this->search !== null || $this->collection === null
+            ? ['title', 'asc']
+            : [$this->collection->sortField, $this->collection->sortDirection];
+
+        foreach ($this->order ?: [$default] as [$field, $direction]) {
             $model->orderBy($field, $direction);
         }
 

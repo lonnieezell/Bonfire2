@@ -123,6 +123,7 @@ nav:
       - content/seo.md
       - content/structure.md
       - content/navigation.md
+      - content/globals.md
       - content/constraints.md
   - Building Sites:
       - building_sites/index.md

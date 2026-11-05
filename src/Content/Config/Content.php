@@ -45,4 +45,16 @@ class Content extends BaseConfig
      * A collection that hands off to a controller is never touched: call content_seo() there.
      */
     public bool $autoSeo = false;
+
+    /**
+     * Whether Bonfire serves the sitemap at /sitemap.xml.
+     * App routes always win over it.
+     */
+    public bool $sitemap = false;
+
+    /**
+     * Whether Bonfire serves a collection's feed at /feed/{collection}.
+     * App routes always win over it.
+     */
+    public bool $feedRoute = false;
 }

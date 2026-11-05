@@ -1,7 +1,9 @@
 <?php
 
 use Bonfire\Content\Content;
+use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
+use Bonfire\Content\GlobalSet;
 use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
@@ -166,6 +168,18 @@ if (! function_exists('content_seo')) {
         foreach ($seo['og'] as $property => $content) {
             $meta->addMeta(['property' => $property, 'content' => esc($content)]);
         }
+    }
+}
+
+if (! function_exists('globals')) {
+    /**
+     * A set of site-wide values from content/globals, read straight from its file.
+     *
+     * @throws ContentException when the set doesn't exist or its file is invalid
+     */
+    function globals(string $handle): GlobalSet
+    {
+        return GlobalSet::load(config('Content')->contentPath, config('Content')->blueprintPath, $handle);
     }
 }
 

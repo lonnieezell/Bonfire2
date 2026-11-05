@@ -13,6 +13,7 @@ namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\Models\ContentTermModel;
+use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * The content query API, available as content().
@@ -31,6 +32,36 @@ final readonly class Content
     public function collection(string $handle): EntryQuery
     {
         return new EntryQuery(Collection::load($this->contentRoot, $handle));
+    }
+
+    /**
+     * Starts a query on the published entries whose title or Markdown body contain the term, in every collection or
+     * only the one named. It's ordered by title, and paginate() and pager() work on it as on any query.
+     * Bonfire adds no search page, so build yours around this.
+     *
+     * @throws ContentException when the collection doesn't exist or its config is invalid
+     */
+    public function search(string $term, ?string $collection = null): EntryQuery
+    {
+        $collection = $collection === null ? null : Collection::load($this->contentRoot, $collection);
+
+        return (new EntryQuery($collection, $term))->published();
+    }
+
+    /**
+     * An RSS feed of a collection's published entries, in the collection's order. An entry with no URI is left out.
+     * Return it from a route of your own.
+     *
+     * @throws ContentException when the collection doesn't exist or its config is invalid
+     */
+    public function feed(string $handle): ResponseInterface
+    {
+        $collection = Collection::load($this->contentRoot, $handle);
+        $entries    = (new EntryQuery($collection))->published()->get();
+
+        return service('response')
+            ->setContentType(Feed::CONTENT_TYPE, 'UTF-8')
+            ->setBody(Feed::rss($collection, $entries));
     }
 
     /**
@@ -111,6 +142,32 @@ final readonly class Content
     }
 
     /**
+     * Where an old URI of an entry now lives, for a route of your own to redirect to with a 301. There is none if the
+     * URI is a published entry's now, or the entry that had it is trashed, a draft, scheduled or gone, or has no URI.
+     * A redirects file that can't be read is logged and gives none.
+     */
+    public function redirectFor(string $uri): ?string
+    {
+        $uri = Collection::normalizeUri($uri);
+
+        try {
+            $id = (new Redirects($this->contentRoot))->all()[$uri] ?? null;
+        } catch (ContentException $e) {
+            log_message('error', 'Content: ' . Redirects::FILE . ': {message}', ['message' => $e->getMessage()]);
+
+            return null;
+        }
+
+        if ($id === null || $this->findByUri($uri) !== null) {
+            return null;
+        }
+
+        $row = (new ContentEntryModel())->published()->select('uri')->where('id', $id)->first();
+
+        return $row['uri'] ?? null;
+    }
+
+    /**
      * A menu as a site shows it. An item whose entry can't be shown is left out, along with the items below it.
      * A tree file that can't be read is logged and gives an empty menu.
      *
@@ -135,6 +192,24 @@ final readonly class Content
         $entries = $ids === [] ? [] : (new ContentEntryModel())->published()->select('id, title, uri')->whereIn('id', $ids)->findAll();
 
         return $tree->items(array_column($entries, null, 'id'), Collection::normalizeUri(rawurldecode(service('request')->getPath())));
+    }
+
+    /**
+     * A sitemap of every collection's published entries, as a response to return from a route.
+     * An entry with no URI is left out.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        $rows = (new ContentEntryModel())->published()->select('uri')->where('uri !=', '')->orderBy('uri')->findAll();
+        $site = rtrim(site_url(), '/');
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($rows as $row) {
+            $url = $site . '/' . implode('/', array_map(rawurlencode(...), explode('/', trim($row['uri'], '/'))));
+            $xml .= '  <url><loc>' . htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc></url>\n";
+        }
+
+        return service('response')->setContentType('application/xml', 'UTF-8')->setBody($xml . "</urlset>\n");
     }
 
     /**

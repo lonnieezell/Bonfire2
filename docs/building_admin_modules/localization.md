@@ -14,7 +14,7 @@ Bonfire keeps those files beside the code that uses them:
 | File | Where it lives in the package | Holds |
 |---|---|---|
 | `Bonfire.php` | `src/Language/{locale}/` | Shared admin text: save and delete messages, collection titles. |
-| `Actions.php`, `Consent.php`, `Email.php`, `Groups.php`, `Recycler.php`, `Settings.php`, `Tools.php`, `Users.php`, `Widgets.php` | `src/{Module}/Language/{locale}/` | Each module's own text. |
+| `Actions.php`, `Consent.php`, `Content.php`, `Docs.php`, `Email.php`, `Groups.php`, `Recycler.php`, `Settings.php`, `Tools.php`, `Users.php`, `Widgets.php` | `src/{Module}/Language/{locale}/` | Each module's own text. |
 | `Auth.php` | Shield, `vendor/codeigniter4/shield/src/Language/{locale}/` | Login, registration and magic link text. |
 
 Bonfire registers every module folder as a namespace, so CodeIgniter searches each module's `Language/` folder too.
