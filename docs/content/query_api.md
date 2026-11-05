@@ -36,6 +36,53 @@ $posts = $query->paginate(10);
 $pager = $query->pager();
 ```
 
+`paginate()` returns a plain list of entries, so you can loop over it like the result of `get()`. The links come from the
+pager, which is CodeIgniter's [`Pager`](https://codeigniter.com/user_guide/libraries/pagination.html). `$page` comes from
+the `?page=` query string unless you pass it.
+
+### Listing a collection
+
+Bonfire doesn't register an index route for a collection, because the page is yours to design. This recipe lists a
+collection's published entries a page at a time. It assumes the collection has a `route`, so that its entries have a
+`uri`. See [Routing](routing.md#serving-a-collection).
+
+Add the route in `app/Config/Routes.php`:
+
+```php
+$routes->get('blog', static function (): string {
+    $query = content()->collection('blog')->published();
+
+    return view('blog/index', [
+        'posts' => $query->paginate(10),
+        'pager' => $query->pager(),
+    ]);
+});
+```
+
+Then add the view, `app/Views/blog/index.php`:
+
+```php
+<h1>Blog</h1>
+
+<?php foreach ($posts as $post): ?>
+    <article>
+        <h2><a href="<?= esc($post->uri) ?>"><?= esc($post->title) ?></a></h2>
+        <p><?= esc($post->field('tagline')) ?></p>
+    </article>
+<?php endforeach ?>
+
+<?= $pager->links() ?>
+```
+
+`/blog` shows the first ten entries and `/blog?page=2` the next ten, with links between the pages. The collection's
+`sort` sets the order, or call `orderBy()` before `paginate()`. To list the entries of a term, use `whereTerm()` in place
+of `published()`.
+
+Your route wins over the [fallback route](routing.md#turning-it-on), so `/blog` and `/blog/{slug}` can both exist.
+
+To change how the links look, pass `links()` the name of a [pager template](https://codeigniter.com/user_guide/libraries/pagination.html#customizing-the-pagination-links)
+as its second argument: `$pager->links('default', 'my_pager')`.
+
 ## Finding an entry
 
 `content()->find($id)` returns an entry from any collection by its UUID, or `null`.
