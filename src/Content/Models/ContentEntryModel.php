@@ -13,6 +13,7 @@ namespace Bonfire\Content\Models;
 
 use Bonfire\Content\ContentException;
 use Bonfire\Content\EntryStore;
+use Bonfire\Core\Like;
 use Bonfire\Recycler\Interfaces\CustomRecyclerPurge;
 use Bonfire\Recycler\Interfaces\CustomRecyclerQuery;
 use Bonfire\Recycler\Interfaces\CustomRecyclerRestore;
@@ -51,6 +52,26 @@ class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecy
             ->groupEnd();
 
         return $this;
+    }
+
+    /**
+     * Keeps entries whose title or Markdown body contain the term, ignoring spaces around it. A % or _ in it
+     * matches itself, and a blank term matches nothing.
+     */
+    public function matching(string $term): self
+    {
+        $term = trim($term);
+
+        if ($term === '') {
+            return $this->where('1 = 0', null, false);
+        }
+
+        $needle = Like::escape($term, $this->db);
+
+        return $this->groupStart()
+            ->like('title', $needle, 'both', true, true)
+            ->orLike('body', $needle, 'both', true, true)
+            ->groupEnd();
     }
 
     /**

@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: front-end search.** `content()->search($term)` returns a query on the published entries of every collection
+that have the term in their title or body, and `content()->search($term, 'blog')` narrows it to one collection. It works
+with `paginate()` and `pager()`, and Bonfire adds no search page, so build your own. See
+[Searching](../content/query_api.md#searching).
+
 **Content: sitemap.** [`content()->sitemap()`](../content/routing.md#sitemap) returns a response with a sitemap of every
 collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
 `$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
