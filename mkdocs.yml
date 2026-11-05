@@ -112,20 +112,27 @@ nav:
   - Content:
       - content/index.md
       - content/getting_started.md
-      - content/collections.md
-      - content/taxonomies.md
-      - content/admin.md
-      - content/blueprints.md
-      - content/field_types.md
-      - content/custom_field_types.md
-      - content/query_api.md
-      - content/routing.md
-      - content/seo.md
-      - content/scaffolding.md
-      - content/structure.md
-      - content/navigation.md
-      - content/globals.md
-      - content/constraints.md
+      - Modeling content:
+          - content/collections.md
+          - content/structure.md
+          - content/taxonomies.md
+          - content/globals.md
+          - content/navigation.md
+      - Editing:
+          - content/blueprints.md
+          - content/field_types.md
+          - content/custom_field_types.md
+          - content/admin.md
+      - Building the front end:
+          - content/routing.md
+          - content/query_api.md
+          - content/seo.md
+          - content/feeds_and_sitemaps.md
+          - content/scaffolding.md
+      - Running it:
+          - content/the_index.md
+          - content/reference.md
+          - content/constraints.md
   - Building Sites:
       - building_sites/index.md
       - building_sites/assets.md

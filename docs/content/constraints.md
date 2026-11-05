@@ -44,7 +44,7 @@ or fail on a conflict. Pick one place where content is edited, and move it from 
 Commit `redirects.yaml` with the rest. It holds the old URIs of renamed and moved entries, and nothing else can bring them
 back. See [Redirects](routing.md#redirects).
 
-Either way, run `php spark content:reindex` after the files change. See [Building the index](index.md#when-to-reindex).
+Either way, run `php spark content:reindex` after the files change. See [When to reindex](the_index.md#when-to-reindex).
 
 ## There are no permissions for one collection
 
@@ -64,6 +64,6 @@ These are covered where they apply, and are listed here so you can find them:
   Entries do check. See [When the file changed](admin.md#when-the-file-changed) and
   [Editing terms in the admin](taxonomies.md#editing-terms-in-the-admin).
 - **The index doesn't follow your files by itself outside `development`.** Reindex when you deploy.
-  See [Building the index](index.md#building-the-index).
+  See [The index and deploys](the_index.md).
 - **The tree editor loads SortableJS from a CDN**, so it needs the browser to reach it. See
   [The tree editor](structure.md#the-tree-editor).

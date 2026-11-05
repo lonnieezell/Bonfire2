@@ -10,7 +10,7 @@ app/Config/Content.php                                one line changed
 content/collections/blog.yaml                         the collection
 content/collections/blog/2026-10-27.hello-world.md    the post
 resources/blueprints/collections/blog/post.yaml       its admin form
-themes/App/blog/show.php                              the template
+app/Views/blog/show.php                               the template
 ```
 
 ## 1. Check that Content is on
@@ -87,9 +87,9 @@ title: Hello world
 This is my *first* post.
 ```
 
-The `id` must be a UUID that no other entry has, so make a new one for each file, such as with `uuidgen`. The date in the file name is when the
-post goes live, so use today's date or an earlier one, or the post is a 404 until that day. Entries without a `status` are
-published. See [Entries](collections.md#entries).
+The `id` must be a UUID that no other entry has, so make a new one for each file, such as with `uuidgen`. The date in
+the filename is when the post goes live, so use today's date or an earlier one, or the post is a 404 until that day.
+Entries without a `status` are published. See [Entries](collections.md#entries).
 
 Then index the file. The admin does this for the entries it saves, but not for files you wrote by hand:
 
@@ -98,7 +98,7 @@ php spark content:reindex
 ```
 
 It prints how many entries it added. If it lists a file with a reason instead, fix that file and run it again. See
-[Building the index](index.md#building-the-index).
+[The index and deploys](the_index.md).
 
 ## 5. Turn on routing
 
@@ -113,8 +113,7 @@ This adds a fallback route that Bonfire places after all of yours, so a route of
 
 ## 6. Write a template
 
-The collection's `template: blog/show` is a view. Make `themes/App/blog/show.php`, which is looked up in the App theme
-first and then in `app/Views`:
+The collection's `template: blog/show` is a view. Make `app/Views/blog/show.php`:
 
 ```php
 <?= $this->extend('master') ?>
@@ -127,7 +126,13 @@ first and then in `app/Views`:
 ```
 
 It gets `$entry` and `$collection`. `$entry->content()` renders the Markdown body as HTML. See
-[Templates](routing.md#templates) and the [Query API](query_api.md#entries) for everything an entry offers.
+[Templates](routing.md#templates) for where templates are looked up, and [Entries](query_api.md#entries) for everything
+an entry offers.
+
+!!! tip
+
+    Next time, `php spark content:scaffold blog` can write a fuller show view for you, built from the blueprint's
+    fields, along with a page that lists the posts. See [Scaffolding](scaffolding.md).
 
 ## See the post
 
@@ -139,14 +144,15 @@ If you get a 404 instead, check these in order:
 1. `$autoRoute` is `true` in `app/Config/Content.php`, the one in your `app` folder.
 2. The post is `published`, and its date or `published_at` is not in the future.
 3. You ran `php spark content:reindex` after the last change to a file or to the collection's `route`. The URI of an
-   entry is stored in the index. In `development` the index catches up with your files by itself, but in `production`
-   it doesn't.
+   entry is stored in the index. In `development` the index
+   [catches up with your files by itself](the_index.md#in-development), but in `production` it doesn't.
 4. The reindex didn't list the file as a problem. Two entries can't share a URI, and `route` must contain `{slug}`.
 
 ## Where next
 
-- To list your posts, query them from a controller or view: [Query API](query_api.md).
-- To tag posts, see [Taxonomies](taxonomies.md). To keep pages in a tree, see [Pages and structures](structure.md). To build a site menu, see
-  [Navigation menus](navigation.md).
+- To list your posts, run [`php spark content:scaffold blog`](scaffolding.md), or follow the
+  [listing recipe](query_api.md#listing-a-collection).
+- To tag posts, see [Taxonomies](taxonomies.md). To keep pages in a tree, see [Pages and structures](structure.md). To
+  build a site menu, see [Navigation menus](navigation.md).
 - Before you deploy, read the [Constraints and known gaps](constraints.md), and add `php spark content:reindex` to your
-  deploy steps. See [Building the index](index.md#when-to-reindex).
+  deploy steps. See [When to reindex](the_index.md#when-to-reindex).

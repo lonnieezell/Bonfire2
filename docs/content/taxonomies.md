@@ -32,7 +32,7 @@ template: tags/show
 | `route` | None | The URI of its term pages, such as `/tags/{slug}`. It must contain `{slug}`, the only placeholder. |
 | `template` | None | The view that renders a term page, such as `tags/show`. |
 
-`route` and `template` only matter when [routing is on](#term-pages). A taxonomy without them has no pages.
+`route` and `template` only matter when [`$autoRoute`](#term-pages) is on. A taxonomy without them has no pages.
 
 ## Terms
 
@@ -49,7 +49,7 @@ color: blue
 | `id` | Yes | A UUID. It identifies the term, so it must be unique across every taxonomy. |
 | `title` | No | The term's title, up to 255 characters. Defaults to the slug. |
 
-The file name, without `.yaml`, is the term's slug: letters, numbers, `-` and `_`. Any other keys are yours, and you read
+The filename, without `.yaml`, is the term's slug: letters, numbers, `-` and `_`. Any other keys are yours, and you read
 them with [`field()`](query_api.md#taxonomies). The admin only saves the keys of the taxonomy's blueprint, and keeps the rest
 as they were.
 
@@ -78,8 +78,8 @@ tags: [php, laravel]
 
 The reindex reads that key for each taxonomy the collection lists, and fills `content_terms` with the terms and
 `content_entry_terms` with which entries have which. A slug with no term file is ignored until there is one, and a
-taxonomy the collection doesn't list is never read. Run `php spark content:reindex` after adding term files by hand. The
-automatic reindex in development only watches `content/collections/`, so it won't notice a changed term file.
+taxonomy the collection doesn't list is never read. Run `php spark content:reindex` after adding or editing term files
+by hand, even in development, because the [automatic reindex](the_index.md#in-development) doesn't watch them.
 
 To tag entries in the admin, give the blueprint a [`terms` field](field_types.md#terms):
 
@@ -107,7 +107,7 @@ $tags  = content()->terms('tags'); // each with ->count
 
 A taxonomy gets an item in the **Content** menu, with a list of its terms and the number of published entries each has.
 **New term** opens a form, and a term's title opens it for editing. The screens are at `/admin/taxonomies/<taxonomy>`, and
-need `content.structure`: tags and categories change how the whole site is organised, so they are not left to those who
+need `content.structure`: tags and categories change how the whole site is organized, so they are not left to those who
 only write entries. See [Permissions](admin.md#permissions).
 
 Without a blueprint, a term has a title and a slug. The slug names the file, so it can't change once the term exists. To
@@ -149,6 +149,7 @@ template: tags/show
 ```
 
 A template is looked up like [a collection's](routing.md#templates). An unknown term gets a 404, and so does a request
-that no taxonomy's route matches. If an entry has the same URI, the entry wins. Every request that no entry matches reads
-the taxonomy configs to look for a term page, on top of the cost described under [Turning it on](routing.md#turning-it-on). For a different page, such as one that
-paginates, skip the template and use `whereTerm()` in a route of your own.
+that no taxonomy's route matches. If an entry has the same URI, the entry wins. Every request that no entry matches
+reads the taxonomy configs to look for a term page, on top of the cost described under
+[Turning it on](routing.md#turning-it-on). For a different page, such as one that paginates, skip the template and use
+`whereTerm()` in a route of your own.
