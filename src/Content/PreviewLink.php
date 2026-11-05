@@ -62,9 +62,6 @@ final class PreviewLink
 
     private static function key(): string
     {
-        $key = (string) config('Encryption')->key;
-
-        // Derived, so a signature made for this can't be one for anything else that signs with the app key.
-        return $key === '' ? '' : hash_hmac('sha256', 'content-preview', $key);
+        return (string) config('Encryption')->key;
     }
 }

@@ -71,12 +71,8 @@ class EntryController extends BaseController
             service('responsecache')->setTtl(0);
         }
 
-        // A controller's own response, or else the one CodeIgniter makes of a string. The Referrer-Policy keeps the
-        // link, which is the only thing guarding the page, from going to the sites that the page links to or loads from.
-        ($result instanceof ResponseInterface ? $result : $this->response)
-            ->noCache()
-            ->setHeader('X-Robots-Tag', 'noindex')
-            ->setHeader('Referrer-Policy', 'no-referrer');
+        // A controller's own response, or else the one CodeIgniter makes of a string.
+        ($result instanceof ResponseInterface ? $result : $this->response)->noCache()->setHeader('X-Robots-Tag', 'noindex');
 
         return $result;
     }

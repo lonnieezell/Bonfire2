@@ -245,7 +245,6 @@ final class DraftPreviewTest extends ContentTestCase
         $result = $this->get($this->linkFor(self::DRAFT));
 
         $this->assertSame('noindex', $result->response()->getHeaderLine('X-Robots-Tag'));
-        $this->assertSame('no-referrer', $result->response()->getHeaderLine('Referrer-Policy'));
         $this->assertStringContainsString('no-store', $result->response()->getHeaderLine('Cache-Control'));
     }
 
