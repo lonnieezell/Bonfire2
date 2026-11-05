@@ -9,5 +9,7 @@ nav:
       - guide/index.md
       - guide/setup.md
       - Custom title: guide/named.md
+      - Advanced:
+          - guide/advanced/tuning.md
   - Reference:
       - reference/api.md

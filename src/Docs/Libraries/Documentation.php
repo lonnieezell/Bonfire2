@@ -26,7 +26,7 @@ class Documentation
     /**
      * The top level of the nav, parsed once.
      *
-     * @var list<array{title: string|null, path: string|null, pages: list<array{title: string|null, path: string}>}>|null
+     * @var list<array{title: string|null, path: string|null, pages: list<array{title: string|null, path: string, group: string|null}>}>|null
      */
     private ?array $nav = null;
 
@@ -49,8 +49,9 @@ class Documentation
     /**
      * The page at a URI: its HTML, its title, and the links to show beside it.
      * Only pages listed in the nav can be read, so a URI can never reach another file.
+     * A link with 'links' of its own is a nested section of the nav, holding its pages.
      *
-     * @return array{title: string, html: string, nav: list<array{title: string, uri: string}>, uri: string}|null
+     * @return array{title: string, html: string, nav: list<array{title: string, uri?: string, links?: list<array{title: string, uri: string}>}>, uri: string}|null
      */
     public function page(string $uri): ?array
     {
@@ -93,10 +94,10 @@ class Documentation
     }
 
     /**
-     * @param array{title: string|null, path: string} $page
-     * @param list<array{title: string, uri: string}> $nav
+     * @param array{title: string|null, path: string}                                                   $page
+     * @param list<array{title: string, uri?: string, links?: list<array{title: string, uri: string}>}> $nav
      *
-     * @return array{title: string, html: string, nav: list<array{title: string, uri: string}>, uri: string}
+     * @return array{title: string, html: string, nav: list<array{title: string, uri?: string, links?: list<array{title: string, uri: string}>}>, uri: string}
      */
     private function build(array $page, array $nav): array
     {
@@ -111,19 +112,35 @@ class Documentation
     }
 
     /**
-     * @param list<array{title: string|null, path: string}> $pages
+     * The links to a section's pages, with the pages of each nested section gathered under its title.
      *
-     * @return list<array{title: string, uri: string}>
+     * @param list<array{title: string|null, path: string, group: string|null}> $pages
+     *
+     * @return list<array{title: string, uri?: string, links?: list<array{title: string, uri: string}>}>
      */
     private function links(array $pages): array
     {
         $links = [];
 
         foreach ($pages as $page) {
-            $links[] = [
+            $link = [
                 'title' => $page['title'] ?? $this->headingOf((string) file_get_contents($this->root . 'docs/' . $page['path'])) ?? $page['path'],
                 'uri'   => MarkdownRenderer::uriFor($page['path']),
             ];
+
+            if ($page['group'] === null) {
+                $links[] = $link;
+
+                continue;
+            }
+
+            $last = array_key_last($links);
+
+            if ($last !== null && isset($links[$last]['links']) && $links[$last]['title'] === $page['group']) {
+                $links[$last]['links'][] = $link;
+            } else {
+                $links[] = ['title' => $page['group'], 'links' => [$link]];
+            }
         }
 
         return $links;
@@ -137,7 +154,7 @@ class Documentation
     /**
      * A section has no URL of its own in mkdocs.yml, so it borrows the folder of its first page.
      *
-     * @param array{pages: list<array{title: string|null, path: string}>} $entry
+     * @param array{pages: list<array{title: string|null, path: string, group: string|null}>} $entry
      */
     private function sectionUri(array $entry): string
     {
@@ -148,7 +165,7 @@ class Documentation
     }
 
     /**
-     * @return list<array{title: string|null, path: string|null, pages: list<array{title: string|null, path: string}>}>
+     * @return list<array{title: string|null, path: string|null, pages: list<array{title: string|null, path: string, group: string|null}>}>
      */
     private function nav(): array
     {
@@ -190,12 +207,13 @@ class Documentation
 
     /**
      * The pages of a section, in order, with any nested sections folded in.
+     * Each page keeps the title of the nested section it sits in; deeper sections fold into that one.
      *
      * @param array<int, mixed> $items
      *
-     * @return list<array{title: string|null, path: string}>
+     * @return list<array{title: string|null, path: string, group: string|null}>
      */
-    private function flatten(array $items): array
+    private function flatten(array $items, ?string $group = null): array
     {
         $pages = [];
 
@@ -204,9 +222,9 @@ class Documentation
             $value = is_array($item) ? reset($item) : $item;
 
             if (is_array($value)) {
-                $pages = [...$pages, ...$this->flatten($value)];
+                $pages = [...$pages, ...$this->flatten($value, $group ?? $title)];
             } elseif (is_file($this->root . 'docs/' . $value)) {
-                $pages[] = ['title' => $title, 'path' => $value];
+                $pages[] = ['title' => $title, 'path' => $value, 'group' => $group];
             }
         }
 

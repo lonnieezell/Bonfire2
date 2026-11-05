@@ -127,6 +127,21 @@ final class DocsControllerTest extends TestCase
         $this->assertStringContainsString('Custom title', $html);
     }
 
+    public function testSideNavGroupsANestedSectionsPages(): void
+    {
+        $html = (string) $this->actingAs($this->admin)->get(ADMIN_AREA . '/docs/guide/setup')->response()->getBody();
+
+        $this->assertMatchesRegularExpression('#<details class="bf-docs-nav-group">\s*<summary[^>]*>\s*Advanced\s*</summary>\s*<a [^>]*href="[^"]*/docs/guide/advanced/tuning"#', $html);
+    }
+
+    public function testSideNavOpensTheGroupOfTheCurrentPage(): void
+    {
+        $result = $this->actingAs($this->admin)->get(ADMIN_AREA . '/docs/guide/advanced/tuning');
+
+        $result->assertSee('guide-tuning');
+        $this->assertMatchesRegularExpression('#<details class="bf-docs-nav-group" open>\s*<summary[^>]*>\s*Advanced\s*</summary>\s*<a [^>]*href="[^"]*/docs/guide/advanced/tuning" aria-current="page"#', (string) $result->response()->getBody());
+    }
+
     public function testSidebarLinksHomeAndEachSection(): void
     {
         $html = $this->sidebarOn(ADMIN_AREA);

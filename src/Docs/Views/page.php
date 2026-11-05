@@ -15,6 +15,30 @@ $this->extend('master') ?>
         padding-block: 6px;
     }
 
+    /* A nested section of the nav, collapsed unless it holds the current page. */
+    .bf-docs-nav-group > summary {
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .bf-docs-nav-group > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .bf-docs-nav-group > summary::after {
+        content: "\203A";
+        margin-left: auto;
+        transition: transform 0.15s;
+    }
+
+    .bf-docs-nav-group[open] > summary::after {
+        transform: rotate(90deg);
+    }
+
+    .bf-docs-nav-group > a {
+        margin-left: 12px;
+    }
+
     @media (min-width: 992px) {
         .bf-docs {
             grid-template-columns: clamp(200px, 25%, 320px) minmax(0, 1fr);
@@ -59,11 +83,23 @@ $this->extend('master') ?>
 <?php $this->section('main') ?>
 <div class="bf-settings bf-docs">
     <nav class="bf-settings-nav" aria-label="<?= lang('Docs.modTitle') ?>">
+        <?php $navLink = static function (array $link) use ($page): string {
+            $current = $link['uri'] === $page['uri'];
+
+            return '<a class="bf-settings-nav-link' . ($current ? ' active' : '') . '" href="' . site_url(MarkdownRenderer::adminPath($link['uri'])) . '"' . ($current ? ' aria-current="page"' : '') . '>'
+                . esc($link['title']) . '</a>';
+        } ?>
         <?php foreach ($page['nav'] as $link) : ?>
-            <?php $current = $link['uri'] === $page['uri'] ?>
-            <a class="bf-settings-nav-link<?= $current ? ' active' : '' ?>" href="<?= site_url(MarkdownRenderer::adminPath($link['uri'])) ?>"<?= $current ? ' aria-current="page"' : '' ?>>
-                <?= esc($link['title']) ?>
-            </a>
+            <?php if (isset($link['links'])) : ?>
+                <details class="bf-docs-nav-group"<?= in_array($page['uri'], array_column($link['links'], 'uri'), true) ? ' open' : '' ?>>
+                    <summary class="bf-settings-nav-link"><?= esc($link['title']) ?></summary>
+                    <?php foreach ($link['links'] as $child) : ?>
+                        <?= $navLink($child) ?>
+                    <?php endforeach ?>
+                </details>
+            <?php else : ?>
+                <?= $navLink($link) ?>
+            <?php endif ?>
         <?php endforeach ?>
     </nav>
     <div class="bf-settings-body">
