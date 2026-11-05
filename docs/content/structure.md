@@ -57,7 +57,7 @@ The reindex never writes the tree file. The admin does.
 
 ### Serving nested URIs
 
-With [routing](routing.md) on, `/about/team` finds the entry with that URI in one index lookup, like any other URI.
+With [`$autoRoute`](routing.md) on, `/about/team` finds the entry with that URI in one index lookup, like any other URI.
 `content()->findByUri('/about/team')` does too. Give the collection a `template` or `controller` to render it.
 
 Two entries can't share a URI, so the slug of each entry in a structured collection must be unique within it.
@@ -68,7 +68,7 @@ Rename an entry's file, or move it in the tree, and the next reindex or tree sav
 every entry below it.
 
 The old URI of the entry, and those of every entry below it, are kept in `content/redirects.yaml`, and with
-[routing](routing.md#redirects) on they answer with a `301` to the current ones. Commit that file with your content.
+[`$autoRoute`](routing.md#redirects) on they answer with a `301` to the current ones. Commit that file with your content.
 
 ## The tree editor
 

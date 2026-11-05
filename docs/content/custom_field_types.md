@@ -3,12 +3,12 @@
 When the [built-in field types](field_types.md) don't fit, write one of your own and register it. Blueprints use it
 by its handle, and it works in the entry form like any other.
 
-This page makes a `colour` type: a colour picker that saves `#rrggbb`.
+This page makes a `color` type: a color picker that saves `#rrggbb`.
 
 ## Write the class
 
 Extend `Bonfire\Content\Fields\FieldType` and override what differs from plain text. Only `partial()` is required. Put the
-class anywhere your app autoloads, such as `app/Content/ColourField.php`:
+class anywhere your app autoloads, such as `app/Content/ColorField.php`:
 
 ```php
 <?php
@@ -18,11 +18,11 @@ namespace App\Content;
 use Bonfire\Content\Field;
 use Bonfire\Content\Fields\FieldType;
 
-final class ColourField extends FieldType
+final class ColorField extends FieldType
 {
     public function partial(): string
     {
-        return 'colour';
+        return 'color';
     }
 
     public function prepare(mixed $input, Field $field, array $submitted): string
@@ -37,7 +37,7 @@ final class ColourField extends FieldType
 }
 ```
 
-Every method is optional but `partial()`:
+Every method is optional but `partial()`. The built-in types are classes like this too:
 
 | Method | What it does | Default |
 |---|---|---|
@@ -47,6 +47,8 @@ Every method is optional but `partial()`:
 | `toFrontMatter($input, $field)` | The value to write to the file. Return `null` or `''` to leave the key out. | The text |
 | `fromFrontMatter($stored, $field)` | The text the form shows for what the file holds. | The value as text, or `''` |
 | `storedInFrontMatter()` | `false` if the value isn't a front matter key, like `slug`. | `true` |
+| `key($field)` | The front matter key that holds the value. `terms` uses the taxonomy's handle. | The field's handle |
+| `check($field)` | Throws a `ContentException` if the blueprint gave the field options it can't use, so the blueprint is refused. | Nothing |
 
 Things to know:
 
@@ -63,7 +65,7 @@ Things to know:
 ## Write the input
 
 The partial is a view called `<partial>.php` in `app/Views/content/fields/`, which Bonfire looks in first for every
-type. Here, `app/Views/content/fields/colour.php`:
+type. Here, `app/Views/content/fields/color.php`:
 
 ```php
 <?php
@@ -90,13 +92,13 @@ Add the handle and the class to `$fieldTypes` in `app/Config/Content.php`:
 
 namespace Config;
 
-use App\Content\ColourField;
+use App\Content\ColorField;
 use Bonfire\Content\Config\Content as BaseContent;
 
 class Content extends BaseContent
 {
     public array $fieldTypes = [
-        'colour' => ColourField::class,
+        'color' => ColorField::class,
     ];
 }
 ```
@@ -105,8 +107,8 @@ Now a blueprint can use it:
 
 ```yaml
 - handle: accent
-  type: colour
-  label: Accent colour
+  type: color
+  label: Accent color
 ```
 
 A registered handle that a built-in type has replaces it. A class that doesn't exist or doesn't extend `FieldType` is

@@ -82,7 +82,7 @@ foreach (navigation('main') as $item) {
 }
 ```
 
-It works anywhere, with or without [auto-routing](routing.md).
+It works anywhere, with `$autoRoute` on or off. See [Routing](routing.md).
 
 - **Skipped items.** An item is left out, along with everything below it, if its entry is a draft, is scheduled for later,
   is in the trash, isn't in the index, or has no URI because its collection has no `route`.
@@ -92,7 +92,7 @@ It works anywhere, with or without [auto-routing](routing.md).
 - **An unknown menu** throws `ContentException`, as does a config file that isn't valid.
 - **A tree file that isn't valid** gives an empty menu and logs an error, so a bad edit doesn't take down every page.
 
-Menus read the index, so what they show follows your files after the [index is updated](index.md#building-the-index).
+Menus read the index, so what they show follows your files after the [index is updated](the_index.md).
 
 ### The sample partial
 
@@ -105,5 +105,7 @@ The App theme has a sample at `themes/App/_navigation.php`. Include it from a vi
 It shows the `main` menu as nested lists and marks the current page with `aria-current="page"`. It's a starting point with
 no styling, so copy it and change the menu's handle and the markup to suit your site.
 
-If you published the App theme before this partial was added, copy it from
-`vendor/lonnieezell/bonfire/themes/App/_navigation.php`.
+!!! note "Upgrading"
+
+    If you published the App theme before this partial was added, copy it from
+    `vendor/lonnieezell/bonfire/themes/App/_navigation.php`.

@@ -95,7 +95,8 @@ Set `$autoSeo` in `app/Config/Content.php`:
 public bool $autoSeo = true;
 ```
 
-Now a page that [routing](routing.md#templates) renders from a collection's `template` gets the tags with no code of yours.
+Now a page that the [fallback route](routing.md#templates) renders from a collection's `template` gets the tags with no
+code of yours.
 `$autoSeo` is off by default.
 
 A collection that hands off to a `controller` is never changed by `$autoSeo`. What the controller returns is the response,

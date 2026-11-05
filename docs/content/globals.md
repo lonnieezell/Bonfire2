@@ -83,7 +83,7 @@ Your input stays in the form, and the file is left as the other change made it.
 A set is read straight from its file on each call to `globals()`. There is no index and no migration, so `content:reindex`
 doesn't touch it and an edit to the file shows on the next request.
 
-Globals work with [auto-routing](routing.md) on or off, and with no theme. A set has no front-end routes and no URL:
+Globals work with [`$autoRoute`](routing.md) on or off, and with no theme. A set has no front-end routes and no URL:
 nothing serves `content/globals`, and it isn't an entry. Only the admin form above has a route.
 
 `globals()` throws a `Bonfire\Content\ContentException` for a handle with no file, and for a file that isn't valid YAML,

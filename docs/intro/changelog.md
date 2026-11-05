@@ -4,6 +4,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 6 November 2026
+
+**Content: reorganized docs.** The Content pages are grouped by task in the nav. Reindexing and deploys have their own
+page, [The index and deploys](../content/the_index.md), and feeds and the sitemap moved out of Routing to
+[Feeds and sitemaps](../content/feeds_and_sitemaps.md). [Configuration and commands](../content/reference.md) lists every
+`Config\Content` property and `content:*` command. `php spark bf:agents` now points agents at the Content docs too, so
+run it again to update your `AGENTS.md`.
+
 ## 5 November 2026 (breaking change)
 
 **The Recycler handles non-integer keys.** So that it can list resources with UUIDs, `CustomRecyclerRestore::recyclerRestore()`
@@ -49,7 +57,7 @@ that have the term in their title or body, and `content()->search($term, 'blog')
 with `paginate()` and `pager()`, and Bonfire adds no search page, so build your own. See
 [Searching](../content/query_api.md#searching).
 
-**Content: sitemap.** [`content()->sitemap()`](../content/routing.md#sitemap) returns a response with a sitemap of every
+**Content: sitemap.** [`content()->sitemap()`](../content/feeds_and_sitemaps.md#sitemap) returns a response with a sitemap of every
 collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
 `$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
 routes win over it.
@@ -78,7 +86,7 @@ index or migration, work with auto-routing off, and have no routes. See [Globals
 
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
-`app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).
+`app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/feeds_and_sitemaps.md#feeds).
 
 **Content: collection index pages.** [Listing a collection](../content/query_api.md#listing-a-collection) shows a route
 and view of your own that list a collection's published entries a page at a time, with pager links from

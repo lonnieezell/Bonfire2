@@ -64,3 +64,22 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Reading and writing settings | `building_sites/settings.md` |
 | Formatting dates, form errors and other global helpers | `building_sites/common_functions.md` |
 | Taking the site offline for maintenance | `building_sites/common_functions.md#maintenance-mode` |
+| Storing pages and posts as Markdown files, and how Content's file-first index works | `content/index.md` |
+| Setting up a first collection, blueprint, entry and template, step by step | `content/getting_started.md` |
+| Defining a collection, its entries or its filenames | `content/collections.md` |
+| Keeping pages in a tree with nested URIs | `content/structure.md` |
+| Adding tags or categories to entries | `content/taxonomies.md` |
+| Reading site-wide values such as the site name | `content/globals.md` |
+| Building a site menu from entries and links | `content/navigation.md` |
+| Writing a blueprint for an entry's admin form | `content/blueprints.md` |
+| Choosing a field type, or overriding a field's input | `content/field_types.md` |
+| Writing a custom field type | `content/custom_field_types.md` |
+| Content permissions, editing, previews or the trash in the admin | `content/admin.md` |
+| Serving entries at their URIs, with a template or a controller | `content/routing.md` |
+| Querying, listing, paginating or searching entries in a controller or view | `content/query_api.md` |
+| Putting an entry's title, description and Open Graph tags in the head | `content/seo.md` |
+| Serving an RSS feed or a sitemap of content | `content/feeds_and_sitemaps.md` |
+| Generating starting views or a controller for a collection | `content/scaffolding.md` |
+| Reindexing content, and what to run on deploy | `content/the_index.md` |
+| Looking up Content's config properties and spark commands | `content/reference.md` |
+| Running Content on several servers, or with git on production | `content/constraints.md` |

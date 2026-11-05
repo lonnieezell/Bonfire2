@@ -31,7 +31,7 @@ fields:
 
 | Key | What it does |
 |---|---|
-| `title` | The blueprint's name. Defaults to its file name. |
+| `title` | The blueprint's name. Defaults to its filename. |
 | `fields` | A list of fields, shown in this order. Required. |
 | `seo` | Which fields feed an entry's SEO `title` and `description`. See [SEO](seo.md#mapping-fields-in-a-blueprint). |
 

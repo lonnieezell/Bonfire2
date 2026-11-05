@@ -12,7 +12,7 @@ screens are at `/admin/content/<collection>`.
 | Permission | What it allows |
 |---|---|
 | `content.access` | Seeing the Content menu and each collection's list. Every other entry screen needs it too. |
-| `content.edit` | Creating and editing entries, and the Markdown preview. and making [draft preview links](#previewing-a-draft). Also editing [globals](globals.md#editing-in-the-admin), which needs `content.access` too. |
+| `content.edit` | Creating and editing entries, using the Markdown preview and making [draft preview links](#previewing-a-draft). Also editing [globals](globals.md#editing-in-the-admin), which needs `content.access` too. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
 | `content.delete` | Moving an entry to the trash. See [Deleting and restoring](#deleting-and-restoring). Restoring and purging need `recycler.view` instead. |
 | `content.structure` | Arranging the entries of a structured collection in its tree editor (see [Pages and structures](structure.md)), and listing, creating and editing the terms of a [taxonomy](taxonomies.md#editing-terms-in-the-admin). Neither needs `content.access`. |
@@ -29,7 +29,7 @@ You publish your own `AuthGroups`, so after updating **run `php spark bonfire:pe
 
 The list shows each entry's title, status and date, a page at a time. It reads the index, so run
 `php spark content:reindex` first if you have files that were not saved through the admin. In development the index
-catches up with your files by itself.
+[catches up with your files by itself](the_index.md#in-development).
 
 ## Search
 
@@ -50,7 +50,7 @@ list.
 A new entry gets:
 
 - An `id`, which is a new UUID.
-- A file name from its slug. In a dated collection, the name starts with a date: the day of the publish date if you set
+- A filename from its slug. In a dated collection, the name starts with a date: the day of the publish date if you set
   one, otherwise today. The slug is made from the title if you leave it empty, and can't change once the entry exists,
   because it is the file's name.
 - The status `draft`, unless the user can publish.
@@ -92,7 +92,7 @@ A user without it can still write drafts, edit entries that are already publishe
 a draft. The status and publish date inputs are disabled for them, and a request that posts them anyway is refused with a
 403 and nothing is saved. An entry they create is a draft.
 
-If you don't change `published_at`, it stays where it was: in the front matter, or in the file name of a dated
+If you don't change `published_at`, it stays where it was: in the front matter, or in the filename of a dated
 collection.
 
 ## The Markdown preview
@@ -108,9 +108,13 @@ collection's `template` or `controller`, whether it's a draft, scheduled or publ
 collection with neither a template nor a controller doesn't offer it. The link doesn't need a `route` or `$autoRoute`.
 
 The link is signed with the app's encryption key (run `php spark key:generate` if it has none) and works for 24 hours.
-**Anyone who has it can open it without logging in**, so you can send it to a client to review a draft. After it
-expires, or if its address is changed in any way, or it is used for another entry, it gets a 404. A link doesn't stop
-working when the entry is published, only when it expires or the entry goes to the trash. See
+
+!!! warning "Anyone who has the link can open it without logging in"
+
+    That's what lets you send it to a client to review a draft, so share it only with people who may see the draft. It
+    keeps working when the entry is published, and stops only when it expires or the entry goes to the trash.
+
+After it expires, or if its address is changed in any way, or it is used for another entry, it gets a 404. See
 [Previews](routing.md#previews) for what the page gets.
 
 ## Deleting and restoring
