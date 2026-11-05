@@ -146,6 +146,7 @@ If you get a 404 instead, check these in order:
 ## Where next
 
 - To list your posts, query them from a controller or view: [Query API](query_api.md).
-- To tag posts, see [Taxonomies](taxonomies.md). To keep pages in a tree, see [Pages and structures](structure.md).
+- To tag posts, see [Taxonomies](taxonomies.md). To keep pages in a tree, see [Pages and structures](structure.md). To build a site menu, see
+  [Navigation menus](navigation.md).
 - Before you deploy, read the [Constraints and known gaps](constraints.md), and add `php spark content:reindex` to your
   deploy steps. See [Building the index](index.md#when-to-reindex).

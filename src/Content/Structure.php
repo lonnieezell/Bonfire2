@@ -21,6 +21,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 final readonly class Structure
 {
+    use TreeFile;
+
     /**
      * @param list<array{id: string, children: list<mixed>}> $nodes
      */
@@ -34,24 +36,6 @@ final readonly class Structure
     public static function path(string $handle): string
     {
         return "trees/collections/{$handle}.yaml";
-    }
-
-    /**
-     * The tree file as it is now, or an empty string if there is none.
-     */
-    public static function raw(string $contentRoot, string $handle): string
-    {
-        $file = rtrim($contentRoot, '/') . '/' . self::path($handle);
-
-        return is_file($file) ? (string) file_get_contents($file) : '';
-    }
-
-    /**
-     * What the editor posts back: a hash of the file it was opened on. A missing file hashes as an empty one.
-     */
-    public static function hash(string $raw): string
-    {
-        return hash('sha256', $raw);
     }
 
     /**
@@ -100,19 +84,6 @@ final readonly class Structure
     private static function fromData(mixed $data): self
     {
         return new self(self::nodes($data));
-    }
-
-    public function toYaml(): string
-    {
-        return Yaml::dump(self::forFile($this->nodes), 99, 2);
-    }
-
-    /**
-     * How many levels deep the tree goes. The root is the first.
-     */
-    public function depth(): int
-    {
-        return self::levels($this->nodes);
     }
 
     /**
@@ -250,33 +221,5 @@ final readonly class Structure
         }
 
         return $nodes;
-    }
-
-    /**
-     * @param list<array{id: string, children: list<mixed>}> $nodes
-     */
-    private static function levels(array $nodes): int
-    {
-        $deepest = 0;
-
-        foreach ($nodes as $node) {
-            $deepest = max($deepest, self::levels($node['children']));
-        }
-
-        return $nodes === [] ? 0 : $deepest + 1;
-    }
-
-    /**
-     * The nodes as the file holds them, without empty `children`.
-     *
-     * @param list<array{id: string, children: list<mixed>}> $nodes
-     *
-     * @return list<array<string, mixed>>
-     */
-    private static function forFile(array $nodes): array
-    {
-        return array_map(static fn (array $node): array => $node['children'] === []
-            ? ['id' => $node['id']]
-            : ['id' => $node['id'], 'children' => self::forFile($node['children'])], $nodes);
     }
 }

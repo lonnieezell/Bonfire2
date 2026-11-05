@@ -4,6 +4,16 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 5 November 2026
+
+**Content: navigation menus.** Add a config at `content/navigation/<handle>.yaml` and users with `content.structure` get
+an editor under **Content** in the sidebar, to build a menu from entries and typed-in links. The items live in
+`content/trees/navigation/<handle>.yaml`. `navigation('main')` returns them as a tree with `title`, `url`, `active` and
+`children`, and leaves out an item, and those below it, when its entry isn't live. An item that links to an entry takes
+its URL from the entry, so renaming a slug changes the menu by itself. The App theme has a sample partial at
+`themes/App/_navigation.php`, which a theme you already published needs to copy. See
+[Navigation menus](../content/navigation.md).
+
 ## 4 November 2026
 
 **Content: getting started and constraints.** [Getting started](../content/getting_started.md) walks you from a fresh

@@ -47,6 +47,23 @@ return [
     'structureEmpty'    => 'There are no entries to arrange yet.',
     'structureConflict' => 'The tree file was changed after you opened it, so your changes were not saved. Reload the structure to see the other change, then make yours again.',
 
+    // Navigation
+    'navigation'              => 'menu',
+    'saveNavigation'          => 'Save menu',
+    'navigationHint'          => 'Add entries and links, then drag an item to reorder it, or onto another item to nest it.',
+    'navigationAddEntry'      => 'Add entry',
+    'navigationAddLink'       => 'Add link',
+    'navigationLinkTitle'     => 'Title',
+    'navigationLinkUrl'       => 'URL',
+    'navigationTitleOverride' => 'Title in the menu',
+    'navigationRemove'        => 'Remove from the menu',
+    'navigationLinkUrlHint'   => 'Start with /, #, ?, http:, https:, mailto: or tel:.',
+    'navigationReload'        => 'Open the menu as it was last saved',
+    'navigationMissing'       => 'Entry not found',
+    'navigationScheduled'     => 'Scheduled',
+    'navigationNoUri'         => 'No URL',
+    'navigationTrashed'       => 'In the trash',
+
     // Field types
     'selectInvalid'  => 'Choose one of the options.',
     'integerInvalid' => 'Enter a whole number.',

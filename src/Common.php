@@ -1,6 +1,7 @@
 <?php
 
 use Bonfire\Content\Content;
+use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
@@ -137,5 +138,17 @@ if (! function_exists('content')) {
         }
 
         return new Content($contentPath);
+    }
+}
+
+if (! function_exists('navigation')) {
+    /**
+     * A menu built in the admin, as a tree of items for a site to show.
+     *
+     * @return list<NavigationItem>
+     */
+    function navigation(string $handle): array
+    {
+        return content()->navigation($handle);
     }
 }
