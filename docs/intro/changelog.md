@@ -67,6 +67,10 @@ its URL from the entry, so renaming a slug changes the menu by itself. The App t
 **The Recycler's resource chooser works again.** Picking another resource in the dropdown on Tools → Recycler did
 nothing. It now swaps the list in place with htmx and starts on the first page of the chosen resource.
 
+**Lithuanian translations completed.** `Content.php` and `Docs.php` now have Lithuanian files, and the remaining keys
+were added to `Bonfire.php`, `Email.php`, `Tools.php`, `Users.php` and `Widgets.php`: the dashboard editor, Mail
+Previews and Outbox, the mailer list, the log viewer and system health, and the users and chart widget settings.
+
 ## 4 November 2026
 
 **Content: getting started and constraints.** [Getting started](../content/getting_started.md) walks you from a fresh
