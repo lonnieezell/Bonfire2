@@ -20,6 +20,12 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: page caching.** A collection with `cache: 3600` in its config has its routed pages served to guests from the cache
+for that many seconds. It's off unless a collection sets it. Only `GET` requests with no query string from guests that the
+fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
+structure, saving a term or menu, and any reindex (including `content:reindex`) clear all of Content's cached pages.
+See [Caching](../content/routing.md#caching).
+
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
 `app/Config/Content.php`, off by default, and your routes win over it. See [Feeds](../content/routing.md#feeds).

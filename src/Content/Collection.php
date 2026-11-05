@@ -41,6 +41,7 @@ final readonly class Collection
         public bool $structure = false,
         public ?int $maxDepth = null,
         public array $taxonomies = [],
+        public ?int $cache = null,
     ) {
     }
 
@@ -87,6 +88,12 @@ final readonly class Collection
             throw new ContentException('`max_depth` must be a whole number of at least 1.');
         }
 
+        $cache = $config['cache'] ?? null;
+
+        if ($cache !== null && (! is_int($cache) || $cache < 1)) {
+            throw new ContentException('`cache` must be a whole number of seconds, at least 1.');
+        }
+
         $taxonomies = array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...))));
 
         if (($taken = array_intersect($taxonomies, Taxonomy::TAKEN_KEYS)) !== []) {
@@ -106,6 +113,7 @@ final readonly class Collection
             $structure,
             $maxDepth,
             $taxonomies,
+            $cache,
         );
     }
 

@@ -14,9 +14,12 @@ namespace Bonfire\Content\Controllers;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
+use Bonfire\Content\PageCache;
 use Bonfire\Content\Taxonomy;
 use Bonfire\Core\BaseController;
+use Closure;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * The fallback route: resolves a request to its published entry, then hands it to
@@ -39,14 +42,52 @@ class EntryController extends BaseController
         }
 
         if ($collection?->controller !== null) {
-            return $this->handOff($collection->controller, $entry);
+            return $this->cached($collection, $uri, fn () => $this->handOff($collection->controller, $entry));
         }
 
         if ($collection?->template !== null) {
-            return render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]);
+            return $this->cached($collection, $uri, fn () => render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]));
         }
 
         throw PageNotFoundException::forPageNotFound();
+    }
+
+    /**
+     * Gives a guest the collection's cached page for this URI, and caches the page when it has to be made. Only
+     * a 200 is kept, so a 404 or a redirect is made again. A request with a query string is never cached, because
+     * the page may depend on it, and neither is one from a logged-in user.
+     *
+     * @param Closure(): mixed $render
+     *
+     * @return mixed
+     */
+    private function cached(Collection $collection, string $uri, Closure $render)
+    {
+        if ($collection->cache === null || $this->request->getUri()->getQuery() !== '' || auth()->loggedIn()) {
+            return $render();
+        }
+
+        $cache = new PageCache();
+        $path  = Collection::normalizeUri($uri);
+        $page  = $cache->get($path);
+
+        if ($page !== null) {
+            if ($page['contentType'] !== null) {
+                $this->response->setHeader('Content-Type', $page['contentType']);
+            }
+
+            return $this->response->setBody($page['body']);
+        }
+
+        $result = $render();
+
+        if (is_string($result)) {
+            $cache->put($path, $result, null, $collection->cache);
+        } elseif ($result instanceof ResponseInterface && $result->getStatusCode() === 200 && is_string($result->getBody())) {
+            $cache->put($path, $result->getBody(), $result->getHeaderLine('Content-Type') ?: null, $collection->cache);
+        }
+
+        return $result;
     }
 
     /**
