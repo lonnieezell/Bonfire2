@@ -20,6 +20,10 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: collection index pages.** [Listing a collection](../content/query_api.md#listing-a-collection) shows a route
+and view of your own that list a collection's published entries a page at a time, with pager links from
+`$query->pager()->links()`. Bonfire adds no index route, and `paginate()` still returns a plain list.
+
 **Content: structure editor save bar.** Moving a page on the Edit structure screen now shows the save bar. Before, the bar
 stayed hidden, so with JavaScript on there was no way to save a new order. Discard opens the page again, which puts the
 pages back.
