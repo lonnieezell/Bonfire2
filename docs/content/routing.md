@@ -76,6 +76,8 @@ It receives `$entry` and `$collection`, and can extend the theme's layout like a
 `$entry` is described under [Entries](query_api.md#entries). `$collection` is a `Bonfire\Content\Collection`, with public
 properties such as `$collection->title` and `$collection->handle`.
 
+Bonfire adds no `<head>` tags for the entry unless you set `$autoSeo`. See [SEO](seo.md).
+
 ## Caching
 
 A collection can have its pages served from the cache. It's off unless the collection sets `cache`, the number of seconds

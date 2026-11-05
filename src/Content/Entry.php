@@ -77,6 +77,81 @@ final readonly class Entry
     }
 
     /**
+     * The values for the page's SEO tags. The blueprint maps the fields that feed the title and the description,
+     * and a value left unmapped or blank comes from `title` and the body's first paragraph as plain text.
+     * The canonical URL is the entry's `uri` on the site's base URL, and is null for an entry without one.
+     * Values are plain text: escape them when you print them.
+     *
+     * @return array{title: string, description: string, canonical: ?string, og: array<string, string>}
+     */
+    public function seo(): array
+    {
+        $map = $this->seoMapping();
+
+        $title       = $this->mappedText($map['title'] ?? null) ?? $this->title;
+        $description = $this->mappedText($map['description'] ?? null) ?? $this->firstParagraph();
+        $canonical   = $this->uri === null ? null : base_url($this->uri);
+
+        $og = array_filter(
+            ['og:title' => $title, 'og:description' => $description, 'og:type' => 'website', 'og:url' => $canonical],
+            static fn (?string $value): bool => $value !== null && $value !== '',
+        );
+
+        return ['title' => $title, 'description' => $description, 'canonical' => $canonical, 'og' => $og];
+    }
+
+    /**
+     * The blueprint's SEO mapping. Its file may be gone or broken by now, as the index outlives it.
+     *
+     * @return array<string, string>
+     */
+    private function seoMapping(): array
+    {
+        if ($this->blueprint === null) {
+            return [];
+        }
+
+        try {
+            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->seo;
+        } catch (ContentException $e) {
+            log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
+
+            return [];
+        }
+    }
+
+    /**
+     * The text of a front matter value, or null when it's blank or not text or a number. A toggle is neither.
+     */
+    private function mappedText(?string $name): ?string
+    {
+        $value = $name === null ? null : $this->field($name);
+        $text  = is_string($value) || is_int($value) || is_float($value) ? trim((string) $value) : '';
+
+        return $text === '' ? null : $text;
+    }
+
+    /**
+     * The body's first paragraph with its markup removed and its whitespace collapsed.
+     */
+    private function firstParagraph(): string
+    {
+        preg_match_all('~<p(?:\s[^>]*)?>(.*?)</p>~s', $this->content(), $matches);
+
+        foreach ($matches[1] as $paragraph) {
+            $text = html_entity_decode(strip_tags($paragraph), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $text = trim((string) preg_replace('/\s+/u', ' ', $text));
+
+            // A paragraph that is only an image has no text to describe the page with.
+            if ($text !== '') {
+                return $text;
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * The Markdown body as HTML. Raw HTML in the body passes through, apart from the tags
      * GitHub's rules disallow, so only render bodies you trust.
      */

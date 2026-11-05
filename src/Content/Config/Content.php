@@ -41,6 +41,12 @@ class Content extends BaseConfig
     public bool $autoRoute = false;
 
     /**
+     * Whether Bonfire puts an entry's SEO tags in the head of the pages it renders through a collection's template.
+     * A collection that hands off to a controller is never touched: call content_seo() there.
+     */
+    public bool $autoSeo = false;
+
+    /**
      * Whether Bonfire serves the sitemap at /sitemap.xml.
      * App routes always win over it.
      */

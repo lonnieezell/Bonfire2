@@ -20,6 +20,12 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: SEO values.** `$entry->seo()` returns an entry's title, description, canonical URL and Open Graph values. A
+blueprint's `seo` key maps the fields that feed the title and description, which default to `title` and the body's first
+paragraph. `content_seo($entry)` adds them to the page's `<head>` through `viewMeta`, escaped. `Config\Content::$autoSeo`,
+off by default, does it for pages rendered from a collection's `template`. The App theme's `master.php` now also renders the
+`link` tags, which the canonical link needs: add `<?= $viewMeta->render('link') ?>` to a copy of your own. See [SEO](../content/seo.md).
+
 **Content: redirects.** When an entry's URI changes, because you moved a page in the tree editor or a reindex found a
 renamed file, a moved page or a changed route, its old URI now answers with a `301` to the new one, and so do the old URIs of
 the pages below it. They're kept in `content/redirects.yaml`, which **you should commit** with your content, and not in the
