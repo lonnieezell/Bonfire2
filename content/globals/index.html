@@ -1542,6 +1542,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-in-the-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing in the admin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2544,6 +2555,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-in-the-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing in the admin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2667,11 +2689,31 @@ other <a href="../blueprints/">blueprints</a>, without a <code>body</code> field
 and a date or datetime is text like <code>2026-10-27</code> or <code>2026-10-27 09:30:00</code>. Other types come back as the file holds them.
 A value the file leaves out or empty, or an integer or date that doesn't fit, such as <code>posts_per_page: lots</code>, gives the
 default you pass, or <code>null</code>. A value the blueprint doesn't list comes back as the file holds it.</p>
+<h2 id="editing-in-the-admin">Editing in the admin</h2>
+<p>Each set that has a blueprint gets an item in the <strong>Content</strong> menu, titled with the blueprint's <code>title</code> (or its handle), and
+a form at <code>/admin/site-values/&lt;handle&gt;</code>. The form is built from the blueprint the same way an <a href="../admin/">entry's form</a> is, so
+it has the same <a href="../field_types/">field types</a> and the same <code>validate:</code> rules. A set with no blueprint has no form and no
+menu item, because there is nothing to build one from.</p>
+<p>Users need <code>content.access</code> and <code>content.edit</code> to see the item, open the form or save it. Anyone else is sent back to the
+dashboard.</p>
+<p>Saving writes the set's YAML file, so <code>globals('site')</code> shows the new values on the next call:</p>
+<ul>
+<li>The file is written whole to a temporary file and renamed into place, so nothing reads half of it.</li>
+<li>Keys the blueprint doesn't list stay as they were, with their values. A field left empty doesn't add a key.</li>
+<li>Comments in the file are dropped, because the YAML is written afresh. Keys keep their order.</li>
+<li>A date written without quotes, such as <code>2026-10-27</code>, is saved back as <code>2026-10-27 00:00:00</code>. Quote a date to keep it
+  exactly as you wrote it.</li>
+<li>If the form doesn't validate, it shows again with what you typed and an error under each field that failed. Nothing is
+  written.</li>
+</ul>
+<p>The form carries a hash of the file it loaded. If the file is different when you save, because someone else saved it or you
+edited it by hand, the save is refused with the same message and reload link as an <a href="../admin/#when-the-file-changed">entry's</a>.
+Your input stays in the form, and the file is left as the other change made it.</p>
 <h2 id="how-it-works">How it works</h2>
 <p>A set is read straight from its file on each call to <code>globals()</code>. There is no index and no migration, so <code>content:reindex</code>
 doesn't touch it and an edit to the file shows on the next request.</p>
-<p>Globals work with <a href="../routing/">auto-routing</a> on or off, and with no theme. A set has no routes and no URL: nothing serves
-<code>content/globals</code>, and it isn't an entry.</p>
+<p>Globals work with <a href="../routing/">auto-routing</a> on or off, and with no theme. A set has no front-end routes and no URL:
+nothing serves <code>content/globals</code>, and it isn't an entry. Only the admin form above has a route.</p>
 <p><code>globals()</code> throws a <code>Bonfire\Content\ContentException</code> for a handle with no file, and for a file that isn't valid YAML,
 isn't a mapping, or whose blueprint is invalid.</p>
 
