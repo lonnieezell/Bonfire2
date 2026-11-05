@@ -913,6 +913,8 @@
       
         
       
+        
+      
     
     
     
@@ -1173,6 +1175,34 @@
     
   
     Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
   
 
     
@@ -2967,6 +2997,9 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Documentation in the admin.</strong> Outside production, the sidebar has a <strong>Documentation</strong> group that shows this guide for
+the version you have installed, with its structure read from <code>mkdocs.yml</code>. Anyone with <code>admin.access</code> can read it, and
+production has no menu and answers with a 404. See <a href="../../modules/documentation/">Documentation</a>.</p>
 <p><strong>Content: navigation menus.</strong> Add a config at <code>content/navigation/&lt;handle&gt;.yaml</code> and users with <code>content.structure</code> get
 an editor under <strong>Content</strong> in the sidebar, to build a menu from entries and typed-in links. The items live in
 <code>content/trees/navigation/&lt;handle&gt;.yaml</code>. <code>navigation('main')</code> returns them as a tree with <code>title</code>, <code>url</code>, <code>active</code> and
