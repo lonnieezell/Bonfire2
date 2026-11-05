@@ -20,7 +20,7 @@ use Bonfire\Content\Models\ContentEntryModel;
 /**
  * Links to other entries, kept in the front matter as a list of their UUIDs. `collections` names the collections
  * that entries can be picked from, and is every collection when it's left out. `max_items` caps how many.
- * Read the entries back with `$entry->entries('handle')`.
+ * Read the entries back with `$entry->entries('handle')`. A link to an entry in the trash stays until the user unticks it.
  */
 final class EntriesField extends FieldType
 {
@@ -35,7 +35,7 @@ final class EntriesField extends FieldType
     }
 
     /**
-     * Every entry chosen has to exist in an allowed collection, and there can't be more than `max_items`.
+     * Every entry chosen has to exist in an allowed collection, in the trash or not, and there can't be more than `max_items`.
      */
     public function rules(Field $field): array|string
     {
@@ -55,13 +55,12 @@ final class EntriesField extends FieldType
                 return false;
             }
 
-            $model = (new ContentEntryModel())->select('id')->whereIn('id', $ids);
+            $model = (new ContentEntryModel())->withDeleted()->select('id')->whereIn('id', $ids);
 
             if ($collections !== []) {
                 $model->whereIn('collection', $collections);
             }
 
-            // The model leaves out entries in the trash.
             if (count($model->findAll()) !== count($ids)) {
                 $error = lang('Content.entriesInvalid');
 
@@ -122,5 +121,28 @@ final class EntriesField extends FieldType
         }
 
         return $entries;
+    }
+
+    /**
+     * The entries in the trash that the field links to, which the form shows but never offers.
+     *
+     * @param list<string> $ids the ids the field holds
+     *
+     * @return list<Entry>
+     */
+    public static function trashedLinks(Field $field, array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+
+        $model       = (new ContentEntryModel())->onlyDeleted()->whereIn('id', $ids)->orderBy('id');
+        $collections = self::collections($field);
+
+        if ($collections !== []) {
+            $model->whereIn('collection', $collections);
+        }
+
+        return array_map(Entry::fromRow(...), $model->findAll());
     }
 }

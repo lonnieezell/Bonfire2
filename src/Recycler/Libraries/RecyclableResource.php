@@ -106,9 +106,13 @@ class RecyclableResource
         return $this->query()->onlyDeleted()->countAllResults();
     }
 
-    public function restore(int $id): bool
+    public function restore(int|string $id): bool
     {
         $model = $this->model();
+
+        if (! $this->acceptsKey($id)) {
+            return false;
+        }
 
         if ($model instanceof CustomRecyclerRestore) {
             return $model->recyclerRestore($id);
@@ -123,9 +127,13 @@ class RecyclableResource
             ->update();
     }
 
-    public function purge(int $id): bool
+    public function purge(int|string $id): bool
     {
         $model = $this->model();
+
+        if (! $this->acceptsKey($id)) {
+            return false;
+        }
 
         if ($model instanceof CustomRecyclerPurge) {
             return $model->recyclerPurge($id);
@@ -157,11 +165,19 @@ class RecyclableResource
     /**
      * Whether the Recycler lists the record, after the model's query hook.
      */
-    private function isDeleted(int $id): bool
+    private function isDeleted(int|string $id): bool
     {
         $model = $this->query();
 
         return $model->onlyDeleted()->where($model->table . '.' . $model->primaryKey, $id)->countAllResults() > 0;
+    }
+
+    /**
+     * The route takes any segment, and a database or a hook may read 12abc as 12.
+     */
+    private function acceptsKey(int|string $id): bool
+    {
+        return ! $this->model()->useAutoIncrement || ctype_digit((string) $id);
     }
 
     private function localized(string $key, string $default): string

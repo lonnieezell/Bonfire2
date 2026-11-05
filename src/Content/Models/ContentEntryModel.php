@@ -11,13 +11,19 @@
 
 namespace Bonfire\Content\Models;
 
+use Bonfire\Content\ContentException;
+use Bonfire\Content\EntryStore;
+use Bonfire\Recycler\Interfaces\CustomRecyclerPurge;
+use Bonfire\Recycler\Interfaces\CustomRecyclerQuery;
+use Bonfire\Recycler\Interfaces\CustomRecyclerRestore;
+use Closure;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 
 /**
  * The index row of each entry. `id` is the entry's UUID and `data` its front matter as JSON.
  */
-class ContentEntryModel extends Model
+class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecyclerRestore, CustomRecyclerPurge
 {
     protected $table            = 'content_entries';
     protected $useAutoIncrement = false;
@@ -25,8 +31,13 @@ class ContentEntryModel extends Model
     protected $useSoftDeletes   = true;
     protected $allowedFields    = [
         'id', 'collection', 'blueprint', 'slug', 'uri', 'parent_id', 'sort', 'status', 'published_at',
-        'title', 'data', 'body', 'path', 'hash', 'mtime',
+        'title', 'data', 'body', 'path', 'hash', 'mtime', 'deleted_at',
     ];
+
+    /**
+     * Why the Recycler's last restore or purge was refused.
+     */
+    private ?string $refusal = null;
 
     /**
      * Keeps entries that are published and whose published_at, if any, has passed.
@@ -40,5 +51,47 @@ class ContentEntryModel extends Model
             ->groupEnd();
 
         return $this;
+    }
+
+    /**
+     * The Recycler lists every column it's asked to show, but never the contents of an entry.
+     */
+    public function setupRecycler(): static
+    {
+        return $this->select('id, collection, blueprint, slug, uri, parent_id, sort, status, published_at, title, path, hash, mtime, deleted_at');
+    }
+
+    public function recyclerRestore(int|string $id): bool
+    {
+        return $this->recycle(static fn (EntryStore $store): bool => $store->restore((string) $id));
+    }
+
+    public function recyclerPurge(int|string $id): bool
+    {
+        return $this->recycle(static fn (EntryStore $store): bool => $store->purge((string) $id));
+    }
+
+    /**
+     * The Recycler shows these when a restore or purge is refused.
+     */
+    public function errors(bool $forceDB = false)
+    {
+        return $this->refusal === null ? parent::errors($forceDB) : [$this->refusal];
+    }
+
+    /**
+     * @param Closure(EntryStore): bool $action
+     */
+    private function recycle(Closure $action): bool
+    {
+        $this->refusal = null;
+
+        try {
+            return $action(new EntryStore(config('Content')->contentPath));
+        } catch (ContentException $e) {
+            $this->refusal = $e->getMessage();
+
+            return false;
+        }
     }
 }

@@ -21,6 +21,9 @@
                         <th><?= lang('Content.colTitle') ?></th>
                         <th><?= lang('Content.colStatus') ?></th>
                         <th><?= lang('Content.colDate') ?></th>
+                        <?php if ($canDelete) : ?>
+                            <th></th>
+                        <?php endif ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +40,11 @@
                                 <x-status tone="<?= $entry->status === 'published' ? 'ok' : 'muted' ?>" label="<?= esc(lang($entry->status === 'published' ? 'Content.statusPublished' : 'Content.statusDraft'), 'attr') ?>" />
                             </td>
                             <td class="bf-muted" data-date><?= $entry->publishedAt === null ? '' : app_date($entry->publishedAt, true) ?></td>
+                            <?php if ($canDelete) : ?>
+                                <td class="text-end">
+                                    <?= view('Bonfire\Content\Views\entry_delete', ['handle' => $collection->handle, 'id' => $entry->id, 'below' => $below[$entry->id]], ['saveData' => false]) ?>
+                                </td>
+                            <?php endif ?>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

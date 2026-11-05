@@ -196,6 +196,20 @@ final class RecyclerTest extends TestCase
         $this->assertSame(['query', "restore {$deleted->id}", "purge {$deleted->id}"], RecyclerHooksModel::$calls);
     }
 
+    public function testAnIntegerKeyedResourceGetsOnlyDigitsAsKeys(): void
+    {
+        service('recycler')->register('hooks', 'Hooks', RecyclerHooksModel::class, ['username']);
+        RecyclerHooksModel::$calls = [];
+
+        $deleted = $this->createUser();
+        $this->users->delete($deleted->id);
+
+        $this->actingAs($this->admin)->get(route_to('recycler-restore', 'hooks', "{$deleted->id}abc"));
+        $this->actingAs($this->admin)->get(route_to('recycler-purge', 'hooks', "{$deleted->id}abc"));
+
+        $this->assertSame([], RecyclerHooksModel::$calls);
+    }
+
     public function testListShowsTheCountAndRowsWithRestoreAndAConfirmedPurge(): void
     {
         $user = $this->createUser();

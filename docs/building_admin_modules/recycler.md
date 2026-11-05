@@ -110,10 +110,11 @@ class UserModel extends ShieldUsers implements CustomRecyclerQuery
 
 You may override the default handling of the restore process if you have needs outside simply setting the 
 `deleted_at` date to `null`. Implement `CustomRecyclerRestore` and its `recyclerRestore()` method. 
-It only accepts a single argument, the record primary key, and returns whether the record was restored. 
+It only accepts a single argument, the record primary key, and returns whether the record was restored. The key is an 
+`int|string`, so that a model can use UUIDs. It comes from the URL, so it's a string even for an integer key. 
 
 ```php
-public function recyclerRestore(int $id): bool
+public function recyclerRestore(int|string $id): bool
 {
     return $this->where('id', $id)
         ->set('deleted_at', null)
@@ -128,8 +129,13 @@ Implement `CustomRecyclerPurge` and its `recyclerPurge()` method.
 It only accepts a single argument, the record primary key, and returns whether the record was purged.
 
 ```php
-public function recyclerPurge(int $id): bool
+public function recyclerPurge(int|string $id): bool
 {
     return (bool) $this->delete($id, true);
 }
 ```
+
+### Saying Why It Was Refused
+
+When a restore or purge returns `false`, the Recycler shows the model's `errors()`, or a "not found" message if there are
+none. Override `errors()` to give a reason of your own, as `ContentEntryModel` does. The Recycler escapes what it shows.

@@ -48,7 +48,7 @@ class RecycleController extends AdminController
      *
      * @return RedirectResponse
      */
-    public function restore(string $resourceType, int $resourceId)
+    public function restore(string $resourceType, int|string $resourceId)
     {
         $resource = $this->authorizedResource($resourceType);
 
@@ -68,7 +68,7 @@ class RecycleController extends AdminController
      *
      * @return RedirectResponse
      */
-    public function purge(string $resourceType, int $resourceId)
+    public function purge(string $resourceType, int|string $resourceId)
     {
         $resource = $this->authorizedResource($resourceType);
 
@@ -101,7 +101,8 @@ class RecycleController extends AdminController
     {
         return redirect()->back()->with(
             'error',
-            $resource->errors() ?: lang('Bonfire.resourceNotFound', [$resource->label()]),
+            // An alert doesn't escape what it shows.
+            esc($resource->errors()) ?: lang('Bonfire.resourceNotFound', [$resource->label()]),
         );
     }
 }

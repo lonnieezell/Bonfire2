@@ -21,6 +21,7 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     // Before the entry routes, which would take "structure" for an id.
     $routes->get('content/(:segment)/structure', 'EntryAdminController::structure/$1', ['as' => 'content-structure']);
     $routes->post('content/(:segment)/structure', 'EntryAdminController::saveStructure/$1');
+    $routes->post('content/(:segment)/(:segment)/delete', 'EntryAdminController::delete/$1/$2', ['as' => 'content-delete']);
     $routes->get('content/(:segment)/(:segment)', 'EntryAdminController::edit/$1/$2', ['as' => 'content-edit']);
     $routes->post('content/(:segment)/(:segment)', 'EntryAdminController::update/$1/$2');
 });

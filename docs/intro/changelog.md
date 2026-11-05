@@ -4,11 +4,27 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 5 November 2026 (breaking change)
+
+**The Recycler handles non-integer keys.** So that it can list resources with UUIDs, `CustomRecyclerRestore::recyclerRestore()`
+and `CustomRecyclerPurge::recyclerPurge()` now take `int|string $id`, as do `RecyclableResource::restore()`, `purge()` and
+`RecycleController::restore()` and `purge()`. **A model of yours that implements either interface with `int $id` is a PHP
+fatal error when the class loads**, so change its signature to `int|string $id`. The key arrives from the URL as a string,
+and the routes now take `(:segment)`. See [The Recycler](../building_admin_modules/recycler.md#overriding-the-restore).
+
 ## 5 November 2026
 
 **Documentation in the admin.** Outside production, the sidebar has a **Documentation** group that shows this guide for
 the version you have installed, with its structure read from `mkdocs.yml`. Anyone with `admin.access` can read it, and
 production has no menu and answers with a 404. See [Documentation](../modules/documentation.md).
+
+**Content: delete to trash.** Users with `content.delete` can delete an entry from the list or its form, which moves its
+file to `content/.trash/<collection>/` and takes it off the site. **Content entries** in the Recycler restores or purges
+it, with `recycler.view`. Deleting a page takes the pages below it, after a confirmation that says how many, and restoring
+brings them back in their exact place in the tree. A trashed entry keeps its slug and URI, and an `entries` link to it
+survives a save and works again after a restore. `content:reindex` goes by where the file is, so a trashed entry stays
+trashed after `--fresh`. You probably want `content/.trash/` in your `.gitignore`, and a fresh clone followed by a reindex
+then loses that machine's Recycler contents. See [Deleting and restoring](../content/admin.md#deleting-and-restoring).
 
 **Content: navigation menus.** Add a config at `content/navigation/<handle>.yaml` and users with `content.structure` get
 an editor under **Content** in the sidebar, to build a menu from entries and typed-in links. The items live in

@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Core\BaseModule;
 use Bonfire\Menus\MenuItem;
 
@@ -25,6 +26,9 @@ class Module extends BaseModule
      */
     public function initAdmin()
     {
+        // Before the check below: the Recycler only asks for recycler.view.
+        service('recycler')->register('entries', 'Content', ContentEntryModel::class, ['title', 'collection', 'slug']);
+
         // Reading every collection's config is for those who'll see the menu.
         $user = auth()->user();
 

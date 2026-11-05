@@ -3,6 +3,7 @@
 namespace Tests\Content;
 
 use Bonfire\Content\Entry;
+use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\StaleCheck;
 use Tests\Support\Content\ContentTestCase;
 
@@ -49,6 +50,19 @@ final class StaleCheckTest extends ContentTestCase
         $this->check();
 
         $this->assertNull(content()->find(self::FIRST_POST));
+    }
+
+    public function testAFileInTheTrashIsNoticed(): void
+    {
+        mkdir($this->site . '.trash/blog', 0775, true);
+        $this->writeFile('.trash/blog/2026-05-01.old.md', "---\nid: 66666666-6666-4666-8666-666666666666\n---\nOld.\n");
+        $this->check();
+        $this->assertNotNull((new ContentEntryModel())->onlyDeleted()->find('66666666-6666-4666-8666-666666666666'));
+
+        unlink($this->site . '.trash/blog/2026-05-01.old.md');
+        $this->check();
+
+        $this->assertNull((new ContentEntryModel())->withDeleted()->find('66666666-6666-4666-8666-666666666666'));
     }
 
     public function testAChangedCollectionConfigIsIndexed(): void

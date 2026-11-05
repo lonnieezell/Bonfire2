@@ -37,6 +37,22 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Trash
+    'recycler' => [
+        'label'   => 'Content entries',
+        'columns' => [
+            'title'      => 'Title',
+            'collection' => 'Collection',
+            'slug'       => 'Slug',
+        ],
+    ],
+    'deleteConfirm'      => 'Move this entry to the trash?',
+    'deleteConfirmBody'  => 'You can restore it from the Recycler.',
+    'deleteConfirmBelow' => '{0, plural, =1 {The page below it goes too.} other {The # pages below it go too.}} You can restore them from the Recycler.',
+    'trashed'            => 'The entry was moved to the trash. You can restore it from the Recycler.',
+    'inTrash'            => 'In trash',
+    'showTrashed'        => 'Show trashed ({0})',
+
     // Structure
     'structure'         => 'structure',
     'editStructure'     => 'Edit structure',

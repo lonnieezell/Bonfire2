@@ -111,10 +111,15 @@ Links to other entries, saved as a list of their UUIDs.
 
 The form lists every entry of those collections, drafts too, with a checkbox each. That suits collections of a few
 hundred entries. For more, [change the input](#changing-an-input). A save is refused if it links an entry that doesn't
-exist, is in the trash, belongs to another collection, or takes the field over `max_items`.
+exist, belongs to another collection, or takes the field over `max_items`.
 
 Read the links back with [`$entry->entries('related')`](query_api.md#entries), which returns entry objects. A link whose
-entry has been deleted or trashed since is skipped without an error, and saving the form drops it from the file.
+entry is gone is skipped without an error, and saving the form drops it from the file.
+
+A link to an entry in the [trash](admin.md#deleting-and-restoring) survives a save. The form shows it checked and muted,
+marked "In trash", and you can untick it. A trashed entry is never offered as a new choice, and its link counts toward
+`max_items`. `$entry->entries()` skips it until it's restored, and then the link works again. If you copied the input to
+your app's views, add what's new in `fields/entries.php`, or saving your form drops these links.
 
 ## terms
 
