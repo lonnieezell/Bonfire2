@@ -19,4 +19,16 @@ class PageCacheController extends Controller
 
         return $this->response->setJSON(['slug' => $entry->slug, 'call' => self::$calls]);
     }
+
+    /**
+     * Refuses with a status and a string, the way a controller that checks access might.
+     */
+    public function refuse(Entry $entry): string
+    {
+        self::$calls++;
+
+        $this->response->setStatusCode(403);
+
+        return 'Not for you: ' . $entry->slug;
+    }
 }

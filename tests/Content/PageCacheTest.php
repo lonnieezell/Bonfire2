@@ -128,6 +128,17 @@ final class PageCacheTest extends ContentTestCase
         $this->assertSame(2, BlogController::$calls);
     }
 
+    public function testAStringWithAnErrorStatusIsNotCached(): void
+    {
+        $this->serveBlog(60, 'controller: ' . PageCacheController::class . '::refuse');
+        PageCacheController::$calls = 0;
+
+        $this->get('blog/first-post')->assertStatus(403);
+        $this->get('blog/first-post')->assertStatus(403);
+
+        $this->assertSame(2, PageCacheController::$calls);
+    }
+
     public function testALoggedInUserAlwaysGetsAFreshPageAndLeavesNothingBehind(): void
     {
         $this->serveBlog(60);

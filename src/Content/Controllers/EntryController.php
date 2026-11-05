@@ -82,7 +82,8 @@ class EntryController extends BaseController
 
         $result = $render();
 
-        if (is_string($result)) {
+        // A string has the status of the response the controller was given, which is this one.
+        if (is_string($result) && $this->response->getStatusCode() === 200) {
             $cache->put($path, $result, null, $collection->cache);
         } elseif ($result instanceof ResponseInterface && $result->getStatusCode() === 200 && is_string($result->getBody())) {
             $cache->put($path, $result->getBody(), $result->getHeaderLine('Content-Type') ?: null, $collection->cache);
