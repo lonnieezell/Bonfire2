@@ -3028,6 +3028,12 @@ and the routes now take <code>(:segment)</code>. See <a href="../../building_adm
 <p><strong>Documentation in the admin.</strong> Outside production, the sidebar has a <strong>Documentation</strong> group that shows this guide for
 the version you have installed, with its structure read from <code>mkdocs.yml</code>. Anyone with <code>admin.access</code> can read it, and
 production has no menu and answers with a 404. See <a href="../../modules/documentation/">Documentation</a>.</p>
+<p><strong>Wider documentation nav.</strong> On wider screens the page list beside the documentation grows to fit most titles, and a title
+that still wraps no longer runs into the next one. Pages also read more easily, with larger body text, smaller headings
+and shorter lines.</p>
+<p><strong>Check your Debug Toolbar config.</strong> If your app's <code>app/Config/Toolbar.php</code> has no <code>$disableOnHeaders</code> property, htmx
+requests such as the Content preview fail after the first one in development. See
+<a href="../installation/#if-htmx-stops-working-in-development">If htmx stops working in development</a>.</p>
 <p><strong>Content: delete to trash.</strong> Users with <code>content.delete</code> can delete an entry from the list or its form, which moves its
 file to <code>content/.trash/&lt;collection&gt;/</code> and takes it off the site. <strong>Content entries</strong> in the Recycler restores or purges
 it, with <code>recycler.view</code>. Deleting a page takes the pages below it, after a confirmation that says how many, and restoring

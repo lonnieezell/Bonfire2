@@ -486,6 +486,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Updating Bonfire">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-htmx-stops-working-in-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If htmx stops working in development
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2577,6 +2594,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Updating Bonfire">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-htmx-stops-working-in-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If htmx stops working in development
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2739,6 +2773,17 @@ recreates <code>writable/</code> on each release, point the marker somewhere els
 <p>If you use AI coding agents, <code>php spark bf:agents</code> writes Bonfire's conventions into your project's <code>AGENTS.md</code>. Add it
 to the same <code>post-update-cmd</code> scripts to keep that guide in step with the installed version. See
 <a href="../ai_agents/">Working With AI Agents</a>.</p>
+<h3 id="if-htmx-stops-working-in-development">If htmx stops working in development</h3>
+<p>Bonfire's admin uses htmx, and CodeIgniter's Debug Toolbar must stay out of htmx responses. If your app's
+<code>app/Config/Toolbar.php</code> has no <code>$disableOnHeaders</code> property, the toolbar adds its script to them. The first htmx request
+works, then later ones fail without sending anything, and the browser console shows
+<code>Maximum call stack size exceeded</code>. For example, a Content preview keeps showing old text. Add the property to fix it:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$disableOnHeaders</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'X-Requested-With'</span> <span class="o">=&gt;</span> <span class="s1">'xmlhttprequest'</span><span class="p">,</span>
+    <span class="s1">'HX-Request'</span>       <span class="o">=&gt;</span> <span class="s1">'true'</span><span class="p">,</span>
+    <span class="s1">'X-Up-Version'</span>     <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+<span class="p">];</span>
+</code></pre></div>
 <h2 id="generate-some-data-for-testing">Generate some data for testing</h2>
 <p>You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):</p>
 <div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>db:seed<span class="w"> </span>Bonfire<span class="se">\\</span>Users<span class="se">\\</span>Database<span class="se">\\</span>Seeds<span class="se">\\</span>Seed100Users
