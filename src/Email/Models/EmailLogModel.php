@@ -11,6 +11,7 @@
 
 namespace Bonfire\Email\Models;
 
+use Bonfire\Core\Like;
 use CodeIgniter\Model;
 use DateTimeImmutable;
 
@@ -55,9 +56,7 @@ class EmailLogModel extends Model
         }
 
         if ($text('recipient') !== '') {
-            // like() only adds the ESCAPE clause, so a % or _ typed here would still be a wildcard.
-            $escape = $this->db->likeEscapeChar;
-            $needle = str_replace([$escape, '%', '_'], [$escape . $escape, $escape . '%', $escape . '_'], $text('recipient'));
+            $needle = Like::escape($text('recipient'), $this->db);
 
             $this->groupStart()
                 ->like('to', $needle)

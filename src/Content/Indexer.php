@@ -118,6 +118,8 @@ final readonly class Indexer
             $errors[Redirects::FILE] = "The old URIs of moved entries were not kept. {$e->getMessage()}";
         }
 
+        PageCache::clear();
+
         return new ReindexResult($added, $updated, count($stale), $unchanged, $errors);
     }
 

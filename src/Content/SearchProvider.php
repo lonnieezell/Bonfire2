@@ -12,6 +12,7 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
+use Bonfire\Core\Like;
 use Bonfire\Search\Interfaces\SearchProviderInterface;
 
 /**
@@ -32,9 +33,7 @@ class SearchProvider extends ContentEntryModel implements SearchProviderInterfac
         // In development, this picks up files changed since the last request.
         content();
 
-        // like() only adds the ESCAPE clause, so a % or _ typed here would still be a wildcard.
-        $escape = $this->db->likeEscapeChar;
-        $needle = str_replace([$escape, '%', '_'], [$escape . $escape, $escape . '%', $escape . '_'], $term);
+        $needle = Like::escape($term, $this->db);
 
         return $this->select('id, collection, title, status')
             ->groupStart()

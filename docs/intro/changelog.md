@@ -28,6 +28,33 @@ unpublished entry gets none, and a chain of moves ends at the latest URI. Routes
 `content()->redirectFor($uri)`; `findByUri()` still treats an old URI as missing. This replaces the "no redirects"
 limit noted for pages. See [Redirects](../content/routing.md#redirects).
 
+**Content: front-end search.** `content()->search($term)` returns a query on the published entries of every collection
+that have the term in their title or body, and `content()->search($term, 'blog')` narrows it to one collection. It works
+with `paginate()` and `pager()`, and Bonfire adds no search page, so build your own. See
+[Searching](../content/query_api.md#searching).
+
+**Content: sitemap.** [`content()->sitemap()`](../content/routing.md#sitemap) returns a response with a sitemap of every
+collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
+`$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
+routes win over it.
+
+**Content: editing globals in the admin.** Each set of globals that has a blueprint gets an item in the Content menu and a
+form built from the blueprint, with the same field types and validation as entries. It needs `content.access` and
+`content.edit`. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.
+See [Globals](../content/globals.md#editing-in-the-admin).
+
+**Content: draft preview.** An entry's form has a **Preview** button for users with `content.edit`. It gives a signed link,
+good for 24 hours, that shows the entry through the collection's `template` or `controller` whatever its status, to anyone
+who has the link and with no login, so a client can review a draft. The response is `noindex` and never cached, and a
+collection with neither a template nor a controller has no preview. Links are signed with the app's encryption key. See
+[Previewing a draft](../content/admin.md#previewing-a-draft).
+
+**Content: page caching.** A collection with `cache: 3600` in its config has its routed pages served to guests from the cache
+for that many seconds. It's off unless a collection sets it. Only `GET` requests with no query string from guests that the
+fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
+structure, saving a term or menu, and any reindex (including `content:reindex`) clear all of Content's cached pages.
+See [Caching](../content/routing.md#caching).
+
 **Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no

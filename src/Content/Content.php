@@ -35,6 +35,20 @@ final readonly class Content
     }
 
     /**
+     * Starts a query on the published entries whose title or Markdown body contain the term, in every collection or
+     * only the one named. It's ordered by title, and paginate() and pager() work on it as on any query.
+     * Bonfire adds no search page, so build yours around this.
+     *
+     * @throws ContentException when the collection doesn't exist or its config is invalid
+     */
+    public function search(string $term, ?string $collection = null): EntryQuery
+    {
+        $collection = $collection === null ? null : Collection::load($this->contentRoot, $collection);
+
+        return (new EntryQuery($collection, $term))->published();
+    }
+
+    /**
      * An RSS feed of a collection's published entries, in the collection's order. An entry with no URI is left out.
      * Return it from a route of your own.
      *
@@ -178,6 +192,24 @@ final readonly class Content
         $entries = $ids === [] ? [] : (new ContentEntryModel())->published()->select('id, title, uri')->whereIn('id', $ids)->findAll();
 
         return $tree->items(array_column($entries, null, 'id'), Collection::normalizeUri(rawurldecode(service('request')->getPath())));
+    }
+
+    /**
+     * A sitemap of every collection's published entries, as a response to return from a route.
+     * An entry with no URI is left out.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        $rows = (new ContentEntryModel())->published()->select('uri')->where('uri !=', '')->orderBy('uri')->findAll();
+        $site = rtrim(site_url(), '/');
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($rows as $row) {
+            $url = $site . '/' . implode('/', array_map(rawurlencode(...), explode('/', trim($row['uri'], '/'))));
+            $xml .= '  <url><loc>' . htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc></url>\n";
+        }
+
+        return service('response')->setContentType('application/xml', 'UTF-8')->setBody($xml . "</urlset>\n");
     }
 
     /**
