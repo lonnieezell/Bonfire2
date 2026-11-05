@@ -151,13 +151,15 @@ final readonly class Blueprint
      */
     private static function seoMapping(string $handle, mixed $seo, array $fields): array
     {
-        if (! is_array($seo) || ($seo !== [] && array_is_list($seo))) {
-            throw new ContentException("Blueprint {$handle}: `seo` must map " . implode(' and ', self::SEO) . ' to field handles.');
+        $allowed = implode(' and ', self::SEO);
+
+        if (! is_array($seo)) {
+            throw new ContentException("Blueprint {$handle}: `seo` must map {$allowed} to field handles.");
         }
 
         foreach ($seo as $key => $field) {
             if (! in_array($key, self::SEO, true)) {
-                throw new ContentException("Blueprint {$handle}: `seo` can map " . implode(' and ', self::SEO) . ", not `{$key}`.");
+                throw new ContentException("Blueprint {$handle}: `seo` can map {$allowed}, not `{$key}`.");
             }
 
             if (! is_string($field) || ! isset($fields[$field])) {

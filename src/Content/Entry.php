@@ -86,7 +86,7 @@ final readonly class Entry
      */
     public function seo(): array
     {
-        $map = $this->blueprint === null ? [] : $this->seoMapping();
+        $map = $this->seoMapping();
 
         $title       = $this->mappedText($map['title'] ?? null) ?? $this->title;
         $description = $this->mappedText($map['description'] ?? null) ?? $this->firstParagraph();
@@ -107,8 +107,12 @@ final readonly class Entry
      */
     private function seoMapping(): array
     {
+        if ($this->blueprint === null) {
+            return [];
+        }
+
         try {
-            return Blueprint::load(config('Content')->blueprintPath, $this->collection, (string) $this->blueprint)->seo;
+            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->seo;
         } catch (ContentException $e) {
             log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
 
@@ -117,13 +121,14 @@ final readonly class Entry
     }
 
     /**
-     * The text of a front matter value, or null when it's blank or not text.
+     * The text of a front matter value, or null when it's blank or not text or a number. A toggle is neither.
      */
     private function mappedText(?string $name): ?string
     {
-        $value = $name === null ? null : ($this->data[$name] ?? null);
+        $value = $name === null ? null : $this->field($name);
+        $text  = is_string($value) || is_int($value) || is_float($value) ? trim((string) $value) : '';
 
-        return is_scalar($value) && trim((string) $value) !== '' ? trim((string) $value) : null;
+        return $text === '' ? null : $text;
     }
 
     /**

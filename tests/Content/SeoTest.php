@@ -100,6 +100,14 @@ final class SeoTest extends ContentTestCase
         $this->assertSame('Fallback paragraph.', $seo['description']);
     }
 
+    public function testAMappedToggleIsNotATitle(): void
+    {
+        $this->mapSeo("seo:\n  title: featured\n");
+        $this->writeEntry("featured: true\n", "Body.\n");
+
+        $this->assertSame('First post', $this->first()->seo()['title']);
+    }
+
     public function testAnEntryWhoseBlueprintIsGoneUsesTheDefaults(): void
     {
         $this->reindexBlogWith("route: /blog/{slug}\nblueprints:\n  - ghost\n");
