@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: sitemap.** [`content()->sitemap()`](../content/routing.md#sitemap) returns a response with a sitemap of every
+collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
+`$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
+routes win over it.
+
 **Content: collection index pages.** [Listing a collection](../content/query_api.md#listing-a-collection) shows a route
 and view of your own that list a collection's published entries a page at a time, with pager links from
 `$query->pager()->links()`. Bonfire adds no index route, and `paginate()` still returns a plain list.

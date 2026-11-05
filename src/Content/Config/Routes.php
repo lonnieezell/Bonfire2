@@ -26,6 +26,10 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->post('content/(:segment)/(:segment)', 'EntryAdminController::update/$1/$2');
 });
 
+if (config('Content')->sitemap) {
+    $routes->get('sitemap.xml', [EntryController::class, 'sitemap']);
+}
+
 if (config('Content')->autoRoute) {
     // This file loads last (see Bonfire\Core\Namespaces), and add() goes after the routes for a single verb.
     $routes->add('(:any)', [EntryController::class, 'show']);

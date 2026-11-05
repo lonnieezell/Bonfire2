@@ -39,4 +39,10 @@ class Content extends BaseConfig
      * App routes always win over it.
      */
     public bool $autoRoute = false;
+
+    /**
+     * Whether Bonfire serves the sitemap at /sitemap.xml.
+     * App routes always win over it.
+     */
+    public bool $sitemap = false;
 }

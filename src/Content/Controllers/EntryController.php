@@ -17,6 +17,7 @@ use Bonfire\Content\Entry;
 use Bonfire\Content\Taxonomy;
 use Bonfire\Core\BaseController;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * The fallback route: resolves a request to its published entry, then hands it to
@@ -47,6 +48,14 @@ class EntryController extends BaseController
         }
 
         throw PageNotFoundException::forPageNotFound();
+    }
+
+    /**
+     * The optional /sitemap.xml route.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        return content()->sitemap();
     }
 
     /**

@@ -127,6 +127,31 @@ $routes->get('blog/(:segment)', static function (string $slug) {
 
 The collection still needs a `route`, since that's what gives its entries URIs.
 
+## Sitemap
+
+`content()->sitemap()` returns a response with a [sitemap](https://www.sitemaps.org/protocol.html) of the site's content, so
+you can serve it from any route of your own:
+
+```php
+$routes->get('sitemap.xml', static fn () => content()->sitemap());
+```
+
+The response has the `application/xml` content type. It lists every collection, with one `<loc>` for each entry that is
+published, as [What gets served](#what-gets-served) describes. Drafts, scheduled entries and trashed entries are left out,
+and so is an entry with no URI, such as one in a collection with no `route`. A location is the entry's URI added to your
+`site_url()`, in alphabetical order.
+
+Instead of writing the route, set `$sitemap` in `app/Config/Content.php`:
+
+```php
+public bool $sitemap = true;
+```
+
+Bonfire then serves the sitemap at `/sitemap.xml`. It's off by default, and works with `$autoRoute` on or off. Your own
+routes win over it, so a route of yours for `sitemap.xml` replaces it.
+
+A sitemap file is limited to 50,000 URLs, and `content()->sitemap()` doesn't split a larger site into several files.
+
 ## Seeing changes
 
 In production, run `php spark content:reindex` when you deploy. A changed file or `route` doesn't take effect until you do.

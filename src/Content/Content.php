@@ -13,6 +13,7 @@ namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\Models\ContentTermModel;
+use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * The content query API, available as content().
@@ -135,6 +136,24 @@ final readonly class Content
         $entries = $ids === [] ? [] : (new ContentEntryModel())->published()->select('id, title, uri')->whereIn('id', $ids)->findAll();
 
         return $tree->items(array_column($entries, null, 'id'), Collection::normalizeUri(rawurldecode(service('request')->getPath())));
+    }
+
+    /**
+     * A sitemap of every collection's published entries, as a response to return from a route.
+     * An entry with no URI is left out.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        $rows = (new ContentEntryModel())->published()->select('uri')->where('uri IS NOT NULL')->where('uri !=', '')->orderBy('uri')->findAll();
+        $site = rtrim(site_url(), '/');
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($rows as $row) {
+            $url = $site . '/' . implode('/', array_map(rawurlencode(...), explode('/', trim($row['uri'], '/'))));
+            $xml .= '  <url><loc>' . htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc></url>\n";
+        }
+
+        return service('response')->setContentType('application/xml', 'UTF-8')->setBody($xml . "</urlset>\n");
     }
 
     /**
