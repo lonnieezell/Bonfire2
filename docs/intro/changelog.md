@@ -20,6 +20,14 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: redirects.** When an entry's URI changes, because you moved a page in the tree editor or a reindex found a
+renamed file, a moved page or a changed route, its old URI now answers with a `301` to the new one, and so do the old URIs of
+the pages below it. They're kept in `content/redirects.yaml`, which **you should commit** with your content, and not in the
+index, so `content:reindex --fresh` keeps them. A published entry at a URI always wins over a redirect from it, a trashed or
+unpublished entry gets none, and a chain of moves ends at the latest URI. Routes of your own can use
+`content()->redirectFor($uri)`; `findByUri()` still treats an old URI as missing. This replaces the "no redirects"
+limit noted for pages. See [Redirects](../content/routing.md#redirects).
+
 **Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no

@@ -28,11 +28,13 @@ final readonly class EntryStore
 
     private string $root;
     private ContentFiles $files;
+    private Redirects $redirects;
 
     public function __construct(string $contentRoot)
     {
-        $this->root  = rtrim($contentRoot, '/') . '/';
-        $this->files = new ContentFiles($contentRoot);
+        $this->root      = rtrim($contentRoot, '/') . '/';
+        $this->files     = new ContentFiles($contentRoot);
+        $this->redirects = new Redirects($contentRoot);
     }
 
     /**
@@ -325,13 +327,20 @@ final readonly class EntryStore
 
             $this->files->move($moves);
 
-            $this->inTransaction(function () use ($collection, $tree, $group): void {
+            $placement = null;
+
+            $this->inTransaction(function () use ($collection, $tree, $group, &$placement): void {
                 (new ContentEntryModel())->update(array_keys($group), ['deleted_at' => null]);
 
                 if ($tree !== null) {
-                    $this->updatePlaces($this->placement($collection, $tree));
+                    $this->updatePlaces($placement = $this->placement($collection, $tree));
                 }
             }, 'The files came back from the trash, but the index could not be updated. Run content:reindex to bring it up to date.');
+
+            // Live pages below it that a hand-moved file put there get new URIs.
+            if ($placement !== null) {
+                $this->remember($this->movedUris($placement));
+            }
 
             return true;
         });
@@ -440,6 +449,7 @@ final readonly class EntryStore
     private function index(Collection $collection, array $record, string $path): array
     {
         $record['mtime'] = (int) filemtime($this->root . $path);
+        $old             = (new ContentEntryModel())->withDeleted()->select('uri')->find($record['id'])['uri'] ?? null;
 
         // The row and the pivot rows change together, or not at all.
         $this->inTransaction(static function () use ($collection, $record): void {
@@ -453,6 +463,10 @@ final readonly class EntryStore
 
             TermIndex::replace([$record['id'] => TermIndex::termIdsOf($collection, $record)]);
         }, 'The entry\'s file was written, but the index could not be updated. Run content:reindex to bring it up to date.');
+
+        if (array_key_exists('uri', $record) && $record['uri'] !== $old) {
+            $this->remember([$record['id'] => [$old, $record['uri']]]);
+        }
 
         return $record;
     }
@@ -613,6 +627,45 @@ final readonly class EntryStore
         $this->files->write(Structure::path($collection->handle), $placement['tree']->toYaml());
 
         $this->inTransaction(fn () => $this->updatePlaces($placement), 'The tree file was saved, but the index could not be updated. Run content:reindex.');
+        $this->remember($this->movedUris($placement));
+    }
+
+    /**
+     * The live entries whose URI this placement changes, with the old and the new one, by id.
+     *
+     * @param array{tree: Structure, placed: array<string, array{parent_id: string|null, sort: int, uri: string|null}>, rows: array<string, array<string, mixed>>} $placement
+     *
+     * @return array<string, array{string|null, string|null}>
+     */
+    private function movedUris(array $placement): array
+    {
+        $moves = [];
+
+        foreach ($placement['placed'] as $id => $columns) {
+            $row = $placement['rows'][$id];
+
+            if ($row['deleted_at'] === null && $columns['uri'] !== $row['uri']) {
+                $moves[$id] = [$row['uri'], $columns['uri']];
+            }
+        }
+
+        return $moves;
+    }
+
+    /**
+     * Records the old URIs for the redirects. This is after the change, which stays if it fails.
+     *
+     * @param array<string, array{string|null, string|null}> $moves the old and new URI of each entry, by id
+     *
+     * @throws ContentException
+     */
+    private function remember(array $moves): void
+    {
+        try {
+            $this->redirects->record($moves);
+        } catch (ContentException $e) {
+            throw new ContentException('The change was saved, but its old URIs could not be kept for redirects. ' . $e->getMessage(), 0, $e);
+        }
     }
 
     /**

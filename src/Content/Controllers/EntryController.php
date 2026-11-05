@@ -38,6 +38,10 @@ class EntryController extends BaseController
             return $page;
         }
 
+        if ($uri !== null && $entry === null && ($target = content()->redirectFor($uri)) !== null) {
+            return redirect()->to($target, 301);
+        }
+
         if ($collection?->controller !== null) {
             return $this->handOff($collection->controller, $entry);
         }

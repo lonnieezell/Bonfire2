@@ -67,10 +67,8 @@ Two entries can't share a URI, so the slug of each entry in a structured collect
 Rename an entry's file, or move it in the tree, and the next reindex or tree save recomputes the URI of the entry and of
 every entry below it.
 
-!!! warning "There are no redirects"
-
-    In this version, the old URI of a page that was renamed or moved is not redirected. It answers with a 404, and so do
-    the URIs of its descendants. Add redirects of your own if the old addresses matter.
+The old URI of the entry, and those of every entry below it, are kept in `content/redirects.yaml`, and with
+[routing](routing.md#redirects) on they answer with a `301` to the current ones. Commit that file with your content.
 
 ## The tree editor
 

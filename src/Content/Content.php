@@ -128,6 +128,32 @@ final readonly class Content
     }
 
     /**
+     * Where an old URI of an entry now lives, for a route of your own to redirect to with a 301. There is none if the
+     * URI is a published entry's now, or the entry that had it is trashed, a draft, scheduled or gone, or has no URI.
+     * A redirects file that can't be read is logged and gives none.
+     */
+    public function redirectFor(string $uri): ?string
+    {
+        $uri = Collection::normalizeUri($uri);
+
+        try {
+            $id = (new Redirects($this->contentRoot))->all()[$uri] ?? null;
+        } catch (ContentException $e) {
+            log_message('error', 'Content: ' . Redirects::FILE . ': {message}', ['message' => $e->getMessage()]);
+
+            return null;
+        }
+
+        if ($id === null || $this->findByUri($uri) !== null) {
+            return null;
+        }
+
+        $row = (new ContentEntryModel())->published()->select('uri')->where('id', $id)->first();
+
+        return $row === null || $row['uri'] === null || $row['uri'] === $uri ? null : $row['uri'];
+    }
+
+    /**
      * A menu as a site shows it. An item whose entry can't be shown is left out, along with the items below it.
      * A tree file that can't be read is logged and gives an empty menu.
      *
