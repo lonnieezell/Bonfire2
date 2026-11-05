@@ -24,11 +24,13 @@ final readonly class GlobalSet
     /**
      * @param array<array-key, mixed> $data      the file's values
      * @param ?Blueprint              $blueprint what describes the values, if the set has one
+     * @param string                  $hash      of the file the values were read from, for a form to catch a change since
      */
     public function __construct(
         public string $handle,
         private array $data,
-        private ?Blueprint $blueprint,
+        public ?Blueprint $blueprint,
+        public string $hash = '',
     ) {
     }
 
@@ -44,8 +46,15 @@ final readonly class GlobalSet
             throw new ContentException("Unknown globals: {$handle}");
         }
 
+        // One read, so the hash is of the text the values came from.
+        $raw = file_get_contents($path);
+
+        if ($raw === false) {
+            throw new ContentException("The globals {$handle} could not be read.");
+        }
+
         try {
-            $data = Yaml::parseFile($path, Yaml::PARSE_DATETIME);
+            $data = Yaml::parse($raw, Yaml::PARSE_DATETIME);
         } catch (ParseException $e) {
             throw new ContentException("Invalid YAML in globals {$handle}: {$e->getMessage()}", 0, $e);
         }
@@ -64,7 +73,37 @@ final readonly class GlobalSet
             }
         });
 
-        return new self($handle, $data, Blueprint::loadGlobal($blueprintPath, $handle));
+        return new self($handle, $data, Blueprint::loadGlobal($blueprintPath, $handle), hash('sha256', $raw));
+    }
+
+    /**
+     * Every set with a valid file. One that can't be loaded is logged and left out.
+     *
+     * @return list<self>
+     */
+    public static function all(string $contentRoot, string $blueprintPath): array
+    {
+        $sets = [];
+
+        foreach (glob(rtrim($contentRoot, '/') . '/globals/*.yaml') ?: [] as $file) {
+            try {
+                $sets[] = self::load($contentRoot, $blueprintPath, basename($file, '.yaml'));
+            } catch (ContentException $e) {
+                log_message('error', 'Content: globals {set}: {message}', ['set' => basename($file), 'message' => $e->getMessage()]);
+            }
+        }
+
+        return $sets;
+    }
+
+    /**
+     * The file's values as the admin form edits them: dates as text, and keys the blueprint doesn't list as they are.
+     *
+     * @return array<array-key, mixed>
+     */
+    public function data(): array
+    {
+        return $this->data;
     }
 
     /**

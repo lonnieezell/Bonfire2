@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: editing globals in the admin.** Each set of globals that has a blueprint gets an item in the Content menu and a
+form built from the blueprint, with the same field types and validation as entries. It needs `content.access` and
+`content.edit`. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.
+See [Globals](../content/globals.md#editing-in-the-admin).
+
 **Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no

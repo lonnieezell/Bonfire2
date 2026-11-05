@@ -54,13 +54,37 @@ and a date or datetime is text like `2026-10-27` or `2026-10-27 09:30:00`. Other
 A value the file leaves out or empty, or an integer or date that doesn't fit, such as `posts_per_page: lots`, gives the
 default you pass, or `null`. A value the blueprint doesn't list comes back as the file holds it.
 
+## Editing in the admin
+
+Each set that has a blueprint gets an item in the **Content** menu, titled with the blueprint's `title` (or its handle), and
+a form at `/admin/site-values/<handle>`. The form is built from the blueprint the same way an [entry's form](admin.md) is, so
+it has the same [field types](field_types.md) and the same `validate:` rules. A set with no blueprint has no form and no
+menu item, because there is nothing to build one from.
+
+Users need `content.access` and `content.edit` to see the item, open the form or save it. Anyone else is sent back to the
+dashboard.
+
+Saving writes the set's YAML file, so `globals('site')` shows the new values on the next call:
+
+- The file is written whole to a temporary file and renamed into place, so nothing reads half of it.
+- Keys the blueprint doesn't list stay as they were, with their values. A field left empty doesn't add a key.
+- Comments in the file are dropped, because the YAML is written afresh. Keys keep their order.
+- A date written without quotes, such as `2026-10-27`, is saved back as `2026-10-27 00:00:00`. Quote a date to keep it
+  exactly as you wrote it.
+- If the form doesn't validate, it shows again with what you typed and an error under each field that failed. Nothing is
+  written.
+
+The form carries a hash of the file it loaded. If the file is different when you save, because someone else saved it or you
+edited it by hand, the save is refused with the same message and reload link as an [entry's](admin.md#when-the-file-changed).
+Your input stays in the form, and the file is left as the other change made it.
+
 ## How it works
 
 A set is read straight from its file on each call to `globals()`. There is no index and no migration, so `content:reindex`
 doesn't touch it and an edit to the file shows on the next request.
 
-Globals work with [auto-routing](routing.md) on or off, and with no theme. A set has no routes and no URL: nothing serves
-`content/globals`, and it isn't an entry.
+Globals work with [auto-routing](routing.md) on or off, and with no theme. A set has no front-end routes and no URL:
+nothing serves `content/globals`, and it isn't an entry. Only the admin form above has a route.
 
 `globals()` throws a `Bonfire\Content\ContentException` for a handle with no file, and for a file that isn't valid YAML,
 isn't a mapping, or whose blueprint is invalid.

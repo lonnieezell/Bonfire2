@@ -15,6 +15,10 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->get('navigation/(:segment)', 'NavigationAdminController::edit/$1', ['as' => 'content-navigation']);
     $routes->post('navigation/(:segment)', 'NavigationAdminController::save/$1');
 
+    // Not under globals/, because GlobalsTest checks that globals have no route of their own on the front end.
+    $routes->get('site-values/(:segment)', 'GlobalAdminController::edit/$1', ['as' => 'content-global']);
+    $routes->post('site-values/(:segment)', 'GlobalAdminController::save/$1');
+
     $routes->post('content/preview', 'EntryAdminController::preview', ['as' => 'content-preview']);
     $routes->get('content/(:segment)', 'EntryAdminController::list/$1', ['as' => 'content-list']);
     $routes->get('content/(:segment)/new', 'EntryAdminController::create/$1', ['as' => 'content-new']);
