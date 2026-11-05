@@ -1548,17 +1548,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#changing-a-slug-doesnt-redirect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changing a slug doesn't redirect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#saving-in-the-admin-drops-yaml-comments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2544,17 +2533,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#changing-a-slug-doesnt-redirect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changing a slug doesn't redirect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#saving-in-the-admin-drops-yaml-comments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2685,13 +2663,6 @@ volume. Set <code>$contentPath</code> in <code>app/Config/Content.php</code> to 
 <p>The index is in your database, which all servers share. Only the files are local. If you build your servers from an image
 or deploy a fresh copy of the code, the files in it are the ones that were committed, and a post saved in the admin since
 isn't among them. See <a href="#git-isnt-automated">Git isn't automated</a>.</p>
-<h2 id="changing-a-slug-doesnt-redirect">Changing a slug doesn't redirect</h2>
-<p>When you rename an entry's file, or move a page in a <a href="../structure/#changing-a-slug-or-moving-a-page">structure</a>, its URI
-changes, and the old URI answers with a 404. The URIs of a page's children change with it. Nothing remembers the old
-ones.</p>
-<p>If the old addresses matter, such as for search engines, add redirects of your own with <code>$routes-&gt;addRedirect()</code> or in
-your web server, before you rename. The admin can't rename an entry, because the slug is the file's name. See
-<a href="../admin/#creating-and-editing">Editing entries</a>.</p>
 <h2 id="saving-in-the-admin-drops-yaml-comments">Saving in the admin drops YAML comments</h2>
 <p>The admin writes an entry's front matter afresh from its values, so comments in it are lost on save. Keys keep their
 order, and keys the blueprint doesn't know keep their values. The same goes for a <a href="../taxonomies/#editing-terms-in-the-admin">term</a>
@@ -2711,6 +2682,8 @@ or fail on a conflict. Pick one place where content is edited, and move it from 
 <li>Don't allow editing in the admin on production, by taking <code>content.edit</code> away from every group there. See
   <a href="../admin/#permissions">Permissions</a>.</li>
 </ul>
+<p>Commit <code>redirects.yaml</code> with the rest. It holds the old URIs of renamed and moved entries, and nothing else can bring them
+back. See <a href="../routing/#redirects">Redirects</a>.</p>
 <p>Either way, run <code>php spark content:reindex</code> after the files change. See <a href="../#when-to-reindex">Building the index</a>.</p>
 <h2 id="there-are-no-permissions-for-one-collection">There are no permissions for one collection</h2>
 <p>The <code>content.*</code> permissions apply to every collection, and to the taxonomies' terms too. You can't let someone edit the

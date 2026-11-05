@@ -3060,6 +3060,13 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: redirects.</strong> When an entry's URI changes, because you moved a page in the tree editor or a reindex found a
+renamed file, a moved page or a changed route, its old URI now answers with a <code>301</code> to the new one, and so do the old URIs of
+the pages below it. They're kept in <code>content/redirects.yaml</code>, which <strong>you should commit</strong> with your content, and not in the
+index, so <code>content:reindex --fresh</code> keeps them. A published entry at a URI always wins over a redirect from it, a trashed or
+unpublished entry gets none, and a chain of moves ends at the latest URI. Routes of your own can use
+<code>content()-&gt;redirectFor($uri)</code>; <code>findByUri()</code> still treats an old URI as missing. This replaces the "no redirects"
+limit noted for pages. See <a href="../../content/routing/#redirects">Redirects</a>.</p>
 <p><strong>Content: front-end search.</strong> <code>content()-&gt;search($term)</code> returns a query on the published entries of every collection
 that have the term in their title or body, and <code>content()-&gt;search($term, 'blog')</code> narrows it to one collection. It works
 with <code>paginate()</code> and <code>pager()</code>, and Bonfire adds no search page, so build your own. See

@@ -2789,11 +2789,8 @@ reindex reads the file and writes three columns for each entry:</p>
 <h3 id="changing-a-slug-or-moving-a-page">Changing a slug or moving a page</h3>
 <p>Rename an entry's file, or move it in the tree, and the next reindex or tree save recomputes the URI of the entry and of
 every entry below it.</p>
-<div class="admonition warning">
-<p class="admonition-title">There are no redirects</p>
-<p>In this version, the old URI of a page that was renamed or moved is not redirected. It answers with a 404, and so do
-the URIs of its descendants. Add redirects of your own if the old addresses matter.</p>
-</div>
+<p>The old URI of the entry, and those of every entry below it, are kept in <code>content/redirects.yaml</code>, and with
+<a href="../routing/#redirects">routing</a> on they answer with a <code>301</code> to the current ones. Commit that file with your content.</p>
 <h2 id="the-tree-editor">The tree editor</h2>
 <p>A user with <code>content.structure</code> sees <strong>Edit structure</strong> on the collection's list, which opens the editor at
 <code>/admin/content/&lt;collection&gt;/structure</code>. It shows the entries as a nested list. Drag the handle of a page to reorder it,

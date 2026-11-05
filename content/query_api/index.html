@@ -2980,6 +2980,8 @@ and scheduled entries too.</p>
 <h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
 <p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
 or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
+<p>An old URI of an entry that was renamed or moved is unknown to it. <code>content()-&gt;redirectFor('/blog/old-slug')</code> gives the
+entry's current URI, or <code>null</code>. See <a href="../routing/#redirects">Redirects</a>.</p>
 <h2 id="sitemap">Sitemap</h2>
 <p><code>content()-&gt;sitemap()</code> returns a response with a sitemap of every collection's published entries that have a URI. See
 <a href="../routing/#sitemap">Sitemap</a>.</p>

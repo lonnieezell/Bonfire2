@@ -1519,6 +1519,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#redirects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sitemap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2716,6 +2727,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#redirects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sitemap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2979,6 +3001,53 @@ page is requested.</p>
 <span class="p">});</span>
 </code></pre></div>
 <p>The collection still needs a <code>route</code>, since that's what gives its entries URIs.</p>
+<h2 id="redirects">Redirects</h2>
+<p>When an entry's URI changes, its old URI keeps working. With <code>$autoRoute</code> on, a request for the old URI gets a <code>301</code> to
+the entry's current one. A URI changes when you move a page in the <a href="../structure/#the-tree-editor">tree editor</a>, and when
+a reindex finds that a file was renamed, a page moved in its tree file, or a <code>route</code> changed. Moving a page covers the pages
+below it too. The admin has no field for an entry's slug, because the slug is the file's name, so a rename is a rename
+of the file.</p>
+<p>The old URIs are kept in <code>redirects.yaml</code> at the content root, next to <code>collections/</code>. They aren't in the index, because
+the index can be rebuilt from your files but an old URI can't, so a table would lose every redirect on a rebuild or on a
+new environment. <code>php spark content:reindex --fresh</code> leaves the file alone.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">/about</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5c1e9a7b-3d24-4f68-8a0e-71b2c9d4e6f3</span>
+<span class="nt">/about/team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9a3d7e51-2b86-4c0f-a1d9-4e8f6b2c7a15</span>
+</code></pre></div>
+<p>Each line is an old URI and the id of the entry that now has it. Because it names the entry and not its new URI, a
+second move changes nothing in the file: after <code>/a</code> becomes <code>/b</code> and then <code>/c</code>, both <code>/a</code> and <code>/b</code> lead to <code>/c</code>. Bonfire
+writes the file, sorted by URI, and you can edit it by hand. Comments in it don't survive the next write, and a line
+whose id isn't a UUID is dropped. The file is read when a URI isn't found, so a request that has an entry doesn't pay for it.</p>
+<p><strong>Commit the file with your content.</strong> It is part of the site like an entry is, and the redirects are lost with a server
+that has no copy. A reindex on production that finds a changed URI writes to it too, so, as for the <a href="../constraints/#the-content-directory-must-be-on-one-machine">entry
+files</a>, production needs the content directory on one server
+or on storage that all servers share. Git isn't automated: see <a href="../constraints/#git-isnt-automated">Git isn't automated</a>.</p>
+<p>A redirect never overrides or points at something that isn't there:</p>
+<ul>
+<li>An entry published at a URI always wins over a redirect from it. Move a page back to an old URI, or create an entry
+  there, even a draft, and the redirect from that URI is dropped from the file, so there are no loops.</li>
+<li>If the entry is in the trash, a draft, or scheduled, or has been deleted for good, the old URI is a <code>404</code>. Restore or
+  publish it and the redirect works again.</li>
+<li>Only a <code>GET</code> request is redirected.</li>
+</ul>
+<p>A file that can't be read is logged and gives no redirects. A reindex then reports it and doesn't touch it, and a move in the
+admin is saved but says its old URIs weren't kept. Fix the file, and the moves made meanwhile are lost.</p>
+<p>For a route of your own, <code>content()-&gt;redirectFor()</code> gives the same answer as the fallback route:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'blog/(:segment)'</span><span class="p">,</span> <span class="k">static</span> <span class="k">function</span> <span class="p">(</span><span class="nx">string</span> <span class="nv">$slug</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$uri</span>   <span class="o">=</span> <span class="s2">"/blog/</span><span class="si">{</span><span class="nv">$slug</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span>
+    <span class="nv">$entry</span> <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">findByUri</span><span class="p">(</span><span class="nv">$uri</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$entry</span> <span class="o">===</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nv">$current</span> <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">redirectFor</span><span class="p">(</span><span class="nv">$uri</span><span class="p">))</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">redirect</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">to</span><span class="p">(</span><span class="nv">$current</span><span class="p">,</span> <span class="mi">301</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">throw</span> <span class="nx">PageNotFoundException</span><span class="o">::</span><span class="na">forPageNotFound</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'blog/show'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'entry'</span> <span class="o">=&gt;</span> <span class="nv">$entry</span><span class="p">]);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>It returns the entry's current URI, or <code>null</code>. <code>findByUri()</code> still treats an old URI as missing.</p>
 <h2 id="sitemap">Sitemap</h2>
 <p><code>content()-&gt;sitemap()</code> returns a response with a <a href="https://www.sitemaps.org/protocol.html">sitemap</a> of the site's content, so
 you can serve it from any route of your own:</p>
