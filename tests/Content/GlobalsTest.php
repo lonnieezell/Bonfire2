@@ -118,13 +118,6 @@ final class GlobalsTest extends ContentTestCase
         $this->assertSame('Welcome', globals('site')->field('name', 'Welcome'));
     }
 
-    public function testAToggleThatIsNotTrueOrFalseGivesTheDefault(): void
-    {
-        $this->writeFile('globals/site.yaml', "maintenance: 'yes'\n");
-
-        $this->assertSame('default', globals('site')->field('maintenance', 'default'));
-    }
-
     public function testAnUnquotedDateIsTextWithOrWithoutABlueprint(): void
     {
         unlink($this->blueprints . 'globals/site.yaml');

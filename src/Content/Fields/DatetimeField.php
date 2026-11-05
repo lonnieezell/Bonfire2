@@ -38,11 +38,6 @@ final class DatetimeField extends FieldType
         return (new DateField())->toFrontMatter($input, self::asDate($field));
     }
 
-    public function cast(mixed $stored, Field $field): ?string
-    {
-        return (new DateField())->cast($stored, self::asDate($field));
-    }
-
     public function fromFrontMatter(mixed $stored, Field $field): string
     {
         return (new DateField())->fromFrontMatter($stored, self::asDate($field));

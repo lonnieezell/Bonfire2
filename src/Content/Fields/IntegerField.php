@@ -70,13 +70,6 @@ final class IntegerField extends FieldType
         return $input === '' ? null : (int) $input;
     }
 
-    public function cast(mixed $stored, Field $field): ?int
-    {
-        $number = $this->fromFrontMatter($stored, $field);
-
-        return $number === '' ? null : (int) $number;
-    }
-
     public function fromFrontMatter(mixed $stored, Field $field): string
     {
         if (is_float($stored) && floor($stored) === $stored) {

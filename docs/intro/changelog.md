@@ -23,8 +23,7 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 **Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
-index or migration, work with auto-routing off, and have no routes. A custom field type can add a `cast()` method. See
-[Globals](../content/globals.md).
+index or migration, work with auto-routing off, and have no routes. See [Globals](../content/globals.md).
 
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in

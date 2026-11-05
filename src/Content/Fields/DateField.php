@@ -38,16 +38,6 @@ final class DateField extends FieldType
         return $input === '' ? null : $input;
     }
 
-    /**
-     * The date as text, which is what an entry's front matter holds.
-     */
-    public function cast(mixed $stored, Field $field): ?string
-    {
-        $date = $this->fromFrontMatter($stored, $field);
-
-        return $date === '' ? null : $date;
-    }
-
     public function fromFrontMatter(mixed $stored, Field $field): string
     {
         return is_string($stored) ? self::normalize($stored, self::hasTime($field)) : '';

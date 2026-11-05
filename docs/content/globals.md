@@ -51,10 +51,8 @@ $site->field('phone', 'not listed');   // the default, because the file has no `
 
 `field()` casts the value by the type of the blueprint field that holds it. A toggle is a `bool`, an integer is an `int`
 and a date or datetime is text like `2026-10-27` or `2026-10-27 09:30:00`. Other types come back as the file holds them.
-A value the file leaves out or empty, or that doesn't fit its type, such as `posts_per_page: lots`, gives the default you
-pass, or `null`. A value the blueprint doesn't list comes back as the file holds it.
-
-A [custom field type](custom_field_types.md) casts with its `cast()` method.
+A value the file leaves out or empty, or an integer or date that doesn't fit, such as `posts_per_page: lots`, gives the
+default you pass, or `null`. A value the blueprint doesn't list comes back as the file holds it.
 
 ## How it works
 

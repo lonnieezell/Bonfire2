@@ -60,7 +60,7 @@ final readonly class GlobalSet
         // YAML turns unquoted dates into objects, and a value should be text like an entry's front matter.
         array_walk_recursive($data, static function (mixed &$value): void {
             if ($value instanceof DateTimeInterface) {
-                $value = EntryParser::toAppTime($value);
+                $value = $value->format('Y-m-d H:i:s');
             }
         });
 
@@ -69,22 +69,38 @@ final readonly class GlobalSet
 
     /**
      * A value, cast by the type of the blueprint field that holds it. A value the file leaves out or empty,
-     * or that doesn't fit its type, gives the default.
+     * or that doesn't fit an integer or date, gives the default.
      */
     public function field(string $name, mixed $default = null): mixed
     {
         $value = $this->data[$name] ?? null;
 
-        foreach ($this->blueprint->fields ?? [] as $field) {
-            $type = FieldTypes::get($field->type);
+        if ($value !== null) {
+            foreach ($this->blueprint->fields ?? [] as $field) {
+                if ($field->handle === $name) {
+                    $value = self::cast($value, $field);
 
-            if ($type->storedInFrontMatter() && $type->key($field) === $name) {
-                $value = $type->cast($value, $field);
-
-                break;
+                    break;
+                }
             }
         }
 
         return $value === null || $value === '' ? $default : $value;
+    }
+
+    /**
+     * Casts a value as its field's type reads it from a file: a toggle is a bool, an integer an int, and a date
+     * or datetime text. Null when it doesn't fit.
+     */
+    private static function cast(mixed $value, Field $field): mixed
+    {
+        $text = FieldTypes::get($field->type)->fromFrontMatter($value, $field);
+
+        return match ($field->type) {
+            'toggle'           => $text === '1',
+            'integer'          => $text === '' ? null : (int) $text,
+            'date', 'datetime' => $text === '' ? null : $text,
+            default            => $value,
+        };
     }
 }
