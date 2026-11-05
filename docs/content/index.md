@@ -21,7 +21,7 @@ So the files are for people and the index is for the site. If they differ, the f
 
 You can edit entries in the admin, where each collection has a list and a form built from its blueprint: see
 [Editing entries](admin.md), [Blueprints](blueprints.md) and [Field types](field_types.md). To serve entries as pages,
-see [Routing](routing.md). To keep pages in a tree with nested URIs, see [Pages and structures](structure.md).
+see [Routing](routing.md). To keep pages in a tree with nested URIs, see [Pages and structures](structure.md). For the `<head>` tags of an entry's page, see [SEO](seo.md).
 
 ## File layout
 

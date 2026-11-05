@@ -30,17 +30,24 @@ final readonly class Blueprint
      */
     public const RESERVED = ['id', 'status', 'published_at', 'blueprint'];
 
+    /**
+     * The SEO values a blueprint can map a field to.
+     */
+    private const SEO = ['title', 'description'];
+
     private const NAME   = '/^[A-Za-z0-9_-]{1,100}$/';
     private const HANDLE = '/^[A-Za-z][A-Za-z0-9_]{0,99}$/';
 
     /**
-     * @param list<Field> $fields
+     * @param list<Field>           $fields
+     * @param array<string, string> $seo    the handle of the field that feeds each SEO value (`title`, `description`)
      */
     public function __construct(
         public string $collection,
         public string $handle,
         public string $title,
         public array $fields,
+        public array $seo = [],
     ) {
     }
 
@@ -126,7 +133,39 @@ final readonly class Blueprint
             $fields[$field->handle] = $field;
         }
 
-        return new self($collection, $handle, is_string($config['title'] ?? null) ? $config['title'] : $handle, array_values($fields));
+        return new self(
+            $collection,
+            $handle,
+            is_string($config['title'] ?? null) ? $config['title'] : $handle,
+            array_values($fields),
+            self::seoMapping($handle, $config['seo'] ?? [], $fields),
+        );
+    }
+
+    /**
+     * @param array<string, Field> $fields
+     *
+     * @return array<string, string>
+     *
+     * @throws ContentException when the mapping names something that isn't an SEO value or a field
+     */
+    private static function seoMapping(string $handle, mixed $seo, array $fields): array
+    {
+        if (! is_array($seo) || ($seo !== [] && array_is_list($seo))) {
+            throw new ContentException("Blueprint {$handle}: `seo` must map " . implode(' and ', self::SEO) . ' to field handles.');
+        }
+
+        foreach ($seo as $key => $field) {
+            if (! in_array($key, self::SEO, true)) {
+                throw new ContentException("Blueprint {$handle}: `seo` can map " . implode(' and ', self::SEO) . ", not `{$key}`.");
+            }
+
+            if (! is_string($field) || ! isset($fields[$field])) {
+                throw new ContentException("Blueprint {$handle}: `seo.{$key}` needs the handle of one of its fields" . (is_string($field) ? ", not `{$field}`." : '.'));
+            }
+        }
+
+        return $seo;
     }
 
     /**

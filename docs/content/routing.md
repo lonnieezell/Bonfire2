@@ -76,6 +76,8 @@ It receives `$entry` and `$collection`, and can extend the theme's layout like a
 `$entry` is described under [Entries](query_api.md#entries). `$collection` is a `Bonfire\Content\Collection`, with public
 properties such as `$collection->title` and `$collection->handle`.
 
+Bonfire adds no `<head>` tags for the entry unless you set `$autoSeo`. See [SEO](seo.md).
+
 ## Handing off to a controller
 
 Use a controller when you need something between finding the entry and rendering the page, such as extra queries, an

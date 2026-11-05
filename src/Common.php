@@ -1,6 +1,7 @@
 <?php
 
 use Bonfire\Content\Content;
+use Bonfire\Content\Entry;
 use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
@@ -138,6 +139,33 @@ if (! function_exists('content')) {
         }
 
         return new Content($contentPath);
+    }
+}
+
+if (! function_exists('content_seo')) {
+    /**
+     * Adds an entry's SEO values to the page's head through the `viewMeta` service: the title, the description,
+     * the canonical link and the Open Graph tags. The layout has to render the `title`, `meta` and `link` types.
+     * Values are escaped here, as the service prints what it is given.
+     */
+    function content_seo(Entry $entry): void
+    {
+        $seo  = $entry->seo();
+        $meta = service('viewMeta');
+
+        $meta->setTitle(esc($seo['title']));
+
+        if ($seo['description'] !== '') {
+            $meta->addMeta(['name' => 'description', 'content' => esc($seo['description'])]);
+        }
+
+        if ($seo['canonical'] !== null) {
+            $meta->addLink(['rel' => 'canonical', 'href' => esc($seo['canonical'])]);
+        }
+
+        foreach ($seo['og'] as $property => $content) {
+            $meta->addMeta(['property' => $property, 'content' => esc($content)]);
+        }
     }
 }
 

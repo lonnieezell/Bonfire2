@@ -114,6 +114,8 @@ $entry->field('tagline', 'Welcome'); // or a default
 $entry->content();                   // the body as HTML
 
 $entry->entries('related');          // the entries an `entries` field links to
+
+$entry->seo();                       // title, description, canonical URL and Open Graph values
 ```
 
 `entries()` returns the entries in the order the file lists them, and skips a link whose entry is missing or in the

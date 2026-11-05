@@ -20,6 +20,12 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: SEO values.** `$entry->seo()` returns an entry's title, description, canonical URL and Open Graph values. A
+blueprint's `seo` key maps the fields that feed the title and description, which default to `title` and the body's first
+paragraph. `content_seo($entry)` adds them to the page's `<head>` through `viewMeta`, escaped. `Config\Content::$autoSeo`,
+off by default, does it for pages rendered from a collection's `template`. The App theme's `master.php` now also renders the
+`link` tags, which the canonical link needs: add `<?= $viewMeta->render('link') ?>` to a copy of your own. See [SEO](../content/seo.md).
+
 **Content: structure editor save bar.** Moving a page on the Edit structure screen now shows the save bar. Before, the bar
 stayed hidden, so with JavaScript on there was no way to save a new order. Discard opens the page again, which puts the
 pages back.

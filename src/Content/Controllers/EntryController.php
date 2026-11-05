@@ -43,6 +43,10 @@ class EntryController extends BaseController
         }
 
         if ($collection?->template !== null) {
+            if (config('Content')->autoSeo) {
+                content_seo($entry);
+            }
+
             return render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]);
         }
 
