@@ -3060,6 +3060,11 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: page caching.</strong> A collection with <code>cache: 3600</code> in its config has its routed pages served to guests from the cache
+for that many seconds. It's off unless a collection sets it. Only <code>GET</code> requests with no query string from guests that the
+fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
+structure, saving a term or menu, and any reindex (including <code>content:reindex</code>) clear all of Content's cached pages.
+See <a href="../../content/routing/#caching">Caching</a>.</p>
 <p><strong>Content: globals.</strong> Keep site-wide values in <code>content/globals/&lt;handle&gt;.yaml</code>, describe them with a blueprint at
 <code>resources/blueprints/globals/&lt;handle&gt;.yaml</code>, and read them anywhere with <code>globals('site')-&gt;field('name', 'default')</code>. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no

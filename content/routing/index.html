@@ -1469,6 +1469,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-clears-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What clears it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#handing-off-to-a-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2616,6 +2644,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-clears-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What clears it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#handing-off-to-a-controller" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2802,6 +2858,45 @@ gets a 404 before any template or controller runs.</p>
 </code></pre></div>
 <p><code>$entry</code> is described under <a href="../query_api/#entries">Entries</a>. <code>$collection</code> is a <code>Bonfire\Content\Collection</code>, with public
 properties such as <code>$collection-&gt;title</code> and <code>$collection-&gt;handle</code>.</p>
+<h2 id="caching">Caching</h2>
+<p>A collection can have its pages served from the cache. It's off unless the collection sets <code>cache</code>, the number of seconds
+a page is kept:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Blog</span>
+<span class="nt">route</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/blog/{slug}</span>
+<span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blog/show</span>
+<span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+</code></pre></div>
+<p>A guest's repeat <code>GET</code> of one of its pages then comes from your app's cache, without rendering the template or running
+your controller. It's the response body that is kept, with the <code>Content-Type</code> of a controller's response, so a
+controller that sets a cookie or other headers doesn't have them replayed. <code>cache</code> must be a whole number of seconds, at
+least 1, or the collection's config is invalid.</p>
+<p>Only some requests are cached:</p>
+<ul>
+<li>Only pages that the fallback route serves, so a route of your own is never cached, even at an entry's URI.</li>
+<li>Only <code>GET</code> requests with no query string. A page may depend on the query string, for example to paginate, so those
+  are rendered every time.</li>
+<li>Only requests from guests. A logged-in user always gets a fresh page, so an editor sees a change at once, and the page
+  they get is not kept for guests.</li>
+<li>Only pages that rendered with a 200 status. A 404, a redirect or an error is never cached.</li>
+<li><a href="../taxonomies/#term-pages">Term pages</a> aren't, since they belong to a taxonomy and not to a collection.</li>
+</ul>
+<p>The admin's Markdown preview isn't served by the fallback route, so it's never cached either.</p>
+<p>Don't cache a collection whose pages differ between guests, such as those with a form that holds a CSRF token, or that show
+something from the session. Every guest would get the first guest's copy. A page is kept by its path alone, so the same
+goes for one that changes with a request header such as <code>Accept</code> or <code>HX-Request</code>, or with the host.</p>
+<h3 id="what-clears-it">What clears it</h3>
+<p>Anything that changes Content clears <strong>all</strong> of its cached pages, not just the one that changed, because a renamed page
+changes the menus and <code>entries</code> links on other pages. These all clear it:</p>
+<ul>
+<li>Saving an entry, creating one, or moving pages in the structure editor.</li>
+<li>Moving an entry to the trash, restoring it and purging it.</li>
+<li>Saving a term or a navigation menu.</li>
+<li><code>content:reindex</code>, and the automatic reindex in development.</li>
+</ul>
+<p>A changed file that isn't reindexed doesn't, because the index is what's served. Nor does time passing: a scheduled entry
+whose <code>published_at</code> arrives shows on cached pages that list it only once they expire, after <code>cache</code> seconds at most.</p>
+<p>Clearing is done by changing a generation number in the cache, so the old pages are left to expire and the cache is never
+emptied. With the <code>dummy</code> cache handler nothing is kept, so every request renders.</p>
 <h2 id="handing-off-to-a-controller">Handing off to a controller</h2>
 <p>Use a controller when you need something between finding the entry and rendering the page, such as extra queries, an
 authorization check or a JSON response:</p>
