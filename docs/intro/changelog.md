@@ -18,6 +18,10 @@ and the routes now take `(:segment)`. See [The Recycler](../building_admin_modul
 the version you have installed, with its structure read from `mkdocs.yml`. Anyone with `admin.access` can read it, and
 production has no menu and answers with a 404. See [Documentation](../modules/documentation.md).
 
+**Wider documentation nav.** On wider screens the page list beside the documentation grows to fit most titles, and a title
+that still wraps no longer runs into the next one. Pages also read more easily, with larger body text, smaller headings
+and shorter lines.
+
 **Content: delete to trash.** Users with `content.delete` can delete an entry from the list or its form, which moves its
 file to `content/.trash/<collection>/` and takes it off the site. **Content entries** in the Recycler restores or purges
 it, with `recycler.view`. Deleting a page takes the pages below it, after a confirmation that says how many, and restoring
