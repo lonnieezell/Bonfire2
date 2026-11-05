@@ -14,7 +14,7 @@
         <link rel="prev" href="../query_api/">
       
       
-        <link rel="next" href="../structure/">
+        <link rel="next" href="../seo/">
       
       
         
@@ -1085,6 +1085,8 @@
       
         
       
+        
+      
     
     
     
@@ -1594,6 +1596,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../seo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SEO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2924,6 +2954,7 @@ gets a 404 before any template or controller runs.</p>
 </code></pre></div>
 <p><code>$entry</code> is described under <a href="../query_api/#entries">Entries</a>. <code>$collection</code> is a <code>Bonfire\Content\Collection</code>, with public
 properties such as <code>$collection-&gt;title</code> and <code>$collection-&gt;handle</code>.</p>
+<p>Bonfire adds no <code>&lt;head&gt;</code> tags for the entry unless you set <code>$autoSeo</code>. See <a href="../seo/">SEO</a>.</p>
 <h2 id="caching">Caching</h2>
 <p>A collection can have its pages served from the cache. It's off unless the collection sets <code>cache</code>, the number of seconds
 a page is kept:</p>
@@ -3152,13 +3183,13 @@ fallback route makes that call for you. A file that can't be indexed is written 
         
         
           
-          <a href="../structure/" class="md-footer__link md-footer__link--next" aria-label="Next: Pages and structures">
+          <a href="../seo/" class="md-footer__link md-footer__link--next" aria-label="Next: SEO">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Pages and structures
+                SEO
               </div>
             </div>
             <div class="md-footer__button md-icon">

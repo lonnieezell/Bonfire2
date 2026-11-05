@@ -1085,6 +1085,8 @@
       
         
       
+        
+      
     
     
     
@@ -1569,6 +1571,34 @@
     
   
     Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../seo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SEO
   
 
     
@@ -3032,6 +3062,8 @@ term or <code>null</code>. Both throw <code>ContentException</code> if the taxon
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">();</span>                   <span class="c1">// the body as HTML</span>
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">(</span><span class="s1">'related'</span><span class="p">);</span>          <span class="c1">// the entries an `entries` field links to</span>
+
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">seo</span><span class="p">();</span>                       <span class="c1">// title, description, canonical URL and Open Graph values</span>
 </code></pre></div>
 <p><code>entries()</code> returns the entries in the order the file lists them, and skips a link whose entry is missing or in the
 trash. It also returns drafts, so check <code>$linked-&gt;status</code> before you show one. See <a href="../field_types/#entries">Field types</a>.</p>
