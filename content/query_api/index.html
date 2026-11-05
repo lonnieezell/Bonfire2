@@ -1428,6 +1428,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#feeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feeds
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2575,6 +2586,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#feeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feeds
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2808,6 +2830,9 @@ of <code>published()</code>.</p>
 <p>Your route wins over the <a href="../routing/#turning-it-on">fallback route</a>, so <code>/blog</code> and <code>/blog/{slug}</code> can both exist.</p>
 <p>To change how the links look, pass <code>links()</code> the name of a <a href="https://codeigniter.com/user_guide/libraries/pagination.html#customizing-the-pagination-links">pager template</a>
 as its second argument: <code>$pager-&gt;links('default', 'my_pager')</code>.</p>
+<h3 id="feeds">Feeds</h3>
+<p><code>content()-&gt;feed($handle)</code> returns a response with the collection's published entries as an RSS feed, for you to return
+from a route. See <a href="../routing/#feeds">Feeds</a>.</p>
 <h2 id="finding-an-entry">Finding an entry</h2>
 <p><code>content()-&gt;find($id)</code> returns an entry from any collection by its UUID, or <code>null</code>.</p>
 <div class="admonition warning">

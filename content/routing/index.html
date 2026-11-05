@@ -1489,6 +1489,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#feeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feeds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feeds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-built-in-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The built-in route
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#seeing-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2580,6 +2608,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#feeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feeds
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feeds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-built-in-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The built-in route
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#seeing-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2753,6 +2809,28 @@ page is requested.</p>
 <span class="p">});</span>
 </code></pre></div>
 <p>The collection still needs a <code>route</code>, since that's what gives its entries URIs.</p>
+<h2 id="feeds">Feeds</h2>
+<p><code>content()-&gt;feed('blog')</code> returns a response with a collection's published entries as an
+<a href="https://www.rssboard.org/rss-specification">RSS 2.0</a> feed. Return it from a route of your own, at any URL:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'blog/feed.xml'</span><span class="p">,</span> <span class="k">static</span> <span class="nx">fn</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">feed</span><span class="p">(</span><span class="s1">'blog'</span><span class="p">));</span>
+</code></pre></div>
+<p>The response has the content type <code>application/rss+xml; charset=UTF-8</code>. The feed has the collection's <code>title</code> as its
+title and description, and the site's URL as its link. Each entry becomes an item with its <code>title</code>, a <code>link</code> and <code>guid</code>
+that are its URI as a full URL, and a <code>pubDate</code> from its <code>published_at</code>. Titles are escaped, and characters that XML can't
+hold are dropped, so the feed stays well-formed. The feed has no item descriptions, because an entry's fields and body
+are yours to render.</p>
+<p>It includes the same entries as <code>published()</code>: no drafts, scheduled entries or trashed entries. They come in the
+collection's <code>sort</code> order, which is newest first for a <a href="../collections/">dated</a> collection. An entry with no URI is left
+out, so a collection with no <code>route</code> gives a feed with no items. <code>feed()</code> includes every published entry, not just the
+latest ones, so for a large collection serve your own cut with the <a href="../query_api/">query API</a> instead.</p>
+<p><code>feed()</code> throws <code>Bonfire\Content\ContentException</code> if the collection doesn't exist or its config is invalid.</p>
+<h3 id="the-built-in-route">The built-in route</h3>
+<p>If you don't need a URL of your own, turn on <code>$feedRoute</code> in <code>app/Config/Content.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="nx">bool</span> <span class="nv">$feedRoute</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<p>Bonfire then serves every collection's feed at <code>/feed/{collection}</code>, such as <code>/feed/blog</code>, and a collection that doesn't
+exist gets a 404. It's independent of <code>$autoRoute</code>, and with <code>$feedRoute</code> off, the default, Bonfire adds no route.</p>
+<p>Your routes always win. A route of yours for <code>feed/blog</code>, or for the pattern <code>feed/(:segment)</code>, takes the request.</p>
 <h2 id="seeing-changes">Seeing changes</h2>
 <p>In production, run <code>php spark content:reindex</code> when you deploy. A changed file or <code>route</code> doesn't take effect until you do.
 If a collection's config is missing or broken by then, its entries get a 404 and the reason is logged.</p>
