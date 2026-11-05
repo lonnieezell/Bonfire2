@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#5-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1329,6 +1340,8 @@
       
         
       
+        
+      
     
     
     
@@ -1645,6 +1658,34 @@
     
   
     Pages and structures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/navigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Navigation menus
   
 
     
@@ -2608,6 +2649,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#5-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2914,6 +2966,14 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: navigation menus.</strong> Add a config at <code>content/navigation/&lt;handle&gt;.yaml</code> and users with <code>content.structure</code> get
+an editor under <strong>Content</strong> in the sidebar, to build a menu from entries and typed-in links. The items live in
+<code>content/trees/navigation/&lt;handle&gt;.yaml</code>. <code>navigation('main')</code> returns them as a tree with <code>title</code>, <code>url</code>, <code>active</code> and
+<code>children</code>, and leaves out an item, and those below it, when its entry isn't live. An item that links to an entry takes
+its URL from the entry, so renaming a slug changes the menu by itself. The App theme has a sample partial at
+<code>themes/App/_navigation.php</code>, which a theme you already published needs to copy. See
+<a href="../../content/navigation/">Navigation menus</a>.</p>
 <h2 id="4-november-2026">4 November 2026</h2>
 <p><strong>Content: getting started and constraints.</strong> <a href="../../content/getting_started/">Getting started</a> walks you from a fresh
 install to a published blog post. <a href="../../content/">Content</a> now explains the file-first model and when to run

@@ -1051,6 +1051,8 @@
       
         
       
+        
+      
     
     
     
@@ -1367,6 +1369,34 @@
     
   
     Pages and structures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="navigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Navigation menus
   
 
     
@@ -2483,7 +2513,8 @@ see <a href="routing/">Routing</a>. To keep pages in a tree with nested URIs, se
         └── php.yaml                    a term
 </code></pre></div>
 <p>A structured collection also has a tree file, at <code>content/trees/collections/&lt;handle&gt;.yaml</code>. See
-<a href="structure/#the-tree-file">Pages and structures</a>.</p>
+<a href="structure/#the-tree-file">Pages and structures</a>. A <a href="navigation/">navigation menu</a> has a config at
+<code>content/navigation/&lt;handle&gt;.yaml</code> and its items at <code>content/trees/navigation/&lt;handle&gt;.yaml</code>.</p>
 <p>Blueprints are not in the content root. They live at <code>resources/blueprints/</code>.</p>
 <p>Change the locations with <code>$contentPath</code> and <code>$blueprintPath</code> in <code>app/Config/Content.php</code>. See
 <a href="collections/">Collections</a> for the config file and the entry format, <a href="blueprints/">Blueprints</a> for the forms, and

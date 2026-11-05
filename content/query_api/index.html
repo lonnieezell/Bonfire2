@@ -1051,6 +1051,8 @@
       
         
       
+        
+      
     
     
     
@@ -1424,6 +1426,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#navigation-menus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation menus
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#taxonomies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1497,6 +1510,34 @@
     
   
     Pages and structures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../navigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Navigation menus
   
 
     
@@ -2521,6 +2562,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#navigation-menus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation menus
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#taxonomies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2683,6 +2735,9 @@ and scheduled entries too.</p>
 <h2 id="finding-an-entry-by-uri">Finding an entry by URI</h2>
 <p><code>content()-&gt;findByUri('/blog/hello-world')</code> returns the published entry at a URI, or <code>null</code> for a draft, a scheduled entry
 or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri">auto-routing</a>, but the collection needs a <code>route</code>.</p>
+<h2 id="navigation-menus">Navigation menus</h2>
+<p><code>navigation('main')</code> returns a <a href="../navigation/#showing-a-menu">menu</a> built in the admin as a tree of items, each with a
+<code>title</code>, <code>url</code>, <code>active</code> and <code>children</code>. It's the same as <code>content()-&gt;navigation('main')</code>.</p>
 <h2 id="taxonomies">Taxonomies</h2>
 <p><code>whereTerm()</code> keeps the published entries that have a <a href="../taxonomies/">term</a>, the same as <code>published()</code> does, and it
 composes with the rest of the query:</p>
