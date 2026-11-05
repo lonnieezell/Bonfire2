@@ -108,7 +108,7 @@ It returns the same query as `collection()`, so `get()`, `paginate()` and `pager
 - It only returns what `published()` keeps. Drafts, scheduled entries and entries in the trash are never found.
 - It's a `LIKE` match on the title and the raw Markdown body, so the term is found inside words, and a `*` in the term
   matches a `*` in the body. A `%` or `_` in the term matches itself, and a quote is safe.
-- A blank term finds nothing.
+- Spaces around the term are ignored, and a blank term finds nothing.
 - `whereTerm()` needs a query on one collection, so it throws unless you narrowed the search to one.
 
 This route and view list the results a page at a time. The pager links keep `?q=`:

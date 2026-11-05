@@ -139,6 +139,11 @@ final class SearchTest extends ContentTestCase
         $this->assertSame([], $this->titles(content()->search("' OR 1=1 --")->get()));
     }
 
+    public function testSpacesAroundTheTermAreIgnored(): void
+    {
+        $this->assertSame(['Zebra crossing'], $this->titles(content()->search('  crossing ')->get()));
+    }
+
     public function testABlankTermFindsNothing(): void
     {
         $this->assertSame([], content()->search('')->get());

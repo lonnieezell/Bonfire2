@@ -55,12 +55,14 @@ class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecy
     }
 
     /**
-     * Keeps entries whose title or Markdown body contain the term. A % or _ in it matches itself, and a blank
-     * term matches nothing.
+     * Keeps entries whose title or Markdown body contain the term, ignoring spaces around it. A % or _ in it
+     * matches itself, and a blank term matches nothing.
      */
     public function matching(string $term): self
     {
-        if (trim($term) === '') {
+        $term = trim($term);
+
+        if ($term === '') {
             return $this->where('1 = 0', null, false);
         }
 
