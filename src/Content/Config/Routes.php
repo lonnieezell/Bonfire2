@@ -26,10 +26,14 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     // Before the entry routes, which would take "structure" for an id.
     $routes->get('content/(:segment)/structure', 'EntryAdminController::structure/$1', ['as' => 'content-structure']);
     $routes->post('content/(:segment)/structure', 'EntryAdminController::saveStructure/$1');
+    $routes->get('content/(:segment)/(:segment)/preview', 'EntryAdminController::previewLink/$1/$2', ['as' => 'content-preview-link']);
     $routes->post('content/(:segment)/(:segment)/delete', 'EntryAdminController::delete/$1/$2', ['as' => 'content-delete']);
     $routes->get('content/(:segment)/(:segment)', 'EntryAdminController::edit/$1/$2', ['as' => 'content-edit']);
     $routes->post('content/(:segment)/(:segment)', 'EntryAdminController::update/$1/$2');
 });
+
+// Outside the admin, so it needs no login, only a link that Bonfire signed. Before the fallback route below.
+$routes->get('content-preview/(:segment)', [[EntryController::class, 'preview'], '$1'], ['as' => 'content-draft-preview']);
 
 if (config('Content')->feedRoute) {
     // Before the fallback route below, which would take the URL. A route of the app's with the same pattern is kept.

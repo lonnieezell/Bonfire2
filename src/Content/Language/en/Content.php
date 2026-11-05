@@ -38,6 +38,12 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Draft preview link
+    'previewLinkTitle' => 'Preview link',
+    'previewLinkHint'  => 'Anyone with this link can see the entry as it will look on the site, without logging in, until {0}.',
+    'previewOpen'      => 'Open preview',
+    'previewNoKey'     => 'A preview link is signed with the app\'s encryption key, and there is none. Run `php spark key:generate`.',
+
     // Trash
     'recycler' => [
         'label'   => 'Content entries',
