@@ -347,10 +347,10 @@ final class TrashTest extends ContentTestCase
         $this->trash('blog', self::SECOND);
         $user = $this->userWith(['admin.access', 'recycler.view']);
 
-        $this->actingAs($user)->get(route_to('recycler-restore', 'entries', self::FIRST));
+        $this->actingAs($user)->post(route_to('recycler-restore', 'entries', self::FIRST), [csrf_token() => csrf_hash()]);
         $this->assertInstanceOf(Entry::class, content()->find(self::FIRST));
 
-        $this->actingAs($user)->get(route_to('recycler-purge', 'entries', self::SECOND));
+        $this->actingAs($user)->post(route_to('recycler-purge', 'entries', self::SECOND), [csrf_token() => csrf_hash()]);
         $this->assertNull($this->row(self::SECOND));
     }
 
@@ -718,12 +718,12 @@ final class TrashTest extends ContentTestCase
 
     private function restore(string $id): TestResponse
     {
-        return $this->actingAs($this->admin)->get(route_to('recycler-restore', 'entries', $id));
+        return $this->actingAs($this->admin)->post(route_to('recycler-restore', 'entries', $id), [csrf_token() => csrf_hash()]);
     }
 
     private function purge(string $id): TestResponse
     {
-        return $this->actingAs($this->admin)->get(route_to('recycler-purge', 'entries', $id));
+        return $this->actingAs($this->admin)->post(route_to('recycler-purge', 'entries', $id), [csrf_token() => csrf_hash()]);
     }
 
     /**

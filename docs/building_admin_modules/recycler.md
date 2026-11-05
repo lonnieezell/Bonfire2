@@ -68,6 +68,19 @@ To localize the column names, an array `recycler` should be created in the modul
 
 If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.
 
+## Restoring and Purging
+
+Restoring and purging change data, so `recycler-restore` and `recycler-purge` only answer POST requests, and they always
+check the CSRF token, even if your app doesn't turn the filter on globally. To offer either from your own views, use a
+form rather than a link:
+
+```php
+<form action="<?= url_to('recycler-restore', 'users', $id) ?>" method="post">
+    <?= csrf_field() ?>
+    <button type="submit" class="btn btn-sm btn-outline-secondary">Restore</button>
+</form>
+```
+
 ## Changing How A Model Is Recycled
 
 The Recycler does three things with a resource: it lists the deleted records, restores one, and purges one. 
