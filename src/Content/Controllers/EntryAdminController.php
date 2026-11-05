@@ -285,17 +285,21 @@ class EntryAdminController extends AdminController
         $this->requireEdit();
 
         $collection = $this->collection($handle);
-        $row        = $collection->previewable() ? $this->entryStore()->read($collection, $id) : null;
 
-        if ($row === null) {
+        if (! $collection->previewable()) {
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $entry   = Entry::fromRow($row);
-        $expires = Time::now()->getTimestamp() + PreviewLink::LIFETIME;
-
         try {
-            $link = PreviewLink::create($entry, $expires);
+            $row = $this->entryStore()->read($collection, $id);
+
+            if ($row === null) {
+                throw PageNotFoundException::forPageNotFound();
+            }
+
+            $entry   = Entry::fromRow($row);
+            $expires = Time::now()->getTimestamp() + PreviewLink::LIFETIME;
+            $link    = PreviewLink::create($entry->id, $expires);
         } catch (ContentException $e) {
             return $this->failed($collection, $e);
         }
@@ -583,7 +587,8 @@ class EntryAdminController extends AdminController
         $rows   = $form->rows($shown['values'], $errors);
         $entry  = $shown['entry'] ?? null;
 
-        $canDelete = $entry !== null && ! ($shown['trashed'] ?? false) && auth()->user()->can('content.delete');
+        $live      = $entry !== null && ! ($shown['trashed'] ?? false);
+        $canDelete = $live && auth()->user()->can('content.delete');
 
         $this->response->setStatusCode($httpStatus);
 
@@ -599,7 +604,7 @@ class EntryAdminController extends AdminController
             'notice'      => $shown['notice'] ?? null,
             'conflict'    => $shown['conflict'] ?? false,
             'canPublish'  => auth()->user()->can('content.publish'),
-            'canPreview'  => $entry !== null && ! ($shown['trashed'] ?? false) && $collection->previewable() && auth()->user()->can('content.edit'),
+            'canPreview'  => $live && $collection->previewable(),
             'canDelete'   => $canDelete,
             'below'       => $canDelete ? $this->entryStore()->descendantCounts($collection, [$entry->id])[$entry->id] : 0,
         ]);

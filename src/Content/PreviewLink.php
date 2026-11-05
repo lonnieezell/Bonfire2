@@ -27,7 +27,7 @@ final class PreviewLink
      *
      * @throws ContentException when the app has no encryption key to sign with
      */
-    public static function create(Entry $entry, int $expires): string
+    public static function create(string $id, int $expires): string
     {
         $key = self::key();
 
@@ -35,9 +35,9 @@ final class PreviewLink
             throw new ContentException(lang('Content.previewNoKey'));
         }
 
-        return url_to('content-draft-preview', $entry->id) . '?' . http_build_query([
+        return url_to('content-draft-preview', $id) . '?' . http_build_query([
             'expires'   => $expires,
-            'signature' => self::sign($entry->id, $expires, $key),
+            'signature' => self::sign($id, $expires, $key),
         ]);
     }
 
@@ -62,6 +62,9 @@ final class PreviewLink
 
     private static function key(): string
     {
-        return (string) config('Encryption')->key;
+        $key = (string) config('Encryption')->key;
+
+        // Derived, so a signature made for this can't be one for anything else that signs with the app key.
+        return $key === '' ? '' : hash_hmac('sha256', 'content-preview', $key);
     }
 }

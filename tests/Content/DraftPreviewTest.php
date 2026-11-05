@@ -2,7 +2,6 @@
 
 namespace Tests\Content;
 
-use Bonfire\Content\Entry;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\PreviewLink;
 use Bonfire\Users\User;
@@ -12,6 +11,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Content\BlogController;
 use Tests\Support\Content\ContentTestCase;
 
@@ -32,7 +32,6 @@ final class DraftPreviewTest extends ContentTestCase
 
         Time::setTestNow('2026-06-01 12:00:00');
         BlogController::$calls = 0;
-        BlogController::$cache = false;
         setting('Site.siteOnline', true);
         config('Encryption')->key = 'a-key-for-the-tests';
         // Before the real themes, so its App theme is the one found, and the Admin theme is still there for the admin screens.
@@ -43,10 +42,7 @@ final class DraftPreviewTest extends ContentTestCase
             Services::resetSingle($service);
         }
 
-        // The routes have to be loaded for url_to() before the first request.
-        Services::resetSingle('routes');
-        Services::resetSingle('router');
-        service('routes')->loadRoutes();
+        $this->reloadRoutes();
 
         $this->editor = $this->createUser();
         $this->editor->addPermission('admin.access', 'content.access', 'content.edit');
@@ -135,6 +131,17 @@ final class DraftPreviewTest extends ContentTestCase
         $this->assertNotFound($link);
     }
 
+    public function testAnEntryWhoseFileIsGoneGivesAnErrorNotACrash(): void
+    {
+        $this->reindexBlogWith("template: blog/show\n");
+        unlink($this->site . 'collections/blog/2026-03-01.draft-post.md');
+
+        $response = $this->actingAs($this->editor)->get(route_to('content-preview-link', 'blog', self::DRAFT));
+
+        $response->assertRedirectTo(route_to('content-list', 'blog'));
+        $response->assertSessionHas('error');
+    }
+
     public function testATrashedEntryHasNoPreviewLink(): void
     {
         $this->reindexBlogWith("template: blog/show\n");
@@ -214,9 +221,8 @@ final class DraftPreviewTest extends ContentTestCase
     public function testALinkForAnEntryThatDoesNotExistIsA404(): void
     {
         $this->reindexBlogWith("template: blog/show\n");
-        $entry = new Entry('99999999-9999-4999-8999-999999999999', 'blog', null, 'ghost', null, 'draft', null, 'Ghost', '', []);
 
-        $this->assertNotFound($this->pathOf(PreviewLink::create($entry, Time::now()->getTimestamp() + 60)));
+        $this->assertNotFound($this->linkFor('99999999-9999-4999-8999-999999999999'));
     }
 
     public function testALinkSignedWithAnotherKeyIsA404(): void
@@ -231,24 +237,26 @@ final class DraftPreviewTest extends ContentTestCase
 
     // The response
 
-    public function testTheResponseIsNoindexAndNotCacheable(): void
+    #[DataProvider('provideTheResponseIsNoindexAndNotCacheable')]
+    public function testTheResponseIsNoindexAndNotCacheable(string $config): void
     {
-        $this->reindexBlogWith("template: blog/show\n");
+        $this->reindexBlogWith($config);
 
         $result = $this->get($this->linkFor(self::DRAFT));
 
         $this->assertSame('noindex', $result->response()->getHeaderLine('X-Robots-Tag'));
+        $this->assertSame('no-referrer', $result->response()->getHeaderLine('Referrer-Policy'));
         $this->assertStringContainsString('no-store', $result->response()->getHeaderLine('Cache-Control'));
     }
 
-    public function testAControllersResponseIsNoindexAndNotCacheable(): void
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideTheResponseIsNoindexAndNotCacheable(): iterable
     {
-        $this->reindexBlogWith('controller: ' . BlogController::class . "::show\n");
+        yield 'a template' => ["template: blog/show\n"];
 
-        $result = $this->get($this->linkFor(self::DRAFT));
-
-        $this->assertSame('noindex', $result->response()->getHeaderLine('X-Robots-Tag'));
-        $this->assertStringContainsString('no-store', $result->response()->getHeaderLine('Cache-Control'));
+        yield 'a controller' => ['controller: ' . BlogController::class . "::show\n"];
     }
 
     public function testAPreviewIsNotCachedEvenWhenTheControllerAsksForPageCaching(): void
@@ -256,9 +264,7 @@ final class DraftPreviewTest extends ContentTestCase
         $this->reindexBlogWith("route: /blog/{slug}\ncontroller: " . BlogController::class . "::show\n");
         config('Content')->autoRoute = true;
         BlogController::$cache       = true;
-        Services::resetSingle('routes');
-        Services::resetSingle('router');
-        service('routes')->loadRoutes();
+        $this->reloadRoutes();
 
         // Pages are cached in memory here, not in the writable folder.
         Services::injectMock('responsecache', new ResponseCache(config('Cache'), service('cache')));
@@ -283,20 +289,22 @@ final class DraftPreviewTest extends ContentTestCase
     {
         $this->reindexBlogWith("route: /blog/{slug}\ntemplate: blog/show\n");
         config('Content')->autoRoute = true;
-        Services::resetSingle('routes');
-        Services::resetSingle('router');
-        service('routes')->loadRoutes();
+        $this->reloadRoutes();
 
         $this->get($this->linkFor(self::DRAFT))->assertOK();
 
-        foreach (['blog/draft-post', 'blog/future-post'] as $uri) {
-            try {
-                $this->get($uri);
-                $this->fail("{$uri} was served.");
-            } catch (PageNotFoundException) {
-                $this->addToAssertionCount(1);
-            }
-        }
+        $this->assertNotFound('blog/draft-post');
+        $this->assertNotFound('blog/future-post');
+    }
+
+    /**
+     * The routes are read once, so this makes them follow a config change. url_to() needs them loaded before the first request.
+     */
+    private function reloadRoutes(): void
+    {
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
+        service('routes')->loadRoutes();
     }
 
     /**
@@ -304,10 +312,7 @@ final class DraftPreviewTest extends ContentTestCase
      */
     private function linkFor(string $id): string
     {
-        $entry = content()->find($id);
-        $this->assertInstanceOf(Entry::class, $entry);
-
-        return $this->pathOf(PreviewLink::create($entry, Time::now()->getTimestamp() + PreviewLink::LIFETIME));
+        return $this->pathOf(PreviewLink::create($id, Time::now()->getTimestamp() + PreviewLink::LIFETIME));
     }
 
     private function linkIn(TestResponse $page): string

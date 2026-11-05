@@ -171,7 +171,8 @@ is rendered with `$entry` and `$collection`. The difference is how the entry is 
 id, so a draft or scheduled entry is shown, and only a link with a valid signature that hasn't expired is served. Any other
 request still gets a 404 for a draft or scheduled entry.
 
-Bonfire marks the response `X-Robots-Tag: noindex` and `Cache-Control: no-store`, and turns page caching off for it, even if
+Bonfire marks the response `X-Robots-Tag: noindex`, `Cache-Control: no-store` and `Referrer-Policy: no-referrer`, so the
+link isn't passed on to sites the page links to or loads from, and turns page caching off for it, even if
 your controller asks for it with `cachePage()`. It does that after your controller returns, so a controller or template
 that sets those itself is overridden.
 
