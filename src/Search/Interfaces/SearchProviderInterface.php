@@ -33,7 +33,8 @@ interface SearchProviderInterface
      * Returns the name of the view to use when
      * displaying the list of results for this
      * resource type. This should be relative
-     * to the theme used to display the results.
+     * to the theme used to display the results,
+     * or a namespaced view in the module.
      */
     public function resultView(): string;
 }

@@ -14,6 +14,10 @@ and the routes now take `(:segment)`. See [The Recycler](../building_admin_modul
 
 ## 5 November 2026
 
+**Content: admin search.** The admin search box now finds entries. It matches the term in an entry's title or Markdown
+body, skips trashed entries, and shows nothing to users without `content.access`. Results show the title, collection and
+status, and link to the edit form for users with `content.edit`. See [Editing entries in the admin](../content/admin.md#search).
+
 **Documentation in the admin.** Outside production, the sidebar has a **Documentation** group that shows this guide for
 the version you have installed, with its structure read from `mkdocs.yml`. Anyone with `admin.access` can read it, and
 production has no menu and answers with a 404. See [Documentation](../modules/documentation.md).

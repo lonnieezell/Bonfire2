@@ -31,6 +31,17 @@ The list shows each entry's title, status and date, a page at a time. It reads t
 `php spark content:reindex` first if you have files that were not saved through the admin. In development the index
 catches up with your files by itself.
 
+## Search
+
+Entries show up in the admin's search box, under **Content**. The search matches the term anywhere in an entry's title
+or in its Markdown body, ignoring case, and lists the entry's title, collection and status. The body is searched as it
+was written, so Markdown syntax such as `**bold**` counts, but front matter fields do not. Trashed entries are left out,
+and so is everything for a user without `content.access`. The title links to the edit form for users with
+`content.edit`, and is plain text for the others. It reads the index, the same as [the list](#the-list).
+
+Content has no page that lists every collection, so the "see all" link under the results goes to the first collection's
+list.
+
 ## Creating and editing
 
 **New entry** opens the form of the collection's first blueprint. To use another blueprint the collection offers, add

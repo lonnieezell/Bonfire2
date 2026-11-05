@@ -143,8 +143,10 @@ Returns the relative URL to the main page for this resource. In this case it tak
 
 **resultView()**
 
-Returns the name of the view that should be used to display the results on the overview page. This MUST be in the
-Admin theme folder in order to be found. This can be a fairly straight-forward view file:
+Returns the name of the view that should be used to display the results on the overview page. This is either relative
+to the Admin theme folder, or a namespaced view in your module, such as `Bonfire\Content\Views\search_results`. Prefer
+a namespaced view in a package, since installs that published their own copy of the theme won't get a new file added to
+it. This can be a fairly straight-forward view file:
 
 ```php
 <table class="table table-hover">
