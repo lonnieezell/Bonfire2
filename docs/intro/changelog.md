@@ -6,6 +6,10 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 5 November 2026
 
+**Documentation in the admin.** Outside production, the sidebar has a **Documentation** group that shows this guide for
+the version you have installed, with its structure read from `mkdocs.yml`. Anyone with `admin.access` can read it, and
+production has no menu and answers with a 404. See [Documentation](../modules/documentation.md).
+
 **Content: navigation menus.** Add a config at `content/navigation/<handle>.yaml` and users with `content.structure` get
 an editor under **Content** in the sidebar, to build a menu from entries and typed-in links. The items live in
 `content/trees/navigation/<handle>.yaml`. `navigation('main')` returns them as a tree with `title`, `url`, `active` and

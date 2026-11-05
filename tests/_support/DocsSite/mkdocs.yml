@@ -1,0 +1,13 @@
+site_name: Fixture
+
+exclude_docs: |
+  adr/
+
+nav:
+  - Home: index.md
+  - Guide:
+      - guide/index.md
+      - guide/setup.md
+      - Custom title: guide/named.md
+  - Reference:
+      - reference/api.md

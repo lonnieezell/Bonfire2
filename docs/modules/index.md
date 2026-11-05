@@ -61,6 +61,12 @@ files.
 
 [Read more about Tools](tools.md)
 
+## Documentation
+
+The Documentation module shows this guide in the admin, outside production, for the version you have installed.
+
+[Read more about Documentation](documentation.md)
+
 ## Recycler
 
 The Recycler, under **Tools**, holds records that were deleted, such as users, so you can restore them or delete them
