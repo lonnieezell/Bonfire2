@@ -84,7 +84,7 @@ class Documentation
 
         foreach ($this->nav() as $entry) {
             $sections[] = [
-                'title' => $entry['title'] ?? '',
+                'title' => $entry['title'] ?? (string) $entry['path'],
                 'uri'   => $entry['path'] === null ? $this->sectionUri($entry) : MarkdownRenderer::uriFor($entry['path']),
             ];
         }
@@ -164,7 +164,9 @@ class Documentation
 
         try {
             $config = Yaml::parseFile($this->root . 'mkdocs.yml');
-        } catch (ParseException) {
+        } catch (ParseException $e) {
+            log_message('error', 'The documentation is hidden, as its mkdocs.yml could not be read: ' . $e->getMessage());
+
             return $this->nav;
         }
 

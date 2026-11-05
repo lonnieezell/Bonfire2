@@ -35,6 +35,25 @@ final class DocsControllerTest extends TestCase
         $this->admin->addGroup('superadmin');
 
         $this->useEnvironment('development');
+
+        foreach (['docs/zebra', 'docs/apple'] as $folder) {
+            if (! is_dir(WRITEPATH . 'docs-order/' . $folder)) {
+                mkdir(WRITEPATH . 'docs-order/' . $folder, 0755, true);
+            }
+        }
+
+        foreach (['index.md', 'zebra/one.md', 'apple/one.md'] as $file) {
+            file_put_contents(WRITEPATH . 'docs-order/docs/' . $file, "# Page\n");
+        }
+    }
+
+    protected function tearDown(): void
+    {
+        helper('filesystem');
+        delete_files(WRITEPATH . 'docs-order/', true);
+        rmdir(WRITEPATH . 'docs-order');
+
+        parent::tearDown();
     }
 
     public function testHomeRendersTheIndexPage(): void
@@ -117,6 +136,32 @@ final class DocsControllerTest extends TestCase
         $this->assertStringContainsString('href="' . site_url(ADMIN_AREA . '/docs/reference') . '"', $html);
     }
 
+    public function testSidebarKeepsTheOrderOfTheNav(): void
+    {
+        file_put_contents(WRITEPATH . 'docs-order/mkdocs.yml', <<<'YAML'
+            nav:
+              - Home: index.md
+              - Zebra:
+                  - zebra/one.md
+              - Apple:
+                  - apple/one.md
+            YAML);
+
+        Services::injectMock('docs', new Documentation(WRITEPATH . 'docs-order/', 'development'));
+
+        $html = $this->sidebarOn(ADMIN_AREA);
+
+        $home  = strpos($html, 'href="' . site_url(ADMIN_AREA . '/docs') . '"');
+        $zebra = strpos($html, '/docs/zebra"');
+        $apple = strpos($html, '/docs/apple"');
+
+        $this->assertNotFalse($home);
+        $this->assertNotFalse($zebra);
+        $this->assertNotFalse($apple);
+        $this->assertLessThan($zebra, $home);
+        $this->assertLessThan($apple, $zebra);
+    }
+
     public function testSidebarMarksTheSectionOfTheCurrentPage(): void
     {
         $html = $this->sidebarOn(ADMIN_AREA . '/docs/guide/setup');
@@ -144,6 +189,16 @@ final class DocsControllerTest extends TestCase
         Services::injectMock('docs', new Documentation(SUPPORTPATH . 'NoSuchFolder/', 'development'));
 
         $this->assertNotFound('');
+    }
+
+    public function testBadYamlHidesTheGuideAndLogsWhy(): void
+    {
+        file_put_contents(WRITEPATH . 'docs-order/mkdocs.yml', "nav:\n  - [unclosed\n");
+
+        $docs = new Documentation(WRITEPATH . 'docs-order/', 'development');
+
+        $this->assertFalse($docs->isAvailable());
+        $this->assertLogContains('error', 'mkdocs.yml');
     }
 
     private function sidebarOn(string $url): string

@@ -34,7 +34,8 @@ class AdmonitionRenderer implements NodeRendererInterface
 
         /** @var Admonition $node */
         $color = self::COLORS[$node->type] ?? 'info';
-        $title = new HtmlElement('strong', ['class' => 'd-block mb-1'], Xml::escape($node->title));
+        $text  = (string) preg_replace('/`([^`]+)`/', '<code>$1</code>', Xml::escape($node->title));
+        $title = new HtmlElement('strong', ['class' => 'd-block mb-1'], $text);
 
         return new HtmlElement('div', ['class' => 'alert alert-' . $color], [$title, $childRenderer->renderNodes($node->children())]);
     }

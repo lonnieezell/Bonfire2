@@ -1,4 +1,6 @@
-<?php $this->extend('master') ?>
+<?php use Bonfire\Docs\Libraries\MarkdownRenderer;
+
+$this->extend('master') ?>
 
 <?php $this->section('crumbParent') ?><?= lang('Docs.modTitle') ?><?php $this->endSection() ?>
 <?php $this->section('crumb') ?><?= esc($page['title']) ?><?php $this->endSection() ?>
@@ -12,7 +14,7 @@
     <nav class="bf-settings-nav" aria-label="<?= lang('Docs.modTitle') ?>">
         <?php foreach ($page['nav'] as $link) : ?>
             <?php $current = $link['uri'] === $page['uri'] ?>
-            <a class="bf-settings-nav-link<?= $current ? ' active' : '' ?>" href="<?= site_url(rtrim(ADMIN_AREA . '/docs/' . $link['uri'], '/')) ?>"<?= $current ? ' aria-current="page"' : '' ?>>
+            <a class="bf-settings-nav-link<?= $current ? ' active' : '' ?>" href="<?= site_url(MarkdownRenderer::adminPath($link['uri'])) ?>"<?= $current ? ' aria-current="page"' : '' ?>>
                 <?= esc($link['title']) ?>
             </a>
         <?php endforeach ?>

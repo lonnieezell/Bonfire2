@@ -18,6 +18,7 @@ use League\CommonMark\Environment\Environment;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
+use League\CommonMark\Extension\CommonMark\Node\Inline\HtmlInline;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\Extension\Table\Table;
@@ -35,6 +36,14 @@ class MarkdownRenderer
     public static function uriFor(string $path): string
     {
         return $path === 'index.md' ? '' : substr($path, 0, -3);
+    }
+
+    /**
+     * The path of the admin screen showing a URI.
+     */
+    public static function adminPath(string $uri): string
+    {
+        return rtrim(ADMIN_AREA . '/docs/' . $uri, '/');
     }
 
     /**
@@ -84,11 +93,13 @@ class MarkdownRenderer
             }
         }
 
-        return site_url(rtrim(ADMIN_AREA . '/docs/' . self::uriFor(implode('/', $segments)), '/')) . ($matches[2] ?? '');
+        return site_url(self::adminPath(self::uriFor(implode('/', $segments)))) . ($matches[2] ?? '');
     }
 
     /**
      * The id MkDocs gives a heading (Python-Markdown's toc slugify and unique), so anchors work in both.
+     * The one difference: an accented letter is dropped here, where MkDocs folds it to its base letter,
+     * since that takes the intl extension, which Bonfire doesn't require.
      *
      * @param array<string, true> $ids The ids already used on this page
      */
@@ -97,7 +108,7 @@ class MarkdownRenderer
         $text = '';
 
         foreach ($heading->iterator() as $node) {
-            if ($node instanceof StringContainerInterface) {
+            if ($node instanceof StringContainerInterface && ! $node instanceof HtmlInline) {
                 $text .= $node->getLiteral();
             }
         }

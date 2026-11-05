@@ -12,6 +12,7 @@
 namespace Bonfire\Docs;
 
 use Bonfire\Core\BaseModule;
+use Bonfire\Docs\Libraries\MarkdownRenderer;
 use Bonfire\Menus\MenuItem;
 
 class Module extends BaseModule
@@ -32,11 +33,13 @@ class Module extends BaseModule
             ->setFontAwesomeIcon('fas fa-book')
             ->setCollapsible();
 
-        foreach ($docs->sections() as $section) {
+        // Items sort by weight, then by title, so the weight is what keeps the nav's order.
+        foreach ($docs->sections() as $weight => $section) {
             $collection->addItem(new MenuItem([
                 'title'      => $section['title'],
-                'url'        => rtrim(ADMIN_AREA . '/docs/' . $section['uri'], '/'),
+                'url'        => MarkdownRenderer::adminPath($section['uri']),
                 'permission' => 'admin.access',
+                'weight'     => $weight,
             ]));
         }
     }

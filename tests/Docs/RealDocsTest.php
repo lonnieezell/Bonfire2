@@ -12,6 +12,7 @@
 namespace Tests\Docs;
 
 use Bonfire\Docs\Libraries\Documentation;
+use Bonfire\Docs\Libraries\MarkdownRenderer;
 use Tests\Support\TestCase;
 
 /**
@@ -27,7 +28,7 @@ final class RealDocsTest extends TestCase
         $pages = [];
 
         foreach ($this->navPaths() as $path) {
-            $uri = $path === 'index.md' ? '' : substr($path, 0, -3);
+            $uri = MarkdownRenderer::uriFor($path);
 
             $page = $docs->page($uri);
             $this->assertNotNull($page, $path);

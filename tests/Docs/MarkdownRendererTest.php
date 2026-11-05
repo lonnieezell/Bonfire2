@@ -94,6 +94,18 @@ final class MarkdownRendererTest extends TestCase
         $this->assertStringNotContainsString('<b>', $this->render("!!! note \"<b>x</b>\"\n    Body."));
     }
 
+    public function testAdmonitionTitleShowsInlineCode(): void
+    {
+        $html = $this->render("!!! danger \"`previewInstance()` must <b>not</b>\"\n    Body.");
+
+        $this->assertStringContainsString('<code>previewInstance()</code> must &lt;b&gt;not&lt;/b&gt;', $html);
+    }
+
+    public function testRawHtmlInAHeadingStaysOutOfItsId(): void
+    {
+        $this->assertStringContainsString('id="foo-bar"', $this->render('## Foo <small>bar</small>'));
+    }
+
     public function testAdmonitionSyntaxInsideCodeIsLeftAlone(): void
     {
         $html = $this->render("```php\n!!! warning\n```");
