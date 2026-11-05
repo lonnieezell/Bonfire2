@@ -102,6 +102,14 @@ class EntryController extends BaseController
     }
 
     /**
+     * The optional /sitemap.xml route.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        return content()->sitemap();
+    }
+
+    /**
      * Gives a guest the collection's cached page for this URI, and caches the page when it has to be made. Only
      * a 200 is kept, so a 404 or a redirect is made again. A request with a query string is never cached, because
      * the page may depend on it, and neither is one from a logged-in user.

@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: sitemap.** [`content()->sitemap()`](../content/routing.md#sitemap) returns a response with a sitemap of every
+collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
+`$sitemap = true` in `app/Config/Content.php` to have Bonfire serve it at `/sitemap.xml`. It's off by default, and your own
+routes win over it.
+
 **Content: editing globals in the admin.** Each set of globals that has a blueprint gets an item in the Content menu and a
 form built from the blueprint, with the same field types and validation as entries. It needs `content.access` and
 `content.edit`. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.

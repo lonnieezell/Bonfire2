@@ -32,6 +32,10 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->post('content/(:segment)/(:segment)', 'EntryAdminController::update/$1/$2');
 });
 
+if (config('Content')->sitemap) {
+    $routes->get('sitemap.xml', [EntryController::class, 'sitemap']);
+}
+
 // Outside the admin, so it needs no login, only a link that Bonfire signed. Before the fallback route below.
 $routes->get('content-preview/(:segment)', [[EntryController::class, 'preview'], '$1'], ['as' => 'content-draft-preview']);
 
