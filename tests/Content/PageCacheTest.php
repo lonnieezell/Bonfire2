@@ -355,8 +355,8 @@ final class PageCacheTest extends ContentTestCase
         $hash = Structure::hash((string) file_get_contents($this->site . 'trees/collections/pages.yaml'));
         $this->store()->saveTree(Collection::load($this->site, 'pages'), Structure::parse(Yaml::dump([['id' => self::HOME], ['id' => self::ABOUT], ['id' => self::TEAM]], 10, 2)), $hash);
 
-        // Team's old URI is gone, so a page cached there must be too.
-        $this->assertNotFound('about/team');
+        // Team's old URI redirects, so a page cached there must not be served.
+        $this->get('about/team')->assertRedirectTo(site_url('team'));
         $this->get('team')->assertSee('Team');
     }
 

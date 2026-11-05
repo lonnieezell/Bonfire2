@@ -40,7 +40,8 @@ content/
         └── php.yaml                    a term
 ```
 
-A structured collection also has a tree file, at `content/trees/collections/<handle>.yaml`. See
+`redirects.yaml`, at the root of `content/`, keeps the old URIs of entries that were renamed or moved. See
+[Redirects](routing.md#redirects). A structured collection also has a tree file, at `content/trees/collections/<handle>.yaml`. See
 [Pages and structures](structure.md#the-tree-file). A [navigation menu](navigation.md) has a config at
 `content/navigation/<handle>.yaml` and its items at `content/trees/navigation/<handle>.yaml`. A set of
 [globals](globals.md) is a file at `content/globals/<handle>.yaml`.

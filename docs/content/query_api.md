@@ -154,6 +154,9 @@ and scheduled entries too.
 `content()->findByUri('/blog/hello-world')` returns the published entry at a URI, or `null` for a draft, a scheduled entry
 or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-by-uri), but the collection needs a `route`.
 
+An old URI of an entry that was renamed or moved is unknown to it. `content()->redirectFor('/blog/old-slug')` gives the
+entry's current URI, or `null`. See [Redirects](routing.md#redirects).
+
 ## Sitemap
 
 `content()->sitemap()` returns a response with a sitemap of every collection's published entries that have a URI. See

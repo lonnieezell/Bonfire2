@@ -49,6 +49,10 @@ final readonly class Indexer
 
         $entries = new ContentEntryModel();
         $db      = $entries->db;
+
+        // A rebuild empties the index, so what the entries had is read first, for the redirects.
+        $had = array_column($entries->withDeleted()->findAll(), null, 'id');
+
         $db->transStart();
 
         if ($fresh) {
@@ -58,7 +62,7 @@ final readonly class Indexer
         }
 
         $termIds = $this->syncTerms($terms);
-        $rows    = array_column($entries->withDeleted()->findAll(), null, 'id');
+        $rows    = $fresh ? [] : $had;
 
         $stale = array_diff_key($rows, $records);
 
@@ -69,8 +73,13 @@ final readonly class Indexer
         TermIndex::forget(array_keys($stale));
 
         $added = $updated = $unchanged = 0;
+        $moves = [];
 
         foreach ($records as $id => $record) {
+            if ($record['deleted_at'] === null && ($had[$id]['deleted_at'] ?? null) === null && ($had[$id]['uri'] ?? null) !== $record['uri']) {
+                $moves[$id] = [$had[$id]['uri'] ?? null, $record['uri']];
+            }
+
             // An entry that stays in the trash keeps the date it went there. Only a rebuild has to take it from the file.
             if ($record['deleted_at'] !== null && ($rows[$id]['deleted_at'] ?? null) !== null) {
                 $record['deleted_at'] = $rows[$id]['deleted_at'];
@@ -101,6 +110,12 @@ final readonly class Indexer
             $db->resetTransStatus();
 
             return new ReindexResult(errors: $errors, failure: 'The index could not be written, so nothing was changed.');
+        }
+
+        try {
+            (new Redirects($this->root))->record($moves);
+        } catch (ContentException $e) {
+            $errors[Redirects::FILE] = "The old URIs of moved entries were not kept. {$e->getMessage()}";
         }
 
         PageCache::clear();

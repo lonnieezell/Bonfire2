@@ -45,6 +45,10 @@ class EntryController extends BaseController
             return $page;
         }
 
+        if ($uri !== null && $entry === null && ($target = content()->redirectFor($uri)) !== null) {
+            return redirect()->to($target, 301);
+        }
+
         if ($entry === null || $collection === null || ($collection->controller === null && $collection->template === null)) {
             throw PageNotFoundException::forPageNotFound();
         }

@@ -17,16 +17,6 @@ The index is in your database, which all servers share. Only the files are local
 or deploy a fresh copy of the code, the files in it are the ones that were committed, and a post saved in the admin since
 isn't among them. See [Git isn't automated](#git-isnt-automated).
 
-## Changing a slug doesn't redirect
-
-When you rename an entry's file, or move a page in a [structure](structure.md#changing-a-slug-or-moving-a-page), its URI
-changes, and the old URI answers with a 404. The URIs of a page's children change with it. Nothing remembers the old
-ones.
-
-If the old addresses matter, such as for search engines, add redirects of your own with `$routes->addRedirect()` or in
-your web server, before you rename. The admin can't rename an entry, because the slug is the file's name. See
-[Editing entries](admin.md#creating-and-editing).
-
 ## Saving in the admin drops YAML comments
 
 The admin writes an entry's front matter afresh from its values, so comments in it are lost on save. Keys keep their
@@ -50,6 +40,9 @@ or fail on a conflict. Pick one place where content is edited, and move it from 
 - Edit in the admin on production, and have a job of your own commit the content directory and push it.
 - Don't allow editing in the admin on production, by taking `content.edit` away from every group there. See
   [Permissions](admin.md#permissions).
+
+Commit `redirects.yaml` with the rest. It holds the old URIs of renamed and moved entries, and nothing else can bring them
+back. See [Redirects](routing.md#redirects).
 
 Either way, run `php spark content:reindex` after the files change. See [Building the index](index.md#when-to-reindex).
 
