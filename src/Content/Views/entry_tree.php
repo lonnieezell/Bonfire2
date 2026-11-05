@@ -18,7 +18,6 @@
 <form action="<?= $action ?>" method="post" data-tree-form x-data="{ showTrashed: false }">
     <?= csrf_field() ?>
     <input type="hidden" name="hash" value="<?= esc($hash, 'attr') ?>">
-    <input type="hidden" name="tree" value="">
 
     <x-admin-box>
         <?php if ($nodes === []) : ?>
@@ -36,30 +35,31 @@
     <x-save-bar save="<?= esc(lang('Content.saveStructure'), 'attr') ?>" />
 </form>
 
+<script>
+    {
+        const form = document.querySelector('[data-tree-form]');
+        const root = form.querySelector('[data-tree]');
+
+        if (root) {
+            const read = (list) => [...list.children].map((item) => ({
+                id: item.dataset.id,
+                children: read(item.querySelector(':scope > [data-children]')),
+            }));
+
+            // The items have no named fields. This puts them in what's posted and in what the save bar compares,
+            // which it first looks at when Alpine starts, after this script.
+            form.addEventListener('formdata', (event) => event.formData.set('tree', JSON.stringify(read(root))));
+
+            // Discarding resets the fields, but only opening the page again puts back the items that were moved.
+            form.addEventListener('reset', () => location.assign(form.action));
+
+            // SortableJS comes after the page's scripts, so wait for it.
+            document.addEventListener('DOMContentLoaded', () => bfTreeSortable(root));
+        }
+    }
+</script>
 <?php $this->endSection() ?>
 
 <?php $this->section('scripts') ?>
 <?= view('Bonfire\Content\Views\tree_sortable', [], ['saveData' => false]) ?>
-<script>
-    // SortableJS comes after the page's scripts, so wait for it.
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('[data-tree-form]');
-        const root = form.querySelector('[data-tree]');
-
-        if (! root) {
-            return;
-        }
-
-        bfTreeSortable(root);
-
-        const read = (list) => [...list.children].map((item) => ({
-            id: item.dataset.id,
-            children: read(item.querySelector(':scope > [data-children]')),
-        }));
-
-        form.addEventListener('submit', () => {
-            form.elements.tree.value = JSON.stringify(read(root));
-        });
-    });
-</script>
 <?php $this->endSection() ?>

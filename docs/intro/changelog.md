@@ -14,6 +14,10 @@ and the routes now take `(:segment)`. See [The Recycler](../building_admin_modul
 
 ## 5 November 2026
 
+**Content: structure editor save bar.** Moving a page on the Edit structure screen now shows the save bar. Before, the bar
+stayed hidden, so with JavaScript on there was no way to save a new order. Discard opens the page again, which puts the
+pages back.
+
 **Content: admin search.** The admin search box now finds entries. It matches the term in an entry's title or Markdown
 body, skips trashed entries, and shows nothing to users without `content.access`. Results show the title, collection and
 status, and link to the edit form for users with `content.edit`. See [Editing entries in the admin](../content/admin.md#search).
