@@ -46,6 +46,7 @@ Every method is optional but `partial()`:
 | `rules($field)` | The validation rules. | The blueprint's `validate` |
 | `toFrontMatter($input, $field)` | The value to write to the file. Return `null` or `''` to leave the key out. | The text |
 | `fromFrontMatter($stored, $field)` | The text the form shows for what the file holds. | The value as text, or `''` |
+| `cast($stored, $field)` | The PHP value [`globals()`](globals.md#reading-a-value) returns for what the file holds. Return `null` for a value that doesn't fit. | The value as the file holds it |
 | `storedInFrontMatter()` | `false` if the value isn't a front matter key, like `slug`. | `true` |
 
 Things to know:

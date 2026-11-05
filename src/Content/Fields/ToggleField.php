@@ -36,6 +36,15 @@ final class ToggleField extends FieldType
         return $input === '1';
     }
 
+    public function cast(mixed $stored, Field $field): ?bool
+    {
+        return match ($stored) {
+            true, 1, '1', 'true'   => true,
+            false, 0, '0', 'false' => false,
+            default                => null,
+        };
+    }
+
     public function fromFrontMatter(mixed $stored, Field $field): string
     {
         return $stored === true || $stored === 1 || $stored === '1' || $stored === 'true' ? '1' : '0';

@@ -164,7 +164,7 @@ final class EntryParser
     /**
      * YAML hands over a date with no offset as UTC, though it means app time.
      */
-    private static function toAppTime(DateTimeInterface $date): string
+    public static function toAppTime(DateTimeInterface $date): string
     {
         if ($date->getTimezone()->getName() !== 'UTC') {
             $date = DateTimeImmutable::createFromInterface($date)->setTimezone(new DateTimeZone(date_default_timezone_get()));

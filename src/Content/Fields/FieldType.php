@@ -63,6 +63,15 @@ abstract class FieldType
     }
 
     /**
+     * The PHP value a template gets for what a YAML file holds, such as an int for an `integer` field. Null when the
+     * value doesn't fit the type, which a reader treats as missing.
+     */
+    public function cast(mixed $stored, Field $field): mixed
+    {
+        return $stored;
+    }
+
+    /**
      * The front matter key that holds the field's value, which is the field's handle unless the type says otherwise.
      */
     public function key(Field $field): string
