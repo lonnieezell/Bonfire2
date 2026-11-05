@@ -1387,6 +1387,8 @@
       
         
       
+        
+      
     
     
     
@@ -1703,6 +1705,34 @@
     
   
     SEO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/scaffolding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scaffolding
   
 
     
@@ -3090,6 +3120,14 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: scaffolding.</strong> <code>php spark content:scaffold &lt;collection&gt;</code> writes starting index and show views for a
+collection into <code>app/Views/&lt;collection&gt;/</code>, built from its blueprints' fields. The index view uses the pagination recipe and
+the show view calls <code>content_seo()</code>. <code>--controller</code> also writes a controller for the collection to hand off to. It never
+overwrites a file, says which ones it skipped, and prints the config line and the index route to add. See
+<a href="../../content/scaffolding/">Scaffolding</a>.</p>
+<p><strong>Content: <code>$entry-&gt;isPublished()</code>.</strong> It says whether an entry has the <code>published</code> status and its <code>published_at</code> has
+passed, the same rule as <code>published()</code>, so you can check the entries an <code>entries</code> field links to, which include drafts.
+See <a href="../../content/query_api/#entries">Entries</a>.</p>
 <p><strong>Content: SEO values.</strong> <code>$entry-&gt;seo()</code> returns an entry's title, description, canonical URL and Open Graph values. A
 blueprint's <code>seo</code> key maps the fields that feed the title and description, which default to <code>title</code> and the body's first
 paragraph. <code>content_seo($entry)</code> adds them to the page's <code>&lt;head&gt;</code> through <code>viewMeta</code>, escaped. <code>Config\Content::$autoSeo</code>,
