@@ -20,10 +20,17 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: page caching.** A collection with `cache: 3600` in its config has its routed pages served to guests from the cache
+for that many seconds. It's off unless a collection sets it. Only `GET` requests with no query string from guests that the
+fallback route serves with a 200 are cached. Saving, trashing, restoring or purging an entry, moving pages in the
+structure, saving a term or menu, and any reindex (including `content:reindex`) clear all of Content's cached pages.
+See [Caching](../content/routing.md#caching).
+
 **Content: globals.** Keep site-wide values in `content/globals/<handle>.yaml`, describe them with a blueprint at
 `resources/blueprints/globals/<handle>.yaml`, and read them anywhere with `globals('site')->field('name', 'default')`. The
 value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
 index or migration, work with auto-routing off, and have no routes. See [Globals](../content/globals.md).
+
 
 **Content: collection feeds.** `content()->feed('blog')` returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional `/feed/{collection}` route is behind `$feedRoute` in
