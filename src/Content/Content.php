@@ -169,6 +169,24 @@ final readonly class Content
     }
 
     /**
+     * A sitemap of every collection's published entries, as a response to return from a route.
+     * An entry with no URI is left out.
+     */
+    public function sitemap(): ResponseInterface
+    {
+        $rows = (new ContentEntryModel())->published()->select('uri')->where('uri !=', '')->orderBy('uri')->findAll();
+        $site = rtrim(site_url(), '/');
+        $xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+        foreach ($rows as $row) {
+            $url = $site . '/' . implode('/', array_map(rawurlencode(...), explode('/', trim($row['uri'], '/'))));
+            $xml .= '  <url><loc>' . htmlspecialchars($url, ENT_XML1 | ENT_QUOTES, 'UTF-8') . "</loc></url>\n";
+        }
+
+        return service('response')->setContentType('application/xml', 'UTF-8')->setBody($xml . "</urlset>\n");
+    }
+
+    /**
      * @param list<string> $termIds
      *
      * @return array<string, int> the published entries of each term that has any, by term id

@@ -38,6 +38,12 @@ return [
     'preview'         => 'Preview',
     'previewEmpty'    => 'Nothing to preview.',
 
+    // Draft preview link
+    'previewLinkTitle' => 'Preview link',
+    'previewLinkHint'  => 'Anyone with this link can see the entry as it will look on the site, without logging in, until {0}.',
+    'previewOpen'      => 'Open preview',
+    'previewNoKey'     => 'A preview link is signed with the app\'s encryption key, and there is none. Run `php spark key:generate`.',
+
     // Trash
     'recycler' => [
         'label'   => 'Content entries',
@@ -80,6 +86,11 @@ return [
     'navigationScheduled'     => 'Scheduled',
     'navigationNoUri'         => 'No URL',
     'navigationTrashed'       => 'In the trash',
+
+    // Globals
+    'global'       => 'global set',
+    'saveGlobal'   => 'Save',
+    'reloadGlobal' => 'Reload the form',
 
     // Field types
     'selectInvalid'  => 'Choose one of the options.',

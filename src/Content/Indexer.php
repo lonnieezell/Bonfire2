@@ -103,6 +103,8 @@ final readonly class Indexer
             return new ReindexResult(errors: $errors, failure: 'The index could not be written, so nothing was changed.');
         }
 
+        PageCache::clear();
+
         return new ReindexResult($added, $updated, count($stale), $unchanged, $errors);
     }
 

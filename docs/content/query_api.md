@@ -154,10 +154,20 @@ and scheduled entries too.
 `content()->findByUri('/blog/hello-world')` returns the published entry at a URI, or `null` for a draft, a scheduled entry
 or an unknown URI. It works without [auto-routing](routing.md#finding-an-entry-by-uri), but the collection needs a `route`.
 
+## Sitemap
+
+`content()->sitemap()` returns a response with a sitemap of every collection's published entries that have a URI. See
+[Sitemap](routing.md#sitemap).
+
 ## Navigation menus
 
 `navigation('main')` returns a [menu](navigation.md#showing-a-menu) built in the admin as a tree of items, each with a
 `title`, `url`, `active` and `children`. It's the same as `content()->navigation('main')`.
+
+## Globals
+
+`globals('site')->field('name')` reads a value from a [set of globals](globals.md), cast by its blueprint. It isn't part
+of `content()`, because globals are read from their files and aren't queried.
 
 ## Taxonomies
 
