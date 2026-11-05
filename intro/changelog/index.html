@@ -3030,6 +3030,12 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: collection index pages.</strong> <a href="../../content/query_api/#listing-a-collection">Listing a collection</a> shows a route
+and view of your own that list a collection's published entries a page at a time, with pager links from
+<code>$query-&gt;pager()-&gt;links()</code>. Bonfire adds no index route, and <code>paginate()</code> still returns a plain list.</p>
+<p><strong>Content: structure editor save bar.</strong> Moving a page on the Edit structure screen now shows the save bar. Before, the bar
+stayed hidden, so with JavaScript on there was no way to save a new order. Discard opens the page again, which puts the
+pages back.</p>
 <p><strong>Content: admin search.</strong> The admin search box now finds entries. It matches the term in an entry's title or Markdown
 body, skips trashed entries, and shows nothing to users without <code>content.access</code>. Results show the title, collection and
 status, and link to the edit form for users with <code>content.edit</code>. See <a href="../../content/admin/#search">Editing entries in the admin</a>.</p>

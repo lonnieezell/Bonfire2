@@ -1417,6 +1417,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#listing-a-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing a collection
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2553,6 +2564,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#listing-a-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Listing a collection
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2751,6 +2773,41 @@ exist or its config is invalid.</p>
 <span class="nv">$posts</span> <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="nv">$pager</span> <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">();</span>
 </code></pre></div>
+<p><code>paginate()</code> returns a plain list of entries, so you can loop over it like the result of <code>get()</code>. The links come from the
+pager, which is CodeIgniter's <a href="https://codeigniter.com/user_guide/libraries/pagination.html"><code>Pager</code></a>. <code>$page</code> comes from
+the <code>?page=</code> query string unless you pass it.</p>
+<h3 id="listing-a-collection">Listing a collection</h3>
+<p>Bonfire doesn't register an index route for a collection, because the page is yours to design. This recipe lists a
+collection's published entries a page at a time. It assumes the collection has a <code>route</code>, so that its entries have a
+<code>uri</code>. See <a href="../routing/#serving-a-collection">Routing</a>.</p>
+<p>Add the route in <code>app/Config/Routes.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'blog'</span><span class="p">,</span> <span class="k">static</span> <span class="k">function</span> <span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">collection</span><span class="p">(</span><span class="s1">'blog'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">published</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'blog/index'</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">'posts'</span> <span class="o">=&gt;</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="s1">'pager'</span> <span class="o">=&gt;</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">(),</span>
+    <span class="p">]);</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>Then add the view, <code>app/Views/blog/index.php</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Blog</span><span class="o">&lt;/</span><span class="nx">h1</span><span class="o">&gt;</span>
+
+<span class="o">&lt;?</span><span class="nx">php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$posts</span> <span class="k">as</span> <span class="nv">$post</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;article&gt;</span>
+<span class="x">        &lt;h2&gt;&lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">uri</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/a&gt;&lt;/h2&gt;</span>
+<span class="x">        &lt;p&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$post</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">))</span> <span class="cp">?&gt;</span><span class="x">&lt;/p&gt;</span>
+<span class="x">    &lt;/article&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endforeach</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$pager</span><span class="o">-&gt;</span><span class="na">links</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p><code>/blog</code> shows the first ten entries and <code>/blog?page=2</code> the next ten, with links between the pages. The collection's
+<code>sort</code> sets the order, or call <code>orderBy()</code> before <code>paginate()</code>. To list the entries of a term, use <code>whereTerm()</code> in place
+of <code>published()</code>.</p>
+<p>Your route wins over the <a href="../routing/#turning-it-on">fallback route</a>, so <code>/blog</code> and <code>/blog/{slug}</code> can both exist.</p>
+<p>To change how the links look, pass <code>links()</code> the name of a <a href="https://codeigniter.com/user_guide/libraries/pagination.html#customizing-the-pagination-links">pager template</a>
+as its second argument: <code>$pager-&gt;links('default', 'my_pager')</code>.</p>
 <h2 id="finding-an-entry">Finding an entry</h2>
 <p><code>content()-&gt;find($id)</code> returns an entry from any collection by its UUID, or <code>null</code>.</p>
 <div class="admonition warning">
