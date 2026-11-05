@@ -3025,6 +3025,9 @@ and <code>CustomRecyclerPurge::recyclerPurge()</code> now take <code>int|string 
 fatal error when the class loads</strong>, so change its signature to <code>int|string $id</code>. The key arrives from the URL as a string,
 and the routes now take <code>(:segment)</code>. See <a href="../../building_admin_modules/recycler/#overriding-the-restore">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: admin search.</strong> The admin search box now finds entries. It matches the term in an entry's title or Markdown
+body, skips trashed entries, and shows nothing to users without <code>content.access</code>. Results show the title, collection and
+status, and link to the edit form for users with <code>content.edit</code>. See <a href="../../content/admin/#search">Editing entries in the admin</a>.</p>
 <p><strong>Documentation in the admin.</strong> Outside production, the sidebar has a <strong>Documentation</strong> group that shows this guide for
 the version you have installed, with its structure read from <code>mkdocs.yml</code>. Anyone with <code>admin.access</code> can read it, and
 production has no menu and answers with a 404. See <a href="../../modules/documentation/">Documentation</a>.</p>

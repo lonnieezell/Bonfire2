@@ -1305,6 +1305,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-and-editing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2559,6 +2570,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#creating-and-editing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2756,6 +2778,14 @@ back to the dashboard with a "not authorized" message.</p>
 <p>The list shows each entry's title, status and date, a page at a time. It reads the index, so run
 <code>php spark content:reindex</code> first if you have files that were not saved through the admin. In development the index
 catches up with your files by itself.</p>
+<h2 id="search">Search</h2>
+<p>Entries show up in the admin's search box, under <strong>Content</strong>. The search matches the term anywhere in an entry's title
+or in its Markdown body, ignoring case, and lists the entry's title, collection and status. The body is searched as it
+was written, so Markdown syntax such as <code>**bold**</code> counts, but front matter fields do not. Trashed entries are left out,
+and so is everything for a user without <code>content.access</code>. The title links to the edit form for users with
+<code>content.edit</code>, and is plain text for the others. It reads the index, the same as <a href="#the-list">the list</a>.</p>
+<p>Content has no page that lists every collection, so the "see all" link under the results goes to the first collection's
+list.</p>
 <h2 id="creating-and-editing">Creating and editing</h2>
 <p><strong>New entry</strong> opens the form of the collection's first blueprint. To use another blueprint the collection offers, add
 <code>?blueprint=&lt;handle&gt;</code> to the address.</p>

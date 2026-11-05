@@ -2663,8 +2663,10 @@ from all search providers.</p>
 <p><strong>resourceUrl()</strong></p>
 <p>Returns the relative URL to the main page for this resource. In this case it takes you to the list of users.</p>
 <p><strong>resultView()</strong></p>
-<p>Returns the name of the view that should be used to display the results on the overview page. This MUST be in the
-Admin theme folder in order to be found. This can be a fairly straight-forward view file:</p>
+<p>Returns the name of the view that should be used to display the results on the overview page. This is either relative
+to the Admin theme folder, or a namespaced view in your module, such as <code>Bonfire\Content\Views\search_results</code>. Prefer
+a namespaced view in a package, since installs that published their own copy of the theme won't get a new file added to
+it. This can be a fairly straight-forward view file:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">table</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"table table-hover"</span><span class="o">&gt;</span>
     <span class="o">&lt;?=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setData</span><span class="p">([</span><span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'Email'</span><span class="p">,</span>
