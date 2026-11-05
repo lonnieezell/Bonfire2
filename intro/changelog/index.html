@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#5-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2679,6 +2690,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#5-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#5-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2996,10 +3018,23 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="5-november-2026-breaking-change">5 November 2026 (breaking change)</h2>
+<p><strong>The Recycler handles non-integer keys.</strong> So that it can list resources with UUIDs, <code>CustomRecyclerRestore::recyclerRestore()</code>
+and <code>CustomRecyclerPurge::recyclerPurge()</code> now take <code>int|string $id</code>, as do <code>RecyclableResource::restore()</code>, <code>purge()</code> and
+<code>RecycleController::restore()</code> and <code>purge()</code>. <strong>A model of yours that implements either interface with <code>int $id</code> is a PHP
+fatal error when the class loads</strong>, so change its signature to <code>int|string $id</code>. The key arrives from the URL as a string,
+and the routes now take <code>(:segment)</code>. See <a href="../../building_admin_modules/recycler/#overriding-the-restore">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
 <p><strong>Documentation in the admin.</strong> Outside production, the sidebar has a <strong>Documentation</strong> group that shows this guide for
 the version you have installed, with its structure read from <code>mkdocs.yml</code>. Anyone with <code>admin.access</code> can read it, and
 production has no menu and answers with a 404. See <a href="../../modules/documentation/">Documentation</a>.</p>
+<p><strong>Content: delete to trash.</strong> Users with <code>content.delete</code> can delete an entry from the list or its form, which moves its
+file to <code>content/.trash/&lt;collection&gt;/</code> and takes it off the site. <strong>Content entries</strong> in the Recycler restores or purges
+it, with <code>recycler.view</code>. Deleting a page takes the pages below it, after a confirmation that says how many, and restoring
+brings them back in their exact place in the tree. A trashed entry keeps its slug and URI, and an <code>entries</code> link to it
+survives a save and works again after a restore. <code>content:reindex</code> goes by where the file is, so a trashed entry stays
+trashed after <code>--fresh</code>. You probably want <code>content/.trash/</code> in your <code>.gitignore</code>, and a fresh clone followed by a reindex
+then loses that machine's Recycler contents. See <a href="../../content/admin/#deleting-and-restoring">Deleting and restoring</a>.</p>
 <p><strong>Content: navigation menus.</strong> Add a config at <code>content/navigation/&lt;handle&gt;.yaml</code> and users with <code>content.structure</code> get
 an editor under <strong>Content</strong> in the sidebar, to build a menu from entries and typed-in links. The items live in
 <code>content/trees/navigation/&lt;handle&gt;.yaml</code>. <code>navigation('main')</code> returns them as a tree with <code>title</code>, <code>url</code>, <code>active</code> and

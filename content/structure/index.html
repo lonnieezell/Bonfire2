@@ -1528,6 +1528,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deleting-and-restoring-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting and restoring pages
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2592,6 +2603,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deleting-and-restoring-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting and restoring pages
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2725,7 +2747,7 @@ reindex reads the file and writes three columns for each entry:</p>
 <ul>
 <li>An entry the file doesn't name is still indexed, at the end of the root, in the order of its file path. Nothing is lost
   by adding an entry file by hand.</li>
-<li>An id with no entry file is skipped, and its children move up to where it was.</li>
+<li>An id with no entry file, in <code>collections/</code> or <code>.trash/</code>, is skipped, and its children move up to where it was.</li>
 <li>An id named twice keeps its first place.</li>
 <li>A file that isn't valid is reported by the reindex, and every entry goes to the root until you fix it.</li>
 </ul>
@@ -2748,8 +2770,8 @@ the URIs of its descendants. Add redirects of your own if the old addresses matt
 or onto another page's list to nest it, then save. The editor uses SortableJS, which it loads from a CDN.</p>
 <p>Saving posts the whole tree. Bonfire then:</p>
 <ul>
-<li>refuses a tree deeper than <code>max_depth</code>, one that names an entry the collection doesn't have, or one that would give
-  two entries the same URI, such as with an entry of another collection,</li>
+<li>refuses a tree deeper than <code>max_depth</code>, one that names an entry the collection doesn't have, one that puts a live page
+  under a page in the trash, or one that would give two entries the same URI, such as with an entry of another collection,</li>
 <li>refuses it if the tree file changed on disk since the editor was opened, the same hash check as <a href="../admin/#when-the-file-changed">entry
   forms</a>. Reload the structure and make your changes again,</li>
 <li>writes the tree file in one step, through a temporary file that is renamed into place, and</li>
@@ -2763,6 +2785,25 @@ know yet.</p>
 <h3 id="new-entries">New entries</h3>
 <p>A new entry made in the admin goes last at the root. The tree file is rewritten to include it, along with any entries it
 didn't name yet. Open the editor to put it elsewhere. Editing an entry keeps its place.</p>
+<h2 id="deleting-and-restoring-pages">Deleting and restoring pages</h2>
+<p><a href="../admin/#deleting-and-restoring">Deleting</a> works on whole branches, because a live page's ancestors are always live. No
+page ever gets a temporary URI.</p>
+<ul>
+<li><strong>Deleting</strong> a page takes every page below it to the trash too. The confirmation says how many, and the delete is
+  refused if that number has changed by the time you confirm.</li>
+<li><strong>Restoring</strong> a page also restores every trashed page the tree file places below it, even one trashed separately
+  earlier. It's all or nothing: if any of them has its original path or URI taken, nothing is restored and the message
+  names what's in the way.</li>
+<li><strong>Restoring a page whose parent is still in the trash</strong> is refused, with a message naming the parent. Restore the parent.</li>
+<li><strong>Purging</strong> a page removes only that page. Pages below it stay in the trash and move up to its spot. If you restore
+  them, their URIs come from that new position.</li>
+</ul>
+<p>Trashed ids stay in the tree file, so a restored page returns to its exact spot. Deleting doesn't rewrite the file, and
+the admin's other tree writes keep the ids. URIs and sort positions are worked out from live pages only, except that a
+trashed page holds the URI it would come back to, even after <code>content:reindex --fresh</code>.</p>
+<p>The tree editor shows trashed pages as muted rows marked "In trash". They're hidden until you press <strong>Show trashed</strong>,
+which appears when the collection has some. Hidden rows are still saved with the tree, so hiding them can't lose their
+position, and they count toward <code>max_depth</code>.</p>
 
 
 

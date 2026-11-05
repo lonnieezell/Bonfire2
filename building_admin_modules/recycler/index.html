@@ -2321,6 +2321,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#saying-why-it-was-refused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saying Why It Was Refused
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2575,6 +2586,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#saying-why-it-was-refused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saying Why It Was Refused
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2735,8 +2757,9 @@ any arguments, and should return the modified model. </p>
 <h3 id="overriding-the-restore">Overriding the Restore</h3>
 <p>You may override the default handling of the restore process if you have needs outside simply setting the 
 <code>deleted_at</code> date to <code>null</code>. Implement <code>CustomRecyclerRestore</code> and its <code>recyclerRestore()</code> method. 
-It only accepts a single argument, the record primary key, and returns whether the record was restored. </p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerRestore</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+It only accepts a single argument, the record primary key, and returns whether the record was restored. The key is an 
+<code>int|string</code>, so that a model can use UUIDs. It comes from the URL, so it's a string even for an integer key. </p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerRestore</span><span class="p">(</span><span class="nx">int</span><span class="o">|</span><span class="nx">string</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="nv">$id</span><span class="p">)</span>
         <span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">'deleted_at'</span><span class="p">,</span> <span class="k">null</span><span class="p">)</span>
@@ -2747,11 +2770,14 @@ It only accepts a single argument, the record primary key, and returns whether t
 <p>You may override the default handling of the purge process if you have needs outside simply deleting the record. 
 Implement <code>CustomRecyclerPurge</code> and its <code>recyclerPurge()</code> method.
 It only accepts a single argument, the record primary key, and returns whether the record was purged.</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerPurge</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">recyclerPurge</span><span class="p">(</span><span class="nx">int</span><span class="o">|</span><span class="nx">string</span> <span class="nv">$id</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="saying-why-it-was-refused">Saying Why It Was Refused</h3>
+<p>When a restore or purge returns <code>false</code>, the Recycler shows the model's <code>errors()</code>, or a "not found" message if there are
+none. Override <code>errors()</code> to give a reason of your own, as <code>ContentEntryModel</code> does. The Recycler escapes what it shows.</p>
 
 
 

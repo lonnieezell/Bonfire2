@@ -1354,6 +1354,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deleting-and-restoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting and restoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deleting and restoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-trash-and-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trash and git
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2580,6 +2608,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deleting-and-restoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting and restoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deleting and restoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-trash-and-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The trash and git
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2682,7 +2738,7 @@ screens are at <code>/admin/content/&lt;collection&gt;</code>.</p>
 </tr>
 <tr>
 <td><code>content.delete</code></td>
-<td>Reserved. Nothing uses it yet.</td>
+<td>Moving an entry to the trash. See <a href="#deleting-and-restoring">Deleting and restoring</a>. Restoring and purging need <code>recycler.view</code> instead.</td>
 </tr>
 <tr>
 <td><code>content.structure</code></td>
@@ -2746,6 +2802,59 @@ collection.</p>
 <p>A <code>markdown</code> field has <strong>Write</strong> and <strong>Preview</strong> tabs. Preview sends the text to the server, which renders it with
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs <code>content.edit</code>.</p>
+<h2 id="deleting-and-restoring">Deleting and restoring</h2>
+<p>A user with <code>content.delete</code> sees <strong>Delete</strong> on each row of the list and at the top of the entry's form. It asks first.</p>
+<p>Deleting moves the file to <code>content/.trash/&lt;collection&gt;/&lt;filename&gt;</code> as it is on disk, and marks the entry's row as
+deleted. The entry leaves the list, the front end, queries, navigation menus and <code>entries</code> fields. Someone who still has
+the form open gets the <a href="#when-the-file-changed">conflict message</a> when they save. If <code>.trash/</code> already holds a file with
+that name, the delete is refused and nothing is overwritten.</p>
+<p>Trashed entries are listed in the Recycler under <strong>Tools</strong>, as <strong>Content entries</strong>. Restoring and purging there need only
+<code>recycler.view</code>, like the Recycler's other resources.</p>
+<ul>
+<li><strong>Restore</strong> moves the file back and the entry reappears. It's refused, with a message saying why, if its original path
+  or URI has been taken, or its file is missing from the trash.</li>
+<li><strong>Purge</strong> deletes the file and the row for good. If the file is already gone, it just clears the row.</li>
+</ul>
+<p>A trashed entry keeps its slug and URI, so a new entry can't take them until you restore or purge it. For what deleting
+does to pages in a tree, see <a href="../structure/#deleting-and-restoring-pages">Pages and structures</a>.</p>
+<h3 id="the-trash-and-git">The trash and git</h3>
+<p><code>.trash/</code> is ordinary files under your content directory. You probably don't want them in version control, so add this
+to your <code>.gitignore</code>, adjusting the path if your content lives elsewhere:</p>
+<div class="highlight"><pre><span></span><code>content/.trash/
+</code></pre></div>
+<p>The consequence is that the Recycler's contents belong to one machine. After a fresh clone and a reindex, the entries
+that were in that machine's trash aren't there. The reindex treats the location of the file as the truth:</p>
+<table>
+<thead>
+<tr>
+<th>On disk</th>
+<th>Result of a reindex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Only in <code>.trash/</code></td>
+<td>The entry is trashed, even if it was live.</td>
+</tr>
+<tr>
+<td>Only in <code>collections/</code></td>
+<td>The entry is live, even if it was trashed.</td>
+</tr>
+<tr>
+<td>The same id in both</td>
+<td>The live one wins. The trash copy is reported as an error and left alone.</td>
+</tr>
+<tr>
+<td>In neither</td>
+<td>The row is removed.</td>
+</tr>
+<tr>
+<td>In <code>.trash/</code>, but its collection's config is gone</td>
+<td>Reported, with no row. It comes back when the config does.</td>
+</tr>
+</tbody>
+</table>
+<p>After <code>content:reindex --fresh</code>, the date an entry was deleted comes from the time on its file in <code>.trash/</code>.</p>
 
 
 

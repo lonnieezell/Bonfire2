@@ -2941,9 +2941,13 @@ is refused.</p>
 </table>
 <p>The form lists every entry of those collections, drafts too, with a checkbox each. That suits collections of a few
 hundred entries. For more, <a href="#changing-an-input">change the input</a>. A save is refused if it links an entry that doesn't
-exist, is in the trash, belongs to another collection, or takes the field over <code>max_items</code>.</p>
+exist, belongs to another collection, or takes the field over <code>max_items</code>.</p>
 <p>Read the links back with <a href="../query_api/#entries"><code>$entry-&gt;entries('related')</code></a>, which returns entry objects. A link whose
-entry has been deleted or trashed since is skipped without an error, and saving the form drops it from the file.</p>
+entry is gone is skipped without an error, and saving the form drops it from the file.</p>
+<p>A link to an entry in the <a href="../admin/#deleting-and-restoring">trash</a> survives a save. The form shows it checked and muted,
+marked "In trash", and you can untick it. A trashed entry is never offered as a new choice, and its link counts toward
+<code>max_items</code>. <code>$entry-&gt;entries()</code> skips it until it's restored, and then the link works again. If you copied the input to
+your app's views, add what's new in <code>fields/entries.php</code>, or saving your form drops these links.</p>
 <h2 id="terms">terms</h2>
 <p>The terms of a <a href="../taxonomies/">taxonomy</a> an entry has, chosen from the terms that exist. <code>taxonomy</code> is required and names
 the taxonomy:</p>

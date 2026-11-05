@@ -2690,8 +2690,8 @@ blog but not the pages. The same goes for <code>content.structure</code>, which 
 <h2 id="smaller-things">Smaller things</h2>
 <p>These are covered where they apply, and are listed here so you can find them:</p>
 <ul>
-<li><strong>Entries can't be deleted in the admin.</strong> <code>content.delete</code> is reserved and nothing uses it yet. Delete the file, then
-  run <code>php spark content:reindex</code>.</li>
+<li><strong>The trash belongs to one machine</strong> if you keep <code>.trash/</code> out of git, as we suggest. A fresh clone and a reindex lose
+  that machine's Recycler contents. See <a href="../admin/#the-trash-and-git">The trash and git</a>.</li>
 <li><strong>Terms have no stale-file check.</strong> If you save a term whose file changed since the form opened, the last save wins.
   Entries do check. See <a href="../admin/#when-the-file-changed">When the file changed</a> and
   <a href="../taxonomies/#editing-terms-in-the-admin">Editing terms in the admin</a>.</li>
