@@ -12,6 +12,12 @@ and `CustomRecyclerPurge::recyclerPurge()` now take `int|string $id`, as do `Rec
 fatal error when the class loads**, so change its signature to `int|string $id`. The key arrives from the URL as a string,
 and the routes now take `(:segment)`. See [The Recycler](../building_admin_modules/recycler.md#overriding-the-restore).
 
+**Recycler restore and purge are POST only.** They changed data on a GET request, so a forged link or image could make a
+logged-in user restore or purge a record. `recycler-restore` and `recycler-purge` are now POST routes that always check the
+CSRF token, even if your app doesn't turn the filter on globally, and the list uses forms. **If you link to these URLs, or
+have your own copy of `listResource.php`, change the links to forms with `csrf_field()`.** A GET to either URL now gives a
+404. See [The Recycler](../building_admin_modules/recycler.md#restoring-and-purging).
+
 ## 5 November 2026
 
 **Content: admin search.** The admin search box now finds entries. It matches the term in an entry's title or Markdown

@@ -33,13 +33,19 @@
                             <?php endforeach ?>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-2">
-                                    <a href="<?= url_to('recycler-restore', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-outline-secondary">
-                                        <i class="fas fa-trash-restore" aria-hidden="true"></i> <?= lang('Recycler.restoreMsgTitle') ?>
-                                    </a>
-                                    <a href="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" class="btn btn-sm btn-outline-danger"
-                                       data-confirm="<?= esc(lang('Recycler.purgeMsgContent')) ?>" data-confirm-button="<?= esc(lang('Recycler.purgeConfirm')) ?>" data-confirm-danger="1">
-                                        <?= lang('Recycler.purgeMsgTitle') ?>
-                                    </a>
+                                    <form action="<?= url_to('recycler-restore', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" method="post">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-trash-restore" aria-hidden="true"></i> <?= lang('Recycler.restoreMsgTitle') ?>
+                                        </button>
+                                    </form>
+                                    <form action="<?= url_to('recycler-purge', $currentResource->alias(), $item[$currentResource->primaryKey()]) ?>" method="post">
+                                        <?= csrf_field() ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                data-confirm="<?= esc(lang('Recycler.purgeMsgContent')) ?>" data-confirm-button="<?= esc(lang('Recycler.purgeConfirm')) ?>" data-confirm-danger="1">
+                                            <?= lang('Recycler.purgeMsgTitle') ?>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
