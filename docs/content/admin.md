@@ -12,7 +12,7 @@ screens are at `/admin/content/<collection>`.
 | Permission | What it allows |
 |---|---|
 | `content.access` | Seeing the Content menu and each collection's list. Every other entry screen needs it too. |
-| `content.edit` | Creating and editing entries, the Markdown preview, and making [draft preview links](#previewing-a-draft). |
+| `content.edit` | Creating and editing entries, and the Markdown preview. and making [draft preview links](#previewing-a-draft). Also editing [globals](globals.md#editing-in-the-admin), which needs `content.access` too. |
 | `content.publish` | Publishing an entry, and setting or changing when it goes live. |
 | `content.delete` | Moving an entry to the trash. See [Deleting and restoring](#deleting-and-restoring). Restoring and purging need `recycler.view` instead. |
 | `content.structure` | Arranging the entries of a structured collection in its tree editor (see [Pages and structures](structure.md)), and listing, creating and editing the terms of a [taxonomy](taxonomies.md#editing-terms-in-the-admin). Neither needs `content.access`. |

@@ -20,6 +20,11 @@ have your own copy of `listResource.php`, change the links to forms with `csrf_f
 
 ## 5 November 2026
 
+**Content: editing globals in the admin.** Each set of globals that has a blueprint gets an item in the Content menu and a
+form built from the blueprint, with the same field types and validation as entries. It needs `content.access` and
+`content.edit`. A save writes the YAML file whole and is refused if the file changed since the form loaded, like an entry.
+See [Globals](../content/globals.md#editing-in-the-admin).
+
 **Content: draft preview.** An entry's form has a **Preview** button for users with `content.edit`. It gives a signed link,
 good for 24 hours, that shows the entry through the collection's `template` or `controller` whatever its status, to anyone
 who has the link and with no login, so a client can review a draft. The response is `noindex` and never cached, and a

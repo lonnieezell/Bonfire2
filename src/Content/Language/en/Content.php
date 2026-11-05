@@ -87,6 +87,11 @@ return [
     'navigationNoUri'         => 'No URL',
     'navigationTrashed'       => 'In the trash',
 
+    // Globals
+    'global'       => 'global set',
+    'saveGlobal'   => 'Save',
+    'reloadGlobal' => 'Reload the form',
+
     // Field types
     'selectInvalid'  => 'Choose one of the options.',
     'integerInvalid' => 'Enter a whole number.',

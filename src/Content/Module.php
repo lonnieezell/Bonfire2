@@ -21,7 +21,8 @@ use Bonfire\Menus\MenuItem;
 class Module extends BaseModule
 {
     /**
-     * Adds a Content menu with an item for each collection, and for each taxonomy and navigation menu to those who have content.structure.
+     * Adds a Content menu with an item for each collection, for each taxonomy and navigation menu to those who have content.structure,
+     * and for each set of globals to those who have content.edit.
      * The sidebar shows it to those who have content.access.
      */
     public function initAdmin()
@@ -41,7 +42,10 @@ class Module extends BaseModule
         $taxonomies  = $canArrange ? Taxonomy::all(config('Content')->contentPath) : [];
         $navigations = $canArrange ? Navigation::all(config('Content')->contentPath) : [];
 
-        if ($collections === [] && $taxonomies === [] && $navigations === []) {
+        // A set nothing describes has no form to open.
+        $globals = $user->can('content.edit') ? array_filter(GlobalSet::all(config('Content')->contentPath, config('Content')->blueprintPath), static fn (GlobalSet $set): bool => $set->blueprint !== null) : [];
+
+        if ($collections === [] && $taxonomies === [] && $navigations === [] && $globals === []) {
             return;
         }
 
@@ -71,6 +75,14 @@ class Module extends BaseModule
                 'title'      => esc($navigation->title),
                 'url'        => route_to('content-navigation', $navigation->handle),
                 'permission' => 'content.structure',
+            ]));
+        }
+
+        foreach ($globals as $set) {
+            $menu->addItem(new MenuItem([
+                'title'      => esc($set->blueprint->title),
+                'url'        => route_to('content-global', $set->handle),
+                'permission' => 'content.edit',
             ]));
         }
     }
