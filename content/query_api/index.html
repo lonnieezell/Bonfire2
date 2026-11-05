@@ -1083,6 +1083,8 @@
       
         
       
+        
+      
     
     
     
@@ -1489,6 +1491,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#globals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Globals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#taxonomies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1590,6 +1603,34 @@
     
   
     Navigation menus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../globals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Globals
   
 
     
@@ -2647,6 +2688,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#globals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Globals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#taxonomies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2850,6 +2902,9 @@ or an unknown URI. It works without <a href="../routing/#finding-an-entry-by-uri
 <h2 id="navigation-menus">Navigation menus</h2>
 <p><code>navigation('main')</code> returns a <a href="../navigation/#showing-a-menu">menu</a> built in the admin as a tree of items, each with a
 <code>title</code>, <code>url</code>, <code>active</code> and <code>children</code>. It's the same as <code>content()-&gt;navigation('main')</code>.</p>
+<h2 id="globals">Globals</h2>
+<p><code>globals('site')-&gt;field('name')</code> reads a value from a <a href="../globals/">set of globals</a>, cast by its blueprint. It isn't part
+of <code>content()</code>, because globals are read from their files and aren't queried.</p>
 <h2 id="taxonomies">Taxonomies</h2>
 <p><code>whereTerm()</code> keeps the published entries that have a <a href="../taxonomies/">term</a>, the same as <code>published()</code> does, and it
 composes with the rest of the query:</p>

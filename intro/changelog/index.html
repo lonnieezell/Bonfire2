@@ -1383,6 +1383,8 @@
       
         
       
+        
+      
     
     
     
@@ -1727,6 +1729,34 @@
     
   
     Navigation menus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/globals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Globals
   
 
     
@@ -3030,6 +3060,10 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: globals.</strong> Keep site-wide values in <code>content/globals/&lt;handle&gt;.yaml</code>, describe them with a blueprint at
+<code>resources/blueprints/globals/&lt;handle&gt;.yaml</code>, and read them anywhere with <code>globals('site')-&gt;field('name', 'default')</code>. The
+value is cast by the blueprint's field type, and a missing one gives the default. Globals are read from the file, with no
+index or migration, work with auto-routing off, and have no routes. See <a href="../../content/globals/">Globals</a>.</p>
 <p><strong>Content: collection feeds.</strong> <code>content()-&gt;feed('blog')</code> returns a response with a collection's published entries as an
 RSS 2.0 feed, to return from a route of your own. An optional <code>/feed/{collection}</code> route is behind <code>$feedRoute</code> in
 <code>app/Config/Content.php</code>, off by default, and your routes win over it. See <a href="../../content/routing/#feeds">Feeds</a>.</p>
