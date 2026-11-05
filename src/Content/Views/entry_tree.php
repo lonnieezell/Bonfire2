@@ -36,6 +36,7 @@
 <?php $this->endSection() ?>
 
 <?php $this->section('scripts') ?>
+<?= view('Bonfire\Content\Views\tree_sortable', [], ['saveData' => false]) ?>
 <script>
     // SortableJS comes after the page's scripts, so wait for it.
     document.addEventListener('DOMContentLoaded', () => {
@@ -46,20 +47,7 @@
             return;
         }
 
-        // Without SortableJS (a blocked CDN) the list can't be moved, but a save still posts it as it is.
-        if (typeof Sortable !== 'undefined') {
-            for (const list of [root, ...root.querySelectorAll('[data-children]')]) {
-                Sortable.create(list, {
-                    group: 'bf-content-tree',
-                    handle: '[data-handle]',
-                    animation: 150,
-                    fallbackOnBody: true,
-                    swapThreshold: 0.65,
-                    // The save bar shows once the form changes.
-                    onEnd: () => form.dispatchEvent(new Event('input', { bubbles: true })),
-                });
-            }
-        }
+        bfTreeSortable(root);
 
         const read = (list) => [...list.children].map((item) => ({
             id: item.dataset.id,

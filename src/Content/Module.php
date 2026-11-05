@@ -20,7 +20,7 @@ use Bonfire\Menus\MenuItem;
 class Module extends BaseModule
 {
     /**
-     * Adds a Content menu with an item for each collection, and for each taxonomy to those who have content.structure.
+     * Adds a Content menu with an item for each collection, and for each taxonomy and navigation menu to those who have content.structure.
      * The sidebar shows it to those who have content.access.
      */
     public function initAdmin()
@@ -33,9 +33,11 @@ class Module extends BaseModule
         }
 
         $collections = Collection::all(config('Content')->contentPath);
-        $taxonomies  = $user->can('content.structure') ? Taxonomy::all(config('Content')->contentPath) : [];
+        $canArrange  = $user->can('content.structure');
+        $taxonomies  = $canArrange ? Taxonomy::all(config('Content')->contentPath) : [];
+        $navigations = $canArrange ? Navigation::all(config('Content')->contentPath) : [];
 
-        if ($collections === [] && $taxonomies === []) {
+        if ($collections === [] && $taxonomies === [] && $navigations === []) {
             return;
         }
 
@@ -56,6 +58,14 @@ class Module extends BaseModule
             $menu->addItem(new MenuItem([
                 'title'      => esc($taxonomy->title),
                 'url'        => route_to('content-terms', $taxonomy->handle),
+                'permission' => 'content.structure',
+            ]));
+        }
+
+        foreach ($navigations as $navigation) {
+            $menu->addItem(new MenuItem([
+                'title'      => esc($navigation->title),
+                'url'        => route_to('content-navigation', $navigation->handle),
                 'permission' => 'content.structure',
             ]));
         }

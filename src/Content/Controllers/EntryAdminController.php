@@ -36,6 +36,8 @@ use Psr\Log\LoggerInterface;
  */
 class EntryAdminController extends AdminController
 {
+    use LoadsSortable;
+
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Content\Views\\';
 
@@ -346,12 +348,7 @@ class EntryAdminController extends AdminController
     {
         $entries = array_column((new ContentEntryModel())->select('id, slug, title, status')->where('collection', $collection->handle)->orderBy('id')->findAll(), null, 'id');
 
-        service('viewMeta')->addScript([
-            'src'            => 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js',
-            'integrity'      => 'sha256-bQqDH8GbS66FF5etM5MVfoYa+3hiRZwRImNZsn4sQzc=',
-            'crossorigin'    => 'anonymous',
-            'referrerpolicy' => 'no-referrer',
-        ]);
+        $this->addSortableScript();
 
         $this->response->setStatusCode($httpStatus);
 

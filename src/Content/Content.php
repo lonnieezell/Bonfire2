@@ -111,6 +111,33 @@ final readonly class Content
     }
 
     /**
+     * A menu as a site shows it. An item whose entry can't be shown is left out, along with the items below it.
+     * A tree file that can't be read is logged and gives an empty menu.
+     *
+     * @return list<NavigationItem>
+     *
+     * @throws ContentException when the menu doesn't exist or its config is invalid
+     */
+    public function navigation(string $handle): array
+    {
+        $navigation = Navigation::load($this->contentRoot, $handle);
+
+        try {
+            $tree = NavigationTree::parse(NavigationTree::raw($this->contentRoot, $navigation->handle));
+        } catch (ContentException $e) {
+            // A menu on every page shouldn't turn a bad edit of its file into a site that's down.
+            log_message('error', 'Content: navigation {menu}: {message}', ['menu' => "{$navigation->handle}.yaml", 'message' => $e->getMessage()]);
+
+            return [];
+        }
+
+        $ids     = $tree->entryIds();
+        $entries = $ids === [] ? [] : (new ContentEntryModel())->published()->select('id, title, uri')->whereIn('id', $ids)->findAll();
+
+        return $tree->items(array_column($entries, null, 'id'), Collection::normalizeUri(rawurldecode(service('request')->getPath())));
+    }
+
+    /**
      * @param list<string> $termIds
      *
      * @return array<string, int> the published entries of each term that has any, by term id
