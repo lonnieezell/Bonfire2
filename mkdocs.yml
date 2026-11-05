@@ -104,6 +104,7 @@ nav:
       - modules/mail_previews.md
       - modules/mail_outbox.md
       - modules/tools.md
+      - modules/documentation.md
       - modules/assets.md
       - modules/consent.md
       - modules/privacy.md
