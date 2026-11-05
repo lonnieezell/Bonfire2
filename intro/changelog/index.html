@@ -3462,6 +3462,8 @@ page, <a href="../../content/the_index/">The index and deploys</a>, and feeds an
 <a href="../../content/feeds_and_sitemaps/">Feeds and sitemaps</a>. <a href="../../content/reference/">Configuration and commands</a> lists every
 <code>Config\Content</code> property and <code>content:*</code> command. <code>php spark bf:agents</code> now points agents at the Content docs too, so
 run it again to update your <code>AGENTS.md</code>.</p>
+<p><strong>Docs: nested sections collapse in the side nav.</strong> The admin's Docs pages show a nested section of <code>mkdocs.yml</code>, like
+Content's "Modeling content", as a collapsible group in the side nav. It opens when it holds the current page.</p>
 <h2 id="5-november-2026-breaking-change">5 November 2026 (breaking change)</h2>
 <p><strong>The Recycler handles non-integer keys.</strong> So that it can list resources with UUIDs, <code>CustomRecyclerRestore::recyclerRestore()</code>
 and <code>CustomRecyclerPurge::recyclerPurge()</code> now take <code>int|string $id</code>, as do <code>RecyclableResource::restore()</code>, <code>purge()</code> and
