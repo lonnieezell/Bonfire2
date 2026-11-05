@@ -50,8 +50,8 @@ final readonly class Indexer
         $entries = new ContentEntryModel();
         $db      = $entries->db;
 
-        // A rebuild empties the index, so the URIs the entries had are read first, for the redirects.
-        $had = array_column($entries->withDeleted()->select('id, uri, deleted_at')->findAll(), null, 'id');
+        // A rebuild empties the index, so what the entries had is read first, for the redirects.
+        $had = array_column($entries->withDeleted()->findAll(), null, 'id');
 
         $db->transStart();
 
@@ -62,7 +62,7 @@ final readonly class Indexer
         }
 
         $termIds = $this->syncTerms($terms);
-        $rows    = array_column($entries->withDeleted()->findAll(), null, 'id');
+        $rows    = $fresh ? [] : $had;
 
         $stale = array_diff_key($rows, $records);
 

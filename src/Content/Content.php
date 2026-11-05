@@ -150,7 +150,7 @@ final readonly class Content
 
         $row = (new ContentEntryModel())->published()->select('uri')->where('id', $id)->first();
 
-        return $row === null || $row['uri'] === null || $row['uri'] === $uri ? null : $row['uri'];
+        return $row['uri'] ?? null;
     }
 
     /**

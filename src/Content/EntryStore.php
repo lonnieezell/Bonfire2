@@ -449,13 +449,14 @@ final readonly class EntryStore
     private function index(Collection $collection, array $record, string $path): array
     {
         $record['mtime'] = (int) filemtime($this->root . $path);
-        $old             = (new ContentEntryModel())->withDeleted()->select('uri')->find($record['id'])['uri'] ?? null;
+        $existing        = (new ContentEntryModel())->withDeleted()->find($record['id']);
+        $old             = $existing['uri'] ?? null;
 
         // The row and the pivot rows change together, or not at all.
-        $this->inTransaction(static function () use ($collection, $record): void {
+        $this->inTransaction(static function () use ($collection, $record, $existing): void {
             $model = new ContentEntryModel();
 
-            if ($model->withDeleted()->find($record['id']) === null) {
+            if ($existing === null) {
                 $model->insert($record);
             } else {
                 $model->update($record['id'], $record);
@@ -653,7 +654,8 @@ final readonly class EntryStore
     }
 
     /**
-     * Records the old URIs for the redirects. This is after the change, which stays if it fails.
+     * Records the old URIs for the redirects. This is after the change, which stays if it fails. Moves with no old
+     * URI only drop redirects, so a file that can't be used is logged and doesn't fail a new entry.
      *
      * @param array<string, array{string|null, string|null}> $moves the old and new URI of each entry, by id
      *
@@ -664,6 +666,12 @@ final readonly class EntryStore
         try {
             $this->redirects->record($moves);
         } catch (ContentException $e) {
+            if (array_filter(array_column($moves, 0)) === []) {
+                log_message('error', 'Content: ' . Redirects::FILE . ': {message}', ['message' => $e->getMessage()]);
+
+                return;
+            }
+
             throw new ContentException('The change was saved, but its old URIs could not be kept for redirects. ' . $e->getMessage(), 0, $e);
         }
     }

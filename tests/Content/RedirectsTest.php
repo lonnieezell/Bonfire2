@@ -216,6 +216,17 @@ final class RedirectsTest extends ContentTestCase
         $this->assertSame('/company/team', content()->redirectFor('/about/team'));
     }
 
+    public function testCreatingAnEntryWorksWhenTheRedirectsFileCantBeRead(): void
+    {
+        file_put_contents($this->site . 'redirects.yaml', "/about: [\n");
+
+        $record = (new EntryStore($this->site))->create(Collection::load($this->site, 'pages'), 'contact', ['title' => 'Contact'], 'Body.', null);
+
+        $this->assertSame('/contact', $this->uriOf((string) $record['id']));
+        $this->assertSame("/about: [\n", (string) file_get_contents($this->site . 'redirects.yaml'));
+        $this->assertLogContains('error', 'Content: redirects.yaml');
+    }
+
     public function testAnEntryStillWinsWhenTheRedirectIsAddedByHand(): void
     {
         file_put_contents($this->site . 'redirects.yaml', '/about: ' . self::TEAM . "\n");
@@ -319,14 +330,14 @@ final class RedirectsTest extends ContentTestCase
     {
         $this->moveAboutToCompany();
 
-        $this->assertNotFoundOnPost('about');
+        $this->assertNotFound('about', 'post');
     }
 
-    private function moveAboutToCompany(): ReindexResult
+    private function moveAboutToCompany(): void
     {
         rename($this->site . 'collections/pages/about.md', $this->site . 'collections/pages/company.md');
 
-        return $this->reindex();
+        $this->reindex();
     }
 
     private function writePages(): void
@@ -372,27 +383,12 @@ final class RedirectsTest extends ContentTestCase
         ]);
     }
 
-    private function assertNotFound(string $uri): void
+    private function assertNotFound(string $uri, string $method = 'get'): void
     {
         $this->serve();
 
         try {
-            $this->get($uri);
-        } catch (PageNotFoundException) {
-            $this->addToAssertionCount(1);
-
-            return;
-        }
-
-        $this->fail("{$uri} was served.");
-    }
-
-    private function assertNotFoundOnPost(string $uri): void
-    {
-        $this->serve();
-
-        try {
-            $this->post($uri);
+            $this->{$method}($uri);
         } catch (PageNotFoundException) {
             $this->addToAssertionCount(1);
 

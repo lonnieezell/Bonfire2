@@ -78,13 +78,15 @@ final readonly class Redirects
      */
     public function record(array $moves): void
     {
-        if ($moves === []) {
+        // With no old URI there is nothing to add, and with no file nothing to drop.
+        if ($moves === [] || (array_filter(array_column($moves, 0)) === [] && ! is_file($this->root . self::FILE))) {
             return;
         }
 
         $files = new ContentFiles($this->root);
 
-        $files->locked('redirects', function () use ($moves, $files): void {
+        // Not a collection handle, which can't hold a dot: the callers hold that collection's lock, and flock would deadlock on it.
+        $files->locked(self::FILE, function () use ($moves, $files): void {
             $before = $redirects = $this->all();
 
             foreach ($moves as $id => [$old, $new]) {
@@ -97,12 +99,11 @@ final readonly class Redirects
                 unset($redirects[(string) $new]);
             }
 
-            ksort($before);
-            ksort($redirects);
-
             if ($redirects === $before) {
                 return;
             }
+
+            ksort($redirects);
 
             $files->write(self::FILE, Yaml::dump($redirects));
         });
