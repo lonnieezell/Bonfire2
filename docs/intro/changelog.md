@@ -22,6 +22,10 @@ production has no menu and answers with a 404. See [Documentation](../modules/do
 that still wraps no longer runs into the next one. Pages also read more easily, with larger body text, smaller headings
 and shorter lines.
 
+**Check your Debug Toolbar config.** If your app's `app/Config/Toolbar.php` has no `$disableOnHeaders` property, htmx
+requests such as the Content preview fail after the first one in development. See
+[If htmx stops working in development](installation.md#if-htmx-stops-working-in-development).
+
 **Content: delete to trash.** Users with `content.delete` can delete an entry from the list or its form, which moves its
 file to `content/.trash/<collection>/` and takes it off the site. **Content entries** in the Recycler restores or purges
 it, with `recycler.view`. Deleting a page takes the pages below it, after a confirmation that says how many, and restoring

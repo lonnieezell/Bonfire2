@@ -113,6 +113,21 @@ If you use AI coding agents, `php spark bf:agents` writes Bonfire's conventions 
 to the same `post-update-cmd` scripts to keep that guide in step with the installed version. See
 [Working With AI Agents](ai_agents.md).
 
+### If htmx stops working in development
+
+Bonfire's admin uses htmx, and CodeIgniter's Debug Toolbar must stay out of htmx responses. If your app's
+`app/Config/Toolbar.php` has no `$disableOnHeaders` property, the toolbar adds its script to them. The first htmx request
+works, then later ones fail without sending anything, and the browser console shows
+`Maximum call stack size exceeded`. For example, a Content preview keeps showing old text. Add the property to fix it:
+
+```php
+public array $disableOnHeaders = [
+    'X-Requested-With' => 'xmlhttprequest',
+    'HX-Request'       => 'true',
+    'X-Up-Version'     => null,
+];
+```
+
 ## Generate some data for testing
 
 You can insert some records of users into your database by running this migration (each run will add 100 users randomly distributed through Users, Developers and Beta groups, randomly activated):
