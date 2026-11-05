@@ -1447,6 +1447,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#searching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#finding-an-entry" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2655,6 +2666,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#searching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#finding-an-entry" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2907,6 +2929,43 @@ as its second argument: <code>$pager-&gt;links('default', 'my_pager')</code>.</p
 <h3 id="feeds">Feeds</h3>
 <p><code>content()-&gt;feed($handle)</code> returns a response with the collection's published entries as an RSS feed, for you to return
 from a route. See <a href="../routing/#feeds">Feeds</a>.</p>
+<h2 id="searching">Searching</h2>
+<p><code>content()-&gt;search($term)</code> starts a query on the published entries that have the term in their title or Markdown body,
+across every collection. Pass a collection's handle as the second argument to search only that one, which throws
+<code>Bonfire\Content\ContentException</code> if the collection doesn't exist. Bonfire adds no search route or page, because the
+page is yours to design.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$query</span>   <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">);</span>            <span class="c1">// every collection</span>
+<span class="nv">$query</span>   <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">,</span> <span class="s1">'blog'</span><span class="p">);</span>    <span class="c1">// only the blog</span>
+<span class="nv">$results</span> <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="nv">$pager</span>   <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">();</span>
+</code></pre></div>
+<p>It returns the same query as <code>collection()</code>, so <code>get()</code>, <code>paginate()</code> and <code>pager()</code> work as they do there, and
+<code>orderBy()</code> changes the order. Results are ordered by title, whichever collections they come from.</p>
+<ul>
+<li>It only returns what <code>published()</code> keeps. Drafts, scheduled entries and entries in the trash are never found.</li>
+<li>It's a <code>LIKE</code> match on the title and the raw Markdown body, so the term is found inside words, and a <code>*</code> in the term
+  matches a <code>*</code> in the body. A <code>%</code> or <code>_</code> in the term matches itself, and a quote is safe.</li>
+<li>Spaces around the term are ignored, and a blank term finds nothing.</li>
+<li><code>whereTerm()</code> needs a query on one collection, so it throws unless you narrowed the search to one.</li>
+</ul>
+<p>This route and view list the results a page at a time. The pager links keep <code>?q=</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$routes</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'search'</span><span class="p">,</span> <span class="k">static</span> <span class="k">function</span> <span class="p">()</span><span class="o">:</span> <span class="nx">string</span> <span class="p">{</span>
+    <span class="nv">$term</span>  <span class="o">=</span> <span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'request'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getGet</span><span class="p">(</span><span class="s1">'q'</span><span class="p">);</span>
+    <span class="nv">$query</span> <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">view</span><span class="p">(</span><span class="s1">'search'</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">'term'</span>    <span class="o">=&gt;</span> <span class="nv">$term</span><span class="p">,</span>
+        <span class="s1">'results'</span> <span class="o">=&gt;</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="s1">'pager'</span>   <span class="o">=&gt;</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">(),</span>
+    <span class="p">]);</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$results</span> <span class="k">as</span> <span class="nv">$entry</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;h2&gt;&lt;a href="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">uri</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/a&gt;&lt;/h2&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endforeach</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$pager</span><span class="o">-&gt;</span><span class="na">links</span><span class="p">()</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <h2 id="finding-an-entry">Finding an entry</h2>
 <p><code>content()-&gt;find($id)</code> returns an entry from any collection by its UUID, or <code>null</code>.</p>
 <div class="admonition warning">

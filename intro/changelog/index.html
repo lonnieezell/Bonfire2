@@ -3060,6 +3060,10 @@ CSRF token, even if your app doesn't turn the filter on globally, and the list u
 have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
 404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
+<p><strong>Content: front-end search.</strong> <code>content()-&gt;search($term)</code> returns a query on the published entries of every collection
+that have the term in their title or body, and <code>content()-&gt;search($term, 'blog')</code> narrows it to one collection. It works
+with <code>paginate()</code> and <code>pager()</code>, and Bonfire adds no search page, so build your own. See
+<a href="../../content/query_api/#searching">Searching</a>.</p>
 <p><strong>Content: sitemap.</strong> <a href="../../content/routing/#sitemap"><code>content()-&gt;sitemap()</code></a> returns a response with a sitemap of every
 collection's published entries, which you can serve from any route of your own. Entries with no URI are left out. Set
 <code>$sitemap = true</code> in <code>app/Config/Content.php</code> to have Bonfire serve it at <code>/sitemap.xml</code>. It's off by default, and your own
