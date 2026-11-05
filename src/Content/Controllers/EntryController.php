@@ -33,7 +33,9 @@ class EntryController extends BaseController
     public function show()
     {
         // Routed for any verb to come after every other route, but only GET is served.
-        $uri        = $this->request->getMethod() === 'GET' ? rawurldecode($this->request->getPath()) : null;
+        $uri = $this->request->getMethod() === 'GET' ? rawurldecode($this->request->getPath()) : null;
+        // Before the entry is read, so a save that clears the cache after the read can't leave this request's older page in the new generation.
+        $cache      = $uri === null || $this->request->getUri()->getQuery() !== '' ? null : new PageCache();
         $entry      = $uri === null ? null : content()->findByUri($uri);
         $collection = $entry === null ? null : $this->collectionOf($entry);
 
@@ -42,14 +44,14 @@ class EntryController extends BaseController
         }
 
         if ($collection?->controller !== null) {
-            return $this->cached($collection, $uri, fn () => $this->handOff($collection->controller, $entry));
+            $render = fn () => $this->handOff($collection->controller, $entry);
+        } elseif ($collection?->template !== null) {
+            $render = fn () => render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]);
+        } else {
+            throw PageNotFoundException::forPageNotFound();
         }
 
-        if ($collection?->template !== null) {
-            return $this->cached($collection, $uri, fn () => render($this->theme, $collection->template, ['entry' => $entry, 'collection' => $collection]));
-        }
-
-        throw PageNotFoundException::forPageNotFound();
+        return $this->cached($collection, $cache, $uri, $render);
     }
 
     /**
@@ -61,15 +63,14 @@ class EntryController extends BaseController
      *
      * @return mixed
      */
-    private function cached(Collection $collection, string $uri, Closure $render)
+    private function cached(Collection $collection, ?PageCache $cache, string $uri, Closure $render)
     {
-        if ($collection->cache === null || $this->request->getUri()->getQuery() !== '' || auth()->loggedIn()) {
+        if ($collection->cache === null || $cache === null || auth()->loggedIn()) {
             return $render();
         }
 
-        $cache = new PageCache();
-        $path  = Collection::normalizeUri($uri);
-        $page  = $cache->get($path);
+        $path = Collection::normalizeUri($uri);
+        $page = $cache->get($path);
 
         if ($page !== null) {
             if ($page['contentType'] !== null) {

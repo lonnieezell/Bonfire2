@@ -106,7 +106,8 @@ Only some requests are cached:
 The admin's Markdown preview isn't served by the fallback route, so it's never cached either.
 
 Don't cache a collection whose pages differ between guests, such as those with a form that holds a CSRF token, or that show
-something from the session. Every guest would get the first guest's copy.
+something from the session. Every guest would get the first guest's copy. A page is kept by its path alone, so the same
+goes for one that changes with a request header such as `Accept` or `HX-Request`, or with the host.
 
 ### What clears it
 
@@ -119,9 +120,10 @@ changes the menus and `entries` links on other pages. These all clear it:
 - `content:reindex`, and the automatic reindex in development.
 
 A changed file that isn't reindexed doesn't, because the index is what's served. Nor does time passing: a scheduled entry
-whose `published_at` arrives shows on cached pages that list it only once they expire, after `cache` seconds at most. Clearing is done by changing a generation number in the cache, so the old pages are left to expire
-and the cache is never emptied. You can't use the `null` or `dummy` cache handler to cache pages: with it, nothing is
-kept and every request renders.
+whose `published_at` arrives shows on cached pages that list it only once they expire, after `cache` seconds at most.
+
+Clearing is done by changing a generation number in the cache, so the old pages are left to expire and the cache is never
+emptied. With the `dummy` cache handler nothing is kept, so every request renders.
 
 ## Handing off to a controller
 

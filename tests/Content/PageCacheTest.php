@@ -432,9 +432,14 @@ final class PageCacheTest extends ContentTestCase
      */
     private function serveBlog(?int $cache, string $config = "template: blog/show\n"): void
     {
-        $this->reindexBlogWith("route: /blog/{slug}\n{$config}\n" . ($cache === null ? '' : "cache: {$cache}\n"));
+        $this->reindexBlogWith("route: /blog/{slug}\n{$config}\n" . $this->cacheLine($cache));
 
         config('Content')->autoRoute = true;
+    }
+
+    private function cacheLine(?int $cache): string
+    {
+        return $cache === null ? '' : "cache: {$cache}\n";
     }
 
     /**
@@ -442,7 +447,7 @@ final class PageCacheTest extends ContentTestCase
      */
     private function writePages(?int $cache): void
     {
-        $this->writeFile('collections/pages.yaml', "title: Pages\nstructure: true\nroute: /{slug}\ntemplate: blog/show\n" . ($cache === null ? '' : "cache: {$cache}\n"));
+        $this->writeFile('collections/pages.yaml', "title: Pages\nstructure: true\nroute: /{slug}\ntemplate: blog/show\n" . $this->cacheLine($cache));
         mkdir($this->site . 'collections/pages');
         mkdir($this->site . 'trees/collections', 0775, true);
 

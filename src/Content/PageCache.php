@@ -19,22 +19,20 @@ namespace Bonfire\Content;
  * A request takes the generation when it starts, so a page that was rendered while a save was clearing the cache
  * is stored under the old generation and never served.
  */
-final readonly class PageCache
+final class PageCache
 {
     private const GENERATION_KEY = 'content_page_generation';
 
-    private string $generation;
+    /**
+     * Null when the cache has none, say after it was emptied. Nothing is cached then, so there is nothing to find.
+     */
+    private ?string $generation;
 
     public function __construct()
     {
         $generation = cache(self::GENERATION_KEY);
 
-        // Without a stored generation, say after the cache was emptied, pages from an earlier one must stay unreachable.
-        if (! is_string($generation)) {
-            $generation = self::renew();
-        }
-
-        $this->generation = $generation;
+        $this->generation = is_string($generation) ? $generation : null;
     }
 
     /**
@@ -42,7 +40,7 @@ final readonly class PageCache
      */
     public function get(string $path): ?array
     {
-        $page = cache($this->key($path));
+        $page = $this->generation === null ? null : cache($this->key($this->generation, $path));
 
         return is_array($page) && is_string($page['body'] ?? null) ? ['body' => $page['body'], 'contentType' => is_string($page['contentType'] ?? null) ? $page['contentType'] : null] : null;
     }
@@ -52,7 +50,10 @@ final readonly class PageCache
      */
     public function put(string $path, string $body, ?string $contentType, int $ttl): void
     {
-        cache()->save($this->key($path), ['body' => $body, 'contentType' => $contentType], $ttl);
+        // Pages from an earlier generation must stay unreachable, so a missing one is replaced, not guessed.
+        $this->generation ??= self::renew();
+
+        cache()->save($this->key($this->generation, $path), ['body' => $body, 'contentType' => $contentType], $ttl);
     }
 
     /**
@@ -63,9 +64,9 @@ final readonly class PageCache
         self::renew();
     }
 
-    private function key(string $path): string
+    private function key(string $generation, string $path): string
     {
-        return "content_page_{$this->generation}_" . hash('sha256', $path);
+        return "content_page_{$generation}_" . hash('sha256', $path);
     }
 
     private static function renew(): string
