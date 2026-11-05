@@ -12,6 +12,9 @@ page, [The index and deploys](../content/the_index.md), and feeds and the sitema
 `Config\Content` property and `content:*` command. `php spark bf:agents` now points agents at the Content docs too, so
 run it again to update your `AGENTS.md`.
 
+**Docs: nested sections collapse in the side nav.** The admin's Docs pages show a nested section of `mkdocs.yml`, like
+Content's "Modeling content", as a collapsible group in the side nav. It opens when it holds the current page.
+
 ## 5 November 2026 (breaking change)
 
 **The Recycler handles non-integer keys.** So that it can list resources with UUIDs, `CustomRecyclerRestore::recyclerRestore()`
