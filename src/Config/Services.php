@@ -6,6 +6,7 @@ use Bonfire\Actions\ActionRegistry;
 use Bonfire\Actions\ActionRuns;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\WidgetRegistry;
+use Bonfire\Docs\Libraries\Documentation;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Privacy\PersonalData;
 use Bonfire\Recycler\Libraries\Recycler;
@@ -51,6 +52,18 @@ class Services extends BaseService
         }
 
         return new ActionRuns();
+    }
+
+    /**
+     * The package's user guide, shown in the admin outside production
+     */
+    public static function docs(bool $getShared = true): Documentation
+    {
+        if ($getShared) {
+            return static::getSharedInstance('docs');
+        }
+
+        return new Documentation(dirname(BFPATH) . '/', ENVIRONMENT);
     }
 
     /**
