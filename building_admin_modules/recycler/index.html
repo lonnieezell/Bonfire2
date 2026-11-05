@@ -2277,6 +2277,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#restoring-and-purging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restoring and Purging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-how-a-model-is-recycled" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2542,6 +2553,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#restoring-and-purging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restoring and Purging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-how-a-model-is-recycled" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2724,6 +2746,15 @@ An entry here wins over a module's registration with the same alias:</p>
     <span class="p">],</span>
 </code></pre></div>
 <p>If Recycler finds the localized strings, it will use them. Otherwise the original DB column names (capitalized, undescore replaced with space) will be used.</p>
+<h2 id="restoring-and-purging">Restoring and Purging</h2>
+<p>Restoring and purging change data, so <code>recycler-restore</code> and <code>recycler-purge</code> only answer POST requests, and they always
+check the CSRF token, even if your app doesn't turn the filter on globally. To offer either from your own views, use a
+form rather than a link:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="nx">form</span> <span class="nx">action</span><span class="o">=</span><span class="s2">"&lt;?= url_to('recycler-restore', 'users', </span><span class="si">$id</span><span class="s2">) ?&gt;"</span> <span class="nx">method</span><span class="o">=</span><span class="s2">"post"</span><span class="o">&gt;</span>
+    <span class="o">&lt;?=</span> <span class="nx">csrf_field</span><span class="p">()</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;button type="submit" class="btn btn-sm btn-outline-secondary"&gt;Restore&lt;/button&gt;</span>
+<span class="x">&lt;/form&gt;</span>
+</code></pre></div>
 <h2 id="changing-how-a-model-is-recycled">Changing How A Model Is Recycled</h2>
 <p>The Recycler does three things with a resource: it lists the deleted records, restores one, and purges one. 
 By default it lists the records through the model's soft delete field, ordered by the date they were deleted and

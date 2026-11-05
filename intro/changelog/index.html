@@ -3024,6 +3024,11 @@ and <code>CustomRecyclerPurge::recyclerPurge()</code> now take <code>int|string 
 <code>RecycleController::restore()</code> and <code>purge()</code>. <strong>A model of yours that implements either interface with <code>int $id</code> is a PHP
 fatal error when the class loads</strong>, so change its signature to <code>int|string $id</code>. The key arrives from the URL as a string,
 and the routes now take <code>(:segment)</code>. See <a href="../../building_admin_modules/recycler/#overriding-the-restore">The Recycler</a>.</p>
+<p><strong>Recycler restore and purge are POST only.</strong> They changed data on a GET request, so a forged link or image could make a
+logged-in user restore or purge a record. <code>recycler-restore</code> and <code>recycler-purge</code> are now POST routes that always check the
+CSRF token, even if your app doesn't turn the filter on globally, and the list uses forms. <strong>If you link to these URLs, or
+have your own copy of <code>listResource.php</code>, change the links to forms with <code>csrf_field()</code>.</strong> A GET to either URL now gives a
+404. See <a href="../../building_admin_modules/recycler/#restoring-and-purging">The Recycler</a>.</p>
 <h2 id="5-november-2026">5 November 2026</h2>
 <p><strong>Content: admin search.</strong> The admin search box now finds entries. It matches the term in an entry's title or Markdown
 body, skips trashed entries, and shows nothing to users without <code>content.access</code>. Results show the title, collection and
