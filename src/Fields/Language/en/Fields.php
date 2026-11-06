@@ -10,11 +10,12 @@
  */
 
 return [
-    'selectInvalid'  => 'Choose one of the options.',
-    'integerInvalid' => 'Enter a whole number.',
-    'integerMin'     => 'Enter a number that is at least {0}.',
-    'integerMax'     => 'Enter a number that is at most {0}.',
-    'decimalInvalid' => 'Enter a number.',
-    'decimalPlaces'  => 'Enter a number with at most {0} decimal places.',
-    'decimalMin'     => 'Enter a number that is at least {0}.',
+    'selectInvalid'    => 'Choose one of the options.',
+    'belongsToInvalid' => 'Choose one of the records.',
+    'integerInvalid'   => 'Enter a whole number.',
+    'integerMin'       => 'Enter a number that is at least {0}.',
+    'integerMax'       => 'Enter a number that is at most {0}.',
+    'decimalInvalid'   => 'Enter a number.',
+    'decimalPlaces'    => 'Enter a number with at most {0} decimal places.',
+    'decimalMin'       => 'Enter a number that is at least {0}.',
 ];
