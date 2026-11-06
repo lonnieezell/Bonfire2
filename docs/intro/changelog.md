@@ -4,6 +4,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 6 November 2026
+
+**A `decimal` field type.** It takes `places` (default `2`), `min` and `step`, renders a number input and saves a string
+such as `"19.99"`, so a `DECIMAL` column never passes through a float. See [Field types](../content/field_types.md#decimal).
+
 ## 6 November 2026 (breaking change)
 
 **The field system moved from Content to `Bonfire\Fields`.** Resources and actions will use the same fields as

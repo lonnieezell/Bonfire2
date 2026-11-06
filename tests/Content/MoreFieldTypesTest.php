@@ -7,6 +7,7 @@ use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\Fields\EntriesField;
+use Bonfire\Content\Fields\EntryStorage;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Fields\Field;
@@ -53,6 +54,13 @@ final class MoreFieldTypesTest extends ContentTestCase
             type: integer
             min: 1
             max: 5
+          - handle: price
+            type: decimal
+            min: 0.01
+          - handle: weight
+            type: decimal
+            places: 3
+            step: 0.5
           - handle: starts_at
             type: datetime
           - handle: related
@@ -220,6 +228,94 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertNull($form->apply($values, ['rating' => 3], '')[0]['rating']);
     }
 
+    // decimal
+
+    public function testADecimalIsKeptAsAString(): void
+    {
+        $form   = $this->form();
+        $values = $form->prepare(['fields' => ['title' => 'T', 'price' => ' 19.99 ', 'weight' => '2']]);
+
+        $this->assertSame('19.99', $values['price']);
+        $this->assertSame([], $form->validate($values));
+        [$frontMatter] = $form->apply($values, [], '');
+        $this->assertSame('19.99', $frontMatter['price']);
+        $this->assertSame('2', $frontMatter['weight']);
+        $this->assertSame('19.99', $form->valuesOf($frontMatter, '', 'x')['price']);
+        $this->assertSame('19.99', $form->valuesOf(['price' => 19.99], '', 'x')['price'], 'a number written by hand');
+        $this->assertSame('', $form->valuesOf(['price' => 'cheap'], '', 'x')['price']);
+    }
+
+    public function testADecimalRefusesTooManyPlacesBelowMinAndWhatIsNotANumber(): void
+    {
+        $form = $this->form();
+
+        $cases = [
+            ['price', '19.999', lang('Fields.decimalPlaces', [2])],
+            ['weight', '1.2345', lang('Fields.decimalPlaces', [3])],
+            ['price', '0.00', lang('Fields.decimalMin', ['0.01'])],
+            ['price', '-5', lang('Fields.decimalMin', ['0.01'])],
+            ['price', 'cheap', lang('Fields.decimalInvalid')],
+            ['price', '1e3', lang('Fields.decimalInvalid')],
+            ['price', '1,5', lang('Fields.decimalInvalid')],
+            ['price', '.5', lang('Fields.decimalInvalid')],
+            ['price', '0x1A', lang('Fields.decimalInvalid')],
+        ];
+
+        foreach ($cases as [$handle, $posted, $message]) {
+            $errors = $form->validate($form->prepare(['fields' => ['title' => 'T', $handle => $posted]]));
+
+            $this->assertSame($message, $errors[$handle] ?? null, "{$handle}: {$posted}");
+        }
+
+        foreach (['0.01', '0.1', '10', '12345678901234567890.12'] as $good) {
+            $this->assertSame([], $form->validate($form->prepare(['fields' => ['title' => 'T', 'price' => $good]])), $good);
+        }
+    }
+
+    public function testADecimalComparesWithoutRoundingToAFloat(): void
+    {
+        $field = new Field('n', 'decimal', 'N', '', null, ['places' => 20, 'min' => '0.30000000000000004']);
+
+        $this->assertSame([], $this->validateField($field, '0.30000000000000004'));
+        $this->assertArrayHasKey('n', $this->validateField($field, '0.3'));
+    }
+
+    public function testADecimalWithNoPlacesIsAWholeNumber(): void
+    {
+        $field = new Field('n', 'decimal', 'N', '', null, ['places' => 0]);
+
+        $this->assertSame([], $this->validateField($field, '12'));
+        $this->assertSame(lang('Fields.decimalPlaces', [0]), $this->validateField($field, '12.5')['n']);
+    }
+
+    public function testADecimalLeftEmptyStoresNullAndClearsOneThatIsThere(): void
+    {
+        $form   = $this->form();
+        $values = $form->prepare(['fields' => ['title' => 'T', 'price' => '']]);
+
+        $this->assertSame([], $form->validate($values));
+        $this->assertArrayNotHasKey('price', $form->apply($values, [], '')[0]);
+        $this->assertNull($form->apply($values, ['price' => '5.00'], '')[0]['price']);
+    }
+
+    public function testADecimalReadFromAFileIsAStringOrNull(): void
+    {
+        $field = new Field('n', 'decimal', 'N', '', null, []);
+
+        $this->assertSame('19.99', EntryStorage::cast('19.99', $field));
+        $this->assertSame('19.99', EntryStorage::cast(19.99, $field), 'a number written by hand');
+        $this->assertNull(EntryStorage::cast('cheap', $field));
+        $this->assertNull(EntryStorage::cast(null, $field));
+    }
+
+    public function testADecimalCanBeRequired(): void
+    {
+        $field = new Field('n', 'decimal', 'N', 'required', null, []);
+
+        $this->assertArrayHasKey('n', $this->validateField($field, ''));
+        $this->assertSame([], $this->validateField($field, '0'));
+    }
+
     // datetime
 
     public function testADatetimeIsKeptWithItsTime(): void
@@ -332,6 +428,8 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertCount(1, $this->xpath($response, '//select[@name="fields[mood]"]'));
         $this->assertCount(3, $this->xpath($response, '//select[@name="fields[tags][]"][@multiple]/option'));
         $this->assertCount(1, $this->xpath($response, '//input[@type="number"][@name="fields[rating]"][@min="1"][@max="5"]'));
+        $this->assertCount(1, $this->xpath($response, '//input[@type="number"][@name="fields[price]"][@step="0.01"][@min="0.01"]'));
+        $this->assertCount(1, $this->xpath($response, '//input[@type="number"][@name="fields[weight]"][@step="0.5"][not(@min)]'));
         $this->assertCount(1, $this->xpath($response, '//input[@type="datetime-local"][@name="fields[starts_at]"]'));
         $this->assertCount(2, $this->xpath($response, '//input[@type="checkbox"][@name="fields[related][]"]'), 'only the pages');
         $this->assertCount(1, $this->xpath($response, '//select[@name="fields[see_also][]"]'));
@@ -345,6 +443,7 @@ final class MoreFieldTypesTest extends ContentTestCase
                 'genre'     => 'sf',
                 'tags'      => ['php', 'css'],
                 'rating'    => '4',
+                'price'     => '19.99',
                 'starts_at' => '2026-12-24T18:30',
                 'related'   => [self::ABOUT, self::CONTACT],
             ],
@@ -357,9 +456,12 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame('sf', $data['genre']);
         $this->assertSame(['php', 'css'], $data['tags']);
         $this->assertSame(4, $data['rating']);
+        $this->assertSame('19.99', $data['price']);
+        $this->assertArrayNotHasKey('weight', $data);
         $this->assertSame('2026-12-24 18:30:00', $data['starts_at']);
         $this->assertSame([self::ABOUT, self::CONTACT], $data['related']);
         $this->assertArrayNotHasKey('see_also', $data);
+        $this->assertMatchesRegularExpression("/^price: '19\\.99'\$/m", (string) file_get_contents($this->site . $row['path']));
 
         // The edit form shows what the file holds.
         $edit = $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', $row['id']));
@@ -368,6 +470,7 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame('sf', $this->xpath($edit, '//select[@name="fields[genre]"]/option[@selected]')->item(0)->getAttribute('value'));
         $this->assertSame(['php', 'css'], $this->values($this->xpath($edit, '//select[@name="fields[tags][]"]/option[@selected]')));
         $this->assertSame('4', $this->xpath($edit, '//input[@name="fields[rating]"]')->item(0)->getAttribute('value'));
+        $this->assertSame('19.99', $this->xpath($edit, '//input[@name="fields[price]"]')->item(0)->getAttribute('value'));
         $this->assertSame('2026-12-24T18:30:00', $this->xpath($edit, '//input[@name="fields[starts_at]"]')->item(0)->getAttribute('value'));
         $this->assertSame([self::ABOUT, self::CONTACT], $this->values($this->xpath($edit, '//input[@name="fields[related][]"][@checked]')));
 
@@ -386,12 +489,12 @@ final class MoreFieldTypesTest extends ContentTestCase
 
         $response = $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), [
             'blueprint' => 'post',
-            'fields'    => ['title' => 'Bad', 'mood' => 'angry', 'rating' => '9', 'related' => [self::FIRST], 'starts_at' => 'soon'],
+            'fields'    => ['title' => 'Bad', 'mood' => 'angry', 'rating' => '9', 'price' => '1.999', 'related' => [self::FIRST], 'starts_at' => 'soon'],
         ]);
 
         $response->assertOK();
 
-        foreach (['mood', 'rating', 'related', 'starts_at'] as $handle) {
+        foreach (['mood', 'rating', 'price', 'related', 'starts_at'] as $handle) {
             $this->assertCount(1, $this->xpath($response, "//*[@data-error=\"{$handle}\"]"), $handle);
         }
 
@@ -452,7 +555,7 @@ final class MoreFieldTypesTest extends ContentTestCase
 
         $this->assertFalse(FieldTypes::has('shout'));
         $this->assertFalse(FieldTypes::has('ghost'));
-        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'slug', 'entries', 'terms', 'blocks'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'slug', 'entries', 'terms', 'blocks'], FieldTypes::names());
     }
 
     /**
