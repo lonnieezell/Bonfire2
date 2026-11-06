@@ -38,13 +38,16 @@ final readonly class Field
      */
     public function cast(mixed $value): mixed
     {
+        if (! in_array($this->type, ['toggle', 'integer', 'date', 'datetime'], true)) {
+            return $value;
+        }
+
         $text = FieldTypes::get($this->type)->fromFrontMatter($value, $this);
 
         return match ($this->type) {
-            'toggle'           => $text === '1',
-            'integer'          => $text === '' ? null : (int) $text,
-            'date', 'datetime' => $text === '' ? null : $text,
-            default            => $value,
+            'toggle'  => $text === '1',
+            'integer' => $text === '' ? null : (int) $text,
+            default   => $text === '' ? null : $text,
         };
     }
 }

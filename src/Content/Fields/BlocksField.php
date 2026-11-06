@@ -72,7 +72,7 @@ final class BlocksField extends FieldType
             $blocks[] = $block;
         }
 
-        return $blocks === [] ? '' : json_encode($blocks, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return ChoiceList::encode($blocks);
     }
 
     /**
@@ -106,6 +106,10 @@ final class BlocksField extends FieldType
             $errors[''] = lang('Content.blocksTooMany', [$max]);
         } elseif ($min !== null && count($blocks) < $min) {
             $errors[''] = lang('Content.blocksTooFew', [$min]);
+        }
+
+        if ($blocks === []) {
+            return $errors;
         }
 
         $allowed    = self::types($field);
@@ -191,7 +195,7 @@ final class BlocksField extends FieldType
             $blocks[] = $block;
         }
 
-        return $blocks === [] ? '' : json_encode($blocks, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return ChoiceList::encode($blocks);
     }
 
     /**
@@ -227,7 +231,7 @@ final class BlocksField extends FieldType
      *
      * @return list<array<string, string>>
      */
-    private static function decode(string $input): array
+    public static function decode(string $input): array
     {
         $items = json_decode($input, true);
         $items = is_array($items) && array_is_list($items) ? $items : [];

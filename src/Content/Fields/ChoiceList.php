@@ -37,7 +37,7 @@ final class ChoiceList
     }
 
     /**
-     * @param list<string> $items
+     * @param list<mixed> $items
      */
     public static function encode(array $items): string
     {
