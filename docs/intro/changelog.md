@@ -9,6 +9,13 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 **A `decimal` field type.** It takes `places` (default `2`), `min` and `step`, renders a number input and saves a string
 such as `"19.99"`, so a `DECIMAL` column never passes through a float. See [Field types](../content/field_types.md#decimal).
 
+**Resources: a model in the admin as one class.** `Bonfire\Resources\Resource` names a model, a URL slug, a permission
+prefix and the pages it has. `service('resources')->register()` in `initAdmin()` adds the sidebar item, and
+`resource_routes()` in `Config/Routes.php` declares the routes. A generic `ResourceController` renders the list: the
+columns, which leave out `textarea` and `markdown` fields unless `columns()` says otherwise, sorting, paging and htmx
+refresh, guarded by `{permission}.list`. Only the list page exists so far. A `list.php` beside the resource replaces the
+package's view. See [Resources](../building_admin_modules/resources.md).
+
 ## 6 November 2026 (breaking change)
 
 **The field system moved from Content to `Bonfire\Fields`.** Resources and actions will use the same fields as

@@ -156,6 +156,7 @@ nav:
       - building_admin_modules/permissions.md
       - building_admin_modules/view_components.md
       - building_admin_modules/filters.md
+      - building_admin_modules/resources.md
       - building_admin_modules/actions.md
       - building_admin_modules/search.md
       - building_admin_modules/recycler.md
