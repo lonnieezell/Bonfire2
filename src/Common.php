@@ -4,6 +4,7 @@ use Bonfire\Content\Content;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\GlobalSet;
+use Bonfire\Content\Markdown;
 use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
@@ -168,6 +169,22 @@ if (! function_exists('content_seo')) {
         foreach ($seo['og'] as $property => $content) {
             $meta->addMeta(['property' => $property, 'content' => esc($content)]);
         }
+    }
+}
+
+if (! function_exists('content_markdown')) {
+    /**
+     * Renders a Markdown string as HTML the way `$entry->content()` does: GitHub Flavored Markdown, then any
+     * `<x-…>` View Components expanded. Pass `components: false` to leave them as written. Use it for front matter
+     * and block fields that hold Markdown. Raw HTML passes through, so only render text you trust.
+     *
+     * It isn't called `markdown()` because Postal already defines a global of that name.
+     *
+     * @throws RuntimeException when a component doesn't exist, except in production, where it is logged and removed
+     */
+    function content_markdown(string $markdown, bool $components = true): string
+    {
+        return Markdown::toHtml($markdown, $components);
     }
 }
 
