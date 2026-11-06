@@ -14,14 +14,28 @@ namespace Bonfire\Fields\Types;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldException;
 use Bonfire\Fields\FieldType;
+use Bonfire\Fields\OptionsToken;
 use CodeIgniter\Model;
 
 /**
  * One record of another model, picked from a select of the records' titles. `model` is the model's class and `title`
  * the column that names a record. What is stored is the record's ID, as a number when it is one, never the record.
+ *
+ * Above `searchAbove` records (default 100) the select becomes a typeahead that asks the options endpoint for the
+ * records that match what was typed. `permission` is what a user needs on top of `admin.access` to search them.
  */
 final class BelongsToField extends FieldType
 {
+    /**
+     * How many records a model may have before the select becomes a typeahead.
+     */
+    public const SEARCH_ABOVE = 100;
+
+    /**
+     * The most records one search gives back.
+     */
+    public const SEARCH_LIMIT = 20;
+
     public function partial(): string
     {
         return 'belongsTo';
@@ -45,6 +59,18 @@ final class BelongsToField extends FieldType
 
         if (! $model->db->fieldExists($title, $model->table)) {
             throw new FieldException("Field `{$field->handle}`: the table of {$class} has no `{$title}` column.");
+        }
+
+        $above = $field->options['searchAbove'] ?? self::SEARCH_ABOVE;
+
+        if (! is_int($above) || $above < 0) {
+            throw new FieldException("Field `{$field->handle}`: `searchAbove` is a number of records, such as 100.");
+        }
+
+        $permission = $field->options['permission'] ?? null;
+
+        if ($permission !== null && (! is_string($permission) || $permission === '')) {
+            throw new FieldException("Field `{$field->handle}`: `permission` is the name of a permission, such as users.list.");
         }
     }
 
@@ -102,6 +128,76 @@ final class BelongsToField extends FieldType
         }
 
         return $choices;
+    }
+
+    /**
+     * Whether the model has more records than the select should list.
+     */
+    public static function searches(Field $field): bool
+    {
+        $above = $field->options['searchAbove'] ?? self::SEARCH_ABOVE;
+
+        return self::model($field)->countAllResults() > (is_int($above) ? $above : self::SEARCH_ABOVE);
+    }
+
+    /**
+     * The signed token that lets the options endpoint search this field's records and nothing else.
+     */
+    public static function token(Field $field): string
+    {
+        $permission = $field->options['permission'] ?? null;
+        $title      = self::titleColumn($field);
+
+        return OptionsToken::create(self::model($field)::class, $title, [$title], is_string($permission) ? $permission : null);
+    }
+
+    /**
+     * The title of the record with this ID, or an empty string when there is none.
+     */
+    public static function titleOf(Field $field, string $id): string
+    {
+        $model = self::model($field);
+        $row   = $id === '' ? null : $model->asArray()->where($model->primaryKey, $id)->first();
+
+        return $row === null ? '' : (string) $row[self::titleColumn($field)];
+    }
+
+    /**
+     * The records whose search columns hold the text, by ID, at most SEARCH_LIMIT of them in title order. The text
+     * is matched as it is: a `%` or `_` in it is not a wildcard.
+     *
+     * @param class-string<Model> $class
+     * @param list<string>        $search the columns to match the text against
+     *
+     * @return array<string, string> title by ID
+     */
+    public static function search(string $class, string $title, array $search, string $text): array
+    {
+        $model = new $class();
+        $key   = $model->primaryKey;
+        $query = $model->asArray()->select([$key, $title])->orderBy($title);
+
+        if ($text !== '' && $search !== []) {
+            // CodeIgniter adds the ESCAPE clause for the character but leaves the wildcards in the text alone.
+            $char = $model->db->likeEscapeChar;
+            $text = str_replace([$char, '%', '_'], [$char . $char, $char . '%', $char . '_'], $text);
+
+            $query->groupStart();
+
+            foreach ($search as $column) {
+                $query->orLike($column, $text, 'both', true);
+            }
+
+            $query->groupEnd();
+        }
+
+        $found = [];
+
+        foreach ($query->findAll(self::SEARCH_LIMIT) as $row) {
+            $found[(string) $row[$key]] = (string) $row[$title];
+        }
+
+        return $found;
     }
 
     private static function model(Field $field): Model
