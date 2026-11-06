@@ -9,22 +9,29 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Content\Fields;
+namespace Bonfire\Fields;
 
-use Bonfire\Content\ContentException;
-use Bonfire\Content\Field;
 use Closure;
 
 /**
- * What a blueprint field type does. A form value is always a string, as the browser posted it.
- * The front matter value is what the file holds.
+ * What a field type does. A form value is always a string, as the browser posted it.
+ * The stored value is what the field's storage holds: a model's column, or a front matter key.
  */
 abstract class FieldType
 {
     /**
-     * The name of the input partial, which renders in Bonfire\Content\Views\fields.
+     * The name of the input partial. It renders from the view namespace the type gives, unless
+     * the app has app/Views/fields/<partial>.php.
      */
     abstract public function partial(): string;
+
+    /**
+     * The namespace of the views that hold the type's partial.
+     */
+    public function viewNamespace(): string
+    {
+        return 'Bonfire\Fields\Views\fields';
+    }
 
     /**
      * Tidies what was posted, before it's validated. Anything that isn't text counts as empty.
@@ -37,7 +44,7 @@ abstract class FieldType
     }
 
     /**
-     * The CodeIgniter validation rules, which are the blueprint's `validate:` and whatever the type needs on top.
+     * The CodeIgniter validation rules, which are the field's `validate:` and whatever the type needs on top.
      *
      * @return list<Closure|string>|string
      */
@@ -47,9 +54,9 @@ abstract class FieldType
     }
 
     /**
-     * The errors inside a value that holds several, such as the blocks of a `blocks` field, by where they are. A key
-     * is the 1-based position of the item the editor sees, then a dot and the handle of its field when the error is
-     * about one field: `2.heading`. An error about the whole value has the key `''`. A type with one value has none.
+     * The errors inside a value that holds several, by the 1-based position of the item. An error about one of its
+     * fields has the item's position, a dot and the field's handle, such as `2.heading`. An error about the whole value
+     * has the key `''`. A type with one value has none.
      *
      * @return array<string, string>
      */
@@ -59,44 +66,28 @@ abstract class FieldType
     }
 
     /**
-     * The value to write to the file for a prepared, valid form value.
+     * The PHP value to store for a prepared, valid form value.
      */
-    public function toFrontMatter(string $input, Field $field): mixed
+    public function toStored(string $input, Field $field): mixed
     {
         return $input;
     }
 
     /**
-     * The form value for what the file holds.
+     * The form value for what the storage holds.
      */
-    public function fromFrontMatter(mixed $stored, Field $field): string
+    public function fromStored(mixed $stored, Field $field): string
     {
         return is_scalar($stored) ? (string) $stored : '';
     }
 
     /**
-     * The front matter key that holds the field's value, which is the field's handle unless the type says otherwise.
-     */
-    public function key(Field $field): string
-    {
-        return $field->handle;
-    }
-
-    /**
-     * Checks the options the blueprint gave the field.
+     * Checks the options the field was given.
      *
-     * @throws ContentException when the field can't be used
+     * @throws FieldException when the field can't be used
      */
     public function check(Field $field): void
     {
-    }
-
-    /**
-     * False for a type whose value is the file's name rather than a front matter key.
-     */
-    public function storedInFrontMatter(): bool
-    {
-        return true;
     }
 
     /**

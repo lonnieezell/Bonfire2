@@ -13,7 +13,10 @@ namespace Bonfire\Content\Fields;
 
 use Bonfire\Content\Blueprint;
 use Bonfire\Content\ContentException;
-use Bonfire\Content\Field;
+use Bonfire\Fields\ChoiceList;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldType;
+use Bonfire\Fields\FieldTypes;
 
 /**
  * A list of blocks, each of a type that has a blueprint in resources/blueprints/blocks. `blocks` lists the types the
@@ -27,6 +30,11 @@ final class BlocksField extends FieldType
     public function partial(): string
     {
         return 'blocks';
+    }
+
+    public function viewNamespace(): string
+    {
+        return 'Bonfire\Content\Views\fields';
     }
 
     /**
@@ -149,7 +157,7 @@ final class BlocksField extends FieldType
      *
      * @return list<array<string, mixed>>
      */
-    public function toFrontMatter(string $input, Field $field): array
+    public function toStored(string $input, Field $field): array
     {
         $blocks     = self::decode($input);
         $blueprints = self::blueprintsFor(array_column($blocks, 'type'));
@@ -160,10 +168,10 @@ final class BlocksField extends FieldType
 
             foreach ($blueprints[$block['type']]->fields ?? [] as $blockField) {
                 $type  = FieldTypes::get($blockField->type);
-                $value = $type->toFrontMatter($block[$blockField->handle] ?? '', $blockField);
+                $value = $type->toStored($block[$blockField->handle] ?? '', $blockField);
 
                 if (! in_array($value, [null, '', []], true)) {
-                    $map[$type->key($blockField)] = $value;
+                    $map[EntryStorage::key($type, $blockField)] = $value;
                 }
             }
 
@@ -177,7 +185,7 @@ final class BlocksField extends FieldType
      * Only the keys the block's blueprint lists come into the form, so saving in the admin drops any other key
      * written into a block by hand.
      */
-    public function fromFrontMatter(mixed $stored, Field $field): string
+    public function fromStored(mixed $stored, Field $field): string
     {
         $items = is_array($stored) && array_is_list($stored) ? array_values(array_filter($stored, static fn (mixed $item): bool => is_array($item) && is_string($item['type'] ?? null))) : [];
 
@@ -189,7 +197,7 @@ final class BlocksField extends FieldType
 
             foreach ($blueprints[$item['type']]->fields ?? [] as $blockField) {
                 $type                       = FieldTypes::get($blockField->type);
-                $block[$blockField->handle] = $type->fromFrontMatter($item[$type->key($blockField)] ?? null, $blockField);
+                $block[$blockField->handle] = $type->fromStored($item[EntryStorage::key($type, $blockField)] ?? null, $blockField);
             }
 
             $blocks[] = $block;

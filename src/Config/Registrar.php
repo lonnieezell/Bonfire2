@@ -5,6 +5,10 @@ namespace Bonfire\Config;
 use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
+use Bonfire\Content\Fields\BlocksField;
+use Bonfire\Content\Fields\EntriesField;
+use Bonfire\Content\Fields\SlugField;
+use Bonfire\Content\Fields\TermsField;
 use Bonfire\Core\Filters\Boot;
 use Bonfire\Core\Filters\OnlineCheck;
 use Bonfire\Users\Validation\UserRules;
@@ -132,6 +136,21 @@ class Registrar
                     'superadmin' => ['email.*'],
                     'admin'      => ['email.preview'],
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * The field types Content adds to the generic ones in Bonfire\Fields.
+     */
+    public static function Fields()
+    {
+        return [
+            'moduleTypes' => [
+                'slug'    => SlugField::class,
+                'entries' => EntriesField::class,
+                'terms'   => TermsField::class,
+                'blocks'  => BlocksField::class,
             ],
         ];
     }

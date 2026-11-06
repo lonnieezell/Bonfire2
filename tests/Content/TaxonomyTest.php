@@ -6,12 +6,12 @@ use Bonfire\Content\Blueprint;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
-use Bonfire\Content\Field;
 use Bonfire\Content\Fields\TermsField;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentTermModel;
 use Bonfire\Content\Taxonomy;
 use Bonfire\Content\TermStore;
+use Bonfire\Fields\Field;
 use CodeIgniter\I18n\Time;
 use Tests\Support\Content\ContentTestCase;
 
@@ -151,10 +151,10 @@ final class TaxonomyTest extends ContentTestCase
         $this->assertSame('php,laravel', $type->prepare(['php', ' laravel ', 'php', 'bad slug', '', 5], $field, []));
         $this->assertSame('php,laravel', $type->prepare('php, laravel', $field, []));
         $this->assertSame('', $type->prepare(null, $field, []));
-        $this->assertSame(['php', 'laravel'], $type->toFrontMatter('php,laravel', $field));
-        $this->assertSame([], $type->toFrontMatter('', $field));
-        $this->assertSame('php,laravel', $type->fromFrontMatter(['php', 'laravel'], $field));
-        $this->assertSame('', $type->fromFrontMatter(null, $field));
+        $this->assertSame(['php', 'laravel'], $type->toStored('php,laravel', $field));
+        $this->assertSame([], $type->toStored('', $field));
+        $this->assertSame('php,laravel', $type->fromStored(['php', 'laravel'], $field));
+        $this->assertSame('', $type->fromStored(null, $field));
     }
 
     // Reindex

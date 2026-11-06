@@ -200,12 +200,12 @@ Read the blocks back with [`$entry->blocks('sections')`](query_api.md#entries), 
 
 ## Changing an input
 
-Each type's input is a partial in `src/Content/Views/fields`. To change one, copy it to
-`app/Views/content/fields/<type>.php`, for example `app/Views/content/fields/text.php`. Bonfire uses your copy for every
+Each type's input is a partial in `src/Fields/Views/fields`, or in `src/Content/Views/fields` for `slug`, `terms` and
+`entries`. To change one, copy it to `app/Views/fields/<type>.php`, for example `app/Views/fields/text.php`. Bonfire uses your copy for every
 field of that type. The partial gets the variables listed at the top of the file it replaces: `$field`, `$name`, `$id`,
 `$value` and `$disabled`. It must name its input `$name`, and give it `$id` so the label points to it.
 
 ## Writing your own
 
-A type is a class that extends `Bonfire\Content\Fields\FieldType`, and the built-in types are classes like this too. To
+A type is a class that extends `Bonfire\Fields\FieldType`, and the built-in types are classes like this too. To
 write one, and for the methods a type can override, see [Custom field types](custom_field_types.md).

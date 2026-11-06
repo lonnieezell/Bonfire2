@@ -9,7 +9,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Content\Fields;
+namespace Bonfire\Fields;
 
 /**
  * A list of strings as a form value, which is always a string: JSON, or the empty string for an empty list.
@@ -37,7 +37,7 @@ final class ChoiceList
     }
 
     /**
-     * @param list<mixed> $items
+     * @param list<string> $items
      */
     public static function encode(array $items): string
     {
@@ -55,11 +55,11 @@ final class ChoiceList
     }
 
     /**
-     * The strings in what a file holds, which is a list or else a single value.
+     * The strings in what the storage holds, which is a list or else a single value.
      *
      * @return list<string>
      */
-    public static function fromFrontMatter(mixed $stored): array
+    public static function fromStored(mixed $stored): array
     {
         return self::fromInput(array_map(static fn (mixed $item): ?string => is_scalar($item) ? (string) $item : null, (array) $stored));
     }

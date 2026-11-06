@@ -9,10 +9,19 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-namespace Bonfire\Content\Fields;
+namespace Bonfire\Fields;
+
+use Bonfire\Fields\Types\DateField;
+use Bonfire\Fields\Types\DatetimeField;
+use Bonfire\Fields\Types\IntegerField;
+use Bonfire\Fields\Types\MarkdownField;
+use Bonfire\Fields\Types\SelectField;
+use Bonfire\Fields\Types\TextareaField;
+use Bonfire\Fields\Types\TextField;
+use Bonfire\Fields\Types\ToggleField;
 
 /**
- * The field types a blueprint can use.
+ * The field types a form can use.
  */
 final class FieldTypes
 {
@@ -20,15 +29,11 @@ final class FieldTypes
         'text'     => TextField::class,
         'textarea' => TextareaField::class,
         'markdown' => MarkdownField::class,
-        'slug'     => SlugField::class,
         'toggle'   => ToggleField::class,
         'date'     => DateField::class,
         'datetime' => DatetimeField::class,
         'select'   => SelectField::class,
         'integer'  => IntegerField::class,
-        'entries'  => EntriesField::class,
-        'terms'    => TermsField::class,
-        'blocks'   => BlocksField::class,
     ];
 
     public static function has(string $type): bool
@@ -52,16 +57,17 @@ final class FieldTypes
     }
 
     /**
-     * The built-in types and the ones registered in Config\Content, by handle. A registered class that
-     * isn't a FieldType is left out, so a blueprint that uses it is refused.
+     * The built-in types, the ones other Bonfire modules add, and the ones registered in Config\Fields, by handle.
+     * A registered class that isn't a FieldType is left out, so a form that uses it is refused.
      *
      * @return array<string, class-string<FieldType>>
      */
     private static function all(): array
     {
-        $types = self::TYPES;
+        $types  = self::TYPES;
+        $config = config('Fields');
 
-        foreach (config('Content')->fieldTypes as $handle => $class) {
+        foreach ([...$config->moduleTypes, ...$config->types] as $handle => $class) {
             if (is_string($class) && is_a($class, FieldType::class, true)) {
                 $types[$handle] = $class;
             }
@@ -71,13 +77,14 @@ final class FieldTypes
     }
 
     /**
-     * The view that renders the type's input: the app's copy in app/Views/content/fields when it has one,
-     * otherwise Bonfire's.
+     * The view that renders the type's input: the app's copy in app/Views/fields when it has one,
+     * otherwise the type's own.
      */
     public static function view(string $type): string
     {
-        $partial = self::get($type)->partial();
+        $type    = self::get($type);
+        $partial = $type->partial();
 
-        return is_file(APPPATH . "Views/content/fields/{$partial}.php") ? "App\\Views\\content\\fields\\{$partial}" : "Bonfire\\Content\\Views\\fields\\{$partial}";
+        return is_file(APPPATH . "Views/fields/{$partial}.php") ? "App\\Views\\fields\\{$partial}" : "{$type->viewNamespace()}\\{$partial}";
     }
 }

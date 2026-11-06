@@ -11,6 +11,8 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Fields\EntryStorage;
+use Bonfire\Fields\FieldTypes;
 use Config\Paths;
 
 /**
@@ -38,12 +40,12 @@ final readonly class Block
      */
     public function field(string $name, mixed $default = null): mixed
     {
-        $value = $this->data[$name] ?? null;
-
         $field = $this->blueprint?->field($name);
+        $key   = $field === null ? $name : EntryStorage::key(FieldTypes::get($field->type), $field);
+        $value = $this->data[$key] ?? null;
 
         if ($value !== null && $field !== null) {
-            $value = $field->cast($value);
+            $value = EntryStorage::cast($value, $field);
         }
 
         return $value === null || $value === '' ? $default : $value;

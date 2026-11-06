@@ -14,8 +14,10 @@ namespace Bonfire\Content\Fields;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
-use Bonfire\Content\Field;
 use Bonfire\Content\Models\ContentEntryModel;
+use Bonfire\Fields\ChoiceList;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldType;
 
 /**
  * Links to other entries, kept in the front matter as a list of their UUIDs. `collections` names the collections
@@ -27,6 +29,11 @@ final class EntriesField extends FieldType
     public function partial(): string
     {
         return 'entries';
+    }
+
+    public function viewNamespace(): string
+    {
+        return 'Bonfire\Content\Views\fields';
     }
 
     public function prepare(mixed $input, Field $field, array $submitted): string
@@ -71,14 +78,14 @@ final class EntriesField extends FieldType
         });
     }
 
-    public function toFrontMatter(string $input, Field $field): mixed
+    public function toStored(string $input, Field $field): mixed
     {
         return ChoiceList::decode($input) ?: null;
     }
 
-    public function fromFrontMatter(mixed $stored, Field $field): string
+    public function fromStored(mixed $stored, Field $field): string
     {
-        return ChoiceList::encode(array_map(strtolower(...), ChoiceList::fromFrontMatter($stored)));
+        return ChoiceList::encode(array_map(strtolower(...), ChoiceList::fromStored($stored)));
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace Tests\Support\Content;
 
-use Bonfire\Content\Field;
-use Bonfire\Content\Fields\FieldType;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldType;
 
 /**
  * A field type of an app's own: text that is kept in capitals. It borrows the bundled text input.

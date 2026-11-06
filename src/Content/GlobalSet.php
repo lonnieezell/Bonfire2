@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Fields\EntryStorage;
 use DateTimeInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -116,7 +117,7 @@ final readonly class GlobalSet
         if ($value !== null) {
             foreach ($this->blueprint->fields ?? [] as $field) {
                 if ($field->handle === $name) {
-                    $value = $field->cast($value);
+                    $value = EntryStorage::cast($value, $field);
 
                     break;
                 }

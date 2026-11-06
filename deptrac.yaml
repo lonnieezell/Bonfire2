@@ -94,7 +94,37 @@ deptrac:
       collectors:
         - type: classLike
           value: .*Services.*
+    # The shared field system. Modules such as Content build on it, so it can't depend on any of them.
+    - name: Fields
+      collectors:
+        - type: classLike
+          value: ^Bonfire\\Fields\\.*
+    - name: Content
+      collectors:
+        - type: bool
+          must:
+          - type: classLike
+            value: ^Bonfire\\Content\\.*
+          must_not:
+          - type: classLike
+            value: .*[A-Za-z]+Model$
   ruleset:
+    # Fields may use itself and the framework, and nothing else of Bonfire's, which keeps Content out of it.
+    Fields:
+      - Fields
+      - Vendor Config
+    Content:
+      - Content
+      - Fields
+      - Config
+      - Entity
+      - Model
+      - Service
+      - Vendor Config
+      - Vendor Controller
+      - Vendor Entity
+      - Vendor Model
+      - Vendor View
     Entity:
       - Config
       - Model
@@ -103,11 +133,13 @@ deptrac:
       - Vendor Entity
       - Vendor Model
     Config:
+      - Content
       - Model
       - Service
       - Vendor Config
     Model:
       - Config
+      - Content
       - Entity
       - Service
       - Vendor Config
