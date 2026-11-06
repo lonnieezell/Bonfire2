@@ -81,15 +81,7 @@ final class BelongsToFieldTest extends ContentTestCase
         $this->assertSame(['', (string) $this->ada->id, (string) $this->admin->id, (string) $this->grace->id], $this->values($options), 'an empty choice, then a record each in title order');
         $this->assertSame('ada', $options->item(1)->textContent);
 
-        $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), [
-            'blueprint' => 'post',
-            'fields'    => ['title' => 'Written', 'author' => (string) $this->ada->id],
-        ])->assertRedirect();
-
-        $row = (new ContentEntryModel())->where('slug', 'written')->first();
-        $this->assertSame($this->ada->id, Entry::fromRow($row)->data['author']);
-
-        $edit = $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', $row['id']));
+        $edit = $this->saveAdaAndEdit();
 
         $this->assertSame([(string) $this->ada->id], $this->values($this->xpath($edit, '//select[@name="fields[author]"]/option[@selected]')));
     }
@@ -199,15 +191,7 @@ final class BelongsToFieldTest extends ContentTestCase
     {
         $this->useSearchable(2);
 
-        $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), [
-            'blueprint' => 'post',
-            'fields'    => ['title' => 'Written', 'author' => (string) $this->ada->id],
-        ])->assertRedirect();
-
-        $row = (new ContentEntryModel())->where('slug', 'written')->first();
-        $this->assertSame($this->ada->id, Entry::fromRow($row)->data['author']);
-
-        $edit = $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', $row['id']));
+        $edit = $this->saveAdaAndEdit();
 
         $this->assertSame([(string) $this->ada->id], $this->values($this->xpath($edit, '//input[@name="fields[author]"]')));
         $this->assertSame(['ada'], $this->values($this->xpath($edit, '//input[@hx-get]')), 'the title, not the ID');
@@ -358,6 +342,22 @@ final class BelongsToFieldTest extends ContentTestCase
         $this->expectExceptionMessage('encryption key');
 
         $this->token();
+    }
+
+    /**
+     * Saves a post by ada, checks that her ID was stored, and gives the post's edit form.
+     */
+    private function saveAdaAndEdit(): TestResponse
+    {
+        $this->actingAs($this->admin)->post(route_to('content-new', 'blog'), [
+            'blueprint' => 'post',
+            'fields'    => ['title' => 'Written', 'author' => (string) $this->ada->id],
+        ])->assertRedirect();
+
+        $row = (new ContentEntryModel())->where('slug', 'written')->first();
+        $this->assertSame($this->ada->id, Entry::fromRow($row)->data['author']);
+
+        return $this->actingAs($this->admin)->get(route_to('content-edit', 'blog', $row['id']));
     }
 
     /**
