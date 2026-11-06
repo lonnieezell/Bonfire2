@@ -28,7 +28,7 @@
     <input type="hidden" name="blueprint" value="<?= esc($blueprint->handle, 'attr') ?>">
 
     <x-admin-box>
-        <?= view('Bonfire\Fields\Views\form_fields', ['rows' => $rows], ['saveData' => false]) ?>
+        <?= view('Bonfire\Fields\Views\form_fields', ['sections' => $sections], ['saveData' => false]) ?>
     </x-admin-box>
 
     <x-admin-box title="<?= esc(lang('Content.publishing'), 'attr') ?>">

@@ -18,10 +18,11 @@ namespace Bonfire\Fields;
 final readonly class Form
 {
     /**
-     * @param list<Field>  $fields
-     * @param list<string> $readOnly the handles of fields the form shows but the user can't change
+     * @param list<Field>   $fields
+     * @param list<string>  $readOnly the handles of fields the form shows but the user can't change
+     * @param list<Section> $sections the same fields, grouped for showing them. Without sections, the form is one group
      */
-    public function __construct(private array $fields, private array $readOnly = [])
+    public function __construct(private array $fields, private array $readOnly = [], private array $sections = [])
     {
     }
 
@@ -52,23 +53,55 @@ final readonly class Form
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool}>
+     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>
      */
     public function rows(array $values, array $errors): array
     {
-        $rows = [];
+        return array_map(fn (Field $field): array => $this->row($field, $values, $errors), $this->fields);
+    }
 
-        foreach ($this->fields as $field) {
-            $rows[] = [
-                'field'    => $field,
-                'view'     => FieldTypes::view($field->type),
-                'value'    => $values[$field->handle] ?? '',
-                'error'    => $errors[$field->handle] ?? null,
-                'disabled' => ! $this->isEditable($field),
+    /**
+     * What the form shows, group by group: each section's title, instructions and number of columns, with the
+     * rows of its fields. A form without sections is one group with no title and one column.
+     *
+     * @param array<string, string> $values by handle
+     * @param array<string, string> $errors by handle
+     *
+     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>}>
+     */
+    public function sections(array $values, array $errors): array
+    {
+        $sections = $this->sections === [] ? [new Section(null, null, Section::DEFAULT_COLUMNS, $this->fields)] : $this->sections;
+        $shown    = [];
+
+        foreach ($sections as $section) {
+            $shown[] = [
+                'title'        => $section->title,
+                'instructions' => $section->instructions,
+                'columns'      => $section->columns,
+                'rows'         => array_map(fn (Field $field): array => $this->row($field, $values, $errors), $section->fields),
             ];
         }
 
-        return $rows;
+        return $shown;
+    }
+
+    /**
+     * @param array<string, string> $values
+     * @param array<string, string> $errors
+     *
+     * @return array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}
+     */
+    private function row(Field $field, array $values, array $errors): array
+    {
+        return [
+            'field'    => $field,
+            'view'     => FieldTypes::view($field->type),
+            'value'    => $values[$field->handle] ?? '',
+            'error'    => $errors[$field->handle] ?? null,
+            'disabled' => ! $this->isEditable($field),
+            'full'     => $field->full || FieldTypes::get($field->type)->isFullWidth(),
+        ];
     }
 
     /**

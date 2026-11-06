@@ -34,6 +34,15 @@ field type, or code of yours that names the old classes, breaks until you change
 The form behind an entry's fields is `Bonfire\Fields\Form`, and its view is `Bonfire\Fields\Views\form_fields` rather than
 `Bonfire\Content\Views\form_fields`. See [Custom field types](../content/custom_field_types.md).
 
+**Content: blueprint sections.** A blueprint can group its fields with `sections:` instead of `fields:`. Each section has
+a `title`, optional `instructions` and `columns` (1 to 3), and its own `fields:`. A field can set `width: full`, and
+`markdown` and `textarea` fields span the row by default. Storage stays flat, so a sectioned blueprint saves the same
+front matter as the same fields in one list. See [Sections](../content/blueprints.md#sections). **If you copied
+`entry_form.php`, `global_form.php` or `term_form.php` from `Bonfire\Content\Views` into your app, they break:** the
+controllers now give them `$sections` rather than `$rows`, which they pass to `Bonfire\Fields\Views\form_fields` as
+`['sections' => $sections]`. That view still takes `rows` for a form with no sections. `Bonfire\Fields\Form` has a
+`sections()` method for other callers, and a custom field type can override `isFullWidth()`.
+
 **Content: components in Markdown, and `content_markdown()`.** `$entry->content()` now converts the Markdown, then expands
 any `<x-…>` View Components in it, so it works in controllers and feeds and not only when echoed in a view. **A body with
 an `<x-…>` tag now gets that component's HTML in `content()`, and a tag for a component that doesn't exist throws a

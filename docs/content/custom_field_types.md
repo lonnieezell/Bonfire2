@@ -48,6 +48,7 @@ Every method is optional but `partial()`. The built-in types are classes like th
 | `fromStored($stored, $field)` | The text the form shows for the stored value. | The value as text, or `''` |
 | `itemErrors($input, $field)` | The errors inside a value that holds several, by the 1-based position of the item, such as `2.heading`. `blocks` uses it. | No errors |
 | `check($field)` | Throws a `Bonfire\Fields\FieldException` if the blueprint gave the field options it can't use, so the blueprint is refused. | Nothing |
+| `isFullWidth()` | Whether the input spans a whole row of a [section's](blueprints.md#sections) columns, as `textarea` and `markdown` do. A field can ask for it with `width: full`. | `false` |
 | `viewNamespace()` | The namespace of the views that hold the type's partial. | `Bonfire\Fields\Views\fields` |
 
 A type that needs to say where an entry keeps its value also implements `Bonfire\Content\Fields\ContentFieldType`.
@@ -60,8 +61,8 @@ Things to know:
 - **The form value is always text.** A browser posts text, so `prepare()` returns a string, `rules()` validate a string,
   and `toStored()` turns it into what is stored, such as a number or a list. A type that holds several
   values, like a multiple `select`, keeps them as JSON text with `Bonfire\Fields\ChoiceList`.
-- **`$field->options`** holds the keys the blueprint gave the field besides `handle`, `type`, `label`, `validate` and
-  `instructions`. Use them for settings, like `min` on an `integer`.
+- **`$field->options`** holds the keys the blueprint gave the field besides `handle`, `type`, `label`, `validate`,
+  `instructions` and `width`. Use them for settings, like `min` on an `integer`.
 - **`withRules()`** adds your rules to the blueprint's `validate`, whether that is a string or a list. A rule can be a
   closure, `function ($value, $data, &$error): bool`, which sets `$error` to its message when it returns `false`. A
   closure turns a string `validate` into a list.

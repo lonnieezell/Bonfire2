@@ -88,6 +88,40 @@ abstract class ContentTestCase extends TestCase
     }
 
     /**
+     * Rewrites the blog's post blueprint into the same fields, grouped in two sections. The second has two columns.
+     */
+    protected function useSections(): void
+    {
+        file_put_contents($this->blueprints . 'collections/blog/post.yaml', <<<'YAML'
+            title: Post
+            sections:
+              - title: Main
+                instructions: What readers see first.
+                fields:
+                  - handle: title
+                    type: text
+                    label: Title
+                    validate: required|max_length[60]
+                  - handle: slug
+                    type: slug
+                  - handle: tagline
+                    type: text
+                    instructions: One line under the title.
+                  - handle: summary
+                    type: textarea
+              - title: Details
+                columns: 2
+                fields:
+                  - handle: featured
+                    type: toggle
+                  - handle: event_date
+                    type: date
+                  - handle: body
+                    type: markdown
+            YAML . "\n");
+    }
+
+    /**
      * Writes a file in the test's copy of the site.
      */
     protected function writeFile(string $path, string $contents): void
