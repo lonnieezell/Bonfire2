@@ -62,6 +62,18 @@ abstract class FieldType
     }
 
     /**
+     * The errors inside a value that holds several, by the 1-based position of the item. An error about one of its
+     * fields has the item's position, a dot and the field's handle, such as `2.heading`. An error about the whole value
+     * has the key `''`. A type with one value has none.
+     *
+     * @return array<string, string>
+     */
+    public function itemErrors(string $input, Field $field): array
+    {
+        return [];
+    }
+
+    /**
      * The PHP value to store for a prepared, valid form value.
      */
     public function toStored(string $input, Field $field): mixed

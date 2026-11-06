@@ -98,6 +98,14 @@ return [
     'entriesLimit'   => 'Choose up to {0}.',
     'entriesNone'    => 'There are no entries to choose from.',
 
+    // Blocks field
+    'blocksTooMany'    => 'Add no more than {0} blocks.',
+    'blocksTooFew'     => 'Add at least {0} blocks.',
+    'blockTypeInvalid' => 'A "{0}" block isn\'t one this field allows.',
+    'blockError'       => 'Block {0} ({1}): {2}',
+    'blocksNone'       => 'No blocks yet.',
+    'blocksHint'       => 'Blocks are written in the entry\'s file. Saving keeps the values shown here.',
+
     // Terms field
     'noTerms'     => 'No terms yet.',
     'unknownTerm' => '{0} (no such term)',

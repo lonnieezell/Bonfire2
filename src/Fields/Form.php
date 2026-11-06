@@ -134,6 +134,7 @@ final readonly class Form
     {
         $rules  = [];
         $labels = [];
+        $checks = [];
 
         foreach ($this->fields() as [$field, $type]) {
             $fieldRules = $type->rules($field);
@@ -141,6 +142,7 @@ final readonly class Form
             if (isset($values[$field->handle]) && $fieldRules !== '' && $fieldRules !== []) {
                 $rules["fields.{$field->handle}"] = ['label' => $field->label, 'rules' => $fieldRules];
                 $labels[$field->handle]           = "fields.{$field->handle}";
+                $checks[$field->handle]           = [$field, $type];
             }
         }
 
@@ -156,6 +158,14 @@ final readonly class Form
         foreach ($labels as $handle => $key) {
             if (($error = $validation->getError($key)) !== '') {
                 $errors[$handle] = $error;
+
+                [$field, $type] = $checks[$handle];
+
+                foreach ($type->itemErrors($values[$handle], $field) as $position => $message) {
+                    if ($position !== '') {
+                        $errors["{$handle}.{$position}"] = $message;
+                    }
+                }
             }
         }
 
