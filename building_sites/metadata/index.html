@@ -2094,10 +2094,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escaping-and-duplicates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escaping and duplicates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#outputting-the-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
         Outputting the Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assets-from-block-partials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets from block partials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assets-for-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets for one page
       
     </span>
   </a>
@@ -2864,10 +2897,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#escaping-and-duplicates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escaping and duplicates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#outputting-the-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
         Outputting the Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assets-from-block-partials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets from block partials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assets-for-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assets for one page
       
     </span>
   </a>
@@ -2971,9 +3037,20 @@
 <span class="s">    // all your javscript code here</span>
 <span class="dl">TEXT</span><span class="p">;</span>
 <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addRawScript</span><span class="p">(</span><span class="nv">$script</span><span class="p">);</span>
+
+<span class="c1">// Adding style blocks</span>
+<span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">addRawStyle</span><span class="p">(</span><span class="s1">'.hero { background: #222; }'</span><span class="p">);</span>
 </code></pre></div>
-<p>The <code>addMeta</code>, <code>addLink</code> and <code>addScript</code> methods all take an array of key value pairs. Each of the pairs will have
-all of the key/value pairs rendered as <code>key=value</code> within the tags, so you can fully customize what each one contains.</p>
+<p>The <code>addMeta</code>, <code>addLink</code>, <code>addScript</code> and <code>addStyle</code> methods all take an array of key value pairs. Each of the pairs will have
+all of the key/value pairs rendered as <code>key="value"</code> within the tags, so you can fully customize what each one contains.</p>
+<h2 id="escaping-and-duplicates">Escaping and duplicates</h2>
+<p>Attribute values are escaped when they are rendered, so a <code>"</code> or <code>&amp;</code> in a value is safe. Pass the plain value, not one
+you have already run through <code>esc()</code>, or it is escaped twice.</p>
+<p>The content of <code>addRawScript()</code> and <code>addRawStyle()</code> is output as it is, between <code>&lt;script&gt;</code> or <code>&lt;style&gt;</code> tags. Never put
+anything a visitor typed in it.</p>
+<p>An entry identical to one already added is ignored, so <code>render()</code> outputs it once. That goes for <code>addMeta()</code>, <code>addLink()</code>,
+<code>addScript()</code> and <code>addStyle()</code> entries with the same keys and values in the same order, and for raw scripts and raw
+styles with the same content.</p>
 <h2 id="outputting-the-metadata">Outputting the Metadata</h2>
 <p>Within your layouts you can use the <code>render()</code> method to render any of the data types.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Render the title tag - &lt;title&gt;...&lt;/title&gt;</span>
@@ -2990,7 +3067,39 @@ all of the key/value pairs rendered as <code>key=value</code> within the tags, s
 <span class="x">// Render all script tags</span>
 <span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'script'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 <span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'rawScripts'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+
+<span class="x">// Render all style tags, and the raw style blocks</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'style'</span><span class="p">)</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$viewMeta</span><span class="o">-&gt;</span><span class="na">render</span><span class="p">(</span><span class="s1">'rawStyles'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 </code></pre></div>
+<p>The App theme's layout outputs <code>meta</code>, <code>title</code>, <code>link</code>, <code>style</code>, <code>rawStyles</code> and <code>script</code>. It doesn't output <code>rawScripts</code>. If you
+keep your own copy of the layout, make sure it renders every type your site adds.</p>
+<h2 id="assets-from-block-partials">Assets from block partials</h2>
+<p>A partial that needs a stylesheet or script can add it itself, however many times the page renders it. Because identical
+entries are output once, three copies of a <code>gallery</code> partial add one stylesheet:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'viewMeta'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">addStyle</span><span class="p">([</span><span class="s1">'rel'</span> <span class="o">=&gt;</span> <span class="s1">'stylesheet'</span><span class="p">,</span> <span class="s1">'href'</span> <span class="o">=&gt;</span> <span class="nx">asset</span><span class="p">(</span><span class="s1">'site/css/gallery.css'</span><span class="p">,</span> <span class="s1">'css'</span><span class="p">)])</span>
+    <span class="o">-&gt;</span><span class="na">addScript</span><span class="p">([</span><span class="s1">'src'</span> <span class="o">=&gt;</span> <span class="nx">asset</span><span class="p">(</span><span class="s1">'site/js/gallery.js'</span><span class="p">,</span> <span class="s1">'js'</span><span class="p">),</span> <span class="s1">'defer'</span> <span class="o">=&gt;</span> <span class="s1">'defer'</span><span class="p">]);</span> <span class="cp">?&gt;</span>
+<span class="x">&lt;div class="gallery"&gt;...&lt;/div&gt;</span>
+</code></pre></div>
+<p>Keep the arrays the same in each copy. <code>['rel' =&gt; 'stylesheet', 'href' =&gt; 'a.css']</code> and
+<code>['href' =&gt; 'a.css', 'rel' =&gt; 'stylesheet']</code> are two entries.</p>
+<p>A layout renders after the views it wraps, so a partial can add assets the layout prints in the <code>&lt;head&gt;</code>.</p>
+<h2 id="assets-for-one-page">Assets for one page</h2>
+<p>Bonfire doesn't add assets for a page on its own. To give one entry its own CSS or JavaScript, add a field to the
+<a href="../../content/blueprints/">blueprint</a> and read it in your template:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">fields</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">page_css</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Page CSS</span>
+<span class="w">    </span><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A path under public/, like site/css/landing.css.</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$css</span> <span class="o">=</span> <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'page_css'</span><span class="p">))</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    </span><span class="cp">&lt;?php</span> <span class="nx">service</span><span class="p">(</span><span class="s1">'viewMeta'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">addStyle</span><span class="p">([</span><span class="s1">'rel'</span> <span class="o">=&gt;</span> <span class="s1">'stylesheet'</span><span class="p">,</span> <span class="s1">'href'</span> <span class="o">=&gt;</span> <span class="nx">base_url</span><span class="p">(</span><span class="nv">$css</span><span class="p">)]);</span> <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>Use <code>addRawStyle()</code> the same way for a field that holds CSS itself. Only do that for a field that editors you trust can
+fill in, since raw content isn't escaped.</p>
 
 
 

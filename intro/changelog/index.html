@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#6-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3117,6 +3128,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#6-november-2026-breaking-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 November 2026 (breaking change)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3456,7 +3478,17 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
+<p><strong><code>viewMeta</code> escapes attribute values.</strong> <code>render()</code> now runs every value of an <code>addMeta()</code>, <code>addLink()</code>, <code>addScript()</code> and
+<code>addStyle()</code> entry through <code>htmlspecialchars()</code>, so a <code>"</code> or <code>&amp;</code> can no longer break out of a tag. <strong>If you escaped a value
+yourself before passing it in, it is now escaped twice</strong>, so pass the plain value. Titles and the content of raw scripts
+are unchanged. <code>content_seo()</code> was updated to match. See <a href="../../building_sites/metadata/#escaping-and-duplicates">View metadata</a>.</p>
 <h2 id="6-november-2026">6 November 2026</h2>
+<p><strong>View metadata: no duplicates, and raw styles.</strong> An identical <code>addMeta()</code>, <code>addLink()</code>, <code>addScript()</code> or <code>addStyle()</code>
+entry, or identical raw script, is output once, so block partials can each declare the assets they need. New
+<code>addRawStyle()</code> and <code>rawStyles()</code> add a <code>&lt;style&gt;</code> block, and the App theme's layout prints it. If you keep your own copy of
+that layout, add <code>&lt;?= $viewMeta-&gt;render('rawStyles') ?&gt;</code> to the <code>&lt;head&gt;</code>. The docs also show how to give one page its own
+assets. See <a href="../../building_sites/metadata/#assets-from-block-partials">View metadata</a>.</p>
 <p><strong>Content: reorganized docs.</strong> The Content pages are grouped by task in the nav. Reindexing and deploys have their own
 page, <a href="../../content/the_index/">The index and deploys</a>, and feeds and the sitemap moved out of Routing to
 <a href="../../content/feeds_and_sitemaps/">Feeds and sitemaps</a>. <a href="../../content/reference/">Configuration and commands</a> lists every
