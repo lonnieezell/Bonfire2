@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#7-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3229,6 +3240,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#7-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3590,6 +3612,13 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="7-november-2026">7 November 2026</h2>
+<p><strong>Resources: row and bulk actions.</strong> A resource's <code>actions()</code> show in its list's row menus and, once rows are checked,
+in the selection bar. <code>register()</code> adds them to the action list named by the resource's <code>$slug</code>, with its model as the
+record source, so another module can add an action with <code>service('actions')-&gt;for('products')-&gt;add(…)</code>. An action the
+user lacks the permission for isn't shown and the endpoint refuses it. <code>Bonfire\Resources\Actions\DeleteRecords</code> deletes
+records through the model, so a soft-deleting model sends them to the Recycler. See
+<a href="../../building_admin_modules/resources/#actions">Resources</a>.</p>
 <h2 id="6-november-2026">6 November 2026</h2>
 <p><strong>Resources: create and edit pages.</strong> Add <code>create</code> and <code>edit</code> to a resource's <code>$pages</code> for forms that render through
 <code>Bonfire\Fields\Form</code> with the save bar. Write the fields in PHP with the builders in <code>Bonfire\Resources\Fields</code> (<code>Text</code>,

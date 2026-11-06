@@ -2804,6 +2804,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3214,6 +3225,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3584,6 +3606,27 @@ computes its cell from the record:</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>Only a handle that is a column of the model's table can be sorted, so these two can't.</p>
+<h3 id="actions">Actions</h3>
+<p><code>actions()</code> returns the <a href="../actions/">actions</a> of the list. Each shows in the row's menu and, as a bulk action, in the bar
+that appears when rows are checked, according to its <code>$placement</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">actions</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">DeleteRecords</span><span class="p">(</span><span class="nv">$this</span><span class="p">),</span> <span class="k">new</span> <span class="nx">FeatureProducts</span><span class="p">()];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>register()</code> adds them to the action list named by the resource's <code>$slug</code>, with the resource's model as the record
+source, so the actions run through <code>POST admin/actions/products/{action}</code> like any other. They need objects, so the
+model must return entities or objects, not arrays. Each action needs the permission it names: an action the user lacks
+the permission for isn't shown, and the endpoint refuses it. A list that has no actions for the user has no checkboxes
+and no actions column.</p>
+<p><code>Bonfire\Resources\Actions\DeleteRecords</code> deletes records through the resource's model after asking for confirmation. It
+needs <code>{permission}.delete</code>. When the model uses soft deletes, the records go to the <a href="../recycler/">Recycler</a>, which
+<code>register()</code> has already set up for the resource, and can be restored from there. Otherwise they are gone for good. It
+also asks the resource's <code>can('delete', $record)</code>: a record that refuses is skipped, and its row doesn't offer the
+action. So that <code>can()</code> has a signed-in user to ask, the action never runs in a queue.</p>
+<p>Another module adds an action to a resource's list by its slug, from <code>initAdmin()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">service</span><span class="p">(</span><span class="s1">'actions'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">for</span><span class="p">(</span><span class="s1">'products'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">ExportProducts</span><span class="p">());</span>
+</code></pre></div>
 <h2 id="replacing-the-views">Replacing the views</h2>
 <p>The views are part of the package, so they aren't copied into your Admin theme and updating Bonfire updates them. To
 replace the create and edit form for one resource, put a <code>form.php</code> in the same folder as the resource class; it gets
@@ -3642,8 +3685,19 @@ replace the create and edit form for one resource, put a <code>form.php</code> i
 <td><code>$narrowed</code></td>
 <td>whether a search or a filter is narrowing the list</td>
 </tr>
+<tr>
+<td><code>$selectable</code></td>
+<td>whether the user may check rows, because they may run a bulk action</td>
+</tr>
+<tr>
+<td><code>$rowActions</code></td>
+<td>whether the user may run a row action</td>
+</tr>
 </tbody>
 </table>
+<p>Each of the <code>$rows</code> also has an <code>id</code> and a <code>selectable</code> flag, false for a record that no bulk action allows. The
+package's <code>_table.php</code> shows the checkboxes, the bulk bar and the row menus with <code>&lt;x-selection-bar&gt;</code>,
+<code>&lt;x-bulk-actions&gt;</code> and <code>&lt;x-row-actions&gt;</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
 
 <span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">section</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span> <span class="cp">?&gt;</span>
