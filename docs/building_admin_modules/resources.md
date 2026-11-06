@@ -35,7 +35,9 @@ class CategoryResource extends Resource
   `Config\AuthGroups` permissions and matrix, as for any [module permission](permissions.md).
 - **`$pages`** names the pages the resource has. `['list']` is the only page there is for now. A page that isn't named
   gets no route, so its URL is a 404.
+- **`$search`** names the columns of the model's table that the search looks in. See [Search](#search).
 - **`fields()`** lists the fields of a record, as the same `Bonfire\Fields\Field` objects that blueprints use.
+- **`filters()`** describes the filters of the list. See [Filters](#filters).
 - **`title()`** is the name in the sidebar and above the list. It is the slug with a capital by default; override it to
   change that.
 
@@ -56,6 +58,15 @@ table icon unless you pass `collection:` and `icon:`:
 ```php
 service('resources')->register(CategoryResource::class, collection: 'tools', icon: 'fas fa-tags');
 ```
+
+It also wires the resource into the rest of the admin:
+
+- **The Recycler** lists the resource's soft-deleted records, and restores or purges them, if the model has
+  `$useSoftDeletes`. The Recycler's alias is the slug, and the columns it shows are the `$search` columns, or the
+  primary key when there are none. See [The Recycler](recycler.md): the model must have `deleted_at` in its
+  `$allowedFields` for a restore to work. A model that deletes for good is left out of the Recycler.
+- **The admin's global search** looks in the `$search` columns, if there are any, for those who have `{permission}.list`.
+  See [Search](#search).
 
 And in the module's `Config/Routes.php`, which is where the routes have to be declared, since routing runs before
 `initAdmin()`:
@@ -97,6 +108,53 @@ public function query(Model $model): Model
 }
 ```
 
+### Search
+
+Name the columns to search in `$search`, and the list gets a search box:
+
+```php
+public array $search = ['name', 'description'];
+```
+
+Typing in the box narrows the list to the records where *any* of those columns contains what was typed, as you type
+(`%` and `_` count as themselves). The search is `?search=` in the URL, so a link can carry it. A resource with an empty
+`$search` has no search box.
+
+### Filters
+
+`filters()` returns the same shape as a model's `$filters` (see [Filters](filters.md)): the key is a column of the
+model's table, and the value has a `title`, the `options`, and optionally a `type` of `radio`. If `options` is a string,
+it names a method of the resource that returns them.
+
+```php
+public function filters(): array
+{
+    return [
+        'status' => ['title' => 'Status', 'options' => ['live' => 'Live', 'draft' => 'Draft']],
+        'category_id' => ['title' => 'Category', 'options' => 'categoryOptions'],
+    ];
+}
+
+public function categoryOptions(): array
+{
+    return array_column(model(CategoryModel::class)->asArray()->findAll(), 'name', 'id');
+}
+```
+
+The filters show in a panel that the toolbar's filter link opens, rendered by the `Bonfire\Core\Cells\Filters` view cell.
+A record matches a filter when its column holds one of the chosen options, and a filter with nothing chosen doesn't
+narrow the list. Only the columns that `filters()` names can be filtered.
+
+Search, filters, sorting and paging combine. The links of the column headings and the pager keep the search and the
+filters, and with htmx on the page the search box and the filter panel send their choices along with every refresh of the
+table.
+
+### Global search
+
+A resource with `$search` also shows up when someone uses the search box in the admin header: its section lists the
+records that match, and each one links to the resource's list narrowed to it. Users without `{permission}.list` don't
+see it. To search differently, write a [search provider](search.md) of your own.
+
 ## Replacing the view
 
 The views are part of the package, so they aren't copied into your Admin theme and updating Bonfire updates them. To
@@ -113,6 +171,8 @@ replace the list for one resource, put a `list.php` in the same folder as the re
 | `$sort`     | the handle of the sorted column, or an empty string                              |
 | `$dir`      | `asc` or `desc`                                                                  |
 | `$sortUrls` | the link of each sortable column, by handle                                      |
+| `$search`   | what was typed in the search box, or an empty string                             |
+| `$narrowed` | whether a search or a filter is narrowing the list                               |
 
 ```php
 <?php $this->extend('master') ?>
@@ -127,3 +187,6 @@ replace the list for one resource, put a `list.php` in the same folder as the re
 
 Sorting and paging refresh the element with the id `content-list`, and an htmx request gets only the package's
 `_table` view, so keep the id and include `_table` as above to keep the refresh.
+
+The package's `list.php` also holds the search box and the filter panel. A `list.php` of yours has them only if you copy
+them from `src/Resources/Views/list.php`.

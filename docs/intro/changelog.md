@@ -16,6 +16,12 @@ columns, which leave out `textarea` and `markdown` fields unless `columns()` say
 refresh, guarded by `{permission}.list`. Only the list page exists so far. A `list.php` beside the resource replaces the
 package's view. See [Resources](../building_admin_modules/resources.md).
 
+**Resources: search, filters, global search and the Recycler.** A resource's `$search` columns give its list a search box
+and put its records in the admin's global search. Its `filters()`, in the shape of a model's `$filters`, show in the
+`Filters` cell's panel and narrow the list. Search, filters, sorting and paging combine, and survive htmx refreshes.
+`register()` also adds a soft-deleting model to the Recycler. The `Filters` view cell takes a `resource` slug beside a
+`model`. See [Resources](../building_admin_modules/resources.md#search).
+
 ## 6 November 2026 (breaking change)
 
 **The field system moved from Content to `Bonfire\Fields`.** Resources and actions will use the same fields as

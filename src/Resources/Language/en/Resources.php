@@ -10,6 +10,9 @@
  */
 
 return [
-    'empty'     => 'Nothing here yet',
-    'emptyHint' => 'Records will show up here once they exist.',
+    'empty'         => 'Nothing here yet',
+    'emptyHint'     => 'Records will show up here once they exist.',
+    'noMatches'     => 'No matches',
+    'noMatchesHint' => 'No record matches the search or the filters. Try a different search, or clear the filters.',
+    'search'        => 'Search',
 ];
