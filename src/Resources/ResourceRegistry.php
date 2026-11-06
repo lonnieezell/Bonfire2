@@ -11,6 +11,7 @@
 
 namespace Bonfire\Resources;
 
+use Bonfire\Fields\Field;
 use Bonfire\Menus\MenuItem;
 use InvalidArgumentException;
 
@@ -26,7 +27,9 @@ class ResourceRegistry
 
     /**
      * Registers a resource and adds its list to the sidebar, for those who have `{permission}.list`.
-     * Call it from a module's initAdmin(), after the module's routes exist.
+     * It also puts the resource's soft-deleted records in the Recycler, shown by the `$search` columns, and
+     * its `$search` columns in the admin's global search. Call it from a module's initAdmin(), after the
+     * module's routes exist.
      *
      * @param class-string $class      a class that extends Resource
      * @param string       $collection the sidebar collection that gets the item
@@ -50,11 +53,48 @@ class ResourceRegistry
             ]));
         }
 
+        // The Recycler lists deleted records, so a model that deletes for good has nothing to show it.
+        if (model($resource->model, false)->useSoftDeletes) {
+            service('recycler')->register($resource->slug, $resource->title(), $resource->model, $this->recyclerColumns($resource));
+        }
+
         return $resource;
     }
 
     public function get(string $slug): ?Resource
     {
         return $this->resources[$slug] ?? null;
+    }
+
+    /**
+     * The global search providers of the registered resources that the signed-in user may list.
+     *
+     * @return list<ResourceSearchProvider>
+     */
+    public function searchProviders(): array
+    {
+        $providers = [];
+
+        foreach ($this->resources as $resource) {
+            $provider = new ResourceSearchProvider($resource);
+
+            if ($resource->search !== [] && $provider->isAllowed()) {
+                $providers[] = $provider;
+            }
+        }
+
+        return $providers;
+    }
+
+    /**
+     * What identifies a deleted record: the `$search` columns, or else the list's columns.
+     *
+     * @return list<string>
+     */
+    private function recyclerColumns(Resource $resource): array
+    {
+        return $resource->search !== []
+            ? $resource->search
+            : array_map(static fn (Field $column): string => $column->handle, $resource->columns());
     }
 }

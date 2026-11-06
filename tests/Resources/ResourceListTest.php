@@ -2,6 +2,7 @@
 
 namespace Tests\Resources;
 
+use Bonfire\Actions\Models\ActionRunModel;
 use Bonfire\Fields\Field;
 use Bonfire\Resources\Resource;
 use Bonfire\Users\User;
@@ -20,7 +21,7 @@ use Tests\Support\TestCase;
  */
 final class ResourceListTest extends TestCase
 {
-    private const SERVICES = ['auth', 'bonfire', 'menus', 'widgets', 'resources'];
+    private const SERVICES = ['auth', 'bonfire', 'menus', 'widgets', 'resources', 'recycler'];
 
     protected $refresh = true;
     private User $admin;
@@ -227,6 +228,160 @@ final class ResourceListTest extends TestCase
         $this->assertNull(service('resources')->get('nope'));
     }
 
+    public function testTheSearchBoxNarrowsTheListToRecordsMatchingAnySearchColumn(): void
+    {
+        $page = $this->visit('admin/categories');
+
+        $this->assertMatchesRegularExpression('#<input type="search" name="search"[^>]*value=""#', $page);
+
+        // In the name column
+        $this->assertSame(['Alpha'], $this->names($this->visit('admin/categories?search=lph')));
+
+        // In the status column, which is the other search column
+        $this->setStatus('Bravo', 'retired');
+        $this->assertSame(['Bravo'], $this->names($this->visit('admin/categories?search=retir')));
+
+        // The box keeps what was typed
+        $this->assertMatchesRegularExpression('#name="search"[^>]*value="retir"#', $this->visit('admin/categories?search=retir'));
+        $this->assertSame([], $this->names($this->visit('admin/categories?search=nothing-like-this')));
+    }
+
+    public function testASearchTreatsPercentAndUnderscoreAsPlainCharacters(): void
+    {
+        model(CategoryModel::class)->insert(['name' => '100% Cotton']);
+
+        $this->assertSame(['100% Cotton'], $this->names($this->visit('admin/categories?search=' . urlencode('0%'))));
+        $this->assertSame([], $this->names($this->visit('admin/categories?search=' . urlencode('_'))));
+    }
+
+    public function testASearchWithNoMatchSaysSoInsteadOfThatTheListIsEmpty(): void
+    {
+        $body = $this->visit('admin/categories?search=nothing-like-this');
+
+        $this->assertStringContainsString(lang('Resources.noMatches'), $body);
+        $this->assertStringNotContainsString(lang('Resources.empty'), $body);
+    }
+
+    public function testTheFiltersRenderThroughTheFiltersCellAndNarrowTheList(): void
+    {
+        $this->setStatus('Alpha', 'draft');
+        $this->setStatus('Bravo', 'draft');
+        $this->setStatus('Echo', 'retired');
+
+        $page = $this->visit('admin/categories');
+
+        // Options from filters(), and the ones that a method of the resource computes
+        $this->assertStringContainsString('<section class="filters">', $page);
+        $this->assertStringContainsString('name="filters[status][draft]"', $page);
+        $this->assertStringContainsString('name="filters[name][Bravo]"', $page);
+
+        $this->assertSame(['Alpha', 'Bravo'], $this->names($this->visit('admin/categories?filters[status][draft]=draft&sort=name&dir=asc')));
+        $this->assertSame(['Alpha', 'Bravo', 'Echo'], $this->names($this->visit('admin/categories?filters[status][draft]=draft&filters[status][retired]=retired&sort=name&dir=asc')));
+        $this->assertSame(['Bravo'], $this->names($this->visit('admin/categories?filters[status][draft]=draft&filters[name][Bravo]=Bravo')));
+    }
+
+    public function testOnlyTheColumnsThatFiltersNamesCanFilter(): void
+    {
+        $this->assertSame(['Delta', 'Alpha', 'Charlie', 'Bravo', 'Echo'], $this->names($this->visit('admin/categories?filters[id][1]=1&filters[unknown]=x')));
+    }
+
+    public function testSearchFiltersSortingAndPagingCombineAndSurviveHtmxRefreshes(): void
+    {
+        setting('Site.perPage', 2);
+
+        foreach (['Alpha', 'Bravo', 'Charlie'] as $name) {
+            $this->setStatus($name, 'draft');
+        }
+
+        // The search box and the filter panel are outside the table that htmx replaces, and htmx sends them along
+        $full = $this->visit('admin/categories');
+
+        $this->assertMatchesRegularExpression('#hx-include="[^"]*\.bf-toolbar-form[^"]*\.filter-check"#', $full);
+        $this->assertStringContainsString('hx-trigger="input delay:300ms from:[name=search]"', $full);
+
+        $page = $this->visit('admin/categories?search=a&filters[status][draft]=draft&sort=name&dir=desc');
+
+        // Delta (live) and Echo (no "a") are out, and the rest are sorted and paged
+        $this->assertSame(['Charlie', 'Bravo'], $this->names($page));
+
+        // The sort and pager links keep the search and the filters, with and without htmx
+        $this->assertSame(['Alpha'], $this->names($this->visit($this->pagerLinks($page)[0])));
+        $this->assertSame(['Alpha'], $this->names($this->visit($this->pagerLinks($page)[0], htmx: true)));
+
+        $ascending = $this->visit($this->sortLink($page), htmx: true);
+
+        $this->assertSame(['Alpha', 'Bravo'], $this->names($ascending));
+        $this->assertStringNotContainsString('<html', $ascending);
+        $this->assertSame(['Charlie'], $this->names($this->visit($this->pagerLinks($ascending)[0], htmx: true)));
+    }
+
+    public function testTheGlobalSearchFindsARecordByASearchColumnAndLinksToIt(): void
+    {
+        $this->setStatus('Charlie', 'retired');
+
+        $found = $this->search('lph')['Categories'];
+
+        $this->assertSame(['Alpha'], array_column($found, 'label'));
+
+        // The link opens the list narrowed to the record
+        $this->assertSame(['Alpha'], $this->names($this->visit($this->path($found[0]['url']))));
+
+        // Another search column
+        $this->assertSame(['Charlie'], array_column($this->search('retire')['Categories'], 'label'));
+    }
+
+    public function testTheGlobalSearchLeavesOutDeletedRecordsAndWhatTheUserMayNotList(): void
+    {
+        model(CategoryModel::class)->where('name', 'Alpha')->delete();
+
+        $this->assertSame([], $this->search('lph')['Categories']);
+
+        $this->adminGroupHas(['admin.access']);
+
+        $this->assertArrayNotHasKey('Categories', $this->search('Bravo'));
+    }
+
+    public function testASoftDeletedRecordShowsInTheRecyclerAndCanBeRestored(): void
+    {
+        $this->adminGroupHas(['admin.access', 'categories.list', 'recycler.view']);
+
+        $alpha = model(CategoryModel::class)->where('name', 'Alpha')->first();
+        model(CategoryModel::class)->delete($alpha->id);
+
+        $this->assertNotContains('Alpha', $this->names($this->visit('admin/categories')));
+
+        $recycler = $this->visit(route_to('recycler') . '?r=categories');
+
+        $this->assertStringContainsString('Alpha', $recycler);
+        $this->assertStringNotContainsString('Bravo', $recycler);
+
+        $this->actingAs($this->admin)->post(route_to('recycler-restore', 'categories', $alpha->id), [csrf_token() => csrf_hash()]);
+
+        $this->assertContains('Alpha', $this->names($this->visit('admin/categories')));
+        $this->assertStringNotContainsString('Alpha', $this->visit(route_to('recycler') . '?r=categories'));
+    }
+
+    public function testTheRecyclerShowsTheSearchColumnsOfTheResource(): void
+    {
+        $this->visit('admin');
+
+        $this->assertSame(['name', 'status'], service('recycler')->find('categories')->columns());
+    }
+
+    public function testAResourceWhoseModelDoesNotSoftDeleteIsLeftOutOfTheRecycler(): void
+    {
+        $resource = new class () extends Resource {
+            public string $model      = ActionRunModel::class;
+            public string $slug       = 'runs';
+            public string $permission = 'runs';
+            public array $pages       = [];
+        };
+
+        service('resources')->register($resource::class);
+
+        $this->assertNull(service('recycler')->resources()['runs'] ?? null);
+    }
+
     /**
      * Gives the admin group these permissions and no others.
      *
@@ -254,6 +409,35 @@ final class ResourceListTest extends TestCase
         $test = $htmx ? $this->withHeaders(['HX-Request' => 'true']) : $this;
 
         return (string) $test->actingAs($this->admin)->get($path, $params)->response()->getBody();
+    }
+
+    private function setStatus(string $name, string $status): void
+    {
+        model(CategoryModel::class)->where('name', $name)->set(['status' => $status])->update();
+    }
+
+    /**
+     * What the admin's global search finds for the term: the label and link of each result, by section title.
+     *
+     * @return array<string, list<array{label: string, url: string}>>
+     */
+    private function search(string $term): array
+    {
+        $body = (string) $this->actingAs($this->admin)->post(ADMIN_AREA . '/search', ['search_term' => $term])->response()->getBody();
+
+        $results = [];
+
+        foreach (explode('<fieldset>', $body) as $section) {
+            if (preg_match('#<legend>(.*?)</legend>#', $section, $title) !== 1) {
+                continue;
+            }
+
+            preg_match_all('#<li data-search-result><a href="([^"]+)">(.*?)</a>#', $section, $found, PREG_SET_ORDER);
+
+            $results[$title[1]] = array_map(static fn (array $result): array => ['label' => $result[2], 'url' => $result[1]], $found);
+        }
+
+        return $results;
     }
 
     /**
