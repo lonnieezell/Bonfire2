@@ -13,6 +13,7 @@ namespace Bonfire\Fields;
 
 use Bonfire\Fields\Types\DateField;
 use Bonfire\Fields\Types\DatetimeField;
+use Bonfire\Fields\Types\DecimalField;
 use Bonfire\Fields\Types\IntegerField;
 use Bonfire\Fields\Types\MarkdownField;
 use Bonfire\Fields\Types\SelectField;
@@ -34,6 +35,7 @@ final class FieldTypes
         'datetime' => DatetimeField::class,
         'select'   => SelectField::class,
         'integer'  => IntegerField::class,
+        'decimal'  => DecimalField::class,
     ];
 
     public static function has(string $type): bool

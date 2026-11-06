@@ -413,7 +413,7 @@ final class BlocksTest extends ContentTestCase
         $this->assertArrayHasKey('sections.3.count', $errors);
         $this->assertArrayHasKey('sections.4.heading', $errors);
         $this->assertArrayNotHasKey('sections.1.heading', $errors);
-        $this->assertSame(lang('Content.integerMin', [1]), $errors['sections.3.count']);
+        $this->assertSame(lang('Fields.integerMin', [1]), $errors['sections.3.count']);
         // The field itself has an error too, which names the position the editor sees.
         $this->assertStringStartsWith(lang('Content.blockError', [2, 'Hero', $errors['sections.2.heading']]), $errors['sections']);
     }

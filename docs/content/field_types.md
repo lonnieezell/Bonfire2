@@ -14,6 +14,7 @@ is saved in the front matter.
 | [`datetime`](#datetime) | A date and time | A string |
 | [`select`](#select) | A dropdown, or a list to pick several from | A string, or a list of them |
 | [`integer`](#integer) | A number | A number |
+| [`decimal`](#decimal) | A number with decimal places | A string |
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
 | [`terms`](#terms) | A checkbox for each term | A list of slugs |
 | [`blocks`](#blocks) | The blocks written in the file | A list of maps |
@@ -117,6 +118,28 @@ A whole number, saved as a number. A value that isn't a whole number, or is outs
   min: 1
   max: 5
 ```
+
+## decimal
+
+A number with a fixed count of decimal places, such as a price. It's saved as a string, `"19.99"`, so it never passes
+through a float and can fill a `DECIMAL` column exactly. A value that isn't a number, has more places than `places`,
+or is below `min` is refused. The numbers are compared digit by digit, not as floats. Left empty, the value is `null`.
+
+| Key | Default | What it does |
+|---|---|---|
+| `places` | `2` | The most decimal places allowed. `0` allows whole numbers only. |
+| `min` | None | The lowest value allowed. |
+| `step` | `0.01` | The `step` of the input, which is `1` over `10` to the power of `places` unless you set it. The server doesn't check it. |
+
+```yaml
+- handle: price
+  type: decimal
+  places: 2
+  min: 0
+```
+
+Write the numbers as plain digits, such as `0.01` and not `1e-2`. Read the value back as the string it is. A calculation
+that needs exactness should use a library such as `bcmath`, not the `float` PHP would cast it to.
 
 ## entries
 
