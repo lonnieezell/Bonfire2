@@ -24,6 +24,11 @@ final class ResourceGeneratorTest extends TestCase
 
     private const SERVICES = ['auth', 'bonfire', 'menus', 'widgets', 'resources', 'resourceTabs'];
 
+    /**
+     * Where the command puts modules; the tests map it to a temp folder.
+     */
+    private const MODULES = APP_NAMESPACE . '\Modules';
+
     protected $refresh = true;
 
     /**
@@ -62,7 +67,7 @@ final class ResourceGeneratorTest extends TestCase
         $this->registrars = BaseConfig::$registrars;
 
         mkdir($this->root . 'Modules', 0777, true);
-        service('autoloader')->addNamespace('Tests\Generated', $this->root . 'Modules');
+        service('autoloader')->addNamespace(self::MODULES, $this->root . 'Modules');
 
         foreach (self::SERVICES as $service) {
             Services::resetSingle($service);
@@ -81,10 +86,10 @@ final class ResourceGeneratorTest extends TestCase
 
         // Bonfire registers each module it discovers as a namespace of its own
         foreach (['Items', 'Gadgets', 'Samples'] as $module) {
-            service('autoloader')->removeNamespace('Tests\Generated\\' . $module);
+            service('autoloader')->removeNamespace(self::MODULES . '\\' . $module);
         }
         db_connect()->query('DROP TABLE IF EXISTS ' . db_connect()->prefixTable('type_samples'));
-        service('autoloader')->removeNamespace('Tests\Generated');
+        service('autoloader')->removeNamespace(self::MODULES);
         delete_files($this->root, true, true);
 
         parent::tearDown();
@@ -286,10 +291,10 @@ final class ResourceGeneratorTest extends TestCase
     {
         $module = $this->root . 'Modules/Items/';
         mkdir($module, 0777, true);
-        file_put_contents($module . 'ItemResource.php', 'mine');
+        file_put_contents($module . 'ItemResource.php', '<?php // mine');
 
         $this->assertSame(0, $this->generate());
-        $this->assertSame('mine', file_get_contents($module . 'ItemResource.php'));
+        $this->assertSame('<?php // mine', file_get_contents($module . 'ItemResource.php'));
         $this->assertFileExists($module . 'Module.php');
     }
 
@@ -309,22 +314,34 @@ final class ResourceGeneratorTest extends TestCase
 
     public function testThePermissionsOfAPageThatIsOffAreLeftOut(): void
     {
-        $this->assertSame(0, $this->generate(['pages' => 'list,edit'], 'Gadget'));
+        // A resource that is already there has no create page.
+        $module    = $this->root . 'Modules/Gadgets/';
+        $namespace = self::MODULES . '\Gadgets';
+        mkdir($module, 0777, true);
+        file_put_contents($module . 'GadgetResource.php', <<<PHP
+            <?php
+
+            namespace {$namespace};
+
+            use Bonfire\\Resources\\Resource;
+            use Tests\\Support\\Models\\ProductModel;
+
+            class GadgetResource extends Resource
+            {
+                public string \$model      = ProductModel::class;
+                public string \$slug       = 'gadgets';
+                public string \$permission = 'gadgets';
+                public array \$pages       = ['list', 'edit'];
+            }
+            PHP);
+
+        $this->assertSame(0, $this->generate(name: 'Gadget'));
 
         $registrar = $this->registrar('Gadgets');
         $config    = $registrar::AuthGroups();
 
         $this->assertSame(['gadgets.list', 'gadgets.edit', 'gadgets.delete'], array_keys($config['permissions']));
         $this->assertSame(['gadgets.list', 'gadgets.edit', 'gadgets.delete'], $config['moduleGrants']['gadgets']['admin']);
-
-        $resource = 'Tests\Generated\Gadgets\GadgetResource';
-        $this->assertSame(['list', 'edit'], (new $resource())->pages);
-    }
-
-    public function testRefusesAPageThatDoesNotExist(): void
-    {
-        $this->assertSame(1, $this->generate(['pages' => 'list,publish']));
-        $this->assertDirectoryDoesNotExist($this->root . 'Modules/Items');
     }
 
     public function testThePermissionsAppearUnderSettingsGroups(): void
@@ -368,11 +385,6 @@ final class ResourceGeneratorTest extends TestCase
         $this->assertDirectoryDoesNotExist($this->root . 'Modules/Items');
     }
 
-    public function testRefusesANamespaceWithNoFolder(): void
-    {
-        $this->assertSame(1, $this->generate(['namespace' => 'Nowhere\Items']));
-    }
-
     /**
      * Runs bf:resource for ProductModel into the temp folder. It is called "Item" so that its routes,
      * permissions and slug aren't those of the Products fixtures.
@@ -382,7 +394,7 @@ final class ResourceGeneratorTest extends TestCase
     private function generate(array $options = [], string $name = 'Item', ?string $model = ProductModel::class): int
     {
         $command = new ResourceGenerator(service('logger'), service('commands'));
-        $params  = [$name, 'namespace' => 'Tests\Generated\\' . plural($name), ...($model === null ? [] : ['model' => $model]), ...$options];
+        $params  = [$name, ...($model === null ? [] : ['model' => $model]), ...$options];
 
         return $command->run($params);
     }
@@ -422,7 +434,7 @@ final class ResourceGeneratorTest extends TestCase
      */
     private function generatedFields(string $name = 'Item'): array
     {
-        $resource = 'Tests\Generated\\' . plural($name) . '\\' . $name . 'Resource';
+        $resource = self::MODULES . '\\' . plural($name) . '\\' . $name . 'Resource';
         $fields   = [];
 
         foreach ((new $resource())->formFields() as $field) {
@@ -437,7 +449,7 @@ final class ResourceGeneratorTest extends TestCase
      */
     private function registrar(string $module): string
     {
-        return 'Tests\Generated\\' . $module . '\Config\Registrar';
+        return self::MODULES . '\\' . $module . '\Config\Registrar';
     }
 
     /**
@@ -445,7 +457,7 @@ final class ResourceGeneratorTest extends TestCase
      */
     private function bootGeneratedModule(): void
     {
-        config('Bonfire')->appModules = ['Tests\Generated' => $this->root . 'Modules'];
+        config('Bonfire')->appModules = [self::MODULES => $this->root . 'Modules'];
         // The shared router keeps the previous routes, without the module's
         Services::resetSingle('routes');
         Services::resetSingle('router');

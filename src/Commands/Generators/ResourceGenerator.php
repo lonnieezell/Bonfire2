@@ -11,6 +11,7 @@
 
 namespace Bonfire\Commands\Generators;
 
+use Bonfire\Resources\Resource;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Model;
@@ -35,9 +36,7 @@ class ResourceGenerator extends BaseCommand
         'name' => 'The record in singular: "Product".',
     ];
     protected $options = [
-        '--model'     => 'The model class whose table the resource describes. Required. A name with no namespace is looked up in App\Models.',
-        '--namespace' => 'The module\'s namespace. Default: "App\Modules\{plural name}".',
-        '--pages'     => 'The pages the resource has, separated by commas. Default: "list,create,edit".',
+        '--model' => 'The model class whose table the resource describes. Required. A name with no namespace is looked up in App\Models.',
     ];
 
     public function run(array $params)
@@ -70,13 +69,6 @@ class ResourceGenerator extends BaseCommand
             return 1;
         }
 
-        $pages = $this->pages((string) ($options['pages'] ?? implode(',', self::PAGES)));
-        if ($pages === []) {
-            CLI::error('--pages takes one or more of ' . implode(', ', self::PAGES) . ', separated by commas.');
-
-            return 1;
-        }
-
         [$columns, $skipped] = $this->columns($model);
         if ($columns === []) {
             CLI::error("{$modelClass}'s table has no column to put in a form.");
@@ -85,7 +77,7 @@ class ResourceGenerator extends BaseCommand
         }
 
         $module    = plural($name);
-        $namespace = trim((string) ($options['namespace'] ?? APP_NAMESPACE . '\Modules\\' . $module), '\\');
+        $namespace = APP_NAMESPACE . '\Modules\\' . $module;
         $path      = $this->namespacePath($namespace);
 
         if ($path === null) {
@@ -93,6 +85,10 @@ class ResourceGenerator extends BaseCommand
 
             return 1;
         }
+
+        // A resource that is already there says which pages it has, so the permissions leave out the others.
+        $existing = "{$namespace}\\{$name}Resource";
+        $pages    = is_subclass_of($existing, Resource::class) ? (new $existing())->pages : self::PAGES;
 
         $data  = $this->templateData($name, $module, $namespace, $model, $columns, $pages);
         $files = [
@@ -160,16 +156,6 @@ class ResourceGenerator extends BaseCommand
         $model = ltrim($model, '\\');
 
         return $model !== '' && ! str_contains($model, '\\') ? APP_NAMESPACE . '\Models\\' . $model : $model;
-    }
-
-    /**
-     * @return list<string> the pages named, or none when one isn't a page
-     */
-    private function pages(string $pages): array
-    {
-        $pages = array_unique(array_filter(array_map(trim(...), explode(',', $pages))));
-
-        return array_diff($pages, self::PAGES) === [] ? $pages : [];
     }
 
     /**

@@ -93,8 +93,7 @@ the missing fields. In production it logs the same message and registers the res
 php spark bf:resource Product --model='App\Models\ProductModel'
 ```
 
-`Product` is the record in singular. The command writes four files into `App\Modules\Products` (change the module with
-`--namespace`):
+`Product` is the record in singular. The command writes four files into `App\Modules\Products`:
 
 | File | What it holds |
 |---|---|
@@ -124,8 +123,9 @@ A column that is `NOT NULL` with no default gets the `required` rule, and a `var
 SQLite leaves a column's length out of what it reports for tables made by the forge, so there `tinyint(1)` is an
 `Integer` and a `varchar` has no `max_length`.
 
-Pass `--pages` to leave pages out, as in `--pages=list,edit`. The resource gets that `$pages`, and the registrar leaves out
-the permissions of the pages that are off. `delete` is always declared.
+The registrar declares the permissions of the pages in the resource's `$pages`, and leaves out those of the pages it
+turns off. When `ProductResource.php` already exists, its `$pages` decide; a new one has all three pages. `delete` is
+always declared.
 
 Files that exist are never overwritten. The command says which it left alone and what to add to them by hand: the
 `register()` line for `Module.php`, the `resource_routes()` line for `Config/Routes.php`, and the permissions for
