@@ -13,13 +13,17 @@
 ?>
 <?php if (Bonfire\Fields\Types\BelongsToField::searches($field)) : ?>
     <?php // The ID input is the one that's posted. It's visible only without JavaScript. The search box has `form` set to nothing, so it's never posted. ?>
+    <?php // Typing clears the ID, so leaving the box without choosing puts the last choice back, unless the box was emptied. ?>
     <div class="position-relative"
-         x-data="{ pick(el) { this.$refs.id.value = el.dataset.id; this.$refs.search.value = el.dataset.title; this.$refs.options.replaceChildren(); } }"
-         @click.outside="$refs.options.replaceChildren()">
+         x-data="{ id: '', title: '',
+                   init() { this.id = this.$refs.id.value; this.title = this.$refs.search.value; },
+                   pick(el) { this.id = el.dataset.id; this.title = el.dataset.title; this.settle(); },
+                   settle() { if (this.$refs.search.value === '') { this.id = this.title = ''; } this.$refs.id.value = this.id; this.$refs.search.value = this.title; this.$refs.options.replaceChildren(); } }"
+         @click.outside="settle()">
         <input type="text" name="<?= esc($name, 'attr') ?>" id="<?= esc($id, 'attr') ?>" value="<?= esc($value, 'attr') ?>" class="form-control"
                placeholder="<?= esc(lang('Fields.belongsToIdPlaceholder'), 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>
                x-ref="id" x-init="$el.type = 'hidden'">
-        <input type="search" name="q" form="" value="<?= esc(Bonfire\Fields\Types\BelongsToField::titleOf($field, $value), 'attr') ?>" class="form-control" autocomplete="off" role="combobox" aria-controls="<?= esc($id, 'attr') ?>-options" aria-label="<?= esc($field->label, 'attr') ?>"
+        <input type="search" name="q" form="" value="<?= esc(Bonfire\Fields\Types\BelongsToField::titleOf($field, $value), 'attr') ?>" class="form-control" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="<?= esc($id, 'attr') ?>-options" aria-label="<?= esc($field->label, 'attr') ?>"
                hidden<?= $disabled ? ' disabled' : '' ?>
                x-ref="search" x-init="$el.hidden = false" @input="$refs.id.value = ''"
                hx-get="<?= esc(route_to('fields-options'), 'attr') ?>"

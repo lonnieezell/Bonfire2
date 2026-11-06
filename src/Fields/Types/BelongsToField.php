@@ -118,16 +118,7 @@ final class BelongsToField extends FieldType
      */
     public static function choices(Field $field): array
     {
-        $model   = self::model($field);
-        $key     = $model->primaryKey;
-        $title   = self::titleColumn($field);
-        $choices = [];
-
-        foreach ($model->asArray()->select([$key, $title])->orderBy($title)->findAll() as $row) {
-            $choices[(string) $row[$key]] = (string) $row[$title];
-        }
-
-        return $choices;
+        return self::titles(self::model($field), self::titleColumn($field));
     }
 
     /**
@@ -174,30 +165,41 @@ final class BelongsToField extends FieldType
     public static function search(string $class, string $title, array $search, string $text): array
     {
         $model = new $class();
-        $key   = $model->primaryKey;
-        $query = $model->asArray()->select([$key, $title])->orderBy($title);
 
         if ($text !== '' && $search !== []) {
             // CodeIgniter adds the ESCAPE clause for the character but leaves the wildcards in the text alone.
             $char = $model->db->likeEscapeChar;
             $text = str_replace([$char, '%', '_'], [$char . $char, $char . '%', $char . '_'], $text);
 
-            $query->groupStart();
+            $model->groupStart();
 
             foreach ($search as $column) {
-                $query->orLike($column, $text, 'both', true);
+                $model->orLike($column, $text, 'both', true);
             }
 
-            $query->groupEnd();
+            $model->groupEnd();
         }
 
-        $found = [];
+        return self::titles($model, $title, self::SEARCH_LIMIT);
+    }
 
-        foreach ($query->findAll(self::SEARCH_LIMIT) as $row) {
-            $found[(string) $row[$key]] = (string) $row[$title];
+    /**
+     * The model's records, whatever conditions it has been given, in title order.
+     *
+     * @param int $limit 0 for all of them
+     *
+     * @return array<string, string> title by ID
+     */
+    private static function titles(Model $model, string $title, int $limit = 0): array
+    {
+        $key    = $model->primaryKey;
+        $titles = [];
+
+        foreach ($model->asArray()->select([$key, $title])->orderBy($title)->findAll($limit) as $row) {
+            $titles[(string) $row[$key]] = (string) $row[$title];
         }
 
-        return $found;
+        return $titles;
     }
 
     private static function model(Field $field): Model
