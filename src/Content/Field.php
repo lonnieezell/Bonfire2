@@ -11,6 +11,8 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Fields\FieldTypes;
+
 /**
  * One field of a blueprint.
  */
@@ -28,5 +30,21 @@ final readonly class Field
         public ?string $instructions,
         public array $options,
     ) {
+    }
+
+    /**
+     * Casts a value as the field's type reads it from a file: a toggle is a bool, an integer an int, and a date
+     * or datetime text. Null when it doesn't fit. Any other type's value is returned as the file holds it.
+     */
+    public function cast(mixed $value): mixed
+    {
+        $text = FieldTypes::get($this->type)->fromFrontMatter($value, $this);
+
+        return match ($this->type) {
+            'toggle'           => $text === '1',
+            'integer'          => $text === '' ? null : (int) $text,
+            'date', 'datetime' => $text === '' ? null : $text,
+            default            => $value,
+        };
     }
 }

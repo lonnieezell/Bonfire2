@@ -27,6 +27,12 @@ class Content extends BaseConfig
     public string $blueprintPath = ROOTPATH . 'resources/blueprints/';
 
     /**
+     * Where the partial of each block type lives, as a view folder: a block of type `hero` renders through
+     * `view('blocks/hero')`, which is app/Views/blocks/hero.php.
+     */
+    public string $blockViewPath = 'blocks';
+
+    /**
      * Field types of your own, for blueprints to use: the handle, then a class that extends
      * Bonfire\Content\Fields\FieldType. A handle that a built-in type has is taken over by yours.
      *

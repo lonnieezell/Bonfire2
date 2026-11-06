@@ -28,6 +28,7 @@ final class FieldTypes
         'integer'  => IntegerField::class,
         'entries'  => EntriesField::class,
         'terms'    => TermsField::class,
+        'blocks'   => BlocksField::class,
     ];
 
     public static function has(string $type): bool

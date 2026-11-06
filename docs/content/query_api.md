@@ -130,6 +130,10 @@ $entry->content();                   // the body as HTML, with components expand
 
 $entry->entries('related');          // the entries an `entries` field links to
 
+$entry->blocks('sections');          // the blocks of a `blocks` field, as a list
+$entry->block('sections');           // the first of them, or null
+$entry->renderBlocks('sections');    // every block through its partial
+
 $entry->seo();                       // title, description, canonical URL and Open Graph values
 
 $entry->isPublished();               // whether published() would keep it
@@ -138,6 +142,10 @@ $entry->isPublished();               // whether published() would keep it
 `entries()` returns the entries in the order the file lists them, and skips a link whose entry is missing or in the
 trash. It also returns drafts and scheduled entries, so check `$linked->isPublished()` before you show one. See
 [Field types](field_types.md#entries).
+
+`blocks()` returns a `BlockList` that you can loop over, count, filter with `ofType()` and render. Each `Block` has a
+`type`, its `entry`, a `field($name, $default)` cast by the block's blueprint, and `render()`. A field the entry doesn't
+have gives an empty list. See [Blocks](blocks.md).
 
 `seo()` is described under [SEO](seo.md#getting-the-values).
 

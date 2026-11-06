@@ -35,12 +35,18 @@ final readonly class Blueprint
      */
     private const SEO = ['title', 'description'];
 
-    private const NAME   = '/^[A-Za-z0-9_-]{1,100}$/';
+    public const NAME    = '/^[A-Za-z0-9_-]{1,100}$/';
     private const HANDLE = '/^[A-Za-z][A-Za-z0-9_]{0,99}$/';
+
+    /**
+     * The field types a block can't have: a slug names a file, terms are indexed, and blocks can't hold blocks.
+     */
+    private const NOT_IN_BLOCKS = ['slug', 'terms', 'blocks'];
 
     /**
      * @param list<Field>           $fields
      * @param array<string, string> $seo    the handle of the field that feeds each SEO value (`title`, `description`)
+     * @param ?string               $icon   the icon of a block type, for the editor to show
      */
     public function __construct(
         public string $collection,
@@ -48,6 +54,7 @@ final readonly class Blueprint
         public string $title,
         public array $fields,
         public array $seo = [],
+        public ?string $icon = null,
     ) {
     }
 
@@ -117,9 +124,27 @@ final readonly class Blueprint
     }
 
     /**
+     * The blueprint of a block type, from resources/blueprints/blocks/<type>.yaml. A block can't have a `slug`, `terms`
+     * or `blocks` field, or one with the handle `type`, which holds the block's type in the front matter.
+     *
+     * @throws ContentException when the file is missing or invalid
+     */
+    public static function loadBlock(string $blueprintPath, string $type): self
+    {
+        $path = rtrim($blueprintPath, '/') . "/blocks/{$type}.yaml";
+
+        // The type comes from front matter or a request.
+        if (preg_match(self::NAME, $type) !== 1 || ! is_file($path)) {
+            throw new ContentException("Unknown block type: {$type}. Its blueprint is resources/blueprints/blocks/{$type}.yaml.");
+        }
+
+        return self::fromFile($path, 'blocks', $type, true);
+    }
+
+    /**
      * @throws ContentException
      */
-    private static function fromFile(string $path, string $collection, string $handle): self
+    private static function fromFile(string $path, string $collection, string $handle, bool $block = false): self
     {
         try {
             $config = Yaml::parseFile($path);
@@ -134,7 +159,7 @@ final readonly class Blueprint
         $fields = $keys = [];
 
         foreach ($config['fields'] as $position => $definition) {
-            $field = self::fromDefinition($handle, $position + 1, $definition);
+            $field = self::fromDefinition($handle, $position + 1, $definition, $block);
 
             if (isset($fields[$field->handle])) {
                 throw new ContentException("Blueprint {$handle} has two fields named `{$field->handle}`.");
@@ -162,6 +187,7 @@ final readonly class Blueprint
             is_string($config['title'] ?? null) ? $config['title'] : $handle,
             array_values($fields),
             self::seoMapping($handle, $config['seo'] ?? [], $fields),
+            is_string($config['icon'] ?? null) && $config['icon'] !== '' ? $config['icon'] : null,
         );
     }
 
@@ -210,9 +236,9 @@ final readonly class Blueprint
     /**
      * @throws ContentException when the definition can't be used
      */
-    private static function fromDefinition(string $blueprint, int $number, mixed $definition): Field
+    private static function fromDefinition(string $blueprint, int $number, mixed $definition, bool $block): Field
     {
-        $where = "Field {$number} of blueprint {$blueprint}";
+        $where = $block ? "Field {$number} of block type {$blueprint}" : "Field {$number} of blueprint {$blueprint}";
 
         if (! is_array($definition) || ! is_string($definition['handle'] ?? null) || preg_match(self::HANDLE, $definition['handle']) !== 1) {
             throw new ContentException("{$where} needs a `handle` of letters, numbers and _.");
@@ -220,12 +246,20 @@ final readonly class Blueprint
 
         $handle = $definition['handle'];
 
+        if ($block && $handle === 'type') {
+            throw new ContentException("{$where}: a block's `type` is kept in a key named `type`, so a field can't use that handle.");
+        }
+
         if (in_array($handle, self::RESERVED, true)) {
             throw new ContentException("{$where}: `{$handle}` is managed by the entry form, so a field can't use it.");
         }
 
         if (! is_string($definition['type'] ?? null) || ! FieldTypes::has($definition['type'])) {
             throw new ContentException("{$where} (`{$handle}`) needs a `type`: " . implode(', ', FieldTypes::names()) . '.');
+        }
+
+        if ($block && in_array($definition['type'], self::NOT_IN_BLOCKS, true)) {
+            throw new ContentException("{$where} (`{$handle}`): a block can't have a `{$definition['type']}` field.");
         }
 
         $validate = $definition['validate'] ?? '';

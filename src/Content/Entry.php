@@ -87,6 +87,69 @@ final readonly class Entry
     }
 
     /**
+     * The blocks of a `blocks` field, in the order the file lists them. A field the entry doesn't have, or that isn't
+     * a list, gives none, and so does an item that isn't a map with a `type`.
+     */
+    public function blocks(string $name): BlockList
+    {
+        $items = $this->data[$name] ?? null;
+        $items = is_array($items) && array_is_list($items) ? $items : [];
+
+        $blueprints = [];
+        $blocks     = [];
+
+        foreach ($items as $item) {
+            if (! is_array($item) || ! is_string($item['type'] ?? null)) {
+                continue;
+            }
+
+            $type = $item['type'];
+
+            if (! array_key_exists($type, $blueprints)) {
+                $blueprints[$type] = $this->blockBlueprint($type);
+            }
+
+            unset($item['type']);
+            $blocks[] = new Block($type, $item, $blueprints[$type], $this);
+        }
+
+        return new BlockList($blocks);
+    }
+
+    /**
+     * The first block of a `blocks` field, or null when it has none.
+     */
+    public function block(string $name): ?Block
+    {
+        return $this->blocks($name)->first();
+    }
+
+    /**
+     * Every block of a `blocks` field through its partial, in order.
+     *
+     * @throws ContentException when a partial doesn't exist, except in production, where it is logged and gives nothing
+     */
+    public function renderBlocks(string $name): string
+    {
+        return $this->blocks($name)->render();
+    }
+
+    /**
+     * The blueprint of a block type. Its file may be gone or broken by now, as the index outlives it, and then
+     * the block's values are returned as the file holds them.
+     */
+    private function blockBlueprint(string $type): ?Blueprint
+    {
+        try {
+            return Blueprint::loadBlock(config('Content')->blueprintPath, $type);
+        } catch (ContentException $e) {
+            log_message('error', 'Content: block type {type}: {message}', ['type' => $type, 'message' => $e->getMessage()]);
+
+            return null;
+        }
+    }
+
+    /**
      * The values for the page's SEO tags. The blueprint maps the fields that feed the title and the description,
      * and a value left unmapped or blank comes from `title` and the body's first paragraph as plain text.
      * The canonical URL is the entry's `uri` on the site's base URL, and is null for an entry without one.

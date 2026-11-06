@@ -135,12 +135,15 @@ final readonly class EntryForm
     /**
      * @param array<string, string> $values as prepare() returned them
      *
-     * @return array<string, string> the first error of each field that has one, by handle
+     * @return array<string, string> the first error of each field that has one, by handle, and then the errors inside a
+     *                               field that holds several values, by the handle, a dot and the position the editor
+     *                               sees: `sections.2.heading`
      */
     public function validate(array $values): array
     {
         $rules  = [];
         $labels = [];
+        $checks = [];
 
         foreach ($this->fields() as [$field, $type]) {
             $fieldRules = $type->rules($field);
@@ -148,6 +151,7 @@ final readonly class EntryForm
             if (isset($values[$field->handle]) && $fieldRules !== '' && $fieldRules !== []) {
                 $rules["fields.{$field->handle}"] = ['label' => $field->label, 'rules' => $fieldRules];
                 $labels[$field->handle]           = "fields.{$field->handle}";
+                $checks[$field->handle]           = [$field, $type];
             }
         }
 
@@ -163,6 +167,14 @@ final readonly class EntryForm
         foreach ($labels as $handle => $key) {
             if (($error = $validation->getError($key)) !== '') {
                 $errors[$handle] = $error;
+
+                [$field, $type] = $checks[$handle];
+
+                foreach ($type->itemErrors($values[$handle], $field) as $position => $message) {
+                    if ($position !== '') {
+                        $errors["{$handle}.{$position}"] = $message;
+                    }
+                }
             }
         }
 

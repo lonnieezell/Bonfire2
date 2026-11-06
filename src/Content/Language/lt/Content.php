@@ -91,6 +91,14 @@ return [
     'entriesLimit'   => 'Pasirinkite iki {0}.',
     'entriesNone'    => 'Nėra įrašų, iš kurių būtų galima rinktis.',
 
+    // Blocks field
+    'blocksTooMany'    => 'Pridėkite ne daugiau kaip {0} blokų.',
+    'blocksTooFew'     => 'Pridėkite bent {0} blokų.',
+    'blockTypeInvalid' => 'Bloko „{0}“ šis laukas neleidžia.',
+    'blockError'       => 'Blokas {0} ({1}): {2}',
+    'blocksNone'       => 'Blokų dar nėra.',
+    'blocksHint'       => 'Blokai rašomi įrašo faile. Išsaugojus čia rodomos reikšmės išlieka.',
+
     // Terms field
     'noTerms'     => 'Terminų dar nėra.',
     'unknownTerm' => '{0} (tokio termino nėra)',

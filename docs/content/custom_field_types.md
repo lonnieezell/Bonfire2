@@ -48,6 +48,7 @@ Every method is optional but `partial()`. The built-in types are classes like th
 | `fromFrontMatter($stored, $field)` | The text the form shows for what the file holds. | The value as text, or `''` |
 | `storedInFrontMatter()` | `false` if the value isn't a front matter key, like `slug`. | `true` |
 | `key($field)` | The front matter key that holds the value. `terms` uses the taxonomy's handle. | The field's handle |
+| `itemErrors($input, $field)` | The errors inside a value that holds several, by the 1-based position of the item, such as `2.heading`. `blocks` uses it. | No errors |
 | `check($field)` | Throws a `ContentException` if the blueprint gave the field options it can't use, so the blueprint is refused. | Nothing |
 
 Things to know:

@@ -9,6 +9,7 @@ Content's settings are in `app/Config/Content.php`, which `php spark bf:install`
 |---|---|---|
 | `$contentPath` | `ROOTPATH . 'content/'` | The content root, which holds collections, entries, taxonomies and the rest. See [File layout](index.md#file-layout). |
 | `$blueprintPath` | `ROOTPATH . 'resources/blueprints/'` | Where blueprints live. See [Blueprints](blueprints.md). |
+| `$blockViewPath` | `'blocks'` | The view folder that holds a partial for each block type, `app/Views/blocks`. See [Blocks](blocks.md#rendering-blocks). |
 | `$fieldTypes` | `[]` | Field types of your own: a handle, then a class that extends `Bonfire\Content\Fields\FieldType`. See [Custom field types](custom_field_types.md#register-it). |
 | `$autoRoute` | `false` | Serves entries at their URIs through the fallback route. See [Routing](routing.md#turning-it-on). |
 | `$autoSeo` | `false` | Adds an entry's SEO tags to the pages the fallback route renders from a `template`. See [SEO](seo.md#doing-it-automatically). |

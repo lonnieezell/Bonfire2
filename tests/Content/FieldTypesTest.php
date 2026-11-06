@@ -22,7 +22,7 @@ final class FieldTypesTest extends TestCase
 
     public function testEveryTypeHasAClassAndABundledPartial(): void
     {
-        $this->assertSame(['text', 'textarea', 'markdown', 'slug', 'toggle', 'date', 'datetime', 'select', 'integer', 'entries', 'terms'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'slug', 'toggle', 'date', 'datetime', 'select', 'integer', 'entries', 'terms', 'blocks'], FieldTypes::names());
 
         foreach (FieldTypes::names() as $type) {
             $this->assertSame($type, FieldTypes::get($type)->partial());

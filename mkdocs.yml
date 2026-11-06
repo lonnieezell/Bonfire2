@@ -127,6 +127,7 @@ nav:
           - content/routing.md
           - content/query_api.md
           - content/markdown.md
+          - content/blocks.md
           - content/seo.md
           - content/feeds_and_sitemaps.md
           - content/scaffolding.md

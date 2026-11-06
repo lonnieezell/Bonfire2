@@ -16,6 +16,7 @@ is saved in the front matter.
 | [`integer`](#integer) | A number | A number |
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
 | [`terms`](#terms) | A checkbox for each term | A list of slugs |
+| [`blocks`](#blocks) | The blocks written in the file | A list of maps |
 
 You can add types of your own. See [Custom field types](custom_field_types.md).
 
@@ -172,6 +173,30 @@ Use one `terms` field for each taxonomy. Don't name a taxonomy `id`, `status`, `
 `body`, which the entry uses itself, or the blueprint is refused.
 
 For the entries to be indexed with their terms, the collection has to list the taxonomy in its `taxonomies`.
+
+## blocks
+
+A list of blocks, each of a type with its own fields, saved as a list of maps with a `type` key.
+
+| Key | Default | What it does |
+|---|---|---|
+| `blocks` | Every block type | The block types the field allows, such as `[hero, cta]`. |
+| `max_items` | None | The most blocks there can be. |
+| `min_items` | None | The fewest blocks there can be. |
+
+```yaml
+- handle: sections
+  type: blocks
+  blocks: [hero, cta]
+  max_items: 10
+```
+
+Block types are files in `resources/blueprints/blocks`, and you write the blocks in the entry's file. The input lists
+them and keeps them when the entry is saved. A save is refused if there are too many or too few blocks, or if a block has a
+type the field doesn't allow or a value that fails its own field's rules. The blueprint is refused if a type has no file.
+
+Read the blocks back with [`$entry->blocks('sections')`](query_api.md#entries), and render them with
+`$entry->renderBlocks('sections')`. For block types, partials and the rest, see [Blocks](blocks.md).
 
 ## Changing an input
 

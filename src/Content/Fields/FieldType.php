@@ -47,6 +47,18 @@ abstract class FieldType
     }
 
     /**
+     * The errors inside a value that holds several, such as the blocks of a `blocks` field, by where they are. A key
+     * is the 1-based position of the item the editor sees, then a dot and the handle of its field when the error is
+     * about one field: `2.heading`. An error about the whole value has the key `''`. A type with one value has none.
+     *
+     * @return array<string, string>
+     */
+    public function itemErrors(string $input, Field $field): array
+    {
+        return [];
+    }
+
+    /**
      * The value to write to the file for a prepared, valid form value.
      */
     public function toFrontMatter(string $input, Field $field): mixed
