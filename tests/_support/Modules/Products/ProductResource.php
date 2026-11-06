@@ -2,6 +2,7 @@
 
 namespace Tests\Support\Modules\Products;
 
+use Bonfire\Resources\Actions\DeleteRecords;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Fields\BelongsTo;
 use Bonfire\Resources\Fields\Date;
@@ -81,12 +82,17 @@ class ProductResource extends Resource
         return $model->select('products.*, categories.name AS category_name')->join('categories', 'categories.id = products.category_id', 'left');
     }
 
+    public function actions(): array
+    {
+        return [new DeleteRecords($this), new FeatureProducts()];
+    }
+
     /**
-     * An archived product is read-only.
+     * An archived product is read-only, and can't be deleted.
      */
     public function can(string $verb, mixed $entity = null): bool
     {
-        if ($verb === 'edit' && $entity !== null && $entity->status === 'archived') {
+        if (in_array($verb, ['edit', 'delete'], true) && $entity !== null && $entity->status === 'archived') {
             return false;
         }
 

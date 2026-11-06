@@ -4,6 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 7 November 2026
+
+**Resources: row and bulk actions.** A resource's `actions()` show in its list's row menus and, once rows are checked,
+in the selection bar. `register()` adds them to the action list named by the resource's `$slug`, with its model as the
+record source, so another module can add an action with `service('actions')->for('products')->add(…)`. An action the
+user lacks the permission for isn't shown and the endpoint refuses it. `Bonfire\Resources\Actions\DeleteRecords` deletes
+records through the model, so a soft-deleting model sends them to the Recycler. See
+[Resources](../building_admin_modules/resources.md#actions).
+
 ## 6 November 2026
 
 **Resources: create and edit pages.** Add `create` and `edit` to a resource's `$pages` for forms that render through
