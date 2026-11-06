@@ -12,6 +12,7 @@ class Metadata
     private array $script     = [];
     private array $rawScripts = [];
     private array $style      = [];
+    private array $rawStyles  = [];
 
     public function __construct()
     {
@@ -24,7 +25,8 @@ class Metadata
 
     /**
      * Renders out the html for the given meta type,
-     * i.e. 'meta', 'title', 'link', 'script', 'rawScript', 'style'.
+     * i.e. 'meta', 'title', 'link', 'script', 'rawScripts', 'style', 'rawStyles'.
+     * Attribute values are escaped. The content of raw scripts and styles is not.
      */
     public function render(string $type): string
     {
@@ -38,9 +40,11 @@ class Metadata
 
         $html = '';
 
-        if ($type === 'rawScripts') {
-            foreach ($this->rawScripts as $script) {
-                $html .= '<script>' . $script . '</script>';
+        if ($type === 'rawScripts' || $type === 'rawStyles') {
+            $tag = $type === 'rawScripts' ? 'script' : 'style';
+
+            foreach ($this->{$type} as $content) {
+                $html .= '<' . $tag . '>' . $content . '</' . $tag . '>';
             }
 
             return $html;
@@ -55,7 +59,7 @@ class Metadata
             $html .= '<' . $type . ' ';
 
             foreach ($item as $key => $value) {
-                $html .= $key . '="' . $value . '" ';
+                $html .= $key . '="' . htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" ';
             }
 
             $html .= '>';
@@ -99,7 +103,7 @@ class Metadata
      */
     public function addMeta(array $content): self
     {
-        $this->meta[] = $content;
+        $this->pushUnique($this->meta, $content);
 
         return $this;
     }
@@ -123,7 +127,7 @@ class Metadata
      */
     public function addLink(array $content): self
     {
-        $this->link[] = $content;
+        $this->pushUnique($this->link, $content);
 
         return $this;
     }
@@ -147,7 +151,7 @@ class Metadata
      */
     public function addScript(array $content): self
     {
-        $this->script[] = $content;
+        $this->pushUnique($this->script, $content);
 
         return $this;
     }
@@ -162,7 +166,7 @@ class Metadata
 
     public function addRawScript(string $content): self
     {
-        $this->rawScripts[] = $content;
+        $this->pushUnique($this->rawScripts, $content);
 
         return $this;
     }
@@ -176,6 +180,25 @@ class Metadata
     }
 
     /**
+     * Add the content of a style tag to the page, i.e. `<style>...</style>`.
+     * The content is output as it is, so don't pass it anything a visitor typed.
+     */
+    public function addRawStyle(string $content): self
+    {
+        $this->pushUnique($this->rawStyles, $content);
+
+        return $this;
+    }
+
+    /**
+     * Get all raw style content.
+     */
+    public function rawStyles(): array
+    {
+        return $this->rawStyles;
+    }
+
+    /**
      * Add a style tag to the page.
      * Can be used to add style tags like 'bootstrap', etc.
      * and also to add custom style tags.
@@ -186,7 +209,7 @@ class Metadata
      */
     public function addStyle(array $content): self
     {
-        $this->style[] = $content;
+        $this->pushUnique($this->style, $content);
 
         return $this;
     }
@@ -197,5 +220,16 @@ class Metadata
     public function styles(): array
     {
         return $this->style;
+    }
+
+    /**
+     * Adds an item to a list unless the list already holds an identical one,
+     * so that block partials can each declare the assets they need.
+     */
+    private function pushUnique(array &$list, array|string $item): void
+    {
+        if (! in_array($item, $list, true)) {
+            $list[] = $item;
+        }
     }
 }
