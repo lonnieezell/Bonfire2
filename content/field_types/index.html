@@ -1625,6 +1625,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="belongsTo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#many-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Many records
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3239,6 +3256,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="belongsTo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#many-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Many records
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3700,8 +3734,44 @@ column of its table. An ID such as <code>7</code> is saved as a number, and any 
 <span class="x">    &lt;p&gt;By </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$author</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/p&gt;</span>
 <span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
 </code></pre></div>
-<p><code>find()</code> returns null when the field is empty or the record is gone, so check for that. A dropdown of every record suits
-tables of a few hundred rows. For more, <a href="#changing-an-input">change the input</a>.</p>
+<p><code>find()</code> returns null when the field is empty or the record is gone, so check for that.</p>
+<h3 id="many-records">Many records</h3>
+<p>A dropdown of every record suits a table of a few hundred rows at most. Above <code>searchAbove</code> records (default <code>100</code>) the
+input becomes a search box instead: type a few letters and it lists the records whose title contains them, at most 20, in
+title order. Choosing one saves its ID, and when you edit the entry the box shows the record's title.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>searchAbove</code></td>
+<td><code>100</code></td>
+<td>How many records the model may have before the dropdown becomes a search box.</td>
+</tr>
+<tr>
+<td><code>permission</code></td>
+<td>None</td>
+<td>A permission the user needs to search the records, on top of <code>admin.access</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">author</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belongsTo</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">App\Models\AuthorModel</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">  </span><span class="nt">searchAbove</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="nt">permission</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">authors.list</span>
+</code></pre></div>
+<p>The search box asks <code>GET /admin/fields/options</code> for the matches. The request carries a token that Bonfire signed with the
+app's encryption key, naming the model, the title column, the column that is searched (the title) and the permission. A
+missing or changed token is refused with a 403, so the endpoint can't be made to read another model or column. Run
+<code>php spark key:generate</code> if the app has no key. Without JavaScript the search box is a plain input that takes the record's
+ID, and a save with an ID that isn't a record is refused.</p>
 <h2 id="entries">entries</h2>
 <p>Links to other entries, saved as a list of their UUIDs.</p>
 <table>
