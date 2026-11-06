@@ -6,6 +6,11 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 6 November 2026
 
+**Fields: `belongsTo` search.** Above `searchAbove` records (default `100`), a `belongsTo` field shows a search box
+instead of a dropdown. It lists matching titles as you type, from an admin endpoint that needs `admin.access`, the field's
+optional `permission` and a token signed with the app's encryption key. See
+[Field types](../content/field_types.md#many-records).
+
 **A `decimal` field type.** It takes `places` (default `2`), `min` and `step`, renders a number input and saves a string
 such as `"19.99"`, so a `DECIMAL` column never passes through a float. See [Field types](../content/field_types.md#decimal).
 

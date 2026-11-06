@@ -173,8 +173,33 @@ Reading the entry gives the ID, not the record. To load the record in a template
 <?php endif ?>
 ```
 
-`find()` returns null when the field is empty or the record is gone, so check for that. A dropdown of every record suits
-tables of a few hundred rows. For more, [change the input](#changing-an-input).
+`find()` returns null when the field is empty or the record is gone, so check for that.
+
+### Many records
+
+A dropdown of every record suits a table of a few hundred rows at most. Above `searchAbove` records (default `100`) the
+input becomes a search box instead: type a few letters and it lists the records whose title contains them, at most 20, in
+title order. Choosing one saves its ID, and when you edit the entry the box shows the record's title.
+
+| Key | Default | What it does |
+|---|---|---|
+| `searchAbove` | `100` | How many records the model may have before the dropdown becomes a search box. |
+| `permission` | None | A permission the user needs to search the records, on top of `admin.access`. |
+
+```yaml
+- handle: author
+  type: belongsTo
+  model: App\Models\AuthorModel
+  title: name
+  searchAbove: 50
+  permission: authors.list
+```
+
+The search box asks `GET /admin/fields/options` for the matches. The request carries a token that Bonfire signed with the
+app's encryption key, naming the model, the title column, the column that is searched (the title) and the permission. A
+missing or changed token is refused with a 403, so the endpoint can't be made to read another model or column. Run
+`php spark key:generate` if the app has no key. Without JavaScript the search box is a plain input that takes the record's
+ID, and a save with an ID that isn't a record is refused.
 
 ## entries
 
