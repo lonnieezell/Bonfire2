@@ -647,7 +647,7 @@ final class EntryAdminTest extends ContentTestCase
 
     public function testAnAppCanOverrideAFieldsInputPartial(): void
     {
-        $dir  = APPPATH . 'Views/content/fields';
+        $dir  = APPPATH . 'Views/fields';
         $file = $dir . '/text.php';
         $made = ! is_dir($dir) && mkdir($dir, 0777, true);
         file_put_contents($file, '<input type="text" name="<?= esc($name, "attr") ?>" data-overridden>');
@@ -658,7 +658,6 @@ final class EntryAdminTest extends ContentTestCase
             unlink($file);
             if ($made) {
                 rmdir($dir);
-                @rmdir(APPPATH . 'Views/content');
             }
         }
 

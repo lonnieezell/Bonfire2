@@ -9,13 +9,15 @@ Content's settings are in `app/Config/Content.php`, which `php spark bf:install`
 |---|---|---|
 | `$contentPath` | `ROOTPATH . 'content/'` | The content root, which holds collections, entries, taxonomies and the rest. See [File layout](index.md#file-layout). |
 | `$blueprintPath` | `ROOTPATH . 'resources/blueprints/'` | Where blueprints live. See [Blueprints](blueprints.md). |
-| `$fieldTypes` | `[]` | Field types of your own: a handle, then a class that extends `Bonfire\Content\Fields\FieldType`. See [Custom field types](custom_field_types.md#register-it). |
 | `$autoRoute` | `false` | Serves entries at their URIs through the fallback route. See [Routing](routing.md#turning-it-on). |
 | `$autoSeo` | `false` | Adds an entry's SEO tags to the pages the fallback route renders from a `template`. See [SEO](seo.md#doing-it-automatically). |
 | `$sitemap` | `false` | Serves the sitemap at `/sitemap.xml`. See [Sitemap](feeds_and_sitemaps.md#the-built-in-sitemap-route). |
 | `$feedRoute` | `false` | Serves each collection's feed at `/feed/{collection}`. See [Feeds](feeds_and_sitemaps.md#the-built-in-feed-route). |
 
 Your own routes win over every route these settings add.
+
+Field types of your own aren't a Content setting: they go in `$types` in `app/Config/Fields.php`. See
+[Custom field types](custom_field_types.md#register-it).
 
 A collection's own settings, such as `route`, `template` and `cache`, are in its config file. See
 [Collection config](collections.md#collection-config).

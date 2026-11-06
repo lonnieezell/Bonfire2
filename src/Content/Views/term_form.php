@@ -14,7 +14,7 @@
     <?= csrf_field() ?>
 
     <x-admin-box>
-        <?= view('Bonfire\Content\Views\form_fields', ['rows' => $rows], ['saveData' => false]) ?>
+        <?= view('Bonfire\Fields\Views\form_fields', ['rows' => $rows], ['saveData' => false]) ?>
     </x-admin-box>
 
     <x-save-bar save="<?= esc(lang('Content.saveTerm'), 'attr') ?>" />

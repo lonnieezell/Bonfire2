@@ -11,7 +11,10 @@
 
 namespace Bonfire\Content;
 
-use Bonfire\Content\Fields\FieldTypes;
+use Bonfire\Content\Fields\EntryStorage;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldException;
+use Bonfire\Fields\FieldTypes;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -143,8 +146,8 @@ final readonly class Blueprint
             $type = FieldTypes::get($field->type);
 
             // A type may save its value under another key than the handle, and two fields can't share one.
-            if ($type->storedInFrontMatter()) {
-                $key = $type->key($field);
+            if (EntryStorage::inFrontMatter($type)) {
+                $key = EntryStorage::key($type, $field);
 
                 if (isset($keys[$key])) {
                     throw new ContentException("Blueprint {$handle}: fields `{$keys[$key]}` and `{$field->handle}` both save to `{$key}`.");
@@ -245,7 +248,11 @@ final readonly class Blueprint
             $options,
         );
 
-        FieldTypes::get($field->type)->check($field);
+        try {
+            FieldTypes::get($field->type)->check($field);
+        } catch (FieldException $e) {
+            throw new ContentException($e->getMessage(), 0, $e);
+        }
 
         return $field;
     }

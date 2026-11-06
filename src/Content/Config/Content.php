@@ -11,7 +11,6 @@
 
 namespace Bonfire\Content\Config;
 
-use Bonfire\Content\Fields\FieldType;
 use CodeIgniter\Config\BaseConfig;
 
 class Content extends BaseConfig
@@ -25,14 +24,6 @@ class Content extends BaseConfig
      * Where blueprints live.
      */
     public string $blueprintPath = ROOTPATH . 'resources/blueprints/';
-
-    /**
-     * Field types of your own, for blueprints to use: the handle, then a class that extends
-     * Bonfire\Content\Fields\FieldType. A handle that a built-in type has is taken over by yours.
-     *
-     * @var array<string, class-string<FieldType>>
-     */
-    public array $fieldTypes = [];
 
     /**
      * Whether Bonfire serves entries through its fallback route.

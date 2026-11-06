@@ -3,8 +3,8 @@
 namespace Tests\Content;
 
 use Bonfire\Content\Blueprint;
-use Bonfire\Content\Field;
 use Bonfire\Content\Indexer;
+use Bonfire\Fields\Field;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
 use Config\Services;

@@ -14,8 +14,9 @@ namespace Bonfire\Commands\Generators;
 use Bonfire\Content\Blueprint;
 use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
-use Bonfire\Content\Field;
-use Bonfire\Content\Fields\FieldTypes;
+use Bonfire\Content\Fields\EntryStorage;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldTypes;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
@@ -79,7 +80,7 @@ class ContentScaffold extends BaseCommand
         // The title and the body have their own places in the views.
         $body   = $fields === [] || isset($fields[Blueprint::BODY]);
         $fields = array_values(array_filter($fields, static fn (Field $field): bool => ! in_array($field->handle, ['title', Blueprint::BODY], true)
-            && FieldTypes::get($field->type)->storedInFrontMatter()));
+            && EntryStorage::inFrontMatter(FieldTypes::get($field->type))));
 
         $files = [
             APPPATH . "Views/{$handle}/index.php" => $this->render('index', [
@@ -91,7 +92,7 @@ class ContentScaffold extends BaseCommand
                 'fields'     => array_map(static fn (Field $field): array => [
                     'label' => $field->label,
                     'type'  => $field->type,
-                    'key'   => var_export(FieldTypes::get($field->type)->key($field), true),
+                    'key'   => var_export(EntryStorage::key(FieldTypes::get($field->type), $field), true),
                 ], $fields),
                 'body' => $body,
             ]),
@@ -149,7 +150,7 @@ class ContentScaffold extends BaseCommand
     {
         foreach ($fields as $field) {
             if (in_array($field->type, ['text', 'textarea'], true)) {
-                return var_export(FieldTypes::get($field->type)->key($field), true);
+                return var_export(EntryStorage::key(FieldTypes::get($field->type), $field), true);
             }
         }
 
