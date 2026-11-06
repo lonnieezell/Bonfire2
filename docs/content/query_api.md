@@ -126,7 +126,7 @@ $entry->data;         // all the front matter, as an array
 $entry->field('tagline');            // one front matter value, or null
 $entry->field('tagline', 'Welcome'); // or a default
 
-$entry->content();                   // the body as HTML
+$entry->content();                   // the body as HTML, with components expanded
 
 $entry->entries('related');          // the entries an `entries` field links to
 
@@ -144,6 +144,9 @@ trash. It also returns drafts and scheduled entries, so check `$linked->isPublis
 `content()` renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
 apart from the tags GitHub disallows, such as `<script>`, so treat a body as code you trust. Links to `javascript:` and
 similar are dropped. Use `$entry->body` to render it your own way.
+
+`content()` also expands any `<x-…>` View Components in the body. Pass `components: false` to skip that. See
+[Markdown and components](markdown.md).
 
 ## Taxonomies
 

@@ -85,6 +85,23 @@ final class ComponentRendererTest extends TestCase
         ];
     }
 
+    public function testUnknownComponentsCanBeDroppedAndLogged(): void
+    {
+        $html = $this->renderer->render('<p>a</p><x-nope /><x-nope>slot</x-nope><x-greeting name="Ada" />', true);
+
+        $this->assertSame('<p>a</p>Hello Ada', $html);
+        $this->assertLogged('error', 'View not found for component: nope');
+    }
+
+    public function testDroppingIsOffByDefaultOnTheSameRenderer(): void
+    {
+        $this->renderer->render('<x-nope />', true);
+
+        $this->expectException(RuntimeException::class);
+
+        $this->renderer->render('<x-nope />');
+    }
+
     public function testThemeComponentsTakePrecedenceOverLookupPaths(): void
     {
         Theme::setTheme('Admin');

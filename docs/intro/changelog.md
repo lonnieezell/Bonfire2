@@ -6,6 +6,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 6 November 2026 (breaking change)
 
+**Content: components in Markdown, and `content_markdown()`.** `$entry->content()` now converts the Markdown, then expands
+any `<x-…>` View Components in it, so it works in controllers and feeds and not only when echoed in a view. **A body with
+an `<x-…>` tag now gets that component's HTML in `content()`, and a tag for a component that doesn't exist throws a
+`RuntimeException` naming it, outside production.** In production it's logged and the tag is removed. Pass
+`content(components: false)` for the old, Markdown-only output. The new `content_markdown($markdown)` helper renders any
+Markdown string the same way, for front matter and block fields. It isn't called `markdown()` because Postal already
+defines that. See [Markdown and components](../content/markdown.md).
+
 **`viewMeta` escapes attribute values.** `render()` now runs every value of an `addMeta()`, `addLink()`, `addScript()` and
 `addStyle()` entry through `htmlspecialchars()`, so a `"` or `&` can no longer break out of a tag. **If you escaped a value
 yourself before passing it in, it is now escaped twice**, so pass the plain value. Titles and the content of raw scripts
