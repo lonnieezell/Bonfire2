@@ -158,16 +158,17 @@ if (! function_exists('content_seo')) {
 
         $meta->setTitle(esc($seo['title']));
 
+        // viewMeta escapes attribute values itself, so these go in as they are.
         if ($seo['description'] !== '') {
-            $meta->addMeta(['name' => 'description', 'content' => esc($seo['description'])]);
+            $meta->addMeta(['name' => 'description', 'content' => $seo['description']]);
         }
 
         if ($seo['canonical'] !== null) {
-            $meta->addLink(['rel' => 'canonical', 'href' => esc($seo['canonical'])]);
+            $meta->addLink(['rel' => 'canonical', 'href' => $seo['canonical']]);
         }
 
         foreach ($seo['og'] as $property => $content) {
-            $meta->addMeta(['property' => $property, 'content' => esc($content)]);
+            $meta->addMeta(['property' => $property, 'content' => $content]);
         }
     }
 }
