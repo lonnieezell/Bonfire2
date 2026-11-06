@@ -15,6 +15,8 @@ use RuntimeException;
 
 class ComponentRenderer
 {
+    private bool $dropUnknown = false;
+
     public function __construct()
     {
         helper('inflector');
@@ -26,9 +28,14 @@ class ComponentRenderer
      * returning the modified string.
      *
      * Called by the View class' render method.
+     *
+     * A component with no view throws, unless $dropUnknown is set. Then it is logged and
+     * its tag, and its slot if it has one, is removed.
      */
-    public function render(?string $output): string
+    public function render(?string $output, bool $dropUnknown = false): string
     {
+        $this->dropUnknown = $dropUnknown;
+
         if ($output === null || $output === '' || $output === '0') {
             return $output ?? '';
         }
@@ -152,7 +159,18 @@ class ComponentRenderer
      */
     private function renderComponent(string $name, array $attributes): string
     {
-        $view      = $this->locateView($name);
+        $view = $this->locateView($name);
+
+        if ($view === null) {
+            if ($this->dropUnknown) {
+                log_message('error', 'View not found for component: ' . $name);
+
+                return '';
+            }
+
+            throw new RuntimeException('View not found for component: ' . $name);
+        }
+
         $component = $this->factory($name, $view);
 
         return $component instanceof Component
@@ -245,9 +263,9 @@ class ComponentRenderer
     /**
      * Locate the view file used to render the component.
      * The file's name must match the name of the component,
-     * minus the 'x-'.
+     * minus the 'x-'. Null when there is none.
      */
-    private function locateView(string $name): string
+    private function locateView(string $name): ?string
     {
         // First search within the current theme
         $path     = Theme::path();
@@ -268,7 +286,7 @@ class ComponentRenderer
             }
         }
 
-        throw new RuntimeException('View not found for component: ' . $name);
+        return null;
         // @todo look in all normal namespaces
     }
 

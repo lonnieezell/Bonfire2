@@ -4,6 +4,7 @@ use Bonfire\Content\Content;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\GlobalSet;
+use Bonfire\Content\Markdown;
 use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
 use Bonfire\View\Theme;
@@ -157,17 +158,34 @@ if (! function_exists('content_seo')) {
 
         $meta->setTitle(esc($seo['title']));
 
+        // viewMeta escapes attribute values itself, so these go in as they are.
         if ($seo['description'] !== '') {
-            $meta->addMeta(['name' => 'description', 'content' => esc($seo['description'])]);
+            $meta->addMeta(['name' => 'description', 'content' => $seo['description']]);
         }
 
         if ($seo['canonical'] !== null) {
-            $meta->addLink(['rel' => 'canonical', 'href' => esc($seo['canonical'])]);
+            $meta->addLink(['rel' => 'canonical', 'href' => $seo['canonical']]);
         }
 
         foreach ($seo['og'] as $property => $content) {
-            $meta->addMeta(['property' => $property, 'content' => esc($content)]);
+            $meta->addMeta(['property' => $property, 'content' => $content]);
         }
+    }
+}
+
+if (! function_exists('content_markdown')) {
+    /**
+     * Renders a Markdown string as HTML the way `$entry->content()` does: GitHub Flavored Markdown, then any
+     * `<x-…>` View Components expanded. Pass `components: false` to leave them as written. Use it for front matter
+     * and block fields that hold Markdown. Raw HTML passes through, so only render text you trust.
+     *
+     * It isn't called `markdown()` because Postal already defines a global of that name.
+     *
+     * @throws RuntimeException when a component doesn't exist, except in production, where it is logged and removed
+     */
+    function content_markdown(string $markdown, bool $components = true): string
+    {
+        return Markdown::toHtml($markdown, $components);
     }
 }
 

@@ -12,7 +12,7 @@
 namespace Bonfire\Content;
 
 use CodeIgniter\I18n\Time;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
+use RuntimeException;
 
 /**
  * An indexed entry: its columns, its front matter and its raw Markdown body.
@@ -146,7 +146,7 @@ final readonly class Entry
      */
     private function firstParagraph(): string
     {
-        preg_match_all('~<p(?:\s[^>]*)?>(.*?)</p>~s', $this->content(), $matches);
+        preg_match_all('~<p(?:\s[^>]*)?>(.*?)</p>~s', $this->content(components: false), $matches);
 
         foreach ($matches[1] as $paragraph) {
             $text = html_entity_decode(strip_tags($paragraph), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -162,11 +162,14 @@ final readonly class Entry
     }
 
     /**
-     * The Markdown body as HTML. Raw HTML in the body passes through, apart from the tags
-     * GitHub's rules disallow, so only render bodies you trust.
+     * The Markdown body as HTML, with any `<x-…>` View Components expanded. Pass `components: false` to leave them
+     * as written. Raw HTML in the body passes through, apart from the tags GitHub's rules disallow, so only
+     * render bodies you trust.
+     *
+     * @throws RuntimeException when a component doesn't exist, except in production, where it is logged and removed
      */
-    public function content(): string
+    public function content(bool $components = true): string
     {
-        return (new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false]))->convert($this->body)->getContent();
+        return Markdown::toHtml($this->body, $components);
     }
 }
