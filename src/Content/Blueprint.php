@@ -137,7 +137,7 @@ final readonly class Blueprint
             throw new ContentException("Blueprint {$handle} needs a `fields` list or a `sections` list.");
         }
 
-        if (isset($config['fields'], $config['sections'])) {
+        if (array_key_exists('fields', $config) && array_key_exists('sections', $config)) {
             throw new ContentException("Blueprint {$handle} has both `fields` and `sections`. Put the fields in the sections, or drop the sections.");
         }
 
@@ -183,7 +183,7 @@ final readonly class Blueprint
             throw new ContentException("{$where} needs a `title`.");
         }
 
-        $columns = $definition['columns'] ?? Section::MIN_COLUMNS;
+        $columns = $definition['columns'] ?? Section::DEFAULT_COLUMNS;
 
         if (! is_int($columns) || $columns < Section::MIN_COLUMNS || $columns > Section::MAX_COLUMNS) {
             throw new ContentException("{$where} (`{$definition['title']}`): `columns` must be a whole number from " . Section::MIN_COLUMNS . ' to ' . Section::MAX_COLUMNS . '.');

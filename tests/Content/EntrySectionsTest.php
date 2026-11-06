@@ -190,7 +190,9 @@ final class EntrySectionsTest extends ContentTestCase
      */
     private function cellOf(TestResponse $response, string $handle): string
     {
-        return $this->query($response, '//*[@data-field="' . $handle . '"]/parent::div')->item(0)?->getAttribute('class') ?? '';
+        $classes = $this->query($response, '//*[@data-field="' . $handle . '"]')->item(0)?->getAttribute('class') ?? '';
+
+        return trim(str_replace(['form-group', 'mb-3'], '', $classes));
     }
 
     /**

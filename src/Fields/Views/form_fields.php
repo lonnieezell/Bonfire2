@@ -21,23 +21,21 @@ $sections ??= [['title' => null, 'instructions' => null, 'columns' => 1, 'rows' 
     <div class="row">
         <?php foreach ($section['rows'] as $row) : ?>
             <?php $field = $row['field'] ?>
-            <div class="<?= $row['full'] ? 'col-12' : $cell ?>">
-                <div class="form-group mb-3" data-field="<?= esc($field->handle, 'attr') ?>">
-                    <label for="field-<?= esc($field->handle, 'attr') ?>" class="form-label"><?= esc($field->label) ?></label>
-                    <?= view($row['view'], [
-                        'field'    => $field,
-                        'name'     => 'fields[' . $field->handle . ']',
-                        'id'       => 'field-' . $field->handle,
-                        'value'    => $row['value'],
-                        'disabled' => $row['disabled'],
-                    ], ['saveData' => false]) ?>
-                    <?php if ($field->instructions !== null) : ?>
-                        <div class="form-text"><?= esc($field->instructions) ?></div>
-                    <?php endif ?>
-                    <?php if ($row['error'] !== null) : ?>
-                        <p class="text-danger" data-error="<?= esc($field->handle, 'attr') ?>"><?= esc($row['error']) ?></p>
-                    <?php endif ?>
-                </div>
+            <div class="form-group mb-3 <?= $row['full'] ? 'col-12' : $cell ?>" data-field="<?= esc($field->handle, 'attr') ?>">
+                <label for="field-<?= esc($field->handle, 'attr') ?>" class="form-label"><?= esc($field->label) ?></label>
+                <?= view($row['view'], [
+                    'field'    => $field,
+                    'name'     => 'fields[' . $field->handle . ']',
+                    'id'       => 'field-' . $field->handle,
+                    'value'    => $row['value'],
+                    'disabled' => $row['disabled'],
+                ], ['saveData' => false]) ?>
+                <?php if ($field->instructions !== null) : ?>
+                    <div class="form-text"><?= esc($field->instructions) ?></div>
+                <?php endif ?>
+                <?php if ($row['error'] !== null) : ?>
+                    <p class="text-danger" data-error="<?= esc($field->handle, 'attr') ?>"><?= esc($row['error']) ?></p>
+                <?php endif ?>
             </div>
         <?php endforeach ?>
     </div>

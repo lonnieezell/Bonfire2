@@ -17,8 +17,9 @@ namespace Bonfire\Fields;
  */
 final readonly class Section
 {
-    public const MIN_COLUMNS = 1;
-    public const MAX_COLUMNS = 3;
+    public const MIN_COLUMNS     = 1;
+    public const MAX_COLUMNS     = 3;
+    public const DEFAULT_COLUMNS = 1;
 
     /**
      * @param list<Field> $fields

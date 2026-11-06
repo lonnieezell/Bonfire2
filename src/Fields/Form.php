@@ -71,7 +71,7 @@ final readonly class Form
      */
     public function sections(array $values, array $errors): array
     {
-        $sections = $this->sections === [] ? [new Section(null, null, 1, $this->fields)] : $this->sections;
+        $sections = $this->sections === [] ? [new Section(null, null, Section::DEFAULT_COLUMNS, $this->fields)] : $this->sections;
         $shown    = [];
 
         foreach ($sections as $section) {
