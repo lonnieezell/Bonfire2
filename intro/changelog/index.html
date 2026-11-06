@@ -3509,6 +3509,28 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
+<p><strong>The field system moved from Content to <code>Bonfire\Fields</code>.</strong> Resources and actions will use the same fields as
+blueprints, so <code>Field</code>, <code>FieldType</code>, <code>FieldTypes</code> and the generic types (<code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>toggle</code>,
+<code>select</code>, <code>integer</code>, <code>date</code> and <code>datetime</code>) now live in <code>Bonfire\Fields</code>, the types under <code>Bonfire\Fields\Types</code>. <code>slug</code>,
+<code>terms</code> and <code>entries</code> stay in <code>Bonfire\Content\Fields</code>. Blueprints work as before. There are no aliases, so <strong>a custom
+field type, or code of yours that names the old classes, breaks until you change these</strong>:</p>
+<ul>
+<li><strong>Namespace.</strong> <code>Bonfire\Content\Field</code> is <code>Bonfire\Fields\Field</code>, <code>Bonfire\Content\Fields\FieldType</code> is
+  <code>Bonfire\Fields\FieldType</code>, <code>Bonfire\Content\Fields\FieldTypes</code> is <code>Bonfire\Fields\FieldTypes</code>, and
+  <code>Bonfire\Content\Fields\ChoiceList</code> is <code>Bonfire\Fields\ChoiceList</code>. A type that extends one of the built-in types, such as
+  <code>TextField</code>, now finds it in <code>Bonfire\Fields\Types</code>. <code>check()</code> throws a <code>Bonfire\Fields\FieldException</code>, not a <code>ContentException</code>.</li>
+<li><strong>Two renamed methods.</strong> <code>toFrontMatter()</code> is <code>toStored()</code> and <code>fromFrontMatter()</code> is <code>fromStored()</code>, with the same
+  arguments. <code>ChoiceList::fromFrontMatter()</code> is <code>ChoiceList::fromStored()</code>. <code>key()</code> and <code>storedInFrontMatter()</code> are no longer
+  on <code>FieldType</code>: a type that overrides them implements <code>Bonfire\Content\Fields\ContentFieldType</code> instead.</li>
+<li><strong>The config key.</strong> <code>Config\Content::$fieldTypes</code> is gone. Register your types in <code>$types</code> of <code>app/Config/Fields.php</code>,
+  which extends <code>Bonfire\Fields\Config\Fields</code>. The language strings <code>Content.selectInvalid</code>, <code>Content.integerInvalid</code>,
+  <code>Content.integerMin</code> and <code>Content.integerMax</code> are <code>Fields.*</code> now.</li>
+<li><strong>The view path.</strong> Overrides of an input move from <code>app/Views/content/fields/&lt;type&gt;.php</code> to <code>app/Views/fields/&lt;type&gt;.php</code>,
+  and now apply wherever a form uses fields. Copies in the old folder are ignored. The <code>@var</code> of the partials is
+  <code>Bonfire\Fields\Field</code>.</li>
+</ul>
+<p>The form behind an entry's fields is <code>Bonfire\Fields\Form</code>, and its view is <code>Bonfire\Fields\Views\form_fields</code> rather than
+<code>Bonfire\Content\Views\form_fields</code>. See <a href="../../content/custom_field_types/">Custom field types</a>.</p>
 <p><strong>Content: components in Markdown, and <code>content_markdown()</code>.</strong> <code>$entry-&gt;content()</code> now converts the Markdown, then expands
 any <code>&lt;x-…&gt;</code> View Components in it, so it works in controllers and feeds and not only when echoed in a view. <strong>A body with
 an <code>&lt;x-…&gt;</code> tag now gets that component's HTML in <code>content()</code>, and a tag for a component that doesn't exist throws a

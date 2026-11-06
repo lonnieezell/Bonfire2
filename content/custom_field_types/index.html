@@ -3046,14 +3046,14 @@
 by its handle, and it works in the entry form like any other.</p>
 <p>This page makes a <code>color</code> type: a color picker that saves <code>#rrggbb</code>.</p>
 <h2 id="write-the-class">Write the class</h2>
-<p>Extend <code>Bonfire\Content\Fields\FieldType</code> and override what differs from plain text. Only <code>partial()</code> is required. Put the
+<p>Extend <code>Bonfire\Fields\FieldType</code> and override what differs from plain text. Only <code>partial()</code> is required. Put the
 class anywhere your app autoloads, such as <code>app/Content/ColorField.php</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">namespace</span> <span class="nx">App\Content</span><span class="p">;</span>
 
-<span class="k">use</span> <span class="nx">Bonfire\Content\Field</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Bonfire\Content\Fields\FieldType</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Fields\Field</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Fields\FieldType</span><span class="p">;</span>
 
 <span class="k">final</span> <span class="k">class</span> <span class="nc">ColorField</span> <span class="k">extends</span> <span class="nx">FieldType</span>
 <span class="p">{</span>
@@ -3099,37 +3099,36 @@ class anywhere your app autoloads, such as <code>app/Content/ColorField.php</cod
 <td>The blueprint's <code>validate</code></td>
 </tr>
 <tr>
-<td><code>toFrontMatter($input, $field)</code></td>
-<td>The value to write to the file. Return <code>null</code> or <code>''</code> to leave the key out.</td>
+<td><code>toStored($input, $field)</code></td>
+<td>The PHP value to store, such as a <code>bool</code>, an <code>int</code> or a list. In Content it's written to the file, and <code>null</code> or <code>''</code> leaves the key out.</td>
 <td>The text</td>
 </tr>
 <tr>
-<td><code>fromFrontMatter($stored, $field)</code></td>
-<td>The text the form shows for what the file holds.</td>
+<td><code>fromStored($stored, $field)</code></td>
+<td>The text the form shows for the stored value.</td>
 <td>The value as text, or <code>''</code></td>
 </tr>
 <tr>
-<td><code>storedInFrontMatter()</code></td>
-<td><code>false</code> if the value isn't a front matter key, like <code>slug</code>.</td>
-<td><code>true</code></td>
-</tr>
-<tr>
-<td><code>key($field)</code></td>
-<td>The front matter key that holds the value. <code>terms</code> uses the taxonomy's handle.</td>
-<td>The field's handle</td>
-</tr>
-<tr>
 <td><code>check($field)</code></td>
-<td>Throws a <code>ContentException</code> if the blueprint gave the field options it can't use, so the blueprint is refused.</td>
+<td>Throws a <code>Bonfire\Fields\FieldException</code> if the blueprint gave the field options it can't use, so the blueprint is refused.</td>
 <td>Nothing</td>
+</tr>
+<tr>
+<td><code>viewNamespace()</code></td>
+<td>The namespace of the views that hold the type's partial.</td>
+<td><code>Bonfire\Fields\Views\fields</code></td>
 </tr>
 </tbody>
 </table>
+<p>A type that needs to say where an entry keeps its value also implements <code>Bonfire\Content\Fields\ContentFieldType</code>.
+Its <code>key($field)</code> is the front matter key that holds the value, which <code>terms</code> sets to the taxonomy's handle, and
+<code>storedInFrontMatter()</code> is <code>false</code> if the value isn't a front matter key, like <code>slug</code>. A type without it keeps its
+value under the field's handle.</p>
 <p>Things to know:</p>
 <ul>
 <li><strong>The form value is always text.</strong> A browser posts text, so <code>prepare()</code> returns a string, <code>rules()</code> validate a string,
-  and <code>toFrontMatter()</code> turns it into what the file should hold, such as a number or a list. A type that holds several
-  values, like a multiple <code>select</code>, keeps them as JSON text with <code>Bonfire\Content\Fields\ChoiceList</code>.</li>
+  and <code>toStored()</code> turns it into what is stored, such as a number or a list. A type that holds several
+  values, like a multiple <code>select</code>, keeps them as JSON text with <code>Bonfire\Fields\ChoiceList</code>.</li>
 <li><strong><code>$field-&gt;options</code></strong> holds the keys the blueprint gave the field besides <code>handle</code>, <code>type</code>, <code>label</code>, <code>validate</code> and
   <code>instructions</code>. Use them for settings, like <code>min</code> on an <code>integer</code>.</li>
 <li><strong><code>withRules()</code></strong> adds your rules to the blueprint's <code>validate</code>, whether that is a string or a list. A rule can be a
@@ -3138,15 +3137,15 @@ class anywhere your app autoloads, such as <code>app/Content/ColorField.php</cod
 <li><strong>A type is created for each use</strong>, so don't keep state in it.</li>
 </ul>
 <h2 id="write-the-input">Write the input</h2>
-<p>The partial is a view called <code>&lt;partial&gt;.php</code> in <code>app/Views/content/fields/</code>, which Bonfire looks in first for every
-type. Here, <code>app/Views/content/fields/color.php</code>:</p>
+<p>The partial is a view called <code>&lt;partial&gt;.php</code> in <code>app/Views/fields/</code>, which Bonfire looks in first for every
+type. Here, <code>app/Views/fields/color.php</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="sd">/**</span>
-<span class="sd"> * @var Bonfire\Content\Field $field</span>
-<span class="sd"> * @var string                $name      the input's name, such as fields[accent]</span>
-<span class="sd"> * @var string                $id        the id the label points to</span>
-<span class="sd"> * @var string                $value</span>
-<span class="sd"> * @var bool                  $disabled</span>
+<span class="sd"> * @var Bonfire\Fields\Field $field</span>
+<span class="sd"> * @var string               $name      the input's name, such as fields[accent]</span>
+<span class="sd"> * @var string               $id        the id the label points to</span>
+<span class="sd"> * @var string               $value</span>
+<span class="sd"> * @var bool                 $disabled</span>
 <span class="sd"> */</span>
 <span class="cp">?&gt;</span>
 <span class="x">&lt;input type="color" name="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="s1">'attr'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">" id="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="s1">'attr'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">" class="form-control form-control-color" value="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$value</span> <span class="o">?:</span> <span class="s1">'#000000'</span><span class="p">,</span> <span class="s1">'attr'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nv">$disabled</span> <span class="o">?</span> <span class="s1">' disabled'</span> <span class="o">:</span> <span class="s1">''</span> <span class="cp">?&gt;</span><span class="x">&gt;</span>
@@ -3154,17 +3153,18 @@ type. Here, <code>app/Views/content/fields/color.php</code>:</p>
 <p>It has to name its input <code>$name</code>, and give it <code>$id</code>. A type can also borrow a partial that already exists, such as
 <code>text</code>, by returning its name from <code>partial()</code>. See <a href="../field_types/#changing-an-input">Changing an input</a>.</p>
 <h2 id="register-it">Register it</h2>
-<p>Add the handle and the class to <code>$fieldTypes</code> in <code>app/Config/Content.php</code>:</p>
+<p>Add the handle and the class to <code>$types</code> in <code>app/Config/Fields.php</code>, which you create if your app doesn't have it yet.
+The field system isn't only Content's, so a type registered here works wherever a form uses fields:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
 
 <span class="k">namespace</span> <span class="nx">Config</span><span class="p">;</span>
 
 <span class="k">use</span> <span class="nx">App\Content\ColorField</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Bonfire\Content\Config\Content</span> <span class="k">as</span> <span class="nx">BaseContent</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Fields\Config\Fields</span> <span class="k">as</span> <span class="nx">BaseFields</span><span class="p">;</span>
 
-<span class="k">class</span> <span class="nc">Content</span> <span class="k">extends</span> <span class="nx">BaseContent</span>
+<span class="k">class</span> <span class="nc">Fields</span> <span class="k">extends</span> <span class="nx">BaseFields</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="k">array</span> <span class="nv">$fieldTypes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="k">public</span> <span class="k">array</span> <span class="nv">$types</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">'color'</span> <span class="o">=&gt;</span> <span class="nx">ColorField</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
     <span class="p">];</span>
 <span class="p">}</span>

@@ -3121,11 +3121,6 @@
 <td>Where blueprints live. See <a href="../blueprints/">Blueprints</a>.</td>
 </tr>
 <tr>
-<td><code>$fieldTypes</code></td>
-<td><code>[]</code></td>
-<td>Field types of your own: a handle, then a class that extends <code>Bonfire\Content\Fields\FieldType</code>. See <a href="../custom_field_types/#register-it">Custom field types</a>.</td>
-</tr>
-<tr>
 <td><code>$autoRoute</code></td>
 <td><code>false</code></td>
 <td>Serves entries at their URIs through the fallback route. See <a href="../routing/#turning-it-on">Routing</a>.</td>
@@ -3148,6 +3143,8 @@
 </tbody>
 </table>
 <p>Your own routes win over every route these settings add.</p>
+<p>Field types of your own aren't a Content setting: they go in <code>$types</code> in <code>app/Config/Fields.php</code>. See
+<a href="../custom_field_types/#register-it">Custom field types</a>.</p>
 <p>A collection's own settings, such as <code>route</code>, <code>template</code> and <code>cache</code>, are in its config file. See
 <a href="../collections/#collection-config">Collection config</a>.</p>
 <h2 id="commands">Commands</h2>

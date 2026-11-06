@@ -3554,12 +3554,12 @@ it. Anything posted that isn't a slug is dropped.</p>
 <code>body</code>, which the entry uses itself, or the blueprint is refused.</p>
 <p>For the entries to be indexed with their terms, the collection has to list the taxonomy in its <code>taxonomies</code>.</p>
 <h2 id="changing-an-input">Changing an input</h2>
-<p>Each type's input is a partial in <code>src/Content/Views/fields</code>. To change one, copy it to
-<code>app/Views/content/fields/&lt;type&gt;.php</code>, for example <code>app/Views/content/fields/text.php</code>. Bonfire uses your copy for every
+<p>Each type's input is a partial in <code>src/Fields/Views/fields</code>, or in <code>src/Content/Views/fields</code> for <code>slug</code>, <code>terms</code> and
+<code>entries</code>. To change one, copy it to <code>app/Views/fields/&lt;type&gt;.php</code>, for example <code>app/Views/fields/text.php</code>. Bonfire uses your copy for every
 field of that type. The partial gets the variables listed at the top of the file it replaces: <code>$field</code>, <code>$name</code>, <code>$id</code>,
 <code>$value</code> and <code>$disabled</code>. It must name its input <code>$name</code>, and give it <code>$id</code> so the label points to it.</p>
 <h2 id="writing-your-own">Writing your own</h2>
-<p>A type is a class that extends <code>Bonfire\Content\Fields\FieldType</code>, and the built-in types are classes like this too. To
+<p>A type is a class that extends <code>Bonfire\Fields\FieldType</code>, and the built-in types are classes like this too. To
 write one, and for the methods a type can override, see <a href="../custom_field_types/">Custom field types</a>.</p>
 
 
