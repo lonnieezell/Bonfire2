@@ -3,6 +3,7 @@
 namespace Tests\View;
 
 use Bonfire\View\Metadata;
+use Config\Services;
 use Tests\Support\TestCase;
 
 /**
@@ -17,6 +18,13 @@ final class MetadataTest extends TestCase
         parent::setUp();
 
         $this->meta = new Metadata();
+    }
+
+    protected function tearDown(): void
+    {
+        Services::resetSingle('viewMeta');
+
+        parent::tearDown();
     }
 
     public function testCanRenderTitleTag()
