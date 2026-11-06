@@ -14,7 +14,7 @@
         <link rel="prev" href="../routing/">
       
       
-        <link rel="next" href="../seo/">
+        <link rel="next" href="../markdown/">
       
       
         
@@ -1551,6 +1551,8 @@
       
         
       
+        
+      
     
     
     
@@ -1811,6 +1813,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markdown and components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3370,7 +3400,7 @@ gives the entry's current URI, or <code>null</code>. See <a href="../routing/#re
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">);</span>            <span class="c1">// one front matter value, or null</span>
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'tagline'</span><span class="p">,</span> <span class="s1">'Welcome'</span><span class="p">);</span> <span class="c1">// or a default</span>
 
-<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">();</span>                   <span class="c1">// the body as HTML</span>
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">();</span>                   <span class="c1">// the body as HTML, with components expanded</span>
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">(</span><span class="s1">'related'</span><span class="p">);</span>          <span class="c1">// the entries an `entries` field links to</span>
 
@@ -3385,6 +3415,8 @@ trash. It also returns drafts and scheduled entries, so check <code>$linked-&gt;
 <p><code>content()</code> renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
 apart from the tags GitHub disallows, such as <code>&lt;script&gt;</code>, so treat a body as code you trust. Links to <code>javascript:</code> and
 similar are dropped. Use <code>$entry-&gt;body</code> to render it your own way.</p>
+<p><code>content()</code> also expands any <code>&lt;x-…&gt;</code> View Components in the body. Pass <code>components: false</code> to skip that. See
+<a href="../markdown/">Markdown and components</a>.</p>
 <h2 id="taxonomies">Taxonomies</h2>
 <p><code>whereTerm()</code> keeps the published entries that have a <a href="../taxonomies/">term</a>, the same as <code>published()</code> does, and it
 composes with the rest of the query:</p>
@@ -3525,13 +3557,13 @@ second argument: <code>$pager-&gt;links('default', 'my_pager')</code>.</p>
         
         
           
-          <a href="../seo/" class="md-footer__link md-footer__link--next" aria-label="Next: SEO">
+          <a href="../markdown/" class="md-footer__link md-footer__link--next" aria-label="Next: Markdown and components">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                SEO
+                Markdown and components
               </div>
             </div>
             <div class="md-footer__button md-icon">

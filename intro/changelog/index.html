@@ -1871,6 +1871,8 @@
       
         
       
+        
+      
     
     
     
@@ -1954,6 +1956,34 @@
     
   
     Query API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/markdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markdown and components
   
 
     
@@ -3479,6 +3509,13 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
+<p><strong>Content: components in Markdown, and <code>content_markdown()</code>.</strong> <code>$entry-&gt;content()</code> now converts the Markdown, then expands
+any <code>&lt;x-…&gt;</code> View Components in it, so it works in controllers and feeds and not only when echoed in a view. <strong>A body with
+an <code>&lt;x-…&gt;</code> tag now gets that component's HTML in <code>content()</code>, and a tag for a component that doesn't exist throws a
+<code>RuntimeException</code> naming it, outside production.</strong> In production it's logged and the tag is removed. Pass
+<code>content(components: false)</code> for the old, Markdown-only output. The new <code>content_markdown($markdown)</code> helper renders any
+Markdown string the same way, for front matter and block fields. It isn't called <code>markdown()</code> because Postal already
+defines that. See <a href="../../content/markdown/">Markdown and components</a>.</p>
 <p><strong><code>viewMeta</code> escapes attribute values.</strong> <code>render()</code> now runs every value of an <code>addMeta()</code>, <code>addLink()</code>, <code>addScript()</code> and
 <code>addStyle()</code> entry through <code>htmlspecialchars()</code>, so a <code>"</code> or <code>&amp;</code> can no longer break out of a tag. <strong>If you escaped a value
 yourself before passing it in, it is now escaped twice</strong>, so pass the plain value. Titles and the content of raw scripts
