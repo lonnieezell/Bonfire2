@@ -3599,6 +3599,11 @@ prefix and the pages it has. <code>service('resources')-&gt;register()</code> in
 columns, which leave out <code>textarea</code> and <code>markdown</code> fields unless <code>columns()</code> says otherwise, sorting, paging and htmx
 refresh, guarded by <code>{permission}.list</code>. Only the list page exists so far. A <code>list.php</code> beside the resource replaces the
 package's view. See <a href="../../building_admin_modules/resources/">Resources</a>.</p>
+<p><strong>Resources: search, filters, global search and the Recycler.</strong> A resource's <code>$search</code> columns give its list a search box
+and put its records in the admin's global search. Its <code>filters()</code>, in the shape of a model's <code>$filters</code>, show in the
+<code>Filters</code> cell's panel and narrow the list. Search, filters, sorting and paging combine, and survive htmx refreshes.
+<code>register()</code> also adds a soft-deleting model to the Recycler. The <code>Filters</code> view cell takes a <code>resource</code> slug beside a
+<code>model</code>. See <a href="../../building_admin_modules/resources/#search">Resources</a>.</p>
 <h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
 <p><strong>The field system moved from Content to <code>Bonfire\Fields</code>.</strong> Resources and actions will use the same fields as
 blueprints, so <code>Field</code>, <code>FieldType</code>, <code>FieldTypes</code> and the generic types (<code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>toggle</code>,

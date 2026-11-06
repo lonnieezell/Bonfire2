@@ -2707,6 +2707,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The list">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global search
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3017,6 +3056,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The list">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#global-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global search
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3135,7 +3213,9 @@ hand-written modules. <a href="../generating_a_module/">Generating a module</a> 
   <code>Config\AuthGroups</code> permissions and matrix, as for any <a href="../permissions/">module permission</a>.</li>
 <li><strong><code>$pages</code></strong> names the pages the resource has. <code>['list']</code> is the only page there is for now. A page that isn't named
   gets no route, so its URL is a 404.</li>
+<li><strong><code>$search</code></strong> names the columns of the model's table that the search looks in. See <a href="#search">Search</a>.</li>
 <li><strong><code>fields()</code></strong> lists the fields of a record, as the same <code>Bonfire\Fields\Field</code> objects that blueprints use.</li>
+<li><strong><code>filters()</code></strong> describes the filters of the list. See <a href="#filters">Filters</a>.</li>
 <li><strong><code>title()</code></strong> is the name in the sidebar and above the list. It is the slug with a capital by default; override it to
   change that.</li>
 </ul>
@@ -3150,6 +3230,15 @@ hand-written modules. <a href="../generating_a_module/">Generating a module</a> 
 table icon unless you pass <code>collection:</code> and <code>icon:</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">service</span><span class="p">(</span><span class="s1">'resources'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nx">CategoryResource</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="nx">collection</span><span class="o">:</span> <span class="s1">'tools'</span><span class="p">,</span> <span class="nx">icon</span><span class="o">:</span> <span class="s1">'fas fa-tags'</span><span class="p">);</span>
 </code></pre></div>
+<p>It also wires the resource into the rest of the admin:</p>
+<ul>
+<li><strong>The Recycler</strong> lists the resource's soft-deleted records, and restores or purges them, if the model has
+  <code>$useSoftDeletes</code>. The Recycler's alias is the slug, and the columns it shows are the <code>$search</code> columns, or the
+  primary key when there are none. See <a href="../recycler/">The Recycler</a>: the model must have <code>deleted_at</code> in its
+  <code>$allowedFields</code> for a restore to work. A model that deletes for good is left out of the Recycler.</li>
+<li><strong>The admin's global search</strong> looks in the <code>$search</code> columns, if there are any, for those who have <code>{permission}.list</code>.
+  See <a href="#search">Search</a>.</li>
+</ul>
 <p>And in the module's <code>Config/Routes.php</code>, which is where the routes have to be declared, since routing runs before
 <code>initAdmin()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">resource_routes</span><span class="p">(</span><span class="nv">$routes</span><span class="p">,</span> <span class="nx">CategoryResource</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
@@ -3176,6 +3265,40 @@ only the table into the list.</p>
     <span class="k">return</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">'archived'</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="search">Search</h3>
+<p>Name the columns to search in <code>$search</code>, and the list gets a search box:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">array</span> <span class="nv">$search</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'description'</span><span class="p">];</span>
+</code></pre></div>
+<p>Typing in the box narrows the list to the records where <em>any</em> of those columns contains what was typed, as you type
+(<code>%</code> and <code>_</code> count as themselves). The search is <code>?search=</code> in the URL, so a link can carry it. A resource with an empty
+<code>$search</code> has no search box.</p>
+<h3 id="filters">Filters</h3>
+<p><code>filters()</code> returns the same shape as a model's <code>$filters</code> (see <a href="../filters/">Filters</a>): the key is a column of the
+model's table, and the value has a <code>title</code>, the <code>options</code>, and optionally a <code>type</code> of <code>radio</code>. If <code>options</code> is a string,
+it names a method of the resource that returns them.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">filters</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="s1">'status'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Status'</span><span class="p">,</span> <span class="s1">'options'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'live'</span> <span class="o">=&gt;</span> <span class="s1">'Live'</span><span class="p">,</span> <span class="s1">'draft'</span> <span class="o">=&gt;</span> <span class="s1">'Draft'</span><span class="p">]],</span>
+        <span class="s1">'category_id'</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Category'</span><span class="p">,</span> <span class="s1">'options'</span> <span class="o">=&gt;</span> <span class="s1">'categoryOptions'</span><span class="p">],</span>
+    <span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">categoryOptions</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nb">array_column</span><span class="p">(</span><span class="nx">model</span><span class="p">(</span><span class="nx">CategoryModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">asArray</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">findAll</span><span class="p">(),</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The filters show in a panel that the toolbar's filter link opens, rendered by the <code>Bonfire\Core\Cells\Filters</code> view cell.
+A record matches a filter when its column holds one of the chosen options, and a filter with nothing chosen doesn't
+narrow the list. Only the columns that <code>filters()</code> names can be filtered.</p>
+<p>Search, filters, sorting and paging combine. The links of the column headings and the pager keep the search and the
+filters, and with htmx on the page the search box and the filter panel send their choices along with every refresh of the
+table.</p>
+<h3 id="global-search">Global search</h3>
+<p>A resource with <code>$search</code> also shows up when someone uses the search box in the admin header: its section lists the
+records that match, and each one links to the resource's list narrowed to it. Users without <code>{permission}.list</code> don't
+see it. To search differently, write a <a href="../search/">search provider</a> of your own.</p>
 <h2 id="replacing-the-view">Replacing the view</h2>
 <p>The views are part of the package, so they aren't copied into your Admin theme and updating Bonfire updates them. To
 replace the list for one resource, put a <code>list.php</code> in the same folder as the resource class. It is an ordinary
@@ -3220,6 +3343,14 @@ replace the list for one resource, put a <code>list.php</code> in the same folde
 <td><code>$sortUrls</code></td>
 <td>the link of each sortable column, by handle</td>
 </tr>
+<tr>
+<td><code>$search</code></td>
+<td>what was typed in the search box, or an empty string</td>
+</tr>
+<tr>
+<td><code>$narrowed</code></td>
+<td>whether a search or a filter is narrowing the list</td>
+</tr>
 </tbody>
 </table>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extend</span><span class="p">(</span><span class="s1">'master'</span><span class="p">)</span> <span class="cp">?&gt;</span>
@@ -3233,6 +3364,8 @@ replace the list for one resource, put a <code>list.php</code> in the same folde
 </code></pre></div>
 <p>Sorting and paging refresh the element with the id <code>content-list</code>, and an htmx request gets only the package's
 <code>_table</code> view, so keep the id and include <code>_table</code> as above to keep the refresh.</p>
+<p>The package's <code>list.php</code> also holds the search box and the filter panel. A <code>list.php</code> of yours has them only if you copy
+them from <code>src/Resources/Views/list.php</code>.</p>
 
 
 
