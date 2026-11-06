@@ -15,6 +15,7 @@ is saved in the front matter.
 | [`select`](#select) | A dropdown, or a list to pick several from | A string, or a list of them |
 | [`integer`](#integer) | A number | A number |
 | [`decimal`](#decimal) | A number with decimal places | A string |
+| [`belongsTo`](#belongsto) | A dropdown of another model's records | The record's ID |
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
 | [`terms`](#terms) | A checkbox for each term | A list of slugs |
 | [`blocks`](#blocks) | The blocks written in the file | A list of maps |
@@ -140,6 +141,40 @@ or is below `min` is refused. The numbers are compared digit by digit, not as fl
 
 Write the numbers as plain digits, such as `0.01` and not `1e-2`. Read the value back as the string it is. A calculation
 that needs exactness should use a library such as `bcmath`, not the `float` PHP would cast it to.
+
+## belongsTo
+
+One record of another model, such as the author of a post. The input is a dropdown of every record's title, and the
+file holds the record's ID.
+
+| Key | Default | What it does |
+|---|---|---|
+| `model` | Required | The class of a CodeIgniter model, such as `App\Models\AuthorModel`. |
+| `title` | Required | The column of the model's table that names a record in the dropdown. |
+
+```yaml
+- handle: author
+  type: belongsTo
+  model: App\Models\AuthorModel
+  title: name
+```
+
+The records come from the model's `findAll()`, ordered by the title, so a soft-deleted record isn't offered. A save is
+refused if the ID isn't a record of the model. The blueprint is refused if `model` isn't a model class, or `title` isn't a
+column of its table. An ID such as `7` is saved as a number, and any other, such as a UUID, as text.
+
+Reading the entry gives the ID, not the record. To load the record in a template, ask the model for it:
+
+```php
+<?php $author = model(App\Models\AuthorModel::class)->find($entry->field('author')); ?>
+
+<?php if ($author !== null) : ?>
+    <p>By <?= esc($author->name) ?></p>
+<?php endif ?>
+```
+
+`find()` returns null when the field is empty or the record is gone, so check for that. A dropdown of every record suits
+tables of a few hundred rows. For more, [change the input](#changing-an-input).
 
 ## entries
 

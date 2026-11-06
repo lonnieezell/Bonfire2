@@ -555,7 +555,7 @@ final class MoreFieldTypesTest extends ContentTestCase
 
         $this->assertFalse(FieldTypes::has('shout'));
         $this->assertFalse(FieldTypes::has('ghost'));
-        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'slug', 'entries', 'terms', 'blocks'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'belongsTo', 'slug', 'entries', 'terms', 'blocks'], FieldTypes::names());
     }
 
     /**

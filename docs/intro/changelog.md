@@ -58,6 +58,11 @@ are unchanged. `content_seo()` was updated to match. See [View metadata](../buil
 
 ## 6 November 2026
 
+**Fields: `belongsTo`.** A new `belongsTo` field type picks one record of another model. Give it a `model` class and a
+`title` column, and the form shows a dropdown of the records' titles and saves the chosen ID. A save is refused if the ID
+isn't a record of the model, and a blueprint whose `model` or `title` can't be found is refused. See
+[Field types](../content/field_types.md#belongsto).
+
 **Content: blocks.** A new `blocks` field type holds a list of typed blocks in an entry's front matter, such as a hero or a
 call to action. Block types are files in `resources/blueprints/blocks`, with a `title`, an optional `icon` and `fields`.
 `$entry->blocks($field)` returns a list you can loop over, filter with `ofType()` and render, `$entry->block($field)` is

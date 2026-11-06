@@ -11,6 +11,7 @@
 
 namespace Bonfire\Fields;
 
+use Bonfire\Fields\Types\BelongsToField;
 use Bonfire\Fields\Types\DateField;
 use Bonfire\Fields\Types\DatetimeField;
 use Bonfire\Fields\Types\DecimalField;
@@ -27,15 +28,16 @@ use Bonfire\Fields\Types\ToggleField;
 final class FieldTypes
 {
     private const TYPES = [
-        'text'     => TextField::class,
-        'textarea' => TextareaField::class,
-        'markdown' => MarkdownField::class,
-        'toggle'   => ToggleField::class,
-        'date'     => DateField::class,
-        'datetime' => DatetimeField::class,
-        'select'   => SelectField::class,
-        'integer'  => IntegerField::class,
-        'decimal'  => DecimalField::class,
+        'text'      => TextField::class,
+        'textarea'  => TextareaField::class,
+        'markdown'  => MarkdownField::class,
+        'toggle'    => ToggleField::class,
+        'date'      => DateField::class,
+        'datetime'  => DatetimeField::class,
+        'select'    => SelectField::class,
+        'integer'   => IntegerField::class,
+        'decimal'   => DecimalField::class,
+        'belongsTo' => BelongsToField::class,
     ];
 
     public static function has(string $type): bool
