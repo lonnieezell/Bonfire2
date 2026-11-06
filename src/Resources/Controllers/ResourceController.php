@@ -94,7 +94,7 @@ class ResourceController extends AdminController
                 'id'         => $this->idOf($model, $record),
                 'cells'      => $this->cells($columns, $record),
                 'editUrl'    => $this->editUrl($resource, $model, $record),
-                'selectable' => $selectable && $actionList->selectable($user, $record),
+                'selectable' => $selectable && is_object($record) && $actionList->selectable($user, $record),
             ], $records),
             'pager'    => $model->pager,
             'sort'     => $sort,
