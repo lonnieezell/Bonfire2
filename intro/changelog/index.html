@@ -3591,6 +3591,14 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="6-november-2026">6 November 2026</h2>
+<p><strong>Resources: create and edit pages.</strong> Add <code>create</code> and <code>edit</code> to a resource's <code>$pages</code> for forms that render through
+<code>Bonfire\Fields\Form</code> with the save bar. Write the fields in PHP with the builders in <code>Bonfire\Resources\Fields</code> (<code>Text</code>,
+<code>Textarea</code>, <code>Markdown</code>, <code>Toggle</code>, <code>Select</code>, <code>Integer</code>, <code>Date</code>, <code>Datetime</code>, <code>Decimal</code>, <code>BelongsTo</code>, <code>Field::make(…,
+type:)</code>) and group them with <code>Section</code>. A save validates the field rules, then the model saves with its own, and one post
+shows the errors of both. <code>{id}</code> works in field rules, <code>beforeSave()</code> and <code>afterSave()</code> hook the save, <code>can()</code> decides
+per record, and a <code>form.php</code> beside the resource replaces the form. <code>Column</code> adds relation (<code>category.name</code>) and computed
+columns to the list. <code>register()</code> throws a <code>ResourceException</code> outside production when a field isn't in the model's
+<code>$allowedFields</code>, and logs it in production. See <a href="../../building_admin_modules/resources/">Resources</a>.</p>
 <p><strong>Fields: <code>belongsTo</code> search.</strong> Above <code>searchAbove</code> records (default <code>100</code>), a <code>belongsTo</code> field shows a search box
 instead of a dropdown. It lists matching titles as you type, from an admin endpoint that needs <code>admin.access</code>, the field's
 optional <code>permission</code> and a token signed with the app's encryption key. See

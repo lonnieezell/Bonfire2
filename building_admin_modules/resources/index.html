@@ -2699,6 +2699,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The forms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The forms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saving
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-list" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2743,16 +2793,27 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#relation-and-computed-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation and computed columns
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#replacing-the-view" class="md-nav__link">
+  <a href="#replacing-the-views" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replacing the view
+        Replacing the views
       
     </span>
   </a>
@@ -3048,6 +3109,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The forms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The forms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saving" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saving
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-list" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3092,16 +3203,27 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#relation-and-computed-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation and computed columns
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#replacing-the-view" class="md-nav__link">
+  <a href="#replacing-the-views" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Replacing the view
+        Replacing the views
       
     </span>
   </a>
@@ -3183,9 +3305,10 @@
 
 <h1 id="resources">Resources</h1>
 <p>A resource describes a model for the admin in one class. Register it and declare its routes, and Bonfire adds the
-sidebar item and the list page: a paginated, sortable table, with no controller or view of yours. Resources sit beside
-hand-written modules. <a href="../generating_a_module/">Generating a module</a> is still the way to get plain controllers and views.</p>
-<p>Only the list page exists so far.</p>
+sidebar item, the list page (a paginated, sortable table) and the create and edit forms, with no controller or view of
+yours. Resources sit beside hand-written modules. <a href="../generating_a_module/">Generating a module</a> is still the way to get
+plain controllers and views.</p>
+<p>The list, create and edit pages exist so far.</p>
 <h2 id="a-resource-class">A resource class</h2>
 <div class="highlight"><pre><span></span><code><span class="k">namespace</span> <span class="nx">App\Modules\Categories</span><span class="p">;</span>
 
@@ -3211,10 +3334,11 @@ hand-written modules. <a href="../generating_a_module/">Generating a module</a> 
 <li><strong><code>$slug</code></strong> is the URL after the admin area (<code>admin/categories</code>), and the prefix of the route names (<code>categories-list</code>).</li>
 <li><strong><code>$permission</code></strong> is the prefix of the permissions that guard the pages. Add <code>categories.list</code> to your
   <code>Config\AuthGroups</code> permissions and matrix, as for any <a href="../permissions/">module permission</a>.</li>
-<li><strong><code>$pages</code></strong> names the pages the resource has. <code>['list']</code> is the only page there is for now. A page that isn't named
-  gets no route, so its URL is a 404.</li>
+<li><strong><code>$pages</code></strong> names the pages the resource has: <code>list</code>, <code>create</code> and <code>edit</code>. A page that isn't named gets no route,
+  so its URL is a 404.</li>
 <li><strong><code>$search</code></strong> names the columns of the model's table that the search looks in. See <a href="#search">Search</a>.</li>
-<li><strong><code>fields()</code></strong> lists the fields of a record, as the same <code>Bonfire\Fields\Field</code> objects that blueprints use.</li>
+<li><strong><code>fields()</code></strong> lists the fields of a record: <a href="#fields">builders</a> such as <code>Text::make('name')</code>, or the same
+  <code>Bonfire\Fields\Field</code> objects that blueprints use.</li>
 <li><strong><code>filters()</code></strong> describes the filters of the list. See <a href="#filters">Filters</a>.</li>
 <li><strong><code>title()</code></strong> is the name in the sidebar and above the list. It is the slug with a capital by default; override it to
   change that.</li>
@@ -3243,8 +3367,148 @@ table icon unless you pass <code>collection:</code> and <code>icon:</code>:</p>
 <code>initAdmin()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">resource_routes</span><span class="p">(</span><span class="nv">$routes</span><span class="p">,</span> <span class="nx">CategoryResource</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
 </code></pre></div>
-<p><code>resource_routes()</code> declares the routes that <code>$pages</code> allows. Register after the routes exist: the sidebar item looks
-its link up by route name.</p>
+<p><code>resource_routes()</code> declares the routes that <code>$pages</code> allows, named <code>{slug}-list</code>, <code>{slug}-new</code> and <code>{slug}-create</code> (the
+form and its post), and <code>{slug}-edit</code> and <code>{slug}-update</code>. Register after the routes exist: the sidebar item looks its
+link up by route name.</p>
+<p>A resource that has a <code>create</code> or <code>edit</code> page saves what its fields hold, so every field has to be in the model's
+<code>$allowedFields</code>, or the model would drop the value without a word. <code>register()</code> throws a <code>ResourceException</code> that names
+the missing fields. In production it logs the same message and registers the resource anyway.</p>
+<h2 id="fields">Fields</h2>
+<p>A field is written in PHP with a builder from <code>Bonfire\Resources\Fields</code>. The methods have the names of the keys of a
+<a href="../../content/blueprints/#field-keys">blueprint field</a>, and each builder is one of the <a href="../../content/field_types/">field types</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Builder</th>
+<th>Type</th>
+<th>Methods of its own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Text</code></td>
+<td><code>text</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Textarea</code></td>
+<td><code>textarea</code></td>
+<td><code>rows()</code></td>
+</tr>
+<tr>
+<td><code>Markdown</code></td>
+<td><code>markdown</code></td>
+<td><code>rows()</code></td>
+</tr>
+<tr>
+<td><code>Toggle</code></td>
+<td><code>toggle</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Select</code></td>
+<td><code>select</code></td>
+<td><code>options()</code>, <code>multiple()</code></td>
+</tr>
+<tr>
+<td><code>Integer</code></td>
+<td><code>integer</code></td>
+<td><code>min()</code>, <code>max()</code></td>
+</tr>
+<tr>
+<td><code>Date</code></td>
+<td><code>date</code></td>
+<td><code>time()</code></td>
+</tr>
+<tr>
+<td><code>Datetime</code></td>
+<td><code>datetime</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>Decimal</code></td>
+<td><code>decimal</code></td>
+<td><code>places()</code>, <code>min()</code>, <code>step()</code></td>
+</tr>
+<tr>
+<td><code>BelongsTo</code></td>
+<td><code>belongsTo</code></td>
+<td><code>model()</code>, <code>title()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Every builder has <code>label()</code>, <code>validate()</code>, <code>instructions()</code> and <code>width('full')</code>, and <code>with([...])</code> sets any key of the
+type. <code>Field::make('slug', type: 'text')</code> takes the type by name, which is how a <a href="../../content/custom_field_types/">custom field
+type</a> is used. The label is the handle in words unless you set one.</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\BelongsTo</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Decimal</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Section</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Select</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Text</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">fields</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="nx">Section</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'Basics'</span><span class="p">,</span> <span class="p">[</span>
+            <span class="nx">Text</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">(</span><span class="s1">'required'</span><span class="p">),</span>
+            <span class="nx">Text</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'sku'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">(</span><span class="s1">'SKU'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">validate</span><span class="p">(</span><span class="s1">'required|is_unique[products.sku,id,{id}]'</span><span class="p">),</span>
+        <span class="p">])</span><span class="o">-&gt;</span><span class="na">columns</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="nx">Section</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'Pricing'</span><span class="p">,</span> <span class="p">[</span>
+            <span class="nx">Decimal</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'price'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">places</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">min</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="nx">BelongsTo</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'category_id'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">(</span><span class="s1">'Category'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">model</span><span class="p">(</span><span class="nx">CategoryModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">(</span><span class="s1">'name'</span><span class="p">),</span>
+            <span class="nx">Select</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'status'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">options</span><span class="p">([</span><span class="s1">'draft'</span> <span class="o">=&gt;</span> <span class="s1">'Draft'</span><span class="p">,</span> <span class="s1">'active'</span> <span class="o">=&gt;</span> <span class="s1">'Active'</span><span class="p">]),</span>
+        <span class="p">])</span><span class="o">-&gt;</span><span class="na">instructions</span><span class="p">(</span><span class="s1">'What it costs.'</span><span class="p">),</span>
+    <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>Section::make($title, $fields)</code> groups fields under a title in one to three columns with <code>columns()</code>, and takes
+<code>instructions()</code>, like a blueprint's <code>sections</code>. A field outside every section goes in a group with no title. The
+form shows the fields and sections in the order <code>fields()</code> lists them.</p>
+<h2 id="the-forms">The forms</h2>
+<p>The create and edit pages render the fields with <code>Bonfire\Fields\Form</code>, the form that blueprints use, and a save bar. The
+list links the first column of each row to the edit page, and has a button for the new record page. Both need
+<code>{permission}.create</code> and <code>{permission}.edit</code>. A user without them is sent back to the dashboard with an error, and
+doesn't see the link.</p>
+<p>Override <code>can()</code> for rules that depend on the record. It runs for the page and the save, and for the list's links:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">can</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$verb</span><span class="p">,</span> <span class="nx">mixed</span> <span class="nv">$entity</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span>
+<span class="p">{</span>
+    <span class="c1">// $verb is list, create or edit. $entity is the record, or null when there isn't one yet.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$verb</span> <span class="o">===</span> <span class="s1">'edit'</span> <span class="o">&amp;&amp;</span> <span class="nv">$entity</span><span class="o">?-&gt;</span><span class="na">status</span> <span class="o">===</span> <span class="s1">'archived'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="k">parent</span><span class="o">::</span><span class="na">can</span><span class="p">(</span><span class="nv">$verb</span><span class="p">,</span> <span class="nv">$entity</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The edit page shows the tabs that other code adds with <a href="../resource_tabs/">resource tabs</a>, under the resource's slug:
+<code>service('resourceTabs')-&gt;addTabFor('products', new ResourceTab([...]))</code>.</p>
+<h3 id="validation">Validation</h3>
+<p>A save runs the field rules (the <code>validate()</code> of each field and whatever its type needs), and then the model saves with
+its own <code>$validationRules</code>. When the field rules fail, the model's rules still run, and their errors are added, so one
+post shows every error under its input. An input shows its field's error before the model's. A model error for a name
+that is no field is shown above the form.</p>
+<p><code>{id}</code> in a field's rules is the ID of the record being edited, and empty for a new one.
+<code>is_unique[products.sku,id,{id}]</code> lets a product keep its own SKU and refuses another's.</p>
+<h3 id="saving">Saving</h3>
+<p>A save goes through <code>$model-&gt;save()</code>. Records are entities when the model's <code>$returnType</code> is an entity class, and arrays
+otherwise. Two methods of the resource hook in:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">beforeSave</span><span class="p">(</span><span class="k">array</span> <span class="nv">$data</span><span class="p">,</span> <span class="nx">mixed</span> <span class="nv">$record</span><span class="p">)</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="c1">// $data holds the stored value of each field, by handle. $record is the one being edited, or null.</span>
+    <span class="nv">$data</span><span class="p">[</span><span class="s1">'slug'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">url_title</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'name'</span><span class="p">],</span> <span class="s1">'-'</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'featured'</span><span class="p">]);</span>
+
+    <span class="k">return</span> <span class="nv">$data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">afterSave</span><span class="p">(</span><span class="nx">mixed</span> <span class="nv">$record</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+<span class="p">{</span>
+    <span class="c1">// The saved record, read back from the model.</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>beforeSave()</code> runs on every post, even one with errors, so the model's rules check the values it would save. What it
+returns is what the model gets: add values, or drop them. <code>afterSave()</code> runs only after the model saved. Then the user
+lands on the record's edit page.</p>
 <h2 id="the-list">The list</h2>
 <p>A user without <code>{permission}.list</code> is sent back to the dashboard with an error, and doesn't see the sidebar item.</p>
 <p>The columns are the resource's <code>columns()</code>. By default they are the <code>fields()</code> except <code>textarea</code> and <code>markdown</code> fields
@@ -3299,9 +3563,32 @@ table.</p>
 <p>A resource with <code>$search</code> also shows up when someone uses the search box in the admin header: its section lists the
 records that match, and each one links to the resource's list narrowed to it. Users without <code>{permission}.list</code> don't
 see it. To search differently, write a <a href="../search/">search provider</a> of your own.</p>
-<h2 id="replacing-the-view">Replacing the view</h2>
+<h3 id="relation-and-computed-columns">Relation and computed columns</h3>
+<p>Return <code>Bonfire\Resources\Column</code> objects from <code>columns()</code>, beside or instead of fields. A dotted handle such as
+<code>category.name</code> reads <code>name</code> from the record's <code>category</code>, or else the record's <code>category_name</code>, which a join in
+<code>query()</code> selects. That gives the list the category's name without a query for each row. A column that calls <code>using()</code>
+computes its cell from the record:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">query</span><span class="p">(</span><span class="nx">Model</span> <span class="nv">$model</span><span class="p">)</span><span class="o">:</span> <span class="nx">Model</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$model</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s1">'products.*, categories.name AS category_name'</span><span class="p">)</span>
+        <span class="o">-&gt;</span><span class="na">join</span><span class="p">(</span><span class="s1">'categories'</span><span class="p">,</span> <span class="s1">'categories.id = products.category_id'</span><span class="p">,</span> <span class="s1">'left'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">columns</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="nx">Column</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'name'</span><span class="p">),</span>
+        <span class="nx">Column</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'category.name'</span><span class="p">,</span> <span class="s1">'Category'</span><span class="p">),</span>
+        <span class="nx">Column</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'stock_value'</span><span class="p">,</span> <span class="s1">'Stock value'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">using</span><span class="p">(</span><span class="nx">fn</span> <span class="p">(</span><span class="nv">$product</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nv">$product</span><span class="o">-&gt;</span><span class="na">price</span> <span class="o">*</span> <span class="nv">$product</span><span class="o">-&gt;</span><span class="na">stock</span><span class="p">),</span>
+    <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Only a handle that is a column of the model's table can be sorted, so these two can't.</p>
+<h2 id="replacing-the-views">Replacing the views</h2>
 <p>The views are part of the package, so they aren't copied into your Admin theme and updating Bonfire updates them. To
-replace the list for one resource, put a <code>list.php</code> in the same folder as the resource class. It is an ordinary
+replace the create and edit form for one resource, put a <code>form.php</code> in the same folder as the resource class; it gets
+<code>$resource</code>, <code>$record</code> (null for a new one), <code>$action</code>, <code>$backUrl</code>, <code>$sections</code> and <code>$notices</code>, and the package's
+<code>form.php</code> is the place to start from. To replace the list, put a <code>list.php</code> there. It is an ordinary
 <a href="../controllers_and_views/">admin view</a> and has these variables:</p>
 <table>
 <thead>
@@ -3317,11 +3604,11 @@ replace the list for one resource, put a <code>list.php</code> in the same folde
 </tr>
 <tr>
 <td><code>$columns</code></td>
-<td>the columns, as <code>Field</code> objects</td>
+<td>the columns, as <code>Field</code> or <code>Column</code> objects</td>
 </tr>
 <tr>
 <td><code>$rows</code></td>
-<td>one array for each record: <code>record</code>, and <code>cells</code>, the text of each column</td>
+<td>one array for each record: <code>record</code>, <code>cells</code> (the text of each column) and <code>editUrl</code> (where the first cell links to, or null)</td>
 </tr>
 <tr>
 <td><code>$pager</code></td>
@@ -3330,6 +3617,10 @@ replace the list for one resource, put a <code>list.php</code> in the same folde
 <tr>
 <td><code>$total</code></td>
 <td>the number of records</td>
+</tr>
+<tr>
+<td><code>$canCreate</code></td>
+<td>whether to show the button for a new record</td>
 </tr>
 <tr>
 <td><code>$sort</code></td>
