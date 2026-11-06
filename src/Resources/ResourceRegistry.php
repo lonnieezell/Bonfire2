@@ -11,6 +11,7 @@
 
 namespace Bonfire\Resources;
 
+use Bonfire\Actions\ModelSource;
 use Bonfire\Fields\Field;
 use Bonfire\Menus\MenuItem;
 use InvalidArgumentException;
@@ -38,7 +39,8 @@ class ResourceRegistry
     /**
      * Registers a resource and adds its list to the sidebar, for those who have `{permission}.list`.
      * It also puts the resource's soft-deleted records in the Recycler, shown by the `$search` columns, and
-     * its `$search` columns in the admin's global search. Call it from a module's initAdmin(), after the
+     * its `$search` columns in the admin's global search, and its `actions()` on the action list named by its slug,
+     * with the model as the record source. Call it from a module's initAdmin(), after the
      * module's routes exist.
      *
      * A resource that saves records needs every field in its model's `$allowedFields`, or the model would drop the
@@ -75,6 +77,13 @@ class ResourceRegistry
         if ($model->useSoftDeletes) {
             // The `$search` columns identify a record, or else its key does: a list column may not be a column of the table.
             service('recycler')->register($resource->slug, $resource->title(), $resource->model, $resource->search ?: [$model->primaryKey]);
+        }
+
+        // The resource's actions go on the list named by its slug, so other modules can add to it.
+        $actions = service('actions')->for($resource->slug)->records(new ModelSource($resource->model));
+
+        foreach ($resource->actions() as $action) {
+            $actions->add($action);
         }
 
         return $resource;

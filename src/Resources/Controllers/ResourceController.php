@@ -78,13 +78,23 @@ class ResourceController extends AdminController
 
         $records = $model->paginate(setting('Site.perPage'));
 
+        // The rows hand their records over, so that the row actions don't load each one again. Actions work on
+        // objects, so a model that returns arrays has none to hand over.
+        $user       = auth()->user();
+        $actionList = service('actions')->for($resource->slug)->showing(array_filter($records, is_object(...)));
+        $selectable = $actionList->selectable($user);
+
         $data = [
-            'resource' => $resource,
-            'columns'  => $columns,
-            'rows'     => array_map(fn ($record): array => [
-                'record'  => $record,
-                'cells'   => $this->cells($columns, $record),
-                'editUrl' => $this->editUrl($resource, $model, $record),
+            'resource'   => $resource,
+            'columns'    => $columns,
+            'selectable' => $selectable,
+            'rowActions' => $actionList->row($user) !== [],
+            'rows'       => array_map(fn ($record): array => [
+                'record'     => $record,
+                'id'         => $this->idOf($model, $record),
+                'cells'      => $this->cells($columns, $record),
+                'editUrl'    => $this->editUrl($resource, $model, $record),
+                'selectable' => $selectable && $actionList->selectable($user, $record),
             ], $records),
             'pager'    => $model->pager,
             'sort'     => $sort,

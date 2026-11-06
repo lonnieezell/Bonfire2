@@ -2,6 +2,7 @@
 
 namespace Tests\Support\Modules\Products;
 
+use Bonfire\Resources\Actions\DeleteRecords;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Fields\BelongsTo;
 use Bonfire\Resources\Fields\Date;
@@ -79,6 +80,11 @@ class ProductResource extends Resource
     public function query(Model $model): Model
     {
         return $model->select('products.*, categories.name AS category_name')->join('categories', 'categories.id = products.category_id', 'left');
+    }
+
+    public function actions(): array
+    {
+        return [new DeleteRecords($this), new FeatureProducts()];
     }
 
     /**

@@ -297,6 +297,36 @@ public function columns(): array
 
 Only a handle that is a column of the model's table can be sorted, so these two can't.
 
+### Actions
+
+`actions()` returns the [actions](actions.md) of the list. Each shows in the row's menu and, as a bulk action, in the bar
+that appears when rows are checked, according to its `$placement`:
+
+```php
+public function actions(): array
+{
+    return [new DeleteRecords($this), new FeatureProducts()];
+}
+```
+
+`register()` adds them to the action list named by the resource's `$slug`, with the resource's model as the record
+source, so the actions run through `POST admin/actions/products/{action}` like any other. They need objects, so the
+model must return entities or objects, not arrays. Each action needs the permission it names: an action the user lacks
+the permission for isn't shown, and the endpoint refuses it. A list that has no actions for the user has no checkboxes
+and no actions column.
+
+`Bonfire\Resources\Actions\DeleteRecords` deletes records through the resource's model after asking for confirmation. It
+needs `{permission}.delete`. When the model uses soft deletes, the records go to the [Recycler](recycler.md), which
+`register()` has already set up for the resource, and can be restored from there. Otherwise they are gone for good. It
+checks the permission only: it doesn't ask `can('delete', $record)`, because an action may run in a queue worker, where
+nobody is signed in.
+
+Another module adds an action to a resource's list by its slug, from `initAdmin()`:
+
+```php
+service('actions')->for('products')->add(new ExportProducts());
+```
+
 ## Replacing the views
 
 The views are part of the package, so they aren't copied into your Admin theme and updating Bonfire updates them. To
@@ -318,6 +348,12 @@ replace the create and edit form for one resource, put a `form.php` in the same 
 | `$sortUrls` | the link of each sortable column, by handle                                      |
 | `$search`   | what was typed in the search box, or an empty string                             |
 | `$narrowed` | whether a search or a filter is narrowing the list                               |
+| `$selectable` | whether the user may check rows, because they may run a bulk action             |
+| `$rowActions` | whether the user may run a row action                                          |
+
+Each of the `$rows` also has an `id` and a `selectable` flag, false for a record that no bulk action allows. The
+package's `_table.php` shows the checkboxes, the bulk bar and the row menus with `<x-selection-bar>`,
+`<x-bulk-actions>` and `<x-row-actions>`.
 
 ```php
 <?php $this->extend('master') ?>
