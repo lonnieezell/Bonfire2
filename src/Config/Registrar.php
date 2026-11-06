@@ -5,6 +5,7 @@ namespace Bonfire\Config;
 use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
+use Bonfire\Content\Fields\BlocksField;
 use Bonfire\Content\Fields\EntriesField;
 use Bonfire\Content\Fields\SlugField;
 use Bonfire\Content\Fields\TermsField;
@@ -149,6 +150,7 @@ class Registrar
                 'slug'    => SlugField::class,
                 'entries' => EntriesField::class,
                 'terms'   => TermsField::class,
+                'blocks'  => BlocksField::class,
             ],
         ];
     }

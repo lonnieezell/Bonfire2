@@ -123,7 +123,9 @@ final readonly class EntryForm
     /**
      * @param array<string, string> $values as prepare() returned them
      *
-     * @return array<string, string> the first error of each field that has one, by handle
+     * @return array<string, string> the first error of each field that has one, by handle, and then the errors inside a
+     *                               field that holds several values, by the handle, a dot and the position the editor
+     *                               sees: `sections.2.heading`
      */
     public function validate(array $values): array
     {

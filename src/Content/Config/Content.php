@@ -26,6 +26,12 @@ class Content extends BaseConfig
     public string $blueprintPath = ROOTPATH . 'resources/blueprints/';
 
     /**
+     * Where the partial of each block type lives, as a view folder: a block of type `hero` renders through
+     * `view('blocks/hero')`, which is app/Views/blocks/hero.php.
+     */
+    public string $blockViewPath = 'blocks';
+
+    /**
      * Whether Bonfire serves entries through its fallback route.
      * App routes always win over it.
      */

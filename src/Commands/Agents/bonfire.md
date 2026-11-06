@@ -78,6 +78,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Serving entries at their URIs, with a template or a controller | `content/routing.md` |
 | Querying, listing, paginating or searching entries in a controller or view | `content/query_api.md` |
 | Putting an entry's title, description and Open Graph tags in the head | `content/seo.md` |
+| Mixing typed sections such as a hero or a call to action on a page, and rendering them through partials | `content/blocks.md` |
 | Serving an RSS feed or a sitemap of content | `content/feeds_and_sitemaps.md` |
 | Generating starting views or a controller for a collection | `content/scaffolding.md` |
 | Reindexing content, and what to run on deploy | `content/the_index.md` |

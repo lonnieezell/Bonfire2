@@ -9,6 +9,7 @@ Content's settings are in `app/Config/Content.php`, which `php spark bf:install`
 |---|---|---|
 | `$contentPath` | `ROOTPATH . 'content/'` | The content root, which holds collections, entries, taxonomies and the rest. See [File layout](index.md#file-layout). |
 | `$blueprintPath` | `ROOTPATH . 'resources/blueprints/'` | Where blueprints live. See [Blueprints](blueprints.md). |
+| `$blockViewPath` | `'blocks'` | The view folder that holds a partial for each block type, `app/Views/blocks`. See [Blocks](blocks.md#rendering-blocks). |
 | `$autoRoute` | `false` | Serves entries at their URIs through the fallback route. See [Routing](routing.md#turning-it-on). |
 | `$autoSeo` | `false` | Adds an entry's SEO tags to the pages the fallback route renders from a `template`. See [SEO](seo.md#doing-it-automatically). |
 | `$sitemap` | `false` | Serves the sitemap at `/sitemap.xml`. See [Sitemap](feeds_and_sitemaps.md#the-built-in-sitemap-route). |

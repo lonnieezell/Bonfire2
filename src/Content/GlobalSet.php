@@ -11,8 +11,7 @@
 
 namespace Bonfire\Content;
 
-use Bonfire\Fields\Field;
-use Bonfire\Fields\FieldTypes;
+use Bonfire\Content\Fields\EntryStorage;
 use DateTimeInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -118,7 +117,7 @@ final readonly class GlobalSet
         if ($value !== null) {
             foreach ($this->blueprint->fields ?? [] as $field) {
                 if ($field->handle === $name) {
-                    $value = self::cast($value, $field);
+                    $value = EntryStorage::cast($value, $field);
 
                     break;
                 }
@@ -126,21 +125,5 @@ final readonly class GlobalSet
         }
 
         return $value === null || $value === '' ? $default : $value;
-    }
-
-    /**
-     * Casts a value as its field's type reads it from a file: a toggle is a bool, an integer an int, and a date
-     * or datetime text. Null when it doesn't fit.
-     */
-    private static function cast(mixed $value, Field $field): mixed
-    {
-        $text = FieldTypes::get($field->type)->fromStored($value, $field);
-
-        return match ($field->type) {
-            'toggle'           => $text === '1',
-            'integer'          => $text === '' ? null : (int) $text,
-            'date', 'datetime' => $text === '' ? null : $text,
-            default            => $value,
-        };
     }
 }

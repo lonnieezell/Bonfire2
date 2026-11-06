@@ -44,6 +44,15 @@ are unchanged. `content_seo()` was updated to match. See [View metadata](../buil
 
 ## 6 November 2026
 
+**Content: blocks.** A new `blocks` field type holds a list of typed blocks in an entry's front matter, such as a hero or a
+call to action. Block types are files in `resources/blueprints/blocks`, with a `title`, an optional `icon` and `fields`.
+`$entry->blocks($field)` returns a list you can loop over, filter with `ofType()` and render, `$entry->block($field)` is
+the first block, and `$entry->renderBlocks($field)` renders them in order through `app/Views/blocks/<type>.php`. A
+block's `field()` is cast by its blueprint, as `globals()` does. A missing partial throws outside production and is logged
+in production. `max_items` and `min_items` are enforced on save, with errors keyed by position. The admin lists the blocks
+and keeps them on save, but you write them in the entry's file. New `Config\Content::$blockViewPath` and
+`FieldType::itemErrors()`. See [Blocks](../content/blocks.md).
+
 **View metadata: no duplicates, and raw styles.** An identical `addMeta()`, `addLink()`, `addScript()` or `addStyle()`
 entry, or identical raw script, is output once, so block partials can each declare the assets they need. New
 `addRawStyle()` and `rawStyles()` add a `<style>` block, and the App theme's layout prints it. If you keep your own copy of

@@ -46,6 +46,7 @@ Every method is optional but `partial()`. The built-in types are classes like th
 | `rules($field)` | The validation rules. | The blueprint's `validate` |
 | `toStored($input, $field)` | The PHP value to store, such as a `bool`, an `int` or a list. In Content it's written to the file, and `null` or `''` leaves the key out. | The text |
 | `fromStored($stored, $field)` | The text the form shows for the stored value. | The value as text, or `''` |
+| `itemErrors($input, $field)` | The errors inside a value that holds several, by the 1-based position of the item, such as `2.heading`. `blocks` uses it. | No errors |
 | `check($field)` | Throws a `Bonfire\Fields\FieldException` if the blueprint gave the field options it can't use, so the blueprint is refused. | Nothing |
 | `viewNamespace()` | The namespace of the views that hold the type's partial. | `Bonfire\Fields\Views\fields` |
 
