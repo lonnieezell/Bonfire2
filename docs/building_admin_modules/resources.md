@@ -85,6 +85,53 @@ A resource that has a `create` or `edit` page saves what its fields hold, so eve
 `$allowedFields`, or the model would drop the value without a word. `register()` throws a `ResourceException` that names
 the missing fields. In production it logs the same message and registers the resource anyway.
 
+## Generating a resource
+
+`php spark bf:resource` writes a resource for a model whose table exists, with a field for each column:
+
+```
+php spark bf:resource Product --model='App\Models\ProductModel'
+```
+
+`Product` is the record in singular. The command writes four files into `App\Modules\Products` (change the module with
+`--namespace`):
+
+| File | What it holds |
+|---|---|
+| `ProductResource.php` | the resource: slug `products`, a field for each column, and the `$pages` |
+| `Module.php` | `service('resources')->register(ProductResource::class)` in `initAdmin()` |
+| `Config/Routes.php` | `resource_routes($routes, ProductResource::class)` |
+| `Config/Registrar.php` | the `products.list`, `products.create`, `products.edit` and `products.delete` permissions, which show up under Settings → Groups |
+
+A `--model` with no namespace is looked up in `App\Models`. The model must have a table; the command refuses a class
+that doesn't exist, isn't a model or has no table. The command leaves out the key, the timestamps and any column that
+isn't in the model's `$allowedFields`, and says which.
+
+The field of a column comes from its type:
+
+| Column | Field |
+|---|---|
+| `varchar`, `char` and any type not listed here | `Text` |
+| `text`, `tinytext`, `mediumtext`, `longtext` | `Textarea` |
+| `int`, `smallint`, `mediumint`, `bigint`, `tinyint` | `Integer` |
+| `decimal`, `numeric` | `Decimal`, with the column's places |
+| `tinyint(1)`, `bool`, `boolean` | `Toggle` |
+| `date` | `Date` |
+| `datetime`, `timestamp` | `Datetime` |
+| a name ending in `_id` | a commented-out `BelongsTo` to uncomment and point at the related model; a column that needs a value also gets a required `Integer` until you swap it for the `BelongsTo` |
+
+A column that is `NOT NULL` with no default gets the `required` rule, and a `varchar` gets `max_length` with its length.
+SQLite leaves a column's length out of what it reports for tables made by the forge, so there `tinyint(1)` is an
+`Integer` and a `varchar` has no `max_length`.
+
+Pass `--pages` to leave pages out, as in `--pages=list,edit`. The resource gets that `$pages`, and the registrar leaves out
+the permissions of the pages that are off. `delete` is always declared.
+
+Files that exist are never overwritten. The command says which it left alone and what to add to them by hand: the
+`register()` line for `Module.php`, the `resource_routes()` line for `Config/Routes.php`, and the permissions for
+`Config/Registrar.php`. Then follow the next steps it prints: add the module to `$appModules`, and run
+`php spark bonfire:permissions` to grant the permissions.
+
 ## Fields
 
 A field is written in PHP with a builder from `Bonfire\Resources\Fields`. The methods have the names of the keys of a

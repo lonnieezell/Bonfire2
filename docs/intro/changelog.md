@@ -4,6 +4,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 7 November 2026
+
+**`bf:resource` generates a resource.** `php spark bf:resource Product --model='App\Models\ProductModel'` reads the
+model's table and writes the resource with a field for each column, plus `Module.php`, `Config/Routes.php` and a
+`Config/Registrar.php` that declares `products.list|create|edit|delete`, which show under Settings → Groups. Files that
+exist are left alone, and the command says what to add to them by hand. See
+[Resources](../building_admin_modules/resources.md#generating-a-resource).
+
 ## 6 November 2026
 
 **Resources: create and edit pages.** Add `create` and `edit` to a resource's `$pages` for forms that render through

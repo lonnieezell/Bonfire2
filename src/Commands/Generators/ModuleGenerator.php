@@ -12,6 +12,7 @@ use CodeIgniter\Model;
  */
 class ModuleGenerator extends BaseCommand
 {
+    use FindsNamespaceFolders;
     use RendersTemplates;
 
     /**
@@ -153,29 +154,6 @@ class ModuleGenerator extends BaseCommand
     }
 
     /**
-     * The folder of a namespace, through the closest namespace the
-     * autoloader maps to a folder.
-     */
-    private function namespacePath(string $namespace): ?string
-    {
-        $namespaces = service('autoloader')->getNamespace();
-        $prefix     = $namespace;
-        $rest       = '';
-
-        while (! isset($namespaces[$prefix])) {
-            $pos = strrpos($prefix, '\\');
-            if ($pos === false) {
-                return null;
-            }
-
-            $rest   = substr($prefix, $pos) . $rest;
-            $prefix = substr($prefix, 0, $pos);
-        }
-
-        return rtrim($namespaces[$prefix][0], '\/') . str_replace('\\', '/', $rest) . '/';
-    }
-
-    /**
      * @param list<string> $fields
      */
     private function templateData(string $name, string $namespace, Model $model, array $fields): array
@@ -218,28 +196,9 @@ class ModuleGenerator extends BaseCommand
      */
     private function nextSteps(string $name, string $namespace, Model $model): void
     {
-        $steps = [];
-
-        $modulesNamespace = substr($namespace, 0, (int) strrpos($namespace, '\\'));
-        if (! array_key_exists($modulesNamespace, (array) config('Bonfire')->appModules)) {
-            $steps[] = "Add '{$modulesNamespace}' to \$appModules in app/Config/Bonfire.php, so Bonfire finds the module.";
-        }
-
-        if (! isset(service('autoloader')->getNamespace()[$namespace])) {
-            $steps[] = "Add '{$namespace}' to \$psr4 in app/Config/Autoload.php, so CodeIgniter reads the module's Config/Registrar.php.";
-        }
-
-        if ($model->useSoftDeletes && ! in_array($model->deletedField, $model->allowedFields, true)) {
-            $steps[] = "Add '{$model->deletedField}' to the model's \$allowedFields, so the Recycler can restore {$name}.";
-        }
-
+        $steps   = $this->setupSteps($namespace, $model, $name);
         $steps[] = 'Run php spark bonfire:permissions to grant the module\'s permissions to the superadmin and admin groups.';
 
-        CLI::newLine();
-        CLI::write('Next steps:', 'yellow');
-
-        foreach ($steps as $i => $step) {
-            CLI::write(($i + 1) . '. ' . $step);
-        }
+        $this->writeSteps($steps);
     }
 }
