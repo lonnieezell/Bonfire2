@@ -36,7 +36,7 @@ final class DecimalField extends FieldType
     public function rules(Field $field): array|string
     {
         $places = self::places($field);
-        $min    = self::bound($field, 'min');
+        $min    = self::option($field, 'min');
 
         return $this->withRules($field, 'permit_empty', static function (mixed $value, mixed $data, ?string &$error = null) use ($places, $min): bool {
             if (! is_string($value) || preg_match(self::NUMBER, $value, $parts) !== 1) {
@@ -68,30 +68,15 @@ final class DecimalField extends FieldType
 
     public function fromStored(mixed $stored, Field $field): string
     {
-        $stored = is_int($stored) || is_float($stored) || is_string($stored) ? trim((string) $stored) : '';
-
-        return preg_match(self::NUMBER, $stored) === 1 ? $stored : '';
+        return self::plain($stored) ?? '';
     }
 
     /**
-     * The most decimal places the field allows.
+     * A numeric option of the field, such as `min` or `step`, as text, or null when it has none or isn't a plain number.
      */
-    public static function places(Field $field): int
+    public static function option(Field $field, string $key): ?string
     {
-        $places = $field->options['places'] ?? null;
-
-        return is_int($places) && $places >= 0 ? $places : self::DEFAULT_PLACES;
-    }
-
-    /**
-     * The field's `min`, as text, or null when it has none.
-     */
-    public static function bound(Field $field, string $key): ?string
-    {
-        $bound = $field->options[$key] ?? null;
-        $bound = is_int($bound) || is_float($bound) || is_string($bound) ? trim((string) $bound) : '';
-
-        return preg_match(self::NUMBER, $bound) === 1 ? $bound : null;
+        return self::plain($field->options[$key] ?? null);
     }
 
     /**
@@ -99,15 +84,35 @@ final class DecimalField extends FieldType
      */
     public static function step(Field $field): string
     {
-        $step = self::bound($field, 'step');
+        $step = self::option($field, 'step');
 
-        if ($step !== null && self::compare($step, '0') > 0) {
+        if ($step !== null && $step[0] !== '-' && trim($step, '0.') !== '') {
             return $step;
         }
 
         $places = self::places($field);
 
         return $places === 0 ? '1' : '0.' . str_repeat('0', $places - 1) . '1';
+    }
+
+    /**
+     * The most decimal places the field allows.
+     */
+    private static function places(Field $field): int
+    {
+        $places = $field->options['places'] ?? null;
+
+        return is_int($places) && $places >= 0 ? $places : self::DEFAULT_PLACES;
+    }
+
+    /**
+     * A number or its text as plain decimal text, or null when it isn't one.
+     */
+    private static function plain(mixed $value): ?string
+    {
+        $value = is_int($value) || is_float($value) || is_string($value) ? trim((string) $value) : '';
+
+        return preg_match(self::NUMBER, $value) === 1 ? $value : null;
     }
 
     /**

@@ -7,11 +7,11 @@ use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\Fields\EntriesField;
+use Bonfire\Content\Fields\EntryStorage;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldTypes;
-use Bonfire\Fields\Types\DecimalField;
 use Bonfire\Fields\Types\IntegerField;
 use Bonfire\Users\User;
 use CodeIgniter\Test\TestResponse;
@@ -296,7 +296,16 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame([], $form->validate($values));
         $this->assertArrayNotHasKey('price', $form->apply($values, [], '')[0]);
         $this->assertNull($form->apply($values, ['price' => '5.00'], '')[0]['price']);
-        $this->assertNull((new DecimalField())->toStored('', new Field('n', 'decimal', 'N', '', null, [])));
+    }
+
+    public function testADecimalReadFromAFileIsAStringOrNull(): void
+    {
+        $field = new Field('n', 'decimal', 'N', '', null, []);
+
+        $this->assertSame('19.99', EntryStorage::cast('19.99', $field));
+        $this->assertSame('19.99', EntryStorage::cast(19.99, $field), 'a number written by hand');
+        $this->assertNull(EntryStorage::cast('cheap', $field));
+        $this->assertNull(EntryStorage::cast(null, $field));
     }
 
     public function testADecimalCanBeRequired(): void

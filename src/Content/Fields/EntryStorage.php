@@ -37,21 +37,21 @@ final class EntryStorage
     }
 
     /**
-     * Casts a value as its field's type reads it from a file: a toggle is a bool, an integer an int, and a date
-     * or datetime text. Null when it doesn't fit.
+     * Casts a value as its field's type reads it from a file: a toggle is a bool, an integer an int, and a decimal,
+     * date or datetime text. Null when it doesn't fit.
      */
     public static function cast(mixed $value, Field $field): mixed
     {
-        if (! in_array($field->type, ['toggle', 'integer', 'date', 'datetime'], true)) {
+        if (! in_array($field->type, ['toggle', 'integer', 'decimal', 'date', 'datetime'], true)) {
             return $value;
         }
 
         $text = FieldTypes::get($field->type)->fromStored($value, $field);
 
         return match ($field->type) {
-            'toggle'           => $text === '1',
-            'integer'          => $text === '' ? null : (int) $text,
-            'date', 'datetime' => $text === '' ? null : $text,
+            'toggle'                      => $text === '1',
+            'integer'                     => $text === '' ? null : (int) $text,
+            'decimal', 'date', 'datetime' => $text === '' ? null : $text,
         };
     }
 }

@@ -8,6 +8,6 @@
  * @var string               $value
  * @var bool                 $disabled
  */
-$min = Bonfire\Fields\Types\DecimalField::bound($field, 'min');
+$min = Bonfire\Fields\Types\DecimalField::option($field, 'min');
 ?>
 <input type="number" step="<?= esc(Bonfire\Fields\Types\DecimalField::step($field), 'attr') ?>"<?= $min === null ? '' : ' min="' . esc($min, 'attr') . '"' ?> name="<?= esc($name, 'attr') ?>" id="<?= esc($id, 'attr') ?>" class="form-control" value="<?= esc($value, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>

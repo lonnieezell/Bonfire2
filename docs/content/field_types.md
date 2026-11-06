@@ -129,7 +129,7 @@ or is below `min` is refused. The numbers are compared digit by digit, not as fl
 |---|---|---|
 | `places` | `2` | The most decimal places allowed. `0` allows whole numbers only. |
 | `min` | None | The lowest value allowed. |
-| `step` | `0.01` | The `step` of the input, which is `1` over `10` to the power of `places` unless you set it. The server doesn't check it. |
+| `step` | `0.01` | The `step` of the input, which is `1` over `10` to the power of `places` unless you set it. The server doesn't check it, but the browser counts steps from `min`, so keep `min` a whole number of steps. |
 
 ```yaml
 - handle: price
