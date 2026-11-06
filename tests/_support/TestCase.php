@@ -90,4 +90,13 @@ abstract class TestCase extends CIUnitTestCase
     {
         config('Bonfire')->appModules = ['Tests\Support\Modules' => SUPPORTPATH . 'Modules'];
     }
+
+    /**
+     * Makes the admin register the Categories and Shelves resources, which list the categories table.
+     * Like withTestCharts() it discovers every module in tests/_support/Modules, the charts included.
+     */
+    protected function withTestResources(): void
+    {
+        config('Bonfire')->appModules = ['Tests\Support\Modules' => SUPPORTPATH . 'Modules'];
+    }
 }

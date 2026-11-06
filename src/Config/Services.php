@@ -10,6 +10,7 @@ use Bonfire\Docs\Libraries\Documentation;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Privacy\PersonalData;
 use Bonfire\Recycler\Libraries\Recycler;
+use Bonfire\Resources\ResourceRegistry;
 use Bonfire\Resources\ResourceTabs;
 use Bonfire\View\Metadata;
 use Bonfire\Widgets\Manager as WidgetManager;
@@ -116,6 +117,18 @@ class Services extends BaseService
         }
 
         return new Recycler();
+    }
+
+    /**
+     * The admin resources that modules have registered
+     */
+    public static function resources(bool $getShared = true): ResourceRegistry
+    {
+        if ($getShared) {
+            return static::getSharedInstance('resources');
+        }
+
+        return new ResourceRegistry();
     }
 
     /**
