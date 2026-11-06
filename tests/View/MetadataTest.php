@@ -3,6 +3,7 @@
 namespace Tests\View;
 
 use Bonfire\View\Metadata;
+use Bonfire\View\Theme;
 use Config\Services;
 use Tests\Support\TestCase;
 
@@ -23,6 +24,10 @@ final class MetadataTest extends TestCase
     protected function tearDown(): void
     {
         Services::resetSingle('viewMeta');
+
+        // render() in the App theme test sets the current theme and caches the theme list.
+        self::setPrivateProperty(Theme::class, 'currentTheme', null);
+        self::setPrivateProperty(Theme::class, 'themeInfo', []);
 
         parent::tearDown();
     }
