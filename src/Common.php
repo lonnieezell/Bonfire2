@@ -195,7 +195,8 @@ if (! function_exists('content_markdown')) {
 if (! function_exists('resource_routes')) {
     /**
      * Declares the admin routes of a resource: one for each page its `$pages` names.
-     * Call it from the module's Config/Routes.php. The routes are named `{slug}-list` and so on.
+     * Call it from the module's Config/Routes.php. The routes are named `{slug}-list`, `{slug}-new` and `{slug}-create`
+     * (the form and its post), and `{slug}-edit` and `{slug}-update`.
      *
      * @param class-string<Bonfire\Resources\Resource> $resource
      */
@@ -206,6 +207,17 @@ if (! function_exists('resource_routes')) {
         $routes->group(ADMIN_AREA, static function (RouteCollection $routes) use ($resource): void {
             if ($resource->allows('list')) {
                 $routes->get($resource->slug, [[ResourceController::class, 'list'], $resource->slug], ['as' => $resource->slug . '-list']);
+            }
+
+            // `new` comes before the edit routes, whose segment would take it for an ID.
+            if ($resource->allows('create')) {
+                $routes->get($resource->slug . '/new', [[ResourceController::class, 'create'], $resource->slug], ['as' => $resource->slug . '-new']);
+                $routes->post($resource->slug . '/new', [[ResourceController::class, 'save'], $resource->slug], ['as' => $resource->slug . '-create']);
+            }
+
+            if ($resource->allows('edit')) {
+                $routes->get($resource->slug . '/(:segment)', [[ResourceController::class, 'edit'], $resource->slug . '/$1'], ['as' => $resource->slug . '-edit']);
+                $routes->post($resource->slug . '/(:segment)', [[ResourceController::class, 'save'], $resource->slug . '/$1'], ['as' => $resource->slug . '-update']);
             }
         });
     }

@@ -12,4 +12,9 @@
 return [
     'empty'     => 'Nothing here yet',
     'emptyHint' => 'Records will show up here once they exist.',
+    'new'       => 'New',
+    'newRecord' => 'New record',
+    'details'   => 'Details',
+    'editing'   => 'Edit',
+    'saved'     => 'The record has been saved.',
 ];
