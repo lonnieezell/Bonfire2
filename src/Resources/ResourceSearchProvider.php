@@ -28,7 +28,7 @@ class ResourceSearchProvider implements SearchProviderInterface
      */
     public function isAllowed(): bool
     {
-        return $this->resource->allows('list') && auth()->user()->can($this->resource->permission . '.list');
+        return $this->resource->allows('list') && auth()->user() !== null && auth()->user()->can($this->resource->permission . '.list');
     }
 
     /**
@@ -50,8 +50,11 @@ class ResourceSearchProvider implements SearchProviderInterface
             ->orderBy($model->table . '.' . $model->primaryKey, 'asc')
             ->findAll($limit);
 
-        return array_map(function (mixed $record) use ($handle, $model): array {
+        return array_map(function (mixed $record) use ($handle, $model, $term): array {
             $label = trim((string) (is_array($record) ? ($record[$handle] ?? '') : ($record->{$handle} ?? '')));
+
+            // A record without a name is labelled by its key, which the list can't search for, so its link keeps the term.
+            $search = $label === '' ? trim($term) : $label;
 
             if ($label === '') {
                 $label = (string) (is_array($record) ? $record[$model->primaryKey] : $record->{$model->primaryKey});
@@ -59,7 +62,7 @@ class ResourceSearchProvider implements SearchProviderInterface
 
             return [
                 'label' => $label,
-                'url'   => url_to($this->resource->slug . '-list') . '?' . http_build_query(['search' => $label]),
+                'url'   => url_to($this->resource->slug . '-list') . '?' . http_build_query(['search' => $search]),
             ];
         }, $records);
     }

@@ -63,7 +63,7 @@ It also wires the resource into the rest of the admin:
 
 - **The Recycler** lists the resource's soft-deleted records, and restores or purges them, if the model has
   `$useSoftDeletes`. The Recycler's alias is the slug, and the columns it shows are the `$search` columns, or the
-  list's columns when there are none. See [The Recycler](recycler.md): the model must have `deleted_at` in its
+  primary key when there are none. See [The Recycler](recycler.md): the model must have `deleted_at` in its
   `$allowedFields` for a restore to work. A model that deletes for good is left out of the Recycler.
 - **The admin's global search** looks in the `$search` columns, if there are any, for those who have `{permission}.list`.
   See [Search](#search).

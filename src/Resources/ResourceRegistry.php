@@ -11,7 +11,6 @@
 
 namespace Bonfire\Resources;
 
-use Bonfire\Fields\Field;
 use Bonfire\Menus\MenuItem;
 use InvalidArgumentException;
 
@@ -54,8 +53,11 @@ class ResourceRegistry
         }
 
         // The Recycler lists deleted records, so a model that deletes for good has nothing to show it.
-        if (model($resource->model, false)->useSoftDeletes) {
-            service('recycler')->register($resource->slug, $resource->title(), $resource->model, $this->recyclerColumns($resource));
+        $model = model($resource->model, false);
+
+        if ($model->useSoftDeletes) {
+            // The `$search` columns identify a record, or else its key does: a list column may not be a column of the table.
+            service('recycler')->register($resource->slug, $resource->title(), $resource->model, $resource->search ?: [$model->primaryKey]);
         }
 
         return $resource;
@@ -84,17 +86,5 @@ class ResourceRegistry
         }
 
         return $providers;
-    }
-
-    /**
-     * What identifies a deleted record: the `$search` columns, or else the list's columns.
-     *
-     * @return list<string>
-     */
-    private function recyclerColumns(Resource $resource): array
-    {
-        return $resource->search !== []
-            ? $resource->search
-            : array_map(static fn (Field $column): string => $column->handle, $resource->columns());
     }
 }
