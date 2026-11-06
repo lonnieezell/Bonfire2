@@ -7,8 +7,11 @@ use Bonfire\Content\GlobalSet;
 use Bonfire\Content\Markdown;
 use Bonfire\Content\NavigationItem;
 use Bonfire\Content\StaleCheck;
+use Bonfire\Resources\Controllers\ResourceController;
+use Bonfire\Resources\Resource;
 use Bonfire\View\Theme;
 use CodeIgniter\I18n\Time;
+use CodeIgniter\Router\RouteCollection;
 
 if (! function_exists('has_error')) {
     /**
@@ -186,6 +189,25 @@ if (! function_exists('content_markdown')) {
     function content_markdown(string $markdown, bool $components = true): string
     {
         return Markdown::toHtml($markdown, $components);
+    }
+}
+
+if (! function_exists('resource_routes')) {
+    /**
+     * Declares the admin routes of a resource: one for each page its `$pages` names.
+     * Call it from the module's Config/Routes.php. The routes are named `{slug}-list` and so on.
+     *
+     * @param class-string<Bonfire\Resources\Resource> $resource
+     */
+    function resource_routes(RouteCollection $routes, string $resource): void
+    {
+        $resource = new $resource();
+
+        $routes->group(ADMIN_AREA, static function (RouteCollection $routes) use ($resource): void {
+            if ($resource->allows('list')) {
+                $routes->get($resource->slug, [[ResourceController::class, 'list'], $resource->slug], ['as' => $resource->slug . '-list']);
+            }
+        });
     }
 }
 
