@@ -50,6 +50,14 @@ final class Column
     }
 
     /**
+     * Whether `using()` computes the value, which the database can't sort by.
+     */
+    public function isComputed(): bool
+    {
+        return $this->compute instanceof Closure;
+    }
+
+    /**
      * The text the cell shows for a record.
      */
     public function valueOf(mixed $record): string
@@ -71,7 +79,10 @@ final class Column
         return $value ?? self::get($record, str_replace('.', '_', $this->handle));
     }
 
-    private static function get(mixed $from, string $key): mixed
+    /**
+     * A key of a record, which is an entity, an object or an array; null when it has none.
+     */
+    public static function get(mixed $from, string $key): mixed
     {
         return match (true) {
             is_array($from)  => $from[$key] ?? null,

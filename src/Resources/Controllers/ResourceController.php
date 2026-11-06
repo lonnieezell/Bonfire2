@@ -49,9 +49,9 @@ class ResourceController extends AdminController
 
         // Only the table's own columns can be sorted. The request's word for it is never put in a query.
         $tableColumns = $model->db->getFieldNames($model->table);
-        $sortable     = array_values(array_filter(
-            array_map(static fn (Column|Field $column): string => $column->handle, $columns),
-            static fn (string $handle): bool => in_array($handle, $tableColumns, true),
+        $sortable     = array_values(array_map(
+            static fn (Column|Field $column): string => $column->handle,
+            array_filter($columns, static fn (Column|Field $column): bool => ! ($column instanceof Column && $column->isComputed()) && in_array($column->handle, $tableColumns, true)),
         ));
         $sort = (string) $this->request->getGet('sort');
         $dir  = strtolower((string) $this->request->getGet('dir')) === 'desc' ? 'desc' : 'asc';
@@ -75,7 +75,7 @@ class ResourceController extends AdminController
             'rows'     => array_map(fn ($record): array => [
                 'record'  => $record,
                 'cells'   => $this->cells($columns, $record),
-                'editUrl' => $resource->allows('edit') && $resource->can('edit', $record) ? url_to($resource->slug . '-edit', $this->idOf($model, $record)) : null,
+                'editUrl' => $this->editUrl($resource, $model, $record),
             ], $records),
             'pager'    => $model->pager,
             'sort'     => $sort,
@@ -157,19 +157,20 @@ class ResourceController extends AdminController
         // Field errors don't stop the model's rules from running, so that one post shows every error.
         if ($errors !== []) {
             $model->validate($key + $data);
-            [$errors, $notices] = $this->merge($form, $errors, $model->errors());
-        } elseif (! $this->persist($model, $record, $data)) {
-            [$errors, $notices] = $this->merge($form, $errors, $model->errors());
-        } else {
-            $saved = $model->find($record === null ? $model->getInsertID() : $key[$model->primaryKey]);
+        } elseif ($this->persist($model, $record, $data)) {
+            // A key that isn't auto-incremented, such as a UUID, is in the data.
+            $saved = $model->find($key[$model->primaryKey] ?? $data[$model->primaryKey] ?? $model->getInsertID());
             $resource->afterSave($saved);
 
             // The edit page, unless the resource has none or the user may not edit the record: then the list.
-            $next = $resource->allows('edit') && $resource->can('edit', $saved)
-                ? url_to($resource->slug . '-edit', $this->idOf($model, $saved))
-                : $this->listUrl($resource);
+            return redirect()->to($this->editUrl($resource, $model, $saved) ?? $this->listUrl($resource))->with('message', lang('Resources.saved'));
+        }
 
-            return redirect()->to($next)->with('message', lang('Resources.saved'));
+        [$errors, $notices] = $this->merge($form, $errors, $model->errors());
+
+        // A save that the model refused without saying why, such as a callback that stopped it, still gets a word.
+        if ($errors === [] && $notices === []) {
+            $notices[] = lang('Resources.notSaved');
         }
 
         // What the post didn't hold, such as a field the form can't change, is shown as it was.
@@ -232,6 +233,16 @@ class ResourceController extends AdminController
         return $resource->allows('list') ? url_to($resource->slug . '-list') : site_url(ADMIN_AREA);
     }
 
+    /**
+     * Where a record is edited, or null when the resource has no edit page or the user may not edit the record.
+     */
+    private function editUrl(Resource $resource, Model $model, mixed $record): ?string
+    {
+        return $resource->allows('edit') && $resource->can('edit', $record)
+            ? url_to($resource->slug . '-edit', $this->idOf($model, $record))
+            : null;
+    }
+
     private function refused(): RedirectResponse
     {
         return redirect()->to(ADMIN_AREA)->with('error', lang('Bonfire.notAuthorized'));
@@ -247,15 +258,7 @@ class ResourceController extends AdminController
 
     private function idOf(Model $model, mixed $record): string
     {
-        return (string) $this->read($record, $model->primaryKey);
-    }
-
-    /**
-     * A column of a record, which is an entity, an object or an array.
-     */
-    private function read(mixed $record, string $handle): mixed
-    {
-        return is_array($record) ? ($record[$handle] ?? null) : ($record->{$handle} ?? null);
+        return (string) Column::get($record, $model->primaryKey);
     }
 
     /**
@@ -268,7 +271,7 @@ class ResourceController extends AdminController
         $values = [];
 
         foreach ($form->fields() as [$field, $type]) {
-            $values[$field->handle] = $type->fromStored($record === null ? null : $this->read($record, $field->handle), $field);
+            $values[$field->handle] = $type->fromStored(Column::get($record, $field->handle), $field);
         }
 
         return $values;
@@ -347,9 +350,9 @@ class ResourceController extends AdminController
      */
     private function cells(array $columns, mixed $record): array
     {
-        return array_map(fn (Column|Field $column): string => $column instanceof Column
+        return array_map(static fn (Column|Field $column): string => $column instanceof Column
             ? $column->valueOf($record)
-            : FieldTypes::get($column->type)->fromStored($this->read($record, $column->handle), $column), $columns);
+            : FieldTypes::get($column->type)->fromStored(Column::get($record, $column->handle), $column), $columns);
     }
 
     /**

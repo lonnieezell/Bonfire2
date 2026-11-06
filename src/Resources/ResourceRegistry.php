@@ -79,24 +79,24 @@ class ResourceRegistry
             return;
         }
 
-        $allowed = model($resource->model, false)->allowedFields;
-        $missing = array_values(array_filter(
-            array_map(static fn (Field $field): string => $field->handle, $resource->formFields()),
-            static fn (string $handle): bool => ! in_array($handle, $allowed, true),
-        ));
+        $model = model($resource->model, false);
+
+        // A model that doesn't protect its fields saves them all.
+        if (! $model->protectFields) {
+            return;
+        }
+
+        $missing = array_diff(array_map(static fn (Field $field): string => $field->handle, $resource->formFields()), $model->allowedFields);
 
         if ($missing === []) {
             return;
         }
 
         $message = sprintf(
-            '%s has %s %s that %s not in the $allowedFields of %s, so saving would drop %s.',
+            '%s has fields that are not in the $allowedFields of %s, so saving would drop their values: `%s`.',
             $resource::class,
-            count($missing) === 1 ? 'the field' : 'the fields',
-            '`' . implode('`, `', $missing) . '`',
-            count($missing) === 1 ? 'is' : 'are',
             $resource->model,
-            count($missing) === 1 ? 'its value' : 'their values',
+            implode('`, `', $missing),
         );
 
         if (! $this->production) {

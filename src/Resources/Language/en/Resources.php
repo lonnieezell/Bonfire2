@@ -17,4 +17,5 @@ return [
     'details'   => 'Details',
     'editing'   => 'Edit',
     'saved'     => 'The record has been saved.',
+    'notSaved'  => 'The record could not be saved.',
 ];
