@@ -19,6 +19,7 @@ final readonly class Field
     /**
      * @param list<string>|string  $validate CodeIgniter validation rules, as a `a|b` string or a list
      * @param array<string, mixed> $options  the keys the type reads itself, such as `rows` or `from`
+     * @param bool                 $full     whether the field spans a whole row of its section, whatever its type does by default
      */
     public function __construct(
         public string $handle,
@@ -27,6 +28,7 @@ final readonly class Field
         public array|string $validate,
         public ?string $instructions,
         public array $options,
+        public bool $full = false,
     ) {
     }
 }

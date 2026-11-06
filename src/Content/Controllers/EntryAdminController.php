@@ -583,9 +583,9 @@ class EntryAdminController extends AdminController
      */
     private function renderForm(Collection $collection, Blueprint $blueprint, EntryForm $form, array $shown, int $httpStatus = 200): string
     {
-        $errors = $shown['errors'] ?? [];
-        $rows   = $form->rows($shown['values'], $errors);
-        $entry  = $shown['entry'] ?? null;
+        $errors   = $shown['errors'] ?? [];
+        $sections = $form->sections($shown['values'], $errors);
+        $entry    = $shown['entry'] ?? null;
 
         $live      = $entry !== null && ! ($shown['trashed'] ?? false);
         $canDelete = $live && auth()->user()->can('content.delete');
@@ -595,7 +595,7 @@ class EntryAdminController extends AdminController
         return $this->render($this->viewPrefix . 'entry_form', [
             'collection'  => $collection,
             'blueprint'   => $blueprint,
-            'rows'        => $rows,
+            'sections'    => $sections,
             'entry'       => $entry,
             'hash'        => $shown['hash'] ?? '',
             'status'      => $shown['status'],

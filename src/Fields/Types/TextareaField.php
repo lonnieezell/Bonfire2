@@ -24,6 +24,11 @@ class TextareaField extends FieldType
         return 'textarea';
     }
 
+    public function isFullWidth(): bool
+    {
+        return true;
+    }
+
     /**
      * Browsers post line breaks as CRLF, and the file keeps LF.
      */

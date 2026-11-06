@@ -26,6 +26,14 @@ abstract class FieldType
     abstract public function partial(): string;
 
     /**
+     * Whether the input spans a whole row of a section's columns, unless the field says `width: full`.
+     */
+    public function isFullWidth(): bool
+    {
+        return false;
+    }
+
+    /**
      * The namespace of the views that hold the type's partial.
      */
     public function viewNamespace(): string

@@ -241,7 +241,7 @@ class TermAdminController extends AdminController
         return $this->render($this->viewPrefix . 'term_form', [
             'taxonomy' => $taxonomy,
             'term'     => $shown['term'] ?? null,
-            'rows'     => $form->rows($shown['values'], $errors),
+            'sections' => $form->sections($shown['values'], $errors),
             'notice'   => $shown['notice'] ?? null,
         ]);
     }

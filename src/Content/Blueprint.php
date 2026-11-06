@@ -15,6 +15,7 @@ use Bonfire\Content\Fields\EntryStorage;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldException;
 use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\Section;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -42,8 +43,9 @@ final readonly class Blueprint
     private const HANDLE = '/^[A-Za-z][A-Za-z0-9_]{0,99}$/';
 
     /**
-     * @param list<Field>           $fields
-     * @param array<string, string> $seo    the handle of the field that feeds each SEO value (`title`, `description`)
+     * @param list<Field>           $fields   every field, in the order the form shows them, whether or not they're in sections
+     * @param array<string, string> $seo      the handle of the field that feeds each SEO value (`title`, `description`)
+     * @param list<Section>         $sections the groups the form shows the fields in, empty when the blueprint lists plain `fields`
      */
     public function __construct(
         public string $collection,
@@ -51,6 +53,7 @@ final readonly class Blueprint
         public string $title,
         public array $fields,
         public array $seo = [],
+        public array $sections = [],
     ) {
     }
 
@@ -130,33 +133,30 @@ final readonly class Blueprint
             throw new ContentException("Invalid YAML in blueprint {$handle}: {$e->getMessage()}", 0, $e);
         }
 
-        if (! is_array($config) || ! is_array($config['fields'] ?? null) || ! array_is_list($config['fields'])) {
-            throw new ContentException("Blueprint {$handle} needs a `fields` list.");
+        if (! is_array($config)) {
+            throw new ContentException("Blueprint {$handle} needs a `fields` list or a `sections` list.");
         }
 
-        $fields = $keys = [];
+        if (isset($config['fields'], $config['sections'])) {
+            throw new ContentException("Blueprint {$handle} has both `fields` and `sections`. Put the fields in the sections, or drop the sections.");
+        }
 
-        foreach ($config['fields'] as $position => $definition) {
-            $field = self::fromDefinition($handle, $position + 1, $definition);
+        $fields = $keys = $sections = [];
 
-            if (isset($fields[$field->handle])) {
-                throw new ContentException("Blueprint {$handle} has two fields named `{$field->handle}`.");
+        if (isset($config['sections'])) {
+            if (! is_array($config['sections']) || ! array_is_list($config['sections'])) {
+                throw new ContentException("Blueprint {$handle} needs a `sections` list.");
             }
 
-            $type = FieldTypes::get($field->type);
-
-            // A type may save its value under another key than the handle, and two fields can't share one.
-            if (EntryStorage::inFrontMatter($type)) {
-                $key = EntryStorage::key($type, $field);
-
-                if (isset($keys[$key])) {
-                    throw new ContentException("Blueprint {$handle}: fields `{$keys[$key]}` and `{$field->handle}` both save to `{$key}`.");
-                }
-
-                $keys[$key] = $field->handle;
+            foreach ($config['sections'] as $position => $definition) {
+                $sections[] = self::section($handle, $position + 1, $definition, $fields, $keys);
             }
-
-            $fields[$field->handle] = $field;
+        } elseif (is_array($config['fields'] ?? null) && array_is_list($config['fields'])) {
+            foreach ($config['fields'] as $position => $definition) {
+                self::addField($handle, 'Field ' . ($position + 1), $definition, $fields, $keys);
+            }
+        } else {
+            throw new ContentException("Blueprint {$handle} needs a `fields` list or a `sections` list.");
         }
 
         return new self(
@@ -165,7 +165,79 @@ final readonly class Blueprint
             is_string($config['title'] ?? null) ? $config['title'] : $handle,
             array_values($fields),
             self::seoMapping($handle, $config['seo'] ?? [], $fields),
+            $sections,
         );
+    }
+
+    /**
+     * @param array<string, Field>  $fields every field so far, by handle, which this adds its own to
+     * @param array<string, string> $keys   the handle of the field saved under each key so far
+     *
+     * @throws ContentException when the section can't be used
+     */
+    private static function section(string $blueprint, int $number, mixed $definition, array &$fields, array &$keys): Section
+    {
+        $where = "Section {$number} of blueprint {$blueprint}";
+
+        if (! is_array($definition) || ! is_string($definition['title'] ?? null) || trim($definition['title']) === '') {
+            throw new ContentException("{$where} needs a `title`.");
+        }
+
+        $columns = $definition['columns'] ?? Section::MIN_COLUMNS;
+
+        if (! is_int($columns) || $columns < Section::MIN_COLUMNS || $columns > Section::MAX_COLUMNS) {
+            throw new ContentException("{$where} (`{$definition['title']}`): `columns` must be a whole number from " . Section::MIN_COLUMNS . ' to ' . Section::MAX_COLUMNS . '.');
+        }
+
+        if (! is_array($definition['fields'] ?? null) || ! array_is_list($definition['fields'])) {
+            throw new ContentException("{$where} (`{$definition['title']}`) needs a `fields` list.");
+        }
+
+        $own = [];
+
+        foreach ($definition['fields'] as $position => $field) {
+            $own[] = self::addField($blueprint, 'Field ' . ($position + 1) . " of section {$number}", $field, $fields, $keys);
+        }
+
+        return new Section(
+            $definition['title'],
+            is_scalar($definition['instructions'] ?? null) ? (string) $definition['instructions'] : null,
+            $columns,
+            $own,
+        );
+    }
+
+    /**
+     * Reads a field definition and adds the field to the blueprint's, after checking that no earlier field
+     * has its handle or saves to its key.
+     *
+     * @param array<string, Field>  $fields every field so far, by handle
+     * @param array<string, string> $keys   the handle of the field saved under each key so far
+     *
+     * @throws ContentException when the definition can't be used, or repeats a handle or a key
+     */
+    private static function addField(string $blueprint, string $which, mixed $definition, array &$fields, array &$keys): Field
+    {
+        $field = self::fromDefinition($blueprint, $which, $definition);
+
+        if (isset($fields[$field->handle])) {
+            throw new ContentException("Blueprint {$blueprint} has two fields named `{$field->handle}`.");
+        }
+
+        $type = FieldTypes::get($field->type);
+
+        // A type may save its value under another key than the handle, and two fields can't share one.
+        if (EntryStorage::inFrontMatter($type)) {
+            $key = EntryStorage::key($type, $field);
+
+            if (isset($keys[$key])) {
+                throw new ContentException("Blueprint {$blueprint}: fields `{$keys[$key]}` and `{$field->handle}` both save to `{$key}`.");
+            }
+
+            $keys[$key] = $field->handle;
+        }
+
+        return $fields[$field->handle] = $field;
     }
 
     /**
@@ -213,9 +285,9 @@ final readonly class Blueprint
     /**
      * @throws ContentException when the definition can't be used
      */
-    private static function fromDefinition(string $blueprint, int $number, mixed $definition): Field
+    private static function fromDefinition(string $blueprint, string $which, mixed $definition): Field
     {
-        $where = "Field {$number} of blueprint {$blueprint}";
+        $where = "{$which} of blueprint {$blueprint}";
 
         if (! is_array($definition) || ! is_string($definition['handle'] ?? null) || preg_match(self::HANDLE, $definition['handle']) !== 1) {
             throw new ContentException("{$where} needs a `handle` of letters, numbers and _.");
@@ -237,7 +309,11 @@ final readonly class Blueprint
             throw new ContentException("{$where} (`{$handle}`): `validate` must be a string of rules or a list of them.");
         }
 
-        $options = array_diff_key($definition, array_flip(['handle', 'type', 'label', 'validate', 'instructions']));
+        if (array_key_exists('width', $definition) && $definition['width'] !== 'full') {
+            throw new ContentException("{$where} (`{$handle}`): `width` can only be `full`.");
+        }
+
+        $options = array_diff_key($definition, array_flip(['handle', 'type', 'label', 'validate', 'instructions', 'width']));
 
         $field = new Field(
             $handle,
@@ -246,6 +322,7 @@ final readonly class Blueprint
             $validate,
             is_scalar($definition['instructions'] ?? null) ? (string) $definition['instructions'] : null,
             $options,
+            ($definition['width'] ?? null) === 'full',
         );
 
         try {
