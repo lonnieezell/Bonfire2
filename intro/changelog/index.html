@@ -3561,6 +3561,14 @@ field type, or code of yours that names the old classes, breaks until you change
 </ul>
 <p>The form behind an entry's fields is <code>Bonfire\Fields\Form</code>, and its view is <code>Bonfire\Fields\Views\form_fields</code> rather than
 <code>Bonfire\Content\Views\form_fields</code>. See <a href="../../content/custom_field_types/">Custom field types</a>.</p>
+<p><strong>Content: blueprint sections.</strong> A blueprint can group its fields with <code>sections:</code> instead of <code>fields:</code>. Each section has
+a <code>title</code>, optional <code>instructions</code> and <code>columns</code> (1 to 3), and its own <code>fields:</code>. A field can set <code>width: full</code>, and
+<code>markdown</code> and <code>textarea</code> fields span the row by default. Storage stays flat, so a sectioned blueprint saves the same
+front matter as the same fields in one list. See <a href="../../content/blueprints/#sections">Sections</a>. <strong>If you copied
+<code>entry_form.php</code>, <code>global_form.php</code> or <code>term_form.php</code> from <code>Bonfire\Content\Views</code> into your app, they break:</strong> the
+controllers now give them <code>$sections</code> rather than <code>$rows</code>, which they pass to <code>Bonfire\Fields\Views\form_fields</code> as
+<code>['sections' =&gt; $sections]</code>. That view still takes <code>rows</code> for a form with no sections. <code>Bonfire\Fields\Form</code> has a
+<code>sections()</code> method for other callers, and a custom field type can override <code>isFullWidth()</code>.</p>
 <p><strong>Content: components in Markdown, and <code>content_markdown()</code>.</strong> <code>$entry-&gt;content()</code> now converts the Markdown, then expands
 any <code>&lt;x-…&gt;</code> View Components in it, so it works in controllers and feeds and not only when echoed in a view. <strong>A body with
 an <code>&lt;x-…&gt;</code> tag now gets that component's HTML in <code>content()</code>, and a tag for a component that doesn't exist throws a

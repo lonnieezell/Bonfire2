@@ -3149,6 +3149,11 @@ class anywhere your app autoloads, such as <code>app/Content/ColorField.php</cod
 <td>Nothing</td>
 </tr>
 <tr>
+<td><code>isFullWidth()</code></td>
+<td>Whether the input spans a whole row of a <a href="../blueprints/#sections">section's</a> columns, as <code>textarea</code> and <code>markdown</code> do. A field can ask for it with <code>width: full</code>.</td>
+<td><code>false</code></td>
+</tr>
+<tr>
 <td><code>viewNamespace()</code></td>
 <td>The namespace of the views that hold the type's partial.</td>
 <td><code>Bonfire\Fields\Views\fields</code></td>
@@ -3164,8 +3169,8 @@ value under the field's handle.</p>
 <li><strong>The form value is always text.</strong> A browser posts text, so <code>prepare()</code> returns a string, <code>rules()</code> validate a string,
   and <code>toStored()</code> turns it into what is stored, such as a number or a list. A type that holds several
   values, like a multiple <code>select</code>, keeps them as JSON text with <code>Bonfire\Fields\ChoiceList</code>.</li>
-<li><strong><code>$field-&gt;options</code></strong> holds the keys the blueprint gave the field besides <code>handle</code>, <code>type</code>, <code>label</code>, <code>validate</code> and
-  <code>instructions</code>. Use them for settings, like <code>min</code> on an <code>integer</code>.</li>
+<li><strong><code>$field-&gt;options</code></strong> holds the keys the blueprint gave the field besides <code>handle</code>, <code>type</code>, <code>label</code>, <code>validate</code>,
+  <code>instructions</code> and <code>width</code>. Use them for settings, like <code>min</code> on an <code>integer</code>.</li>
 <li><strong><code>withRules()</code></strong> adds your rules to the blueprint's <code>validate</code>, whether that is a string or a list. A rule can be a
   closure, <code>function ($value, $data, &amp;$error): bool</code>, which sets <code>$error</code> to its message when it returns <code>false</code>. A
   closure turns a string <code>validate</code> into a list.</li>

@@ -1501,6 +1501,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fields-that-arent-ordinary-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2981,6 +2992,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fields-that-arent-ordinary-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3132,7 +3154,11 @@ blueprints its entries can use in its <code>blueprints</code> list, and the firs
 </tr>
 <tr>
 <td><code>fields</code></td>
-<td>A list of fields, shown in this order. Required.</td>
+<td>A list of fields, shown in this order. Give <code>fields</code> or <a href="#sections"><code>sections</code></a>, not both.</td>
+</tr>
+<tr>
+<td><code>sections</code></td>
+<td>Groups of fields, shown in this order. See <a href="#sections">Sections</a>.</td>
 </tr>
 <tr>
 <td><code>seo</code></td>
@@ -3175,11 +3201,81 @@ blueprints its entries can use in its <code>blueprints</code> list, and the firs
 <td>None</td>
 <td>Help text under the input.</td>
 </tr>
+<tr>
+<td><code>width</code></td>
+<td>None</td>
+<td><code>full</code> makes the field span the whole row of its <a href="#sections">section</a>. <code>markdown</code> and <code>textarea</code> fields do already.</td>
+</tr>
 </tbody>
 </table>
 <p>A type can read more keys, such as <code>rows</code> or <code>time</code>. They are listed with the type.</p>
+<h2 id="sections">Sections</h2>
+<p>Group the fields of a long form with <code>sections</code> instead of <code>fields</code>. Each section has a title, and shows its fields in
+one to three columns:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Post</span>
+<span class="nt">sections</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Content</span>
+<span class="w">    </span><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">What readers see first.</span>
+<span class="w">    </span><span class="nt">fields</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">title</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">        </span><span class="nt">validate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">required</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slug</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slug</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Details</span>
+<span class="w">    </span><span class="nt">columns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">fields</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">featured</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">toggle</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">event_date</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">        </span><span class="nt">width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">body</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">markdown</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>Required</td>
+<td>The heading of the section.</td>
+</tr>
+<tr>
+<td><code>instructions</code></td>
+<td>None</td>
+<td>Help text under the heading.</td>
+</tr>
+<tr>
+<td><code>columns</code></td>
+<td><code>1</code></td>
+<td>How many columns the fields are laid out in: <code>1</code>, <code>2</code> or <code>3</code>.</td>
+</tr>
+<tr>
+<td><code>fields</code></td>
+<td>Required</td>
+<td>The section's fields, with the <a href="#field-keys">field keys</a> above.</td>
+</tr>
+</tbody>
+</table>
+<p>Fields fill the columns in order, row by row. A field with <code>width: full</code>, and every <code>markdown</code> and <code>textarea</code> field,
+takes a whole row instead. Below the <code>md</code> breakpoint the columns stack, one field to a row.</p>
+<p>Sections only change how the form looks. The fields are saved flat, as front matter keys, exactly as they would be in a
+blueprint with the same fields in one <code>fields</code> list. A handle can be used once in the whole blueprint, not once in each
+section, and the <a href="../seo/#mapping-fields-in-a-blueprint"><code>seo</code></a> mapping can name a field of any section. Everything that
+reads a blueprint's fields, such as <a href="../scaffolding/"><code>content:scaffold</code></a>, sees them as one list. Taxonomy and global
+blueprints can have sections too.</p>
 <p>A blueprint that can't be loaded, because its YAML is invalid, a field has no <code>handle</code>, uses a <code>type</code> that doesn't exist
-or repeats a handle, is refused with a message that says which. The entry form doesn't open, and the collection's list
+or repeats a handle, has both <code>fields</code> and <code>sections</code>, has a section without a <code>title</code> or with <code>columns</code> outside 1 to 3,
+or has a <code>width</code> other than <code>full</code>, is refused with a message that says which. The entry form doesn't open, and the collection's list
 still does.</p>
 <h2 id="fields-that-arent-ordinary-keys">Fields that aren't ordinary keys</h2>
 <ul>
