@@ -334,6 +334,15 @@ final class ResourceFormTest extends TestCase
         $this->assertSame('Existing', model(ProductModel::class)->find($id)->name);
     }
 
+    public function testSomeoneWhoCanCreateButNotEditLandsOnTheListAfterSaving(): void
+    {
+        $this->adminGroupHas(['admin.access', 'products.list', 'products.create']);
+
+        $this->actingAs($this->admin)->post('admin/products/new', ['fields' => $this->product()])->assertRedirectTo(url_to('products-list'));
+
+        $this->assertSame('Blue Widget', $this->onlyProduct()->name);
+    }
+
     public function testTheNewButtonAndTheEditLinksNeedTheirPermissions(): void
     {
         $id = $this->createProduct();

@@ -2,7 +2,6 @@
 
 namespace Tests\Resources;
 
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Bonfire\Fields\Field as CompiledField;
 use Bonfire\Fields\Section as CompiledSection;
 use Bonfire\Resources\Column;
@@ -21,6 +20,7 @@ use Bonfire\Resources\Fields\Toggle;
 use Bonfire\Resources\Resource;
 use Bonfire\Resources\ResourceException;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Tests\Support\Models\CategoryModel;
 use Tests\Support\TestCase;
 

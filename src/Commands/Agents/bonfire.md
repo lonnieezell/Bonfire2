@@ -38,7 +38,7 @@ Docs: vendor/lonnieezell/bonfire/docs/ (matches the installed version)
 | Building admin pages, settings forms and lists | `building_admin_modules/view_components.md` |
 | Adding row or bulk actions to a list | `building_admin_modules/actions.md` |
 | Adding filters to a list | `building_admin_modules/filters.md` |
-| Describing a model as an admin resource with a sidebar item and a list page | `building_admin_modules/resources.md` |
+| Describing a model as an admin resource with a sidebar item, a list page and create and edit forms | `building_admin_modules/resources.md` |
 | Overriding Bonfire's text, adding a locale or translating a module | `building_admin_modules/localization.md` |
 | Adding permissions and granting them to groups | `building_admin_modules/permissions.md` |
 | Changing login, registration or redirect defaults, or customizing the auth pages | `modules/auth.md` |

@@ -164,7 +164,12 @@ class ResourceController extends AdminController
             $saved = $model->find($record === null ? $model->getInsertID() : $key[$model->primaryKey]);
             $resource->afterSave($saved);
 
-            return redirect()->to(url_to($resource->slug . '-edit', $this->idOf($model, $saved)))->with('message', lang('Resources.saved'));
+            // The edit page, unless the resource has none or the user may not edit the record: then the list.
+            $next = $resource->allows('edit') && $resource->can('edit', $saved)
+                ? url_to($resource->slug . '-edit', $this->idOf($model, $saved))
+                : $this->listUrl($resource);
+
+            return redirect()->to($next)->with('message', lang('Resources.saved'));
         }
 
         // What the post didn't hold, such as a field the form can't change, is shown as it was.
@@ -213,10 +218,18 @@ class ResourceController extends AdminController
             'resource' => $resource,
             'record'   => $record,
             'action'   => $record === null ? url_to($resource->slug . '-create') : url_to($resource->slug . '-update', $this->idOf($model, $record)),
-            'backUrl'  => $resource->allows('list') ? url_to($resource->slug . '-list') : site_url(ADMIN_AREA),
+            'backUrl'  => $this->listUrl($resource),
             'sections' => $form->sections($values, $errors),
             'notices'  => $notices,
         ]);
+    }
+
+    /**
+     * The resource's list, or the dashboard when it has none.
+     */
+    private function listUrl(Resource $resource): string
+    {
+        return $resource->allows('list') ? url_to($resource->slug . '-list') : site_url(ADMIN_AREA);
     }
 
     private function refused(): RedirectResponse
@@ -290,7 +303,8 @@ class ResourceController extends AdminController
     {
         if (is_a($model->returnType, Entity::class, true)) {
             $entity = $record ?? new ($model->returnType)();
-            $entity->fill($data);
+            // The ID is the record's, whatever beforeSave() returned.
+            $entity->fill(array_diff_key($data, [$model->primaryKey => true]));
 
             // The model refuses an update with nothing to change.
             return ($record !== null && ! $entity->hasChanged()) || $model->save($entity);
