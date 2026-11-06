@@ -3606,6 +3606,10 @@ defines that. See <a href="../../content/markdown/">Markdown and components</a>.
 yourself before passing it in, it is now escaped twice</strong>, so pass the plain value. Titles and the content of raw scripts
 are unchanged. <code>content_seo()</code> was updated to match. See <a href="../../building_sites/metadata/#escaping-and-duplicates">View metadata</a>.</p>
 <h2 id="6-november-2026_1">6 November 2026</h2>
+<p><strong>Fields: <code>belongsTo</code>.</strong> A new <code>belongsTo</code> field type picks one record of another model. Give it a <code>model</code> class and a
+<code>title</code> column, and the form shows a dropdown of the records' titles and saves the chosen ID. A save is refused if the ID
+isn't a record of the model, and a blueprint whose <code>model</code> or <code>title</code> can't be found is refused. See
+<a href="../../content/field_types/#belongsto">Field types</a>.</p>
 <p><strong>Content: blocks.</strong> A new <code>blocks</code> field type holds a list of typed blocks in an entry's front matter, such as a hero or a
 call to action. Block types are files in <code>resources/blueprints/blocks</code>, with a <code>title</code>, an optional <code>icon</code> and <code>fields</code>.
 <code>$entry-&gt;blocks($field)</code> returns a list you can loop over, filter with <code>ofType()</code> and render, <code>$entry-&gt;block($field)</code> is

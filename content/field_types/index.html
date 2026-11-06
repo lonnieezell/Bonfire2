@@ -1617,6 +1617,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#belongsto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        belongsTo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3190,6 +3201,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#belongsto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        belongsTo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3398,6 +3420,11 @@ is saved in the front matter.</p>
 <td>A string</td>
 </tr>
 <tr>
+<td><a href="#belongsto"><code>belongsTo</code></a></td>
+<td>A dropdown of another model's records</td>
+<td>The record's ID</td>
+</tr>
+<tr>
 <td><a href="#entries"><code>entries</code></a></td>
 <td>Entries to link to</td>
 <td>A list of UUIDs</td>
@@ -3604,6 +3631,47 @@ or is below <code>min</code> is refused. The numbers are compared digit by digit
 </code></pre></div>
 <p>Write the numbers as plain digits, such as <code>0.01</code> and not <code>1e-2</code>. Read the value back as the string it is. A calculation
 that needs exactness should use a library such as <code>bcmath</code>, not the <code>float</code> PHP would cast it to.</p>
+<h2 id="belongsto">belongsTo</h2>
+<p>One record of another model, such as the author of a post. The input is a dropdown of every record's title, and the
+file holds the record's ID.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td>Required</td>
+<td>The class of a CodeIgniter model, such as <code>App\Models\AuthorModel</code>.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Required</td>
+<td>The column of the model's table that names a record in the dropdown.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">author</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belongsTo</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">App\Models\AuthorModel</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+</code></pre></div>
+<p>The records come from the model's <code>findAll()</code>, ordered by the title, so a soft-deleted record isn't offered. A save is
+refused if the ID isn't a record of the model. The blueprint is refused if <code>model</code> isn't a model class, or <code>title</code> isn't a
+column of its table. An ID such as <code>7</code> is saved as a number, and any other, such as a UUID, as text.</p>
+<p>Reading the entry gives the ID, not the record. To load the record in a template, ask the model for it:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$author</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="nx">App\Models\AuthorModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'author'</span><span class="p">));</span> <span class="cp">?&gt;</span>
+
+<span class="cp">&lt;?php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$author</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;p&gt;By </span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$author</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">&lt;/p&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p><code>find()</code> returns null when the field is empty or the record is gone, so check for that. A dropdown of every record suits
+tables of a few hundred rows. For more, <a href="#changing-an-input">change the input</a>.</p>
 <h2 id="entries">entries</h2>
 <p>Links to other entries, saved as a list of their UUIDs.</p>
 <table>
