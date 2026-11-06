@@ -204,6 +204,22 @@ final class ResourceActionsTest extends TestCase
         $this->assertCount(2, model(ProductModel::class)->onlyDeleted()->findAll());
     }
 
+    public function testADeleteTheResourceRefusesIsSkippedAndItsRowDoesNotOfferIt(): void
+    {
+        $archived = $this->createProduct('Anvil', ['status' => 'archived']);
+        $active   = $this->createProduct('Bellows');
+
+        $this->assertSame([$active], $this->rowActionIds($this->visit('admin/products'), 'delete-records'));
+
+        $this->runAction('delete-records', [$archived, $active], confirmed: true)->assertSessionHas('message');
+
+        $this->assertNotNull(model(ProductModel::class)->find($archived));
+        $this->assertNull(model(ProductModel::class)->find($active));
+
+        $this->runAction('delete-records', [$archived], confirmed: true)->assertSessionHas('error', lang('Actions.noneAllowed'));
+        $this->assertNotNull(model(ProductModel::class)->find($archived));
+    }
+
     // Custom and added actions
 
     public function testACustomActionRunsOnTheSelectedProducts(): void

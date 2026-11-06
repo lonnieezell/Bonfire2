@@ -88,11 +88,11 @@ class ProductResource extends Resource
     }
 
     /**
-     * An archived product is read-only.
+     * An archived product is read-only, and can't be deleted.
      */
     public function can(string $verb, mixed $entity = null): bool
     {
-        if ($verb === 'edit' && $entity !== null && $entity->status === 'archived') {
+        if (in_array($verb, ['edit', 'delete'], true) && $entity !== null && $entity->status === 'archived') {
             return false;
         }
 

@@ -318,8 +318,8 @@ and no actions column.
 `Bonfire\Resources\Actions\DeleteRecords` deletes records through the resource's model after asking for confirmation. It
 needs `{permission}.delete`. When the model uses soft deletes, the records go to the [Recycler](recycler.md), which
 `register()` has already set up for the resource, and can be restored from there. Otherwise they are gone for good. It
-checks the permission only: it doesn't ask `can('delete', $record)`, because an action may run in a queue worker, where
-nobody is signed in.
+also asks the resource's `can('delete', $record)`: a record that refuses is skipped, and its row doesn't offer the
+action. So that `can()` has a signed-in user to ask, the action never runs in a queue.
 
 Another module adds an action to a resource's list by its slug, from `initAdmin()`:
 
