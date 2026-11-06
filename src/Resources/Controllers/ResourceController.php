@@ -47,6 +47,15 @@ class ResourceController extends AdminController
         $model   = $resource->query(model($resource->model, false));
         $columns = $resource->columns();
 
+        // The search box and the filter panel both send their choice in the query, so a link can carry it too.
+        $search = trim((string) $this->request->getGet('search'));
+        $chosen = (array) $this->request->getGet('filters');
+
+        $resource->applySearch($model, $search);
+        $resource->applyFilters($model, $chosen);
+
+        $narrowing = $this->narrowing($resource, $search, $chosen);
+
         // Only the table's own columns can be sorted. The request's word for it is never put in a query.
         $tableColumns = $model->db->getFieldNames($model->table);
         $sortable     = array_values(array_map(
@@ -80,7 +89,9 @@ class ResourceController extends AdminController
             'pager'    => $model->pager,
             'sort'     => $sort,
             'dir'      => $dir,
-            'sortUrls' => $this->sortUrls($sortable, $sort, $dir),
+            'sortUrls' => $this->sortUrls($sortable, $sort, $dir, $narrowing),
+            'search'   => $search,
+            'narrowed' => $narrowing !== [],
         ];
 
         if ($this->request->hasHeader('HX-Request')) {
@@ -356,18 +367,35 @@ class ResourceController extends AdminController
     }
 
     /**
+     * The query parameters that narrow the list, for a link to keep: the search, and the chosen options of
+     * the filters that the resource has.
+     *
+     * @param array<string, mixed> $chosen
+     *
+     * @return array<string, mixed>
+     */
+    private function narrowing(Resource $resource, string $search, array $chosen): array
+    {
+        $query = $search === '' ? [] : ['search' => $search];
+        $kept  = array_intersect_key($chosen, $resource->filters());
+
+        return $kept === [] ? $query : $query + ['filters' => $kept];
+    }
+
+    /**
      * The link of each sortable column: the order that a click gives it, starting from the page one.
      *
-     * @param list<string> $sortable
+     * @param list<string>         $sortable
+     * @param array<string, mixed> $narrowing the search and filters to keep
      *
      * @return array<string, string> by handle
      */
-    private function sortUrls(array $sortable, string $sort, string $dir): array
+    private function sortUrls(array $sortable, string $sort, string $dir, array $narrowing): array
     {
         $urls = [];
 
         foreach ($sortable as $handle) {
-            $query = ['sort' => $handle, 'dir' => $handle === $sort && $dir === 'asc' ? 'desc' : 'asc'];
+            $query = $narrowing + ['sort' => $handle, 'dir' => $handle === $sort && $dir === 'asc' ? 'desc' : 'asc'];
 
             $urls[$handle] = current_url() . '?' . http_build_query($query);
         }

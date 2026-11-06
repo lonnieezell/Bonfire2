@@ -37,7 +37,9 @@ class ResourceRegistry
 
     /**
      * Registers a resource and adds its list to the sidebar, for those who have `{permission}.list`.
-     * Call it from a module's initAdmin(), after the module's routes exist.
+     * It also puts the resource's soft-deleted records in the Recycler, shown by the `$search` columns, and
+     * its `$search` columns in the admin's global search. Call it from a module's initAdmin(), after the
+     * module's routes exist.
      *
      * A resource that saves records needs every field in its model's `$allowedFields`, or the model would drop the
      * value. That throws a ResourceException, except in production, where it is logged and the resource still registers.
@@ -65,6 +67,14 @@ class ResourceRegistry
                 'fontAwesomeIcon' => $icon,
                 'permission'      => $resource->permission . '.list',
             ]));
+        }
+
+        // The Recycler lists deleted records, so a model that deletes for good has nothing to show it.
+        $model = model($resource->model, false);
+
+        if ($model->useSoftDeletes) {
+            // The `$search` columns identify a record, or else its key does: a list column may not be a column of the table.
+            service('recycler')->register($resource->slug, $resource->title(), $resource->model, $resource->search ?: [$model->primaryKey]);
         }
 
         return $resource;
@@ -109,5 +119,25 @@ class ResourceRegistry
     public function get(string $slug): ?Resource
     {
         return $this->resources[$slug] ?? null;
+    }
+
+    /**
+     * The global search providers of the registered resources that the signed-in user may list.
+     *
+     * @return list<ResourceSearchProvider>
+     */
+    public function searchProviders(): array
+    {
+        $providers = [];
+
+        foreach ($this->resources as $resource) {
+            $provider = new ResourceSearchProvider($resource);
+
+            if ($resource->search !== [] && $provider->isAllowed()) {
+                $providers[] = $provider;
+            }
+        }
+
+        return $providers;
     }
 }

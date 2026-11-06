@@ -11,10 +11,15 @@ use CodeIgniter\Pager\Pager;
  * @var string                                          $sort     the handle of the sorted column, or ''
  * @var string                                          $dir      asc or desc
  * @var array<string, string>                           $sortUrls the link of each sortable column, by handle
+ * @var bool                                            $narrowed whether a search or a filter is in use
  */
 ?>
 <?php if ($rows === []) : ?>
-    <x-empty-state title="<?= esc(lang('Resources.empty'), 'attr') ?>" hint="<?= esc(lang('Resources.emptyHint'), 'attr') ?>" />
+    <?php if ($narrowed) : ?>
+        <x-empty-state title="<?= esc(lang('Resources.noMatches'), 'attr') ?>" hint="<?= esc(lang('Resources.noMatchesHint'), 'attr') ?>" />
+    <?php else : ?>
+        <x-empty-state title="<?= esc(lang('Resources.empty'), 'attr') ?>" hint="<?= esc(lang('Resources.emptyHint'), 'attr') ?>" />
+    <?php endif ?>
 <?php else : ?>
     <div class="table-responsive">
         <table class="table table-hover bf-table">

@@ -15,6 +15,11 @@ per record, and a `form.php` beside the resource replaces the form. `Column` add
 columns to the list. `register()` throws a `ResourceException` outside production when a field isn't in the model's
 `$allowedFields`, and logs it in production. See [Resources](../building_admin_modules/resources.md).
 
+**Fields: `belongsTo` search.** Above `searchAbove` records (default `100`), a `belongsTo` field shows a search box
+instead of a dropdown. It lists matching titles as you type, from an admin endpoint that needs `admin.access`, the field's
+optional `permission` and a token signed with the app's encryption key. See
+[Field types](../content/field_types.md#many-records).
+
 **A `decimal` field type.** It takes `places` (default `2`), `min` and `step`, renders a number input and saves a string
 such as `"19.99"`, so a `DECIMAL` column never passes through a float. See [Field types](../content/field_types.md#decimal).
 
@@ -24,6 +29,12 @@ prefix and the pages it has. `service('resources')->register()` in `initAdmin()`
 columns, which leave out `textarea` and `markdown` fields unless `columns()` says otherwise, sorting, paging and htmx
 refresh, guarded by `{permission}.list`. Only the list page exists so far. A `list.php` beside the resource replaces the
 package's view. See [Resources](../building_admin_modules/resources.md).
+
+**Resources: search, filters, global search and the Recycler.** A resource's `$search` columns give its list a search box
+and put its records in the admin's global search. Its `filters()`, in the shape of a model's `$filters`, show in the
+`Filters` cell's panel and narrow the list. Search, filters, sorting and paging combine, and survive htmx refreshes.
+`register()` also adds a soft-deleting model to the Recycler. The `Filters` view cell takes a `resource` slug beside a
+`model`. See [Resources](../building_admin_modules/resources.md#search).
 
 ## 6 November 2026 (breaking change)
 

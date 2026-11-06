@@ -22,6 +22,15 @@ class CreateCategoriesTable extends Migration
                 'type'       => 'varchar',
                 'constraint' => 255,
             ],
+            'status' => [
+                'type'       => 'varchar',
+                'constraint' => 20,
+                'default'    => 'live',
+            ],
+            'deleted_at' => [
+                'type' => 'datetime',
+                'null' => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('categories', true);

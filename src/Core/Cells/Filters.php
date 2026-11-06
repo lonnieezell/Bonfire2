@@ -16,7 +16,8 @@ use RuntimeException;
 class Filters
 {
     /**
-     * A view cell that displays the list of available filters.
+     * A view cell that displays the list of available filters, of the `model`,
+     * or of the `resource` whose slug is given.
      *
      * @param mixed $params
      *
@@ -24,17 +25,21 @@ class Filters
      */
     public function renderList($params = [])
     {
-        if (! isset($params['model'])) {
+        if (isset($params['resource'])) {
+            $source = service('resources')->get($params['resource'])
+                ?? throw new RuntimeException('The Filter view cell found no resource with the slug ' . $params['resource'] . '.');
+        } elseif (isset($params['model'])) {
+            $source = model($params['model']);
+        } else {
             throw new RuntimeException('You must provide the Filter view cell with the model to use.');
         }
 
-        $model = model($params['model']);
-        if (! method_exists($model, 'getFilters')) {
+        if (! method_exists($source, 'getFilters')) {
             throw new RuntimeException('Your model is not compatible with Filters. See Bonfire\Traits\Filterable.');
         }
 
         return view(config('Bonfire')->views['filter_list'], [
-            'filters' => $model->getFilters(),
+            'filters' => $source->getFilters(),
             'target'  => $params['target'] ?? null,
         ]);
     }

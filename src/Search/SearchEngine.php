@@ -23,7 +23,7 @@ class SearchEngine
      */
     public function overview(?array $post = null)
     {
-        $providers = $this->locateProviders();
+        $providers = array_merge($this->locateProviders(), service('resources')->searchProviders());
         $term      = isset($post['search_term']) ? trim($post['search_term']) : null;
 
         if ($term === null || $term === '' || $term === '0') {
