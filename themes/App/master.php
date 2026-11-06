@@ -18,6 +18,8 @@
 
     <?= $viewMeta->render('style') ?>
 
+    <?= $viewMeta->render('rawStyles') ?>
+
     <script src="https://unpkg.com/alpinejs@3.16.1/dist/cdn.min.js" integrity="sha384-75oSay1c6HzSZ8dPUa3pKH8KLR9R2yAq9zTvyhTrR3gy1qI9w3AExggq3/RE57uR" crossorigin="anonymous" defer></script>
 
 </head>

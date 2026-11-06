@@ -4,7 +4,20 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 6 November 2026 (breaking change)
+
+**`viewMeta` escapes attribute values.** `render()` now runs every value of an `addMeta()`, `addLink()`, `addScript()` and
+`addStyle()` entry through `htmlspecialchars()`, so a `"` or `&` can no longer break out of a tag. **If you escaped a value
+yourself before passing it in, it is now escaped twice**, so pass the plain value. Titles and the content of raw scripts
+are unchanged. `content_seo()` was updated to match. See [View metadata](../building_sites/metadata.md#escaping-and-duplicates).
+
 ## 6 November 2026
+
+**View metadata: no duplicates, and raw styles.** An identical `addMeta()`, `addLink()`, `addScript()` or `addStyle()`
+entry, or identical raw script, is output once, so block partials can each declare the assets they need. New
+`addRawStyle()` and `rawStyles()` add a `<style>` block, and the App theme's layout prints it. If you keep your own copy of
+that layout, add `<?= $viewMeta->render('rawStyles') ?>` to the `<head>`. The docs also show how to give one page its own
+assets. See [View metadata](../building_sites/metadata.md#assets-from-block-partials).
 
 **Content: reorganized docs.** The Content pages are grouped by task in the nav. Reindexing and deploys have their own
 page, [The index and deploys](../content/the_index.md), and feeds and the sitemap moved out of Routing to
