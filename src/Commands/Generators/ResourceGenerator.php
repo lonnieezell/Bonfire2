@@ -14,6 +14,7 @@ namespace Bonfire\Commands\Generators;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 use CodeIgniter\Model;
+use ReflectionClass;
 
 /**
  * Generates a resource for an existing model, with a field for each column of its table, and the module
@@ -29,7 +30,7 @@ class ResourceGenerator extends BaseCommand
     protected $group       = 'Bonfire';
     protected $name        = 'bf:resource';
     protected $description = 'Generates a resource, with its module, routes and permissions, for a model.';
-    protected $usage       = 'bf:resource <name> --model <model class> [options]';
+    protected $usage       = 'bf:resource <name> --model=<model class> [options]';
     protected $arguments   = [
         'name' => 'The record in singular: "Product".',
     ];
@@ -53,7 +54,7 @@ class ResourceGenerator extends BaseCommand
         }
 
         $modelClass = $this->modelClass((string) ($options['model'] ?? ''));
-        if (! is_subclass_of($modelClass, Model::class)) {
+        if (! is_subclass_of($modelClass, Model::class) || ! (new ReflectionClass($modelClass))->isInstantiable()) {
             CLI::error("--model must name a model class, and \"{$modelClass}\" is not one.");
 
             return 1;
@@ -83,8 +84,7 @@ class ResourceGenerator extends BaseCommand
             return 1;
         }
 
-        $entity    = $name;
-        $module    = plural($entity);
+        $module    = plural($name);
         $namespace = trim((string) ($options['namespace'] ?? APP_NAMESPACE . '\Modules\\' . $module), '\\');
         $path      = $this->namespacePath($namespace);
 
@@ -94,7 +94,7 @@ class ResourceGenerator extends BaseCommand
             return 1;
         }
 
-        $data  = $this->templateData($entity, $module, $namespace, $model, $columns, $pages);
+        $data  = $this->templateData($name, $module, $namespace, $model, $columns, $pages);
         $files = [
             $path . $data['class'] . '.php' => 'resource',
             $path . 'Module.php'            => 'module',
@@ -107,7 +107,7 @@ class ResourceGenerator extends BaseCommand
         foreach ($files as $file => $template) {
             if (is_file($file)) {
                 CLI::write('Left ' . clean_path($file) . ' alone, because it exists.', 'yellow');
-                $byHand[$template] = $file;
+                $byHand[] = $template;
 
                 continue;
             }
@@ -167,7 +167,7 @@ class ResourceGenerator extends BaseCommand
      */
     private function pages(string $pages): array
     {
-        $pages = array_values(array_unique(array_filter(array_map(trim(...), explode(',', $pages)))));
+        $pages = array_unique(array_filter(array_map(trim(...), explode(',', $pages))));
 
         return array_diff($pages, self::PAGES) === [] ? $pages : [];
     }
@@ -204,7 +204,7 @@ class ResourceGenerator extends BaseCommand
      * @param list<object> $columns
      * @param list<string> $pages
      */
-    private function templateData(string $entity, string $module, string $namespace, Model $model, array $columns, array $pages): array
+    private function templateData(string $name, string $module, string $namespace, Model $model, array $columns, array $pages): array
     {
         $slug    = dasherize(decamelize($module));
         $plural  = strtolower(humanize(decamelize($module)));
@@ -224,25 +224,28 @@ class ResourceGenerator extends BaseCommand
         $imports = array_values(array_unique($imports));
         sort($imports);
 
-        $permissions = [
+        $descriptions = [
             'list'   => "Can view the list of {$plural}",
             'create' => "Can create {$plural}",
             'edit'   => "Can edit {$plural}",
             'delete' => "Can delete {$plural}",
         ];
+        $permissions = [];
 
         // Deleting isn't a page, so every resource may have it.
-        $permissions = array_filter($permissions, static fn (string $verb): bool => $verb === 'delete' || in_array($verb, $pages, true), ARRAY_FILTER_USE_KEY);
+        foreach ([...array_intersect(self::PAGES, $pages), 'delete'] as $verb) {
+            $permissions["{$slug}.{$verb}"] = $descriptions[$verb];
+        }
 
         return [
             'namespace'   => $namespace,
-            'class'       => $entity . 'Resource',
-            'modelShort'  => substr(strrchr('\\' . $model::class, '\\'), 1),
+            'class'       => $name . 'Resource',
+            'modelShort'  => (new ReflectionClass($model))->getShortName(),
             'slug'        => $slug,
             'pages'       => $pages,
             'imports'     => $imports,
             'fields'      => $fields,
-            'permissions' => array_combine(array_map(static fn (string $verb): string => "{$slug}.{$verb}", array_keys($permissions)), $permissions),
+            'permissions' => $permissions,
         ];
     }
 
@@ -256,10 +259,9 @@ class ResourceGenerator extends BaseCommand
         $handle = $column->name;
 
         if (str_ends_with($handle, '_id')) {
-            $related = str_replace(' ', '', ucwords(str_replace('_', ' ', substr($handle, 0, -3)))) . 'Model';
-            $label   = ucfirst(str_replace('_', ' ', substr($handle, 0, -3)));
-
-            $stub = "// BelongsTo::make('{$handle}')->label('{$label}')->model({$related}::class)->title('name'),";
+            $base    = substr($handle, 0, -3);
+            $related = pascalize($base) . 'Model';
+            $stub    = "// BelongsTo::make('{$handle}')->label('" . ucfirst(str_replace('_', ' ', $base)) . "')->model({$related}::class)->title('name'),";
 
             // A column the database needs a value for still gets an input, until the stub replaces it.
             if (! $column->nullable && $column->default === null) {
@@ -270,10 +272,7 @@ class ResourceGenerator extends BaseCommand
                 ], 'Integer'];
             }
 
-            return [[
-                "// {$handle} looks like a relation. To use it, import BelongsTo and {$related}, and uncomment:",
-                $stub,
-            ], null];
+            return [["// {$handle} looks like a relation. To use it, import BelongsTo and {$related}, and uncomment:", $stub], null];
         }
 
         preg_match('/^\s*([a-z]+)(?:\s*\(\s*(\d+)\s*(?:,\s*(\d+)\s*)?\))?/i', (string) $column->type, $match);
@@ -298,7 +297,7 @@ class ResourceGenerator extends BaseCommand
             $rules[] = 'required';
         }
 
-        if ($builder === 'Text' && in_array($type, ['varchar', 'char'], true) && $length > 0) {
+        if ($builder === 'Text' && in_array($type, ['varchar', 'char', 'character'], true) && $length > 0) {
             $rules[] = "max_length[{$length}]";
         }
 
@@ -318,29 +317,34 @@ class ResourceGenerator extends BaseCommand
     /**
      * Says what to add to the files that were already there.
      *
-     * @param array<string, string> $byHand the files left alone, by template
+     * @param list<string> $byHand the templates of the files left alone
      */
     private function byHand(array $byHand, array $data): void
     {
         $steps = [
             'module'    => "Add this to initAdmin() in Module.php:\n    service('resources')->register({$data['class']}::class);",
             'routes'    => "Add this to Config/Routes.php:\n    resource_routes(\$routes, {$data['class']}::class);",
-            'registrar' => "Add these to the 'permissions' of AuthGroups() in Config/Registrar.php, and a 'moduleGrants' entry for '{$data['slug']}' like it:\n"
+            'registrar' => "Add these to the 'permissions' of AuthGroups() in Config/Registrar.php:\n"
                 . implode("\n", array_map(
                     static fn (string $permission, string $description): string => "    '{$permission}' => '{$description}',",
                     array_keys($data['permissions']),
                     $data['permissions'],
-                )),
+                ))
+                . "\nand this to its 'moduleGrants':\n"
+                . "    '{$data['slug']}' => [\n"
+                . "        'superadmin' => ['{$data['slug']}.*'],\n"
+                . "        'admin'      => ['" . implode("', '", array_keys($data['permissions'])) . "'],\n"
+                . '    ],',
         ];
 
         foreach ($steps as $template => $step) {
-            if (isset($byHand[$template])) {
+            if (in_array($template, $byHand, true)) {
                 CLI::newLine();
                 CLI::write($step);
             }
         }
 
-        if (isset($byHand['resource'])) {
+        if (in_array('resource', $byHand, true)) {
             CLI::newLine();
             CLI::write("{$data['class']} was left as it is, so check that its fields match the table.");
         }

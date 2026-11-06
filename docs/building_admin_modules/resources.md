@@ -114,7 +114,7 @@ The field of a column comes from its type:
 | `varchar`, `char` and any type not listed here | `Text` |
 | `text`, `tinytext`, `mediumtext`, `longtext` | `Textarea` |
 | `int`, `smallint`, `mediumint`, `bigint`, `tinyint` | `Integer` |
-| `decimal`, `numeric` | `Decimal`, with the column's places |
+| `decimal`, `numeric` | `Decimal`, with the column's places where the database reports them (MySQL doesn't, so the default of 2 applies) |
 | `tinyint(1)`, `bool`, `boolean` | `Toggle` |
 | `date` | `Date` |
 | `datetime`, `timestamp` | `Datetime` |

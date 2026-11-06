@@ -265,6 +265,7 @@ final class ResourceGeneratorTest extends TestCase
 
         $this->assertStringContainsString("service('resources')->register(ItemResource::class);", $output);
         $this->assertStringContainsString('resource_routes($routes, ItemResource::class);', $output);
+        $this->assertStringContainsString("'superadmin' => ['items.*'],", $output);
 
         foreach (['items.list', 'items.create', 'items.edit', 'items.delete'] as $permission) {
             $this->assertStringContainsString("'{$permission}' =>", $output);

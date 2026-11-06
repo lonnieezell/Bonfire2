@@ -31,7 +31,7 @@ trait FindsNamespaceFolders
         $steps = [];
 
         $modulesNamespace = substr($namespace, 0, (int) strrpos($namespace, '\\'));
-        if (! array_key_exists($modulesNamespace, (array) config('Bonfire')->appModules)) {
+        if ($modulesNamespace !== '' && ! array_key_exists($modulesNamespace, (array) config('Bonfire')->appModules)) {
             $steps[] = "Add '{$modulesNamespace}' to \$appModules in app/Config/Bonfire.php, so Bonfire finds the module.";
         }
 
