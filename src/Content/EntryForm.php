@@ -40,7 +40,7 @@ final readonly class EntryForm
             }
         }
 
-        $this->form = new Form($blueprint->fields, $readOnly);
+        $this->form = new Form($blueprint->fields, $readOnly, $blueprint->sections);
     }
 
     /**
@@ -59,11 +59,24 @@ final readonly class EntryForm
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool}>
+     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>
      */
     public function rows(array $values, array $errors): array
     {
         return $this->form->rows($values, $errors);
+    }
+
+    /**
+     * What the form shows, section by section.
+     *
+     * @param array<string, string> $values by handle
+     * @param array<string, string> $errors by handle
+     *
+     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>}>
+     */
+    public function sections(array $values, array $errors): array
+    {
+        return $this->form->sections($values, $errors);
     }
 
     /**

@@ -124,7 +124,7 @@ class GlobalAdminController extends AdminController
         return $this->render($this->viewPrefix . 'global_form', [
             'set'       => $set,
             'blueprint' => $blueprint,
-            'rows'      => $form->rows($shown['values'], $shown['errors'] ?? []),
+            'sections'  => $form->sections($shown['values'], $shown['errors'] ?? []),
             'hash'      => $shown['hash'],
             'notice'    => $shown['notice'] ?? null,
             'conflict'  => $shown['conflict'] ?? false,

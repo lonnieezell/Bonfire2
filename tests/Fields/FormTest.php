@@ -5,6 +5,7 @@ namespace Tests\Fields;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldType;
 use Bonfire\Fields\Form;
+use Bonfire\Fields\Section;
 use Bonfire\Fields\Types\IntegerField;
 use Bonfire\Fields\Types\TextField;
 use Bonfire\Fields\Types\ToggleField;
@@ -45,6 +46,52 @@ final class FormTest extends TestCase
         $this->assertSame('Bonfire\Fields\Views\fields\toggle', $rows[2]['view']);
         $this->assertContainsOnlyBool(array_column($rows, 'disabled'));
         $this->assertNotContains(true, array_column($rows, 'disabled'));
+    }
+
+    public function testAFormWithoutSectionsIsOneUntitledColumn(): void
+    {
+        $sections = $this->form()->sections(['name' => 'Ada'], ['age' => 'Too young']);
+
+        $this->assertCount(1, $sections);
+        $this->assertNull($sections[0]['title']);
+        $this->assertNull($sections[0]['instructions']);
+        $this->assertSame(1, $sections[0]['columns']);
+        $this->assertSame(['name', 'age', 'active', 'mood'], array_map(static fn (array $row): string => $row['field']->handle, $sections[0]['rows']));
+        $this->assertSame('Ada', $sections[0]['rows'][0]['value']);
+        $this->assertSame('Too young', $sections[0]['rows'][1]['error']);
+    }
+
+    public function testAFormCarriesItsSectionsWithTheRowsOfEachOne(): void
+    {
+        $name  = new Field('name', 'text', 'Name', 'required', null, []);
+        $notes = new Field('notes', 'textarea', 'Notes', '', null, []);
+        $age   = new Field('age', 'integer', 'Age', '', null, []);
+        $form  = new Form([$name, $notes, $age], [], [
+            new Section('Who', 'About them.', 2, [$name, $notes]),
+            new Section('Other', null, 3, [$age]),
+        ]);
+
+        $sections = $form->sections(['age' => '36'], []);
+
+        $this->assertSame(['Who', 'Other'], array_column($sections, 'title'));
+        $this->assertSame('About them.', $sections[0]['instructions']);
+        $this->assertSame([2, 3], array_column($sections, 'columns'));
+        $this->assertSame(['name', 'notes'], array_map(static fn (array $row): string => $row['field']->handle, $sections[0]['rows']));
+        $this->assertSame('36', $sections[1]['rows'][0]['value']);
+        $this->assertSame(['name', 'notes', 'age'], array_map(static fn (array $row): string => $row['field']->handle, $form->rows([], [])), 'rows() stays flat');
+        $this->assertSame(['name' => '', 'notes' => '', 'age' => '5'], $form->prepare(['fields' => ['age' => '5']]), 'sections do not change what is posted');
+    }
+
+    public function testATextareaOrMarkdownFieldSpansTheRowAndAnyFieldCanAskTo(): void
+    {
+        $form = new Form([
+            new Field('a', 'text', 'A', '', null, []),
+            new Field('b', 'textarea', 'B', '', null, []),
+            new Field('c', 'markdown', 'C', '', null, []),
+            new Field('d', 'text', 'D', '', null, [], true),
+        ]);
+
+        $this->assertSame([false, true, true, true], array_column($form->rows([], []), 'full'));
     }
 
     public function testAReadOnlyFieldIsShownDisabledAndNotTakenFromAPost(): void

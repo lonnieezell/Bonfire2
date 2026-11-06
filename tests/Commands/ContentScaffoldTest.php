@@ -67,6 +67,22 @@ final class ContentScaffoldTest extends ContentTestCase
         $this->assertMatchesRegularExpression('#Skipped.*Views/blog/show\.php#', $this->getStreamFilterBuffer());
     }
 
+    public function testASectionedBlueprintScaffoldsTheSameViewsAsTheFlatOne(): void
+    {
+        command('content:scaffold blog');
+        $flat = file_get_contents(self::VIEWS . 'show.php') . file_get_contents(self::VIEWS . 'index.php');
+        $this->assertStringContainsString('tagline', $flat, 'the scaffold lists the blueprint fields');
+
+        foreach (['index.php', 'show.php'] as $file) {
+            unlink(self::VIEWS . $file);
+        }
+
+        $this->useSections();
+        command('content:scaffold blog');
+
+        $this->assertSame($flat, file_get_contents(self::VIEWS . 'show.php') . file_get_contents(self::VIEWS . 'index.php'));
+    }
+
     public function testTheShowViewRendersTheEntryWithItsSeoTags(): void
     {
         command('content:scaffold blog');

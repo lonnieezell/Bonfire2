@@ -37,7 +37,7 @@ final class BlocksTest extends ContentTestCase
         $this->writeBlock('hero', "title: Hero\nicon: star\nfields:\n  - handle: heading\n    type: text\n    validate: required|max_length[20]\n  - handle: subheading\n    type: text\n");
         $this->writeBlock('cta', "title: Call to action\nfields:\n  - handle: label\n    type: text\n  - handle: new_tab\n    type: toggle\n  - handle: count\n    type: integer\n    min: 1\n");
 
-        $this->useSections();
+        $this->useBlocksField();
         $this->writeSections(<<<'YAML'
             sections:
               - type: hero
@@ -232,7 +232,7 @@ final class BlocksTest extends ContentTestCase
 
     public function testABlockTypeWithoutAFileFailsTheBlueprint(): void
     {
-        $this->useSections("    blocks: [hero, banner]\n");
+        $this->useBlocksField("    blocks: [hero, banner]\n");
 
         $this->expectException(ContentException::class);
         $this->expectExceptionMessage('`sections`');
@@ -292,7 +292,7 @@ final class BlocksTest extends ContentTestCase
     {
         $this->assertSame(['cta', 'hero'], BlocksField::types($this->blueprint()->field('sections')));
 
-        $this->useSections("    blocks: [hero]\n");
+        $this->useBlocksField("    blocks: [hero]\n");
         $this->assertSame(['hero'], BlocksField::types($this->blueprint()->field('sections')));
     }
 
@@ -376,7 +376,7 @@ final class BlocksTest extends ContentTestCase
 
     public function testMaxItemsIsEnforcedOnSave(): void
     {
-        $this->useSections("    max_items: 2\n");
+        $this->useBlocksField("    max_items: 2\n");
         $form = $this->form();
         $hero = ['type' => 'hero', 'heading' => 'H'];
 
@@ -389,7 +389,7 @@ final class BlocksTest extends ContentTestCase
 
     public function testMinItemsIsEnforcedOnSaveEvenForAnEmptyField(): void
     {
-        $this->useSections("    min_items: 2\n");
+        $this->useBlocksField("    min_items: 2\n");
         $form = $this->form();
         $hero = ['type' => 'hero', 'heading' => 'H'];
 
@@ -420,7 +420,7 @@ final class BlocksTest extends ContentTestCase
 
     public function testABlockOfAnUnknownOrNotAllowedTypeIsRefused(): void
     {
-        $this->useSections("    blocks: [hero]\n");
+        $this->useBlocksField("    blocks: [hero]\n");
         $form = $this->form();
 
         $errors = $form->validate($form->prepare($this->posting([
@@ -499,7 +499,7 @@ final class BlocksTest extends ContentTestCase
      *
      * @param string $options more lines for the field, indented four spaces
      */
-    private function useSections(string $options = ''): void
+    private function useBlocksField(string $options = ''): void
     {
         file_put_contents(
             $this->blueprints . 'collections/blog/post.yaml',

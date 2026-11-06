@@ -32,7 +32,8 @@ fields:
 | Key | What it does |
 |---|---|
 | `title` | The blueprint's name. Defaults to its filename. |
-| `fields` | A list of fields, shown in this order. Required. |
+| `fields` | A list of fields, shown in this order. Give `fields` or [`sections`](#sections), not both. |
+| `sections` | Groups of fields, shown in this order. See [Sections](#sections). |
 | `seo` | Which fields feed an entry's SEO `title` and `description`. See [SEO](seo.md#mapping-fields-in-a-blueprint). |
 
 ## Field keys
@@ -44,11 +45,59 @@ fields:
 | `label` | The handle, as words | The label above the input. |
 | `validate` | None | CodeIgniter validation rules, as `required\|max_length[255]` or as a list. |
 | `instructions` | None | Help text under the input. |
+| `width` | None | `full` makes the field span the whole row of its [section](#sections). `markdown` and `textarea` fields do already. |
 
 A type can read more keys, such as `rows` or `time`. They are listed with the type.
 
+## Sections
+
+Group the fields of a long form with `sections` instead of `fields`. Each section has a title, and shows its fields in
+one to three columns:
+
+```yaml
+title: Post
+sections:
+  - title: Content
+    instructions: What readers see first.
+    fields:
+      - handle: title
+        type: text
+        validate: required
+      - handle: slug
+        type: slug
+  - title: Details
+    columns: 2
+    fields:
+      - handle: featured
+        type: toggle
+      - handle: event_date
+        type: date
+      - handle: location
+        type: text
+        width: full
+      - handle: body
+        type: markdown
+```
+
+| Key | Default | What it does |
+|---|---|---|
+| `title` | Required | The heading of the section. |
+| `instructions` | None | Help text under the heading. |
+| `columns` | `1` | How many columns the fields are laid out in: `1`, `2` or `3`. |
+| `fields` | Required | The section's fields, with the [field keys](#field-keys) above. |
+
+Fields fill the columns in order, row by row. A field with `width: full`, and every `markdown` and `textarea` field,
+takes a whole row instead. Below the `md` breakpoint the columns stack, one field to a row.
+
+Sections only change how the form looks. The fields are saved flat, as front matter keys, exactly as they would be in a
+blueprint with the same fields in one `fields` list. A handle can be used once in the whole blueprint, not once in each
+section, and the [`seo`](seo.md#mapping-fields-in-a-blueprint) mapping can name a field of any section. Everything that
+reads a blueprint's fields, such as [`content:scaffold`](scaffolding.md), sees them as one list. Taxonomy and global
+blueprints can have sections too.
+
 A blueprint that can't be loaded, because its YAML is invalid, a field has no `handle`, uses a `type` that doesn't exist
-or repeats a handle, is refused with a message that says which. The entry form doesn't open, and the collection's list
+or repeats a handle, has both `fields` and `sections`, has a section without a `title` or with `columns` outside 1 to 3,
+or has a `width` other than `full`, is refused with a message that says which. The entry form doesn't open, and the collection's list
 still does.
 
 ## Fields that aren't ordinary keys

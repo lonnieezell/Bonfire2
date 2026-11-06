@@ -47,6 +47,18 @@ final class SeoTest extends ContentTestCase
         service('routes')->loadRoutes();
     }
 
+    public function testSeoCanMapFieldsThatAreInSections(): void
+    {
+        $this->useSections();
+        $this->mapSeo("seo:\n  title: tagline\n  description: summary\n");
+        $this->writeEntry("tagline: Mapped title\nsummary: Mapped description\n", "Body paragraph.\n");
+
+        $seo = $this->first()->seo();
+
+        $this->assertSame('Mapped title', $seo['title']);
+        $this->assertSame('Mapped description', $seo['description']);
+    }
+
     public function testSeoReadsTheFieldsTheBlueprintMaps(): void
     {
         $this->mapSeo("seo:\n  title: tagline\n  description: summary\n");
