@@ -11,6 +11,7 @@
 
 namespace Bonfire\Resources;
 
+use Bonfire\Fields\Field;
 use Bonfire\Menus\MenuItem;
 use InvalidArgumentException;
 
@@ -24,11 +25,24 @@ class ResourceRegistry
      */
     private array $resources = [];
 
+    private readonly bool $production;
+
+    /**
+     * @param bool|null $production whether a mistake in a resource is logged instead of thrown; the environment decides by default
+     */
+    public function __construct(?bool $production = null)
+    {
+        $this->production = $production ?? ENVIRONMENT === 'production';
+    }
+
     /**
      * Registers a resource and adds its list to the sidebar, for those who have `{permission}.list`.
      * It also puts the resource's soft-deleted records in the Recycler, shown by the `$search` columns, and
      * its `$search` columns in the admin's global search. Call it from a module's initAdmin(), after the
      * module's routes exist.
+     *
+     * A resource that saves records needs every field in its model's `$allowedFields`, or the model would drop the
+     * value. That throws a ResourceException, except in production, where it is logged and the resource still registers.
      *
      * @param class-string $class      a class that extends Resource
      * @param string       $collection the sidebar collection that gets the item
@@ -40,7 +54,10 @@ class ResourceRegistry
             throw new InvalidArgumentException("{$class} is not a " . Resource::class . '.');
         }
 
-        $resource                         = new $class();
+        $resource = new $class();
+
+        $this->checkAllowedFields($resource);
+
         $this->resources[$resource->slug] = $resource;
 
         if ($resource->allows('list')) {
@@ -61,6 +78,42 @@ class ResourceRegistry
         }
 
         return $resource;
+    }
+
+    /**
+     * @throws ResourceException outside production, when a field isn't in the model's `$allowedFields`
+     */
+    private function checkAllowedFields(Resource $resource): void
+    {
+        if (! $resource->allows('create') && ! $resource->allows('edit')) {
+            return;
+        }
+
+        $model = model($resource->model, false);
+
+        // A model that doesn't protect its fields saves them all.
+        if (! $model->protectFields) {
+            return;
+        }
+
+        $missing = array_diff(array_map(static fn (Field $field): string => $field->handle, $resource->formFields()), $model->allowedFields);
+
+        if ($missing === []) {
+            return;
+        }
+
+        $message = sprintf(
+            '%s has fields that are not in the $allowedFields of %s, so saving would drop their values: `%s`.',
+            $resource::class,
+            $resource->model,
+            implode('`, `', $missing),
+        );
+
+        if (! $this->production) {
+            throw new ResourceException($message);
+        }
+
+        log_message('error', $message);
     }
 
     public function get(string $slug): ?Resource

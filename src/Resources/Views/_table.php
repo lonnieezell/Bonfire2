@@ -5,8 +5,8 @@ use CodeIgniter\Pager\Pager;
 /**
  * The table and pager of a resource's list, which is all that an htmx refresh loads.
  *
- * @var list<Bonfire\Fields\Field>                      $columns
- * @var list<array{record: mixed, cells: list<string>}> $rows
+ * @var list<Bonfire\Resources\Column|Bonfire\Fields\Field>                  $columns
+ * @var list<array{record: mixed, cells: list<string>, editUrl: string|null}> $rows     editUrl is where the first cell links to
  * @var Pager                                           $pager
  * @var string                                          $sort     the handle of the sorted column, or ''
  * @var string                                          $dir      asc or desc
@@ -45,7 +45,7 @@ use CodeIgniter\Pager\Pager;
                 <?php foreach ($rows as $row) : ?>
                     <tr data-row>
                         <?php foreach ($columns as $i => $column) : ?>
-                            <td data-cell="<?= esc($column->handle, 'attr') ?>"><?= esc($row['cells'][$i]) ?></td>
+                            <td data-cell="<?= esc($column->handle, 'attr') ?>"><?= $i === 0 && $row['editUrl'] !== null ? '<a href="' . esc($row['editUrl'], 'attr') . '">' . esc($row['cells'][$i]) . '</a>' : esc($row['cells'][$i]) ?></td>
                         <?php endforeach ?>
                     </tr>
                 <?php endforeach ?>

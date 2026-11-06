@@ -6,6 +6,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 6 November 2026
 
+**Resources: create and edit pages.** Add `create` and `edit` to a resource's `$pages` for forms that render through
+`Bonfire\Fields\Form` with the save bar. Write the fields in PHP with the builders in `Bonfire\Resources\Fields` (`Text`,
+`Textarea`, `Markdown`, `Toggle`, `Select`, `Integer`, `Date`, `Datetime`, `Decimal`, `BelongsTo`, `Field::make(…,
+type:)`) and group them with `Section`. A save validates the field rules, then the model saves with its own, and one post
+shows the errors of both. `{id}` works in field rules, `beforeSave()` and `afterSave()` hook the save, `can()` decides
+per record, and a `form.php` beside the resource replaces the form. `Column` adds relation (`category.name`) and computed
+columns to the list. `register()` throws a `ResourceException` outside production when a field isn't in the model's
+`$allowedFields`, and logs it in production. See [Resources](../building_admin_modules/resources.md).
+
 **Fields: `belongsTo` search.** Above `searchAbove` records (default `100`), a `belongsTo` field shows a search box
 instead of a dropdown. It lists matching titles as you type, from an admin endpoint that needs `admin.access`, the field's
 optional `permission` and a token signed with the app's encryption key. See
