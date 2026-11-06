@@ -1606,6 +1606,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#decimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decimal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3168,6 +3179,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#decimal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decimal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3371,6 +3393,11 @@ is saved in the front matter.</p>
 <td>A number</td>
 </tr>
 <tr>
+<td><a href="#decimal"><code>decimal</code></a></td>
+<td>A number with decimal places</td>
+<td>A string</td>
+</tr>
+<tr>
 <td><a href="#entries"><code>entries</code></a></td>
 <td>Entries to link to</td>
 <td>A list of UUIDs</td>
@@ -3540,6 +3567,43 @@ own name, and has no keys of its own. A value that isn't a date and time is refu
 <span class="w">  </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="w">  </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 </code></pre></div>
+<h2 id="decimal">decimal</h2>
+<p>A number with a fixed count of decimal places, such as a price. It's saved as a string, <code>"19.99"</code>, so it never passes
+through a float and can fill a <code>DECIMAL</code> column exactly. A value that isn't a number, has more places than <code>places</code>,
+or is below <code>min</code> is refused. The numbers are compared digit by digit, not as floats. Left empty, the value is <code>null</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>places</code></td>
+<td><code>2</code></td>
+<td>The most decimal places allowed. <code>0</code> allows whole numbers only.</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td>None</td>
+<td>The lowest value allowed.</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td><code>0.01</code></td>
+<td>The <code>step</code> of the input, which is <code>1</code> over <code>10</code> to the power of <code>places</code> unless you set it. The server doesn't check it, but the browser counts steps from <code>min</code>, so keep <code>min</code> a whole number of steps.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">price</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimal</span>
+<span class="w">  </span><span class="nt">places</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
+<p>Write the numbers as plain digits, such as <code>0.01</code> and not <code>1e-2</code>. Read the value back as the string it is. A calculation
+that needs exactness should use a library such as <code>bcmath</code>, not the <code>float</code> PHP would cast it to.</p>
 <h2 id="entries">entries</h2>
 <p>Links to other entries, saved as a list of their UUIDs.</p>
 <table>

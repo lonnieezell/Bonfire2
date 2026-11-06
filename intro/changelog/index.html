@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#6-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -630,7 +641,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-november-2026" class="md-nav__link">
+  <a href="#6-november-2026_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         6 November 2026
@@ -3188,6 +3199,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#6-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#6-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3199,7 +3221,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-november-2026" class="md-nav__link">
+  <a href="#6-november-2026_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         6 November 2026
@@ -3538,6 +3560,9 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="6-november-2026">6 November 2026</h2>
+<p><strong>A <code>decimal</code> field type.</strong> It takes <code>places</code> (default <code>2</code>), <code>min</code> and <code>step</code>, renders a number input and saves a string
+such as <code>"19.99"</code>, so a <code>DECIMAL</code> column never passes through a float. See <a href="../../content/field_types/#decimal">Field types</a>.</p>
 <h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
 <p><strong>The field system moved from Content to <code>Bonfire\Fields</code>.</strong> Resources and actions will use the same fields as
 blueprints, so <code>Field</code>, <code>FieldType</code>, <code>FieldTypes</code> and the generic types (<code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>toggle</code>,
@@ -3580,7 +3605,7 @@ defines that. See <a href="../../content/markdown/">Markdown and components</a>.
 <code>addStyle()</code> entry through <code>htmlspecialchars()</code>, so a <code>"</code> or <code>&amp;</code> can no longer break out of a tag. <strong>If you escaped a value
 yourself before passing it in, it is now escaped twice</strong>, so pass the plain value. Titles and the content of raw scripts
 are unchanged. <code>content_seo()</code> was updated to match. See <a href="../../building_sites/metadata/#escaping-and-duplicates">View metadata</a>.</p>
-<h2 id="6-november-2026">6 November 2026</h2>
+<h2 id="6-november-2026_1">6 November 2026</h2>
 <p><strong>Content: blocks.</strong> A new <code>blocks</code> field type holds a list of typed blocks in an entry's front matter, such as a hero or a
 call to action. Block types are files in <code>resources/blueprints/blocks</code>, with a <code>title</code>, an optional <code>icon</code> and <code>fields</code>.
 <code>$entry-&gt;blocks($field)</code> returns a list you can loop over, filter with <code>ofType()</code> and render, <code>$entry-&gt;block($field)</code> is
