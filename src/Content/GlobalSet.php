@@ -11,7 +11,8 @@
 
 namespace Bonfire\Content;
 
-use Bonfire\Content\Fields\FieldTypes;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldTypes;
 use DateTimeInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -133,7 +134,7 @@ final readonly class GlobalSet
      */
     private static function cast(mixed $value, Field $field): mixed
     {
-        $text = FieldTypes::get($field->type)->fromFrontMatter($value, $field);
+        $text = FieldTypes::get($field->type)->fromStored($value, $field);
 
         return match ($field->type) {
             'toggle'           => $text === '1',

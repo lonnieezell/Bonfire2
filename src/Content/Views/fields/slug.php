@@ -1,14 +1,14 @@
 <?php
 /**
  * The input of a slug field. While the entry is new, it's filled from the field named by `from` (the title
- * unless the blueprint says otherwise) until someone types in it. Copy it to app/Views/content/fields/slug.php
+ * unless the blueprint says otherwise) until someone types in it. Copy it to app/Views/fields/slug.php
  * to change it.
  *
- * @var Bonfire\Content\Field $field
- * @var string                $name
- * @var string                $id
- * @var string                $value
- * @var bool                  $disabled   true once the entry exists, because the slug names its file
+ * @var Bonfire\Fields\Field $field
+ * @var string               $name
+ * @var string               $id
+ * @var string               $value
+ * @var bool                 $disabled   true once the entry exists, because the slug names its file
  */
 $sourceId = 'field-' . Bonfire\Content\Fields\SlugField::source($field);
 ?>

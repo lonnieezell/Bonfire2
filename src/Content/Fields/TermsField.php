@@ -11,20 +11,26 @@
 
 namespace Bonfire\Content\Fields;
 
-use Bonfire\Content\ContentException;
-use Bonfire\Content\Field;
 use Bonfire\Content\Taxonomy;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldException;
+use Bonfire\Fields\FieldType;
 
 /**
  * The terms of a taxonomy an entry has, chosen from the terms that exist. The front matter holds their slugs as a list
  * under the taxonomy's handle, such as `tags: [php, laravel]`. The form value is the slugs separated by commas.
  * The collection has to list the taxonomy in `taxonomies` for the terms to be indexed.
  */
-final class TermsField extends FieldType
+final class TermsField extends FieldType implements ContentFieldType
 {
     public function partial(): string
     {
         return 'terms';
+    }
+
+    public function viewNamespace(): string
+    {
+        return 'Bonfire\Content\Views\fields';
     }
 
     public function check(Field $field): void
@@ -32,13 +38,18 @@ final class TermsField extends FieldType
         $taxonomy = self::taxonomy($field);
 
         if ($taxonomy === '') {
-            throw new ContentException("Field `{$field->handle}` needs a `taxonomy`: the handle of the taxonomy its terms come from.");
+            throw new FieldException("Field `{$field->handle}` needs a `taxonomy`: the handle of the taxonomy its terms come from.");
         }
 
         // The taxonomy's handle is a front matter key, so it can't be one the entry already uses.
         if (in_array($taxonomy, Taxonomy::TAKEN_KEYS, true)) {
-            throw new ContentException("Field `{$field->handle}`: its terms are saved under `{$taxonomy}`, which the entry uses for something else. Name the taxonomy differently.");
+            throw new FieldException("Field `{$field->handle}`: its terms are saved under `{$taxonomy}`, which the entry uses for something else. Name the taxonomy differently.");
         }
+    }
+
+    public function storedInFrontMatter(): bool
+    {
+        return true;
     }
 
     /**
@@ -70,12 +81,12 @@ final class TermsField extends FieldType
     /**
      * @return list<string>
      */
-    public function toFrontMatter(string $input, Field $field): array
+    public function toStored(string $input, Field $field): array
     {
         return $input === '' ? [] : explode(',', $input);
     }
 
-    public function fromFrontMatter(mixed $stored, Field $field): string
+    public function fromStored(mixed $stored, Field $field): string
     {
         return implode(',', array_filter((array) $stored, is_string(...)));
     }

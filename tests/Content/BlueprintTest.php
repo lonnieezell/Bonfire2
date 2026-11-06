@@ -66,7 +66,7 @@ final class BlueprintTest extends ContentTestCase
 
         yield 'reserved handle' => ["fields:\n  - handle: status\n    type: text\n", '/managed by the entry form/'];
 
-        yield 'unknown type' => ["fields:\n  - handle: a\n    type: wysiwyg\n", '/needs a `type`: text, textarea, markdown, slug, toggle, date/'];
+        yield 'unknown type' => ["fields:\n  - handle: a\n    type: wysiwyg\n", '/needs a `type`: text, textarea, markdown, toggle, date/'];
 
         yield 'duplicate handle' => ["fields:\n  - handle: a\n    type: text\n  - handle: a\n    type: text\n", '/two fields named `a`/'];
 

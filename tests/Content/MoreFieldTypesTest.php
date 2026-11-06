@@ -6,12 +6,12 @@ use Bonfire\Content\Blueprint;
 use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
-use Bonfire\Content\Field;
 use Bonfire\Content\Fields\EntriesField;
-use Bonfire\Content\Fields\FieldTypes;
-use Bonfire\Content\Fields\IntegerField;
 use Bonfire\Content\Indexer;
 use Bonfire\Content\Models\ContentEntryModel;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\Types\IntegerField;
 use Bonfire\Users\User;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
@@ -126,7 +126,7 @@ final class MoreFieldTypesTest extends ContentTestCase
         foreach (['mood' => 'angry', 'genre' => 'Science fiction'] as $handle => $posted) {
             $errors = $form->validate($form->prepare(['fields' => ['title' => 'T', $handle => $posted]]));
 
-            $this->assertSame(lang('Content.selectInvalid'), $errors[$handle] ?? null, $handle);
+            $this->assertSame(lang('Fields.selectInvalid'), $errors[$handle] ?? null, $handle);
         }
     }
 
@@ -151,7 +151,7 @@ final class MoreFieldTypesTest extends ContentTestCase
         $this->assertSame($values['tags'], $form->valuesOf($frontMatter, '', 'x')['tags']);
 
         $errors = $form->validate($form->prepare(['fields' => ['title' => 'T', 'tags' => ['php', 'js']]]));
-        $this->assertSame(lang('Content.selectInvalid'), $errors['tags']);
+        $this->assertSame(lang('Fields.selectInvalid'), $errors['tags']);
     }
 
     public function testASelectWhoseValuesAreNumbersAcceptsThem(): void
@@ -194,11 +194,11 @@ final class MoreFieldTypesTest extends ContentTestCase
     {
         $form = $this->form();
 
-        $this->assertSame(lang('Content.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '2.5']]))['rating']);
-        $this->assertSame(lang('Content.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => 'three']]))['rating']);
-        $this->assertSame(lang('Content.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '99999999999999999999']]))['rating']);
-        $this->assertSame(lang('Content.integerMin', [1]), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '0']]))['rating']);
-        $this->assertSame(lang('Content.integerMax', [5]), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '6']]))['rating']);
+        $this->assertSame(lang('Fields.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '2.5']]))['rating']);
+        $this->assertSame(lang('Fields.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => 'three']]))['rating']);
+        $this->assertSame(lang('Fields.integerInvalid'), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '99999999999999999999']]))['rating']);
+        $this->assertSame(lang('Fields.integerMin', [1]), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '0']]))['rating']);
+        $this->assertSame(lang('Fields.integerMax', [5]), $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '6']]))['rating']);
         $this->assertSame([], $form->validate($form->prepare(['fields' => ['title' => 'T', 'rating' => '5']])));
     }
 
@@ -447,12 +447,12 @@ final class MoreFieldTypesTest extends ContentTestCase
 
     public function testARegisteredClassThatIsNotAFieldTypeIsRefused(): void
     {
-        $config             = config('Content');
-        $config->fieldTypes = ['shout' => self::class, 'ghost' => 'No\Such\Class'];
+        $config        = config('Fields');
+        $config->types = ['shout' => self::class, 'ghost' => 'No\Such\Class'];
 
         $this->assertFalse(FieldTypes::has('shout'));
         $this->assertFalse(FieldTypes::has('ghost'));
-        $this->assertSame(['text', 'textarea', 'markdown', 'slug', 'toggle', 'date', 'datetime', 'select', 'integer', 'entries', 'terms'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'slug', 'entries', 'terms'], FieldTypes::names());
     }
 
     /**
@@ -465,7 +465,7 @@ final class MoreFieldTypesTest extends ContentTestCase
 
     private function registerShout(): void
     {
-        config('Content')->fieldTypes = ['shout' => ShoutField::class];
+        config('Fields')->types = ['shout' => ShoutField::class];
     }
 
     private function useFields(string $fields): void

@@ -1,13 +1,13 @@
 <?php
 /**
- * The input of a terms field: a checkbox for each term of the taxonomy. Copy it to app/Views/content/fields/terms.php to change it.
+ * The input of a terms field: a checkbox for each term of the taxonomy. Copy it to app/Views/fields/terms.php to change it.
  * A slug the entry has that no term has stays checked, so that saving doesn't drop it.
  *
- * @var Bonfire\Content\Field $field
- * @var string                $name     the input's name, such as fields[tags]. The boxes add [].
- * @var string                $id       the id the boxes' ids start with
- * @var string                $value    the slugs the entry has, separated by commas
- * @var bool                  $disabled
+ * @var Bonfire\Fields\Field $field
+ * @var string               $name     the input's name, such as fields[tags]. The boxes add [].
+ * @var string               $id       the id the boxes' ids start with
+ * @var string               $value    the slugs the entry has, separated by commas
+ * @var bool                 $disabled
  */
 
 // Straight from the index, because the entry counts that content()->terms() adds aren't needed here.

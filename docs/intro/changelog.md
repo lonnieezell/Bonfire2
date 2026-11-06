@@ -4,6 +4,31 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 6 November 2026 (breaking change)
+
+**The field system moved from Content to `Bonfire\Fields`.** Resources and actions will use the same fields as
+blueprints, so `Field`, `FieldType`, `FieldTypes` and the generic types (`text`, `textarea`, `markdown`, `toggle`,
+`select`, `integer`, `date` and `datetime`) now live in `Bonfire\Fields`, the types under `Bonfire\Fields\Types`. `slug`,
+`terms` and `entries` stay in `Bonfire\Content\Fields`. Blueprints work as before. There are no aliases, so **a custom
+field type, or code of yours that names the old classes, breaks until you change these**:
+
+- **Namespace.** `Bonfire\Content\Field` is `Bonfire\Fields\Field`, `Bonfire\Content\Fields\FieldType` is
+  `Bonfire\Fields\FieldType`, `Bonfire\Content\Fields\FieldTypes` is `Bonfire\Fields\FieldTypes`, and
+  `Bonfire\Content\Fields\ChoiceList` is `Bonfire\Fields\ChoiceList`. A type that extends one of the built-in types, such as
+  `TextField`, now finds it in `Bonfire\Fields\Types`. `check()` throws a `Bonfire\Fields\FieldException`, not a `ContentException`.
+- **Two renamed methods.** `toFrontMatter()` is `toStored()` and `fromFrontMatter()` is `fromStored()`, with the same
+  arguments. `ChoiceList::fromFrontMatter()` is `ChoiceList::fromStored()`. `key()` and `storedInFrontMatter()` are no longer
+  on `FieldType`: a type that overrides them implements `Bonfire\Content\Fields\ContentFieldType` instead.
+- **The config key.** `Config\Content::$fieldTypes` is gone. Register your types in `$types` of `app/Config/Fields.php`,
+  which extends `Bonfire\Fields\Config\Fields`. The language strings `Content.selectInvalid`, `Content.integerInvalid`,
+  `Content.integerMin` and `Content.integerMax` are `Fields.*` now.
+- **The view path.** Overrides of an input move from `app/Views/content/fields/<type>.php` to `app/Views/fields/<type>.php`,
+  and now apply wherever a form uses fields. Copies in the old folder are ignored. The `@var` of the partials is
+  `Bonfire\Fields\Field`.
+
+The form behind an entry's fields is `Bonfire\Fields\Form`, and its view is `Bonfire\Fields\Views\form_fields` rather than
+`Bonfire\Content\Views\form_fields`. See [Custom field types](../content/custom_field_types.md).
+
 ## 6 November 2026
 
 **Content: reorganized docs.** The Content pages are grouped by task in the nav. Reindexing and deploys have their own

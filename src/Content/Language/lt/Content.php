@@ -82,10 +82,6 @@ return [
     'navigationTrashed'       => 'Šiukšliadėžėje',
 
     // Field types
-    'selectInvalid'  => 'Pasirinkite vieną iš parinkčių.',
-    'integerInvalid' => 'Įveskite sveikąjį skaičių.',
-    'integerMin'     => 'Įveskite skaičių, ne mažesnį nei {0}.',
-    'integerMax'     => 'Įveskite skaičių, ne didesnį nei {0}.',
     'entriesInvalid' => 'Pasirinkite egzistuojančius įrašus iš rinkinių, kuriuos leidžia šis laukas.',
     'entriesTooMany' => 'Pasirinkite ne daugiau kaip {0}.',
     'entriesLimit'   => 'Pasirinkite iki {0}.',

@@ -11,21 +11,36 @@
 
 namespace Bonfire\Content;
 
-use Bonfire\Content\Fields\FieldType;
-use Bonfire\Content\Fields\FieldTypes;
+use Bonfire\Content\Fields\EntryStorage;
 use Bonfire\Content\Fields\SlugField;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldType;
+use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\Form;
 
 /**
  * Moves an entry between its file and the blueprint's form: what the form shows, what a post holds once
- * it's tidied, whether it's valid, and the front matter and body to write for it.
+ * it's tidied, whether it's valid, and the front matter and body to write for it. The form itself is a
+ * Bonfire\Fields\Form, which renders through Bonfire\Fields\Views\form_fields.
  */
 final readonly class EntryForm
 {
+    private Form $form;
+
     /**
      * @param bool $isNew an existing entry's slug is its file name, so the form can't change it
      */
     public function __construct(private Blueprint $blueprint, private bool $isNew)
     {
+        $readOnly = [];
+
+        foreach ($blueprint->fields as $field) {
+            if (! $this->isEditable(FieldTypes::get($field->type))) {
+                $readOnly[] = $field->handle;
+            }
+        }
+
+        $this->form = new Form($blueprint->fields, $readOnly);
     }
 
     /**
@@ -35,13 +50,7 @@ final readonly class EntryForm
      */
     public function fields(): array
     {
-        $fields = [];
-
-        foreach ($this->blueprint->fields as $field) {
-            $fields[] = [$field, FieldTypes::get($field->type)];
-        }
-
-        return $fields;
+        return $this->form->fields();
     }
 
     /**
@@ -54,19 +63,7 @@ final readonly class EntryForm
      */
     public function rows(array $values, array $errors): array
     {
-        $rows = [];
-
-        foreach ($this->fields() as [$field, $type]) {
-            $rows[] = [
-                'field'    => $field,
-                'view'     => FieldTypes::view($field->type),
-                'value'    => $values[$field->handle] ?? '',
-                'error'    => $errors[$field->handle] ?? null,
-                'disabled' => ! $this->isEditable($type),
-            ];
-        }
-
-        return $rows;
+        return $this->form->rows($values, $errors);
     }
 
     /**
@@ -74,7 +71,7 @@ final readonly class EntryForm
      */
     public function isEditable(FieldType $type): bool
     {
-        return $this->isNew || $type->storedInFrontMatter();
+        return $this->isNew || EntryStorage::inFrontMatter($type);
     }
 
     /**
@@ -90,12 +87,12 @@ final readonly class EntryForm
 
         foreach ($this->fields() as [$field, $type]) {
             $stored = match (true) {
-                $field->handle === Blueprint::BODY => $body,
-                ! $type->storedInFrontMatter()     => $slug,
-                default                            => $data[$type->key($field)] ?? null,
+                $field->handle === Blueprint::BODY   => $body,
+                ! EntryStorage::inFrontMatter($type) => $slug,
+                default                              => $data[EntryStorage::key($type, $field)] ?? null,
             };
 
-            $values[$field->handle] = $type->fromFrontMatter($stored, $field);
+            $values[$field->handle] = $type->fromStored($stored, $field);
         }
 
         return $values;
@@ -120,16 +117,7 @@ final readonly class EntryForm
      */
     public function prepare(array $post): array
     {
-        $posted = is_array($post['fields'] ?? null) ? $post['fields'] : [];
-        $values = [];
-
-        foreach ($this->fields() as [$field, $type]) {
-            if ($this->isEditable($type)) {
-                $values[$field->handle] = $type->prepare($posted[$field->handle] ?? null, $field, ['fields' => $posted]);
-            }
-        }
-
-        return $values;
+        return $this->form->prepare($post);
     }
 
     /**
@@ -139,34 +127,7 @@ final readonly class EntryForm
      */
     public function validate(array $values): array
     {
-        $rules  = [];
-        $labels = [];
-
-        foreach ($this->fields() as [$field, $type]) {
-            $fieldRules = $type->rules($field);
-
-            if (isset($values[$field->handle]) && $fieldRules !== '' && $fieldRules !== []) {
-                $rules["fields.{$field->handle}"] = ['label' => $field->label, 'rules' => $fieldRules];
-                $labels[$field->handle]           = "fields.{$field->handle}";
-            }
-        }
-
-        if ($rules === []) {
-            return [];
-        }
-
-        $validation = single_service('validation')->setRules($rules);
-        $validation->run(['fields' => $values]);
-
-        $errors = [];
-
-        foreach ($labels as $handle => $key) {
-            if (($error = $validation->getError($key)) !== '') {
-                $errors[$handle] = $error;
-            }
-        }
-
-        return $errors;
+        return $this->form->validate($values);
     }
 
     /**
@@ -193,12 +154,12 @@ final readonly class EntryForm
                 continue;
             }
 
-            if (! $type->storedInFrontMatter()) {
+            if (! EntryStorage::inFrontMatter($type)) {
                 continue;
             }
 
-            $value = $type->toFrontMatter($values[$field->handle], $field);
-            $key   = $type->key($field);
+            $value = $type->toStored($values[$field->handle], $field);
+            $key   = EntryStorage::key($type, $field);
 
             // A field left empty doesn't add a key to the file.
             if (array_key_exists($key, $existing) || ! in_array($value, [null, '', []], true)) {
@@ -217,7 +178,7 @@ final readonly class EntryForm
     public function slugOf(array $values): string
     {
         foreach ($this->fields() as [$field, $type]) {
-            if (! $type->storedInFrontMatter() && isset($values[$field->handle])) {
+            if (! EntryStorage::inFrontMatter($type) && isset($values[$field->handle])) {
                 return $values[$field->handle];
             }
         }

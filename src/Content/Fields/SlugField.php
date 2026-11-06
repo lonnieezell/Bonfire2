@@ -11,19 +11,30 @@
 
 namespace Bonfire\Content\Fields;
 
-use Bonfire\Content\Field;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldType;
 
 /**
  * The entry's slug. It names the file, so it isn't in the front matter and can't change once the entry exists.
  * Left empty, it's made from the field named by `from`, which is `title` unless the blueprint says otherwise.
  */
-final class SlugField extends FieldType
+final class SlugField extends FieldType implements ContentFieldType
 {
     public const MAX_LENGTH = 100;
 
     public function partial(): string
     {
         return 'slug';
+    }
+
+    public function viewNamespace(): string
+    {
+        return 'Bonfire\Content\Views\fields';
+    }
+
+    public function key(Field $field): string
+    {
+        return $field->handle;
     }
 
     /**

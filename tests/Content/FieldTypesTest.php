@@ -2,14 +2,14 @@
 
 namespace Tests\Content;
 
-use Bonfire\Content\Field;
-use Bonfire\Content\Fields\DateField;
-use Bonfire\Content\Fields\FieldTypes;
-use Bonfire\Content\Fields\MarkdownField;
 use Bonfire\Content\Fields\SlugField;
-use Bonfire\Content\Fields\TextareaField;
-use Bonfire\Content\Fields\TextField;
-use Bonfire\Content\Fields\ToggleField;
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\Types\DateField;
+use Bonfire\Fields\Types\MarkdownField;
+use Bonfire\Fields\Types\TextareaField;
+use Bonfire\Fields\Types\TextField;
+use Bonfire\Fields\Types\ToggleField;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\TestCase;
 
@@ -22,12 +22,15 @@ final class FieldTypesTest extends TestCase
 
     public function testEveryTypeHasAClassAndABundledPartial(): void
     {
-        $this->assertSame(['text', 'textarea', 'markdown', 'slug', 'toggle', 'date', 'datetime', 'select', 'integer', 'entries', 'terms'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'slug', 'entries', 'terms'], FieldTypes::names());
 
         foreach (FieldTypes::names() as $type) {
+            // The generic types render from Bonfire\Fields, and the ones tied to an entry from Content.
+            $module = in_array($type, ['slug', 'entries', 'terms'], true) ? 'Content' : 'Fields';
+
             $this->assertSame($type, FieldTypes::get($type)->partial());
-            $this->assertSame("Bonfire\\Content\\Views\\fields\\{$type}", FieldTypes::view($type));
-            $this->assertFileExists(dirname(__DIR__, 2) . "/src/Content/Views/fields/{$type}.php");
+            $this->assertSame("Bonfire\\{$module}\\Views\\fields\\{$type}", FieldTypes::view($type));
+            $this->assertFileExists(dirname(__DIR__, 2) . "/src/{$module}/Views/fields/{$type}.php");
         }
     }
 
@@ -52,14 +55,14 @@ final class FieldTypesTest extends TestCase
         $this->assertSame("a\nb", (new MarkdownField())->prepare("a\r\nb", $field, []));
     }
 
-    public function testTextCastsToAndFromFrontMatter(): void
+    public function testTextCastsToAndFromStored(): void
     {
         $field = $this->field('text');
 
-        $this->assertSame('Hi', (new TextField())->toFrontMatter('Hi', $field));
-        $this->assertSame('42', (new TextField())->fromFrontMatter(42, $field));
-        $this->assertSame('', (new TextField())->fromFrontMatter(null, $field));
-        $this->assertSame('', (new TextField())->fromFrontMatter(['a'], $field));
+        $this->assertSame('Hi', (new TextField())->toStored('Hi', $field));
+        $this->assertSame('42', (new TextField())->fromStored(42, $field));
+        $this->assertSame('', (new TextField())->fromStored(null, $field));
+        $this->assertSame('', (new TextField())->fromStored(['a'], $field));
     }
 
     public function testToggleCastsToABoolean(): void
@@ -71,11 +74,11 @@ final class FieldTypesTest extends TestCase
         $this->assertSame('1', $toggle->prepare('on', $field, []));
         $this->assertSame('0', $toggle->prepare('0', $field, []));
         $this->assertSame('0', $toggle->prepare(null, $field, []), 'a switch that is off posts nothing');
-        $this->assertTrue($toggle->toFrontMatter('1', $field));
-        $this->assertFalse($toggle->toFrontMatter('0', $field));
-        $this->assertSame('1', $toggle->fromFrontMatter(true, $field));
-        $this->assertSame('0', $toggle->fromFrontMatter(false, $field));
-        $this->assertSame('0', $toggle->fromFrontMatter(null, $field));
+        $this->assertTrue($toggle->toStored('1', $field));
+        $this->assertFalse($toggle->toStored('0', $field));
+        $this->assertSame('1', $toggle->fromStored(true, $field));
+        $this->assertSame('0', $toggle->fromStored(false, $field));
+        $this->assertSame('0', $toggle->fromStored(null, $field));
     }
 
     #[DataProvider('provideDateIsKeptInOneForm')]
@@ -104,15 +107,15 @@ final class FieldTypesTest extends TestCase
         yield 'not a date is left for validation' => [' next week ', true, 'next week'];
     }
 
-    public function testDateCastsToAndFromFrontMatter(): void
+    public function testDateCastsToAndFromStored(): void
     {
         $date = new DateField();
 
-        $this->assertNull($date->toFrontMatter('', $this->field('date')));
-        $this->assertSame('2026-10-27', $date->toFrontMatter('2026-10-27', $this->field('date')));
-        $this->assertSame('2026-10-27', $date->fromFrontMatter('2026-10-27 00:00:00', $this->field('date')));
-        $this->assertSame('2026-10-27 09:30:00', $date->fromFrontMatter('2026-10-27 09:30:00', $this->field('date', '', ['time' => true])));
-        $this->assertSame('', $date->fromFrontMatter(null, $this->field('date')));
+        $this->assertNull($date->toStored('', $this->field('date')));
+        $this->assertSame('2026-10-27', $date->toStored('2026-10-27', $this->field('date')));
+        $this->assertSame('2026-10-27', $date->fromStored('2026-10-27 00:00:00', $this->field('date')));
+        $this->assertSame('2026-10-27 09:30:00', $date->fromStored('2026-10-27 09:30:00', $this->field('date', '', ['time' => true])));
+        $this->assertSame('', $date->fromStored(null, $this->field('date')));
     }
 
     public function testSlugIsMadeFromTheTitleUnlessTyped(): void
