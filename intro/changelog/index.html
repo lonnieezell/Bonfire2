@@ -2668,6 +2668,8 @@
       
         
       
+        
+      
     
     
     
@@ -2928,6 +2930,34 @@
     
   
     Filters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../building_admin_modules/resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
   
 
     
@@ -3563,6 +3593,12 @@
 <h2 id="6-november-2026">6 November 2026</h2>
 <p><strong>A <code>decimal</code> field type.</strong> It takes <code>places</code> (default <code>2</code>), <code>min</code> and <code>step</code>, renders a number input and saves a string
 such as <code>"19.99"</code>, so a <code>DECIMAL</code> column never passes through a float. See <a href="../../content/field_types/#decimal">Field types</a>.</p>
+<p><strong>Resources: a model in the admin as one class.</strong> <code>Bonfire\Resources\Resource</code> names a model, a URL slug, a permission
+prefix and the pages it has. <code>service('resources')-&gt;register()</code> in <code>initAdmin()</code> adds the sidebar item, and
+<code>resource_routes()</code> in <code>Config/Routes.php</code> declares the routes. A generic <code>ResourceController</code> renders the list: the
+columns, which leave out <code>textarea</code> and <code>markdown</code> fields unless <code>columns()</code> says otherwise, sorting, paging and htmx
+refresh, guarded by <code>{permission}.list</code>. Only the list page exists so far. A <code>list.php</code> beside the resource replaces the
+package's view. See <a href="../../building_admin_modules/resources/">Resources</a>.</p>
 <h2 id="6-november-2026-breaking-change">6 November 2026 (breaking change)</h2>
 <p><strong>The field system moved from Content to <code>Bonfire\Fields</code>.</strong> Resources and actions will use the same fields as
 blueprints, so <code>Field</code>, <code>FieldType</code>, <code>FieldTypes</code> and the generic types (<code>text</code>, <code>textarea</code>, <code>markdown</code>, <code>toggle</code>,
