@@ -1553,6 +1553,8 @@
       
         
       
+        
+      
     
     
     
@@ -1833,6 +1835,34 @@
     
   
     Markdown and components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blocks
   
 
     
@@ -3404,6 +3434,10 @@ gives the entry's current URI, or <code>null</code>. See <a href="../routing/#re
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">(</span><span class="s1">'related'</span><span class="p">);</span>          <span class="c1">// the entries an `entries` field links to</span>
 
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">blocks</span><span class="p">(</span><span class="s1">'sections'</span><span class="p">);</span>          <span class="c1">// the blocks of a `blocks` field, as a list</span>
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">block</span><span class="p">(</span><span class="s1">'sections'</span><span class="p">);</span>           <span class="c1">// the first of them, or null</span>
+<span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">renderBlocks</span><span class="p">(</span><span class="s1">'sections'</span><span class="p">);</span>    <span class="c1">// every block through its partial</span>
+
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">seo</span><span class="p">();</span>                       <span class="c1">// title, description, canonical URL and Open Graph values</span>
 
 <span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">isPublished</span><span class="p">();</span>               <span class="c1">// whether published() would keep it</span>
@@ -3411,6 +3445,9 @@ gives the entry's current URI, or <code>null</code>. See <a href="../routing/#re
 <p><code>entries()</code> returns the entries in the order the file lists them, and skips a link whose entry is missing or in the
 trash. It also returns drafts and scheduled entries, so check <code>$linked-&gt;isPublished()</code> before you show one. See
 <a href="../field_types/#entries">Field types</a>.</p>
+<p><code>blocks()</code> returns a <code>BlockList</code> that you can loop over, count, filter with <code>ofType()</code> and render. Each <code>Block</code> has a
+<code>type</code>, its <code>entry</code>, a <code>field($name, $default)</code> cast by the block's blueprint, and <code>render()</code>. A field the entry doesn't
+have gives an empty list. See <a href="../blocks/">Blocks</a>.</p>
 <p><code>seo()</code> is described under <a href="../seo/#getting-the-values">SEO</a>.</p>
 <p><code>content()</code> renders the body as GitHub Flavored Markdown, with tables and the rest. Raw HTML in the body passes through,
 apart from the tags GitHub disallows, such as <code>&lt;script&gt;</code>, so treat a body as code you trust. Links to <code>javascript:</code> and

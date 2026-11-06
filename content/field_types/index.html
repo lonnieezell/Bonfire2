@@ -1628,6 +1628,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1730,6 +1741,8 @@
   
     
     
+      
+        
       
         
       
@@ -1854,6 +1867,34 @@
     
   
     Markdown and components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blocks
   
 
     
@@ -3149,6 +3190,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3327,6 +3379,11 @@ is saved in the front matter.</p>
 <td><a href="#terms"><code>terms</code></a></td>
 <td>A checkbox for each term</td>
 <td>A list of slugs</td>
+</tr>
+<tr>
+<td><a href="#blocks"><code>blocks</code></a></td>
+<td>The blocks written in the file</td>
+<td>A list of maps</td>
 </tr>
 </tbody>
 </table>
@@ -3553,6 +3610,44 @@ it. Anything posted that isn't a slug is dropped.</p>
 <p>Use one <code>terms</code> field for each taxonomy. Don't name a taxonomy <code>id</code>, <code>status</code>, <code>published_at</code>, <code>blueprint</code>, <code>title</code> or
 <code>body</code>, which the entry uses itself, or the blueprint is refused.</p>
 <p>For the entries to be indexed with their terms, the collection has to list the taxonomy in its <code>taxonomies</code>.</p>
+<h2 id="blocks">blocks</h2>
+<p>A list of blocks, each of a type with its own fields, saved as a list of maps with a <code>type</code> key.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blocks</code></td>
+<td>Every block type</td>
+<td>The block types the field allows, such as <code>[hero, cta]</code>.</td>
+</tr>
+<tr>
+<td><code>max_items</code></td>
+<td>None</td>
+<td>The most blocks there can be.</td>
+</tr>
+<tr>
+<td><code>min_items</code></td>
+<td>None</td>
+<td>The fewest blocks there can be.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sections</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocks</span>
+<span class="w">  </span><span class="nt">blocks</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">hero</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">cta</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">max_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<p>Block types are files in <code>resources/blueprints/blocks</code>, and you write the blocks in the entry's file. The input lists
+them and keeps them when the entry is saved. A save is refused if there are too many or too few blocks, or if a block has a
+type the field doesn't allow or a value that fails its own field's rules. The blueprint is refused if a type has no file.</p>
+<p>Read the blocks back with <a href="../query_api/#entries"><code>$entry-&gt;blocks('sections')</code></a>, and render them with
+<code>$entry-&gt;renderBlocks('sections')</code>. For block types, partials and the rest, see <a href="../blocks/">Blocks</a>.</p>
 <h2 id="changing-an-input">Changing an input</h2>
 <p>Each type's input is a partial in <code>src/Fields/Views/fields</code>, or in <code>src/Content/Views/fields</code> for <code>slug</code>, <code>terms</code> and
 <code>entries</code>. To change one, copy it to <code>app/Views/fields/&lt;type&gt;.php</code>, for example <code>app/Views/fields/text.php</code>. Bonfire uses your copy for every
