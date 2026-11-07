@@ -218,7 +218,8 @@ document.addEventListener('alpine:init', () => {
             this.typed = '';
             this.proceed = proceed;
             this.source = source;
-            this.busy = false;
+            // Held until the action's fields are in, so a post can't leave them out
+            this.busy = source !== null;
             this.$refs.fields.innerHTML = '';
             this.$root.showModal();
             if (source) {
@@ -231,6 +232,9 @@ document.addEventListener('alpine:init', () => {
             const response = await fetch(`${source.formAction}/fields`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).catch(() => null);
             if (this.source === source && response?.ok) {
                 this.setFields(await response.text());
+            }
+            if (this.source === source) {
+                this.busy = false;
             }
         },
 
