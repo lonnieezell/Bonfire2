@@ -12,6 +12,8 @@
     <form method="dialog" @submit.prevent="accept()">
         <h2 id="bf-confirm-title" class="h5" x-text="title"></h2>
         <p x-show="body" x-text="body"></p>
+        <?php // The action's fields, fetched when it has any, and swapped for the same fields with their errors when they're refused. ?>
+        <div x-ref="fields"></div>
         <template x-if="typeCount">
             <div class="mb-3">
                 <label class="form-label" for="bf-confirm-count" x-text="typeLabel"></label>
@@ -21,7 +23,7 @@
         <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" @click="$root.close()"><?= lang('Actions.cancel') ?></button>
             <button type="submit" class="btn" :class="danger ? 'btn-danger' : 'btn-primary'" x-text="button"
-                :disabled="typeCount && typed !== String(count)"></button>
+                :disabled="busy || (typeCount && typed !== String(count))"></button>
         </div>
     </form>
 </dialog>

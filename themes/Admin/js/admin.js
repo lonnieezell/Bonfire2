@@ -180,6 +180,9 @@ document.addEventListener('alpine:init', () => {
         count: 1,
         typed: '',
         proceed: null,
+        // The button of an action with fields, whose form the dialog posts with fetch
+        source: null,
+        busy: false,
 
         init() {
             document.addEventListener('click', (event) => {
@@ -188,7 +191,7 @@ document.addEventListener('alpine:init', () => {
                     return;
                 }
                 event.preventDefault();
-                this.ask(el.dataset, this.countFor(el), () => this.go(el));
+                this.ask(el.dataset, this.countFor(el), () => this.go(el), el.dataset.confirmFields ? el : null);
             });
 
             document.addEventListener('htmx:confirm', (event) => {
@@ -205,7 +208,7 @@ document.addEventListener('alpine:init', () => {
             return el.dataset.confirmBulk ? bfCheckedRows(el.form) : 1;
         },
 
-        ask(data, count, proceed) {
+        ask(data, count, proceed, source = null) {
             this.count = count;
             this.title = data.confirm.replaceAll('{count}', count);
             this.body = data.confirmBody || '';
@@ -214,7 +217,38 @@ document.addEventListener('alpine:init', () => {
             this.typeCount = data.confirmType === '1';
             this.typed = '';
             this.proceed = proceed;
+            this.source = source;
+            // Held until the action's fields are in, so a post can't leave them out
+            this.busy = source !== null;
+            this.$refs.fields.innerHTML = '';
             this.$root.showModal();
+            if (source) {
+                this.loadFields(source);
+            }
+        },
+
+        // The action's fields come from its endpoint, which holds no record IDs.
+        async loadFields(source) {
+            const response = await fetch(`${source.formAction}/fields`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).catch(() => null);
+            if (this.source === source && response?.ok) {
+                this.setFields(await response.text());
+            }
+            if (this.source === source) {
+                this.busy = false;
+            }
+        },
+
+        setFields(html) {
+            this.$refs.fields.innerHTML = html;
+            window.htmx?.process(this.$refs.fields);
+
+            // A refused post rotated the CSRF token, so the page's forms need the new one for whatever is posted next.
+            const token = this.$refs.fields.querySelector('[data-csrf]');
+            if (token) {
+                document.querySelectorAll(`input[type="hidden"][name="${token.name}"]`).forEach((input) => {
+                    input.value = token.value;
+                });
+            }
         },
 
         get typeLabel() {
@@ -222,8 +256,49 @@ document.addEventListener('alpine:init', () => {
         },
 
         accept() {
+            if (this.source) {
+                this.submit();
+                return;
+            }
             this.$root.close();
             this.proceed();
+        },
+
+        // Posts the checked rows and the typed fields. Invalid fields come back with their errors and the dialog stays open.
+        async submit() {
+            const el = this.source;
+            const data = new FormData(el.form, el);
+            data.set('confirmed', '1');
+            if (this.typeCount) {
+                data.set('confirm_count', this.typed);
+            }
+            const own = new FormData(this.$root.querySelector('form'));
+            [...new Set(own.keys())].forEach((key) => data.delete(key));
+            own.forEach((value, key) => data.append(key, value));
+
+            this.busy = true;
+            const response = await fetch(el.formAction, { method: 'POST', body: data, headers: { 'X-Requested-With': 'XMLHttpRequest' } }).catch(() => null);
+            this.busy = false;
+
+            // The post never got an answer, so keep the dialog (and what was typed) open to try again
+            if (! response) {
+                return;
+            }
+
+            if (response.status === 422) {
+                this.setFields(await response.text());
+                return;
+            }
+
+            // The message waits in the session for the page to show. Anything else, like a login redirect, is followed.
+            const to = response.headers.get('HX-Redirect');
+            if (to) {
+                window.location.href = to;
+            } else if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                window.location.reload();
+            }
         },
 
         // Submits the button's form the way its click would have, marked as confirmed, or follows the link.

@@ -26,6 +26,7 @@ class ActionContext
 
     /**
      * @param list<int|string>                                   $ids
+     * @param array<string, string>                              $input      What the admin typed into the action's `fields()`, by handle
      * @param (Closure(int $processed, int $skipped): void)|null $afterChunk Called once each chunk is handled
      */
     public function __construct(
@@ -35,12 +36,22 @@ class ActionContext
         private readonly array $ids,
         private readonly int $chunkSize = 100,
         private readonly ?Closure $afterChunk = null,
+        private readonly array $input = [],
     ) {
     }
 
     public function actor(): User
     {
         return $this->actor;
+    }
+
+    /**
+     * What the admin typed into one of the action's `fields()`, as the field's form value. The same in a queue worker
+     * as in the request.
+     */
+    public function input(string $handle, string $default = ''): string
+    {
+        return $this->input[$handle] ?? $default;
     }
 
     /**
