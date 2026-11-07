@@ -28,9 +28,10 @@ class ActionRuns
     /**
      * Runs the action on the records now, or queues the run.
      *
-     * @param list<int|string> $ids
+     * @param list<int|string>      $ids
+     * @param array<string, string> $input what the admin typed into the action's `fields()`, by handle
      */
-    public function dispatch(string $list, Action $action, User $actor, array $ids): RunOutcome
+    public function dispatch(string $list, Action $action, User $actor, array $ids, array $input = []): RunOutcome
     {
         $queueReady = isset(config('Queue')?->jobHandlers[RunAction::NAME]);
 
@@ -44,6 +45,7 @@ class ActionRuns
             'action'  => $action->name(),
             'user_id' => $actor->id,
             'ids'     => json_encode($ids),
+            'inputs'  => json_encode($input),
             'total'   => count($ids),
         ];
 
@@ -61,7 +63,7 @@ class ActionRuns
             return RunOutcome::queued($runId);
         }
 
-        $context = new ActionContext(service('actions')->for($list)->source(), $action, $actor, $ids);
+        $context = new ActionContext(service('actions')->for($list)->source(), $action, $actor, $ids, input: $input);
 
         // Runs in the request are recorded once they end, as the audit trail
         // of who did what. Recording them first would leave a run killed by a
@@ -113,6 +115,7 @@ class ActionRuns
             $actor,
             json_decode($run['ids'], true),
             afterChunk: static fn (int $processed, int $skipped) => $runs->update($runId, ['processed' => $processed, 'skipped' => $skipped]),
+            input: json_decode($run['inputs'] ?? '[]', true),
         );
 
         try {

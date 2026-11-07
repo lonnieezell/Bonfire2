@@ -63,6 +63,9 @@ bar, or `Placement::Both`.
 **confirm()** returns what to ask before the action runs, or `null` to run straight away. `{count}` in the title
 becomes the number of records. `->typeToConfirm()` makes the admin type that number before a large destructive run.
 
+**fields()** lists what to ask the admin for before the action runs, like a reason. See
+[Asking For Input](#asking-for-input).
+
 **allows()** decides, per record, whether the action may touch it. Records it rejects, and selected records that no
 longer exist, are skipped and reported ("3 users banned. Skipped 1.") rather than failing the batch.
 
@@ -76,7 +79,41 @@ The action's name in its URL comes from the class name: `BanUsers` is `ban-users
 
     `handle()` may run in a queue worker, where there is no request, session or signed-in user. Use only what the
     context gives you: `$context->entities()` (the records, one at a time), `$context->chunks()` (the records, a chunk
-    of up to 100 at a time) and `$context->actor()` (the admin who started the run).
+    of up to 100 at a time), `$context->input()` (what the admin typed) and `$context->actor()` (the admin who started
+    the run).
+
+### Asking For Input
+
+`fields()` returns the fields to ask for, written the same way as a [resource's fields](resources.md#fields): the
+builders in `Bonfire\Resources\Fields` or a `Bonfire\Fields\Field`, with the rules in `validate()`. `handle()` reads
+what was typed with `$context->input('handle')`, which is the field's form value, a string:
+
+```php
+use Bonfire\Resources\Fields\Textarea;
+
+public function fields(): array
+{
+    return [Textarea::make('reason')->label('Reason')->validate('permit_empty|max_length[255]')];
+}
+
+public function handle(ActionContext $context): ActionResult
+{
+    foreach ($context->entities() as $user) {
+        $user->ban($context->input('reason'));
+    }
+
+    return ActionResult::message('{count} users banned.');
+}
+```
+
+The fields show in the confirm dialog, under its question. An action that has fields opens the dialog even when
+`confirm()` returns `null`, titled with the action's label. The endpoint validates the fields before it runs or queues
+anything. Invalid input keeps the dialog open with each error under its input, and nothing runs. Without JavaScript
+the confirmation page shows the same fields and errors.
+
+`input()` returns the same values for a run in the request and for one in a queue worker, which gets them from the
+run's `inputs` column in `action_runs`. Run `php spark migrate --all` to add it. `input('reason', 'none')` gives a
+default for a field that wasn't posted. This works for actions on any list, whether a resource's or one you wrote.
 
 ### Deleting
 
@@ -183,7 +220,8 @@ $selectable = $actionList->selectable(auth()->user());
 ## Confirmation
 
 With JavaScript, an action that asks first opens `<x-confirm-dialog>`, a dialog that is in the Admin layout once. It
-shows the title with the count filled in, the body, and a red button for dangerous actions.
+shows the title with the count filled in, the body, the action's [fields](#asking-for-input), and a red button for
+dangerous actions.
 
 Without JavaScript, the action's button posts straight to the endpoint, which answers with a confirmation page holding
 the same question and a button to go ahead. Either way, an action never runs until it's confirmed.

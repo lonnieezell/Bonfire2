@@ -8,6 +8,7 @@
  * @var Bonfire\Actions\Action  $action
  * @var Bonfire\Actions\Confirm $confirm
  * @var list<int|string>        $ids
+ * @var list<array>             $sections what Bonfire\Fields\Form::sections() returns, or none for an action without fields
  * @var bool                    $miscount
  */
 ?>
@@ -24,6 +25,10 @@
         <h2 class="h5"><?= esc($confirm->title(count($ids))) ?></h2>
         <?php if ($confirm->text() !== '') : ?>
             <p><?= esc($confirm->text()) ?></p>
+        <?php endif ?>
+
+        <?php if ($sections !== []) : ?>
+            <?= view('Bonfire\\Fields\\Views\\form_fields', ['sections' => $sections], ['saveData' => false]) ?>
         <?php endif ?>
 
         <?php if ($confirm->asksToType()) : ?>
