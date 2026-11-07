@@ -140,7 +140,7 @@ class ActionController extends AdminController
      */
     private function ask(Action $action, Confirm $confirm, Form $form, array $ids, array $input, array $errors): ResponseInterface|string
     {
-        $sections = $form->fields() === [] ? [] : $form->sections($input, $errors);
+        $sections = $action->hasFields() ? $form->sections($input, $errors) : [];
 
         if ($this->request->isAJAX()) {
             return $this->response->setStatusCode(422)

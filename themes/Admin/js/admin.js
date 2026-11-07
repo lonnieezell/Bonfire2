@@ -280,16 +280,21 @@ document.addEventListener('alpine:init', () => {
             const response = await fetch(el.formAction, { method: 'POST', body: data, headers: { 'X-Requested-With': 'XMLHttpRequest' } }).catch(() => null);
             this.busy = false;
 
-            if (response?.status === 422) {
+            // The post never got an answer, so keep the dialog (and what was typed) open to try again
+            if (! response) {
+                return;
+            }
+
+            if (response.status === 422) {
                 this.setFields(await response.text());
                 return;
             }
 
             // The message waits in the session for the page to show. Anything else, like a login redirect, is followed.
-            const to = response?.headers.get('HX-Redirect');
+            const to = response.headers.get('HX-Redirect');
             if (to) {
                 window.location.href = to;
-            } else if (response?.redirected) {
+            } else if (response.redirected) {
                 window.location.href = response.url;
             } else {
                 window.location.reload();

@@ -2,6 +2,7 @@
 
 namespace Tests\Actions;
 
+use Bonfire\Actions\Confirm;
 use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Actions\Models\ActionRunModel;
 use Bonfire\Actions\ModelSource;
@@ -104,7 +105,7 @@ final class ActionInputTest extends TestCase
 
     public function testTheFieldsComeBeforeTheActionsOwnQuestion(): void
     {
-        $this->note->asks = true;
+        $this->note->asks = Confirm::make('Note {count} users?');
         $ids              = $this->users(2);
 
         $page = $this->runAction(['selects' => $ids]);
@@ -128,7 +129,7 @@ final class ActionInputTest extends TestCase
 
         $valid->assertStatus(204);
         $valid->assertHeader('HX-Redirect');
-        $valid->assertSessionHas('message', '2 users noted.');
+        $valid->assertSessionHas('message', '2 users touched.');
         $this->assertSame(['Fine'], $this->note->notes);
     }
 

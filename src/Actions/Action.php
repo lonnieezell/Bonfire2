@@ -48,7 +48,8 @@ abstract class Action
      */
     public bool $danger = false;
 
-    public Queue $queue = Queue::Auto;
+    public Queue $queue      = Queue::Auto;
+    private ?bool $hasFields = null;
 
     /**
      * With `Queue::Auto`, runs on more records than this are queued.
@@ -85,6 +86,14 @@ abstract class Action
     }
 
     /**
+     * Whether `fields()` has anything to ask for. Asked once, since a list renders its buttons for every row.
+     */
+    public function hasFields(): bool
+    {
+        return $this->hasFields ??= $this->fields() !== [];
+    }
+
+    /**
      * The form of `fields()`.
      *
      * @throws FieldException when a field's options can't be used
@@ -105,7 +114,7 @@ abstract class Action
      */
     public function question(): ?Confirm
     {
-        return $this->confirm() ?? ($this->fields() === [] ? null : Confirm::make($this->label));
+        return $this->confirm() ?? ($this->hasFields() ? Confirm::make($this->label) : null);
     }
 
     /**
@@ -132,7 +141,7 @@ abstract class Action
         }
 
         return stringify_attributes(array_filter([
-            'data-confirm-fields' => $this->fields() === [] ? '' : '1',
+            'data-confirm-fields' => $this->hasFields() ? '1' : '',
             'data-confirm'        => $confirm->title(),
             'data-confirm-body'   => $confirm->text(),
             'data-confirm-button' => $confirm->buttonLabel() ?: $this->label,

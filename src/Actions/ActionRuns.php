@@ -115,7 +115,7 @@ class ActionRuns
             $actor,
             json_decode($run['ids'], true),
             afterChunk: static fn (int $processed, int $skipped) => $runs->update($runId, ['processed' => $processed, 'skipped' => $skipped]),
-            input: json_decode($run['inputs'] ?? '[]', true),
+            input: json_decode($run['inputs'] ?? '[]', true) ?? [],
         );
 
         try {

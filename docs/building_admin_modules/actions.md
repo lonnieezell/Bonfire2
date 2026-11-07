@@ -113,7 +113,8 @@ the confirmation page shows the same fields and errors.
 
 `input()` returns the same values for a run in the request and for one in a queue worker, which gets them from the
 run's `inputs` column in `action_runs`. Run `php spark migrate --all` to add it. `input('reason', 'none')` gives a
-default for a field that wasn't posted. This works for actions on any list, whether a resource's or one you wrote.
+default for a field that wasn't posted. The values are kept in `action_runs` as the run's audit trail, so don't ask
+for a secret such as a password. This works for actions on any list, whether a resource's or one you wrote.
 
 ### Deleting
 
