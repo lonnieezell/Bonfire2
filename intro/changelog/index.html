@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -3613,6 +3613,12 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="7-november-2026">7 November 2026</h2>
+<p><strong>Actions: input fields.</strong> An action's <code>fields()</code> asks the admin for input in the confirm dialog, such as a reason, and
+<code>handle()</code> reads it with <code>$context-&gt;input('reason')</code>. Write the fields like a resource's. The endpoint validates them
+before it runs or queues the action: invalid input keeps the dialog open with the error under the input, and the
+no-JavaScript confirm page shows the same fields and errors. A queued run gets the same input, stored in the new
+<code>action_runs.inputs</code> column, so <strong>run <code>php spark migrate --all</code></strong>. Works on any list, including hand-written ones such as
+Users. See <a href="../../building_admin_modules/actions/#asking-for-input">Row and Bulk Actions</a>.</p>
 <p><strong>Resources: row and bulk actions.</strong> A resource's <code>actions()</code> show in its list's row menus and, once rows are checked,
 in the selection bar. <code>register()</code> adds them to the action list named by the resource's <code>$slug</code>, with its model as the
 record source, so another module can add an action with <code>service('actions')-&gt;for('products')-&gt;add(…)</code>. An action the
@@ -4503,7 +4509,7 @@ composer.json scripts section:</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "navigation.footer", "content.action.edit", "navigation.top", "search.suggest", "search.highlight", "search.share", "navigation.path", "navigation.indexes", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
