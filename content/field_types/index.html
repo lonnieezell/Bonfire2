@@ -3875,8 +3875,8 @@ it. Anything posted that isn't a slug is dropped.</p>
 <span class="w">  </span><span class="nt">blocks</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">hero</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">cta</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">max_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 </code></pre></div>
-<p>Block types are files in <code>resources/blueprints/blocks</code>, and you write the blocks in the entry's file. The input lists
-them and keeps them when the entry is saved. A save is refused if there are too many or too few blocks, or if a block has a
+<p>Block types are files in <code>resources/blueprints/blocks</code>. The input is a list of cards that you add, move, copy and delete
+(see <a href="../admin/#editing-blocks">Editing blocks</a>), and a field with <code>max_items: 1</code> is a slot for a single block. A save is refused if there are too many or too few blocks, or if a block has a
 type the field doesn't allow or a value that fails its own field's rules. The blueprint is refused if a type has no file.</p>
 <p>Read the blocks back with <a href="../query_api/#entries"><code>$entry-&gt;blocks('sections')</code></a>, and render them with
 <code>$entry-&gt;renderBlocks('sections')</code>. For block types, partials and the rest, see <a href="../blocks/">Blocks</a>.</p>

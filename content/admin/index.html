@@ -1646,6 +1646,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Editing blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors-in-a-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors in a block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-block-type-that-is-gone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A block type that is gone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#previewing-a-draft" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3150,6 +3189,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing blocks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Editing blocks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors-in-a-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors in a block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-block-type-that-is-gone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A block type that is gone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#previewing-a-draft" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3380,6 +3458,38 @@ collection.</p>
 <p>A <code>markdown</code> field has <strong>Write</strong> and <strong>Preview</strong> tabs. Preview sends the text to the server, which renders it with
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs <code>content.edit</code>.</p>
+<h2 id="editing-blocks">Editing blocks</h2>
+<p>A <a href="../blocks/"><code>blocks</code> field</a> is a list of cards, one for each block, so a client can compose a page from the block types
+you wrote without touching markup.</p>
+<ul>
+<li><strong>A card</strong> shows the block type's <code>title</code> and a one-line summary, which is the value of the type's first <code>text</code> field.
+  Click it to open the fields. Cards start closed, except one with an error, which opens by itself.</li>
+<li><strong>Move up</strong> and <strong>move down</strong> swap a card with its neighbour, and the handle on the left drags it anywhere in the list.</li>
+<li><strong>Duplicate</strong> adds a copy with the values as they are now, right below the card. <strong>Delete</strong> removes the card.</li>
+<li><strong>Add block</strong> lists the types the field allows and adds a new card at the end. The menu is disabled once the list has
+  <code>max_items</code> blocks.</li>
+</ul>
+<p>Saving writes the blocks in the order the cards are in on the page. Nothing is saved until you press <strong>Save</strong>. If cards
+were added, moved or deleted, <strong>Discard</strong> opens the page again to put them back.</p>
+<p>A field with <code>max_items: 1</code> is a slot. It shows the block without the handle and the move and duplicate buttons. The
+menu says <strong>Choose a block</strong> while the slot is empty and <strong>Replace</strong> after, and choosing a type replaces whatever is in
+the slot. <strong>Delete</strong> empties it.</p>
+<p>The form for a new block comes from the server when you add it, drawn by the same input partials as the rest of the
+form. So an app's own copy of an input in <code>app/Views/fields/</code>, and a <a href="../custom_field_types/">custom field type</a>, work
+inside a block with no JavaScript of your own. The Markdown preview tab inside a block previews the text as plain
+Markdown, as <a href="#the-markdown-preview">it does</a> everywhere else. The <strong>Preview</strong> link at the top of the entry shows the
+page as the site renders it, blocks included.</p>
+<h3 id="errors-in-a-block">Errors in a block</h3>
+<p>A block that fails validation keeps what was typed, and its card opens with each problem labelled by the block's
+position, counting from 1, and its type: <code>Block 3 (Feature grid): The Title field is required.</code> The first problem is also
+shown under the field, and <code>max_items</code> and <code>min_items</code> are checked on the server when you save, whatever the page let
+you do.</p>
+<h3 id="a-block-type-that-is-gone">A block type that is gone</h3>
+<p>If an entry has a block whose type no longer has a file in <code>resources/blueprints/blocks</code>, its card is read-only and says
+<code>Unknown block type `x`, kept as is.</code> You can move it or delete it. Saving writes it back as the file had it, with
+every key it held. Values written as <code>1.0</code> come back as <code>1</code>, the way the index holds numbers.</p>
+<p>The form signs what it keeps with the app's encryption key, so a post can't make up a block of a type that has no file.
+Run <code>php spark key:generate</code> if your app has no key.</p>
 <h2 id="previewing-a-draft">Previewing a draft</h2>
 <p><strong>Preview</strong> at the top of an entry's form gives you a link to the entry as it will look on the site, through the
 collection's <code>template</code> or <code>controller</code>, whether it's a draft, scheduled or published. It needs <code>content.edit</code>, and a

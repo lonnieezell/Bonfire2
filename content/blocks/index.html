@@ -3183,8 +3183,8 @@
 <p>A blocks field holds a list of blocks in an entry's front matter. Each block has a type, such as <code>hero</code> or <code>cta</code>, with
 its own fields, and you render each type through a view of your own. That lets one page mix a hero, a few text sections
 and a call to action, in an order the file sets, while you keep control of the HTML.</p>
-<p>You write the blocks in the entry's file. The admin lists them and keeps them when the entry is saved, but doesn't have
-an editor for them.</p>
+<p>You can write the blocks in the entry's file, and the admin edits them as a list of cards that can be added, moved,
+copied and deleted. See <a href="../admin/#editing-blocks">Editing blocks</a>.</p>
 <h2 id="block-types">Block types</h2>
 <p>A block type is a file at <code>resources/blueprints/blocks/&lt;type&gt;.yaml</code>. It looks like a <a href="../blueprints/">blueprint</a>: a
 <code>title</code>, an optional <code>icon</code>, and a list of <code>fields</code>.</p>
@@ -3353,7 +3353,9 @@ gives the default. A key the block blueprint doesn't list is returned as the fil
 field's handle, hold the first problem, such as <code>Block 2 (Hero): The Heading field is required.</code>, and the others are under
 <code>sections.2.heading</code>, or <code>sections.2</code> for a block's type.</p>
 <p>Saving in the admin writes each block's fields as its blueprint lists them, so a key you wrote by hand that the block
-blueprint doesn't list is dropped.</p>
+blueprint doesn't list is dropped. A block whose type has no file any more is the exception: it is written back as it was.</p>
+<p>The editor names each block's inputs with a random key, such as <code>fields[sections][b_3f9a2c][heading]</code>, and takes the
+order of the blocks from the order they are posted in. The keys are not saved.</p>
 
 
 

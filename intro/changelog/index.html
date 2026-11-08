@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#8-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#7-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3240,6 +3251,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#8-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#7-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3612,6 +3634,16 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="8-november-2026">8 November 2026</h2>
+<p><strong>Content: an admin editor for <code>blocks</code> fields.</strong> A blocks field is now a list of collapsible cards, each with the block
+type's title, a summary, a drag handle, and buttons to move, duplicate and delete it. <strong>Add block</strong> lists the types the
+field allows and is disabled at <code>max_items</code>, and a field with <code>max_items: 1</code> is a slot. The inputs of a new block come
+from the server and render through the same field partials as the rest of the form, so your own field types and copies
+of the input partials work inside a block. An error opens the card that has it, labelled with its position: <code>Block 3
+(Feature grid): The Title field is required.</code> A block whose type no longer has a file shows as read-only and is saved
+back as it was. See <a href="../../content/admin/#editing-blocks">Editing blocks</a>.</p>
+<p>If you copied <code>src/Content/Views/fields/blocks.php</code> into your app to change the blocks input, it still works but shows
+the old read-only list. Copy the new one to get the editor.</p>
 <h2 id="7-november-2026">7 November 2026</h2>
 <p><strong><code>bf:resource</code> generates a resource.</strong> <code>php spark bf:resource Product --model='App\Models\ProductModel'</code> reads the
 model's table and writes the resource with a field for each column, plus <code>Module.php</code>, <code>Config/Routes.php</code> and a
