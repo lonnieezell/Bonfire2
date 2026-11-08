@@ -6,6 +6,12 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 7 November 2026
 
+**`bf:resource` generates a resource.** `php spark bf:resource Product --model='App\Models\ProductModel'` reads the
+model's table and writes the resource with a field for each column, plus `Module.php`, `Config/Routes.php` and a
+`Config/Registrar.php` that declares `products.list|create|edit|delete`, which show under Settings → Groups. Files that
+exist are left alone, and the command says what to add to them by hand. See
+[Resources](../building_admin_modules/resources.md#generating-a-resource).
+
 **Actions: input fields.** An action's `fields()` asks the admin for input in the confirm dialog, such as a reason, and
 `handle()` reads it with `$context->input('reason')`. Write the fields like a resource's. The endpoint validates them
 before it runs or queues the action: invalid input keeps the dialog open with the error under the input, and the
