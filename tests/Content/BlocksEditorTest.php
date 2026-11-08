@@ -433,8 +433,8 @@ final class BlocksEditorTest extends ContentTestCase
 
     public function testWithoutAnEncryptionKeyNoUnknownBlockIsTrusted(): void
     {
-        $blueprint = Blueprint::load($this->blueprints, 'blog', 'post');
-        $form      = new EntryForm($blueprint, true);
+        $blueprint                = Blueprint::load($this->blueprints, 'blog', 'post');
+        $form                     = new EntryForm($blueprint, true);
         config('Encryption')->key = '';
 
         // The key is empty, so anyone could make this signature.
