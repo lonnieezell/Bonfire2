@@ -98,13 +98,35 @@ final class ListEditorTest extends ContentTestCase
         $this->assertStringContainsString('Sortable.min.js', $this->editBody());
     }
 
+    public function testTheGlobalSetFormLoadsSortableForAList(): void
+    {
+        mkdir($this->site . 'globals');
+        mkdir($this->blueprints . 'globals');
+        file_put_contents($this->blueprints . 'globals/site.yaml', "title: Site\nfields:\n  - handle: features\n    type: list\n" . self::ROWS);
+        $this->writeFile('globals/site.yaml', "features:\n  - {title: One}\n");
+        Services::resetSingle('viewMeta');
+
+        $this->assertStringContainsString('Sortable.min.js', $this->actingAs($this->admin)->get(route_to('content-global', 'site'))->getBody());
+    }
+
+    public function testTheTermFormLoadsSortableForAList(): void
+    {
+        $this->useTags();
+        mkdir($this->blueprints . 'taxonomies');
+        file_put_contents($this->blueprints . 'taxonomies/tags.yaml', "title: Tags\nfields:\n  - handle: title\n    type: text\n  - handle: slug\n    type: slug\n  - handle: features\n    type: list\n" . self::ROWS);
+        Services::resetSingle('viewMeta');
+
+        $this->assertStringContainsString('Sortable.min.js', $this->actingAs($this->admin)->get(route_to('content-term-new', 'tags'))->getBody());
+    }
+
     // Adding
 
     public function testTheAddButtonAsksTheServerForARow(): void
     {
         $button = $this->page()->query('//button[@data-add-row]')->item(0);
 
-        $this->assertSame(url_to('content-list-row'), $button->getAttribute('hx-get'));
+        $this->assertSame(url_to('content-list-row'), $button->getAttribute('hx-post'));
+        $this->assertSame(csrf_token() . ',field,name,id,count', $button->getAttribute('hx-params'));
         $this->assertSame('#field-features-list', $button->getAttribute('hx-target'));
         $this->assertSame('beforeend', $button->getAttribute('hx-swap'));
         $this->assertStringContainsString(esc($this->token(), 'js'), (string) $button->getAttribute('hx-vals'));
@@ -140,7 +162,7 @@ final class ListEditorTest extends ContentTestCase
 
         foreach (['', 'nope', $token . 'x', 'e30.' . explode('.', $token)[1]] as $forged) {
             try {
-                $this->fragment(['token' => $forged]);
+                $this->fragment(['field' => $forged]);
                 $this->fail('A forged token was accepted: ' . $forged);
             } catch (PageNotFoundException) {
             }
@@ -165,7 +187,7 @@ final class ListEditorTest extends ContentTestCase
 
         $this->expectException(PageNotFoundException::class);
 
-        $this->fragment(['token' => $payload . '.' . hash_hmac('sha256', 'fields-options|' . $payload, 'a-key-for-the-tests')]);
+        $this->fragment(['field' => $payload . '.' . hash_hmac('sha256', 'fields-options|' . $payload, 'a-key-for-the-tests')]);
     }
 
     public function testAFragmentNeedsPermissionToEdit(): void
@@ -173,7 +195,26 @@ final class ListEditorTest extends ContentTestCase
         $viewer = $this->createUser();
         $viewer->addPermission('admin.access', 'content.access');
 
-        $this->actingAs($viewer)->get(route_to('content-list-row'), $this->fragmentQuery())->assertRedirectTo(site_url(ADMIN_AREA));
+        $this->actingAs($viewer)->post(route_to('content-list-row'), $this->fragmentQuery())->assertRedirectTo(site_url(ADMIN_AREA));
+    }
+
+    public function testAFragmentNeedsACsrfToken(): void
+    {
+        $query = $this->fragmentQuery();
+        unset($query[csrf_token()]);
+
+        $response = $this->actingAs($this->admin)->post(route_to('content-list-row'), $query);
+
+        $this->assertStringNotContainsString('data-row', (string) $response->getBody());
+    }
+
+    public function testTheFragmentGivesThePageTheRotatedCsrfToken(): void
+    {
+        $sent = csrf_hash();
+        $body = $this->fragment()->getBody();
+
+        $this->assertNotSame($sent, csrf_hash());
+        $this->assertOutOfBandToken($body);
     }
 
     public function testAddIsDisabledAtMaxItemsAndTheServerRefusesIt(): void
@@ -182,9 +223,11 @@ final class ListEditorTest extends ContentTestCase
 
         $this->assertTrue($this->page()->query('//button[@data-add-row]')->item(0)->hasAttribute('disabled'));
 
+        // Answered with a 200, because htmx ignores any other response and the page still needs the rotated token.
         $refused = $this->fragment(['count' => 3]);
-        $this->assertSame(422, $refused->response()->getStatusCode());
-        $this->assertSame('', trim($refused->getBody()));
+        $refused->assertOK();
+        $this->assertStringNotContainsString('data-row', $refused->getBody());
+        $this->assertOutOfBandToken($refused->getBody());
 
         $this->fragment(['count' => 2])->assertOK();
     }
@@ -339,7 +382,7 @@ final class ListEditorTest extends ContentTestCase
      */
     private function fragmentQuery(array $query = []): array
     {
-        return $query + ['token' => $this->token(), 'name' => 'fields[features]', 'id' => 'field-features', 'count' => 0];
+        return $query + [csrf_token() => csrf_hash(), 'field' => $this->token(), 'name' => 'fields[features]', 'id' => 'field-features', 'count' => 0];
     }
 
     /**
@@ -347,7 +390,18 @@ final class ListEditorTest extends ContentTestCase
      */
     private function fragment(array $query = []): TestResponse
     {
-        return $this->actingAs($this->admin)->get(route_to('content-list-row'), $this->fragmentQuery($query));
+        return $this->actingAs($this->admin)->post(route_to('content-list-row'), $this->fragmentQuery($query));
+    }
+
+    private function assertOutOfBandToken(string $body): void
+    {
+        $name  = csrf_token();
+        $input = $this->dom($body)->query('//input[@hx-swap-oob]')->item(0);
+
+        $this->assertInstanceOf(DOMElement::class, $input);
+        $this->assertSame($name, $input->getAttribute('name'));
+        $this->assertSame(csrf_hash(), $input->getAttribute('value'));
+        $this->assertSame("outerHTML:input[type=hidden][name=\"{$name}\"]", $input->getAttribute('hx-swap-oob'));
     }
 
     private function editBody(): string

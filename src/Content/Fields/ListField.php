@@ -53,13 +53,7 @@ final class ListField extends FieldType
         $rows      = [];
 
         foreach (array_filter(is_array($input) ? $input : [], is_array(...)) as $item) {
-            $row = [];
-
-            foreach ($subFields as $subField) {
-                $row[$subField->handle] = FieldTypes::get($subField->type)->prepare($item[$subField->handle] ?? null, $subField, ['fields' => $item]);
-            }
-
-            $rows[] = $row;
+            $rows[] = BlocksField::preparedValues($subFields, $item);
         }
 
         return ChoiceList::encode($rows);
@@ -123,8 +117,8 @@ final class ListField extends FieldType
      */
     public function fromStored(mixed $stored, Field $field): string
     {
-        $blueprint = self::rowBlueprint($field);
-        $rows      = array_map(static fn (array $item): array => BlocksField::valuesFrom($blueprint, $item), self::maps($stored));
+        $subFields = Blueprint::subFields($field);
+        $rows      = array_map(static fn (array $item): array => BlocksField::valuesFrom($subFields, $item), self::maps($stored));
 
         return ChoiceList::encode($rows);
     }

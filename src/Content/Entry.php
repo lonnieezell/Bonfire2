@@ -73,8 +73,8 @@ final readonly class Entry
     {
         $value = $this->data[$name] ?? null;
 
-        // Only a list of maps can be a list field's rows, so nothing else costs a read of the blueprint.
-        if (is_array($value) && array_is_list($value) && is_array($value[0] ?? null)) {
+        // Only a list with maps in it can be a list field's rows, so nothing else costs a read of the blueprint.
+        if (is_array($value) && array_is_list($value) && array_filter($value, is_array(...)) !== []) {
             $field = $this->listField($name);
             $value = $field === null ? $value : EntryStorage::cast($value, $field);
         }
@@ -88,19 +88,27 @@ final readonly class Entry
      */
     private function listField(string $name): ?Field
     {
+        $field = $this->ownBlueprint()?->field($name);
+
+        return $field?->type === 'list' ? $field : null;
+    }
+
+    /**
+     * The entry's blueprint, or null when it has none or its file is gone or broken by now, as the index outlives it.
+     */
+    private function ownBlueprint(): ?Blueprint
+    {
         if ($this->blueprint === null) {
             return null;
         }
 
         try {
-            $field = Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->field($name);
+            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint);
         } catch (ContentException $e) {
             log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
 
             return null;
         }
-
-        return $field?->type === 'list' ? $field : null;
     }
 
     /**
@@ -211,17 +219,7 @@ final readonly class Entry
      */
     private function seoMapping(): array
     {
-        if ($this->blueprint === null) {
-            return [];
-        }
-
-        try {
-            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->seo;
-        } catch (ContentException $e) {
-            log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
-
-            return [];
-        }
+        return $this->ownBlueprint()?->seo ?? [];
     }
 
     /**

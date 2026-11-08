@@ -195,6 +195,14 @@ final class ListFieldTest extends ContentTestCase
         $this->assertSame([['stars' => '4']], $entry->field('features'));
     }
 
+    public function testFieldCastsTheRowsWhenTheFirstItemIsNotAMap(): void
+    {
+        $this->assertSame(
+            [['title' => null, 'stars' => 4, 'live' => false]],
+            $this->entryWith("features:\n  - stray\n  - {stars: '4'}\n")->field('features'),
+        );
+    }
+
     public function testAListInsideABlockSavesAndReadsBackCast(): void
     {
         mkdir($this->blueprints . 'blocks');

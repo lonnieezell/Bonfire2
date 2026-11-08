@@ -22,13 +22,7 @@ $max       = BlocksField::bound($field, 'max_items');
 $full      = $max !== null && count($rows) >= $max;
 $list      = $id . '-list';
 $token     = ListField::token($field);
-$errorsOf  = [];
-
-foreach ($errors as $where => $message) {
-    [$position, $handle] = array_pad(explode('.', (string) $where, 2), 2, '');
-
-    $errorsOf[(int) $position][$handle] = $message;
-}
+$errorsOf  = BlocksField::errorsByPosition($errors);
 ?>
 <div id="<?= esc($id, 'attr') ?>" data-list x-data="bfBlocks(<?= (int) $max ?>, false)">
     <div id="<?= esc($list, 'attr') ?>" data-list-rows x-ref="list">
@@ -53,10 +47,11 @@ foreach ($errors as $where => $message) {
         <p class="text-muted" data-list-no-key><?= lang('Content.listNoKey') ?></p>
     <?php elseif (! $disabled) : ?>
         <button type="button" class="btn btn-outline-primary" data-add-row :disabled="full"<?= $full ? ' disabled' : '' ?>
-            hx-get="<?= url_to('content-list-row') ?>"
+            hx-post="<?= url_to('content-list-row') ?>"
             hx-target="#<?= esc($list, 'attr') ?>"
             hx-swap="beforeend"
-            hx-vals="js:{token: '<?= esc($token, 'js') ?>', name: '<?= esc($name, 'js') ?>', id: '<?= esc($id, 'js') ?>', count: document.getElementById('<?= esc($list, 'js') ?>').children.length}"
+            hx-params="<?= esc(csrf_token(), 'attr') ?>,field,name,id,count"
+            hx-vals="js:{field: '<?= esc($token, 'js') ?>', name: '<?= esc($name, 'js') ?>', id: '<?= esc($id, 'js') ?>', count: document.getElementById('<?= esc($list, 'js') ?>').children.length}"
         ><?= lang('Content.listAdd') ?></button>
     <?php endif ?>
 </div>

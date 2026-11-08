@@ -30,6 +30,8 @@ use Psr\Log\LoggerInterface;
  */
 class GlobalAdminController extends AdminController
 {
+    use LoadsSortable;
+
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Content\Views\\';
 
@@ -120,6 +122,8 @@ class GlobalAdminController extends AdminController
     private function renderForm(GlobalSet $set, Blueprint $blueprint, EntryForm $form, array $shown, int $httpStatus = 200): string
     {
         $this->response->setStatusCode($httpStatus);
+
+        $this->addSortableScriptFor($form);
 
         return $this->render($this->viewPrefix . 'global_form', [
             'set'       => $set,

@@ -27,6 +27,12 @@ if (! config('Content')->autoSeo) {
                 <@php endif ?>
             <@php endforeach ?>
         </dd>
+<?php elseif ($field['type'] === 'list') : ?>
+        <dd>
+            <@php foreach ($entry->field(<?= $field['key'] ?>, []) as $row): ?>
+                <p><@= esc(implode(', ', array_filter($row, is_scalar(...)))) ?></p>
+            <@php endforeach ?>
+        </dd>
 <?php elseif (in_array($field['type'], ['date', 'datetime', 'integer', 'markdown', 'select', 'text', 'textarea'], true)) : ?>
         <dd><@= esc($entry->field(<?= $field['key'] ?>)) ?></dd>
 <?php else : ?>

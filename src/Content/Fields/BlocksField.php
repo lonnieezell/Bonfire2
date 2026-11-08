@@ -84,14 +84,29 @@ final class BlocksField extends FieldType
                 }
             }
 
-            foreach ($blueprints[$type]->fields ?? [] as $blockField) {
-                $block[$blockField->handle] = FieldTypes::get($blockField->type)->prepare($item[$blockField->handle] ?? null, $blockField, ['fields' => $item]);
-            }
-
-            $blocks[] = $block;
+            $blocks[] = $block + self::preparedValues($blueprints[$type]->fields ?? [], $item);
         }
 
         return ChoiceList::encode($blocks);
+    }
+
+    /**
+     * The posted values of an item's fields, each tidied by its own type.
+     *
+     * @param list<Field>             $fields
+     * @param array<array-key, mixed> $item
+     *
+     * @return array<string, string> by handle
+     */
+    public static function preparedValues(array $fields, array $item): array
+    {
+        $values = [];
+
+        foreach ($fields as $itemField) {
+            $values[$itemField->handle] = FieldTypes::get($itemField->type)->prepare($item[$itemField->handle] ?? null, $itemField, ['fields' => $item]);
+        }
+
+        return $values;
     }
 
     /**
@@ -256,7 +271,7 @@ final class BlocksField extends FieldType
                 continue;
             }
 
-            $blocks[] = ['type' => $item['type']] + self::valuesFrom($blueprints[$item['type']], $item);
+            $blocks[] = ['type' => $item['type']] + self::valuesFrom($blueprints[$item['type']]->fields, $item);
         }
 
         return ChoiceList::encode($blocks);
@@ -269,21 +284,22 @@ final class BlocksField extends FieldType
      */
     public static function emptyBlock(Blueprint $blueprint): array
     {
-        return ['type' => $blueprint->handle] + self::valuesFrom($blueprint, []);
+        return ['type' => $blueprint->handle] + self::valuesFrom($blueprint->fields, []);
     }
 
     /**
-     * The form value of each field of a block type, from what the front matter holds for a block.
+     * The form value of each of an item's fields, from what the front matter holds for the item.
      *
+     * @param list<Field>             $fields
      * @param array<array-key, mixed> $stored
      *
      * @return array<string, string> by handle
      */
-    public static function valuesFrom(Blueprint $blueprint, array $stored): array
+    public static function valuesFrom(array $fields, array $stored): array
     {
         $values = [];
 
-        foreach ($blueprint->fields as $blockField) {
+        foreach ($fields as $blockField) {
             $type                        = FieldTypes::get($blockField->type);
             $values[$blockField->handle] = $type->fromStored($stored[EntryStorage::key($type, $blockField)] ?? null, $blockField);
         }
@@ -343,6 +359,27 @@ final class BlocksField extends FieldType
         sort($all);
 
         return $all;
+    }
+
+    /**
+     * The errors inside a field's items, from `2.title` keys to the handles of each position. A whole item's error has
+     * the handle ''.
+     *
+     * @param array<array-key, string> $errors
+     *
+     * @return array<int, array<string, string>>
+     */
+    public static function errorsByPosition(array $errors): array
+    {
+        $byPosition = [];
+
+        foreach ($errors as $where => $message) {
+            [$position, $handle] = array_pad(explode('.', (string) $where, 2), 2, '');
+
+            $byPosition[(int) $position][$handle] = $message;
+        }
+
+        return $byPosition;
     }
 
     /**

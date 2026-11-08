@@ -406,17 +406,17 @@ class EntryAdminController extends AdminController
 
     /**
      * The card of a new row, with the inputs of a list field's sub-fields. The field's Add row button fetches it with
-     * htmx. The field comes from a signed token, because the row's owner may be any blueprint or block type, and `name`
-     * and `id` say where in the form the list is, which a duplicated block changes. A list that has as many rows as it
-     * may gets nothing, going by `count`. Saving checks it.
+     * htmx. The field comes from a signed token, because the row's owner may be any blueprint or block type. It's posted
+     * because a large definition would be too long for a URL. `name` and `id` say where in the form the list is, which
+     * a duplicated block changes. A list that has as many rows as it may gets no row, going by `count`. Saving checks it.
      */
     public function listRow(): string
     {
         $this->requireEdit();
 
-        $field = ListField::fromToken($this->request->getGet('token'));
-        $name  = $this->request->getGet('name');
-        $id    = $this->request->getGet('id');
+        $field = ListField::fromToken($this->request->getPost('field'));
+        $name  = $this->request->getPost('name');
+        $id    = $this->request->getPost('id');
 
         if (
             $field === null
@@ -428,10 +428,8 @@ class EntryAdminController extends AdminController
 
         $max = BlocksField::bound($field, 'max_items');
 
-        if ($max !== null && (int) $this->request->getGet('count') >= $max) {
-            $this->response->setStatusCode(422);
-
-            return '';
+        if ($max !== null && (int) $this->request->getPost('count') >= $max) {
+            return $this->rotatedCsrfInput();
         }
 
         try {
@@ -444,7 +442,7 @@ class EntryAdminController extends AdminController
             'name'       => $name,
             'id'         => $id,
             'key'        => BlocksField::newKey(),
-            'block'      => BlocksField::valuesFrom($blueprint, []),
+            'block'      => BlocksField::valuesFrom($blueprint->fields, []),
             'blueprint'  => $blueprint,
             'cardErrors' => [],
             'position'   => 0,
@@ -452,7 +450,18 @@ class EntryAdminController extends AdminController
             'slot'       => false,
             'disabled'   => false,
             'isRow'      => true,
-        ], ['saveData' => false]);
+        ], ['saveData' => false]) . $this->rotatedCsrfInput();
+    }
+
+    /**
+     * Verifying a post rotates the CSRF token, so htmx swaps this over the page's token inputs out of band. Without it,
+     * the next post from the page would be refused.
+     */
+    private function rotatedCsrfInput(): string
+    {
+        $name = csrf_token();
+
+        return '<input type="hidden" name="' . esc($name, 'attr') . '" value="' . esc(csrf_hash(), 'attr') . '" hx-swap-oob="' . esc("outerHTML:input[type=hidden][name=\"{$name}\"]", 'attr') . '">';
     }
 
     /**
@@ -689,10 +698,7 @@ class EntryAdminController extends AdminController
 
         $this->response->setStatusCode($httpStatus);
 
-        // The cards of a blocks or list field are dragged to reorder them.
-        if (array_filter($blueprint->fields, static fn ($field): bool => in_array($field->type, ['blocks', 'list'], true)) !== []) {
-            $this->addSortableScript();
-        }
+        $this->addSortableScriptFor($form);
 
         return $this->render($this->viewPrefix . 'entry_form', [
             'collection'  => $collection,
