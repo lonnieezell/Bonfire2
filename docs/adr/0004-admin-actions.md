@@ -48,7 +48,7 @@ class BanUsers extends Action
 
     public function fields(): array
     {
-        return [Textarea::make('reason')->rules('permit_empty|max_length[255]')];
+        return [Textarea::make('reason')->validate('permit_empty|max_length[255]')];
     }
 
     public function allows(User $actor, object $entity): bool
@@ -147,8 +147,14 @@ the GET delete is removed as part of this work.
 - **`<x-row-actions>` takes `id`, not `:entity`.** View Components only receive
   string attributes, so the component loads the record through the list's
   record source to leave out actions whose `allows()` rejects it.
-- **`fields()` is deferred** until ADR 0003's field classes exist; actions take
-  no input yet.
+- **`fields()` shipped after the rest,** once ADR 0003's field classes existed
+  (#837). It returns the same builders or `Bonfire\Fields\Field`s as a
+  resource, and `ActionController` validates them through `Bonfire\Fields\Form`
+  before running or queueing. The dialog fetches them from `GET
+  admin/actions/{list}/{action}/fields`, which holds no record IDs, and posts
+  with `fetch` so invalid input keeps it open. The values are stored in
+  `action_runs.inputs` and reach `handle()` through `ActionContext::input()`,
+  so a queued run gets what a run in the request does.
 - **Row actions submit one form in the layout** (`#bf-action-form`, rendered by
   `<x-confirm-dialog>`), since a row's menu sits inside the list's bulk form
   and forms can't nest.

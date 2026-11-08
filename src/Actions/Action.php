@@ -11,6 +11,11 @@
 
 namespace Bonfire\Actions;
 
+use Bonfire\Fields\Field;
+use Bonfire\Fields\FieldException;
+use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\Form;
+use Bonfire\Resources\Fields\Field as FieldBuilder;
 use Bonfire\Users\User;
 
 /**
@@ -43,7 +48,8 @@ abstract class Action
      */
     public bool $danger = false;
 
-    public Queue $queue = Queue::Auto;
+    public Queue $queue      = Queue::Auto;
+    private ?bool $hasFields = null;
 
     /**
      * With `Queue::Auto`, runs on more records than this are queued.
@@ -69,6 +75,49 @@ abstract class Action
     }
 
     /**
+     * What the admin is asked for before the action runs, shown in the confirm dialog. Write a field with the builders
+     * in `Bonfire\Resources\Fields` or as a `Bonfire\Fields\Field`. `handle()` reads the values with `$context->input()`.
+     *
+     * @return list<Field|FieldBuilder>
+     */
+    public function fields(): array
+    {
+        return [];
+    }
+
+    /**
+     * Whether `fields()` has anything to ask for. Asked once, since a list renders its buttons for every row.
+     */
+    public function hasFields(): bool
+    {
+        return $this->hasFields ??= $this->fields() !== [];
+    }
+
+    /**
+     * The form of `fields()`.
+     *
+     * @throws FieldException when a field's options can't be used
+     */
+    public function form(): Form
+    {
+        $fields = array_map(static fn (Field|FieldBuilder $field): Field => $field instanceof FieldBuilder ? $field->compile() : $field, $this->fields());
+
+        foreach ($fields as $field) {
+            FieldTypes::get($field->type)->check($field);
+        }
+
+        return new Form($fields);
+    }
+
+    /**
+     * What the dialog or confirm page asks: `confirm()`, or just the action's label when it only has fields to ask for.
+     */
+    public function question(): ?Confirm
+    {
+        return $this->confirm() ?? ($this->hasFields() ? Confirm::make($this->label) : null);
+    }
+
+    /**
      * Whether the action may touch this record. Rejected records are skipped and reported.
      */
     public function allows(User $actor, object $record): bool
@@ -80,17 +129,19 @@ abstract class Action
 
     /**
      * The data-confirm attributes <x-confirm-dialog> reads to ask before the
-     * action runs, or an empty string when it doesn't ask.
+     * action runs, or an empty string when it doesn't ask. With fields, the dialog
+     * fetches them from the button's `formaction` plus `/fields`.
      */
     public function confirmAttributes(): string
     {
-        $confirm = $this->confirm();
+        $confirm = $this->question();
 
         if ($confirm === null) {
             return '';
         }
 
         return stringify_attributes(array_filter([
+            'data-confirm-fields' => $this->hasFields() ? '1' : '',
             'data-confirm'        => $confirm->title(),
             'data-confirm-body'   => $confirm->text(),
             'data-confirm-button' => $confirm->buttonLabel() ?: $this->label,

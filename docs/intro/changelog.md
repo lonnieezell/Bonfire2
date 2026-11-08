@@ -12,6 +12,20 @@ model's table and writes the resource with a field for each column, plus `Module
 exist are left alone, and the command says what to add to them by hand. See
 [Resources](../building_admin_modules/resources.md#generating-a-resource).
 
+**Actions: input fields.** An action's `fields()` asks the admin for input in the confirm dialog, such as a reason, and
+`handle()` reads it with `$context->input('reason')`. Write the fields like a resource's. The endpoint validates them
+before it runs or queues the action: invalid input keeps the dialog open with the error under the input, and the
+no-JavaScript confirm page shows the same fields and errors. A queued run gets the same input, stored in the new
+`action_runs.inputs` column, so **run `php spark migrate --all`**. Works on any list, including hand-written ones such as
+Users. See [Row and Bulk Actions](../building_admin_modules/actions.md#asking-for-input).
+
+**Resources: row and bulk actions.** A resource's `actions()` show in its list's row menus and, once rows are checked,
+in the selection bar. `register()` adds them to the action list named by the resource's `$slug`, with its model as the
+record source, so another module can add an action with `service('actions')->for('products')->add(…)`. An action the
+user lacks the permission for isn't shown and the endpoint refuses it. `Bonfire\Resources\Actions\DeleteRecords` deletes
+records through the model, so a soft-deleting model sends them to the Recycler. See
+[Resources](../building_admin_modules/resources.md#actions).
+
 ## 6 November 2026
 
 **Resources: create and edit pages.** Add `create` and `edit` to a resource's `$pages` for forms that render through

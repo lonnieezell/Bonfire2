@@ -21,4 +21,6 @@ return [
     'noMatches'     => 'No matches',
     'noMatchesHint' => 'No record matches the search or the filters. Try a different search, or clear the filters.',
     'search'        => 'Search',
+    'selectAll'     => 'Select all records',
+    'selectRecord'  => 'Select record',
 ];

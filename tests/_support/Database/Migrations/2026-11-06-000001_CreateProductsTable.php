@@ -74,6 +74,10 @@ class CreateProductsTable extends Migration
                 'type' => 'datetime',
                 'null' => true,
             ],
+            'deleted_at' => [
+                'type' => 'datetime',
+                'null' => true,
+            ],
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->createTable('products', true);

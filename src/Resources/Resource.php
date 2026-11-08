@@ -11,6 +11,7 @@
 
 namespace Bonfire\Resources;
 
+use Bonfire\Actions\Action;
 use Bonfire\Core\Like;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldException;
@@ -187,6 +188,18 @@ abstract class Resource
         }
 
         return $filters;
+    }
+
+    /**
+     * The row and bulk actions of the list. `register()` adds them to the action list named by `$slug`, where they
+     * run on records loaded through the model. Each action needs the permission it names, and records come back as
+     * objects, so the model must return entities or objects. `new DeleteRecords($this)` deletes the records.
+     *
+     * @return list<Action>
+     */
+    public function actions(): array
+    {
+        return [];
     }
 
     /**
