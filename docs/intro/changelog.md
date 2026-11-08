@@ -4,6 +4,19 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 8 November 2026
+
+**Content: an admin editor for `blocks` fields.** A blocks field is now a list of collapsible cards, each with the block
+type's title, a summary, a drag handle, and buttons to move, duplicate and delete it. **Add block** lists the types the
+field allows and is disabled at `max_items`, and a field with `max_items: 1` is a slot. The inputs of a new block come
+from the server and render through the same field partials as the rest of the form, so your own field types and copies
+of the input partials work inside a block. An error opens the card that has it, labelled with its position: `Block 3
+(Feature grid): The Title field is required.` A block whose type no longer has a file shows as read-only and is saved
+back as it was. See [Editing blocks](../content/admin.md#editing-blocks).
+
+If you copied `src/Content/Views/fields/blocks.php` into your app to change the blocks input, it still works but shows
+the old read-only list. Copy the new one to get the editor.
+
 ## 7 November 2026
 
 **`bf:resource` generates a resource.** `php spark bf:resource Product --model='App\Models\ProductModel'` reads the

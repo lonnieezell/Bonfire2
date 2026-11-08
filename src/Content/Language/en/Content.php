@@ -104,7 +104,16 @@ return [
     'blockTypeInvalid' => 'A "{0}" block isn\'t one this field allows.',
     'blockError'       => 'Block {0} ({1}): {2}',
     'blocksNone'       => 'No blocks yet.',
-    'blocksHint'       => 'Blocks are written in the entry\'s file. Saving keeps the values shown here.',
+    'blockAdd'         => 'Add block',
+    'blockChoose'      => 'Choose a block',
+    'blockReplace'     => 'Replace',
+    'blockMoveUp'      => 'Move up',
+    'blockMoveDown'    => 'Move down',
+    'blockDuplicate'   => 'Duplicate',
+    'blockDelete'      => 'Delete',
+    'blockDrag'        => 'Drag to reorder',
+    'blockToggle'      => 'Show or hide the block',
+    'blockUnknown'     => 'Unknown block type `{0}`, kept as is.',
 
     // Terms field
     'noTerms'     => 'No terms yet.',

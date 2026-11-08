@@ -59,7 +59,7 @@ final readonly class EntryForm
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>
+     * @return list<array{field: Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>
      */
     public function rows(array $values, array $errors): array
     {
@@ -72,7 +72,7 @@ final readonly class EntryForm
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>}>
+     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>}>
      */
     public function sections(array $values, array $errors): array
     {

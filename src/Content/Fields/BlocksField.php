@@ -22,7 +22,9 @@ use Bonfire\Fields\FieldTypes;
  * A list of blocks, each of a type that has a blueprint in resources/blueprints/blocks. `blocks` lists the types the
  * field allows and is every type when it's left out. `max_items` and `min_items` bound how many blocks there are.
  * The front matter holds a list of maps, each with a reserved `type` key. The form value is that list as JSON,
- * with every value as text like any other form value, or the empty string for no blocks.
+ * with every value as text like any other form value, or the empty string for no blocks. A block whose type has no
+ * blueprint any more can't be edited, so the form value holds it as it is in a signed `kept` key, and saving writes it
+ * back unchanged.
  * Read the blocks back with `$entry->blocks('handle')`.
  */
 final class BlocksField extends FieldType
@@ -72,6 +74,14 @@ final class BlocksField extends FieldType
         foreach ($items as $index => $item) {
             $type  = $types[$index];
             $block = ['type' => $type];
+
+            if (! isset($blueprints[$type])) {
+                $carried = array_map(static fn (mixed $text): string => is_string($text) ? $text : '', ['kept' => $item['kept'] ?? null, 'signed' => $item['signed'] ?? null]);
+
+                if (self::kept($block + $carried) !== null) {
+                    $block += $carried;
+                }
+            }
 
             foreach ($blueprints[$type]->fields ?? [] as $blockField) {
                 $block[$blockField->handle] = FieldTypes::get($blockField->type)->prepare($item[$blockField->handle] ?? null, $blockField, ['fields' => $item]);
@@ -127,6 +137,11 @@ final class BlocksField extends FieldType
             $position = $index + 1;
             $type     = $block['type'];
 
+            // A block of a type that is gone is written back as it was.
+            if (! isset($blueprints[$type]) && self::kept($block) !== null) {
+                continue;
+            }
+
             if (! in_array($type, $allowed, true) || ! isset($blueprints[$type])) {
                 $errors[(string) $position] = lang('Content.blockTypeInvalid', [$type]);
 
@@ -164,6 +179,14 @@ final class BlocksField extends FieldType
         $stored     = [];
 
         foreach ($blocks as $block) {
+            $kept = isset($blueprints[$block['type']]) ? null : self::kept($block);
+
+            if ($kept !== null) {
+                $stored[] = $kept;
+
+                continue;
+            }
+
             $map = ['type' => $block['type']];
 
             foreach ($blueprints[$block['type']]->fields ?? [] as $blockField) {
@@ -193,17 +216,73 @@ final class BlocksField extends FieldType
         $blocks     = [];
 
         foreach ($items as $item) {
-            $block = ['type' => $item['type']];
+            if (! isset($blueprints[$item['type']])) {
+                $json = json_encode($item, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
 
-            foreach ($blueprints[$item['type']]->fields ?? [] as $blockField) {
-                $type                       = FieldTypes::get($blockField->type);
-                $block[$blockField->handle] = $type->fromStored($item[EntryStorage::key($type, $blockField)] ?? null, $blockField);
+                // A block that can't be written as JSON has no `kept`, so a save refuses it rather than drop it.
+                $blocks[] = ['type' => $item['type']] + ($json === false ? [] : ['kept' => $json, 'signed' => self::sign($json)]);
+
+                continue;
             }
 
-            $blocks[] = $block;
+            $blocks[] = ['type' => $item['type']] + self::valuesFrom($blueprints[$item['type']], $item);
         }
 
         return ChoiceList::encode($blocks);
+    }
+
+    /**
+     * What the form holds for a new block: its type and the empty value of each field.
+     *
+     * @return array<string, string>
+     */
+    public static function emptyBlock(Blueprint $blueprint): array
+    {
+        return ['type' => $blueprint->handle] + self::valuesFrom($blueprint, []);
+    }
+
+    /**
+     * The form value of each field of a block type, from what the front matter holds for a block.
+     *
+     * @param array<array-key, mixed> $stored
+     *
+     * @return array<string, string> by handle
+     */
+    private static function valuesFrom(Blueprint $blueprint, array $stored): array
+    {
+        $values = [];
+
+        foreach ($blueprint->fields as $blockField) {
+            $type                        = FieldTypes::get($blockField->type);
+            $values[$blockField->handle] = $type->fromStored($stored[EntryStorage::key($type, $blockField)] ?? null, $blockField);
+        }
+
+        return $values;
+    }
+
+    /**
+     * What a block of a type that is gone holds in the front matter, or null when the block doesn't carry it. The form
+     * signs it when it shows the block, so a post can't make up a block of a type that has no blueprint.
+     *
+     * @param array<string, string> $block as decode() returns it
+     *
+     * @return array<array-key, mixed>|null
+     */
+    private static function kept(array $block): ?array
+    {
+        $json   = $block['kept'] ?? '';
+        $stored = json_decode($json, true);
+
+        if (! is_array($stored) || ($stored['type'] ?? null) !== $block['type'] || ! hash_equals(self::sign($json), $block['signed'] ?? '')) {
+            return null;
+        }
+
+        return $stored;
+    }
+
+    private static function sign(string $json): string
+    {
+        return hash_hmac('sha256', 'content-block|' . $json, (string) config('Encryption')->key);
     }
 
     /**
@@ -225,6 +304,14 @@ final class BlocksField extends FieldType
         sort($all);
 
         return $all;
+    }
+
+    /**
+     * What names the inputs of a block, so that the blocks are told apart however they are moved. It isn't saved.
+     */
+    public static function newKey(): string
+    {
+        return 'b_' . bin2hex(random_bytes(3));
     }
 
     public static function bound(Field $field, string $key): ?int
@@ -265,7 +352,7 @@ final class BlocksField extends FieldType
      *
      * @return array<string, Blueprint> by type, without those whose blueprint can't be loaded
      */
-    private static function blueprintsFor(array $types): array
+    public static function blueprintsFor(array $types): array
     {
         $blueprints = [];
 

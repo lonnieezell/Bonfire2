@@ -17,6 +17,7 @@ use Bonfire\Content\ContentException;
 use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\EntryStore;
+use Bonfire\Content\Fields\BlocksField;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\PreviewLink;
 use Bonfire\Content\SaveConflictException;
@@ -359,6 +360,50 @@ class EntryAdminController extends AdminController
     }
 
     /**
+     * The card of a new block, with the inputs of its type, for a blocks field named `$field` in the form. The field's
+     * menu fetches it with htmx, so the inputs are drawn by the same partials as the rest of the form. `count` and `max`
+     * are how many blocks the field has and may have, and a field that has as many as it may gets nothing. `slot` is
+     * set for a field that holds a single block.
+     *
+     * Which types the field allows isn't checked, because the form isn't known. Saving checks it.
+     */
+    public function block(string $field, string $type): string
+    {
+        $this->requireEdit();
+
+        $max = (int) $this->request->getGet('max');
+
+        if ($max > 0 && (int) $this->request->getGet('count') >= $max) {
+            $this->response->setStatusCode(422);
+
+            return '';
+        }
+
+        try {
+            $blueprint = Blueprint::loadBlock(config('Content')->blueprintPath, $type);
+        } catch (ContentException) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        if (preg_match(Blueprint::NAME, $field) !== 1) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return view('Bonfire\Content\Views\block_card', [
+            'name'       => "fields[{$field}]",
+            'id'         => "field-{$field}",
+            'key'        => BlocksField::newKey(),
+            'block'      => BlocksField::emptyBlock($blueprint),
+            'blueprint'  => $blueprint,
+            'cardErrors' => [],
+            'position'   => 0,
+            'open'       => true,
+            'slot'       => $this->request->getGet('slot') === '1',
+            'disabled'   => false,
+        ], ['saveData' => false]);
+    }
+
+    /**
      * @throws RedirectException
      */
     private function deny(): never
@@ -591,6 +636,11 @@ class EntryAdminController extends AdminController
         $canDelete = $live && auth()->user()->can('content.delete');
 
         $this->response->setStatusCode($httpStatus);
+
+        // A blocks field's cards are dragged to reorder them.
+        if (array_filter($blueprint->fields, static fn ($field): bool => $field->type === 'blocks') !== []) {
+            $this->addSortableScript();
+        }
 
         return $this->render($this->viewPrefix . 'entry_form', [
             'collection'  => $collection,

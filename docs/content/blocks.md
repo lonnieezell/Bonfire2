@@ -4,8 +4,8 @@ A blocks field holds a list of blocks in an entry's front matter. Each block has
 its own fields, and you render each type through a view of your own. That lets one page mix a hero, a few text sections
 and a call to action, in an order the file sets, while you keep control of the HTML.
 
-You write the blocks in the entry's file. The admin lists them and keeps them when the entry is saved, but doesn't have
-an editor for them.
+You can write the blocks in the entry's file, and the admin edits them as a list of cards that can be added, moved,
+copied and deleted. See [Editing blocks](admin.md#editing-blocks).
 
 ## Block types
 
@@ -153,4 +153,7 @@ field's handle, hold the first problem, such as `Block 2 (Hero): The Heading fie
 `sections.2.heading`, or `sections.2` for a block's type.
 
 Saving in the admin writes each block's fields as its blueprint lists them, so a key you wrote by hand that the block
-blueprint doesn't list is dropped.
+blueprint doesn't list is dropped. A block whose type has no file any more is the exception: it is written back as it was.
+
+The editor names each block's inputs with a random key, such as `fields[sections][b_3f9a2c][heading]`, and takes the
+order of the blocks from the order they are posted in. The keys are not saved.

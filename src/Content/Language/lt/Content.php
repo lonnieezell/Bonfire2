@@ -93,7 +93,16 @@ return [
     'blockTypeInvalid' => 'Bloko „{0}“ šis laukas neleidžia.',
     'blockError'       => 'Blokas {0} ({1}): {2}',
     'blocksNone'       => 'Blokų dar nėra.',
-    'blocksHint'       => 'Blokai rašomi įrašo faile. Išsaugojus čia rodomos reikšmės išlieka.',
+    'blockAdd'         => 'Pridėti bloką',
+    'blockChoose'      => 'Pasirinkti bloką',
+    'blockReplace'     => 'Pakeisti',
+    'blockMoveUp'      => 'Perkelti aukštyn',
+    'blockMoveDown'    => 'Perkelti žemyn',
+    'blockDuplicate'   => 'Dubliuoti',
+    'blockDelete'      => 'Ištrinti',
+    'blockDrag'        => 'Vilkite, kad pakeistumėte tvarką',
+    'blockToggle'      => 'Rodyti arba slėpti bloką',
+    'blockUnknown'     => 'Nežinomas bloko tipas `{0}`, paliktas nepakeistas.',
 
     // Terms field
     'noTerms'     => 'Terminų dar nėra.',

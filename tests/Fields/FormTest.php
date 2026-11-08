@@ -48,6 +48,15 @@ final class FormTest extends TestCase
         $this->assertNotContains(true, array_column($rows, 'disabled'));
     }
 
+    public function testARowHoldsTheErrorsInsideItsFieldByPositionAndHandle(): void
+    {
+        $rows = $this->form()->rows([], ['name' => 'Bad', 'name.2.heading' => 'Required', 'name.2' => 'Not allowed', 'age.1.x' => 'Other field', 'names.1.x' => 'Other field']);
+
+        $this->assertSame(['2.heading' => 'Required', '2' => 'Not allowed'], $rows[0]['errors']);
+        $this->assertSame(['1.x' => 'Other field'], $rows[1]['errors']);
+        $this->assertSame([], $rows[2]['errors']);
+    }
+
     public function testAFormWithoutSectionsIsOneUntitledColumn(): void
     {
         $sections = $this->form()->sections(['name' => 'Ada'], ['age' => 'Too young']);

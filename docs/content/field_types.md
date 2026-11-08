@@ -274,8 +274,8 @@ A list of blocks, each of a type with its own fields, saved as a list of maps wi
   max_items: 10
 ```
 
-Block types are files in `resources/blueprints/blocks`, and you write the blocks in the entry's file. The input lists
-them and keeps them when the entry is saved. A save is refused if there are too many or too few blocks, or if a block has a
+Block types are files in `resources/blueprints/blocks`. The input is a list of cards that you add, move, copy and delete
+(see [Editing blocks](admin.md#editing-blocks)), and a field with `max_items: 1` is a slot for a single block. A save is refused if there are too many or too few blocks, or if a block has a
 type the field doesn't allow or a value that fails its own field's rules. The blueprint is refused if a type has no file.
 
 Read the blocks back with [`$entry->blocks('sections')`](query_api.md#entries), and render them with
