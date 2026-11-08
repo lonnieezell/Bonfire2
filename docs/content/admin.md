@@ -101,6 +101,47 @@ A `markdown` field has **Write** and **Preview** tabs. Preview sends the text to
 CommonMark and shows the result without saving. Raw HTML in the text shows as text in the preview. The preview only
 answers requests from htmx, and needs `content.edit`.
 
+## Editing blocks
+
+A [`blocks` field](blocks.md) is a list of cards, one for each block, so a client can compose a page from the block types
+you wrote without touching markup.
+
+- **A card** shows the block type's `title` and a one-line summary, which is the value of the type's first `text` field.
+  Click it to open the fields. Cards start closed, except one with an error, which opens by itself.
+- **Move up** and **move down** swap a card with its neighbour, and the handle on the left drags it anywhere in the list.
+- **Duplicate** adds a copy with the values as they are now, right below the card. **Delete** removes the card.
+- **Add block** lists the types the field allows and adds a new card at the end. The menu is disabled once the list has
+  `max_items` blocks.
+
+Saving writes the blocks in the order the cards are in on the page. Nothing is saved until you press **Save**. If cards
+were added, moved or deleted, **Discard** opens the page again to put them back.
+
+A field with `max_items: 1` is a slot. It shows the block without the handle and the move and duplicate buttons. The
+menu says **Choose a block** while the slot is empty and **Replace** after, and choosing a type replaces whatever is in
+the slot. **Delete** empties it.
+
+The form for a new block comes from the server when you add it, drawn by the same input partials as the rest of the
+form. So an app's own copy of an input in `app/Views/fields/`, and a [custom field type](custom_field_types.md), work
+inside a block with no JavaScript of your own. The Markdown preview tab inside a block previews the text as plain
+Markdown, as [it does](#the-markdown-preview) everywhere else. The **Preview** link at the top of the entry shows the
+page as the site renders it, blocks included.
+
+### Errors in a block
+
+A block that fails validation keeps what was typed, and its card opens with each problem labelled by the block's
+position, counting from 1, and its type: `Block 3 (Feature grid): The Title field is required.` The first problem is also
+shown under the field, and `max_items` and `min_items` are checked on the server when you save, whatever the page let
+you do.
+
+### A block type that is gone
+
+If an entry has a block whose type no longer has a file in `resources/blueprints/blocks`, its card is read-only and says
+``Unknown block type `x`, kept as is.`` You can move it or delete it. Saving writes it back as the file had it, with
+every key it held. Values written as `1.0` come back as `1`, the way the index holds numbers.
+
+The form signs what it keeps with the app's encryption key, so a post can't make up a block of a type that has no file.
+Run `php spark key:generate` if your app has no key.
+
 ## Previewing a draft
 
 **Preview** at the top of an entry's form gives you a link to the entry as it will look on the site, through the

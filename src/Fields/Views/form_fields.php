@@ -4,10 +4,14 @@
  * a label, the field's input, its instructions and its error. Columns stack below `md`, and a full-width row spans
  * its section. Pass `rows` instead for a form with no sections.
  *
- * @var list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Bonfire\Fields\Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>}> $sections
- * @var list<array{field: Bonfire\Fields\Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>                                                                              $rows     used when `sections` isn't given
+ * @var list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Bonfire\Fields\Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>}> $sections
+ * @var list<array{field: Bonfire\Fields\Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>                                                                              $rows     used when `sections` isn't given
+ * @var string                                                                                                                                                                                                              $namePrefix the name an input starts with, before `[handle]`. Defaults to `fields`
+ * @var string                                                                                                                                                                                                              $idPrefix   the id an input starts with, before `-handle`. Defaults to `field`
  */
-$sections ??= [['title' => null, 'instructions' => null, 'columns' => 1, 'rows' => $rows]];
+$namePrefix ??= 'fields';
+$idPrefix   ??= 'field';
+$sections   ??= [['title' => null, 'instructions' => null, 'columns' => 1, 'rows' => $rows]];
 ?>
 <?php foreach ($sections as $section) : ?>
     <?php $cell = 'col-12' . ($section['columns'] === 1 ? '' : ' col-md-' . intdiv(12, $section['columns'])) ?>
@@ -22,12 +26,13 @@ $sections ??= [['title' => null, 'instructions' => null, 'columns' => 1, 'rows' 
         <?php foreach ($section['rows'] as $row) : ?>
             <?php $field = $row['field'] ?>
             <div class="form-group mb-3 <?= $row['full'] ? 'col-12' : $cell ?>" data-field="<?= esc($field->handle, 'attr') ?>">
-                <label for="field-<?= esc($field->handle, 'attr') ?>" class="form-label"><?= esc($field->label) ?></label>
+                <label for="<?= esc($idPrefix . '-' . $field->handle, 'attr') ?>" class="form-label"><?= esc($field->label) ?></label>
                 <?= view($row['view'], [
                     'field'    => $field,
-                    'name'     => 'fields[' . $field->handle . ']',
-                    'id'       => 'field-' . $field->handle,
+                    'name'     => $namePrefix . '[' . $field->handle . ']',
+                    'id'       => $idPrefix . '-' . $field->handle,
                     'value'    => $row['value'],
+                    'errors'   => $row['errors'] ?? [],
                     'disabled' => $row['disabled'],
                 ], ['saveData' => false]) ?>
                 <?php if ($field->instructions !== null) : ?>

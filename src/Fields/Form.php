@@ -53,7 +53,7 @@ final readonly class Form
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>
+     * @return list<array{field: Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>
      */
     public function rows(array $values, array $errors): array
     {
@@ -67,7 +67,7 @@ final readonly class Form
      * @param array<string, string> $values by handle
      * @param array<string, string> $errors by handle
      *
-     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}>}>
+     * @return list<array{title: string|null, instructions: string|null, columns: int, rows: list<array{field: Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}>}>
      */
     public function sections(array $values, array $errors): array
     {
@@ -90,7 +90,7 @@ final readonly class Form
      * @param array<string, string> $values
      * @param array<string, string> $errors
      *
-     * @return array{field: Field, view: string, value: string, error: string|null, disabled: bool, full: bool}
+     * @return array{field: Field, view: string, value: string, error: string|null, errors: array<string, string>, disabled: bool, full: bool}
      */
     private function row(Field $field, array $values, array $errors): array
     {
@@ -99,9 +99,31 @@ final readonly class Form
             'view'     => FieldTypes::view($field->type),
             'value'    => $values[$field->handle] ?? '',
             'error'    => $errors[$field->handle] ?? null,
+            'errors'   => $this->innerErrors($field, $errors),
             'disabled' => ! $this->isEditable($field),
             'full'     => $field->full || FieldTypes::get($field->type)->isFullWidth(),
         ];
+    }
+
+    /**
+     * The errors inside a field that holds several values, by the position and handle: `2.heading`.
+     *
+     * @param array<string, string> $errors
+     *
+     * @return array<string, string>
+     */
+    private function innerErrors(Field $field, array $errors): array
+    {
+        $prefix = $field->handle . '.';
+        $inside = [];
+
+        foreach ($errors as $key => $message) {
+            if (str_starts_with((string) $key, $prefix)) {
+                $inside[substr((string) $key, strlen($prefix))] = $message;
+            }
+        }
+
+        return $inside;
     }
 
     /**
