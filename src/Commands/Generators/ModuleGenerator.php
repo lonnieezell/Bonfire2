@@ -12,6 +12,7 @@ use CodeIgniter\Model;
  */
 class ModuleGenerator extends BaseCommand
 {
+    use FindsNamespaceFolders;
     use RendersTemplates;
 
     /**
@@ -150,29 +151,6 @@ class ModuleGenerator extends BaseCommand
     protected function rootPath(): string
     {
         return ROOTPATH;
-    }
-
-    /**
-     * The folder of a namespace, through the closest namespace the
-     * autoloader maps to a folder.
-     */
-    private function namespacePath(string $namespace): ?string
-    {
-        $namespaces = service('autoloader')->getNamespace();
-        $prefix     = $namespace;
-        $rest       = '';
-
-        while (! isset($namespaces[$prefix])) {
-            $pos = strrpos($prefix, '\\');
-            if ($pos === false) {
-                return null;
-            }
-
-            $rest   = substr($prefix, $pos) . $rest;
-            $prefix = substr($prefix, 0, $pos);
-        }
-
-        return rtrim($namespaces[$prefix][0], '\/') . str_replace('\\', '/', $rest) . '/';
     }
 
     /**
