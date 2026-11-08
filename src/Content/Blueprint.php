@@ -35,6 +35,11 @@ final readonly class Blueprint
     public const RESERVED = ['id', 'status', 'published_at', 'blueprint'];
 
     /**
+     * The built-in block type that embeds a fragment, and the handle of the field that holds the link.
+     */
+    public const FRAGMENT_BLOCK = 'fragment';
+
+    /**
      * The SEO values a blueprint can map a field to.
      */
     private const SEO = ['title', 'description'];
@@ -131,7 +136,8 @@ final readonly class Blueprint
 
     /**
      * The blueprint of a block type, from resources/blueprints/blocks/<type>.yaml. A block can't have a `slug`, `terms`
-     * or `blocks` field, or one with the handle `type`, which holds the block's type in the front matter.
+     * or `blocks` field, or one with the handle `type`, which holds the block's type in the front matter. The `fragment`
+     * type is built in, unless that file exists.
      *
      * @throws ContentException when the file is missing or invalid
      */
@@ -139,12 +145,34 @@ final readonly class Blueprint
     {
         $path = rtrim($blueprintPath, '/') . "/blocks/{$type}.yaml";
 
+        if ($type === self::FRAGMENT_BLOCK && ! is_file($path)) {
+            return self::fragmentBlock();
+        }
+
         // The type comes from front matter or a request.
         if (preg_match(self::NAME, $type) !== 1 || ! is_file($path)) {
             throw new ContentException("Unknown block type: {$type}. Its blueprint is resources/blueprints/blocks/{$type}.yaml.");
         }
 
         return self::fromFile($path, 'blocks', $type, true);
+    }
+
+    /**
+     * The built-in block type, which links to one entry of a fragment collection.
+     *
+     * @throws ContentException when there is no fragment collection, as an `entries` field that names none allows any entry
+     */
+    private static function fragmentBlock(): self
+    {
+        $collections = Collection::fragmentHandles(config('Content')->contentPath);
+
+        if ($collections === []) {
+            throw new ContentException('The `' . self::FRAGMENT_BLOCK . '` block type needs a collection with `fragments: true`.');
+        }
+
+        return new self('blocks', self::FRAGMENT_BLOCK, 'Fragment', [
+            new Field(self::FRAGMENT_BLOCK, 'entries', 'Fragment', '', null, ['collections' => $collections, 'max_items' => 1]),
+        ]);
     }
 
     /**

@@ -17,6 +17,7 @@ $posts = content()->collection('blog')->published()->orderBy('title')->get();
 | `find($id)` | One entry by its UUID, or `null` | [Finding entries](#finding-entries) |
 | `findMany($ids)` | Entries by their UUIDs, in that order | [Finding entries](#finding-entries) |
 | `findByUri($uri)` | The published entry at a URI, or `null` | [Finding entries](#finding-entries) |
+| `fragment($name)` | A published fragment by its slug or `collection/slug`, or `null` | [Fragments](fragments.md#finding-a-fragment) |
 | `redirectFor($uri)` | The current URI of an entry that had this URI, or `null` | [Redirects](routing.md#redirects) |
 | `terms($taxonomy)` | A taxonomy's terms | [Taxonomies](#taxonomies) |
 | `term($taxonomy, $slug)` | One term, or `null` | [Taxonomies](#taxonomies) |

@@ -42,6 +42,7 @@ final readonly class Collection
         public ?int $maxDepth = null,
         public array $taxonomies = [],
         public ?int $cache = null,
+        public bool $fragments = false,
     ) {
     }
 
@@ -94,6 +95,16 @@ final readonly class Collection
             throw new ContentException('`cache` must be a whole number of seconds, at least 1.');
         }
 
+        $fragments = $config['fragments'] ?? false;
+
+        if (! is_bool($fragments)) {
+            throw new ContentException('`fragments` must be true or false.');
+        }
+
+        if ($fragments && $route !== null) {
+            throw new ContentException('A collection with `fragments: true` can\'t have a `route`, because a fragment only shows inside other pages.');
+        }
+
         $taxonomies = array_values(array_unique(array_filter((array) ($config['taxonomies'] ?? []), is_string(...))));
 
         if (($taken = array_intersect($taxonomies, Taxonomy::TAKEN_KEYS)) !== []) {
@@ -114,6 +125,7 @@ final readonly class Collection
             $maxDepth,
             $taxonomies,
             $cache,
+            $fragments,
         );
     }
 
@@ -162,6 +174,19 @@ final readonly class Collection
         }
 
         return $collections;
+    }
+
+    /**
+     * The handles of the collections with `fragments: true`.
+     *
+     * @return list<string>
+     */
+    public static function fragmentHandles(string $contentRoot): array
+    {
+        return array_values(array_map(
+            static fn (self $collection): string => $collection->handle,
+            array_filter(self::all($contentRoot), static fn (self $collection): bool => $collection->fragments),
+        ));
     }
 
     /**

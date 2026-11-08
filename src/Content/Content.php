@@ -142,6 +142,38 @@ final readonly class Content
     }
 
     /**
+     * Finds a published fragment by its slug, in any fragment collection, or by `collection/slug` in that one. Drafts,
+     * scheduled and trashed fragments are treated as missing. A slug that more than one collection has is logged and
+     * gives null, because there is no telling which was meant.
+     */
+    public function fragment(string $name): ?Entry
+    {
+        $handles = Collection::fragmentHandles($this->contentRoot);
+        $slug    = $name;
+
+        if (str_contains($name, '/')) {
+            [$collection, $slug] = explode('/', $name, 2);
+            $handles             = array_values(array_intersect($handles, [$collection]));
+        }
+
+        if ($handles === []) {
+            return null;
+        }
+
+        $rows = (new ContentEntryModel())->published()->whereIn('collection', $handles)->where('slug', $slug)->findAll();
+        // A case-insensitive collation also matches other spellings of the slug.
+        $rows = array_values(array_filter($rows, static fn (array $row): bool => $row['slug'] === $slug));
+
+        if (count($rows) > 1) {
+            log_message('error', 'Content: more than one fragment has the slug {slug}, so none was returned. Name its collection too, as in collection/slug.', ['slug' => $slug]);
+
+            return null;
+        }
+
+        return $rows === [] ? null : Entry::fromRow($rows[0]);
+    }
+
+    /**
      * Where an old URI of an entry now lives, for a route of your own to redirect to with a 301. There is none if the
      * URI is a published entry's now, or the entry that had it is trashed, a draft, scheduled or gone, or has no URI.
      * A redirects file that can't be read is logged and gives none.

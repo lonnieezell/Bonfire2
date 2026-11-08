@@ -12,6 +12,7 @@
 namespace Bonfire\Content\Fields;
 
 use Bonfire\Content\Blueprint;
+use Bonfire\Content\Collection;
 use Bonfire\Content\ContentException;
 use Bonfire\Fields\ChoiceList;
 use Bonfire\Fields\Field;
@@ -287,7 +288,8 @@ final class BlocksField extends FieldType
     }
 
     /**
-     * The block types the field allows: the ones `blocks` lists, or else every file in resources/blueprints/blocks.
+     * The block types the field allows: the ones `blocks` lists, or else every file in resources/blueprints/blocks,
+     * and the built-in `fragment` type when the site has a fragment collection.
      *
      * @return list<string>
      */
@@ -302,6 +304,12 @@ final class BlocksField extends FieldType
 
         $all = array_map(static fn (string $file): string => basename($file, '.yaml'), glob(rtrim(config('Content')->blueprintPath, '/') . '/blocks/*.yaml') ?: []);
         $all = array_filter($all, static fn (string $type): bool => preg_match(Blueprint::NAME, $type) === 1);
+
+        if (Collection::fragmentHandles(config('Content')->contentPath) !== []) {
+            $all[] = Blueprint::FRAGMENT_BLOCK;
+        }
+
+        $all = array_unique($all);
         sort($all);
 
         return $all;

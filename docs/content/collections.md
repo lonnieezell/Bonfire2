@@ -26,6 +26,7 @@ blueprints:
 | `max_depth` | None | How many levels a structured collection's tree can have. |
 | `taxonomies` | None | The [taxonomies](taxonomies.md) its entries can be tagged with, such as `[tags]`. |
 | `cache` | None | How many seconds guests get its pages from the cache, such as `3600`. See [Caching](routing.md#caching). |
+| `fragments` | `false` | Makes its entries [fragments](fragments.md), reusable content for other pages. Can't be set with `route`. |
 
 ## Entries
 
