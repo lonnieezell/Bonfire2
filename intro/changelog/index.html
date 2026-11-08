@@ -3613,6 +3613,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="7-november-2026">7 November 2026</h2>
+<p><strong><code>bf:resource</code> generates a resource.</strong> <code>php spark bf:resource Product --model='App\Models\ProductModel'</code> reads the
+model's table and writes the resource with a field for each column, plus <code>Module.php</code>, <code>Config/Routes.php</code> and a
+<code>Config/Registrar.php</code> that declares <code>products.list|create|edit|delete</code>, which show under Settings → Groups. Files that
+exist are left alone, and the command says what to add to them by hand. See
+<a href="../../building_admin_modules/resources/#generating-a-resource">Resources</a>.</p>
 <p><strong>Actions: input fields.</strong> An action's <code>fields()</code> asks the admin for input in the confirm dialog, such as a reason, and
 <code>handle()</code> reads it with <code>$context-&gt;input('reason')</code>. Write the fields like a resource's. The endpoint validates them
 before it runs or queues the action: invalid input keeps the dialog open with the error under the input, and the

@@ -2699,6 +2699,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#generating-a-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a resource
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fields" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3120,6 +3131,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#generating-a-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a resource
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fields" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3395,6 +3417,93 @@ link up by route name.</p>
 <p>A resource that has a <code>create</code> or <code>edit</code> page saves what its fields hold, so every field has to be in the model's
 <code>$allowedFields</code>, or the model would drop the value without a word. <code>register()</code> throws a <code>ResourceException</code> that names
 the missing fields. In production it logs the same message and registers the resource anyway.</p>
+<h2 id="generating-a-resource">Generating a resource</h2>
+<p><code>php spark bf:resource</code> writes a resource for a model whose table exists, with a field for each column:</p>
+<div class="highlight"><pre><span></span><code>php spark bf:resource Product --model='App\Models\ProductModel'
+</code></pre></div>
+<p><code>Product</code> is the record in singular. The command writes four files into <code>App\Modules\Products</code>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ProductResource.php</code></td>
+<td>the resource: slug <code>products</code>, a field for each column, and the <code>$pages</code></td>
+</tr>
+<tr>
+<td><code>Module.php</code></td>
+<td><code>service('resources')-&gt;register(ProductResource::class)</code> in <code>initAdmin()</code></td>
+</tr>
+<tr>
+<td><code>Config/Routes.php</code></td>
+<td><code>resource_routes($routes, ProductResource::class)</code></td>
+</tr>
+<tr>
+<td><code>Config/Registrar.php</code></td>
+<td>the <code>products.list</code>, <code>products.create</code>, <code>products.edit</code> and <code>products.delete</code> permissions, which show up under Settings → Groups</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>--model</code> with no namespace is looked up in <code>App\Models</code>. The model must have a table; the command refuses a class
+that doesn't exist, isn't a model or has no table. The command leaves out the key, the timestamps and any column that
+isn't in the model's <code>$allowedFields</code>, and says which.</p>
+<p>The field of a column comes from its type:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>varchar</code>, <code>char</code> and any type not listed here</td>
+<td><code>Text</code></td>
+</tr>
+<tr>
+<td><code>text</code>, <code>tinytext</code>, <code>mediumtext</code>, <code>longtext</code></td>
+<td><code>Textarea</code></td>
+</tr>
+<tr>
+<td><code>int</code>, <code>smallint</code>, <code>mediumint</code>, <code>bigint</code>, <code>tinyint</code></td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td><code>decimal</code>, <code>numeric</code></td>
+<td><code>Decimal</code>, with the column's places where the database reports them (MySQL doesn't, so the default of 2 applies)</td>
+</tr>
+<tr>
+<td><code>tinyint(1)</code>, <code>bool</code>, <code>boolean</code></td>
+<td><code>Toggle</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>Date</code></td>
+</tr>
+<tr>
+<td><code>datetime</code>, <code>timestamp</code></td>
+<td><code>Datetime</code></td>
+</tr>
+<tr>
+<td>a name ending in <code>_id</code></td>
+<td>a commented-out <code>BelongsTo</code> to uncomment and point at the related model; a column that needs a value also gets a required <code>Integer</code> until you swap it for the <code>BelongsTo</code></td>
+</tr>
+</tbody>
+</table>
+<p>A column that is <code>NOT NULL</code> with no default gets the <code>required</code> rule, and a <code>varchar</code> gets <code>max_length</code> with its length.
+SQLite leaves a column's length out of what it reports for tables made by the forge, so there <code>tinyint(1)</code> is an
+<code>Integer</code> and a <code>varchar</code> has no <code>max_length</code>.</p>
+<p>The registrar declares the permissions of the pages in the resource's <code>$pages</code>, and leaves out those of the pages it
+turns off. When <code>ProductResource.php</code> already exists, its <code>$pages</code> decide; a new one has all three pages. <code>delete</code> is
+always declared.</p>
+<p>Files that exist are never overwritten. The command says which it left alone and what to add to them by hand: the
+<code>register()</code> line for <code>Module.php</code>, the <code>resource_routes()</code> line for <code>Config/Routes.php</code>, and the permissions for
+<code>Config/Registrar.php</code>. Then follow the next steps it prints: add the module to <code>$appModules</code>, and run
+<code>php spark bonfire:permissions</code> to grant the permissions.</p>
 <h2 id="fields">Fields</h2>
 <p>A field is written in PHP with a builder from <code>Bonfire\Resources\Fields</code>. The methods have the names of the keys of a
 <a href="../../content/blueprints/#field-keys">blueprint field</a>, and each builder is one of the <a href="../../content/field_types/">field types</a>:</p>
