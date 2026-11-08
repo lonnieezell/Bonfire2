@@ -273,7 +273,8 @@ final class BlocksField extends FieldType
         $json   = $block['kept'] ?? '';
         $stored = json_decode($json, true);
 
-        if (! is_array($stored) || ($stored['type'] ?? null) !== $block['type'] || ! hash_equals(self::sign($json), $block['signed'] ?? '')) {
+        // With no encryption key the signature could be made by anyone, so no block is trusted.
+        if ((string) config('Encryption')->key === '' || ! is_array($stored) || ($stored['type'] ?? null) !== $block['type'] || ! hash_equals(self::sign($json), $block['signed'] ?? '')) {
             return null;
         }
 

@@ -379,13 +379,13 @@ class EntryAdminController extends AdminController
             return '';
         }
 
-        try {
-            $blueprint = Blueprint::loadBlock(config('Content')->blueprintPath, $type);
-        } catch (ContentException) {
+        if (preg_match(Blueprint::NAME, $field) !== 1) {
             throw PageNotFoundException::forPageNotFound();
         }
 
-        if (preg_match(Blueprint::NAME, $field) !== 1) {
+        try {
+            $blueprint = Blueprint::loadBlock(config('Content')->blueprintPath, $type);
+        } catch (ContentException) {
             throw PageNotFoundException::forPageNotFound();
         }
 

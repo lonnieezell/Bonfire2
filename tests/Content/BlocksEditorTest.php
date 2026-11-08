@@ -39,6 +39,7 @@ final class BlocksEditorTest extends ContentTestCase
         parent::setUp();
 
         setting('Site.siteOnline', true);
+        config('Encryption')->key = 'a-key-for-the-tests';
 
         foreach (['auth', 'bonfire', 'menus', 'widgets'] as $service) {
             Services::resetSingle($service);
@@ -428,6 +429,20 @@ final class BlocksEditorTest extends ContentTestCase
 
         $this->assertSame([], $form->validate($values));
         $this->assertSame([['type' => 'ghost', 'a' => 'b']], $form->apply($values, [], '')[0]['sections']);
+    }
+
+    public function testWithoutAnEncryptionKeyNoUnknownBlockIsTrusted(): void
+    {
+        $blueprint = Blueprint::load($this->blueprints, 'blog', 'post');
+        $form      = new EntryForm($blueprint, true);
+        config('Encryption')->key = '';
+
+        // The key is empty, so anyone could make this signature.
+        $json   = '{"type":"ghost","a":"b"}';
+        $forged = ['type' => 'ghost', 'kept' => $json, 'signed' => hash_hmac('sha256', 'content-block|' . $json, '')];
+        $values = $form->prepare(['fields' => ['title' => 'T', 'sections' => [$forged]]]);
+
+        $this->assertArrayHasKey('sections.1', $form->validate($values));
     }
 
     public function testAKeptBlockIsIgnoredWhenTheTypeHasABlueprint(): void
