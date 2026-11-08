@@ -149,19 +149,36 @@ final class BlocksField extends FieldType
                 continue;
             }
 
-            foreach ($blueprints[$type]->fields as $blockField) {
-                $rules = FieldTypes::get($blockField->type)->rules($blockField);
+            $errors += self::fieldErrors($blueprints[$type]->fields, $block, $position);
+        }
 
-                if ($rules === '' || $rules === []) {
-                    continue;
-                }
+        return $errors;
+    }
 
-                $validation = single_service('validation')->setRules(['value' => ['label' => $blockField->label, 'rules' => $rules]]);
-                $validation->run(['value' => $block[$blockField->handle] ?? '']);
+    /**
+     * The first error of each of an item's fields, by the item's position, a dot and the field's handle.
+     *
+     * @param list<Field>           $fields
+     * @param array<string, string> $values the text of each field, by handle
+     *
+     * @return array<string, string>
+     */
+    public static function fieldErrors(array $fields, array $values, int $position): array
+    {
+        $errors = [];
 
-                if (($error = $validation->getError('value')) !== '') {
-                    $errors["{$position}.{$blockField->handle}"] = $error;
-                }
+        foreach ($fields as $itemField) {
+            $rules = FieldTypes::get($itemField->type)->rules($itemField);
+
+            if ($rules === '' || $rules === []) {
+                continue;
+            }
+
+            $validation = single_service('validation')->setRules(['value' => ['label' => $itemField->label, 'rules' => $rules]]);
+            $validation->run(['value' => $values[$itemField->handle] ?? '']);
+
+            if (($error = $validation->getError('value')) !== '') {
+                $errors["{$position}.{$itemField->handle}"] = $error;
             }
         }
 
@@ -188,21 +205,34 @@ final class BlocksField extends FieldType
                 continue;
             }
 
-            $map = ['type' => $block['type']];
-
-            foreach ($blueprints[$block['type']]->fields ?? [] as $blockField) {
-                $type  = FieldTypes::get($blockField->type);
-                $value = $type->toStored($block[$blockField->handle] ?? '', $blockField);
-
-                if (! in_array($value, [null, '', []], true)) {
-                    $map[EntryStorage::key($type, $blockField)] = $value;
-                }
-            }
-
-            $stored[] = $map;
+            $stored[] = ['type' => $block['type']] + self::storedValues($blueprints[$block['type']]->fields ?? [], $block);
         }
 
         return $stored;
+    }
+
+    /**
+     * What an item's fields write to the front matter, each by its own type. A value left empty adds no key.
+     *
+     * @param list<Field>           $fields
+     * @param array<string, string> $values the text of each field, by handle
+     *
+     * @return array<string, mixed>
+     */
+    public static function storedValues(array $fields, array $values): array
+    {
+        $map = [];
+
+        foreach ($fields as $itemField) {
+            $type  = FieldTypes::get($itemField->type);
+            $value = $type->toStored($values[$itemField->handle] ?? '', $itemField);
+
+            if (! in_array($value, [null, '', []], true)) {
+                $map[EntryStorage::key($type, $itemField)] = $value;
+            }
+        }
+
+        return $map;
     }
 
     /**
@@ -249,7 +279,7 @@ final class BlocksField extends FieldType
      *
      * @return array<string, string> by handle
      */
-    private static function valuesFrom(Blueprint $blueprint, array $stored): array
+    public static function valuesFrom(Blueprint $blueprint, array $stored): array
     {
         $values = [];
 

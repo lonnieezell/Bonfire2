@@ -142,6 +142,19 @@ every key it held. Values written as `1.0` come back as `1`, the way the index h
 The form signs what it keeps with the app's encryption key, so a post can't make up a block of a type that has no file.
 Run `php spark key:generate` if your app has no key.
 
+## Editing lists
+
+A [`list` field](field_types.md#list) is edited like blocks: a card for each row, which you open, move with the buttons
+or the handle, duplicate and delete. **Add row** adds a new row at the end, and is disabled once the list has `max_items`
+rows. The inputs of a new row come from the server, so an app's own input partials and custom field types work in a row.
+
+A row that fails validation opens with each problem labelled by its position, counting from 1: `Row 3: The Title field
+is required.` In a list inside a block, the problem shows on the block's card with both positions.
+
+The **Add row** button sends the server the field's definition, signed with the app's encryption key, so a request can
+only draw rows a blueprint defined. Run `php spark key:generate` if your app has no key. Without one, the existing rows
+can still be edited, moved and deleted, but the form says why it can't add any.
+
 ## Previewing a draft
 
 **Preview** at the top of an entry's form gives you a link to the entry as it will look on the site, through the

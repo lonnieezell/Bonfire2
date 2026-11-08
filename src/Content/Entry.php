@@ -11,6 +11,8 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Fields\EntryStorage;
+use Bonfire\Fields\Field;
 use CodeIgniter\I18n\Time;
 use RuntimeException;
 
@@ -65,11 +67,40 @@ final readonly class Entry
     }
 
     /**
-     * A front matter value.
+     * A front matter value, as the file holds it. The rows of a `list` field are cast by their sub-fields' types.
      */
     public function field(string $name, mixed $default = null): mixed
     {
-        return $this->data[$name] ?? $default;
+        $value = $this->data[$name] ?? null;
+
+        // Only a list of maps can be a list field's rows, so nothing else costs a read of the blueprint.
+        if (is_array($value) && array_is_list($value) && is_array($value[0] ?? null)) {
+            $field = $this->listField($name);
+            $value = $field === null ? $value : EntryStorage::cast($value, $field);
+        }
+
+        return $value ?? $default;
+    }
+
+    /**
+     * The `list` field with this handle, or null. The blueprint's file may be gone or broken by now, as the index
+     * outlives it, and then the rows are returned as the file holds them.
+     */
+    private function listField(string $name): ?Field
+    {
+        if ($this->blueprint === null) {
+            return null;
+        }
+
+        try {
+            $field = Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->field($name);
+        } catch (ContentException $e) {
+            log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
+
+            return null;
+        }
+
+        return $field?->type === 'list' ? $field : null;
     }
 
     /**

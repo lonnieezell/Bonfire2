@@ -7,6 +7,7 @@ use Bonfire\Auth\Filters\Admin;
 use Bonfire\Consent\Filters\ConsentFilter;
 use Bonfire\Content\Fields\BlocksField;
 use Bonfire\Content\Fields\EntriesField;
+use Bonfire\Content\Fields\ListField;
 use Bonfire\Content\Fields\SlugField;
 use Bonfire\Content\Fields\TermsField;
 use Bonfire\Core\Filters\Boot;
@@ -151,6 +152,7 @@ class Registrar
                 'entries' => EntriesField::class,
                 'terms'   => TermsField::class,
                 'blocks'  => BlocksField::class,
+                'list'    => ListField::class,
             ],
         ];
     }

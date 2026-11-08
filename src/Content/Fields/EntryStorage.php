@@ -38,10 +38,14 @@ final class EntryStorage
 
     /**
      * Casts a value as its field's type reads it from a file: a toggle is a bool, an integer an int, and a decimal,
-     * date or datetime text. Null when it doesn't fit.
+     * date or datetime text, and a list its rows with their values cast. Null when it doesn't fit.
      */
     public static function cast(mixed $value, Field $field): mixed
     {
+        if ($field->type === 'list') {
+            return ListField::cast($value, $field);
+        }
+
         if (! in_array($field->type, ['toggle', 'integer', 'decimal', 'date', 'datetime'], true)) {
             return $value;
         }

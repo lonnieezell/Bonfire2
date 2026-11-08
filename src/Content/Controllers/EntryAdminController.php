@@ -18,6 +18,7 @@ use Bonfire\Content\Entry;
 use Bonfire\Content\EntryForm;
 use Bonfire\Content\EntryStore;
 use Bonfire\Content\Fields\BlocksField;
+use Bonfire\Content\Fields\ListField;
 use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Content\PreviewLink;
 use Bonfire\Content\SaveConflictException;
@@ -404,6 +405,57 @@ class EntryAdminController extends AdminController
     }
 
     /**
+     * The card of a new row, with the inputs of a list field's sub-fields. The field's Add row button fetches it with
+     * htmx. The field comes from a signed token, because the row's owner may be any blueprint or block type, and `name`
+     * and `id` say where in the form the list is, which a duplicated block changes. A list that has as many rows as it
+     * may gets nothing, going by `count`. Saving checks it.
+     */
+    public function listRow(): string
+    {
+        $this->requireEdit();
+
+        $field = ListField::fromToken($this->request->getGet('token'));
+        $name  = $this->request->getGet('name');
+        $id    = $this->request->getGet('id');
+
+        if (
+            $field === null
+            || ! is_string($name) || preg_match('/^fields(\[[A-Za-z0-9_-]+\])+$/', $name) !== 1
+            || ! is_string($id) || preg_match('/^field[A-Za-z0-9_-]*$/', $id) !== 1
+        ) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $max = BlocksField::bound($field, 'max_items');
+
+        if ($max !== null && (int) $this->request->getGet('count') >= $max) {
+            $this->response->setStatusCode(422);
+
+            return '';
+        }
+
+        try {
+            $blueprint = ListField::rowBlueprint($field);
+        } catch (ContentException) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return view('Bonfire\Content\Views\block_card', [
+            'name'       => $name,
+            'id'         => $id,
+            'key'        => BlocksField::newKey(),
+            'block'      => BlocksField::valuesFrom($blueprint, []),
+            'blueprint'  => $blueprint,
+            'cardErrors' => [],
+            'position'   => 0,
+            'open'       => true,
+            'slot'       => false,
+            'disabled'   => false,
+            'isRow'      => true,
+        ], ['saveData' => false]);
+    }
+
+    /**
      * @throws RedirectException
      */
     private function deny(): never
@@ -637,8 +689,8 @@ class EntryAdminController extends AdminController
 
         $this->response->setStatusCode($httpStatus);
 
-        // A blocks field's cards are dragged to reorder them.
-        if (array_filter($blueprint->fields, static fn ($field): bool => $field->type === 'blocks') !== []) {
+        // The cards of a blocks or list field are dragged to reorder them.
+        if (array_filter($blueprint->fields, static fn ($field): bool => in_array($field->type, ['blocks', 'list'], true)) !== []) {
             $this->addSortableScript();
         }
 

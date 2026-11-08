@@ -15,8 +15,11 @@
  * @var bool                      $open        whether the card shows its fields
  * @var bool                      $slot        whether the field holds one block, which is shown without the list's buttons
  * @var bool                      $disabled
+ * @var bool                      $isRow       whether this is a row of a list field, which has no type, so a sub-field can be named `type`
  */
-$type         = $block['type'];
+$isRow ??= false;
+
+$type         = $isRow ? '' : $block['type'];
 $prefix       = $name . '[' . $key . ']';
 $title        = $blueprint?->title ?? $type;
 $summary      = '';
@@ -35,7 +38,7 @@ foreach ($blueprint?->fields ?? [] as $blockField) {
 $open  = $open || $slot || $cardErrors !== [];
 $tools = ! $slot && ! $disabled;
 ?>
-<div class="card mb-2<?= $cardErrors === [] ? '' : ' border-danger' ?>" data-block="<?= esc($type, 'attr') ?>" data-block-key="<?= esc($key, 'attr') ?>"<?= $summaryField !== null ? ' data-summary-field="' . esc($summaryField, 'attr') . '"' : '' ?>
+<div class="card mb-2<?= $cardErrors === [] ? '' : ' border-danger' ?>" data-block="<?= esc($type, 'attr') ?>"<?= $isRow ? ' data-row' : '' ?> data-block-key="<?= esc($key, 'attr') ?>"<?= $summaryField !== null ? ' data-summary-field="' . esc($summaryField, 'attr') . '"' : '' ?>
     x-data="{ open: <?= $open ? 'true' : 'false' ?> }" @input="summarize($event)">
     <div class="card-header d-flex align-items-center gap-2 py-2">
         <?php if ($tools) : ?>
@@ -63,11 +66,12 @@ $tools = ! $slot && ! $disabled;
         <?php endif ?>
     </div>
     <div class="card-body" data-block-body x-show="open"<?= $open ? '' : ' x-cloak' ?>>
-        <input type="hidden" name="<?= esc($prefix . '[type]', 'attr') ?>" value="<?= esc($type, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>
+        <?php // Always posted, so a card whose inputs post nothing when empty is still saved. A handle can't start with `_`, so `_row` is never a sub-field's. ?>
+        <input type="hidden" name="<?= esc($prefix . ($isRow ? '[_row]' : '[type]'), 'attr') ?>" value="<?= esc($isRow ? '1' : $type, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>
         <?php if ($cardErrors !== []) : ?>
             <div class="alert alert-danger" role="alert" data-block-errors>
                 <?php foreach ($cardErrors as $handle => $message) : ?>
-                    <p class="mb-0" data-error="<?= esc($handle === '' ? (string) $position : $position . '.' . $handle, 'attr') ?>"><?= esc(lang('Content.blockError', [$position, $title, $message])) ?></p>
+                    <p class="mb-0" data-error="<?= esc($handle === '' ? (string) $position : $position . '.' . $handle, 'attr') ?>"><?= esc($isRow ? lang('Content.listError', [$position, $message]) : lang('Content.blockError', [$position, $title, $message])) ?></p>
                 <?php endforeach ?>
             </div>
         <?php endif ?>
