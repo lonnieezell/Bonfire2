@@ -253,6 +253,14 @@ final class SearchTest extends ContentTestCase
         $this->assertSame([], $this->titles(content()->search('capybaras', 'notes')->get()));
     }
 
+    public function testAPhraseWrappedOverTwoLinesIsFound(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Wrapped', "A wandering\ncapybara.");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Wrapped'], $this->titles(content()->search('wandering capybara')->get()));
+    }
+
     public function testWhereTermNeedsACollection(): void
     {
         $this->expectException(ContentException::class);

@@ -99,7 +99,7 @@ final class EntryParser
      */
     private static function searchText(array $frontMatter, string $body): string
     {
-        $strings = [$body];
+        $blocks = [];
 
         foreach ($frontMatter as $value) {
             if (! is_array($value) || ! array_is_list($value)) {
@@ -108,21 +108,20 @@ final class EntryParser
 
             foreach ($value as $item) {
                 if (is_array($item) && is_string($item['type'] ?? null)) {
-                    array_walk_recursive($item, static function (mixed $string) use (&$strings): void {
-                        if (is_string($string)) {
-                            $strings[] = $string;
-                        }
-                    });
+                    $blocks[] = $item;
                 }
             }
         }
 
-        return trim(implode("\n", array_map(self::plainText(...), $strings)));
-    }
+        $strings = [$body];
 
-    private static function plainText(string $markdown): string
-    {
-        return trim(html_entity_decode(strip_tags(Markdown::toHtml($markdown, false)), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        array_walk_recursive($blocks, static function (mixed $string) use (&$strings): void {
+            if (is_string($string)) {
+                $strings[] = $string;
+            }
+        });
+
+        return trim(implode("\n", array_map(static fn (string $markdown): string => Markdown::htmlToText(Markdown::toHtml($markdown, false)), $strings)));
     }
 
     /**

@@ -20,6 +20,11 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
 final class Markdown
 {
     /**
+     * Kept because indexing converts every string of every entry, and building one costs far more than a conversion.
+     */
+    private static ?GithubFlavoredMarkdownConverter $converter = null;
+
+    /**
      * Converts GitHub Flavored Markdown to HTML, then expands any View Components in it. Expanding comes second so
      * that a component's own indented HTML never becomes a code block.
      *
@@ -27,8 +32,20 @@ final class Markdown
      */
     public static function toHtml(string $markdown, bool $components = true): string
     {
-        $html = (new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false]))->convert($markdown)->getContent();
+        self::$converter ??= new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false]);
+
+        $html = self::$converter->convert($markdown)->getContent();
 
         return $components ? (new ComponentRenderer())->render($html, ENVIRONMENT === 'production') : $html;
+    }
+
+    /**
+     * Removes the markup from HTML. Whitespace is collapsed, so a line the author wrapped reads as one.
+     */
+    public static function htmlToText(string $html): string
+    {
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim((string) preg_replace('/\s+/u', ' ', $text));
     }
 }

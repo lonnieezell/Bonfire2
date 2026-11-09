@@ -212,8 +212,7 @@ final readonly class Entry
         preg_match_all('~<p(?:\s[^>]*)?>(.*?)</p>~s', $this->content(components: false), $matches);
 
         foreach ($matches[1] as $paragraph) {
-            $text = html_entity_decode(strip_tags($paragraph), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $text = trim((string) preg_replace('/\s+/u', ' ', $text));
+            $text = Markdown::htmlToText($paragraph);
 
             // A paragraph that is only an image has no text to describe the page with.
             if ($text !== '') {
