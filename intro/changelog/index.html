@@ -3687,6 +3687,11 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="9-november-2026">9 November 2026</h2>
+<p><strong>Content: a <code>list</code> field type.</strong> A repeater with fixed sub-fields, for repeated items such as features, FAQs or pricing
+tiers. It works as a blueprint field and inside a block, is saved as a list of maps, and enforces <code>min_items</code> and
+<code>max_items</code>. <code>field()</code> returns the rows with each value cast by its sub-field's type. In the admin, rows come from the
+server and can be moved, duplicated and deleted like blocks, and an error is labelled by the row's position. Adding a row
+needs the app's encryption key. See <a href="../../content/field_types/#list">Field types</a>.</p>
 <p><strong>Content: <code>make:block</code>.</strong> <code>php spark make:block hero</code> writes a new block type into your app: its blueprint at
 <code>resources/blueprints/blocks/hero.yaml</code> and a partial in your block view folder that renders its fields. Files that exist
 are skipped and named, and the two files are yours from then on. <code>make:block fragment</code> writes a partial that renders the

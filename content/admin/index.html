@@ -1685,6 +1685,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#previewing-a-draft" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3258,6 +3269,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#editing-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing lists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#previewing-a-draft" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3520,6 +3542,16 @@ you do.</p>
 every key it held. Values written as <code>1.0</code> come back as <code>1</code>, the way the index holds numbers.</p>
 <p>The form signs what it keeps with the app's encryption key, so a post can't make up a block of a type that has no file.
 Run <code>php spark key:generate</code> if your app has no key.</p>
+<h2 id="editing-lists">Editing lists</h2>
+<p>A <a href="../field_types/#list"><code>list</code> field</a> is edited like blocks: a card for each row, which you open, move with the buttons
+or the handle, duplicate and delete. <strong>Add row</strong> adds a new row at the end, and is disabled once the list has <code>max_items</code>
+rows. The inputs of a new row come from the server, so an app's own input partials and custom field types work in a row.</p>
+<p>A row that fails validation opens with each problem labelled by its position, counting from 1: <code>Row 3: The Title field
+is required.</code> In a list inside a block, the problem shows on the block's card with both positions.</p>
+<p>The <strong>Add row</strong> button sends the server the field's definition, signed with the app's encryption key, so a request can
+only draw rows a blueprint defined. Run <code>php spark key:generate</code> if your app has no key. Without one, the existing rows
+can still be edited, moved and deleted, but the form says why it can't add any. Adding a row needs <code>content.access</code> and
+<code>content.edit</code>, or <code>content.structure</code>, which is what the forms that can hold a list need.</p>
 <h2 id="previewing-a-draft">Previewing a draft</h2>
 <p><strong>Preview</strong> at the top of an entry's form gives you a link to the entry as it will look on the site, through the
 collection's <code>template</code> or <code>controller</code>, whether it's a draft, scheduled or published. It needs <code>content.edit</code>, and a

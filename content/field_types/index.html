@@ -1678,6 +1678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3339,6 +3350,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changing-an-input" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3531,6 +3553,11 @@ is saved in the front matter.</p>
 <tr>
 <td><a href="#blocks"><code>blocks</code></a></td>
 <td>The blocks written in the file</td>
+<td>A list of maps</td>
+</tr>
+<tr>
+<td><a href="#list"><code>list</code></a></td>
+<td>Rows you add, move, copy and delete</td>
 <td>A list of maps</td>
 </tr>
 </tbody>
@@ -3910,6 +3937,54 @@ it. Anything posted that isn't a slug is dropped.</p>
 type the field doesn't allow or a value that fails its own field's rules. The blueprint is refused if a type has no file.</p>
 <p>Read the blocks back with <a href="../query_api/#entries"><code>$entry-&gt;blocks('sections')</code></a>, and render them with
 <code>$entry-&gt;renderBlocks('sections')</code>. For block types, partials and the rest, see <a href="../blocks/">Blocks</a>.</p>
+<h2 id="list">list</h2>
+<p>A repeater: rows that all have the same fixed sub-fields, for repeated items such as features, FAQs, pricing tiers or
+logos. It's saved as a list of maps. Use it as a field of a blueprint or inside a <a href="../blocks/">block</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fields</code></td>
+<td>Required</td>
+<td>The sub-fields of each row, written like a blueprint's fields.</td>
+</tr>
+<tr>
+<td><code>max_items</code></td>
+<td>None</td>
+<td>The most rows there can be.</td>
+</tr>
+<tr>
+<td><code>min_items</code></td>
+<td>None</td>
+<td>The fewest rows there can be.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">features</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list</span>
+<span class="w">  </span><span class="nt">max_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
+<span class="w">  </span><span class="nt">fields</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="nv">title</span><span class="p p-Indicator">,</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">text</span><span class="p p-Indicator">,</span><span class="nt"> validate</span><span class="p">:</span><span class="w"> </span><span class="nv">required</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="nv">text</span><span class="p p-Indicator">,</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">markdown</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<p>A sub-field can be any type except <code>slug</code>, <code>terms</code>, <code>blocks</code> and <code>list</code>, and the blueprint is refused if it uses one of
+those. A row's keys are its own, so handles such as <code>type</code> and <code>status</code> are fine there. A save is refused if there are
+too many or too few rows, or if a value fails its sub-field's rules. For how the rows are edited, see
+<a href="../admin/#editing-lists">Editing lists</a>.</p>
+<p>Read the rows back with <code>field()</code>, which returns a list of maps with every sub-field of every row, each value cast by
+its type: a <code>toggle</code> is a bool and an <code>integer</code> an int. A sub-field a row leaves out is <code>null</code>, or <code>false</code> for a toggle.
+It works the same on an entry, a block and a <a href="../globals/">global set</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'features'</span><span class="p">,</span> <span class="p">[])</span> <span class="k">as</span> <span class="nv">$feature</span><span class="p">)</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;h3&gt;</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$feature</span><span class="p">[</span><span class="s1">'title'</span><span class="p">])</span> <span class="cp">?&gt;</span><span class="x">&lt;/h3&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endforeach</span> <span class="cp">?&gt;</span>
+</code></pre></div>
+<p>Keys in a row that the sub-fields don't list aren't returned, and saving the form drops them from the file.</p>
 <h2 id="changing-an-input">Changing an input</h2>
 <p>Each type's input is a partial in <code>src/Fields/Views/fields</code>, or in <code>src/Content/Views/fields</code> for <code>slug</code>, <code>terms</code> and
 <code>entries</code>. To change one, copy it to <code>app/Views/fields/&lt;type&gt;.php</code>, for example <code>app/Views/fields/text.php</code>. Bonfire uses your copy for every
