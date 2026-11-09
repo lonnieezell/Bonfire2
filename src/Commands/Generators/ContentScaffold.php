@@ -27,7 +27,6 @@ use CodeIgniter\CLI\CLI;
 class ContentScaffold extends BaseCommand
 {
     use RendersTemplates;
-    use WritesNewFiles;
 
     /**
      * Names that tokenize as plain names but can't name a class.
@@ -111,8 +110,20 @@ class ContentScaffold extends BaseCommand
             ]);
         }
 
-        if (! $this->writeNewFiles($files)) {
-            return EXIT_ERROR;
+        foreach ($files as $file => $contents) {
+            if (is_file($file)) {
+                CLI::write('Skipped ' . clean_path($file) . ', which exists.', 'yellow');
+
+                continue;
+            }
+
+            if ((! is_dir(dirname($file)) && ! mkdir(dirname($file), 0775, true)) || file_put_contents($file, $contents) === false) {
+                CLI::error("Couldn't write " . clean_path($file) . '.');
+
+                return EXIT_ERROR;
+            }
+
+            CLI::write('Created ' . clean_path($file), 'green');
         }
 
         $this->nextSteps($collection, $controller ? $controllerClass : null, $controllerSkipped);
