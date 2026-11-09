@@ -34,11 +34,8 @@ final class BlockGeneratorTest extends ContentTestCase
 
     protected function tearDown(): void
     {
-        foreach (glob(self::VIEWS . '*') ?: [] as $file) {
-            unlink($file);
-        }
-
         if (is_dir(self::VIEWS)) {
+            delete_files(self::VIEWS, true, false, true);
             rmdir(self::VIEWS);
         }
 
@@ -131,12 +128,28 @@ final class BlockGeneratorTest extends ContentTestCase
         $this->assertStringContainsString('Half price', $this->page()->renderBlocks('sections'));
     }
 
-    public function testTheFragmentBlockKeepsItsBuiltInBlueprint(): void
+    #[DataProvider('provideTheFragmentBlockKeepsItsBuiltInBlueprint')]
+    public function testTheFragmentBlockKeepsItsBuiltInBlueprint(string $type): void
     {
-        command('make:block fragment');
+        command("make:block {$type}");
 
         $this->assertFileExists(self::VIEWS . 'fragment.php');
-        $this->assertFileDoesNotExist($this->blueprints . 'blocks/fragment.yaml');
+        $this->assertDirectoryDoesNotExist($this->blueprints . 'blocks');
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideTheFragmentBlockKeepsItsBuiltInBlueprint(): iterable
+    {
+        yield 'its own name' => ['fragment'];
+
+        yield 'another case' => ['Fragment'];
+    }
+
+    public function testATrailingNewlineIsNotAValidType(): void
+    {
+        $this->assertDoesNotMatchRegularExpression(Blueprint::NAME, "hero\n");
     }
 
     /**

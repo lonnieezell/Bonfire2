@@ -48,6 +48,13 @@ class BlockGenerator extends BaseCommand
             return EXIT_ERROR;
         }
 
+        // On a case-insensitive disk, Fragment.yaml is the file that replaces the built-in type.
+        if (strcasecmp($type, Blueprint::FRAGMENT_BLOCK) === 0) {
+            $type = Blueprint::FRAGMENT_BLOCK;
+        }
+
+        helper('inflector');
+
         $config  = config('Content');
         $folder  = trim($config->blockViewPath, '/');
         $partial = rtrim((new Paths())->viewDirectory, '/') . "/{$folder}/{$type}.php";
@@ -58,7 +65,7 @@ class BlockGenerator extends BaseCommand
             : [
                 rtrim($config->blueprintPath, '/') . "/blocks/{$type}.yaml" => $this->render('blueprint', [
                     // Quoted when YAML would read it as something else, such as `True` or `2026`.
-                    'title' => Yaml::dump(ucwords(str_replace(['-', '_'], ' ', $type))),
+                    'title' => Yaml::dump(trim(humanize($type, '-_')) ?: $type),
                 ]),
                 $partial => $this->render('partial', ['type' => $type]),
             ];
