@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#9-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1908,6 +1919,8 @@
       
         
       
+        
+      
     
     
     
@@ -2047,6 +2060,34 @@
     
   
     Blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../content/fragments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fragments
   
 
     
@@ -3251,6 +3292,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#9-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#8-november-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3634,6 +3686,12 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="9-november-2026">9 November 2026</h2>
+<p><strong>Content: fragments.</strong> Write a piece of content once and use it on many pages. A collection with <code>fragments: true</code> has no
+route, and its entries get drafts, the trash, preview, search and the admin like any other. <code>content()-&gt;fragment('spring-sale')</code>
+returns the published entry or <code>null</code>, and <code>fragment('promos/spring-sale')</code> names the collection. A built-in <code>fragment</code>
+block type links to one fragment, and <code>$block-&gt;fragment()</code> reads it in your own <code>blocks/fragment.php</code>. A cycle of fragments,
+or nesting more than 5 deep, renders nothing and logs an error. See <a href="../../content/fragments/">Fragments</a>.</p>
 <h2 id="8-november-2026">8 November 2026</h2>
 <p><strong>Content: an admin editor for <code>blocks</code> fields.</strong> A blocks field is now a list of collapsible cards, each with the block
 type's title, a summary, a drag handle, and buttons to move, duplicate and delete it. <strong>Add block</strong> lists the types the
