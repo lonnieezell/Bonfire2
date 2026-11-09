@@ -3687,6 +3687,10 @@
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
 <h2 id="9-november-2026">9 November 2026</h2>
+<p><strong>Content: <code>make:block</code>.</strong> <code>php spark make:block hero</code> writes a new block type into your app: its blueprint at
+<code>resources/blueprints/blocks/hero.yaml</code> and a partial in your block view folder that renders its fields. Files that exist
+are skipped and named, and the two files are yours from then on. <code>make:block fragment</code> writes a partial that renders the
+linked fragment's <code>sections</code>. See <a href="../../content/blocks/#generating-a-block-type">Blocks</a>.</p>
 <p><strong>Content: fragments.</strong> Write a piece of content once and use it on many pages. A collection with <code>fragments: true</code> has no
 route, and its entries get drafts, the trash, preview, search and the admin like any other. <code>content()-&gt;fragment('spring-sale')</code>
 returns the published entry or <code>null</code>, and <code>fragment('promos/spring-sale')</code> names the collection. A built-in <code>fragment</code>

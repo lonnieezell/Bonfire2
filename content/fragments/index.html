@@ -3264,8 +3264,9 @@ keep <code>$block-&gt;fragment()</code> and the <a href="#fragments-inside-fragm
 <span class="w">    </span><span class="nt">fragment</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3f0f0c1e-0a53-4e0c-9d7a-2f7c3a8f5d11</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <h3 id="its-partial">Its partial</h3>
-<p>The HTML is yours, so create the partial at <code>app/Views/blocks/fragment.php</code>. <code>$block-&gt;fragment()</code> returns the linked
-published entry, or <code>null</code> when it's a draft, scheduled, in the trash or gone:</p>
+<p>The HTML is yours, so create the partial at <code>app/Views/blocks/fragment.php</code>. <code>php spark make:block fragment</code> writes one
+that renders the fragment's <code>sections</code> field, for you to change. <code>$block-&gt;fragment()</code> returns the linked published entry,
+or <code>null</code> when it's a draft, scheduled, in the trash or gone:</p>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="c1">// app/Views/blocks/fragment.php ?&gt;</span>
 <span class="o">&lt;?</span><span class="nx">php</span> <span class="nv">$fragment</span> <span class="o">=</span> <span class="nv">$block</span><span class="o">-&gt;</span><span class="na">fragment</span><span class="p">();</span> <span class="cp">?&gt;</span>
 

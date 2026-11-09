@@ -1756,6 +1756,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Block types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-a-block-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a block type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3055,6 +3072,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Block types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-a-block-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating a block type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3238,6 +3272,17 @@ copied and deleted. See <a href="../admin/#editing-blocks">Editing blocks</a>.</
 </ul>
 <p>A block type that breaks one of these is refused with a message that names the file and the field.</p>
 <p>The <code>fragment</code> block type is built in and needs no file. See <a href="../fragments/#the-fragment-block">Fragments</a>.</p>
+<h3 id="generating-a-block-type">Generating a block type</h3>
+<p><code>make:block</code> writes a block type's two files, so you start from something that renders:</p>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>make:block<span class="w"> </span>hero
+</code></pre></div>
+<p>It writes the block type to <code>resources/blueprints/blocks/hero.yaml</code>, with one <code>heading</code> field, and a partial that renders
+that field to <code>app/Views/blocks/hero.php</code>, or the folder <code>$blockViewPath</code> names. Both files are yours from then on, so add
+your fields to the block type and show them in the partial.</p>
+<p>The command never overwrites a file. It says which files it skipped, and still writes the other one. A type can have
+letters, numbers, <code>_</code> and <code>-</code>, up to 100 characters. Anything else is an error, and nothing is written.</p>
+<p><code>php spark make:block fragment</code> writes only a partial, one that renders the linked fragment's <code>sections</code> field. The
+built-in type has no file to write, and a file named <code>fragment.yaml</code> would replace it.</p>
 <h2 id="the-blocks-field">The blocks field</h2>
 <p>Add a <code>blocks</code> field to a blueprint:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sections</span>

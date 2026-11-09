@@ -2024,6 +2024,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#makeblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make:block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#related-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3081,6 +3092,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#makeblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        make:block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#related-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3287,6 +3309,26 @@ overwrites a file.</p>
 </tbody>
 </table>
 <p>See <a href="../scaffolding/">Scaffolding</a>.</p>
+<h3 id="makeblock">make:block</h3>
+<div class="highlight"><pre><span></span><code>php<span class="w"> </span>spark<span class="w"> </span>make:block<span class="w"> </span>&lt;type&gt;
+</code></pre></div>
+<p>Writes a new block type's blueprint to <code>resources/blueprints/blocks/&lt;type&gt;.yaml</code> and a partial that renders its fields to
+the <code>$blockViewPath</code> folder. It never overwrites a file. <code>make:block fragment</code> writes only a partial for the built-in type.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>The handle of the block type.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../blocks/#generating-a-block-type">Blocks</a>.</p>
 <h3 id="related-commands">Related commands</h3>
 <table>
 <thead>
