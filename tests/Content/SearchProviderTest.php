@@ -110,9 +110,28 @@ final class SearchProviderTest extends ContentTestCase
         );
     }
 
-    public function testTheBodyIsSearchedAsRawMarkdown(): void
+    public function testMarkdownSyntaxInTheBodyIsNotFound(): void
     {
-        $this->assertCount(1, $this->provider->search('*post*'));
+        $this->assertSame([], $this->provider->search('*post*'));
+        $this->assertCount(1, $this->provider->search('The first post'));
+    }
+
+    public function testAPageIsFoundByTextOnlyInOneOfItsBlocks(): void
+    {
+        $this->writeFile('collections/blog/2026-04-01.built.md', "---\nid: 44444444-4444-4444-8444-444444444444\ntitle: Built\nsections:\n  - type: hero\n    heading: A wandering capybara\n---\nPlain.\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['44444444-4444-4444-8444-444444444444'], array_column($this->provider->search('capybara'), 'id'));
+    }
+
+    public function testFragmentEntriesAreFound(): void
+    {
+        mkdir($this->site . 'collections/promos');
+        $this->writeFile('collections/promos.yaml', "title: Promos\nfragments: true\n");
+        $this->writeFile('collections/promos/spring-sale.md', "---\nid: 55555555-5555-4555-8555-555555555555\ntitle: Spring sale\n---\nHalf price capybaras.\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['55555555-5555-4555-8555-555555555555'], array_column($this->provider->search('capybaras'), 'id'));
     }
 
     public function testLikeWildcardsInTheTermAreTakenLiterally(): void
@@ -125,7 +144,7 @@ final class SearchProviderTest extends ContentTestCase
     {
         $this->assertSame([], $this->provider->search("zebra's"));
 
-        (new ContentEntryModel())->update(self::DRAFT, ['body' => "The zebra's stripes"]);
+        (new ContentEntryModel())->update(self::DRAFT, ['search_text' => "The zebra's stripes"]);
 
         $this->assertSame([self::DRAFT], array_column($this->provider->search("zebra's"), 'id'));
     }

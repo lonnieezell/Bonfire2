@@ -85,8 +85,43 @@ final class EntryParser
             'title'        => $title,
             'data'         => self::encode($frontMatter),
             'body'         => $body,
+            'search_text'  => self::searchText($frontMatter, $body),
             'hash'         => hash('sha256', $raw),
         ];
+    }
+
+    /**
+     * What a search matches besides the title: the body and every string inside a block, as plain text. A block is a
+     * map with a `type` in a list, which is all that's checked, so that no blueprint has to load. Components aren't
+     * expanded, so the text of an embedded fragment stays out of the page that embeds it.
+     *
+     * @param array<array-key, mixed> $frontMatter
+     */
+    private static function searchText(array $frontMatter, string $body): string
+    {
+        $blocks = [];
+
+        foreach ($frontMatter as $value) {
+            if (! is_array($value) || ! array_is_list($value)) {
+                continue;
+            }
+
+            foreach ($value as $item) {
+                if (is_array($item) && is_string($item['type'] ?? null)) {
+                    $blocks[] = $item;
+                }
+            }
+        }
+
+        $strings = [$body];
+
+        array_walk_recursive($blocks, static function (mixed $string) use (&$strings): void {
+            if (is_string($string)) {
+                $strings[] = $string;
+            }
+        });
+
+        return trim(implode("\n", array_map(static fn (string $markdown): string => Markdown::htmlToText(Markdown::toHtml($markdown, false)), $strings)));
     }
 
     /**

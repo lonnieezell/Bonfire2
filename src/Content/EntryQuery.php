@@ -38,9 +38,10 @@ final class EntryQuery
 
     /**
      * @param Collection|null $collection null for a search across every collection
-     * @param string|null     $search     keeps entries with this text in the title or body
+     * @param string|null     $search     keeps entries with this text in the title or search text
+     * @param list<string>    $excluded   the handles of collections to leave out
      */
-    public function __construct(private readonly ?Collection $collection, private readonly ?string $search = null)
+    public function __construct(private readonly ?Collection $collection, private readonly ?string $search = null, private readonly array $excluded = [])
     {
     }
 
@@ -142,6 +143,10 @@ final class EntryQuery
 
         if ($this->collection !== null) {
             $model->where('collection', $this->collection->handle);
+        }
+
+        if ($this->excluded !== []) {
+            $model->whereNotIn('collection', $this->excluded);
         }
 
         if ($this->published) {

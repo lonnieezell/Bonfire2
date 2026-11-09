@@ -47,6 +47,22 @@ final class SearchTest extends ContentTestCase
     }
 
     /**
+     * Writes an entry in the `promos` fragment collection.
+     *
+     * @return string the entry's id
+     */
+    private function fragment(string $title, string $body): string
+    {
+        $id = 'bbbbbbbb-1111-4111-8111-111111111111';
+
+        mkdir($this->site . 'collections/promos', 0777, true);
+        $this->writeFile('collections/promos.yaml', "title: Promos\nfragments: true\n");
+        $this->writeFile('collections/promos/spring-sale.md', "---\nid: {$id}\ntitle: {$title}\n---\n{$body}\n");
+
+        return $id;
+    }
+
+    /**
      * @param list<Entry> $entries
      *
      * @return list<string>
@@ -154,6 +170,95 @@ final class SearchTest extends ContentTestCase
     {
         $this->assertSame(['First post', 'Plain note', 'Second post'], $this->titles(content()->search('post')->get()));
         $this->assertSame(['Second post', 'Plain note', 'First post'], $this->titles(content()->search('post')->orderBy('title', 'desc')->get()));
+    }
+
+    public function testMarkdownSyntaxAndComponentAttributesAreNotFound(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Styled', "Some **okapi** here.\n\n<x-alert kind=\"tapir-warning\">Inside the alert.</x-alert>");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Styled'], $this->titles(content()->search('okapi')->get()));
+        $this->assertSame(['Styled'], $this->titles(content()->search('Inside the alert')->get()));
+        $this->assertSame([], $this->titles(content()->search('**')->get()));
+        $this->assertSame([], $this->titles(content()->search('tapir-warning')->get()));
+        $this->assertSame([], $this->titles(content()->search('x-alert')->get()));
+    }
+
+    public function testAnEscapedCharacterInTheBodyIsFoundAsItReads(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Styled', 'Fish & chips, 1 < 2.');
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Styled'], $this->titles(content()->search('Fish & chips, 1 < 2')->get()));
+    }
+
+    public function testAPageIsFoundByTextOnlyInOneOfItsBlocks(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Built', 'Plain.', <<<'YAML'
+            sections:
+              - type: hero
+                heading: A wandering capybara
+              - type: columns
+                items:
+                  - label: Nested narwhal
+
+            YAML);
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Built'], $this->titles(content()->search('capybara')->get()));
+        $this->assertSame(['Built'], $this->titles(content()->search('narwhal')->get()), 'At any depth inside the block.');
+    }
+
+    public function testMarkdownInABlockIsNotFound(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Built', 'Plain.', "sections:\n  - type: hero\n    copy: 'Some **okapi** here'\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Built'], $this->titles(content()->search('Some okapi here')->get()));
+        $this->assertSame([], $this->titles(content()->search('**')->get()));
+    }
+
+    public function testFrontMatterOutsideTheBlocksShapeIsNotFound(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Fields', 'Plain.', <<<'YAML'
+            tagline: A wandering capybara
+            links:
+              - label: A wandering narwhal
+            seo:
+              type: A wandering okapi
+
+            YAML);
+        (new Indexer($this->site))->reindex();
+
+        foreach (['capybara', 'narwhal', 'okapi'] as $word) {
+            $this->assertSame([], $this->titles(content()->search($word)->get()), $word);
+        }
+    }
+
+    public function testFragmentEntriesAreLeftOutUnlessTheirCollectionIsNamed(): void
+    {
+        $this->fragment('Spring sale', 'Half price capybaras.');
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame([], $this->titles(content()->search('capybaras')->get()));
+        $this->assertSame(['Spring sale'], $this->titles(content()->search('capybaras', 'promos')->get()));
+    }
+
+    public function testTextOfAnEmbeddedFragmentIsNotCopiedIntoThePage(): void
+    {
+        $id = $this->fragment('Spring sale', 'Half price capybaras.');
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Landing', 'Plain.', "sections:\n  - type: fragment\n    fragment: [{$id}]\n");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame([], $this->titles(content()->search('capybaras', 'notes')->get()));
+    }
+
+    public function testAPhraseWrappedOverTwoLinesIsFound(): void
+    {
+        $this->note('aaaaaaaa-7777-4777-8777-777777777777', 'Wrapped', "A wandering\ncapybara.");
+        (new Indexer($this->site))->reindex();
+
+        $this->assertSame(['Wrapped'], $this->titles(content()->search('wandering capybara')->get()));
     }
 
     public function testWhereTermNeedsACollection(): void
