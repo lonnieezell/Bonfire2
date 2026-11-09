@@ -43,7 +43,7 @@ class BlockGenerator extends BaseCommand
         $type = (string) ($params[0] ?? '');
 
         if (preg_match(Blueprint::NAME, $type) !== 1) {
-            CLI::error("`{$type}` can't name a block type. Use 1 to 100 letters, numbers, _ and -, such as hero.");
+            CLI::error("make:block needs a type of 1 to 100 letters, numbers, _ and -, such as hero. It got: {$type}");
 
             return EXIT_ERROR;
         }
