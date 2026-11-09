@@ -3446,10 +3446,11 @@ pager, which is CodeIgniter's <a href="https://codeigniter.com/user_guide/librar
 the <code>?page=</code> query string unless you pass it. For a whole page built this way, see
 <a href="#listing-a-collection">Listing a collection</a>.</p>
 <h2 id="searching">Searching</h2>
-<p><code>content()-&gt;search($term)</code> starts a query on the published entries that have the term in their title or Markdown body,
-across every collection. Pass a collection's handle as the second argument to search only that one, which throws
-<code>Bonfire\Content\ContentException</code> if the collection doesn't exist.</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$query</span>   <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">);</span>            <span class="c1">// every collection</span>
+<p><code>content()-&gt;search($term)</code> starts a query on the published entries that have the term in their title, body or blocks,
+across every collection except <a href="../fragments/">fragment collections</a>. Pass a collection's handle as the second argument to
+search only that one, fragment collections included, which throws <code>Bonfire\Content\ContentException</code> if the collection
+doesn't exist.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$query</span>   <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">);</span>            <span class="c1">// every collection but fragments</span>
 <span class="nv">$query</span>   <span class="o">=</span> <span class="nx">content</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">search</span><span class="p">(</span><span class="nv">$term</span><span class="p">,</span> <span class="s1">'blog'</span><span class="p">);</span>    <span class="c1">// only the blog</span>
 <span class="nv">$results</span> <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">paginate</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="nv">$pager</span>   <span class="o">=</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">pager</span><span class="p">();</span>
@@ -3458,8 +3459,12 @@ across every collection. Pass a collection's handle as the second argument to se
 <code>orderBy()</code> changes the order. Results are ordered by title, whichever collections they come from.</p>
 <ul>
 <li>It only returns what <code>published()</code> keeps. Drafts, scheduled entries and entries in the trash are never found.</li>
-<li>It's a plain <code>LIKE</code> match on the title and the raw Markdown body, so the term is found inside words and in Markdown
-  syntax. There are no wildcards: <code>*</code>, <code>%</code> and <code>_</code> each match only themselves, and a quote is safe.</li>
+<li>It's a plain <code>LIKE</code> match on the title and the entry's search text, so the term is found inside words. There are no
+  wildcards: <code>*</code>, <code>%</code> and <code>_</code> each match only themselves, and a quote is safe.</li>
+<li>The search text is the body rendered to plain text, plus every string in any front matter value that is a list of maps
+  with a <code>type</code> key, which is how <a href="../blocks/">blocks</a> are stored. Those strings are rendered to plain text too, so
+  Markdown syntax and component attributes aren't found. Other front matter fields aren't searched, and neither is the
+  text of a fragment that a page embeds.</li>
 <li>Spaces around the term are ignored, and a blank term finds nothing.</li>
 <li><code>whereTerm()</code> needs a query on one collection, so it throws unless you narrowed the search to one.</li>
 </ul>

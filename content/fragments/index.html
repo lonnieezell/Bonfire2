@@ -3211,7 +3211,8 @@
 
 <h1 id="fragments">Fragments</h1>
 <p>A fragment is a piece of content you write once and use on many pages, such as a call to action. It's an ordinary entry
-in a collection that has no route, so it has drafts, the trash, preview, search and the admin like any other entry.</p>
+in a collection that has no route, so it has drafts, the trash, preview, admin search and the admin like any other entry.
+<code>content()-&gt;search()</code> leaves fragments out unless you <a href="../query_api/#searching">name their collection</a>.</p>
 <h2 id="a-fragment-collection">A fragment collection</h2>
 <p>Set <code>fragments: true</code> in a <a href="../collections/#collection-config">collection's config</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># content/collections/promos.yaml</span>

@@ -619,10 +619,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#9-november-2026" class="md-nav__link">
+  <a href="#9-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9 November 2026
+        9 November 2026 (breaking change)
       
     </span>
   </a>
@@ -3292,10 +3292,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#9-november-2026" class="md-nav__link">
+  <a href="#9-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9 November 2026
+        9 November 2026 (breaking change)
       
     </span>
   </a>
@@ -3686,7 +3686,14 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
-<h2 id="9-november-2026">9 November 2026</h2>
+<h2 id="9-november-2026-breaking-change">9 November 2026 (breaking change)</h2>
+<p><strong>Content: search reads blocks, and no longer reads Markdown syntax.</strong> Admin search and <code>content()-&gt;search()</code> now match an
+entry's title and a new <code>search_text</code> column, in place of the raw body. It holds the body and every string in the entry's
+blocks, as plain text, so a page built from blocks can be found, and <code>**</code> or a component's attribute no longer matches.
+Text from an embedded fragment isn't copied into the page. Fragment collections are left out of <code>content()-&gt;search()</code> unless
+you name one, and admin search still finds them. <strong>Run <code>php spark migrate</code>, then <code>php spark content:reindex</code>, after
+updating.</strong> Until you migrate, searching, saving an entry and reindexing all fail with a database error. Until you reindex,
+search finds existing entries only by title. See <a href="../../content/query_api/#searching">Searching</a>.</p>
 <p><strong>Content: a <code>list</code> field type.</strong> A repeater with fixed sub-fields, for repeated items such as features, FAQs or pricing
 tiers. It works as a blueprint field and inside a block, is saved as a list of maps, and enforces <code>min_items</code> and
 <code>max_items</code>. <code>field()</code> returns the rows with each value cast by its sub-field's type. In the admin, rows come from the
@@ -3697,7 +3704,7 @@ needs the app's encryption key. See <a href="../../content/field_types/#list">Fi
 are skipped and named, and the two files are yours from then on. <code>make:block fragment</code> writes a partial that renders the
 linked fragment's <code>sections</code>. See <a href="../../content/blocks/#generating-a-block-type">Blocks</a>.</p>
 <p><strong>Content: fragments.</strong> Write a piece of content once and use it on many pages. A collection with <code>fragments: true</code> has no
-route, and its entries get drafts, the trash, preview, search and the admin like any other. <code>content()-&gt;fragment('spring-sale')</code>
+route, and its entries get drafts, the trash, preview, admin search and the admin like any other. <code>content()-&gt;fragment('spring-sale')</code>
 returns the published entry or <code>null</code>, and <code>fragment('promos/spring-sale')</code> names the collection. A built-in <code>fragment</code>
 block type links to one fragment, and <code>$block-&gt;fragment()</code> reads it in your own <code>blocks/fragment.php</code>. A cycle of fragments,
 or nesting more than 5 deep, renders nothing and logs an error. See <a href="../../content/fragments/">Fragments</a>.</p>

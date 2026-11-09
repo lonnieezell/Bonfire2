@@ -3457,10 +3457,11 @@ back to the dashboard with a "not authorized" message.</p>
 <code>php spark content:reindex</code> first if you have files that were not saved through the admin. In development the index
 <a href="../the_index/#in-development">catches up with your files by itself</a>.</p>
 <h2 id="search">Search</h2>
-<p>Entries show up in the admin's search box, under <strong>Content</strong>. The search matches the term anywhere in an entry's title
-or in its Markdown body, ignoring case, and lists the entry's title, collection and status. The body is searched as it
-was written, so Markdown syntax such as <code>**bold**</code> counts, but front matter fields do not. Trashed entries are left out,
-and so is everything for a user without <code>content.access</code>. The title links to the edit form for users with
+<p>Entries show up in the admin's search box, under <strong>Content</strong>. The search matches the term anywhere in an entry's title,
+body or blocks, ignoring case, and lists the entry's title, collection and status. The body and blocks are searched as
+plain text, so Markdown syntax such as <code>**bold**</code> doesn't count, and other front matter fields aren't searched. Fragments
+are found here, unlike in <a href="../query_api/#searching"><code>content()-&gt;search()</code></a>. Trashed entries are left out, and so is
+everything for a user without <code>content.access</code>. The title links to the edit form for users with
 <code>content.edit</code>, and is plain text for the others. It reads the index, the same as <a href="#the-list">the list</a>.</p>
 <p>Content has no page that lists every collection, so the "see all" link under the results goes to the first collection's
 list.</p>
