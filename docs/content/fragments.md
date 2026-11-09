@@ -81,8 +81,9 @@ sections:
 
 ### Its partial
 
-The HTML is yours, so create the partial at `app/Views/blocks/fragment.php`. `$block->fragment()` returns the linked
-published entry, or `null` when it's a draft, scheduled, in the trash or gone:
+The HTML is yours, so create the partial at `app/Views/blocks/fragment.php`. `php spark make:block fragment` writes one
+that renders the fragment's `sections` field, for you to change. `$block->fragment()` returns the linked published entry,
+or `null` when it's a draft, scheduled, in the trash or gone:
 
 ```php
 <?php // app/Views/blocks/fragment.php ?>

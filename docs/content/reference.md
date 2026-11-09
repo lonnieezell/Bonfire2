@@ -56,6 +56,21 @@ overwrites a file.
 
 See [Scaffolding](scaffolding.md).
 
+### make:block
+
+```bash
+php spark make:block <type>
+```
+
+Writes a new block type's blueprint to `resources/blueprints/blocks/<type>.yaml` and a partial that renders its fields to
+the `$blockViewPath` folder. It never overwrites a file. `make:block fragment` writes only a partial for the built-in type.
+
+| Argument | What it does |
+|---|---|
+| `type` | The handle of the block type. |
+
+See [Blocks](blocks.md#generating-a-block-type).
+
 ### Related commands
 
 | Command | Why Content needs it |
