@@ -116,6 +116,15 @@ return [
     'blockToggle'      => 'Show or hide the block',
     'blockUnknown'     => 'Unknown block type `{0}`, kept as is.',
 
+    // List field
+    'listTooMany' => 'Add no more than {0} rows.',
+    'listTooFew'  => 'Add at least {0} rows.',
+    'listError'   => 'Row {0}: {1}',
+    'listRow'     => 'Row',
+    'listNone'    => 'No rows yet.',
+    'listAdd'     => 'Add row',
+    'listNoKey'   => 'Adding a row needs the app\'s encryption key, and there is none. Run `php spark key:generate`.',
+
     // Terms field
     'noTerms'     => 'No terms yet.',
     'unknownTerm' => '{0} (no such term)',

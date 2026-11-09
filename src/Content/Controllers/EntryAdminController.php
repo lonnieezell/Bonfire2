@@ -637,10 +637,7 @@ class EntryAdminController extends AdminController
 
         $this->response->setStatusCode($httpStatus);
 
-        // A blocks field's cards are dragged to reorder them.
-        if (array_filter($blueprint->fields, static fn ($field): bool => $field->type === 'blocks') !== []) {
-            $this->addSortableScript();
-        }
+        $this->addSortableScriptFor($form);
 
         return $this->render($this->viewPrefix . 'entry_form', [
             'collection'  => $collection,

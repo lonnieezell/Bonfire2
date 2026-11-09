@@ -30,6 +30,8 @@ use Psr\Log\LoggerInterface;
  */
 class TermAdminController extends AdminController
 {
+    use LoadsSortable;
+
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Content\Views\\';
 
@@ -237,6 +239,8 @@ class TermAdminController extends AdminController
     private function renderForm(Taxonomy $taxonomy, EntryForm $form, array $shown): string
     {
         $errors = $shown['errors'] ?? [];
+
+        $this->addSortableScriptFor($form);
 
         return $this->render($this->viewPrefix . 'term_form', [
             'taxonomy' => $taxonomy,

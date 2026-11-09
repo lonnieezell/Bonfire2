@@ -105,6 +105,15 @@ return [
     'blockToggle'      => 'Rodyti arba slėpti bloką',
     'blockUnknown'     => 'Nežinomas bloko tipas `{0}`, paliktas nepakeistas.',
 
+    // List field
+    'listTooMany' => 'Pridėkite ne daugiau kaip {0} eilučių.',
+    'listTooFew'  => 'Pridėkite bent {0} eilučių.',
+    'listError'   => 'Eilutė {0}: {1}',
+    'listRow'     => 'Eilutė',
+    'listNone'    => 'Eilučių dar nėra.',
+    'listAdd'     => 'Pridėti eilutę',
+    'listNoKey'   => 'Eilutei pridėti reikia programos šifravimo rakto, o jo nėra. Paleiskite `php spark key:generate`.',
+
     // Terms field
     'noTerms'     => 'Terminų dar nėra.',
     'unknownTerm' => '{0} (tokio termino nėra)',

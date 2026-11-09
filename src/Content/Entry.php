@@ -11,6 +11,7 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Content\Fields\EntryStorage;
 use CodeIgniter\I18n\Time;
 use RuntimeException;
 
@@ -65,11 +66,37 @@ final readonly class Entry
     }
 
     /**
-     * A front matter value.
+     * A front matter value, as the file holds it. The rows of a `list` field are cast by their sub-fields' types.
      */
     public function field(string $name, mixed $default = null): mixed
     {
-        return $this->data[$name] ?? $default;
+        $value = $this->data[$name] ?? null;
+
+        // Only a list with maps in it can be a list field's rows, so nothing else costs a read of the blueprint.
+        if (is_array($value) && array_is_list($value) && array_filter($value, is_array(...)) !== []) {
+            $field = $this->ownBlueprint()?->field($name);
+            $value = $field?->type === 'list' ? EntryStorage::cast($value, $field) : $value;
+        }
+
+        return $value ?? $default;
+    }
+
+    /**
+     * The entry's blueprint, or null when it has none or its file is gone or broken by now, as the index outlives it.
+     */
+    private function ownBlueprint(): ?Blueprint
+    {
+        if ($this->blueprint === null) {
+            return null;
+        }
+
+        try {
+            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint);
+        } catch (ContentException $e) {
+            log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
+
+            return null;
+        }
     }
 
     /**
@@ -180,17 +207,7 @@ final readonly class Entry
      */
     private function seoMapping(): array
     {
-        if ($this->blueprint === null) {
-            return [];
-        }
-
-        try {
-            return Blueprint::load(config('Content')->blueprintPath, $this->collection, $this->blueprint)->seo;
-        } catch (ContentException $e) {
-            log_message('error', "Content: blueprint {$this->collection}/{$this->blueprint}: {$e->getMessage()}");
-
-            return [];
-        }
+        return $this->ownBlueprint()?->seo ?? [];
     }
 
     /**

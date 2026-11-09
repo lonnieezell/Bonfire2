@@ -19,6 +19,7 @@ is saved in the front matter.
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
 | [`terms`](#terms) | A checkbox for each term | A list of slugs |
 | [`blocks`](#blocks) | The blocks written in the file | A list of maps |
+| [`list`](#list) | Rows you add, move, copy and delete | A list of maps |
 
 You can add types of your own. See [Custom field types](custom_field_types.md).
 
@@ -280,6 +281,43 @@ type the field doesn't allow or a value that fails its own field's rules. The bl
 
 Read the blocks back with [`$entry->blocks('sections')`](query_api.md#entries), and render them with
 `$entry->renderBlocks('sections')`. For block types, partials and the rest, see [Blocks](blocks.md).
+
+## list
+
+A repeater: rows that all have the same fixed sub-fields, for repeated items such as features, FAQs, pricing tiers or
+logos. It's saved as a list of maps. Use it as a field of a blueprint or inside a [block](blocks.md).
+
+| Key | Default | What it does |
+|---|---|---|
+| `fields` | Required | The sub-fields of each row, written like a blueprint's fields. |
+| `max_items` | None | The most rows there can be. |
+| `min_items` | None | The fewest rows there can be. |
+
+```yaml
+- handle: features
+  type: list
+  max_items: 6
+  fields:
+    - {handle: title, type: text, validate: required}
+    - {handle: text, type: markdown}
+```
+
+A sub-field can be any type except `slug`, `terms`, `blocks` and `list`, and the blueprint is refused if it uses one of
+those. A row's keys are its own, so handles such as `type` and `status` are fine there. A save is refused if there are
+too many or too few rows, or if a value fails its sub-field's rules. For how the rows are edited, see
+[Editing lists](admin.md#editing-lists).
+
+Read the rows back with `field()`, which returns a list of maps with every sub-field of every row, each value cast by
+its type: a `toggle` is a bool and an `integer` an int. A sub-field a row leaves out is `null`, or `false` for a toggle.
+It works the same on an entry, a block and a [global set](globals.md).
+
+```php
+<?php foreach ($entry->field('features', []) as $feature) : ?>
+    <h3><?= esc($feature['title']) ?></h3>
+<?php endforeach ?>
+```
+
+Keys in a row that the sub-fields don't list aren't returned, and saving the form drops them from the file.
 
 ## Changing an input
 

@@ -22,11 +22,11 @@ final class FieldTypesTest extends TestCase
 
     public function testEveryTypeHasAClassAndABundledPartial(): void
     {
-        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'belongsTo', 'slug', 'entries', 'terms', 'blocks'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'belongsTo', 'slug', 'entries', 'terms', 'blocks', 'list'], FieldTypes::names());
 
         foreach (FieldTypes::names() as $type) {
             // The generic types render from Bonfire\Fields, and the ones tied to an entry from Content.
-            $module = in_array($type, ['slug', 'entries', 'terms', 'blocks'], true) ? 'Content' : 'Fields';
+            $module = in_array($type, ['slug', 'entries', 'terms', 'blocks', 'list'], true) ? 'Content' : 'Fields';
 
             $this->assertSame($type, FieldTypes::get($type)->partial());
             $this->assertSame("Bonfire\\{$module}\\Views\\fields\\{$type}", FieldTypes::view($type));

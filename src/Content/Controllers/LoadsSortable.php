@@ -11,11 +11,27 @@
 
 namespace Bonfire\Content\Controllers;
 
+use Bonfire\Content\EntryForm;
+
 /**
  * What the admin's tree editors drag their items with.
  */
 trait LoadsSortable
 {
+    /**
+     * Loads it for a form with a blocks or list field, whose cards are dragged to reorder them.
+     */
+    private function addSortableScriptFor(EntryForm $form): void
+    {
+        foreach ($form->fields() as [$field]) {
+            if (in_array($field->type, ['blocks', 'list'], true)) {
+                $this->addSortableScript();
+
+                return;
+            }
+        }
+    }
+
     private function addSortableScript(): void
     {
         service('viewMeta')->addScript([

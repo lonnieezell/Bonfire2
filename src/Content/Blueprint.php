@@ -53,6 +53,19 @@ final readonly class Blueprint
     private const NOT_IN_BLOCKS = ['slug', 'terms', 'blocks'];
 
     /**
+     * The field types a list's rows can't have: the ones a block can't, and a list can't hold lists.
+     */
+    private const NOT_IN_LISTS = [...self::NOT_IN_BLOCKS, 'list'];
+
+    /**
+     * What holds a field, which decides the rules for its handle and type and what its errors call it.
+     */
+    private const IN_BLUEPRINT = 'blueprint';
+
+    private const IN_BLOCK = 'block type';
+    private const IN_LIST  = 'list';
+
+    /**
      * @param list<Field>           $fields   every field, in the order the form shows them, whether or not they're in sections
      * @param array<string, string> $seo      the handle of the field that feeds each SEO value (`title`, `description`)
      * @param list<Section>         $sections the groups the form shows the fields in, empty when the blueprint lists plain `fields`
@@ -154,7 +167,31 @@ final readonly class Blueprint
             throw new ContentException("Unknown block type: {$type}. Its blueprint is resources/blueprints/blocks/{$type}.yaml.");
         }
 
-        return self::fromFile($path, 'blocks', $type, true);
+        return self::fromFile($path, 'blocks', $type, self::IN_BLOCK);
+    }
+
+    /**
+     * The fields of each row of a `list` field, from its `fields` key. They can't be of the types in NOT_IN_LISTS.
+     *
+     * @return list<Field>
+     *
+     * @throws ContentException when the definitions can't be used
+     */
+    public static function subFields(Field $list): array
+    {
+        $definitions = $list->options['fields'] ?? null;
+
+        if (! is_array($definitions) || ! array_is_list($definitions) || $definitions === []) {
+            throw new ContentException("List field `{$list->handle}` needs a `fields` list.");
+        }
+
+        $fields = $keys = [];
+
+        foreach ($definitions as $position => $definition) {
+            self::addField($list->handle, 'Field ' . ($position + 1), $definition, $fields, $keys, self::IN_LIST);
+        }
+
+        return array_values($fields);
     }
 
     /**
@@ -180,7 +217,7 @@ final readonly class Blueprint
     /**
      * @throws ContentException
      */
-    private static function fromFile(string $path, string $collection, string $handle, bool $block = false): self
+    private static function fromFile(string $path, string $collection, string $handle, string $owner = self::IN_BLUEPRINT): self
     {
         try {
             $config = Yaml::parseFile($path);
@@ -204,11 +241,11 @@ final readonly class Blueprint
             }
 
             foreach ($config['sections'] as $position => $definition) {
-                $sections[] = self::section($handle, $position + 1, $definition, $fields, $keys, $block);
+                $sections[] = self::section($handle, $position + 1, $definition, $fields, $keys, $owner);
             }
         } elseif (is_array($config['fields'] ?? null) && array_is_list($config['fields'])) {
             foreach ($config['fields'] as $position => $definition) {
-                self::addField($handle, 'Field ' . ($position + 1), $definition, $fields, $keys, $block);
+                self::addField($handle, 'Field ' . ($position + 1), $definition, $fields, $keys, $owner);
             }
         } else {
             throw new ContentException("Blueprint {$handle} needs a `fields` list or a `sections` list.");
@@ -231,7 +268,7 @@ final readonly class Blueprint
      *
      * @throws ContentException when the section can't be used
      */
-    private static function section(string $blueprint, int $number, mixed $definition, array &$fields, array &$keys, bool $block): Section
+    private static function section(string $blueprint, int $number, mixed $definition, array &$fields, array &$keys, string $owner): Section
     {
         $where = "Section {$number} of blueprint {$blueprint}";
 
@@ -252,7 +289,7 @@ final readonly class Blueprint
         $own = [];
 
         foreach ($definition['fields'] as $position => $field) {
-            $own[] = self::addField($blueprint, 'Field ' . ($position + 1) . " of section {$number}", $field, $fields, $keys, $block);
+            $own[] = self::addField($blueprint, 'Field ' . ($position + 1) . " of section {$number}", $field, $fields, $keys, $owner);
         }
 
         return new Section(
@@ -272,9 +309,9 @@ final readonly class Blueprint
      *
      * @throws ContentException when the definition can't be used, or repeats a handle or a key
      */
-    private static function addField(string $blueprint, string $which, mixed $definition, array &$fields, array &$keys, bool $block): Field
+    private static function addField(string $blueprint, string $which, mixed $definition, array &$fields, array &$keys, string $owner): Field
     {
-        $field = self::fromDefinition($blueprint, $which, $definition, $block);
+        $field = self::fromDefinition($blueprint, $which, $definition, $owner);
 
         if (isset($fields[$field->handle])) {
             throw new ContentException("Blueprint {$blueprint} has two fields named `{$field->handle}`.");
@@ -341,9 +378,9 @@ final readonly class Blueprint
     /**
      * @throws ContentException when the definition can't be used
      */
-    private static function fromDefinition(string $blueprint, string $which, mixed $definition, bool $block): Field
+    private static function fromDefinition(string $blueprint, string $which, mixed $definition, string $owner): Field
     {
-        $where = $block ? "{$which} of block type {$blueprint}" : "{$which} of blueprint {$blueprint}";
+        $where = "{$which} of {$owner} {$blueprint}";
 
         if (! is_array($definition) || ! is_string($definition['handle'] ?? null) || preg_match(self::HANDLE, $definition['handle']) !== 1) {
             throw new ContentException("{$where} needs a `handle` of letters, numbers and _.");
@@ -351,11 +388,12 @@ final readonly class Blueprint
 
         $handle = $definition['handle'];
 
-        if ($block && $handle === 'type') {
+        if ($owner === self::IN_BLOCK && $handle === 'type') {
             throw new ContentException("{$where}: a block's `type` is kept in a key named `type`, so a field can't use that handle.");
         }
 
-        if (in_array($handle, self::RESERVED, true)) {
+        // A row's keys are its own, so only a field of an entry or a block can clash with what the form manages.
+        if ($owner !== self::IN_LIST && in_array($handle, self::RESERVED, true)) {
             throw new ContentException("{$where}: `{$handle}` is managed by the entry form, so a field can't use it.");
         }
 
@@ -363,8 +401,12 @@ final readonly class Blueprint
             throw new ContentException("{$where} (`{$handle}`) needs a `type`: " . implode(', ', FieldTypes::names()) . '.');
         }
 
-        if ($block && in_array($definition['type'], self::NOT_IN_BLOCKS, true)) {
+        if ($owner === self::IN_BLOCK && in_array($definition['type'], self::NOT_IN_BLOCKS, true)) {
             throw new ContentException("{$where} (`{$handle}`): a block can't have a `{$definition['type']}` field.");
+        }
+
+        if ($owner === self::IN_LIST && in_array($definition['type'], self::NOT_IN_LISTS, true)) {
+            throw new ContentException("{$where} (`{$handle}`): a list can't have a `{$definition['type']}` field.");
         }
 
         $validate = $definition['validate'] ?? '';

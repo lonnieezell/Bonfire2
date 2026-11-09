@@ -20,6 +20,7 @@ $routes->group(ADMIN_AREA, ['namespace' => '\Bonfire\Content\Controllers'], stat
     $routes->post('site-values/(:segment)', 'GlobalAdminController::save/$1');
 
     $routes->get('content-block/(:segment)/(:segment)', 'EntryAdminController::block/$1/$2', ['as' => 'content-block']);
+    $routes->post('content-list-row', 'ListRowController::row', ['as' => 'content-list-row', 'filter' => 'csrf']);
     $routes->post('content/preview', 'EntryAdminController::preview', ['as' => 'content-preview']);
     $routes->get('content/(:segment)', 'EntryAdminController::list/$1', ['as' => 'content-list']);
     $routes->get('content/(:segment)/new', 'EntryAdminController::create/$1', ['as' => 'content-new']);

@@ -112,6 +112,21 @@ final class ContentScaffoldTest extends ContentTestCase
         $page->assertDontSee('/blog/draft-post');
     }
 
+    public function testAListFieldShowsARowForEachOfItsRows(): void
+    {
+        file_put_contents($this->blueprints . 'collections/blog/post.yaml', "  - handle: features\n    type: list\n    fields:\n      - {handle: name, type: text}\n      - {handle: note, type: text}\n", FILE_APPEND);
+        $this->writeFile('collections/blog/2026-01-10.first-post.md', "---\nid: 11111111-1111-4111-8111-111111111111\ntitle: First post\nfeatures:\n  - {name: One, note: First}\n  - {name: Two}\n---\nThe first post.\n");
+
+        command('content:scaffold blog');
+        $this->serveBlog("template: blog/show\n");
+
+        $page = $this->get('blog/first-post');
+
+        $page->assertOK();
+        $page->assertSee('One, First');
+        $page->assertSee('Two');
+    }
+
     public function testTheIndexViewListsAPageOfEntriesWithPagerLinks(): void
     {
         command('content:scaffold blog');

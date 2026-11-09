@@ -23,13 +23,7 @@ $max        = BlocksField::bound($field, 'max_items');
 $slot       = $max === 1;
 $full       = ! $slot && $max !== null && count($blocks) >= $max;
 $list       = $id . '-list';
-$errorsOf   = [];
-
-foreach ($errors as $where => $message) {
-    [$position, $handle] = array_pad(explode('.', (string) $where, 2), 2, '');
-
-    $errorsOf[(int) $position][$handle] = $message;
-}
+$errorsOf   = BlocksField::errorsByPosition($errors);
 ?>
 <div id="<?= esc($id, 'attr') ?>" data-blocks<?= $slot ? ' data-slot' : '' ?> x-data="bfBlocks(<?= (int) $max ?>, <?= $slot ? 'true' : 'false' ?>)">
     <div id="<?= esc($list, 'attr') ?>" data-blocks-list x-ref="list">

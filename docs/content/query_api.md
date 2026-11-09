@@ -126,6 +126,7 @@ $entry->data;         // all the front matter, as an array
 
 $entry->field('tagline');            // one front matter value, or null
 $entry->field('tagline', 'Welcome'); // or a default
+$entry->field('features');           // the rows of a `list` field, cast by their sub-fields' types
 
 $entry->content();                   // the body as HTML, with components expanded
 
