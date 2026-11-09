@@ -44,7 +44,7 @@ final readonly class Blueprint
      */
     private const SEO = ['title', 'description'];
 
-    public const NAME    = '/^[A-Za-z0-9_-]{1,100}$/';
+    public const NAME    = '/^[A-Za-z0-9_-]{1,100}$/D';
     private const HANDLE = '/^[A-Za-z][A-Za-z0-9_]{0,99}$/';
 
     /**

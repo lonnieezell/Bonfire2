@@ -36,6 +36,24 @@ A block type that breaks one of these is refused with a message that names the f
 
 The `fragment` block type is built in and needs no file. See [Fragments](fragments.md#the-fragment-block).
 
+### Generating a block type
+
+`make:block` writes a block type's two files, so you start from something that renders:
+
+```bash
+php spark make:block hero
+```
+
+It writes the block type to `resources/blueprints/blocks/hero.yaml`, with one `heading` field, and a partial that renders
+that field to `app/Views/blocks/hero.php`, or the folder `$blockViewPath` names. Both files are yours from then on, so add
+your fields to the block type and show them in the partial.
+
+The command never overwrites a file. It says which files it skipped, and still writes the other one. A type can have
+letters, numbers, `_` and `-`, up to 100 characters. Anything else is an error, and nothing is written.
+
+`php spark make:block fragment` writes only a partial, one that renders the linked fragment's `sections` field. The
+built-in type has no file to write, and a file named `fragment.yaml` would replace it.
+
 ## The blocks field
 
 Add a `blocks` field to a blueprint:
