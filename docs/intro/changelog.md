@@ -4,6 +4,14 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 9 November 2026
+
+**Content: fragments.** Write a piece of content once and use it on many pages. A collection with `fragments: true` has no
+route, and its entries get drafts, the trash, preview, search and the admin like any other. `content()->fragment('spring-sale')`
+returns the published entry or `null`, and `fragment('promos/spring-sale')` names the collection. A built-in `fragment`
+block type links to one fragment, and `$block->fragment()` reads it in your own `blocks/fragment.php`. A cycle of fragments,
+or nesting more than 5 deep, renders nothing and logs an error. See [Fragments](../content/fragments.md).
+
 ## 8 November 2026
 
 **Content: an admin editor for `blocks` fields.** A blocks field is now a list of collapsible cards, each with the block

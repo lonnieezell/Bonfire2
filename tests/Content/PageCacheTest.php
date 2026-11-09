@@ -321,6 +321,28 @@ final class PageCacheTest extends ContentTestCase
         });
     }
 
+    public function testSavingAFragmentShowsTheEditOnACachedPageThatEmbedsIt(): void
+    {
+        $fragment = 'f0000000-0000-4000-8000-000000000001';
+
+        $this->writeFile('collections/promos.yaml', "title: Promos\nfragments: true\n");
+        mkdir($this->site . 'collections/promos');
+        $this->writeFile('collections/promos/spring-sale.md', "---\nid: {$fragment}\ntitle: Spring sale\n---\nBody.\n");
+        $this->writeFile('collections/blog/2026-01-10.first-post.md', "---\nid: " . self::FIRST . "\ntitle: First post\nsections:\n  - type: fragment\n    fragment: [{$fragment}]\n---\nBody.\n");
+        $this->serveBlog(60, 'controller: ' . PageCacheController::class . '::blocks');
+
+        $this->get('blog/first-post')->assertSee('Spring sale');
+        // The page is served from the cache: it doesn't show a change that cleared nothing.
+        $this->tamperWith($fragment);
+        $this->get('blog/first-post')->assertSee('Spring sale');
+
+        $promos  = Collection::load($this->site, 'promos');
+        $current = $this->store()->read($promos, $fragment);
+        $this->store()->update($promos, $current, ['id' => $fragment, 'title' => 'Summer sale'], 'Body.', hash('sha256', (string) file_get_contents($this->site . $current['path'])));
+
+        $this->get('blog/first-post')->assertSee('Summer sale');
+    }
+
     public function testTrashingAnEntryClearsTheCache(): void
     {
         $this->serveBlog(60);

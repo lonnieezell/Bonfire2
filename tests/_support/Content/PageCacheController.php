@@ -21,6 +21,14 @@ class PageCacheController extends Controller
     }
 
     /**
+     * Shows the entry's blocks, to cache a page that embeds a fragment.
+     */
+    public function blocks(Entry $entry): string
+    {
+        return $entry->renderBlocks('sections');
+    }
+
+    /**
      * Refuses with a status and a string, the way a controller that checks access might.
      */
     public function refuse(Entry $entry): string

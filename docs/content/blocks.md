@@ -34,6 +34,8 @@ The fields use the same [keys](blueprints.md#field-keys) and [types](field_types
 
 A block type that breaks one of these is refused with a message that names the file and the field.
 
+The `fragment` block type is built in and needs no file. See [Fragments](fragments.md#the-fragment-block).
+
 ## The blocks field
 
 Add a `blocks` field to a blueprint:
@@ -48,7 +50,7 @@ Add a `blocks` field to a blueprint:
 
 | Key | Default | What it does |
 |---|---|---|
-| `blocks` | Every file in `resources/blueprints/blocks` | The block types the field allows. |
+| `blocks` | Every file in `resources/blueprints/blocks`, and `fragment` if the site has a fragment collection | The block types the field allows. |
 | `max_items` | None | The most blocks there can be. |
 | `min_items` | None | The fewest blocks there can be. |
 
@@ -131,6 +133,7 @@ Each `Bonfire\Content\Block` has:
 |---|---|
 | `type` | The block's type, such as `hero`. |
 | `field($name, $default = null)` | A value of the block. |
+| `fragment()` | The published entry a `fragment` block links to, or `null`. See [Fragments](fragments.md#its-partial). |
 | `entry` | The entry the block belongs to. |
 | `render()` | The block through its partial. |
 

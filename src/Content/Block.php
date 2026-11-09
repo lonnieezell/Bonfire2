@@ -52,8 +52,42 @@ final readonly class Block
     }
 
     /**
+     * The published fragment a `fragment` block links to. Null for any other block, for a draft, scheduled, trashed or
+     * missing fragment, and for an entry outside a fragment collection, which a file written by hand can link to.
+     */
+    public function fragment(): ?Entry
+    {
+        $id    = $this->fragmentId();
+        $entry = $id === null ? null : content()->find($id);
+
+        if ($entry === null || ! $entry->isPublished()) {
+            return null;
+        }
+
+        try {
+            return Collection::load(config('Content')->contentPath, $entry->collection)->fragments ? $entry : null;
+        } catch (ContentException $e) {
+            // The index keeps an entry until the next reindex, and its collection's config may be gone or broken by then.
+            log_message('error', 'Content: collection {collection}: {message}', ['collection' => $entry->collection, 'message' => $e->getMessage()]);
+
+            return null;
+        }
+    }
+
+    /**
+     * The id a `fragment` block links to, whatever that entry's state.
+     */
+    private function fragmentId(): ?string
+    {
+        $ids = $this->type === Blueprint::FRAGMENT_BLOCK ? $this->field(Blueprint::FRAGMENT_BLOCK) : null;
+
+        return is_array($ids) && is_string($ids[0] ?? null) ? strtolower($ids[0]) : null;
+    }
+
+    /**
      * The block through its partial, which is `view('blocks/<type>')` unless `Config\Content::$blockViewPath` says
-     * otherwise, with the block as `$block`. View Components work inside the partial.
+     * otherwise, with the block as `$block`. View Components work inside the partial. A `fragment` block in a cycle of
+     * fragments, or nested more than 5 deep, is logged and gives nothing.
      *
      * @throws ContentException when the partial doesn't exist, except in production, where it is logged and gives nothing
      */
@@ -68,6 +102,20 @@ final readonly class Block
      * @throws ContentException when the partial doesn't exist and this isn't production
      */
     public function renderFor(bool $production): string
+    {
+        $fragment = $this->fragmentId();
+
+        if ($fragment === null) {
+            return $this->renderPartial($production);
+        }
+
+        return FragmentStack::render($this->entry->id, $fragment, fn (): string => $this->renderPartial($production));
+    }
+
+    /**
+     * @throws ContentException when the partial doesn't exist and this isn't production
+     */
+    private function renderPartial(bool $production): string
     {
         $folder = trim(config('Content')->blockViewPath, '/');
         $view   = "{$folder}/{$this->type}";

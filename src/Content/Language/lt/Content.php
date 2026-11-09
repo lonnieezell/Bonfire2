@@ -96,6 +96,7 @@ return [
     'blockAdd'         => 'Pridėti bloką',
     'blockChoose'      => 'Pasirinkti bloką',
     'blockReplace'     => 'Pakeisti',
+    'blockFragment'    => 'Fragmentas',
     'blockMoveUp'      => 'Perkelti aukštyn',
     'blockMoveDown'    => 'Perkelti žemyn',
     'blockDuplicate'   => 'Dubliuoti',
