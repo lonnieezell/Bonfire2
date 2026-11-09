@@ -129,6 +129,8 @@ final class ListEditorTest extends ContentTestCase
         $this->assertSame(csrf_token() . ',field,name,id,count', $button->getAttribute('hx-params'));
         $this->assertSame('#field-features-list', $button->getAttribute('hx-target'));
         $this->assertSame('beforeend', $button->getAttribute('hx-swap'));
+        $this->assertSame('closest form:queue', $button->getAttribute('hx-sync'), 'one post at a time, as each rotates the CSRF token');
+        $this->assertStringContainsString('XMLHttpRequest', (string) $button->getAttribute('hx-headers'), 'so a refused token is an error, not a redirect whose page is swapped in');
         $this->assertStringContainsString(esc($this->token(), 'js'), (string) $button->getAttribute('hx-vals'));
     }
 
@@ -196,6 +198,25 @@ final class ListEditorTest extends ContentTestCase
         $viewer->addPermission('admin.access', 'content.access');
 
         $this->actingAs($viewer)->post(route_to('content-list-row'), $this->fragmentQuery())->assertRedirectTo(site_url(ADMIN_AREA));
+    }
+
+    public function testAFragmentNeedsAccessAlongsideEdit(): void
+    {
+        $editor = $this->createUser();
+        $editor->addPermission('admin.access', 'content.edit');
+
+        $this->actingAs($editor)->post(route_to('content-list-row'), $this->fragmentQuery())->assertRedirectTo(site_url(ADMIN_AREA));
+    }
+
+    public function testAFragmentIsGivenToWhoeverCanOpenATermForm(): void
+    {
+        $arranger = $this->createUser();
+        $arranger->addPermission('admin.access', 'content.structure');
+
+        $response = $this->actingAs($arranger)->post(route_to('content-list-row'), $this->fragmentQuery());
+
+        $response->assertOK();
+        $this->assertStringContainsString('data-row', (string) $response->getBody());
     }
 
     public function testAFragmentNeedsACsrfToken(): void

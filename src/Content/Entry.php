@@ -12,7 +12,6 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Fields\EntryStorage;
-use Bonfire\Fields\Field;
 use CodeIgniter\I18n\Time;
 use RuntimeException;
 
@@ -75,22 +74,11 @@ final readonly class Entry
 
         // Only a list with maps in it can be a list field's rows, so nothing else costs a read of the blueprint.
         if (is_array($value) && array_is_list($value) && array_filter($value, is_array(...)) !== []) {
-            $field = $this->listField($name);
-            $value = $field === null ? $value : EntryStorage::cast($value, $field);
+            $field = $this->ownBlueprint()?->field($name);
+            $value = $field?->type === 'list' ? EntryStorage::cast($value, $field) : $value;
         }
 
         return $value ?? $default;
-    }
-
-    /**
-     * The `list` field with this handle, or null. The blueprint's file may be gone or broken by now, as the index
-     * outlives it, and then the rows are returned as the file holds them.
-     */
-    private function listField(string $name): ?Field
-    {
-        $field = $this->ownBlueprint()?->field($name);
-
-        return $field?->type === 'list' ? $field : null;
     }
 
     /**

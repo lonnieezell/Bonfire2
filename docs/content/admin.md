@@ -153,7 +153,8 @@ is required.` In a list inside a block, the problem shows on the block's card wi
 
 The **Add row** button sends the server the field's definition, signed with the app's encryption key, so a request can
 only draw rows a blueprint defined. Run `php spark key:generate` if your app has no key. Without one, the existing rows
-can still be edited, moved and deleted, but the form says why it can't add any.
+can still be edited, moved and deleted, but the form says why it can't add any. Adding a row needs `content.access` and
+`content.edit`, or `content.structure`, which is what the forms that can hold a list need.
 
 ## Previewing a draft
 

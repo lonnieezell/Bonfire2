@@ -50,6 +50,8 @@ $errorsOf  = BlocksField::errorsByPosition($errors);
             hx-post="<?= url_to('content-list-row') ?>"
             hx-target="#<?= esc($list, 'attr') ?>"
             hx-swap="beforeend"
+            hx-sync="closest form:queue"
+            hx-headers='{"X-Requested-With": "XMLHttpRequest"}'
             hx-params="<?= esc(csrf_token(), 'attr') ?>,field,name,id,count"
             hx-vals="js:{field: '<?= esc($token, 'js') ?>', name: '<?= esc($name, 'js') ?>', id: '<?= esc($id, 'js') ?>', count: document.getElementById('<?= esc($list, 'js') ?>').children.length}"
         ><?= lang('Content.listAdd') ?></button>

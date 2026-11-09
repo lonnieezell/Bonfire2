@@ -67,7 +67,7 @@ $tools = ! $slot && ! $disabled;
     </div>
     <div class="card-body" data-block-body x-show="open"<?= $open ? '' : ' x-cloak' ?>>
         <?php // Always posted, so a card whose inputs post nothing when empty is still saved. A handle can't start with `_`, so `_row` is never a sub-field's. ?>
-        <input type="hidden" name="<?= esc($prefix . ($isRow ? '[_row]' : '[type]'), 'attr') ?>" value="<?= esc($isRow ? '1' : $type, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>
+        <input type="hidden" name="<?= esc($prefix . ($isRow ? '[_row]' : '[type]'), 'attr') ?>" value="<?= esc($type, 'attr') ?>"<?= $disabled ? ' disabled' : '' ?>>
         <?php if ($cardErrors !== []) : ?>
             <div class="alert alert-danger" role="alert" data-block-errors>
                 <?php foreach ($cardErrors as $handle => $message) : ?>

@@ -16,6 +16,7 @@ use Bonfire\Fields\ChoiceList;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldType;
 use Bonfire\Fields\FieldTypes;
+use Bonfire\Fields\SignedToken;
 
 /**
  * A repeater: rows with the same fixed sub-fields, listed in `fields`. `max_items` and `min_items` bound how many rows
@@ -25,6 +26,8 @@ use Bonfire\Fields\FieldTypes;
  */
 final class ListField extends FieldType
 {
+    private const TOKEN_PURPOSE = 'content-list';
+
     public function partial(): string
     {
         return 'list';
@@ -92,7 +95,7 @@ final class ListField extends FieldType
             $errors[''] = lang('Content.listTooFew', [$min]);
         }
 
-        $subFields = $rows === [] ? [] : Blueprint::subFields($field);
+        $subFields = Blueprint::subFields($field);
 
         foreach ($rows as $index => $row) {
             $errors += BlocksField::fieldErrors($subFields, $row, $index + 1);
@@ -131,14 +134,14 @@ final class ListField extends FieldType
     public static function cast(mixed $stored, Field $field): array
     {
         $subFields = Blueprint::subFields($field);
+        $keys      = array_map(static fn (Field $subField): string => EntryStorage::key(FieldTypes::get($subField->type), $subField), $subFields);
         $rows      = [];
 
         foreach (self::maps($stored) as $item) {
             $row = [];
 
-            foreach ($subFields as $subField) {
-                $key                    = EntryStorage::key(FieldTypes::get($subField->type), $subField);
-                $row[$subField->handle] = EntryStorage::cast($item[$key] ?? null, $subField);
+            foreach ($subFields as $index => $subField) {
+                $row[$subField->handle] = EntryStorage::cast($item[$keys[$index]] ?? null, $subField);
             }
 
             $rows[] = $row;
@@ -161,18 +164,7 @@ final class ListField extends FieldType
      */
     public static function token(Field $field): string
     {
-        $key = (string) config('Encryption')->key;
-
-        if ($key === '') {
-            return '';
-        }
-
-        $payload = rtrim(strtr(base64_encode(json_encode(
-            ['handle' => $field->handle, 'fields' => $field->options['fields'], 'max_items' => BlocksField::bound($field, 'max_items')],
-            JSON_THROW_ON_ERROR,
-        )), '+/', '-_'), '=');
-
-        return $payload . '.' . self::sign($payload, $key);
+        return SignedToken::encode(self::TOKEN_PURPOSE, ['handle' => $field->handle, 'fields' => $field->options['fields'], 'max_items' => BlocksField::bound($field, 'max_items')]);
     }
 
     /**
@@ -181,26 +173,9 @@ final class ListField extends FieldType
      */
     public static function fromToken(mixed $token): ?Field
     {
-        $key = (string) config('Encryption')->key;
+        $data = SignedToken::decode(self::TOKEN_PURPOSE, $token);
 
-        if ($key === '' || ! is_string($token)) {
-            return null;
-        }
-
-        $parts = explode('.', $token);
-
-        if (count($parts) !== 2 || ! hash_equals(self::sign($parts[0], $key), $parts[1])) {
-            return null;
-        }
-
-        $data = json_decode((string) base64_decode(strtr($parts[0], '-_', '+/'), true), true);
-
-        return new Field($data['handle'], 'list', '', '', null, ['fields' => $data['fields'], 'max_items' => $data['max_items']]);
-    }
-
-    private static function sign(string $payload, string $key): string
-    {
-        return hash_hmac('sha256', 'content-list|' . $payload, $key);
+        return $data === null ? null : new Field($data['handle'], 'list', '', '', null, ['fields' => $data['fields'], 'max_items' => $data['max_items']]);
     }
 
     /**
