@@ -12,17 +12,16 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Models\ContentEntryModel;
-use Bonfire\Core\Like;
 use Bonfire\Search\Interfaces\SearchProviderInterface;
 
 /**
- * Puts entries in the admin's global search. The index row holds the raw Markdown body, so a LIKE on it is enough.
+ * Puts entries in the admin's global search. The index row holds the search text, so a LIKE on it is enough.
  */
 class SearchProvider extends ContentEntryModel implements SearchProviderInterface
 {
     /**
-     * The rows of entries whose title or Markdown body contain the term. Trashed entries are left out by the model,
-     * and so is everything for someone without content.access.
+     * The rows of entries whose title or search text contain the term, fragments included. Trashed entries are left
+     * out by the model, and so is everything for someone without content.access.
      */
     public function search(string $term, int $limit = 10, ?array $post = null): array
     {
@@ -33,13 +32,8 @@ class SearchProvider extends ContentEntryModel implements SearchProviderInterfac
         // In development, this picks up files changed since the last request.
         content();
 
-        $needle = Like::escape($term, $this->db);
-
         return $this->select('id, collection, title, status')
-            ->groupStart()
-            ->like('title', $needle, 'both', true, true)
-            ->orLike('body', $needle, 'both', true, true)
-            ->groupEnd()
+            ->matching($term)
             ->orderBy('title', 'asc')
             ->findAll($limit);
     }

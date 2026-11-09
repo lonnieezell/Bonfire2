@@ -1,7 +1,8 @@
 # Fragments
 
 A fragment is a piece of content you write once and use on many pages, such as a call to action. It's an ordinary entry
-in a collection that has no route, so it has drafts, the trash, preview, search and the admin like any other entry.
+in a collection that has no route, so it has drafts, the trash, preview, admin search and the admin like any other entry.
+`content()->search()` leaves fragments out unless you [name their collection](query_api.md#searching).
 
 ## A fragment collection
 

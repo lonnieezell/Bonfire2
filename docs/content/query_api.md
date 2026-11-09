@@ -66,12 +66,13 @@ the `?page=` query string unless you pass it. For a whole page built this way, s
 
 ## Searching
 
-`content()->search($term)` starts a query on the published entries that have the term in their title or Markdown body,
-across every collection. Pass a collection's handle as the second argument to search only that one, which throws
-`Bonfire\Content\ContentException` if the collection doesn't exist.
+`content()->search($term)` starts a query on the published entries that have the term in their title, body or blocks,
+across every collection except [fragment collections](fragments.md). Pass a collection's handle as the second argument to
+search only that one, fragment collections included, which throws `Bonfire\Content\ContentException` if the collection
+doesn't exist.
 
 ```php
-$query   = content()->search($term);            // every collection
+$query   = content()->search($term);            // every collection but fragments
 $query   = content()->search($term, 'blog');    // only the blog
 $results = $query->paginate(10);
 $pager   = $query->pager();
@@ -81,8 +82,12 @@ It returns the same query as `collection()`, so `get()`, `paginate()` and `pager
 `orderBy()` changes the order. Results are ordered by title, whichever collections they come from.
 
 - It only returns what `published()` keeps. Drafts, scheduled entries and entries in the trash are never found.
-- It's a plain `LIKE` match on the title and the raw Markdown body, so the term is found inside words and in Markdown
-  syntax. There are no wildcards: `*`, `%` and `_` each match only themselves, and a quote is safe.
+- It's a plain `LIKE` match on the title and the entry's search text, so the term is found inside words. There are no
+  wildcards: `*`, `%` and `_` each match only themselves, and a quote is safe.
+- The search text is the body rendered to plain text, plus every string in any front matter value that is a list of maps
+  with a `type` key, which is how [blocks](blocks.md) are stored. Those strings are rendered to plain text too, so
+  Markdown syntax and component attributes aren't found. Other front matter fields aren't searched, and neither is the
+  text of a fragment that a page embeds.
 - Spaces around the term are ignored, and a blank term finds nothing.
 - `whereTerm()` needs a query on one collection, so it throws unless you narrowed the search to one.
 

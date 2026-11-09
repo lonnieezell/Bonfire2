@@ -33,10 +33,11 @@ The list shows each entry's title, status and date, a page at a time. It reads t
 
 ## Search
 
-Entries show up in the admin's search box, under **Content**. The search matches the term anywhere in an entry's title
-or in its Markdown body, ignoring case, and lists the entry's title, collection and status. The body is searched as it
-was written, so Markdown syntax such as `**bold**` counts, but front matter fields do not. Trashed entries are left out,
-and so is everything for a user without `content.access`. The title links to the edit form for users with
+Entries show up in the admin's search box, under **Content**. The search matches the term anywhere in an entry's title,
+body or blocks, ignoring case, and lists the entry's title, collection and status. The body and blocks are searched as
+plain text, so Markdown syntax such as `**bold**` doesn't count, and other front matter fields aren't searched. Fragments
+are found here, unlike in [`content()->search()`](query_api.md#searching). Trashed entries are left out, and so is
+everything for a user without `content.access`. The title links to the edit form for users with
 `content.edit`, and is plain text for the others. It reads the index, the same as [the list](#the-list).
 
 Content has no page that lists every collection, so the "see all" link under the results goes to the first collection's

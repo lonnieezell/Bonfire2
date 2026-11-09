@@ -4,7 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 9 November 2026
+## 9 November 2026 (breaking change)
+
+**Content: search reads blocks, and no longer reads Markdown syntax.** Admin search and `content()->search()` now match an
+entry's title and a new `search_text` column, in place of the raw body. It holds the body and every string in the entry's
+blocks, as plain text, so a page built from blocks can be found, and `**` or a component's attribute no longer matches.
+Text from an embedded fragment isn't copied into the page. Fragment collections are left out of `content()->search()` unless
+you name one, and admin search still finds them. **Run `php spark migrate`, then `php spark content:reindex`, after
+updating.** Until you migrate, searching, saving an entry and reindexing all fail with a database error. Until you reindex,
+search finds existing entries only by title. See [Searching](../content/query_api.md#searching).
 
 **Content: `make:block`.** `php spark make:block hero` writes a new block type into your app: its blueprint at
 `resources/blueprints/blocks/hero.yaml` and a partial in your block view folder that renders its fields. Files that exist
@@ -12,7 +20,7 @@ are skipped and named, and the two files are yours from then on. `make:block fra
 linked fragment's `sections`. See [Blocks](../content/blocks.md#generating-a-block-type).
 
 **Content: fragments.** Write a piece of content once and use it on many pages. A collection with `fragments: true` has no
-route, and its entries get drafts, the trash, preview, search and the admin like any other. `content()->fragment('spring-sale')`
+route, and its entries get drafts, the trash, preview, admin search and the admin like any other. `content()->fragment('spring-sale')`
 returns the published entry or `null`, and `fragment('promos/spring-sale')` names the collection. A built-in `fragment`
 block type links to one fragment, and `$block->fragment()` reads it in your own `blocks/fragment.php`. A cycle of fragments,
 or nesting more than 5 deep, renders nothing and logs an error. See [Fragments](../content/fragments.md).

@@ -32,7 +32,7 @@ class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecy
     protected $useSoftDeletes   = true;
     protected $allowedFields    = [
         'id', 'collection', 'blueprint', 'slug', 'uri', 'parent_id', 'sort', 'status', 'published_at',
-        'title', 'data', 'body', 'path', 'hash', 'mtime', 'deleted_at',
+        'title', 'data', 'body', 'search_text', 'path', 'hash', 'mtime', 'deleted_at',
     ];
 
     /**
@@ -55,8 +55,8 @@ class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecy
     }
 
     /**
-     * Keeps entries whose title or Markdown body contain the term, ignoring spaces around it. A % or _ in it
-     * matches itself, and a blank term matches nothing.
+     * Keeps entries whose title or search text (the body and blocks as plain text) contain the term, ignoring spaces
+     * around it. A % or _ in it matches itself, and a blank term matches nothing.
      */
     public function matching(string $term): self
     {
@@ -70,7 +70,7 @@ class ContentEntryModel extends Model implements CustomRecyclerQuery, CustomRecy
 
         return $this->groupStart()
             ->like('title', $needle, 'both', true, true)
-            ->orLike('body', $needle, 'both', true, true)
+            ->orLike('search_text', $needle, 'both', true, true)
             ->groupEnd();
     }
 

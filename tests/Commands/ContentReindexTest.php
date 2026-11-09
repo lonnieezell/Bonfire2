@@ -31,6 +31,19 @@ final class ContentReindexTest extends ContentTestCase
         $this->assertStringContainsString('4 added, 0 updated, 0 removed, 0 unchanged', $this->getStreamFilterBuffer());
     }
 
+    public function testFillsTheSearchTextOfEntriesIndexedBeforeItsColumnExisted(): void
+    {
+        command('content:reindex');
+        db_connect()->table('content_entries')->where('id !=', '')->update(['search_text' => null]);
+        $this->assertSame([], content()->search('The first post')->get());
+        $this->resetStreamFilterBuffer();
+
+        command('content:reindex');
+
+        $this->assertStringContainsString('0 added, 4 updated, 0 removed, 0 unchanged', $this->getStreamFilterBuffer());
+        $this->assertCount(1, content()->search('The first post')->get());
+    }
+
     public function testAFailureSaysSoInsteadOfReportingCounts(): void
     {
         config('Content')->contentPath = $this->site . 'not-mounted/';
