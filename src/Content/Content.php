@@ -153,7 +153,7 @@ final readonly class Content
 
         if (str_contains($name, '/')) {
             [$collection, $slug] = explode('/', $name, 2);
-            $handles             = array_values(array_intersect($handles, [$collection]));
+            $handles             = array_intersect($handles, [$collection]);
         }
 
         if ($handles === []) {
@@ -165,7 +165,10 @@ final readonly class Content
         $rows = array_values(array_filter($rows, static fn (array $row): bool => $row['slug'] === $slug));
 
         if (count($rows) > 1) {
-            log_message('error', 'Content: more than one fragment has the slug {slug}, so none was returned. Name its collection too, as in collection/slug.', ['slug' => $slug]);
+            // A dated collection can hold a slug under several dates, and then naming the collection doesn't help.
+            $fix = count(array_unique(array_column($rows, 'collection'))) > 1 ? 'Name its collection too, as in collection/slug.' : 'Give each its own slug.';
+
+            log_message('error', 'Content: more than one fragment has the slug {slug}, so none was returned. ' . $fix, ['slug' => $slug]);
 
             return null;
         }

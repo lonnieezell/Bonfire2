@@ -107,6 +107,7 @@ return [
     'blockAdd'         => 'Add block',
     'blockChoose'      => 'Choose a block',
     'blockReplace'     => 'Replace',
+    'blockFragment'    => 'Fragment',
     'blockMoveUp'      => 'Move up',
     'blockMoveDown'    => 'Move down',
     'blockDuplicate'   => 'Duplicate',

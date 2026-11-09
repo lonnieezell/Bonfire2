@@ -138,6 +138,17 @@ final class FragmentsTest extends ContentTestCase
         $this->assertLogged('error', 'Content: more than one fragment has the slug spring-sale, so none was returned. Name its collection too, as in collection/slug.');
     }
 
+    public function testASlugTwiceInOneDatedCollectionIsNullAndDoesNotAdviseNamingTheCollection(): void
+    {
+        $this->writeFile('collections/promos.yaml', "title: Promos\ndated: true\nfragments: true\n");
+        mkdir($this->site . 'collections/promos');
+        $this->writeFragment('promos', self::SALE, '2026-01-10.spring-sale', 'January');
+        $this->writeFragment('promos', self::OTHER, '2026-02-10.spring-sale', 'February');
+
+        $this->assertNull(content()->fragment('promos/spring-sale'));
+        $this->assertLogged('error', 'Content: more than one fragment has the slug spring-sale, so none was returned. Give each its own slug.');
+    }
+
     // The fragment block
 
     public function testTheBlockReturnsTheFragmentItLinksTo(): void

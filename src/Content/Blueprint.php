@@ -170,8 +170,10 @@ final readonly class Blueprint
             throw new ContentException('The `' . self::FRAGMENT_BLOCK . '` block type needs a collection with `fragments: true`.');
         }
 
-        return new self('blocks', self::FRAGMENT_BLOCK, 'Fragment', [
-            new Field(self::FRAGMENT_BLOCK, 'entries', 'Fragment', '', null, ['collections' => $collections, 'max_items' => 1]),
+        $title = lang('Content.blockFragment');
+
+        return new self('blocks', self::FRAGMENT_BLOCK, $title, [
+            new Field(self::FRAGMENT_BLOCK, 'entries', $title, '', null, ['collections' => $collections, 'max_items' => 1]),
         ]);
     }
 

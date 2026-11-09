@@ -183,10 +183,7 @@ final readonly class Collection
      */
     public static function fragmentHandles(string $contentRoot): array
     {
-        return array_values(array_map(
-            static fn (self $collection): string => $collection->handle,
-            array_filter(self::all($contentRoot), static fn (self $collection): bool => $collection->fragments),
-        ));
+        return array_column(array_filter(self::all($contentRoot), static fn (self $collection): bool => $collection->fragments), 'handle');
     }
 
     /**

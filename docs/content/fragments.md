@@ -49,7 +49,8 @@ content()->fragment('promos/spring-sale');
 ```
 
 A slug on its own looks in every fragment collection. If more than one has a published fragment with that slug, it's
-logged as an error and you get `null`, so name the collection when slugs can repeat.
+logged as an error and you get `null`, so name the collection when slugs can repeat. A dated collection can hold one slug
+under two dates, which also gives `null`, so give each fragment its own slug.
 
 ## The fragment block
 

@@ -12,7 +12,6 @@
 namespace Bonfire\Content;
 
 use Bonfire\Content\Fields\EntryStorage;
-use Bonfire\Content\Models\ContentEntryModel;
 use Bonfire\Fields\FieldTypes;
 use Config\Paths;
 
@@ -58,16 +57,21 @@ final readonly class Block
      */
     public function fragment(): ?Entry
     {
-        $id          = $this->fragmentId();
-        $collections = $id === null ? [] : Collection::fragmentHandles(config('Content')->contentPath);
+        $id    = $this->fragmentId();
+        $entry = $id === null ? null : content()->find($id);
 
-        if ($collections === []) {
+        if ($entry === null || ! $entry->isPublished()) {
             return null;
         }
 
-        $row = (new ContentEntryModel())->published()->whereIn('collection', $collections)->where('id', $id)->first();
+        try {
+            return Collection::load(config('Content')->contentPath, $entry->collection)->fragments ? $entry : null;
+        } catch (ContentException $e) {
+            // The index keeps an entry until the next reindex, and its collection's config may be gone or broken by then.
+            log_message('error', 'Content: collection {collection}: {message}', ['collection' => $entry->collection, 'message' => $e->getMessage()]);
 
-        return $row === null ? null : Entry::fromRow($row);
+            return null;
+        }
     }
 
     /**
