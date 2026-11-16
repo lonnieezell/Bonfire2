@@ -138,6 +138,29 @@ class DeletePhotos extends DeleteAction
 Override `confirm()` for your own question and `deleted()` for the message once it's done. See
 `Bonfire\Users\Actions\DeleteUsers` for a complete example.
 
+### Returning A File
+
+An action that writes a file for the admin, such as an export, returns `ActionResult::file()` with the file's path, the
+name to download it as, and the message:
+
+```php
+public function handle(ActionContext $context): ActionResult
+{
+    $path = WRITEPATH . 'exports/' . bin2hex(random_bytes(16)) . '.csv';
+    // ... write the records to $path
+
+    return ActionResult::file($path, 'photos.csv', '{count} photos exported.');
+}
+```
+
+A run in the request answers with the file as a download, then deletes it. A queued run keeps the file, and its toast
+ends with a **Download** link to `GET admin/actions/runs/{id}/download`. Only the admin who started the run can
+download it, and only for a day after the run ends. Clean up old files yourself:
+`Bonfire\Resources\Actions\ExportRecords` deletes its own when it writes the next one. Keep each file under `WRITEPATH`
+with a random name, since the link serves the path the run recorded. A run that handled no records deletes its file and
+reports the error as usual. A queued run records the file in the `file` column of `action_runs`, so run
+`php spark migrate --all` to add it.
+
 ## Registering Actions
 
 Actions belong to a named list. Register them in your module's `initAdmin()`, saying where the list's records come

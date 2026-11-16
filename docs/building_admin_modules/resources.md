@@ -368,6 +368,34 @@ needs `{permission}.delete`. When the model uses soft deletes, the records go to
 also asks the resource's `can('delete', $record)`: a record that refuses is skipped, and its row doesn't offer the
 action. So that `can()` has a signed-in user to ask, the action never runs in a queue.
 
+#### Exporting to CSV
+
+`Bonfire\Resources\Actions\ExportRecords` downloads records as a CSV file. Add it to `actions()` to turn it on:
+
+```php
+public function actions(): array
+{
+    return [new DeleteRecords($this), new ExportRecords($this)];
+}
+```
+
+It needs `{permission}.list`, since an export shows nothing the list doesn't. The admin can export in two ways:
+
+- **The checked rows**, with **Export CSV** in the bar that appears when rows are checked.
+- **Everything matching the search and filters**, with the **Export CSV** button above the list. This exports every
+  matching record, on every page. It posts to `POST admin/{slug}/export`, which `resource_routes()` declares with the
+  list.
+
+The file has a header row of the list's column labels, then one row per record with the same text the list shows: the
+stored value of a select or toggle, not its label. A cell that starts with `=`, `+`, `-`, `@`, a tab or a carriage
+return gets a leading `'`, so a spreadsheet doesn't run it as a formula. Negative numbers show that quote too. The file
+starts with a UTF-8 byte order mark, so Excel reads accents correctly, and it's named `{slug}-{date}-{time}.csv`.
+
+Up to 500 records download straight away. Larger exports run [in the background](actions.md#running-in-the-background)
+when the queue is set up, and the toast links to the file once it's written. Files are kept in `writable/exports/` and
+deleted after a day. Records load through the model, not `query()`, so a [relation column](#relation-and-computed-columns)
+read from a join is empty in the file unless the record has the relation loaded.
+
 Another module adds an action to a resource's list by its slug, from `initAdmin()`:
 
 ```php
