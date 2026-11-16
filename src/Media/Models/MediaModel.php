@@ -13,12 +13,13 @@ namespace Bonfire\Media\Models;
 
 use Bonfire\Core\Like;
 use Bonfire\Media\Entities\Media;
+use Bonfire\Recycler\Interfaces\CustomRecyclerPurge;
 use CodeIgniter\Model;
 
 /**
  * One row per media file. Deleting is soft, so the file stays on disk until the Recycler purges it.
  */
-class MediaModel extends Model
+class MediaModel extends Model implements CustomRecyclerPurge
 {
     protected $table            = 'media';
     protected $useAutoIncrement = false;
@@ -26,7 +27,8 @@ class MediaModel extends Model
     protected $useSoftDeletes   = true;
     protected $useTimestamps    = true;
     protected $allowedFields    = [
-        'id', 'container', 'folder', 'path', 'filename', 'mime', 'size', 'width', 'height', 'alt',
+        // deleted_at so that the Recycler's restore can clear it.
+        'id', 'container', 'folder', 'path', 'filename', 'mime', 'size', 'width', 'height', 'alt', 'deleted_at',
     ];
     protected $beforeInsert = ['addId'];
 
@@ -55,6 +57,24 @@ class MediaModel extends Model
             ->orderBy('folder')->get()->getResultArray();
 
         return array_column($rows, 'folder');
+    }
+
+    /**
+     * Removes a deleted file's row and the file on disk. One that isn't deleted is left alone.
+     */
+    public function recyclerPurge(int|string $id): bool
+    {
+        $media = $this->onlyDeleted()->find($id);
+
+        if (! $media instanceof Media || ! $this->delete($media->id, true)) {
+            return false;
+        }
+
+        if (is_file($media->diskPath())) {
+            unlink($media->diskPath());
+        }
+
+        return true;
     }
 
     /**

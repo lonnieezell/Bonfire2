@@ -4,6 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 16 November 2026
+
+**Media: a media library.** A new **Media** screen under **Content** stores uploaded files. Upload several at once into a
+folder, browse by folder, search by filename or alt text, set a file's alt text, and move it to another folder without
+changing its URL. Deleted files go to the Recycler, and purging one removes it from disk. Uploads are refused when their
+extension isn't allowed or they're over the size limit, and SVG is off by default. It needs the new `media.access`,
+`media.edit` and `media.delete` permissions: **run `php spark migrate` and `php spark bonfire:permissions` after
+updating.** See [Media](../modules/media.md).
+
 ## 9 November 2026 (breaking change)
 
 **Content: search reads blocks, and no longer reads Markdown syntax.** Admin search and `content()->search()` now match an

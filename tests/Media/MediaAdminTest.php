@@ -133,6 +133,47 @@ final class MediaAdminTest extends MediaTestCase
         $this->assertFileExists($this->dir . 'cat.jpg');
     }
 
+    public function testTheRecyclerListsADeletedFile(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+        model(MediaModel::class)->delete($media->id);
+
+        $this->actingAs($this->admin)->get(route_to('recycler') . '?r=media')->assertSee(route_to('recycler-purge', 'media', $media->id));
+    }
+
+    public function testPurgingADeletedFileRemovesItFromDisk(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+        $kept  = $this->mediaFile('dog.jpg');
+        model(MediaModel::class)->delete([$media->id, $kept->id]);
+
+        $this->actingAs($this->admin)->post(route_to('recycler-purge', 'media', $media->id), [csrf_token() => csrf_hash()])->assertSessionMissing('error');
+
+        $this->assertNull(model(MediaModel::class)->withDeleted()->find($media->id));
+        $this->assertFileDoesNotExist($this->dir . 'cat.jpg');
+        $this->assertFileExists($this->dir . 'dog.jpg');
+    }
+
+    public function testPurgeRefusesAFileThatIsNotDeleted(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+
+        $this->actingAs($this->admin)->post(route_to('recycler-purge', 'media', $media->id), [csrf_token() => csrf_hash()])->assertSessionHas('error');
+
+        $this->assertNotNull(model(MediaModel::class)->find($media->id));
+        $this->assertFileExists($this->dir . 'cat.jpg');
+    }
+
+    public function testRestoringBringsItBackToTheList(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+        model(MediaModel::class)->delete($media->id);
+
+        $this->actingAs($this->admin)->post(route_to('recycler-restore', 'media', $media->id), [csrf_token() => csrf_hash()])->assertSessionMissing('error');
+
+        $this->assertSame([$media->id], $this->listed($this->actingAs($this->admin)->get(route_to('media-list'))));
+    }
+
     public function testRefusesUploadEditAndDeleteWithoutThePermissions(): void
     {
         $media = $this->mediaFile('cat.jpg', '', 'Cat');

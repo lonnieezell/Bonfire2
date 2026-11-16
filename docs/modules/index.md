@@ -17,6 +17,12 @@ permissions, and set the rules for registration, passwords and avatars.
 
 [Read more about Users](users.md)
 
+## Media
+
+The Media library stores uploaded files in folders, with alt text, and lets you upload, search, move and delete them.
+
+[Read more about Media](media.md)
+
 ## Groups
 
 The Groups module, under **Settings → Groups**, lists the user groups and sets which permissions each group grants.

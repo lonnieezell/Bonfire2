@@ -12,6 +12,7 @@
 namespace Bonfire\Media;
 
 use Bonfire\Core\BaseModule;
+use Bonfire\Media\Models\MediaModel;
 use Bonfire\Menus\MenuItem;
 
 /**
@@ -20,10 +21,13 @@ use Bonfire\Menus\MenuItem;
 class Module extends BaseModule
 {
     /**
-     * Adds Media to the Content section of the sidebar, for those who have media.access.
+     * Adds Media to the Content section of the sidebar, for those who have media.access,
+     * and deleted files to the Recycler.
      */
     public function initAdmin()
     {
+        service('recycler')->register('media', 'Media', MediaModel::class, ['filename', 'folder', 'path']);
+
         service('menus')->menu('sidebar')->collection('content')->addItem(new MenuItem([
             'title'           => lang('Media.modTitle'),
             'namedRoute'      => 'media-list',
