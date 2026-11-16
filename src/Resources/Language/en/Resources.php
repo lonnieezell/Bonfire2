@@ -23,4 +23,6 @@ return [
     'search'        => 'Search',
     'selectAll'     => 'Select all records',
     'selectRecord'  => 'Select record',
+    'exportCsv'     => 'Export CSV',
+    'exported'      => 'The {0} have been exported.',
 ];

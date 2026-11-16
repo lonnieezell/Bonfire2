@@ -13,7 +13,6 @@ namespace Bonfire\Resources\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Field;
-use Bonfire\Fields\FieldTypes;
 use Bonfire\Fields\Form;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
@@ -92,7 +91,7 @@ class ResourceController extends AdminController
             'rows'       => array_map(fn ($record): array => [
                 'record'     => $record,
                 'id'         => $this->idOf($model, $record),
-                'cells'      => $this->cells($columns, $record),
+                'cells'      => $resource->cells($columns, $record),
                 'editUrl'    => $this->editUrl($resource, $model, $record),
                 'selectable' => $selectable && is_object($record) && $actionList->selectable($user, $record),
             ], $records),
@@ -360,20 +359,6 @@ class ResourceController extends AdminController
         }
 
         return [$errors, $notices];
-    }
-
-    /**
-     * What each column shows for a record, as text.
-     *
-     * @param list<Column|Field> $columns
-     *
-     * @return list<string>
-     */
-    private function cells(array $columns, mixed $record): array
-    {
-        return array_map(static fn (Column|Field $column): string => $column instanceof Column
-            ? $column->valueOf($record)
-            : FieldTypes::get($column->type)->fromStored(Column::get($record, $column->handle), $column), $columns);
     }
 
     /**

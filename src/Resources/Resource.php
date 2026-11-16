@@ -127,6 +127,20 @@ abstract class Resource
     }
 
     /**
+     * What each column shows for a record, as text: in the list, and in an export.
+     *
+     * @param list<Column|Field> $columns the resource's `columns()`
+     *
+     * @return list<string>
+     */
+    public function cells(array $columns, mixed $record): array
+    {
+        return array_map(static fn (Column|Field $column): string => $column instanceof Column
+            ? $column->valueOf($record)
+            : FieldTypes::get($column->type)->fromStored(Column::get($record, $column->handle), $column), $columns);
+    }
+
+    /**
      * Whether the signed-in user may do `list`, `create`, `edit` or `delete` to a record, or to any record when
      * `$entity` is null. By default that is having `{permission}.{verb}`. Override it for rules that depend on the record.
      */
