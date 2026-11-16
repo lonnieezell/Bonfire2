@@ -20,6 +20,7 @@ use Bonfire\Fields\Field;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
 use Bonfire\Users\User;
+use Throwable;
 
 /**
  * Downloads the records as a CSV of the list's columns, with the text the list shows. Anyone who may see the list
@@ -41,9 +42,13 @@ class ExportRecords extends Action
      */
     public static function offered(string $list, User $user): ?self
     {
-        $export = service('actions')->find($list, 'export-records');
+        foreach (service('actions')->for($list)->bulk($user) as $action) {
+            if ($action instanceof self) {
+                return $action;
+            }
+        }
 
-        return $export instanceof self && in_array($export, service('actions')->for($list)->bulk($user), true) ? $export : null;
+        return null;
     }
 
     public function handle(ActionContext $context): ActionResult
@@ -61,18 +66,17 @@ class ExportRecords extends Action
             }
         }
 
-        $path    = $dir . bin2hex(random_bytes(16)) . '.csv';
-        $columns = $this->resource->columns();
-        $file    = fopen($path, 'wb');
+        $path = $dir . bin2hex(random_bytes(16)) . '.csv';
+        $file = fopen($path, 'wb');
 
-        // The byte order mark tells Excel the file is UTF-8.
-        fwrite($file, "\u{FEFF}");
-        fputcsv($file, array_map(static fn (Column|Field $column): string => $column->label, $columns), escape: '');
+        try {
+            $this->write($file, $context);
+        } catch (Throwable $e) {
+            // A half-written export is no use to anyone.
+            fclose($file);
+            unlink($path);
 
-        foreach ($context->chunks() as $records) {
-            foreach ($records as $record) {
-                fputcsv($file, array_map(self::defuse(...), $this->resource->cells($columns, $record)), escape: '');
-            }
+            throw $e;
         }
 
         fclose($file);
@@ -82,6 +86,39 @@ class ExportRecords extends Action
             $this->resource->slug . '-' . date('Y-m-d-His') . '.csv',
             lang('Resources.exported', [mb_strtolower($this->resource->title())]),
         );
+    }
+
+    /**
+     * A record the resource won't let the user list is skipped.
+     */
+    public function allows(User $actor, object $record): bool
+    {
+        return $this->resource->can('list', $record);
+    }
+
+    /**
+     * Writes the header and a row per record. Each chunk loads again through the resource's `query()`, so the file
+     * has only records the list shows, with what its joins add, such as a relation's column.
+     *
+     * @param resource $file
+     */
+    private function write($file, ActionContext $context): void
+    {
+        $columns = $this->resource->columns();
+
+        // The byte order mark tells Excel the file is UTF-8.
+        fwrite($file, "\u{FEFF}");
+        fputcsv($file, array_map(static fn (Column|Field $column): string => $column->label, $columns), escape: '');
+
+        foreach ($context->chunks() as $records) {
+            $model = model($this->resource->model, false);
+            $key   = $model->table . '.' . $model->primaryKey;
+            $ids   = array_map(static fn (object $record): mixed => Column::get($record, $model->primaryKey), $records);
+
+            foreach ($this->resource->query($model)->whereIn($key, $ids)->orderBy($key, 'asc')->findAll() as $record) {
+                fputcsv($file, array_map(self::defuse(...), $this->resource->cells($columns, $record)), escape: '');
+            }
+        }
     }
 
     /**

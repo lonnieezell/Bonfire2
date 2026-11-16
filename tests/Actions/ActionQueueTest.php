@@ -15,6 +15,7 @@ use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\Queue\Interfaces\QueueInterface;
 use CodeIgniter\Queue\QueuePushResult;
 use CodeIgniter\Test\TestResponse;
+use Config\Database;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
@@ -109,6 +110,17 @@ final class ActionQueueTest extends TestCase
 
         $this->assertSame($ids, $this->touch->touched);
         $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'done', 'processed' => 2, 'skipped' => 1, 'message' => '2 users touched. Skipped 1.']);
+    }
+
+    public function testARunWithoutAFileFinishesBeforeTheFileColumnIsMigrated(): void
+    {
+        Database::forge()->dropColumn('action_runs', 'file');
+        $this->touch->queue = Queue::Always;
+        $runId              = $this->queueAction($this->users(1));
+
+        (new RunAction(['run' => $runId]))->process();
+
+        $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'done']);
     }
 
     public function testAFailedPushMarksTheRunFailed(): void

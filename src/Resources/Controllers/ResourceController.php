@@ -125,23 +125,21 @@ class ResourceController extends AdminController
     {
         $resource = $this->resource($slug, 'list');
 
-        if (! service('actions')->find($resource->slug, 'export-records') instanceof ExportRecords) {
-            throw PageNotFoundException::forPageNotFound();
-        }
-
-        $user   = auth()->user();
-        $action = ExportRecords::offered($resource->slug, $user);
-
-        if (! $action instanceof ExportRecords || ! $resource->can('list')) {
+        if (! $resource->can('list')) {
             return $this->refused();
         }
 
+        // A list without the export has no button, and neither does one whose export the user may not run.
+        $user   = auth()->user();
+        $action = ExportRecords::offered($resource->slug, $user) ?? throw PageNotFoundException::forPageNotFound();
+
         // The records the list shows for the search and filters, in its default order.
         $model = $this->narrowed($resource, (string) $this->request->getPost('search'), (array) $this->request->getPost('filters'));
-        $ids   = array_column(
+        // A join to a one-to-many relation repeats a record.
+        $ids = array_values(array_unique(array_column(
             $model->select($model->table . '.' . $model->primaryKey)->orderBy($model->table . '.' . $model->primaryKey, 'asc')->asArray()->findAll(),
             $model->primaryKey,
-        );
+        )));
 
         if ($ids === []) {
             return $this->back('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));

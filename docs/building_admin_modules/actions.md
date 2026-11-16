@@ -161,6 +161,9 @@ with a random name, since the link serves the path the run recorded. A run that 
 reports the error as usual. A queued run records the file in the `file` column of `action_runs`, so run
 `php spark migrate --all` to add it.
 
+An action that returns a file can't have `fields()` yet: the confirm dialog posts them with JavaScript, which can't
+save a download.
+
 ## Registering Actions
 
 Actions belong to a named list. Register them in your module's `initAdmin()`, saying where the list's records come

@@ -137,13 +137,13 @@ class ActionRuns
         $succeeded = $context->succeeded($result);
         $file      = $this->keptFile($succeeded, $result);
 
+        // Only a run with a file writes the column, so other actions keep working on an install that hasn't migrated.
         $runs->update($runId, [
             'status'    => $succeeded ? RunStatus::Done : RunStatus::Failed,
             'processed' => $context->processed(),
             'skipped'   => $context->skipped(),
             'message'   => $context->summary($result),
-            'file'      => $file instanceof ResultFile ? json_encode($file) : null,
-        ]);
+        ] + ($file instanceof ResultFile ? ['file' => json_encode($file)] : []));
     }
 
     /**

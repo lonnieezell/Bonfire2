@@ -8,10 +8,12 @@ use Bonfire\Resources\Actions\ExportRecords;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\HTTP\DownloadResponse;
+use CodeIgniter\Model;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Actions\TouchProducts;
+use Tests\Support\Models\CategoryModel;
 use Tests\Support\Models\ProductModel;
 use Tests\Support\Modules\Products\FeatureProducts;
 use Tests\Support\Modules\Products\ProductResource;
@@ -288,7 +290,8 @@ final class ResourceActionsTest extends TestCase
     public function testExportsTheCheckedRecordsWithTheListsColumns(): void
     {
         $this->addExport();
-        $anvil = $this->createProduct('Anvil', ['price' => '10.00', 'stock' => 3, 'status' => 'active']);
+        $tools = model(CategoryModel::class)->insert(['name' => 'Tools']);
+        $anvil = $this->createProduct('Anvil', ['price' => '10.00', 'stock' => 3, 'status' => 'active', 'category_id' => $tools]);
         $this->createProduct('Bellows');
 
         $download = $this->runAction('export-records', [$anvil])->response();
@@ -296,7 +299,32 @@ final class ResourceActionsTest extends TestCase
         $this->assertInstanceOf(DownloadResponse::class, $download);
         $download->buildHeaders();
         $this->assertMatchesRegularExpression('#filename="products-\d{4}-\d{2}-\d{2}-\d{6}\.csv"#', $download->getHeaderLine('Content-Disposition'));
-        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,,30.00,active\n", $this->body($download));
+        // The category's name comes from the join in the resource's query(), as in the list.
+        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,Tools,30.00,active\n", $this->body($download));
+    }
+
+    public function testExportLeavesOutRecordsTheListDoesNotShow(): void
+    {
+        // A list that hides archived products, as a resource scoping its query() would, and a product its can() refuses.
+        $resource = new class () extends ProductResource {
+            public function query(Model $model): Model
+            {
+                return parent::query($model)->where('products.status !=', 'archived');
+            }
+
+            public function can(string $verb, mixed $entity = null): bool
+            {
+                return $entity?->name !== 'Cupola' && parent::can($verb, $entity);
+            }
+        };
+        service('actions')->for('products')->add(new ExportRecords($resource));
+        $shown   = $this->createProduct('Anvil', ['status' => 'active']);
+        $hidden  = $this->createProduct('Bellows', ['status' => 'archived']);
+        $refused = $this->createProduct('Cupola', ['status' => 'active']);
+
+        $csv = $this->body($this->runAction('export-records', [$shown, $hidden, $refused])->response());
+
+        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,,,active\n", $csv);
     }
 
     public function testALargeExportIsQueuedAndItsToastLinksToTheFile(): void

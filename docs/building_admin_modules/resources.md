@@ -393,8 +393,9 @@ starts with a UTF-8 byte order mark, so Excel reads accents correctly, and it's 
 
 Up to 500 records download straight away. Larger exports run [in the background](actions.md#running-in-the-background)
 when the queue is set up, and the toast links to the file once it's written. Files are kept in `writable/exports/` and
-deleted after a day. Records load through the model, not `query()`, so a [relation column](#relation-and-computed-columns)
-read from a join is empty in the file unless the record has the relation loaded.
+deleted after a day. Records load through the resource's `query()`, as in the list, so a
+[relation column](#relation-and-computed-columns) read from a join is filled in, and a record that `query()` leaves out of
+the list, or that `can('list', $record)` refuses, is left out of the file.
 
 Another module adds an action to a resource's list by its slug, from `initAdmin()`:
 
