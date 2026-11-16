@@ -124,11 +124,19 @@ class Registrar
                 'content.publish'   => 'Can publish Content entries and set when they go live',
                 'content.delete'    => 'Can delete Content entries',
                 'content.structure' => 'Can change the structure of Content, such as collections and blueprints',
+
+                'media.access' => 'Can see the Media library',
+                'media.edit'   => 'Can upload media files and change their alt text and folder',
+                'media.delete' => 'Can delete media files',
             ],
             'moduleGrants' => [
                 'content' => [
                     'superadmin' => ['content.*'],
                     'admin'      => ['content.*'],
+                ],
+                'media' => [
+                    'superadmin' => ['media.*'],
+                    'admin'      => ['media.*'],
                 ],
                 'privacy' => [
                     'admin' => ['users.export'],
