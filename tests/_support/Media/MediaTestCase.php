@@ -6,6 +6,7 @@ use Bonfire\Media\Config\Media as MediaConfig;
 use Bonfire\Media\Entities\Media;
 use Bonfire\Media\Models\MediaModel;
 use CodeIgniter\Config\Factories;
+use CodeIgniter\HTTP\Files\UploadedFile;
 use Tests\Support\TestCase;
 
 /**
@@ -44,6 +45,28 @@ abstract class MediaTestCase extends TestCase
         Factories::reset('config');
 
         parent::tearDown();
+    }
+
+    /**
+     * An upload of a JPEG of the given size, or of the given bytes when there are any.
+     */
+    protected function upload(string $name, int $width = 30, int $height = 20, ?string $bytes = null): UploadedFile
+    {
+        $path = tempnam(sys_get_temp_dir(), 'bf-media');
+
+        if ($bytes === null) {
+            imagejpeg(imagecreatetruecolor($width, $height), $path);
+        } else {
+            file_put_contents($path, $bytes);
+        }
+
+        // The framework refuses to move anything PHP did not receive as a real HTTP upload.
+        return new class ($path, $name, 'application/octet-stream', filesize($path), UPLOAD_ERR_OK) extends UploadedFile {
+            public function move(string $targetPath, ?string $name = null, bool $overwrite = false): bool
+            {
+                return rename($this->getPathname(), rtrim($targetPath, '/') . '/' . $name);
+            }
+        };
     }
 
     /**
