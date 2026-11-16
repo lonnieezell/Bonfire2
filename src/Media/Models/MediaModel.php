@@ -11,6 +11,7 @@
 
 namespace Bonfire\Media\Models;
 
+use Bonfire\Core\Like;
 use Bonfire\Media\Entities\Media;
 use CodeIgniter\Model;
 
@@ -28,6 +29,33 @@ class MediaModel extends Model
         'id', 'container', 'folder', 'path', 'filename', 'mime', 'size', 'width', 'height', 'alt',
     ];
     protected $beforeInsert = ['addId'];
+
+    /**
+     * Keeps files whose original name or alt text contains the term. A % or _ in it matches itself.
+     */
+    public function matching(string $term): self
+    {
+        $needle = Like::escape(trim($term), $this->db);
+
+        return $this->groupStart()
+            ->like('filename', $needle, 'both', true, true)
+            ->orLike('alt', $needle, 'both', true, true)
+            ->groupEnd();
+    }
+
+    /**
+     * The folders files are listed under, in order, without the root.
+     *
+     * @return list<string>
+     */
+    public function folders(): array
+    {
+        $rows = $this->builder()->distinct()->select('folder')
+            ->where('folder !=', '')->where('deleted_at', null)
+            ->orderBy('folder')->get()->getResultArray();
+
+        return array_column($rows, 'folder');
+    }
 
     /**
      * Gives a new row a random (version 4) UUID.

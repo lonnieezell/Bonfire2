@@ -170,6 +170,7 @@ deptrac:
       - Vendor Model
     Service:
       - Config
+      - Media
       - Vendor Config
 
     # Ignore anything in the Vendor layers

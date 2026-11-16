@@ -62,13 +62,7 @@ class MediaStorage
         $size       = $file->getSize();
         $dimensions = @getimagesize($file->getPathname());
 
-        try {
-            $moved = $file->move($directory, $path);
-        } catch (HTTPException) {
-            $moved = false;
-        }
-
-        if (! $moved) {
+        if (! $this->moveUpload($file, $directory, $path)) {
             throw new MediaException(lang('Media.moveFailed', [$name]));
         }
 
@@ -85,6 +79,18 @@ class MediaStorage
         ]);
 
         return $model->find($id);
+    }
+
+    /**
+     * Moves the upload into place, which PHP allows only for a file it received as an HTTP upload.
+     */
+    protected function moveUpload(UploadedFile $file, string $directory, string $name): bool
+    {
+        try {
+            return $file->move($directory, $name);
+        } catch (HTTPException) {
+            return false;
+        }
     }
 
     /**
