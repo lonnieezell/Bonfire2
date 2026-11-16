@@ -11,13 +11,16 @@
 
 namespace Bonfire\Resources\Controllers;
 
+use Bonfire\Actions\ResultFile;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\Form;
+use Bonfire\Resources\Actions\ExportRecords;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Model;
 use ReflectionClass;
@@ -109,8 +112,54 @@ class ResourceController extends AdminController
 
         $data['total']     = $model->pager->getTotal();
         $data['canCreate'] = $resource->allows('create') && $resource->can('create');
-
         return $this->renderPage($resource, 'list', $data);
+    }
+
+    /**
+     * Exports every record that matches the list's search and filters, through the list's ExportRecords action:
+     * a download, or a queued run whose toast links to the file.
+     *
+     * @return DownloadResponse|RedirectResponse
+     */
+    public function export(string $slug)
+    {
+        $resource = $this->resource($slug, 'list');
+        $action   = service('actions')->find($resource->slug, 'export-records');
+
+        if (! $action instanceof ExportRecords) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $user = auth()->user();
+
+        if (! $resource->can('list') || ! in_array($action, service('actions')->for($resource->slug)->bulk($user), true)) {
+            return $this->refused();
+        }
+
+        // The records the list shows for the search and filters, in its default order.
+        $model = $resource->query(model($resource->model, false));
+        $resource->applySearch($model, (string) $this->request->getPost('search'));
+        $resource->applyFilters($model, (array) $this->request->getPost('filters'));
+        $ids = array_column(
+            $model->select($model->table . '.' . $model->primaryKey)->orderBy($model->table . '.' . $model->primaryKey, 'asc')->asArray()->findAll(),
+            $model->primaryKey,
+        );
+
+        if ($ids === []) {
+            return redirect()->back()->with('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));
+        }
+
+        $outcome = service('actionRuns')->dispatch($resource->slug, $action, $user, $ids);
+
+        if ($outcome->runId !== null) {
+            return redirect()->back()->with('actionRun', $outcome->runId);
+        }
+
+        if ($outcome->file instanceof ResultFile) {
+            return $this->response->download($outcome->file->name, $outcome->file->take());
+        }
+
+        return redirect()->back()->with($outcome->succeeded ? 'message' : 'error', $outcome->message);
     }
 
     /**

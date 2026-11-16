@@ -19,4 +19,15 @@ final readonly class ResultFile
     public function __construct(public string $path, public string $name)
     {
     }
+
+    /**
+     * The file's contents, deleting the file: for a run in the request, whose file is only for its response.
+     */
+    public function take(): string
+    {
+        $contents = (string) file_get_contents($this->path);
+        unlink($this->path);
+
+        return $contents;
+    }
 }

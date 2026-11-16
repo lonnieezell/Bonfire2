@@ -75,12 +75,8 @@ class ActionController extends AdminController
             return $this->back('actionRun', $outcome->runId);
         }
 
-        // Read before it's deleted: the run's file is only for this response.
         if ($outcome->file instanceof ResultFile) {
-            $contents = (string) file_get_contents($outcome->file->path);
-            unlink($outcome->file->path);
-
-            return $this->response->download($outcome->file->name, $contents);
+            return $this->response->download($outcome->file->name, $outcome->file->take());
         }
 
         return $this->back($outcome->succeeded ? 'message' : 'error', $outcome->message);
