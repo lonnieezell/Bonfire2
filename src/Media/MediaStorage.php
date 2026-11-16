@@ -52,33 +52,29 @@ class MediaStorage
             throw new MediaException(lang('Media.tooLarge', [$name, $config->maxSize]));
         }
 
+        $dimensions = @getimagesize($file->getPathname());
+        $model      = model(MediaModel::class);
+        $row        = [
+            'container' => $container,
+            'folder'    => $folder,
+            'filename'  => $name,
+            'mime'      => $file->getMimeType(),
+            'size'      => $file->getSize(),
+            'width'     => $dimensions === false ? null : $dimensions[0],
+            'height'    => $dimensions === false ? null : $dimensions[1],
+        ];
+
+        if (! $model->validate($row)) {
+            throw new MediaException($name . ': ' . implode(' ', $model->errors()));
+        }
+
         $directory = rtrim($config->containers[$container]['path'], '/');
 
         if (! is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
-        $dimensions = @getimagesize($file->getPathname());
-        $model      = model(MediaModel::class);
-
-        // The row goes in first: the unique (container, path) key keeps a concurrent upload of the same name
-        // from taking the path between choosing it and moving the file there.
-        try {
-            $id = $model->insert([
-                'container' => $container,
-                'folder'    => $folder,
-                'path'      => $this->freeName($container, $directory, pathinfo($name, PATHINFO_FILENAME), $extension),
-                'filename'  => $name,
-                'mime'      => $file->getMimeType(),
-                'size'      => $file->getSize(),
-                'width'     => $dimensions === false ? null : $dimensions[0],
-                'height'    => $dimensions === false ? null : $dimensions[1],
-            ]);
-        } catch (DatabaseException) {
-            $id = false;
-        }
-
-        $media = $id === false ? null : $model->find($id);
+        $media = $this->addRow($model, $row, $directory);
 
         if ($media === null || ! $this->moveUpload($file, $directory, $media->path)) {
             if ($media !== null) {
@@ -89,6 +85,33 @@ class MediaStorage
         }
 
         return $media;
+    }
+
+    /**
+     * Adds the row under a free path, before the file is moved: the unique (container, path) key keeps a concurrent
+     * upload of the same name from taking the path in between. One that loses that race chooses again.
+     *
+     * @param array<string, mixed> $row
+     */
+    private function addRow(MediaModel $model, array $row, string $directory): ?Media
+    {
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            $row['path'] = $this->freeName($row['container'], $directory, $row['filename']);
+
+            try {
+                $id = $model->insert($row);
+            } catch (DatabaseException $e) {
+                log_message('warning', 'Media: could not add {path}: {message}', ['path' => $row['path'], 'message' => $e->getMessage()]);
+
+                continue;
+            }
+
+            if ($id !== false) {
+                return $model->find($id);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -104,15 +127,17 @@ class MediaStorage
     }
 
     /**
-     * `<slug>.<ext>`, or `<slug>-2.<ext>`, `<slug>-3.<ext>` and on when a file on disk or a row, deleted or not, has it.
+     * `<slug>.<ext>` for an upload named `<name>.<ext>`, or `<slug>-2.<ext>`, `<slug>-3.<ext>` and on when a file on disk
+     * or a row, deleted or not, has it.
      */
-    private function freeName(string $container, string $directory, string $basename, string $extension): string
+    private function freeName(string $container, string $directory, string $uploadedName): string
     {
         helper('url');
 
-        $slug  = url_title($basename, '-', true);
-        $slug  = $slug === '' ? 'file' : $slug;
-        $model = model(MediaModel::class);
+        $extension = strtolower(pathinfo($uploadedName, PATHINFO_EXTENSION));
+        $slug      = url_title(pathinfo($uploadedName, PATHINFO_FILENAME), '-', true);
+        $slug      = $slug === '' ? 'file' : $slug;
+        $model     = model(MediaModel::class);
 
         for ($n = 1;; $n++) {
             $path = $slug . ($n === 1 ? '' : "-{$n}") . '.' . $extension;

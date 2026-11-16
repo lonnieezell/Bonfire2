@@ -9,6 +9,7 @@
  * @var string                             $search
  * @var bool                               $canEdit
  * @var bool                               $canDelete
+ * @var string                             $query     this page's query string, which a delete goes back to
  */
 $listUrl = url_to('media-list');
 ?>
@@ -81,7 +82,7 @@ $listUrl = url_to('media-list');
                         </div>
                         <?php if ($canDelete) : ?>
                             <div class="card-footer p-2 text-end">
-                                <?= view('Bonfire\Media\Views\media_delete', ['media' => $file, 'size' => 'btn-sm'], ['saveData' => false]) ?>
+                                <?= view('Bonfire\Media\Views\media_delete', ['media' => $file, 'size' => 'btn-sm', 'return' => $query], ['saveData' => false]) ?>
                             </div>
                         <?php endif ?>
                     </div>

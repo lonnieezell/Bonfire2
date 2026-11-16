@@ -31,6 +31,10 @@ class MediaModel extends Model implements CustomRecyclerPurge
         // deleted_at so that the Recycler's restore can clear it.
         'id', 'container', 'folder', 'path', 'filename', 'mime', 'size', 'width', 'height', 'alt', 'deleted_at',
     ];
+    protected $validationRules = [
+        'folder' => 'permit_empty|max_length[255]',
+        'alt'    => 'permit_empty|max_length[255]',
+    ];
     protected $beforeInsert = ['addId', 'cleanFolderOf'];
     protected $beforeUpdate = ['cleanFolderOf'];
 
@@ -68,11 +72,11 @@ class MediaModel extends Model implements CustomRecyclerPurge
     {
         $media = $this->onlyDeleted()->find($id);
 
-        if (! $media instanceof Media) {
+        // A file in a container that's no longer configured can't be found on disk, so its row stays rather than orphaning it.
+        if (! $media instanceof Media || ! isset(config('Media')->containers[$media->container])) {
             return false;
         }
 
-        // Before the row goes, so a container that's no longer configured stops the purge rather than orphaning the file.
         $path = $media->diskPath();
 
         if (! $this->delete($media->id, true)) {

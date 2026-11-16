@@ -14,7 +14,7 @@
 <?php $this->section('main') ?>
 <x-page-head back="<?= url_to('media-list') ?>?folder=<?= esc(rawurlencode($media->folder), 'attr') ?>" backLabel="<?= esc(lang('Media.modTitle'), 'attr') ?>" title="<?= esc(lang('Media.editFile'), 'attr') ?>">
     <?php if ($canDelete) : ?>
-        <?= view('Bonfire\Media\Views\media_delete', ['media' => $media, 'size' => ''], ['saveData' => false]) ?>
+        <?= view('Bonfire\Media\Views\media_delete', ['media' => $media, 'size' => '', 'return' => http_build_query(['folder' => $media->folder])], ['saveData' => false]) ?>
     <?php endif ?>
 </x-page-head>
 

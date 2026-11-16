@@ -69,6 +69,7 @@ class MediaAdminController extends AdminController
             'search'    => $search,
             'canEdit'   => auth()->user()->can('media.edit'),
             'canDelete' => auth()->user()->can('media.delete'),
+            'query'     => $this->request->getUri()->getQuery(),
         ]);
     }
 
@@ -164,7 +165,11 @@ class MediaAdminController extends AdminController
 
         model(MediaModel::class)->delete($this->find($id)->id);
 
-        return redirect()->to(route_to('media-list'))->with('message', lang('Media.deleted'));
+        // Back to the folder, search and page the list was showing, which a card's form posts as `return`.
+        parse_str((string) $this->request->getPost('return'), $return);
+        $query = http_build_query(array_intersect_key($return, array_flip(['folder', 'q', 'page'])));
+
+        return redirect()->to(route_to('media-list') . ($query === '' ? '' : '?' . $query))->with('message', lang('Media.deleted'));
     }
 
     /**

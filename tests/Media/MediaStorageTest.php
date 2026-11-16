@@ -66,12 +66,12 @@ final class MediaStorageTest extends MediaTestCase
     }
 
     #[DataProvider('provideRefusesTheUpload')]
-    public function testRefusesTheUpload(string $name, string $container, int $bytes): void
+    public function testRefusesTheUpload(string $name, string $container, int $bytes, string $folder = ''): void
     {
         config('Media')->maxSize = 1;
 
         try {
-            $this->storage()->store($this->upload($name, str_repeat('a', $bytes)), $container, '');
+            $this->storage()->store($this->upload($name, str_repeat('a', $bytes)), $container, $folder);
             $this->fail('The upload was stored.');
         } catch (MediaException) {
         }
@@ -81,7 +81,7 @@ final class MediaStorageTest extends MediaTestCase
     }
 
     /**
-     * @return iterable<string, array{string, string, int}>
+     * @return iterable<string, array{0: string, 1: string, 2: int, 3?: string}>
      */
     public static function provideRefusesTheUpload(): iterable
     {
@@ -90,5 +90,7 @@ final class MediaStorageTest extends MediaTestCase
         yield 'a file over maxSize' => ['big.txt', 'public', 2048];
 
         yield 'an unknown container' => ['notes.txt', 'private', 1];
+
+        yield 'a folder over 255 characters' => ['notes.txt', 'public', 1, str_repeat('a', 256)];
     }
 }

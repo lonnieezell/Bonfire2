@@ -200,6 +200,32 @@ final class MediaAdminTest extends MediaTestCase
         $this->assertFileExists($this->dir . 'cat.jpg');
     }
 
+    public function testPurgeRefusesAFileWhoseContainerIsNoLongerConfigured(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+        model(MediaModel::class)->delete($media->id);
+        config('Media')->containers = [];
+
+        $this->actingAs($this->admin)->post(route_to('recycler-purge', 'media', $media->id), [csrf_token() => csrf_hash()])->assertSessionHas('error');
+
+        $this->assertNotNull(model(MediaModel::class)->withDeleted()->find($media->id));
+        $this->assertFileExists($this->dir . 'cat.jpg');
+    }
+
+    public function testDeletingFromTheListGoesBackToTheSameFolder(): void
+    {
+        $media = $this->mediaFile('cat.jpg', 'pets');
+        $list  = $this->actingAs($this->admin)->get(route_to('media-list') . '?folder=pets&q=cat');
+        preg_match('/name="return" value="([^"]*)"/', $list->getBody(), $return);
+
+        $response = $this->actingAs($this->admin)->post(route_to('media-delete', $media->id), [
+            'return'     => html_entity_decode($return[1]),
+            csrf_token() => csrf_hash(),
+        ]);
+
+        $response->assertRedirectTo(site_url(route_to('media-list') . '?folder=pets&q=cat'));
+    }
+
     public function testRestoringBringsItBackToTheList(): void
     {
         $media = $this->mediaFile('cat.jpg');
