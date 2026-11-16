@@ -16,9 +16,9 @@ use Bonfire\Actions\ActionContext;
 use Bonfire\Actions\ActionResult;
 use Bonfire\Actions\ActionRuns;
 use Bonfire\Actions\Placement;
+use Bonfire\Fields\Field;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
-use Bonfire\Fields\Field;
 
 /**
  * Downloads the records as a CSV of the list's columns, with the text the list shows. Anyone who may see the list

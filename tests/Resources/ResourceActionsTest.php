@@ -303,7 +303,7 @@ final class ResourceActionsTest extends TestCase
     {
         $this->addExport();
         service('actions')->find('products', 'export-records')->queueAbove = 1;
-        $ids = [$this->createProduct('Anvil'), $this->createProduct('Bellows')];
+        $ids                                                               = [$this->createProduct('Anvil'), $this->createProduct('Bellows')];
 
         $this->runAction('export-records', $ids)->assertSessionHas('actionRun');
         $runId = $_SESSION['actionRun'];
@@ -350,10 +350,21 @@ final class ResourceActionsTest extends TestCase
         unlink($recent);
     }
 
+    #[DataProvider('provideExportEscapesCellsThatStartWithAFormulaCharacter')]
+    public function testExportEscapesCellsThatStartWithAFormulaCharacter(string $name, string $cell): void
+    {
+        $this->addExport();
+        $id = $this->createProduct($name, ['sku' => 'F-1']);
+
+        $csv = $this->body($this->runAction('export-records', [$id])->response());
+
+        $this->assertStringContainsString("\n{$cell},F-1,", $csv);
+    }
+
     /**
      * @return iterable<string, array{string, string}>
      */
-    public static function formulaCells(): iterable
+    public static function provideExportEscapesCellsThatStartWithAFormulaCharacter(): iterable
     {
         yield 'equals' => ['=SUM(A1)', "'=SUM(A1)"];
 
@@ -366,17 +377,6 @@ final class ResourceActionsTest extends TestCase
         yield 'tab' => ["\tTab", "\"'\tTab\""];
 
         yield 'carriage return' => ["\rCR", "\"'\rCR\""];
-    }
-
-    #[DataProvider('formulaCells')]
-    public function testExportEscapesCellsThatStartWithAFormulaCharacter(string $name, string $cell): void
-    {
-        $this->addExport();
-        $id = $this->createProduct($name, ['sku' => 'F-1']);
-
-        $csv = $this->body($this->runAction('export-records', [$id])->response());
-
-        $this->assertStringContainsString("\n{$cell},F-1,", $csv);
     }
 
     /**

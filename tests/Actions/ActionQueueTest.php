@@ -203,17 +203,7 @@ final class ActionQueueTest extends TestCase
         $this->actingAs($other)->get(route_to('action-run-download', $runId));
     }
 
-    /**
-     * @return iterable<string, array{int, bool}>
-     */
-    public static function expiredFiles(): iterable
-    {
-        yield 'ended over a day ago' => [DAY + 60, true];
-
-        yield 'file deleted' => [60, false];
-    }
-
-    #[DataProvider('expiredFiles')]
+    #[DataProvider('provideAnExpiredFileIsNotFound')]
     public function testAnExpiredFileIsNotFound(int $endedAgo, bool $fileKept): void
     {
         $runId = $this->runWithFile($endedAgo);
@@ -225,6 +215,16 @@ final class ActionQueueTest extends TestCase
         $this->expectException(PageNotFoundException::class);
 
         $this->actingAs($this->admin)->get(route_to('action-run-download', $runId));
+    }
+
+    /**
+     * @return iterable<string, array{int, bool}>
+     */
+    public static function provideAnExpiredFileIsNotFound(): iterable
+    {
+        yield 'ended over a day ago' => [DAY + 60, true];
+
+        yield 'file deleted' => [60, false];
     }
 
     /**

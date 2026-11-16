@@ -112,6 +112,7 @@ class ResourceController extends AdminController
 
         $data['total']     = $model->pager->getTotal();
         $data['canCreate'] = $resource->allows('create') && $resource->can('create');
+
         return $this->renderPage($resource, 'list', $data);
     }
 
