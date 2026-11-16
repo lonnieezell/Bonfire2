@@ -10,6 +10,7 @@ return [
     'confirm'      => 'Patvirtinti',
     'queueMissing' => 'Šis veiksmas vykdomas fone; tam reikia codeigniter4/queue paketo ir veikiančios „spark queue:work“ komandos.',
     'running'      => 'Vykdoma… {0} iš {1}',
+    'download'     => 'Atsisiųsti',
     // dashboard widget
     'actionsModTitle' => 'Veiksmai',
     'actionRuns'      => 'Veiksmų vykdymai',

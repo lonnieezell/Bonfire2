@@ -26,6 +26,11 @@ use Throwable;
 class ActionRuns
 {
     /**
+     * How long, in seconds, a queued run's file can be downloaded after the run ends.
+     */
+    public const FILE_LIFETIME = DAY;
+
+    /**
      * Runs the action on the records now, or queues the run.
      *
      * @param list<int|string>      $ids
@@ -135,12 +140,34 @@ class ActionRuns
             throw $e;
         }
 
+        $succeeded = $context->succeeded($result);
+
+        if (! $succeeded && $result->file instanceof ResultFile) {
+            @unlink($result->file->path);
+        }
+
         $runs->update($runId, [
-            'status'    => $context->succeeded($result) ? RunStatus::Done : RunStatus::Failed,
+            'status'    => $succeeded ? RunStatus::Done : RunStatus::Failed,
             'processed' => $context->processed(),
             'skipped'   => $context->skipped(),
             'message'   => $context->summary($result),
+            'file'      => $succeeded && $result->file instanceof ResultFile ? json_encode(['path' => $result->file->path, 'name' => $result->file->name]) : null,
         ]);
+    }
+
+    /**
+     * The file a queued run wrote, if the viewer started the run, it ended less than a day ago, and the file is still there.
+     */
+    public function file(int $runId, User $viewer): ?ResultFile
+    {
+        $run  = $this->progress($runId, $viewer);
+        $file = json_decode($run['file'] ?? '', true);
+
+        if (! is_array($file) || $run['updated_at']->getTimestamp() < time() - self::FILE_LIFETIME || ! is_file($file['path'])) {
+            return null;
+        }
+
+        return new ResultFile($file['path'], $file['name']);
     }
 
     /**

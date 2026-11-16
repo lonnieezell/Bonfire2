@@ -17,6 +17,7 @@ use Bonfire\Actions\ResultFile;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Form;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -119,6 +120,20 @@ class ActionController extends AdminController
         }
 
         return view($this->viewPrefix . '_run', ['run' => $run]);
+    }
+
+    /**
+     * The file a queued run wrote, for the admin who started it, for a day after the run ends.
+     */
+    public function download(int $id): DownloadResponse
+    {
+        $file = service('actionRuns')->file($id, auth()->user());
+
+        if (! $file instanceof ResultFile) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $this->response->download($file->path, null)->setFileName($file->name);
     }
 
     private function mayRun(Action $action): bool
