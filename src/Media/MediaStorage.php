@@ -13,6 +13,7 @@ namespace Bonfire\Media;
 
 use Bonfire\Media\Entities\Media;
 use Bonfire\Media\Models\MediaModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
 use CodeIgniter\HTTP\Files\UploadedFile;
 
@@ -57,28 +58,37 @@ class MediaStorage
             mkdir($directory, 0755, true);
         }
 
-        $path       = $this->freeName($container, $directory, pathinfo($name, PATHINFO_FILENAME), $extension);
-        $mime       = $file->getMimeType();
-        $size       = $file->getSize();
         $dimensions = @getimagesize($file->getPathname());
+        $model      = model(MediaModel::class);
 
-        if (! $this->moveUpload($file, $directory, $path)) {
+        // The row goes in first: the unique (container, path) key keeps a concurrent upload of the same name
+        // from taking the path between choosing it and moving the file there.
+        try {
+            $id = $model->insert([
+                'container' => $container,
+                'folder'    => $folder,
+                'path'      => $this->freeName($container, $directory, pathinfo($name, PATHINFO_FILENAME), $extension),
+                'filename'  => $name,
+                'mime'      => $file->getMimeType(),
+                'size'      => $file->getSize(),
+                'width'     => $dimensions === false ? null : $dimensions[0],
+                'height'    => $dimensions === false ? null : $dimensions[1],
+            ]);
+        } catch (DatabaseException) {
+            $id = false;
+        }
+
+        $media = $id === false ? null : $model->find($id);
+
+        if ($media === null || ! $this->moveUpload($file, $directory, $media->path)) {
+            if ($media !== null) {
+                $model->delete($media->id, true);
+            }
+
             throw new MediaException(lang('Media.moveFailed', [$name]));
         }
 
-        $model = model(MediaModel::class);
-        $id    = $model->insert([
-            'container' => $container,
-            'folder'    => $folder,
-            'path'      => $path,
-            'filename'  => $name,
-            'mime'      => $mime,
-            'size'      => $size,
-            'width'     => $dimensions === false ? null : $dimensions[0],
-            'height'    => $dimensions === false ? null : $dimensions[1],
-        ]);
-
-        return $model->find($id);
+        return $media;
     }
 
     /**

@@ -68,12 +68,19 @@ class MediaModel extends Model implements CustomRecyclerPurge
     {
         $media = $this->onlyDeleted()->find($id);
 
-        if (! $media instanceof Media || ! $this->delete($media->id, true)) {
+        if (! $media instanceof Media) {
             return false;
         }
 
-        if (is_file($media->diskPath())) {
-            unlink($media->diskPath());
+        // Before the row goes, so a container that's no longer configured stops the purge rather than orphaning the file.
+        $path = $media->diskPath();
+
+        if (! $this->delete($media->id, true)) {
+            return false;
+        }
+
+        if (is_file($path)) {
+            unlink($path);
         }
 
         return true;

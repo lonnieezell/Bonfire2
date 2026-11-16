@@ -3,6 +3,7 @@
 namespace Tests\Media;
 
 use Bonfire\Media\MediaException;
+use Bonfire\Media\MediaStorage;
 use Bonfire\Media\Models\MediaModel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Media\MediaTestCase;
@@ -50,6 +51,18 @@ final class MediaStorageTest extends MediaTestCase
         model(MediaModel::class)->delete($taken->id);
 
         $this->assertSame('cat-2.jpg', $this->storage()->store($this->upload('cat.jpg'), 'public', '')->path);
+    }
+
+    public function testAFileThatCanNotBeMovedLeavesNoRow(): void
+    {
+        $this->expectException(MediaException::class);
+
+        try {
+            // The real move refuses a file PHP didn't receive as an HTTP upload.
+            (new MediaStorage())->store($this->upload('cat.jpg'), 'public', '');
+        } finally {
+            $this->assertSame(0, model(MediaModel::class)->withDeleted()->countAllResults());
+        }
     }
 
     #[DataProvider('provideRefusesTheUpload')]

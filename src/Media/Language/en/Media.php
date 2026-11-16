@@ -26,6 +26,7 @@ return [
     'upload'            => 'Upload',
     'uploaded'          => '{0, plural, =1{1 file uploaded.} other{# files uploaded.}}',
     'noFiles'           => 'Choose at least one file to upload.',
+    'folderTooLong'     => 'A folder name can be at most 255 characters.',
 
     // Form
     'editFile'          => 'Edit media file',

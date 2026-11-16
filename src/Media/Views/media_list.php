@@ -8,6 +8,7 @@
  * @var string|null                        $folder  null for every folder, '' for files in none
  * @var string                             $search
  * @var bool                               $canEdit
+ * @var bool                               $canDelete
  */
 $listUrl = url_to('media-list');
 ?>
@@ -78,6 +79,11 @@ $listUrl = url_to('media-list');
                                 <a href="<?= esc($file->url(), 'attr') ?>" class="text-break" target="_blank" rel="noopener"><?= esc($file->filename) ?></a>
                             <?php endif ?>
                         </div>
+                        <?php if ($canDelete) : ?>
+                            <div class="card-footer p-2 text-end">
+                                <?= view('Bonfire\Media\Views\media_delete', ['media' => $file, 'size' => 'btn-sm'], ['saveData' => false]) ?>
+                            </div>
+                        <?php endif ?>
                     </div>
                 </div>
             <?php endforeach ?>

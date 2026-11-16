@@ -62,12 +62,13 @@ class MediaAdminController extends AdminController
         }
 
         return $this->render($this->viewPrefix . 'media_list', [
-            'files'   => $model->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
-            'pager'   => $model->pager,
-            'folders' => $folders,
-            'folder'  => $folder,
-            'search'  => $search,
-            'canEdit' => auth()->user()->can('media.edit'),
+            'files'     => $model->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
+            'pager'     => $model->pager,
+            'folders'   => $folders,
+            'folder'    => $folder,
+            'search'    => $search,
+            'canEdit'   => auth()->user()->can('media.edit'),
+            'canDelete' => auth()->user()->can('media.delete'),
         ]);
     }
 
@@ -79,11 +80,22 @@ class MediaAdminController extends AdminController
         $this->require('media.edit');
 
         $folder   = MediaModel::cleanFolder((string) $this->request->getPost('folder'));
+        $redirect = redirect()->to(route_to('media-list') . '?folder=' . rawurlencode($folder));
+
+        if (mb_strlen($folder) > 255) {
+            return $redirect->with('error', lang('Media.folderTooLong'));
+        }
+
         $storage  = service('mediaStorage');
         $errors   = [];
         $uploaded = 0;
 
         foreach ($this->request->getFileMultiple('files') ?? [] as $file) {
+            // An empty slot in the form is no file at all.
+            if ($file->getError() === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
             try {
                 $storage->store($file, 'public', $folder);
                 $uploaded++;
@@ -92,15 +104,16 @@ class MediaAdminController extends AdminController
             }
         }
 
-        $redirect = redirect()->to(route_to('media-list') . '?folder=' . rawurlencode($folder));
-
-        if ($errors !== []) {
-            return $redirect->with('error', implode(' ', $errors));
+        if ($uploaded > 0) {
+            $redirect->with('message', lang('Media.uploaded', [$uploaded]));
         }
 
-        return $uploaded === 0
-            ? $redirect->with('error', lang('Media.noFiles'))
-            : $redirect->with('message', lang('Media.uploaded', [$uploaded]));
+        if ($errors === [] && $uploaded === 0) {
+            $errors[] = lang('Media.noFiles');
+        }
+
+        // The alert shows the message as HTML, and the errors hold the names the files were uploaded with.
+        return $errors === [] ? $redirect : $redirect->with('error', esc(implode(' ', $errors)));
     }
 
     /**

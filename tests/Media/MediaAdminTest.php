@@ -93,8 +93,52 @@ final class MediaAdminTest extends MediaTestCase
 
         $response = $this->actingAs($this->admin)->post(route_to('media-upload'), ['folder' => '', csrf_token() => csrf_hash()]);
 
-        $response->assertSessionHas('error', lang('Media.extensionNotAllowed', ['evil.php']));
+        $response->assertSessionHas('error', esc(lang('Media.extensionNotAllowed', ['evil.php'])));
+        $response->assertSessionHas('message', lang('Media.uploaded', [1]));
         $this->assertSame(['one.jpg'], array_column(model(MediaModel::class)->asArray()->findAll(), 'path'));
+    }
+
+    public function testUploadEscapesTheFilenameInItsError(): void
+    {
+        $this->filesToUpload(['<img src=x onerror=alert(1)>.php']);
+
+        $response = $this->actingAs($this->admin)->post(route_to('media-upload'), ['folder' => '', csrf_token() => csrf_hash()]);
+
+        $response->assertSessionHas('error', esc(lang('Media.extensionNotAllowed', ['<img src=x onerror=alert(1)>.php'])));
+    }
+
+    public function testUploadRefusesAFolderOverTheLimit(): void
+    {
+        $this->filesToUpload(['one.jpg']);
+
+        $response = $this->actingAs($this->admin)->post(route_to('media-upload'), ['folder' => str_repeat('a', 256), csrf_token() => csrf_hash()]);
+
+        $response->assertSessionHas('error');
+        $this->assertSame(0, model(MediaModel::class)->countAllResults());
+        $this->assertDirectoryDoesNotExist($this->dir);
+    }
+
+    public function testAnEmptyFileSlotAsksForAFile(): void
+    {
+        service('superglobals')->setFilesArray(['files' => [
+            'name' => [''], 'type' => [''], 'tmp_name' => [''], 'error' => [UPLOAD_ERR_NO_FILE], 'size' => [0],
+        ]]);
+
+        $response = $this->actingAs($this->admin)->post(route_to('media-upload'), ['folder' => '', csrf_token() => csrf_hash()]);
+
+        $response->assertSessionHas('error', lang('Media.noFiles'));
+    }
+
+    public function testWithDeleteButNotEditTheListOffersDelete(): void
+    {
+        $media = $this->mediaFile('cat.jpg');
+        $user  = $this->createUser();
+        $user->addPermission('admin.access', 'media.access', 'media.delete');
+
+        $this->actingAs($user)->get(route_to('media-list'))->assertSee(route_to('media-delete', $media->id));
+        $this->actingAs($user)->post(route_to('media-delete', $media->id), [csrf_token() => csrf_hash()])->assertSessionMissing('error');
+
+        $this->assertNull(model(MediaModel::class)->find($media->id));
     }
 
     public function testEditSavesAltTextAndMovesTheFolderWithoutChangingTheUrl(): void

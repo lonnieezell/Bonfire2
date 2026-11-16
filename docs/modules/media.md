@@ -3,7 +3,7 @@
 The media library holds the files your site uploads: images, PDFs and other documents. Open **Media** under **Content**
 in the sidebar. You need the `media.access` permission to see it.
 
-Each file is a row in the `media` table, so run `php spark migrate` after updating to get the table.
+Each file is a row in the `media` table, so run `php spark migrate --all` after updating to get the table.
 
 ## Permissions
 

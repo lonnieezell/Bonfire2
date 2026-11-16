@@ -14,14 +14,7 @@
 <?php $this->section('main') ?>
 <x-page-head back="<?= url_to('media-list') ?>?folder=<?= esc(rawurlencode($media->folder), 'attr') ?>" backLabel="<?= esc(lang('Media.modTitle'), 'attr') ?>" title="<?= esc(lang('Media.editFile'), 'attr') ?>">
     <?php if ($canDelete) : ?>
-        <form action="<?= url_to('media-delete', $media->id) ?>" method="post" class="d-inline-block">
-            <?= csrf_field() ?>
-            <button type="submit" class="btn btn-outline-danger" data-delete
-                data-confirm="<?= esc(lang('Media.deleteConfirm'), 'attr') ?>"
-                data-confirm-body="<?= esc(lang('Media.deleteConfirmBody'), 'attr') ?>"
-                data-confirm-button="<?= esc(lang('Bonfire.delete'), 'attr') ?>"
-                data-confirm-danger="1"><?= lang('Bonfire.delete') ?></button>
-        </form>
+        <?= view('Bonfire\Media\Views\media_delete', ['media' => $media, 'size' => ''], ['saveData' => false]) ?>
     <?php endif ?>
 </x-page-head>
 
