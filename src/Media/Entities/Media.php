@@ -16,16 +16,16 @@ use CodeIgniter\Entity\Entity;
 /**
  * A media file: an upload in one of the containers in Config\Media.
  *
- * @property string      $id        a UUID
+ * @property string|null $alt
  * @property string      $container
- * @property string      $folder    the folder it is listed under, '' for none; never where it is on disk
- * @property string      $path      relative to the container
  * @property string      $filename  the name it was uploaded as
+ * @property string      $folder    the folder it is listed under, '' for none; never where it is on disk
+ * @property int|null    $height
+ * @property string      $id        a UUID
  * @property string      $mime
+ * @property string      $path      relative to the container
  * @property int         $size      in bytes
  * @property int|null    $width
- * @property int|null    $height
- * @property string|null $alt
  */
 class Media extends Entity
 {

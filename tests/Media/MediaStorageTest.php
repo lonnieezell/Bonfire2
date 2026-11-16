@@ -53,17 +53,7 @@ final class MediaStorageTest extends MediaTestCase
         $this->assertSame('cat-2.jpg', (new MediaStorage())->store($this->upload('cat.jpg'), 'public', '')->path);
     }
 
-    /**
-     * @return iterable<string, array{string, string, int}>
-     */
-    public static function provideRefusals(): iterable
-    {
-        yield 'a disallowed extension' => ['shell.php', 'public', 1];
-        yield 'a file over maxSize' => ['big.txt', 'public', 2048];
-        yield 'an unknown container' => ['notes.txt', 'private', 1];
-    }
-
-    #[DataProvider('provideRefusals')]
+    #[DataProvider('provideRefusesTheUpload')]
     public function testRefusesTheUpload(string $name, string $container, int $bytes): void
     {
         config('Media')->maxSize = 1;
@@ -76,5 +66,17 @@ final class MediaStorageTest extends MediaTestCase
 
         $this->assertSame(0, model(MediaModel::class)->withDeleted()->countAllResults());
         $this->assertDirectoryDoesNotExist($this->dir);
+    }
+
+    /**
+     * @return iterable<string, array{string, string, int}>
+     */
+    public static function provideRefusesTheUpload(): iterable
+    {
+        yield 'a disallowed extension' => ['shell.php', 'public', 1];
+
+        yield 'a file over maxSize' => ['big.txt', 'public', 2048];
+
+        yield 'an unknown container' => ['notes.txt', 'private', 1];
     }
 }

@@ -111,9 +111,9 @@ final class MediaAdminTest extends MediaTestCase
         $url   = $media->url();
 
         $response = $this->actingAs($this->admin)->post(route_to('media-edit', $media->id), [
-            'alt'           => 'A sleeping cat',
-            'folder'        => 'animals',
-            csrf_token()    => csrf_hash(),
+            'alt'        => 'A sleeping cat',
+            'folder'     => 'animals',
+            csrf_token() => csrf_hash(),
         ]);
 
         $response->assertRedirectTo(site_url(route_to('media-edit', $media->id)));

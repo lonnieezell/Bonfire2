@@ -104,7 +104,7 @@ class MediaStorage
         $slug  = $slug === '' ? 'file' : $slug;
         $model = model(MediaModel::class);
 
-        for ($n = 1; ; $n++) {
+        for ($n = 1;; $n++) {
             $path = $slug . ($n === 1 ? '' : "-{$n}") . '.' . $extension;
 
             if (! is_file($directory . '/' . $path) && $model->withDeleted()->where(['container' => $container, 'path' => $path])->countAllResults() === 0) {

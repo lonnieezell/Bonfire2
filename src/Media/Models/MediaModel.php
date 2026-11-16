@@ -53,7 +53,7 @@ class MediaModel extends Model implements CustomRecyclerPurge
     public function folders(): array
     {
         $rows = $this->builder()->distinct()->select('folder')
-            ->where('folder !=', '')->where('deleted_at', null)
+            ->where('folder !=', '')->where('deleted_at')
             ->orderBy('folder')->get()->getResultArray();
 
         return array_column($rows, 'folder');
