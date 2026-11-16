@@ -2,10 +2,8 @@
 
 namespace Tests\Media;
 
-use Bonfire\Media\MediaStorage;
 use Bonfire\Media\Models\MediaModel;
 use Bonfire\Users\User;
-use CodeIgniter\HTTP\Files\UploadedFile;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use Tests\Support\Media\MediaTestCase;
@@ -29,13 +27,7 @@ final class MediaAdminTest extends MediaTestCase
 
         service('routes')->loadRoutes();
 
-        // PHP only moves files it received as a real HTTP upload.
-        Services::injectMock('mediaStorage', new class () extends MediaStorage {
-            protected function moveUpload(UploadedFile $file, string $directory, string $name): bool
-            {
-                return rename($file->getTempName(), $directory . '/' . $name);
-            }
-        });
+        Services::injectMock('mediaStorage', $this->storage());
 
         $this->admin = $this->createUser();
         $this->admin->addGroup('superadmin');
@@ -197,7 +189,8 @@ final class MediaAdminTest extends MediaTestCase
             $response->assertSessionHas('error', lang('Bonfire.notAuthorized'));
         }
 
-        $this->assertSame(['Cat', ''], [model(MediaModel::class)->find($media->id)->alt, model(MediaModel::class)->find($media->id)->folder]);
+        $row = model(MediaModel::class)->find($media->id);
+        $this->assertSame(['Cat', ''], [$row->alt, $row->folder]);
         $this->assertSame(1, model(MediaModel::class)->countAllResults());
     }
 
@@ -231,8 +224,7 @@ final class MediaAdminTest extends MediaTestCase
         $files = ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
 
         foreach ($names as $name) {
-            $path = tempnam(sys_get_temp_dir(), 'bf-media');
-            imagejpeg(imagecreatetruecolor(4, 4), $path);
+            $path = $this->tempFile();
 
             $files['name'][]     = $name;
             $files['type'][]     = 'image/jpeg';

@@ -3,7 +3,6 @@
 namespace Tests\Media;
 
 use Bonfire\Media\MediaException;
-use Bonfire\Media\MediaStorage;
 use Bonfire\Media\Models\MediaModel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Media\MediaTestCase;
@@ -15,7 +14,7 @@ final class MediaStorageTest extends MediaTestCase
 {
     public function testStoresAnUploadAndRecordsItsDimensions(): void
     {
-        $media = (new MediaStorage())->store($this->upload('My Cat.JPG', 30, 20), 'public', 'pets');
+        $media = $this->storage()->store($this->upload('My Cat.JPG'), 'public', ' /pets/ ');
 
         $this->assertFileExists($this->dir . 'my-cat.jpg');
 
@@ -29,7 +28,7 @@ final class MediaStorageTest extends MediaTestCase
 
     public function testAFileThatIsNotAnImageHasNoDimensions(): void
     {
-        $media = (new MediaStorage())->store($this->upload('notes.txt', bytes: 'hello'), 'public', '');
+        $media = $this->storage()->store($this->upload('notes.txt', 'hello'), 'public', '');
 
         $row = model(MediaModel::class)->find($media->id);
         $this->assertSame(['notes.txt', null, null], [$row->path, $row->width, $row->height]);
@@ -38,7 +37,7 @@ final class MediaStorageTest extends MediaTestCase
     public function testSuffixesANameAlreadyTaken(): void
     {
         $this->mediaFile('cat.jpg');
-        $storage = new MediaStorage();
+        $storage = $this->storage();
 
         $this->assertSame('cat-2.jpg', $storage->store($this->upload('cat.jpg'), 'public', '')->path);
         $this->assertSame('cat-3.jpg', $storage->store($this->upload('Cat.jpg'), 'public', '')->path);
@@ -50,7 +49,7 @@ final class MediaStorageTest extends MediaTestCase
         $taken = $this->mediaFile('cat.jpg');
         model(MediaModel::class)->delete($taken->id);
 
-        $this->assertSame('cat-2.jpg', (new MediaStorage())->store($this->upload('cat.jpg'), 'public', '')->path);
+        $this->assertSame('cat-2.jpg', $this->storage()->store($this->upload('cat.jpg'), 'public', '')->path);
     }
 
     #[DataProvider('provideRefusesTheUpload')]
@@ -59,7 +58,7 @@ final class MediaStorageTest extends MediaTestCase
         config('Media')->maxSize = 1;
 
         try {
-            (new MediaStorage())->store($this->upload($name, bytes: str_repeat('a', $bytes)), $container, '');
+            $this->storage()->store($this->upload($name, str_repeat('a', $bytes)), $container, '');
             $this->fail('The upload was stored.');
         } catch (MediaException) {
         }

@@ -12,6 +12,7 @@
 namespace Bonfire\Media\Models;
 
 use Bonfire\Core\Like;
+use Bonfire\Core\Uuid;
 use Bonfire\Media\Entities\Media;
 use Bonfire\Recycler\Interfaces\CustomRecyclerPurge;
 use CodeIgniter\Model;
@@ -30,7 +31,8 @@ class MediaModel extends Model implements CustomRecyclerPurge
         // deleted_at so that the Recycler's restore can clear it.
         'id', 'container', 'folder', 'path', 'filename', 'mime', 'size', 'width', 'height', 'alt', 'deleted_at',
     ];
-    protected $beforeInsert = ['addId'];
+    protected $beforeInsert = ['addId', 'cleanFolderOf'];
+    protected $beforeUpdate = ['cleanFolderOf'];
 
     /**
      * Keeps files whose original name or alt text contains the term. A % or _ in it matches itself.
@@ -78,6 +80,14 @@ class MediaModel extends Model implements CustomRecyclerPurge
     }
 
     /**
+     * A folder as typed, without the spaces and slashes around it.
+     */
+    public static function cleanFolder(string $folder): string
+    {
+        return trim($folder, " /\t");
+    }
+
+    /**
      * Gives a new row a random (version 4) UUID.
      *
      * @param array{data: array<string, mixed>} $event
@@ -86,11 +96,21 @@ class MediaModel extends Model implements CustomRecyclerPurge
      */
     protected function addId(array $event): array
     {
-        $bytes    = random_bytes(16);
-        $bytes[6] = chr((ord($bytes[6]) & 0x0F) | 0x40);
-        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80);
+        $event['data']['id'] ??= Uuid::v4();
 
-        $event['data']['id'] ??= vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
+        return $event;
+    }
+
+    /**
+     * @param array{data: array<string, mixed>} $event
+     *
+     * @return array{data: array<string, mixed>}
+     */
+    protected function cleanFolderOf(array $event): array
+    {
+        if (isset($event['data']['folder'])) {
+            $event['data']['folder'] = self::cleanFolder((string) $event['data']['folder']);
+        }
 
         return $event;
     }

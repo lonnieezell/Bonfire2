@@ -69,7 +69,7 @@ class MediaStorage
         $model = model(MediaModel::class);
         $id    = $model->insert([
             'container' => $container,
-            'folder'    => trim($folder, " /\t"),
+            'folder'    => $folder,
             'path'      => $path,
             'filename'  => $name,
             'mime'      => $mime,

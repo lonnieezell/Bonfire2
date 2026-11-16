@@ -29,6 +29,7 @@ class CreateMediaTable extends Migration
         $this->forge->addPrimaryKey('id');
         $this->forge->addUniqueKey(['container', 'path']);
         $this->forge->addKey('folder');
+        $this->forge->addKey('created_at');
         $this->forge->createTable('media', true);
     }
 

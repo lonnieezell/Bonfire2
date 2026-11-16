@@ -47,24 +47,25 @@ class MediaAdminController extends AdminController
      */
     public function list(): string
     {
-        $folder = $this->request->getGet('folder');
-        $search = trim((string) $this->request->getGet('q'));
-        $model  = model(MediaModel::class);
-        $query  = model(MediaModel::class, false);
+        $folder  = $this->request->getGet('folder');
+        $folder  = is_string($folder) ? MediaModel::cleanFolder($folder) : null;
+        $search  = trim((string) $this->request->getGet('q'));
+        $model   = model(MediaModel::class);
+        $folders = $model->folders();
 
-        if (is_string($folder)) {
-            $query->where('folder', $this->folder($folder));
+        if ($folder !== null) {
+            $model->where('folder', $folder);
         }
 
         if ($search !== '') {
-            $query->matching($search);
+            $model->matching($search);
         }
 
         return $this->render($this->viewPrefix . 'media_list', [
-            'files'   => $query->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
-            'pager'   => $query->pager,
-            'folders' => $model->folders(),
-            'folder'  => is_string($folder) ? $this->folder($folder) : null,
+            'files'   => $model->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
+            'pager'   => $model->pager,
+            'folders' => $folders,
+            'folder'  => $folder,
             'search'  => $search,
             'canEdit' => auth()->user()->can('media.edit'),
         ]);
@@ -77,7 +78,7 @@ class MediaAdminController extends AdminController
     {
         $this->require('media.edit');
 
-        $folder   = $this->folder((string) $this->request->getPost('folder'));
+        $folder   = MediaModel::cleanFolder((string) $this->request->getPost('folder'));
         $storage  = service('mediaStorage');
         $errors   = [];
         $uploaded = 0;
@@ -135,7 +136,7 @@ class MediaAdminController extends AdminController
 
         model(MediaModel::class)->update($media->id, [
             'alt'    => $alt === '' ? null : $alt,
-            'folder' => $this->folder((string) $this->request->getPost('folder')),
+            'folder' => (string) $this->request->getPost('folder'),
         ]);
 
         return redirect()->to(route_to('media-edit', $media->id))->with('message', lang('Bonfire.resourceSaved', [lang('Media.file')]));
@@ -172,18 +173,12 @@ class MediaAdminController extends AdminController
     }
 
     /**
-     * A folder as typed, without the spaces and slashes around it.
-     */
-    private function folder(string $folder): string
-    {
-        return trim($folder, " /\t");
-    }
-
-    /**
      * @param array<string, string> $errors
      */
     private function renderForm(Media $media, array $errors = []): string
     {
+        helper('number');
+
         return $this->render($this->viewPrefix . 'media_form', [
             'media'     => $media,
             'errors'    => $errors,

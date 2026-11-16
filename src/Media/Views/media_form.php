@@ -39,7 +39,7 @@
                 <dt><?= lang('Media.type') ?></dt>
                 <dd><?= esc($media->mime) ?></dd>
                 <dt><?= lang('Media.size') ?></dt>
-                <dd><?= number_format($media->size / 1024, 1) ?> KB</dd>
+                <dd><?= number_to_size($media->size) ?></dd>
                 <?php if ($media->isImage()) : ?>
                     <dt><?= lang('Media.dimensions') ?></dt>
                     <dd><?= $media->width ?> × <?= $media->height ?></dd>

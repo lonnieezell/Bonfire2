@@ -4,6 +4,7 @@ namespace Tests\Support\Media;
 
 use Bonfire\Media\Config\Media as MediaConfig;
 use Bonfire\Media\Entities\Media;
+use Bonfire\Media\MediaStorage;
 use Bonfire\Media\Models\MediaModel;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\HTTP\Files\UploadedFile;
@@ -48,25 +49,44 @@ abstract class MediaTestCase extends TestCase
     }
 
     /**
-     * An upload of a JPEG of the given size, or of the given bytes when there are any.
+     * MediaStorage, moving files with rename(): PHP only moves a file it received as a real HTTP upload.
      */
-    protected function upload(string $name, int $width = 30, int $height = 20, ?string $bytes = null): UploadedFile
+    protected function storage(): MediaStorage
+    {
+        return new class () extends MediaStorage {
+            protected function moveUpload(UploadedFile $file, string $directory, string $name): bool
+            {
+                return rename($file->getTempName(), $directory . '/' . $name);
+            }
+        };
+    }
+
+    /**
+     * A 30 × 20 JPEG in a temp file, or the given bytes when there are any.
+     *
+     * @return string its path
+     */
+    protected function tempFile(?string $bytes = null): string
     {
         $path = tempnam(sys_get_temp_dir(), 'bf-media');
 
         if ($bytes === null) {
-            imagejpeg(imagecreatetruecolor($width, $height), $path);
+            imagejpeg(imagecreatetruecolor(30, 20), $path);
         } else {
             file_put_contents($path, $bytes);
         }
 
-        // The framework refuses to move anything PHP did not receive as a real HTTP upload.
-        return new class ($path, $name, 'application/octet-stream', filesize($path), UPLOAD_ERR_OK) extends UploadedFile {
-            public function move(string $targetPath, ?string $name = null, bool $overwrite = false): bool
-            {
-                return rename($this->getPathname(), rtrim($targetPath, '/') . '/' . $name);
-            }
-        };
+        return $path;
+    }
+
+    /**
+     * An upload of tempFile().
+     */
+    protected function upload(string $name, ?string $bytes = null): UploadedFile
+    {
+        $path = $this->tempFile($bytes);
+
+        return new UploadedFile($path, $name, 'application/octet-stream', filesize($path), UPLOAD_ERR_OK);
     }
 
     /**
