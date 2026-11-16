@@ -11,7 +11,7 @@
 
 namespace Bonfire\Resources\Controllers;
 
-use Bonfire\Actions\ResultFile;
+use Bonfire\Actions\Controllers\RespondsToRuns;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Field;
 use Bonfire\Fields\Form;
@@ -20,8 +20,8 @@ use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Model;
 use ReflectionClass;
 
@@ -31,6 +31,8 @@ use ReflectionClass;
  */
 class ResourceController extends AdminController
 {
+    use RespondsToRuns;
+
     protected $viewPrefix = 'Bonfire\Resources\Views\\';
 
     /**
@@ -46,15 +48,12 @@ class ResourceController extends AdminController
             return $this->refused();
         }
 
-        $model   = $resource->query(model($resource->model, false));
         $columns = $resource->columns();
 
         // The search box and the filter panel both send their choice in the query, so a link can carry it too.
         $search = trim((string) $this->request->getGet('search'));
         $chosen = (array) $this->request->getGet('filters');
-
-        $resource->applySearch($model, $search);
-        $resource->applyFilters($model, $chosen);
+        $model  = $this->narrowed($resource, $search, $chosen);
 
         $narrowing = $this->narrowing($resource, $search, $chosen);
 
@@ -120,47 +119,35 @@ class ResourceController extends AdminController
      * Exports every record that matches the list's search and filters, through the list's ExportRecords action:
      * a download, or a queued run whose toast links to the file.
      *
-     * @return DownloadResponse|RedirectResponse
+     * @return RedirectResponse|ResponseInterface
      */
     public function export(string $slug)
     {
         $resource = $this->resource($slug, 'list');
-        $action   = service('actions')->find($resource->slug, 'export-records');
 
-        if (! $action instanceof ExportRecords) {
+        if (! service('actions')->find($resource->slug, 'export-records') instanceof ExportRecords) {
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $user = auth()->user();
+        $user   = auth()->user();
+        $action = ExportRecords::offered($resource->slug, $user);
 
-        if (! $resource->can('list') || ! in_array($action, service('actions')->for($resource->slug)->bulk($user), true)) {
+        if (! $action instanceof ExportRecords || ! $resource->can('list')) {
             return $this->refused();
         }
 
         // The records the list shows for the search and filters, in its default order.
-        $model = $resource->query(model($resource->model, false));
-        $resource->applySearch($model, (string) $this->request->getPost('search'));
-        $resource->applyFilters($model, (array) $this->request->getPost('filters'));
-        $ids = array_column(
+        $model = $this->narrowed($resource, (string) $this->request->getPost('search'), (array) $this->request->getPost('filters'));
+        $ids   = array_column(
             $model->select($model->table . '.' . $model->primaryKey)->orderBy($model->table . '.' . $model->primaryKey, 'asc')->asArray()->findAll(),
             $model->primaryKey,
         );
 
         if ($ids === []) {
-            return redirect()->back()->with('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));
+            return $this->back('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));
         }
 
-        $outcome = service('actionRuns')->dispatch($resource->slug, $action, $user, $ids);
-
-        if ($outcome->runId !== null) {
-            return redirect()->back()->with('actionRun', $outcome->runId);
-        }
-
-        if ($outcome->file instanceof ResultFile) {
-            return $this->response->download($outcome->file->name, $outcome->file->take());
-        }
-
-        return redirect()->back()->with($outcome->succeeded ? 'message' : 'error', $outcome->message);
+        return $this->respondTo(service('actionRuns')->dispatch($resource->slug, $action, $user, $ids));
     }
 
     /**
@@ -409,6 +396,19 @@ class ResourceController extends AdminController
         }
 
         return [$errors, $notices];
+    }
+
+    /**
+     * The resource's model, prepared by its `query()` and narrowed to the records matching the search and filters.
+     *
+     * @param array<string, mixed> $chosen the chosen options of the filters, by column
+     */
+    private function narrowed(Resource $resource, string $search, array $chosen): Model
+    {
+        $model = $resource->query(model($resource->model, false));
+        $resource->applySearch($model, $search);
+
+        return $resource->applyFilters($model, $chosen);
     }
 
     /**

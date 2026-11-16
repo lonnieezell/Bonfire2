@@ -28,6 +28,8 @@ use CodeIgniter\HTTP\ResponseInterface;
  */
 class ActionController extends AdminController
 {
+    use RespondsToRuns;
+
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Actions\Views\\';
 
@@ -69,17 +71,7 @@ class ActionController extends AdminController
             return $this->ask($action, $confirm, $form, $ids, $input, $errors);
         }
 
-        $outcome = service('actionRuns')->dispatch($list, $action, $user, $ids, $input);
-
-        if ($outcome->runId !== null) {
-            return $this->back('actionRun', $outcome->runId);
-        }
-
-        if ($outcome->file instanceof ResultFile) {
-            return $this->response->download($outcome->file->name, $outcome->file->take());
-        }
-
-        return $this->back($outcome->succeeded ? 'message' : 'error', $outcome->message);
+        return $this->respondTo(service('actionRuns')->dispatch($list, $action, $user, $ids, $input));
     }
 
     /**
@@ -135,20 +127,6 @@ class ActionController extends AdminController
     private function mayRun(Action $action): bool
     {
         return $action->permission === '' || auth()->user()->can($action->permission);
-    }
-
-    /**
-     * Back to the page the admin came from with a message. The dialog posts with AJAX, so it is told to go there.
-     */
-    private function back(string $key, int|string $value): RedirectResponse|ResponseInterface
-    {
-        if (! $this->request->isAJAX()) {
-            return redirect()->back()->with($key, $value);
-        }
-
-        session()->setFlashdata($key, $value);
-
-        return $this->response->setStatusCode(204)->setHeader('HX-Redirect', previous_url());
     }
 
     /**

@@ -83,13 +83,7 @@ class ActionRuns
         }
 
         $succeeded = $context->succeeded($result);
-
-        // A file from a run that did nothing has nothing in it to send.
-        if (! $succeeded && $result->file instanceof ResultFile) {
-            @unlink($result->file->path);
-        }
-
-        $outcome = RunOutcome::ran($succeeded, $context->summary($result), $succeeded ? $result->file : null);
+        $outcome   = RunOutcome::ran($succeeded, $context->summary($result), $this->keptFile($succeeded, $result));
 
         $runs->insert($run + [
             'status'    => $outcome->succeeded ? RunStatus::Done : RunStatus::Failed,
@@ -141,18 +135,27 @@ class ActionRuns
         }
 
         $succeeded = $context->succeeded($result);
-
-        if (! $succeeded && $result->file instanceof ResultFile) {
-            @unlink($result->file->path);
-        }
+        $file      = $this->keptFile($succeeded, $result);
 
         $runs->update($runId, [
             'status'    => $succeeded ? RunStatus::Done : RunStatus::Failed,
             'processed' => $context->processed(),
             'skipped'   => $context->skipped(),
             'message'   => $context->summary($result),
-            'file'      => $succeeded && $result->file instanceof ResultFile ? json_encode(['path' => $result->file->path, 'name' => $result->file->name]) : null,
+            'file'      => $file instanceof ResultFile ? json_encode($file) : null,
         ]);
+    }
+
+    /**
+     * The result's file, if the run succeeded. A file from a run that did nothing has nothing in it to send, so it's deleted.
+     */
+    private function keptFile(bool $succeeded, ActionResult $result): ?ResultFile
+    {
+        if (! $succeeded && $result->file instanceof ResultFile) {
+            @unlink($result->file->path);
+        }
+
+        return $succeeded ? $result->file : null;
     }
 
     /**

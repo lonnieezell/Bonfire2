@@ -19,6 +19,7 @@ use Bonfire\Actions\Placement;
 use Bonfire\Fields\Field;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
+use Bonfire\Users\User;
 
 /**
  * Downloads the records as a CSV of the list's columns, with the text the list shows. Anyone who may see the list
@@ -33,6 +34,16 @@ class ExportRecords extends Action
     {
         $this->label      = lang('Resources.exportCsv');
         $this->permission = $resource->permission . '.list';
+    }
+
+    /**
+     * The export on list `$list` that `$user` may run, which the Export CSV button above the list runs, or null.
+     */
+    public static function offered(string $list, User $user): ?self
+    {
+        $export = service('actions')->find($list, 'export-records');
+
+        return $export instanceof self && in_array($export, service('actions')->for($list)->bulk($user), true) ? $export : null;
     }
 
     public function handle(ActionContext $context): ActionResult
