@@ -305,26 +305,37 @@ final class ResourceActionsTest extends TestCase
 
     public function testExportLeavesOutRecordsTheListDoesNotShow(): void
     {
-        // A list that hides archived products, as a resource scoping its query() would, and a product its can() refuses.
+        // A list that hides archived products, as a resource scoping its query() would.
         $resource = new class () extends ProductResource {
             public function query(Model $model): Model
             {
                 return parent::query($model)->where('products.status !=', 'archived');
             }
+        };
+        service('actions')->for('products')->add(new ExportRecords($resource));
+        $shown  = $this->createProduct('Anvil', ['status' => 'active']);
+        $hidden = $this->createProduct('Bellows', ['status' => 'archived']);
 
-            public function can(string $verb, mixed $entity = null): bool
+        $csv = $this->body($this->runAction('export-records', [$shown, $hidden])->response());
+
+        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,,,active\n", $csv);
+    }
+
+    public function testExportWritesARecordOnceWhenTheQueryRepeatsIt(): void
+    {
+        // A join that gives each product a row per category, as a join to a one-to-many relation does.
+        $resource = new class () extends ProductResource {
+            public function query(Model $model): Model
             {
-                return $entity?->name !== 'Cupola' && parent::can($verb, $entity);
+                return parent::query($model)->join('categories AS every_category', 'every_category.id > 0');
             }
         };
         service('actions')->for('products')->add(new ExportRecords($resource));
-        $shown   = $this->createProduct('Anvil', ['status' => 'active']);
-        $hidden  = $this->createProduct('Bellows', ['status' => 'archived']);
-        $refused = $this->createProduct('Cupola', ['status' => 'active']);
+        model(CategoryModel::class)->insertBatch([['name' => 'Tools'], ['name' => 'Toys']]);
 
-        $csv = $this->body($this->runAction('export-records', [$shown, $hidden, $refused])->response());
+        $csv = $this->body($this->runAction('export-records', [$this->createProduct('Anvil')])->response());
 
-        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,,,active\n", $csv);
+        $this->assertSame(1, substr_count($csv, "\nAnvil,"));
     }
 
     public function testALargeExportIsQueuedAndItsToastLinksToTheFile(): void
@@ -335,6 +346,8 @@ final class ResourceActionsTest extends TestCase
 
         $this->runAction('export-records', $ids)->assertSessionHas('actionRun');
         $runId = $_SESSION['actionRun'];
+        // A queue worker has no signed-in user.
+        auth()->logout();
         (new RunAction(['run' => $runId]))->process();
 
         $toast = (string) $this->withHeaders(['HX-Request' => 'true'])->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();

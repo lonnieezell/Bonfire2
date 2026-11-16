@@ -20,6 +20,7 @@ use Bonfire\Fields\Field;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
 use Bonfire\Users\User;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -67,7 +68,7 @@ class ExportRecords extends Action
         }
 
         $path = $dir . bin2hex(random_bytes(16)) . '.csv';
-        $file = fopen($path, 'wb');
+        $file = fopen($path, 'wb') ?: throw new RuntimeException("Can't write the export to {$dir}.");
 
         try {
             $this->write($file, $context);
@@ -89,14 +90,6 @@ class ExportRecords extends Action
     }
 
     /**
-     * A record the resource won't let the user list is skipped.
-     */
-    public function allows(User $actor, object $record): bool
-    {
-        return $this->resource->can('list', $record);
-    }
-
-    /**
      * Writes the header and a row per record. Each chunk loads again through the resource's `query()`, so the file
      * has only records the list shows, with what its joins add, such as a relation's column.
      *
@@ -114,9 +107,16 @@ class ExportRecords extends Action
             $model = model($this->resource->model, false);
             $key   = $model->table . '.' . $model->primaryKey;
             $ids   = array_map(static fn (object $record): mixed => Column::get($record, $model->primaryKey), $records);
+            $done  = [];
 
             foreach ($this->resource->query($model)->whereIn($key, $ids)->orderBy($key, 'asc')->findAll() as $record) {
-                fputcsv($file, array_map(self::defuse(...), $this->resource->cells($columns, $record)), escape: '');
+                // A join to a one-to-many relation repeats a record.
+                $id = (string) Column::get($record, $model->primaryKey);
+
+                if (! isset($done[$id])) {
+                    $done[$id] = true;
+                    fputcsv($file, array_map(self::defuse(...), $this->resource->cells($columns, $record)), escape: '');
+                }
             }
         }
     }
