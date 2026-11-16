@@ -13,6 +13,7 @@ namespace Bonfire\Actions\Controllers;
 
 use Bonfire\Actions\Action;
 use Bonfire\Actions\Confirm;
+use Bonfire\Actions\ResultFile;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Form;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -71,6 +72,14 @@ class ActionController extends AdminController
 
         if ($outcome->runId !== null) {
             return $this->back('actionRun', $outcome->runId);
+        }
+
+        // Read before it's deleted: the run's file is only for this response.
+        if ($outcome->file instanceof ResultFile) {
+            $contents = (string) file_get_contents($outcome->file->path);
+            unlink($outcome->file->path);
+
+            return $this->response->download($outcome->file->name, $contents);
         }
 
         return $this->back($outcome->succeeded ? 'message' : 'error', $outcome->message);

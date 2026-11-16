@@ -77,7 +77,14 @@ class ActionRuns
             return RunOutcome::ran(false, lang('Bonfire.unknownError'));
         }
 
-        $outcome = RunOutcome::ran($context->succeeded($result), $context->summary($result));
+        $succeeded = $context->succeeded($result);
+
+        // A file from a run that did nothing has nothing in it to send.
+        if (! $succeeded && $result->file instanceof ResultFile) {
+            @unlink($result->file->path);
+        }
+
+        $outcome = RunOutcome::ran($succeeded, $context->summary($result), $succeeded ? $result->file : null);
 
         $runs->insert($run + [
             'status'    => $outcome->succeeded ? RunStatus::Done : RunStatus::Failed,
