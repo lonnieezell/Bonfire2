@@ -6,7 +6,7 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 ## 16 November 2026 (breaking change)
 
-**Media: a media library.** A new **Media** screen under **Content** stores uploaded files. Upload several at once into a
+**Media: a media library.** A new **Media** screen in the sidebar stores uploaded files. Upload several at once into a
 folder, browse by folder, search by filename or alt text, set a file's alt text, and move it to another folder without
 changing its URL. Deleted files go to the Recycler, and purging one removes it from disk. Uploads are refused when their
 extension isn't allowed or they're over the size limit, and SVG is off by default. It needs the new `media.access`,
