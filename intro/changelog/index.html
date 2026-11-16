@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#16-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#9-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3292,6 +3303,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#16-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#9-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3686,6 +3708,16 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="16-november-2026">16 November 2026</h2>
+<p><strong>Resources: export to CSV.</strong> Add <code>new ExportRecords($this)</code> to a resource's <code>actions()</code> to let anyone with
+<code>{permission}.list</code> download its records as CSV: the checked rows from the selection bar, or every record matching the
+search and filters from a new <strong>Export CSV</strong> button above the list. The file has the list's columns and the text the
+list shows, and cells that a spreadsheet would run as a formula are escaped. Exports of more than 500 records run in the
+queue, and the toast links to the file. See <a href="../../building_admin_modules/resources/#exporting-to-csv">Exporting to CSV</a>.</p>
+<p><strong>Actions: return a file.</strong> <code>ActionResult::file($path, $filename, $message)</code> lets an action hand the admin a file. A run
+in the request downloads it straight away. A queued run's toast links to it, for the admin who started the run, for a
+day. <strong>Run <code>php spark migrate --all</code></strong> to add the <code>file</code> column to <code>action_runs</code>. See
+<a href="../../building_admin_modules/actions/#returning-a-file">Returning A File</a>.</p>
 <h2 id="9-november-2026-breaking-change">9 November 2026 (breaking change)</h2>
 <p><strong>Content: search reads blocks, and no longer reads Markdown syntax.</strong> Admin search and <code>content()-&gt;search()</code> now match an
 entry's title and a new <code>search_text</code> column, in place of the raw body. It holds the body and every string in the entry's

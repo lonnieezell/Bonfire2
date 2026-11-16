@@ -3763,6 +3763,30 @@ needs <code>{permission}.delete</code>. When the model uses soft deletes, the re
 <code>register()</code> has already set up for the resource, and can be restored from there. Otherwise they are gone for good. It
 also asks the resource's <code>can('delete', $record)</code>: a record that refuses is skipped, and its row doesn't offer the
 action. So that <code>can()</code> has a signed-in user to ask, the action never runs in a queue.</p>
+<h4 id="exporting-to-csv">Exporting to CSV</h4>
+<p><code>Bonfire\Resources\Actions\ExportRecords</code> downloads records as a CSV file. Add it to <code>actions()</code> to turn it on:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">actions</span><span class="p">()</span><span class="o">:</span> <span class="k">array</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="k">new</span> <span class="nx">DeleteRecords</span><span class="p">(</span><span class="nv">$this</span><span class="p">),</span> <span class="k">new</span> <span class="nx">ExportRecords</span><span class="p">(</span><span class="nv">$this</span><span class="p">)];</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>It needs <code>{permission}.list</code>, since an export shows nothing the list doesn't. The admin can export in two ways:</p>
+<ul>
+<li><strong>The checked rows</strong>, with <strong>Export CSV</strong> in the bar that appears when rows are checked.</li>
+<li><strong>Everything matching the search and filters</strong>, with the <strong>Export CSV</strong> button above the list. This exports every
+  matching record, on every page. It posts to <code>POST admin/{slug}/export</code>, which <code>resource_routes()</code> declares with the
+  list.</li>
+</ul>
+<p>The file has a header row of the list's column labels, then one row per record with the same text the list shows: the
+stored value of a select or toggle, not its label. A cell that starts with <code>=</code>, <code>+</code>, <code>-</code>, <code>@</code>, a tab or a carriage
+return gets a leading <code>'</code>, so a spreadsheet doesn't run it as a formula. Negative numbers show that quote too. The file
+starts with a UTF-8 byte order mark, so Excel reads accents correctly, and it's named <code>{slug}-{date}-{time}.csv</code>.</p>
+<p>Up to 500 records download straight away. Larger exports run <a href="../actions/#running-in-the-background">in the background</a>
+when the queue is set up, and the toast links to the file once it's written. Files are kept in <code>writable/exports/</code> and
+deleted after a day. Records load through the resource's <code>query()</code>, as in the list, so a
+<a href="#relation-and-computed-columns">relation column</a> read from a join is filled in, and a record that <code>query()</code> leaves out of
+the list is left out of the file. It doesn't ask <code>can()</code> about each record, since a queued export has no signed-in user
+to ask.</p>
 <p>Another module adds an action to a resource's list by its slug, from <code>initAdmin()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nx">service</span><span class="p">(</span><span class="s1">'actions'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">for</span><span class="p">(</span><span class="s1">'products'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">ExportProducts</span><span class="p">());</span>
 </code></pre></div>

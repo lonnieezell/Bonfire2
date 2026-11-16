@@ -2768,6 +2768,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#returning-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returning A File
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3089,6 +3100,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#returning-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returning A File
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3324,6 +3346,26 @@ Extend it with how your records are deleted, and usually your own permission and
 </code></pre></div>
 <p>Override <code>confirm()</code> for your own question and <code>deleted()</code> for the message once it's done. See
 <code>Bonfire\Users\Actions\DeleteUsers</code> for a complete example.</p>
+<h3 id="returning-a-file">Returning A File</h3>
+<p>An action that writes a file for the admin, such as an export, returns <code>ActionResult::file()</code> with the file's path, the
+name to download it as, and the message:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nx">ActionContext</span> <span class="nv">$context</span><span class="p">)</span><span class="o">:</span> <span class="nx">ActionResult</span>
+<span class="p">{</span>
+    <span class="nv">$path</span> <span class="o">=</span> <span class="nx">WRITEPATH</span> <span class="o">.</span> <span class="s1">'exports/'</span> <span class="o">.</span> <span class="nb">bin2hex</span><span class="p">(</span><span class="nb">random_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span> <span class="o">.</span> <span class="s1">'.csv'</span><span class="p">;</span>
+    <span class="c1">// ... write the records to $path</span>
+
+    <span class="k">return</span> <span class="nx">ActionResult</span><span class="o">::</span><span class="na">file</span><span class="p">(</span><span class="nv">$path</span><span class="p">,</span> <span class="s1">'photos.csv'</span><span class="p">,</span> <span class="s1">'{count} photos exported.'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>A run in the request answers with the file as a download, then deletes it. A queued run keeps the file, and its toast
+ends with a <strong>Download</strong> link to <code>GET admin/actions/runs/{id}/download</code>. Only the admin who started the run can
+download it, and only for a day after the run ends. Clean up old files yourself:
+<code>Bonfire\Resources\Actions\ExportRecords</code> deletes its own when it writes the next one. Keep each file under <code>WRITEPATH</code>
+with a random name, since the link serves the path the run recorded. A run that handled no records deletes its file and
+reports the error as usual. A queued run records the file in the <code>file</code> column of <code>action_runs</code>, so run
+<code>php spark migrate --all</code> to add it.</p>
+<p>An action that returns a file can't have <code>fields()</code> yet: the confirm dialog posts them with JavaScript, which can't
+save a download.</p>
 <h2 id="registering-actions">Registering Actions</h2>
 <p>Actions belong to a named list. Register them in your module's <code>initAdmin()</code>, saying where the list's records come
 from:</p>
