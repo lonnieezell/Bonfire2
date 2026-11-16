@@ -25,6 +25,16 @@ class TouchUsers extends Action
     public ?Confirm $asks = null;
     public bool $fails    = false;
 
+    /**
+     * Whether it answers with a file of the IDs it touched.
+     */
+    public bool $writesFile = false;
+
+    /**
+     * The file it wrote last.
+     */
+    public string $file = '';
+
     public function confirm(): ?Confirm
     {
         return $this->asks;
@@ -43,6 +53,13 @@ class TouchUsers extends Action
 
         foreach ($context->entities() as $user) {
             $this->touched[] = $user->id;
+        }
+
+        if ($this->writesFile) {
+            $this->file = tempnam(sys_get_temp_dir(), 'touched');
+            file_put_contents($this->file, implode(',', $this->touched));
+
+            return ActionResult::file($this->file, 'touched.txt', '{count} users touched.');
         }
 
         return ActionResult::message('{count} users touched.');

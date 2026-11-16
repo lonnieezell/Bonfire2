@@ -195,8 +195,9 @@ if (! function_exists('content_markdown')) {
 if (! function_exists('resource_routes')) {
     /**
      * Declares the admin routes of a resource: one for each page its `$pages` names.
-     * Call it from the module's Config/Routes.php. The routes are named `{slug}-list`, `{slug}-new` and `{slug}-create`
-     * (the form and its post), and `{slug}-edit` and `{slug}-update`.
+     * Call it from the module's Config/Routes.php. The routes are named `{slug}-list` and `{slug}-export` (the Export CSV
+     * button, for a resource whose actions() has ExportRecords), `{slug}-new` and `{slug}-create` (the form and its post),
+     * and `{slug}-edit` and `{slug}-update`.
      *
      * @param class-string<Bonfire\Resources\Resource> $resource
      */
@@ -207,6 +208,9 @@ if (! function_exists('resource_routes')) {
         $routes->group(ADMIN_AREA, static function (RouteCollection $routes) use ($resource): void {
             if ($resource->allows('list')) {
                 $routes->get($resource->slug, [[ResourceController::class, 'list'], $resource->slug], ['as' => $resource->slug . '-list']);
+                // Before the edit routes, whose segment would take `export` for an ID. CSRF is checked even when an app
+                // doesn't turn it on globally.
+                $routes->post($resource->slug . '/export', [[ResourceController::class, 'export'], $resource->slug], ['as' => $resource->slug . '-export', 'filter' => 'csrf']);
             }
 
             // `new` comes before the edit routes, whose segment would take it for an ID.

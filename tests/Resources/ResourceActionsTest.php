@@ -2,14 +2,21 @@
 
 namespace Tests\Resources;
 
+use Bonfire\Actions\Jobs\RunAction;
 use Bonfire\Resources\Actions\DeleteRecords;
+use Bonfire\Resources\Actions\ExportRecords;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
+use CodeIgniter\HTTP\DownloadResponse;
+use CodeIgniter\Model;
 use CodeIgniter\Test\TestResponse;
 use Config\Services;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Actions\TouchProducts;
+use Tests\Support\Models\CategoryModel;
 use Tests\Support\Models\ProductModel;
 use Tests\Support\Modules\Products\FeatureProducts;
+use Tests\Support\Modules\Products\ProductResource;
 use Tests\Support\TestCase;
 
 /**
@@ -278,6 +285,141 @@ final class ResourceActionsTest extends TestCase
         $this->assertCount(1, service('actions')->for('products')->source()->find([$this->createProduct('Anvil')]));
     }
 
+    // Export
+
+    public function testExportsTheCheckedRecordsWithTheListsColumns(): void
+    {
+        $this->addExport();
+        $tools = model(CategoryModel::class)->insert(['name' => 'Tools']);
+        $anvil = $this->createProduct('Anvil', ['price' => '10.00', 'stock' => 3, 'status' => 'active', 'category_id' => $tools]);
+        $this->createProduct('Bellows');
+
+        $download = $this->runAction('export-records', [$anvil])->response();
+
+        $this->assertInstanceOf(DownloadResponse::class, $download);
+        $download->buildHeaders();
+        $this->assertMatchesRegularExpression('#filename="products-\d{4}-\d{2}-\d{2}-\d{6}\.csv"#', $download->getHeaderLine('Content-Disposition'));
+        // The category's name comes from the join in the resource's query(), as in the list.
+        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,Tools,30.00,active\n", $this->body($download));
+    }
+
+    public function testExportLeavesOutRecordsTheListDoesNotShow(): void
+    {
+        // A list that hides archived products, as a resource scoping its query() would.
+        $resource = new class () extends ProductResource {
+            public function query(Model $model): Model
+            {
+                return parent::query($model)->where('products.status !=', 'archived');
+            }
+        };
+        service('actions')->for('products')->add(new ExportRecords($resource));
+        $shown  = $this->createProduct('Anvil', ['status' => 'active']);
+        $hidden = $this->createProduct('Bellows', ['status' => 'archived']);
+
+        $csv = $this->body($this->runAction('export-records', [$shown, $hidden])->response());
+
+        $this->assertSame("\u{FEFF}Name,SKU,Category,\"Stock value\",Status\nAnvil,ANV-1,,,active\n", $csv);
+    }
+
+    public function testExportWritesARecordOnceWhenTheQueryRepeatsIt(): void
+    {
+        // A join that gives each product a row per category, as a join to a one-to-many relation does.
+        $resource = new class () extends ProductResource {
+            public function query(Model $model): Model
+            {
+                return parent::query($model)->join('categories AS every_category', 'every_category.id > 0');
+            }
+        };
+        service('actions')->for('products')->add(new ExportRecords($resource));
+        model(CategoryModel::class)->insertBatch([['name' => 'Tools'], ['name' => 'Toys']]);
+
+        $csv = $this->body($this->runAction('export-records', [$this->createProduct('Anvil')])->response());
+
+        $this->assertSame(1, substr_count($csv, "\nAnvil,"));
+    }
+
+    public function testALargeExportIsQueuedAndItsToastLinksToTheFile(): void
+    {
+        $this->addExport();
+        service('actions')->find('products', 'export-records')->queueAbove = 1;
+        $ids                                                               = [$this->createProduct('Anvil'), $this->createProduct('Bellows')];
+
+        $this->runAction('export-records', $ids)->assertSessionHas('actionRun');
+        $runId = $_SESSION['actionRun'];
+        // A queue worker has no signed-in user.
+        auth()->logout();
+        (new RunAction(['run' => $runId]))->process();
+
+        $toast = (string) $this->withHeaders(['HX-Request' => 'true'])->actingAs($this->admin)->get(route_to('action-run', $runId))->response()->getBody();
+        $this->assertStringContainsString('href="' . url_to('action-run-download', $runId) . '"', $toast);
+
+        $download = $this->actingAs($this->admin)->get(route_to('action-run-download', $runId))->response();
+        $this->assertStringContainsString("\nAnvil,ANV-1,", $this->body($download));
+        $this->assertStringContainsString("\nBellows,BEL-1,", $this->body($download));
+    }
+
+    public function testExportIsOfferedWithTheListPermissionAndRefusedWithoutIt(): void
+    {
+        $this->addExport();
+        $id = $this->createProduct('Anvil');
+
+        $this->assertContains('export-records', $this->bulkActions($this->visit('admin/products')));
+
+        $this->adminGroupHas(['admin.access', 'products.delete']);
+
+        $this->runAction('export-records', [$id])->assertSessionHas('error', lang('Bonfire.notAuthorized'));
+    }
+
+    public function testExportPrunesExportsOlderThanADay(): void
+    {
+        $this->addExport();
+        $dir = WRITEPATH . 'exports/';
+
+        if (! is_dir($dir)) {
+            mkdir($dir, 0700, true);
+        }
+
+        file_put_contents($old = $dir . 'old.csv', 'old');
+        touch($old, time() - DAY - 60);
+        file_put_contents($recent = $dir . 'recent.csv', 'recent');
+        touch($recent, time() - DAY + 60);
+
+        $this->runAction('export-records', [$this->createProduct('Anvil')]);
+
+        $this->assertFileDoesNotExist($old);
+        $this->assertFileExists($recent);
+        unlink($recent);
+    }
+
+    #[DataProvider('provideExportEscapesCellsThatStartWithAFormulaCharacter')]
+    public function testExportEscapesCellsThatStartWithAFormulaCharacter(string $name, string $cell): void
+    {
+        $this->addExport();
+        $id = $this->createProduct($name, ['sku' => 'F-1']);
+
+        $csv = $this->body($this->runAction('export-records', [$id])->response());
+
+        $this->assertStringContainsString("\n{$cell},F-1,", $csv);
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function provideExportEscapesCellsThatStartWithAFormulaCharacter(): iterable
+    {
+        yield 'equals' => ['=SUM(A1)', "'=SUM(A1)"];
+
+        yield 'plus' => ['+10', "'+10"];
+
+        yield 'minus' => ['-20', "'-20"];
+
+        yield 'at' => ['@cmd', "'@cmd"];
+
+        yield 'tab' => ["\tTab", "\"'\tTab\""];
+
+        yield 'carriage return' => ["\rCR", "\"'\rCR\""];
+    }
+
     /**
      * @param array<string, mixed> $with
      */
@@ -319,6 +461,22 @@ final class ResourceActionsTest extends TestCase
         }
 
         return $this->actingAs($this->admin)->post("admin/actions/products/{$action}", $data);
+    }
+
+    /**
+     * Adds the export to the products list, as a resource's actions() would.
+     */
+    private function addExport(): void
+    {
+        service('actions')->for('products')->add(new ExportRecords(new ProductResource()));
+    }
+
+    private function body(DownloadResponse $download): string
+    {
+        ob_start();
+        $download->sendBody();
+
+        return (string) ob_get_clean();
     }
 
     /**

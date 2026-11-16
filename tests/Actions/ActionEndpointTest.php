@@ -7,6 +7,7 @@ use Bonfire\Actions\ModelSource;
 use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\Test\TestResponse;
 use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
@@ -153,6 +154,24 @@ final class ActionEndpointTest extends TestCase
 
         $this->runAction(['selects' => $ids, 'confirmed' => '1', 'confirm_count' => '2'])->assertRedirect();
         $this->assertSame($ids, $this->touch->touched);
+    }
+
+    public function testAFileResultDownloadsInTheRequest(): void
+    {
+        $this->touch->writesFile = true;
+        $ids                     = [$this->createUser()->id, $this->createUser()->id];
+
+        $download = $this->runAction(['selects' => $ids])->response();
+
+        $this->assertInstanceOf(DownloadResponse::class, $download);
+        $download->buildHeaders();
+        $this->assertStringContainsString('filename="touched.txt"', $download->getHeaderLine('Content-Disposition'));
+        ob_start();
+        $download->sendBody();
+        $this->assertSame(implode(',', $ids), ob_get_clean());
+        // The file is gone once it's sent; the run is recorded as any other.
+        $this->assertFileDoesNotExist($this->touch->file);
+        $this->seeInDatabase('action_runs', ['list' => 'test-users', 'status' => 'done', 'message' => '2 users touched.']);
     }
 
     public function testAFailingActionReportsAnErrorAndLogsIt(): void

@@ -13,9 +13,11 @@ namespace Bonfire\Actions\Controllers;
 
 use Bonfire\Actions\Action;
 use Bonfire\Actions\Confirm;
+use Bonfire\Actions\ResultFile;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Form;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -26,6 +28,8 @@ use CodeIgniter\HTTP\ResponseInterface;
  */
 class ActionController extends AdminController
 {
+    use RespondsToRuns;
+
     protected $theme      = 'Admin';
     protected $viewPrefix = 'Bonfire\Actions\Views\\';
 
@@ -67,13 +71,7 @@ class ActionController extends AdminController
             return $this->ask($action, $confirm, $form, $ids, $input, $errors);
         }
 
-        $outcome = service('actionRuns')->dispatch($list, $action, $user, $ids, $input);
-
-        if ($outcome->runId !== null) {
-            return $this->back('actionRun', $outcome->runId);
-        }
-
-        return $this->back($outcome->succeeded ? 'message' : 'error', $outcome->message);
+        return $this->respondTo(service('actionRuns')->dispatch($list, $action, $user, $ids, $input));
     }
 
     /**
@@ -112,23 +110,23 @@ class ActionController extends AdminController
         return view($this->viewPrefix . '_run', ['run' => $run]);
     }
 
+    /**
+     * The file a queued run wrote, for the admin who started it, for a day after the run ends.
+     */
+    public function download(int $id): DownloadResponse
+    {
+        $file = service('actionRuns')->file($id, auth()->user());
+
+        if (! $file instanceof ResultFile) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $this->response->download($file->path, null)->setFileName($file->name);
+    }
+
     private function mayRun(Action $action): bool
     {
         return $action->permission === '' || auth()->user()->can($action->permission);
-    }
-
-    /**
-     * Back to the page the admin came from with a message. The dialog posts with AJAX, so it is told to go there.
-     */
-    private function back(string $key, int|string $value): RedirectResponse|ResponseInterface
-    {
-        if (! $this->request->isAJAX()) {
-            return redirect()->back()->with($key, $value);
-        }
-
-        session()->setFlashdata($key, $value);
-
-        return $this->response->setStatusCode(204)->setHeader('HX-Redirect', previous_url());
     }
 
     /**

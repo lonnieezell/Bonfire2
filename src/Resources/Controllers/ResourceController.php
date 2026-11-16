@@ -11,15 +11,17 @@
 
 namespace Bonfire\Resources\Controllers;
 
+use Bonfire\Actions\Controllers\RespondsToRuns;
 use Bonfire\Core\AdminController;
 use Bonfire\Fields\Field;
-use Bonfire\Fields\FieldTypes;
 use Bonfire\Fields\Form;
+use Bonfire\Resources\Actions\ExportRecords;
 use Bonfire\Resources\Column;
 use Bonfire\Resources\Resource;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Model;
 use ReflectionClass;
 
@@ -29,6 +31,8 @@ use ReflectionClass;
  */
 class ResourceController extends AdminController
 {
+    use RespondsToRuns;
+
     protected $viewPrefix = 'Bonfire\Resources\Views\\';
 
     /**
@@ -44,15 +48,12 @@ class ResourceController extends AdminController
             return $this->refused();
         }
 
-        $model   = $resource->query(model($resource->model, false));
         $columns = $resource->columns();
 
         // The search box and the filter panel both send their choice in the query, so a link can carry it too.
         $search = trim((string) $this->request->getGet('search'));
         $chosen = (array) $this->request->getGet('filters');
-
-        $resource->applySearch($model, $search);
-        $resource->applyFilters($model, $chosen);
+        $model  = $this->narrowed($resource, $search, $chosen);
 
         $narrowing = $this->narrowing($resource, $search, $chosen);
 
@@ -92,7 +93,7 @@ class ResourceController extends AdminController
             'rows'       => array_map(fn ($record): array => [
                 'record'     => $record,
                 'id'         => $this->idOf($model, $record),
-                'cells'      => $this->cells($columns, $record),
+                'cells'      => $resource->cells($columns, $record),
                 'editUrl'    => $this->editUrl($resource, $model, $record),
                 'selectable' => $selectable && is_object($record) && $actionList->selectable($user, $record),
             ], $records),
@@ -112,6 +113,39 @@ class ResourceController extends AdminController
         $data['canCreate'] = $resource->allows('create') && $resource->can('create');
 
         return $this->renderPage($resource, 'list', $data);
+    }
+
+    /**
+     * Exports every record that matches the list's search and filters, through the list's ExportRecords action:
+     * a download, or a queued run whose toast links to the file.
+     *
+     * @return RedirectResponse|ResponseInterface
+     */
+    public function export(string $slug)
+    {
+        $resource = $this->resource($slug, 'list');
+
+        if (! $resource->can('list')) {
+            return $this->refused();
+        }
+
+        // A list without the export has no button, and neither does one whose export the user may not run.
+        $user   = auth()->user();
+        $action = ExportRecords::offered($resource->slug, $user) ?? throw PageNotFoundException::forPageNotFound();
+
+        // The records the list shows for the search and filters, in its default order.
+        $model = $this->narrowed($resource, (string) $this->request->getPost('search'), (array) $this->request->getPost('filters'));
+        // A join to a one-to-many relation repeats a record.
+        $ids = array_values(array_unique(array_column(
+            $model->select($model->table . '.' . $model->primaryKey)->orderBy($model->table . '.' . $model->primaryKey, 'asc')->asArray()->findAll(),
+            $model->primaryKey,
+        )));
+
+        if ($ids === []) {
+            return $this->back('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));
+        }
+
+        return $this->respondTo(service('actionRuns')->dispatch($resource->slug, $action, $user, $ids));
     }
 
     /**
@@ -363,17 +397,16 @@ class ResourceController extends AdminController
     }
 
     /**
-     * What each column shows for a record, as text.
+     * The resource's model, prepared by its `query()` and narrowed to the records matching the search and filters.
      *
-     * @param list<Column|Field> $columns
-     *
-     * @return list<string>
+     * @param array<string, mixed> $chosen the chosen options of the filters, by column
      */
-    private function cells(array $columns, mixed $record): array
+    private function narrowed(Resource $resource, string $search, array $chosen): Model
     {
-        return array_map(static fn (Column|Field $column): string => $column instanceof Column
-            ? $column->valueOf($record)
-            : FieldTypes::get($column->type)->fromStored(Column::get($record, $column->handle), $column), $columns);
+        $model = $resource->query(model($resource->model, false));
+        $resource->applySearch($model, $search);
+
+        return $resource->applyFilters($model, $chosen);
     }
 
     /**

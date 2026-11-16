@@ -13,7 +13,7 @@ namespace Bonfire\Actions;
 
 /**
  * What dispatching a run did: queued it as `$runId`, or ran it (or refused to)
- * and has a message for the admin.
+ * and has a message for the admin, and maybe a file to send them.
  */
 final readonly class RunOutcome
 {
@@ -21,6 +21,7 @@ final readonly class RunOutcome
         public ?int $runId,
         public bool $succeeded,
         public string $message,
+        public ?ResultFile $file = null,
     ) {
     }
 
@@ -29,8 +30,8 @@ final readonly class RunOutcome
         return new self($runId, true, '');
     }
 
-    public static function ran(bool $succeeded, string $message): self
+    public static function ran(bool $succeeded, string $message, ?ResultFile $file = null): self
     {
-        return new self(null, $succeeded, $message);
+        return new self(null, $succeeded, $message, $file);
     }
 }
