@@ -90,6 +90,28 @@ abstract class MediaTestCase extends TestCase
     }
 
     /**
+     * Puts files into $_FILES['files'] as a multiple upload.
+     *
+     * @param list<string> $names
+     */
+    protected function filesToUpload(array $names): void
+    {
+        $files = ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
+
+        foreach ($names as $name) {
+            $path = $this->tempFile();
+
+            $files['name'][]     = $name;
+            $files['type'][]     = 'image/jpeg';
+            $files['tmp_name'][] = $path;
+            $files['error'][]    = UPLOAD_ERR_OK;
+            $files['size'][]     = filesize($path);
+        }
+
+        service('superglobals')->setFilesArray(['files' => $files]);
+    }
+
+    /**
      * Writes a file into the container and adds its row.
      */
     protected function mediaFile(string $path, string $folder = '', ?string $alt = null, string $mime = 'image/jpeg'): Media

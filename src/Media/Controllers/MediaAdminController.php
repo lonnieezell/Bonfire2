@@ -47,19 +47,10 @@ class MediaAdminController extends AdminController
      */
     public function list(): string
     {
-        $folder  = $this->request->getGet('folder');
-        $folder  = is_string($folder) ? MediaModel::cleanFolder($folder) : null;
-        $search  = trim((string) $this->request->getGet('q'));
         $model   = model(MediaModel::class);
         $folders = $model->folders();
 
-        if ($folder !== null) {
-            $model->where('folder', $folder);
-        }
-
-        if ($search !== '') {
-            $model->matching($search);
-        }
+        [$folder, $search] = $this->filter($model);
 
         return $this->render($this->viewPrefix . 'media_list', [
             'files'     => $model->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
@@ -74,14 +65,45 @@ class MediaAdminController extends AdminController
     }
 
     /**
+     * The body of the picker a file or image field opens: the files to pick from, filtered like the list, with only
+     * images for `?type=image`, and an upload form for those who can upload. It has no layout, as htmx swaps it in.
+     */
+    public function picker(): string
+    {
+        $type    = $this->request->getGet('type') === 'image' ? 'image' : 'file';
+        $model   = model(MediaModel::class);
+        $folders = $model->folders();
+
+        [$folder, $search] = $this->filter($model);
+
+        if ($type === 'image') {
+            $model->like('mime', 'image/', 'after');
+        }
+
+        return view($this->viewPrefix . 'picker', [
+            'files'   => $model->orderBy('created_at', 'desc')->orderBy('path')->paginate(setting('Site.perPage')),
+            'pager'   => $model->pager,
+            'type'    => $type,
+            'folders' => $folders,
+            'folder'  => $folder,
+            'search'  => $search,
+            'canEdit' => auth()->user()->can('media.edit'),
+        ], ['saveData' => false]);
+    }
+
+    /**
      * Stores each file in `files[]` under the posted folder. A file that is refused doesn't stop the others.
+     * Posted from a field's picker (`picker` is the field's type), it goes back to the picker in that folder.
      */
     public function upload(): RedirectResponse
     {
         $this->require('media.edit');
 
         $folder   = MediaModel::cleanFolder((string) $this->request->getPost('folder'));
-        $redirect = redirect()->to(route_to('media-list') . '?folder=' . rawurlencode($folder));
+        $picker   = $this->request->getPost('picker');
+        $redirect = redirect()->to(in_array($picker, ['file', 'image'], true)
+            ? route_to('media-picker') . '?' . http_build_query(['type' => $picker, 'folder' => $folder])
+            : route_to('media-list') . '?folder=' . rawurlencode($folder));
 
         if (mb_strlen($folder) > 255) {
             return $redirect->with('error', lang('Media.folderTooLong'));
@@ -170,6 +192,28 @@ class MediaAdminController extends AdminController
         $query = http_build_query(array_intersect_key($return, array_flip(['folder', 'q', 'page'])));
 
         return redirect()->to(route_to('media-list') . ($query === '' ? '' : '?' . $query))->with('message', lang('Media.deleted'));
+    }
+
+    /**
+     * Keeps the files in one folder (`?folder=`, empty for those in none) and those whose name or alt text has `?q=`.
+     *
+     * @return array{string|null, string} the folder, null for all of them, and the search
+     */
+    private function filter(MediaModel $model): array
+    {
+        $folder = $this->request->getGet('folder');
+        $folder = is_string($folder) ? MediaModel::cleanFolder($folder) : null;
+        $search = trim((string) $this->request->getGet('q'));
+
+        if ($folder !== null) {
+            $model->where('folder', $folder);
+        }
+
+        if ($search !== '') {
+            $model->matching($search);
+        }
+
+        return [$folder, $search];
     }
 
     /**
