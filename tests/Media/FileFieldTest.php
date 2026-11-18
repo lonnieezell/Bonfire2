@@ -49,7 +49,7 @@ final class FileFieldTest extends MediaTestCase
         yield 'image' => ['image'];
     }
 
-    #[DataProvider('refused')]
+    #[DataProvider('provideRefusesAnIdThatIsNotALiveFileOfTheType')]
     public function testRefusesAnIdThatIsNotALiveFileOfTheType(string $type, string $case): void
     {
         $id = match ($case) {
@@ -67,7 +67,7 @@ final class FileFieldTest extends MediaTestCase
     /**
      * @return iterable<string, array{string, string}>
      */
-    public static function refused(): iterable
+    public static function provideRefusesAnIdThatIsNotALiveFileOfTheType(): iterable
     {
         yield 'file, an unknown id' => ['file', 'unknown'];
 

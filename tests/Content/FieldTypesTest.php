@@ -28,8 +28,8 @@ final class FieldTypesTest extends TestCase
             // The generic types render from Bonfire\Fields, the ones tied to an entry from Content, and the media ones from Media.
             $module = match (true) {
                 in_array($type, ['slug', 'entries', 'terms', 'blocks', 'list'], true) => 'Content',
-                in_array($type, ['file', 'image'], true)                             => 'Media',
-                default                                                              => 'Fields',
+                in_array($type, ['file', 'image'], true)                              => 'Media',
+                default                                                               => 'Fields',
             };
             // An image field is a file field that takes images, so it shares the file input.
             $partial = $type === 'image' ? 'file' : $type;
