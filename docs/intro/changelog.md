@@ -14,6 +14,17 @@ extension isn't allowed or they're over the size limit, and SVG is off by defaul
 updating.** Until you migrate, the dashboard's Recycler widget and the Media screen fail with a database error, because the
 `media` table doesn't exist yet. See [Media](../modules/media.md).
 
+**Resources: export to CSV.** Add `new ExportRecords($this)` to a resource's `actions()` to let anyone with
+`{permission}.list` download its records as CSV: the checked rows from the selection bar, or every record matching the
+search and filters from a new **Export CSV** button above the list. The file has the list's columns and the text the
+list shows, and cells that a spreadsheet would run as a formula are escaped. Exports of more than 500 records run in the
+queue, and the toast links to the file. See [Exporting to CSV](../building_admin_modules/resources.md#exporting-to-csv).
+
+**Actions: return a file.** `ActionResult::file($path, $filename, $message)` lets an action hand the admin a file. A run
+in the request downloads it straight away. A queued run's toast links to it, for the admin who started the run, for a
+day. **Run `php spark migrate --all`** to add the `file` column to `action_runs`. See
+[Returning A File](../building_admin_modules/actions.md#returning-a-file).
+
 ## 9 November 2026 (breaking change)
 
 **Content: search reads blocks, and no longer reads Markdown syntax.** Admin search and `content()->search()` now match an

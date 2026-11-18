@@ -10,6 +10,7 @@ return [
     'confirm'      => 'Confirm',
     'queueMissing' => 'This action runs in the background, which needs the codeigniter4/queue package and a running "spark queue:work".',
     'running'      => 'Working… {0} of {1}',
+    'download'     => 'Download',
     // dashboard widget
     'actionsModTitle' => 'Actions',
     'actionRuns'      => 'Action runs',

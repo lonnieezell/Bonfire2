@@ -8,13 +8,25 @@
  * @var int                        $total
  * @var bool                       $canCreate whether to offer the new record button
  */
+
+use Bonfire\Resources\Actions\ExportRecords;
+
 $hasSearch  = $resource->search !== [];
 $hasFilters = $resource->filters() !== [];
+$canExport  = ExportRecords::offered($resource->slug, auth()->user()) instanceof ExportRecords;
 
 $this->extend('master') ?>
 
 <?php $this->section('main') ?>
 <x-page-head title="<?= esc($resource->title(), 'attr') ?>" count="<?= $total ?>">
+    <?php if ($canExport) : ?>
+        <?php // It sends the search and the chosen filters, the same inputs that htmx sends when the list refreshes. ?>
+        <form method="post" action="<?= url_to($resource->slug . '-export') ?>" class="d-inline" data-export-form
+            x-data @formdata="document.querySelectorAll('.bf-toolbar-form [name], .filters .filter-check:checked').forEach(input => $event.formData.append(input.name, input.value))">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-file-csv" aria-hidden="true"></i> <?= lang('Resources.exportCsv') ?></button>
+        </form>
+    <?php endif ?>
     <?php if ($canCreate) : ?>
         <a href="<?= url_to($resource->slug . '-new') ?>" class="btn btn-primary" data-new-record><i class="fas fa-plus" aria-hidden="true"></i> <?= lang('Resources.new') ?></a>
     <?php endif ?>

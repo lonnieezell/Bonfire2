@@ -11,9 +11,12 @@ use Bonfire\Users\Models\UserModel;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
 use CodeIgniter\Queue\Interfaces\QueueInterface;
 use CodeIgniter\Queue\QueuePushResult;
 use CodeIgniter\Test\TestResponse;
+use Config\Database;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\Actions\TouchUsers;
 use Tests\Support\TestCase;
 
@@ -41,6 +44,14 @@ final class ActionQueueTest extends TestCase
         service('actions')->for('test-users')
             ->records(new ModelSource(UserModel::class))
             ->add($this->touch);
+    }
+
+    protected function tearDown(): void
+    {
+        // A test may have put a mock queue in its place.
+        Services::resetSingle('queue');
+
+        parent::tearDown();
     }
 
     /**
@@ -99,6 +110,17 @@ final class ActionQueueTest extends TestCase
 
         $this->assertSame($ids, $this->touch->touched);
         $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'done', 'processed' => 2, 'skipped' => 1, 'message' => '2 users touched. Skipped 1.']);
+    }
+
+    public function testARunWithoutAFileFinishesBeforeTheFileColumnIsMigrated(): void
+    {
+        Database::forge()->dropColumn('action_runs', 'file');
+        $this->touch->queue = Queue::Always;
+        $runId              = $this->queueAction($this->users(1));
+
+        (new RunAction(['run' => $runId]))->process();
+
+        $this->seeInDatabase('action_runs', ['id' => $runId, 'status' => 'done']);
     }
 
     public function testAFailedPushMarksTheRunFailed(): void
@@ -160,6 +182,75 @@ final class ActionQueueTest extends TestCase
         $done = (string) $this->actingAs($this->admin)->withHeaders(['HX-Request' => 'true'])->get(route_to('action-run', $runId))->response()->getBody();
         $this->assertStringNotContainsString('hx-trigger', $done);
         $this->assertStringContainsString('All touched.', $done);
+    }
+
+    public function testAQueuedFileResultShowsADownloadLink(): void
+    {
+        $this->touch->queue      = Queue::Always;
+        $this->touch->writesFile = true;
+        $ids                     = $this->users(2);
+        $runId                   = $this->queueAction($ids);
+
+        (new RunAction(['run' => $runId]))->process();
+
+        $toast = (string) $this->actingAs($this->admin)->withHeaders(['HX-Request' => 'true'])->get(route_to('action-run', $runId))->response()->getBody();
+        $this->assertStringContainsString('2 users touched.', $toast);
+        $this->assertStringContainsString('href="' . url_to('action-run-download', $runId) . '"', $toast);
+
+        $download = $this->actingAs($this->admin)->get(route_to('action-run-download', $runId))->response();
+        $this->assertInstanceOf(DownloadResponse::class, $download);
+        $download->buildHeaders();
+        $this->assertStringContainsString('filename="touched.txt"', $download->getHeaderLine('Content-Disposition'));
+        $this->assertSame(filesize($this->touch->file), $download->getContentLength());
+    }
+
+    public function testAnotherAdminCantDownloadARunsFile(): void
+    {
+        $runId = $this->runWithFile();
+        $other = $this->createUser();
+        $other->addGroup('admin');
+
+        $this->expectException(PageNotFoundException::class);
+
+        $this->actingAs($other)->get(route_to('action-run-download', $runId));
+    }
+
+    #[DataProvider('provideAnExpiredFileIsNotFound')]
+    public function testAnExpiredFileIsNotFound(int $endedAgo, bool $fileKept): void
+    {
+        $runId = $this->runWithFile($endedAgo);
+
+        if (! $fileKept) {
+            unlink(json_decode(model(ActionRunModel::class)->find($runId)['file'], true)['path']);
+        }
+
+        $this->expectException(PageNotFoundException::class);
+
+        $this->actingAs($this->admin)->get(route_to('action-run-download', $runId));
+    }
+
+    /**
+     * @return iterable<string, array{int, bool}>
+     */
+    public static function provideAnExpiredFileIsNotFound(): iterable
+    {
+        yield 'ended over a day ago' => [DAY + 60, true];
+
+        yield 'file deleted' => [60, false];
+    }
+
+    /**
+     * A finished run of the admin's with a file, that ended `$endedAgo` seconds ago.
+     */
+    private function runWithFile(int $endedAgo = 60): int
+    {
+        $path = tempnam(sys_get_temp_dir(), 'run');
+        file_put_contents($path, 'ids');
+
+        $runId = model(ActionRunModel::class)->insert(['list' => 'test-users', 'action' => 'touch-users', 'user_id' => $this->admin->id, 'ids' => '[]', 'total' => 1, 'status' => RunStatus::Done, 'file' => json_encode(['path' => $path, 'name' => 'ids.txt'])]);
+        db_connect()->table('action_runs')->where('id', $runId)->update(['updated_at' => date('Y-m-d H:i:s', time() - $endedAgo)]);
+
+        return $runId;
     }
 
     public function testOnlyTheAdminWhoStartedARunSeesIt(): void

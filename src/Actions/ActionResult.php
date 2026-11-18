@@ -16,8 +16,11 @@ namespace Bonfire\Actions;
  */
 class ActionResult
 {
-    private function __construct(private readonly string $message, public readonly bool $failed)
-    {
+    private function __construct(
+        private readonly string $message,
+        public readonly bool $failed,
+        public readonly ?ResultFile $file = null,
+    ) {
     }
 
     public static function message(string $message): static
@@ -28,6 +31,15 @@ class ActionResult
     public static function error(string $message): static
     {
         return new static($message, true);
+    }
+
+    /**
+     * A file for the admin to download as `$filename`. A run in the request sends it and deletes it; a queued run
+     * keeps it for a day behind a link in its toast, for the admin who started it.
+     */
+    public static function file(string $path, string $filename, string $message): static
+    {
+        return new static($message, false, new ResultFile($path, $filename));
     }
 
     public function text(int $count): string

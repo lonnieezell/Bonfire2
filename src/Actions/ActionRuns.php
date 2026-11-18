@@ -26,6 +26,11 @@ use Throwable;
 class ActionRuns
 {
     /**
+     * How long, in seconds, a queued run's file can be downloaded after the run ends.
+     */
+    public const FILE_LIFETIME = DAY;
+
+    /**
      * Runs the action on the records now, or queues the run.
      *
      * @param list<int|string>      $ids
@@ -77,7 +82,8 @@ class ActionRuns
             return RunOutcome::ran(false, lang('Bonfire.unknownError'));
         }
 
-        $outcome = RunOutcome::ran($context->succeeded($result), $context->summary($result));
+        $succeeded = $context->succeeded($result);
+        $outcome   = RunOutcome::ran($succeeded, $context->summary($result), $this->keptFile($succeeded, $result));
 
         $runs->insert($run + [
             'status'    => $outcome->succeeded ? RunStatus::Done : RunStatus::Failed,
@@ -128,12 +134,43 @@ class ActionRuns
             throw $e;
         }
 
+        $succeeded = $context->succeeded($result);
+        $file      = $this->keptFile($succeeded, $result);
+
+        // Only a run with a file writes the column, so other actions keep working on an install that hasn't migrated.
         $runs->update($runId, [
-            'status'    => $context->succeeded($result) ? RunStatus::Done : RunStatus::Failed,
+            'status'    => $succeeded ? RunStatus::Done : RunStatus::Failed,
             'processed' => $context->processed(),
             'skipped'   => $context->skipped(),
             'message'   => $context->summary($result),
-        ]);
+        ] + ($file instanceof ResultFile ? ['file' => json_encode($file)] : []));
+    }
+
+    /**
+     * The result's file, if the run succeeded. A file from a run that did nothing has nothing in it to send, so it's deleted.
+     */
+    private function keptFile(bool $succeeded, ActionResult $result): ?ResultFile
+    {
+        if (! $succeeded && $result->file instanceof ResultFile) {
+            @unlink($result->file->path);
+        }
+
+        return $succeeded ? $result->file : null;
+    }
+
+    /**
+     * The file a queued run wrote, if the viewer started the run, it ended less than a day ago, and the file is still there.
+     */
+    public function file(int $runId, User $viewer): ?ResultFile
+    {
+        $run  = $this->progress($runId, $viewer);
+        $file = json_decode($run['file'] ?? '', true);
+
+        if (! is_array($file) || $run['updated_at']->getTimestamp() < time() - self::FILE_LIFETIME || ! is_file($file['path'])) {
+            return null;
+        }
+
+        return new ResultFile($file['path'], $file['name']);
     }
 
     /**

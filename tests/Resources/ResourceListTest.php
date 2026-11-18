@@ -3,11 +3,15 @@
 namespace Tests\Resources;
 
 use Bonfire\Actions\Models\ActionRunModel;
+use Bonfire\Actions\ModelSource;
 use Bonfire\Fields\Field;
+use Bonfire\Resources\Actions\ExportRecords;
 use Bonfire\Resources\Resource;
 use Bonfire\Users\User;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\HTTP\DownloadResponse;
+use CodeIgniter\Test\TestResponse;
 use Config\Services;
 use InvalidArgumentException;
 use Tests\Support\Models\CategoryModel;
@@ -21,7 +25,7 @@ use Tests\Support\TestCase;
  */
 final class ResourceListTest extends TestCase
 {
-    private const SERVICES = ['auth', 'bonfire', 'menus', 'widgets', 'resources', 'recycler'];
+    private const SERVICES = ['auth', 'bonfire', 'menus', 'widgets', 'resources', 'recycler', 'actions'];
 
     protected $refresh = true;
     private User $admin;
@@ -315,6 +319,38 @@ final class ResourceListTest extends TestCase
         $this->assertSame(['Charlie'], $this->names($this->visit($this->pagerLinks($ascending)[0], htmx: true)));
     }
 
+    public function testExportsEveryRecordMatchingTheSearchAndFilters(): void
+    {
+        setting('Site.perPage', 1);
+        $this->addExport();
+
+        foreach (['Alpha', 'Bravo', 'Charlie'] as $name) {
+            $this->setStatus($name, 'draft');
+        }
+
+        $page = $this->visit('admin/categories');
+        $this->assertMatchesRegularExpression('#<form [^>]*action="' . preg_quote(url_to('categories-export'), '#') . '"#', $page);
+
+        // Echo has an "h" but is live, and Bravo has none; the two that match are on two pages of the list.
+        $download = $this->export(['search' => 'h', 'filters' => ['status' => ['draft' => 'draft']]])->response();
+
+        $this->assertInstanceOf(DownloadResponse::class, $download);
+        ob_start();
+        $download->sendBody();
+        $this->assertSame("\u{FEFF}Name\nAlpha\nCharlie\n", ob_get_clean());
+
+        $this->export(['search' => 'zzz'])->assertSessionHas('error', lang('Bonfire.resourcesNotSelected', [lang('Actions.records')]));
+    }
+
+    public function testTheExportButtonIsHiddenWithoutTheAction(): void
+    {
+        $this->assertStringNotContainsString('action="' . url_to('categories-export') . '"', $this->visit('admin/categories'));
+
+        $this->expectException(PageNotFoundException::class);
+
+        $this->export([]);
+    }
+
     public function testTheGlobalSearchFindsARecordByASearchColumnAndLinksToIt(): void
     {
         $this->setStatus('Charlie', 'retired');
@@ -409,6 +445,24 @@ final class ResourceListTest extends TestCase
         $test = $htmx ? $this->withHeaders(['HX-Request' => 'true']) : $this;
 
         return (string) $test->actingAs($this->admin)->get($path, $params)->response()->getBody();
+    }
+
+    /**
+     * Adds the export to the categories list, as the resource's actions() would.
+     */
+    private function addExport(): void
+    {
+        service('actions')->for('categories')->records(new ModelSource(CategoryModel::class))->add(new ExportRecords(new CategoryResource()));
+    }
+
+    /**
+     * Posts the Export CSV form with the search and filters it copies from the page.
+     *
+     * @param array<string, mixed> $narrowing
+     */
+    private function export(array $narrowing): TestResponse
+    {
+        return $this->actingAs($this->admin)->post('admin/categories/export', [csrf_token() => csrf_hash(), ...$narrowing]);
     }
 
     private function setStatus(string $name, string $status): void
