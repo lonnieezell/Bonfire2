@@ -2,6 +2,7 @@
 
 namespace Tests\Resources;
 
+use Bonfire\Media\Models\MediaModel;
 use Bonfire\Resources\Resource;
 use Bonfire\Resources\ResourceException;
 use Bonfire\Resources\ResourceRegistry;
@@ -38,6 +39,7 @@ final class ResourceFormTest extends TestCase
     protected $refresh = true;
     private User $admin;
     private int $categoryId;
+    private string $photoId;
 
     protected function setUp(): void
     {
@@ -60,6 +62,9 @@ final class ResourceFormTest extends TestCase
         $this->admin->addGroup('admin');
 
         $this->categoryId = (int) model(CategoryModel::class)->insert(['name' => 'Gadgets']);
+        $this->photoId    = model(MediaModel::class)->insert([
+            'container' => 'public', 'path' => 'widget.jpg', 'filename' => 'widget.jpg', 'mime' => 'image/jpeg', 'size' => 5, 'width' => 30, 'height' => 20,
+        ]);
 
         ProductResource::$saved    = [];
         ProductRowResource::$saved = [];
@@ -95,6 +100,7 @@ final class ResourceFormTest extends TestCase
         $this->assertTrue($product->featured);
         $this->assertSame('2026-01-15', $product->released_on);
         $this->assertSame('2026-02-01 09:30:00', $product->available_at);
+        $this->assertSame($this->photoId, $product->photo);
 
         // The edit form shows what was saved: posting it as it is changes nothing.
         $edit   = (string) $this->actingAs($this->admin)->get("admin/products/{$product->id}")->response()->getBody();
@@ -104,6 +110,7 @@ final class ResourceFormTest extends TestCase
         $this->assertSame('19.99', $fields['fields']['price']);
         $this->assertSame((string) $this->categoryId, $fields['fields']['category_id']);
         $this->assertSame('active', $fields['fields']['status']);
+        $this->assertSame($this->photoId, $fields['fields']['photo']);
 
         // A browser drops the line break right after <textarea>, which DOMDocument keeps.
         foreach (['summary', 'description'] as $handle) {
@@ -477,6 +484,7 @@ final class ResourceFormTest extends TestCase
             'featured'     => '1',
             'released_on'  => '2026-01-15',
             'available_at' => '2026-02-01T09:30',
+            'photo'        => $this->photoId,
         ];
     }
 

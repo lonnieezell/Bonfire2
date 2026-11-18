@@ -3,47 +3,14 @@
 namespace Tests\Media;
 
 use Bonfire\Media\Models\MediaModel;
-use Bonfire\Users\User;
 use CodeIgniter\Test\TestResponse;
-use Config\Services;
-use Tests\Support\Media\MediaTestCase;
+use Tests\Support\Media\MediaAdminTestCase;
 
 /**
  * @internal
  */
-final class MediaAdminTest extends MediaTestCase
+final class MediaAdminTest extends MediaAdminTestCase
 {
-    private User $admin;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        setting('Site.siteOnline', true);
-
-        foreach (['auth', 'bonfire', 'menus', 'widgets'] as $service) {
-            Services::resetSingle($service);
-        }
-
-        service('routes')->loadRoutes();
-
-        Services::injectMock('mediaStorage', $this->storage());
-
-        $this->admin = $this->createUser();
-        $this->admin->addGroup('superadmin');
-    }
-
-    protected function tearDown(): void
-    {
-        service('superglobals')->setFilesArray([]);
-
-        foreach (['auth', 'bonfire', 'menus', 'widgets', 'mediaStorage'] as $service) {
-            Services::resetSingle($service);
-        }
-
-        parent::tearDown();
-    }
-
     public function testListsFilesInTheChosenFolder(): void
     {
         $cat = $this->mediaFile('cat.jpg', 'pets');
@@ -282,28 +249,6 @@ final class MediaAdminTest extends MediaTestCase
 
         $this->actingAs($this->admin)->get(ADMIN_AREA)->assertSee(url_to('media-list'));
         $this->actingAs($user)->get(ADMIN_AREA)->assertDontSee(url_to('media-list'));
-    }
-
-    /**
-     * Puts files into $_FILES['files'] as a multiple upload.
-     *
-     * @param list<string> $names
-     */
-    private function filesToUpload(array $names): void
-    {
-        $files = ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
-
-        foreach ($names as $name) {
-            $path = $this->tempFile();
-
-            $files['name'][]     = $name;
-            $files['type'][]     = 'image/jpeg';
-            $files['tmp_name'][] = $path;
-            $files['error'][]    = UPLOAD_ERR_OK;
-            $files['size'][]     = filesize($path);
-        }
-
-        service('superglobals')->setFilesArray(['files' => $files]);
     }
 
     /**

@@ -16,6 +16,8 @@ is saved in the front matter.
 | [`integer`](#integer) | A number | A number |
 | [`decimal`](#decimal) | A number with decimal places | A string |
 | [`belongsTo`](#belongsto) | A dropdown of another model's records | The record's ID |
+| [`file`](#file-and-image) | A file picked from the media library | The file's ID |
+| [`image`](#file-and-image) | An image picked from the media library | The file's ID |
 | [`entries`](#entries) | Entries to link to | A list of UUIDs |
 | [`terms`](#terms) | A checkbox for each term | A list of slugs |
 | [`blocks`](#blocks) | The blocks written in the file | A list of maps |
@@ -201,6 +203,38 @@ app's encryption key, naming the model, the title column, the column that is sea
 missing or changed token is refused with a 403, so the endpoint can't be made to read another model or column. Run
 `php spark key:generate` if the app has no key. Without JavaScript the search box is a plain input that takes the record's
 ID, and a save with an ID that isn't a record is refused.
+
+## file and image
+
+One file from the [media library](../modules/media.md). **Choose** opens a picker of the library's files, where the editor
+can search, open a folder, or upload a new file and pick it without leaving the form. An `image` field lists and accepts
+only images. A `file` field takes any file the library allows.
+
+| Key | Default | What it does |
+|---|---|---|
+| `folder` | None | The folder the picker opens on, and the folder an upload goes into. |
+
+```yaml
+- handle: photo
+  type: image
+  folder: products
+```
+
+The file holds the media file's ID, a UUID, so moving or renaming the file in the library doesn't break the link. A save
+is refused if the ID isn't a file in the library, or if an `image` field is given a file that isn't an image. A file
+that was deleted shows **File not found** in the form, and the entry can't be saved until the field is cleared or another
+file is chosen.
+
+The picker needs the `media.access` permission, and its upload form `media.edit`.
+
+Reading the entry gives the ID. To get the file in a template, use the `media()` helper. It returns `null` for an empty
+field or a deleted file:
+
+```php
+<?php if ($photo = media($entry->field('photo'))) : ?>
+    <img src="<?= esc($photo->url(), 'attr') ?>" alt="<?= esc($photo->alt ?? '', 'attr') ?>">
+<?php endif ?>
+```
 
 ## entries
 

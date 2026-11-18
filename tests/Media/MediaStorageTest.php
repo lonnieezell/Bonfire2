@@ -93,4 +93,33 @@ final class MediaStorageTest extends MediaTestCase
 
         yield 'a folder over 255 characters' => ['notes.txt', 'public', 1, str_repeat('a', 256)];
     }
+
+    #[DataProvider('provideImagesOnlyRefusesWithTheFirstReason')]
+    public function testImagesOnlyRefusesWithTheFirstReason(string $name, int $bytes, string $message): void
+    {
+        config('Media')->maxSize = 1;
+
+        try {
+            $this->storage()->store($this->upload($name, str_repeat('a', $bytes)), 'public', '', imagesOnly: true);
+            $this->fail('The upload was stored.');
+        } catch (MediaException $e) {
+            $this->assertSame($message, $e->getMessage());
+        }
+
+        $this->assertSame(0, model(MediaModel::class)->withDeleted()->countAllResults());
+    }
+
+    /**
+     * The upload's own problems come first, so a file that is too large isn't said to be "not an image".
+     *
+     * @return iterable<string, array{string, int, string}>
+     */
+    public static function provideImagesOnlyRefusesWithTheFirstReason(): iterable
+    {
+        yield 'a text file' => ['notes.jpg', 1, "notes.jpg isn't an image."];
+
+        yield 'a disallowed extension' => ['shell.php', 1, "shell.php: files of this type can't be uploaded."];
+
+        yield 'a file over maxSize' => ['big.jpg', 2048, 'big.jpg is larger than the 1 KB limit.'];
+    }
 }

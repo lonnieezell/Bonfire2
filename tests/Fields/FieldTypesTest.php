@@ -92,7 +92,7 @@ final class FieldTypesTest extends TestCase
     public function testContentsTypesComeInThroughTheRegistrarNotTheGenericList(): void
     {
         $this->assertSame(
-            ['slug' => 'Bonfire\Content\Fields\SlugField', 'entries' => 'Bonfire\Content\Fields\EntriesField', 'terms' => 'Bonfire\Content\Fields\TermsField', 'blocks' => 'Bonfire\Content\Fields\BlocksField', 'list' => 'Bonfire\Content\Fields\ListField'],
+            ['slug' => 'Bonfire\Content\Fields\SlugField', 'entries' => 'Bonfire\Content\Fields\EntriesField', 'terms' => 'Bonfire\Content\Fields\TermsField', 'blocks' => 'Bonfire\Content\Fields\BlocksField', 'list' => 'Bonfire\Content\Fields\ListField', 'file' => 'Bonfire\Media\Fields\FileField', 'image' => 'Bonfire\Media\Fields\ImageField'],
             config('Fields')->moduleTypes,
         );
     }

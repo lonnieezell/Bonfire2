@@ -52,6 +52,16 @@ class MediaModel extends Model implements CustomRecyclerPurge
     }
 
     /**
+     * The file with this ID, or null when there's no ID or the file is gone (deleted, in the Recycler).
+     */
+    public function findLive(?string $id): ?Media
+    {
+        $media = $id === null || $id === '' ? null : $this->find($id);
+
+        return $media instanceof Media ? $media : null;
+    }
+
+    /**
      * The folders files are listed under, in order, without the root.
      *
      * @return list<string>

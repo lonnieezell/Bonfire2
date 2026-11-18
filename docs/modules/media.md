@@ -57,7 +57,22 @@ Copy `Bonfire\Media\Config\Media` to `app/Config/Media.php` to change these:
     SVG is not allowed by default. An SVG file can hold script, which runs when the file is opened from your site. Only
     add `svg` if everyone who can upload is trusted.
 
+## File and image fields
+
+Blueprints, resource forms and action inputs pick a file from the library with a [`file` or `image`
+field](../content/field_types.md#file-and-image). The field stores the file's ID. Its picker is the library in a dialog,
+with an upload form for those with `media.edit`.
+
 ## Using files in code
+
+The `media()` helper gives the file a field holds, or `null` when the field is empty or the file was deleted. Controllers
+that extend Bonfire's load it for you:
+
+```php
+echo media($product->photo)?->url();
+```
+
+To load a file by ID yourself, ask the model:
 
 ```php
 use Bonfire\Media\Models\MediaModel;

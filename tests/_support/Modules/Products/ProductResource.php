@@ -8,6 +8,7 @@ use Bonfire\Resources\Fields\BelongsTo;
 use Bonfire\Resources\Fields\Date;
 use Bonfire\Resources\Fields\Datetime;
 use Bonfire\Resources\Fields\Decimal;
+use Bonfire\Resources\Fields\Field;
 use Bonfire\Resources\Fields\Integer;
 use Bonfire\Resources\Fields\Markdown;
 use Bonfire\Resources\Fields\Section;
@@ -57,6 +58,7 @@ class ProductResource extends Resource
                 Toggle::make('featured'),
                 Date::make('released_on'),
                 Datetime::make('available_at'),
+                Field::make('photo', 'image'),
             ]),
         ];
     }

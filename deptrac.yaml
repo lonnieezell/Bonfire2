@@ -156,6 +156,7 @@ deptrac:
       - Vendor Model
     Config:
       - Content
+      - Media
       - Model
       - Service
       - Vendor Config

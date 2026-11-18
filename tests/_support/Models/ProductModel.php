@@ -13,7 +13,7 @@ class ProductModel extends Model
     protected $useSoftDeletes = true;
     protected $allowedFields  = [
         'name', 'slug', 'sku', 'summary', 'description', 'price', 'stock',
-        'category_id', 'status', 'featured', 'released_on', 'available_at', 'deleted_at',
+        'category_id', 'status', 'featured', 'released_on', 'available_at', 'photo', 'deleted_at',
     ];
     protected $validationRules = [
         'name' => 'required|min_length[3]',

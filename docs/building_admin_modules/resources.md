@@ -154,6 +154,10 @@ Every builder has `label()`, `validate()`, `instructions()` and `width('full')`,
 type. `Field::make('slug', type: 'text')` takes the type by name, which is how a [custom field
 type](../content/custom_field_types.md) is used. The label is the handle in words unless you set one.
 
+The media library's [`file` and `image` types](../content/field_types.md#file-and-image) have no builder of their own:
+`Field::make('photo', 'image')->with(['folder' => 'products'])`. The column holds the file's ID, a UUID, so it needs to
+be a string column of at least 36 characters.
+
 ```php
 use Bonfire\Resources\Fields\BelongsTo;
 use Bonfire\Resources\Fields\Decimal;
