@@ -866,6 +866,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#file-and-image-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File and image fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-files-in-code" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3146,6 +3157,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#file-and-image-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File and image fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-files-in-code" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3309,7 +3331,16 @@ working, until it is purged there. Purging removes the file.</p>
 <p>SVG is not allowed by default. An SVG file can hold script, which runs when the file is opened from your site. Only
 add <code>svg</code> if everyone who can upload is trusted.</p>
 </div>
+<h2 id="file-and-image-fields">File and image fields</h2>
+<p>Blueprints, resource forms and action inputs pick a file from the library with a <a href="../../content/field_types/#file-and-image"><code>file</code> or <code>image</code>
+field</a>. The field stores the file's ID. Its picker is the library in a dialog,
+with an upload form for those with <code>media.edit</code>.</p>
 <h2 id="using-files-in-code">Using files in code</h2>
+<p>The <code>media()</code> helper gives the file a field holds, or <code>null</code> when the field is empty or the file was deleted. Controllers
+that extend Bonfire's load it for you:</p>
+<div class="highlight"><pre><span></span><code><span class="k">echo</span> <span class="nx">media</span><span class="p">(</span><span class="nv">$product</span><span class="o">-&gt;</span><span class="na">photo</span><span class="p">)</span><span class="o">?-&gt;</span><span class="na">url</span><span class="p">();</span>
+</code></pre></div>
+<p>To load a file by ID yourself, ask the model:</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Media\Models\MediaModel</span><span class="p">;</span>
 
 <span class="nv">$media</span> <span class="o">=</span> <span class="nx">model</span><span class="p">(</span><span class="nx">MediaModel</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>

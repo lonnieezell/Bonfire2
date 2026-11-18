@@ -619,6 +619,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#18-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#16-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3333,6 +3344,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#18-november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18 November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#16-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3738,6 +3760,15 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
+<h2 id="18-november-2026">18 November 2026</h2>
+<p><strong>Media: file and image fields.</strong> Blueprints, resource forms and action inputs can pick a file from the media library with
+the new <code>file</code> and <code>image</code> field types. <strong>Choose</strong> opens the library in a dialog, where the editor can search, open a
+folder, or upload a file and pick it. The field stores the file's ID, and an <code>image</code> field takes images only. A file
+that was deleted shows <strong>File not found</strong>, and the form won't save until the field is fixed. Read the file on the front
+end with the new <code>media($id)</code> helper, which is <code>null</code> for an empty field or a deleted file. Bonfire's controllers load it
+on every request, so if your app already defines a global <code>media()</code> function, yours is kept, and you'll need to read the
+file with <code>model(MediaModel::class)-&gt;find($id)</code> instead. See <a href="../../content/field_types/#file-and-image">File and
+image</a>.</p>
 <h2 id="16-november-2026-breaking-change">16 November 2026 (breaking change)</h2>
 <p><strong>Media: a media library.</strong> A new <strong>Media</strong> screen in the sidebar stores uploaded files. Upload several at once into a
 folder, browse by folder, search by filename or alt text, set a file's alt text, and move it to another folder without

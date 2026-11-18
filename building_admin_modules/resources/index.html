@@ -3631,6 +3631,9 @@ always declared.</p>
 <p>Every builder has <code>label()</code>, <code>validate()</code>, <code>instructions()</code> and <code>width('full')</code>, and <code>with([...])</code> sets any key of the
 type. <code>Field::make('slug', type: 'text')</code> takes the type by name, which is how a <a href="../../content/custom_field_types/">custom field
 type</a> is used. The label is the handle in words unless you set one.</p>
+<p>The media library's <a href="../../content/field_types/#file-and-image"><code>file</code> and <code>image</code> types</a> have no builder of their own:
+<code>Field::make('photo', 'image')-&gt;with(['folder' =&gt; 'products'])</code>. The column holds the file's ID, a UUID, so it needs to
+be a string column of at least 36 characters.</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\BelongsTo</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Decimal</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Bonfire\Resources\Fields\Section</span><span class="p">;</span>

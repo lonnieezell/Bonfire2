@@ -1675,6 +1675,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#file-and-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file and image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3347,6 +3358,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#file-and-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        file and image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#entries" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3569,6 +3591,16 @@ is saved in the front matter.</p>
 <td><a href="#belongsto"><code>belongsTo</code></a></td>
 <td>A dropdown of another model's records</td>
 <td>The record's ID</td>
+</tr>
+<tr>
+<td><a href="#file-and-image"><code>file</code></a></td>
+<td>A file picked from the media library</td>
+<td>The file's ID</td>
+</tr>
+<tr>
+<td><a href="#file-and-image"><code>image</code></a></td>
+<td>An image picked from the media library</td>
+<td>The file's ID</td>
 </tr>
 <tr>
 <td><a href="#entries"><code>entries</code></a></td>
@@ -3859,6 +3891,41 @@ app's encryption key, naming the model, the title column, the column that is sea
 missing or changed token is refused with a 403, so the endpoint can't be made to read another model or column. Run
 <code>php spark key:generate</code> if the app has no key. Without JavaScript the search box is a plain input that takes the record's
 ID, and a save with an ID that isn't a record is refused.</p>
+<h2 id="file-and-image">file and image</h2>
+<p>One file from the <a href="../../modules/media/">media library</a>. <strong>Choose</strong> opens a picker of the library's files, where the editor
+can search, open a folder, or upload a new file and pick it without leaving the form. An <code>image</code> field lists and accepts
+only images. A <code>file</code> field takes any file the library allows.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>folder</code></td>
+<td>None</td>
+<td>The folder the picker opens on, and the folder an upload goes into.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">handle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">photo</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span>
+<span class="w">  </span><span class="nt">folder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">products</span>
+</code></pre></div>
+<p>The file holds the media file's ID, a UUID, so moving or renaming the file in the library doesn't break the link. A save
+is refused if the ID isn't a file in the library, or if an <code>image</code> field is given a file that isn't an image. A file
+that was deleted shows <strong>File not found</strong> in the form, and the entry can't be saved until the field is cleared or another
+file is chosen.</p>
+<p>The picker needs the <code>media.access</code> permission, and its upload form <code>media.edit</code>.</p>
+<p>Reading the entry gives the ID. To get the file in a template, use the <code>media()</code> helper. It returns <code>null</code> for an empty
+field or a deleted file:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$photo</span> <span class="o">=</span> <span class="nx">media</span><span class="p">(</span><span class="nv">$entry</span><span class="o">-&gt;</span><span class="na">field</span><span class="p">(</span><span class="s1">'photo'</span><span class="p">)))</span> <span class="o">:</span> <span class="cp">?&gt;</span>
+<span class="x">    &lt;img src="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$photo</span><span class="o">-&gt;</span><span class="na">url</span><span class="p">(),</span> <span class="s1">'attr'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">" alt="</span><span class="cp">&lt;?</span><span class="o">=</span> <span class="nx">esc</span><span class="p">(</span><span class="nv">$photo</span><span class="o">-&gt;</span><span class="na">alt</span> <span class="o">??</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'attr'</span><span class="p">)</span> <span class="cp">?&gt;</span><span class="x">"&gt;</span>
+<span class="cp">&lt;?php</span> <span class="k">endif</span> <span class="cp">?&gt;</span>
+</code></pre></div>
 <h2 id="entries">entries</h2>
 <p>Links to other entries, saved as a list of their UUIDs.</p>
 <table>
