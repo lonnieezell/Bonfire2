@@ -18,8 +18,13 @@ use Bonfire\Media\Entities\Media;
  */
 final class ImageField extends FileField
 {
+    /**
+     * What the mime of an image starts with. The picker lists the same files.
+     */
+    public const MIME_PREFIX = 'image/';
+
     public function accepts(Media $media): bool
     {
-        return str_starts_with($media->mime, 'image/');
+        return str_starts_with($media->mime, self::MIME_PREFIX);
     }
 }

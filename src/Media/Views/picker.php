@@ -1,7 +1,8 @@
 <?php
 /**
  * The body of a file or image field's picker, which htmx swaps into the field's dialog: the folders, a search, an
- * upload form for those who can upload, and the files to pick. Picking calls the field's Alpine `pick()`.
+ * upload form for those who can upload, and the files to pick. Picking calls the field's Alpine `pick()`. Its links
+ * and forms swap into the element that sets their hx-target, the field's picker.
  *
  * @var list<Bonfire\Media\Entities\Media> $files
  * @var CodeIgniter\Pager\Pager            $pager
@@ -12,8 +13,11 @@
  * @var bool                               $canEdit
  */
 $pickerUrl = static fn (array $query): string => url_to('media-picker') . '?' . http_build_query(['type' => $type] + $query);
-$swap      = 'hx-target="closest .bf-media-picker" hx-swap="innerHTML"';
+$csrfName  = csrf_token();
 ?>
+<?php // An upload rotates the CSRF token, so htmx swaps this over the page's token inputs out of band, or the field's form couldn't be saved. ?>
+<input type="hidden" name="<?= esc($csrfName, 'attr') ?>" value="<?= esc(csrf_hash(), 'attr') ?>" hx-swap-oob="<?= esc("outerHTML:input[type=hidden][name=\"{$csrfName}\"]", 'attr') ?>">
+
 <?php if (session('message')) : ?>
     <div class="alert alert-success py-2" role="status"><?= esc(session('message')) ?></div>
 <?php endif ?>
@@ -23,9 +27,8 @@ $swap      = 'hx-target="closest .bf-media-picker" hx-swap="innerHTML"';
 <?php endif ?>
 
 <?php if ($canEdit) : ?>
-    <form hx-post="<?= url_to('media-upload') ?>" hx-encoding="multipart/form-data" <?= $swap ?> class="row g-2 align-items-end mb-3" data-picker-upload>
-        <?php // data-csrf: a post rotates the token, so the field copies this one into the page's forms. ?>
-        <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" data-csrf>
+    <form hx-post="<?= url_to('media-upload') ?>" hx-encoding="multipart/form-data" class="row g-2 align-items-end mb-3" data-picker-upload>
+        <?= csrf_field() ?>
         <input type="hidden" name="picker" value="<?= esc($type, 'attr') ?>">
         <div class="col-md-6">
             <input type="file" name="files[]" class="form-control" aria-label="<?= esc(lang('Media.files'), 'attr') ?>"<?= $type === 'image' ? ' accept="image/*"' : '' ?> multiple required>
@@ -41,14 +44,14 @@ $swap      = 'hx-target="closest .bf-media-picker" hx-swap="innerHTML"';
 
 <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
     <nav class="nav nav-pills small" aria-label="<?= esc(lang('Media.folders'), 'attr') ?>">
-        <button type="button" class="nav-link<?= $folder === null ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl([]), 'attr') ?>" <?= $swap ?>><?= lang('Media.allFolders') ?></button>
-        <button type="button" class="nav-link<?= $folder === '' ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl(['folder' => '']), 'attr') ?>" <?= $swap ?>><?= lang('Media.noFolder') ?></button>
+        <button type="button" class="nav-link<?= $folder === null ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl([]), 'attr') ?>"><?= lang('Media.allFolders') ?></button>
+        <button type="button" class="nav-link<?= $folder === '' ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl(['folder' => '']), 'attr') ?>"><?= lang('Media.noFolder') ?></button>
         <?php foreach ($folders as $name) : ?>
-            <button type="button" class="nav-link<?= $folder === $name ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl(['folder' => $name]), 'attr') ?>" <?= $swap ?>><i class="fas fa-folder" aria-hidden="true"></i> <?= esc($name) ?></button>
+            <button type="button" class="nav-link<?= $folder === $name ? ' active' : '' ?>" hx-get="<?= esc($pickerUrl(['folder' => $name]), 'attr') ?>"><i class="fas fa-folder" aria-hidden="true"></i> <?= esc($name) ?></button>
         <?php endforeach ?>
     </nav>
 
-    <form hx-get="<?= url_to('media-picker') ?>" <?= $swap ?> role="search" class="d-flex gap-2">
+    <form hx-get="<?= url_to('media-picker') ?>" role="search" class="d-flex gap-2">
         <input type="hidden" name="type" value="<?= esc($type, 'attr') ?>">
         <?php if ($folder !== null) : ?>
             <input type="hidden" name="folder" value="<?= esc($folder, 'attr') ?>">
@@ -78,7 +81,7 @@ $swap      = 'hx-target="closest .bf-media-picker" hx-swap="innerHTML"';
         <?php endforeach ?>
     </div>
 
-    <div class="mt-2" hx-boost="true" hx-push-url="false" <?= $swap ?>>
+    <div class="mt-2" hx-boost="true" hx-push-url="false">
         <?= $pager->links('default', 'bonfire_full') ?>
     </div>
 <?php endif ?>

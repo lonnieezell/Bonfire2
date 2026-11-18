@@ -13,6 +13,7 @@ namespace Bonfire\Media\Controllers;
 
 use Bonfire\Core\AdminController;
 use Bonfire\Media\Entities\Media;
+use Bonfire\Media\Fields\ImageField;
 use Bonfire\Media\MediaException;
 use Bonfire\Media\Models\MediaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -77,7 +78,7 @@ class MediaAdminController extends AdminController
         [$folder, $search] = $this->filter($model);
 
         if ($type === 'image') {
-            $model->like('mime', 'image/', 'after');
+            $model->like('mime', ImageField::MIME_PREFIX, 'after');
         }
 
         return view($this->viewPrefix . 'picker', [

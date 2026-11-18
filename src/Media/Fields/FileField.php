@@ -15,7 +15,6 @@ use Bonfire\Fields\Field;
 use Bonfire\Fields\FieldException;
 use Bonfire\Fields\FieldType;
 use Bonfire\Media\Entities\Media;
-use Bonfire\Media\Models\MediaModel;
 
 /**
  * One file from the media library, picked or uploaded in a picker over the Media browser. What is stored is the
@@ -53,10 +52,12 @@ class FileField extends FieldType
      */
     public function rules(Field $field): array|string
     {
-        return $this->withRules($field, 'permit_empty', function (mixed $value, mixed $data, ?string &$error = null): bool {
-            $media = is_string($value) ? model(MediaModel::class)->find($value) : null;
+        helper('media');
 
-            if (! $media instanceof Media) {
+        return $this->withRules($field, 'permit_empty', function (mixed $value, mixed $data, ?string &$error = null): bool {
+            $media = is_string($value) ? media($value) : null;
+
+            if ($media === null) {
                 $error = lang('Media.fileNotFound');
 
                 return false;
