@@ -4,6 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
+## 18 November 2026
+
+**Media: file and image fields.** Blueprints, resource forms and action inputs can pick a file from the media library with
+the new `file` and `image` field types. **Choose** opens the library in a dialog, where the editor can search, open a
+folder, or upload a file and pick it. The field stores the file's ID, and an `image` field takes images only. A file
+that was deleted shows **File not found**, and the form won't save until the field is fixed. Read the file on the front
+end with the new `media($id)` helper, which is `null` for an empty field or a deleted file. See [File and
+image](../content/field_types.md#file-and-image).
+
 ## 16 November 2026 (breaking change)
 
 **Media: a media library.** A new **Media** screen in the sidebar stores uploaded files. Upload several at once into a
