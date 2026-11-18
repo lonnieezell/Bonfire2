@@ -74,6 +74,11 @@ class CreateProductsTable extends Migration
                 'type' => 'datetime',
                 'null' => true,
             ],
+            'photo' => [
+                'type'       => 'varchar',
+                'constraint' => 36,
+                'null'       => true,
+            ],
             'deleted_at' => [
                 'type' => 'datetime',
                 'null' => true,
