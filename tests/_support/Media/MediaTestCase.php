@@ -90,16 +90,16 @@ abstract class MediaTestCase extends TestCase
     }
 
     /**
-     * Puts files into $_FILES['files'] as a multiple upload.
+     * Puts files into $_FILES['files'] as a multiple upload, each a JPEG or the given bytes.
      *
      * @param list<string> $names
      */
-    protected function filesToUpload(array $names): void
+    protected function filesToUpload(array $names, ?string $bytes = null): void
     {
         $files = ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
 
         foreach ($names as $name) {
-            $path = $this->tempFile();
+            $path = $this->tempFile($bytes);
 
             $files['name'][]     = $name;
             $files['type'][]     = 'image/jpeg';

@@ -94,7 +94,8 @@ class MediaAdminController extends AdminController
 
     /**
      * Stores each file in `files[]` under the posted folder. A file that is refused doesn't stop the others.
-     * Posted from a field's picker (`picker` is the field's type), it goes back to the picker in that folder.
+     * Posted from a field's picker (`picker` is the field's type), it goes back to the picker in that folder, and an
+     * image field's picker refuses a file that isn't an image.
      */
     public function upload(): RedirectResponse
     {
@@ -117,6 +118,13 @@ class MediaAdminController extends AdminController
         foreach ($this->request->getFileMultiple('files') ?? [] as $file) {
             // An empty slot in the form is no file at all.
             if ($file->getError() === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
+            // An image field's picker lists only images, so a file that isn't one would be stored where it can't be picked.
+            if ($picker === 'image' && ! str_starts_with((string) $file->getMimeType(), ImageField::MIME_PREFIX)) {
+                $errors[] = lang('Media.notAnImageUpload', [$file->getClientName()]);
+
                 continue;
             }
 

@@ -51,11 +51,12 @@ return [
     'moveFailed'          => '{0} could not be saved.',
 
     // File and image fields
-    'fileNotFound' => 'File not found. Choose another or clear the field.',
-    'notAnImage'   => 'Choose an image.',
-    'choose'       => 'Choose',
-    'clear'        => 'Clear',
-    'chooseFile'   => 'Choose a file',
-    'chooseImage'  => 'Choose an image',
-    'close'        => 'Close',
+    'fileNotFound'     => 'File not found. Choose another or clear the field.',
+    'notAnImage'       => 'Choose an image.',
+    'notAnImageUpload' => '{0} isn\'t an image.',
+    'choose'           => 'Choose',
+    'clear'            => 'Clear',
+    'chooseFile'       => 'Choose a file',
+    'chooseImage'      => 'Choose an image',
+    'close'            => 'Close',
 ];

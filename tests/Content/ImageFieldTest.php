@@ -62,7 +62,7 @@ final class ImageFieldTest extends ContentTestCase
         $this->assertSame([$photo->url()], $this->query($edit, '//*[@data-field="photo"]//img/@src'), 'the picked image is shown');
         $this->assertSame(
             [url_to('media-picker') . '?' . http_build_query(['type' => 'image', 'folder' => 'posts'])],
-            $this->query($edit, '//*[@data-field="photo"]//*[@hx-get]/@hx-get'),
+            $this->query($edit, '//*[@data-field="photo"]//*[@data-picker]/@data-picker'),
             'the picker opens on images in the field\'s folder',
         );
     }
@@ -83,6 +83,22 @@ final class ImageFieldTest extends ContentTestCase
         ]);
 
         $this->assertCount(1, $this->query($refused, '//*[@data-error="photo"]'));
+    }
+
+    public function testAnEditorWithoutMediaAccessSeesTheFileButCannotOpenThePicker(): void
+    {
+        $photo = $this->image();
+        $admin = $this->saveEntryWith($photo->id);
+        $this->assertCount(1, $this->query($admin, '//*[@data-field="photo"]//*[@data-picker]/@data-picker'), 'an admin can choose');
+
+        $editor = $this->createUser();
+        $editor->addPermission('admin.access', 'content.access', 'content.edit');
+
+        $edit = $this->actingAs($editor)->get($this->editUrl());
+        $edit->assertOK();
+
+        $this->assertSame([$photo->url()], $this->query($edit, '//*[@data-field="photo"]//img/@src'));
+        $this->assertSame([], $this->query($edit, '//*[@data-field="photo"]//*[@data-picker]/@data-picker'));
     }
 
     private function image(): Media

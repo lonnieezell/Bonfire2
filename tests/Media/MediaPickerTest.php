@@ -106,6 +106,16 @@ final class MediaPickerTest extends MediaTestCase
         $this->assertSame(['new.jpg'], array_column(model(MediaModel::class)->asArray()->findAll(), 'filename'));
     }
 
+    public function testAnImagePickerRefusesToUploadAFileThatIsNotAnImage(): void
+    {
+        $this->filesToUpload(['notes.jpg'], 'plain text, whatever the name says');
+
+        $response = $this->actingAs($this->admin)->post(route_to('media-upload'), ['folder' => '', 'picker' => 'image', csrf_token() => csrf_hash()]);
+
+        $response->assertSessionHas('error');
+        $this->assertSame(0, model(MediaModel::class)->countAllResults());
+    }
+
     /**
      * The IDs of the files the picker offers.
      *

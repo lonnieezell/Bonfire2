@@ -10,7 +10,9 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 the new `file` and `image` field types. **Choose** opens the library in a dialog, where the editor can search, open a
 folder, or upload a file and pick it. The field stores the file's ID, and an `image` field takes images only. A file
 that was deleted shows **File not found**, and the form won't save until the field is fixed. Read the file on the front
-end with the new `media($id)` helper, which is `null` for an empty field or a deleted file. See [File and
+end with the new `media($id)` helper, which is `null` for an empty field or a deleted file. Bonfire's controllers load it
+on every request, so if your app already defines a global `media()` function, yours is kept, and you'll need to read the
+file with `model(MediaModel::class)->find($id)` instead. See [File and
 image](../content/field_types.md#file-and-image).
 
 ## 16 November 2026 (breaking change)
