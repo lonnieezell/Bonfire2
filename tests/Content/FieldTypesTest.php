@@ -22,15 +22,21 @@ final class FieldTypesTest extends TestCase
 
     public function testEveryTypeHasAClassAndABundledPartial(): void
     {
-        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'belongsTo', 'slug', 'entries', 'terms', 'blocks', 'list'], FieldTypes::names());
+        $this->assertSame(['text', 'textarea', 'markdown', 'toggle', 'date', 'datetime', 'select', 'integer', 'decimal', 'belongsTo', 'slug', 'entries', 'terms', 'blocks', 'list', 'file', 'image'], FieldTypes::names());
 
         foreach (FieldTypes::names() as $type) {
-            // The generic types render from Bonfire\Fields, and the ones tied to an entry from Content.
-            $module = in_array($type, ['slug', 'entries', 'terms', 'blocks', 'list'], true) ? 'Content' : 'Fields';
+            // The generic types render from Bonfire\Fields, the ones tied to an entry from Content, and the media ones from Media.
+            $module = match (true) {
+                in_array($type, ['slug', 'entries', 'terms', 'blocks', 'list'], true) => 'Content',
+                in_array($type, ['file', 'image'], true)                             => 'Media',
+                default                                                              => 'Fields',
+            };
+            // An image field is a file field that takes images, so it shares the file input.
+            $partial = $type === 'image' ? 'file' : $type;
 
-            $this->assertSame($type, FieldTypes::get($type)->partial());
-            $this->assertSame("Bonfire\\{$module}\\Views\\fields\\{$type}", FieldTypes::view($type));
-            $this->assertFileExists(dirname(__DIR__, 2) . "/src/{$module}/Views/fields/{$type}.php");
+            $this->assertSame($partial, FieldTypes::get($type)->partial());
+            $this->assertSame("Bonfire\\{$module}\\Views\\fields\\{$partial}", FieldTypes::view($type));
+            $this->assertFileExists(dirname(__DIR__, 2) . "/src/{$module}/Views/fields/{$partial}.php");
         }
     }
 

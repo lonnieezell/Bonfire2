@@ -92,7 +92,7 @@ abstract class MediaTestCase extends TestCase
     /**
      * Writes a file into the container and adds its row.
      */
-    protected function mediaFile(string $path, string $folder = '', ?string $alt = null): Media
+    protected function mediaFile(string $path, string $folder = '', ?string $alt = null, string $mime = 'image/jpeg'): Media
     {
         if (! is_dir($this->dir)) {
             mkdir($this->dir, 0755, true);
@@ -106,7 +106,7 @@ abstract class MediaTestCase extends TestCase
             'folder'    => $folder,
             'path'      => $path,
             'filename'  => $path,
-            'mime'      => 'image/jpeg',
+            'mime'      => $mime,
             'size'      => 5,
             'alt'       => $alt,
         ]);

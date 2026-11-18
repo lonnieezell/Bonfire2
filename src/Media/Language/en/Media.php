@@ -49,4 +49,8 @@ return [
     'extensionNotAllowed' => '{0}: files of this type can\'t be uploaded.',
     'tooLarge'            => '{0} is larger than the {1} KB limit.',
     'moveFailed'          => '{0} could not be saved.',
+
+    // File and image fields
+    'fileNotFound' => 'File not found. Choose another or clear the field.',
+    'notAnImage'   => 'Choose an image.',
 ];

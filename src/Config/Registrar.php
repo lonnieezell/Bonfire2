@@ -12,6 +12,8 @@ use Bonfire\Content\Fields\SlugField;
 use Bonfire\Content\Fields\TermsField;
 use Bonfire\Core\Filters\Boot;
 use Bonfire\Core\Filters\OnlineCheck;
+use Bonfire\Media\Fields\FileField;
+use Bonfire\Media\Fields\ImageField;
 use Bonfire\Users\Validation\UserRules;
 use Bonfire\View\Decorator;
 use CodeIgniter\Shield\Authentication\Passwords\ValidationRules as PasswordRules;
@@ -161,6 +163,8 @@ class Registrar
                 'terms'   => TermsField::class,
                 'blocks'  => BlocksField::class,
                 'list'    => ListField::class,
+                'file'    => FileField::class,
+                'image'   => ImageField::class,
             ],
         ];
     }
