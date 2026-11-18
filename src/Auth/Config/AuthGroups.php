@@ -90,6 +90,9 @@ class AuthGroups extends ShieldAuthGroups
         'content.publish'     => 'Can publish Content entries and set when they go live',
         'content.delete'      => 'Can delete Content entries',
         'content.structure'   => 'Can change the structure of Content, such as collections and blueprints',
+        'media.access'        => 'Can see the Media library',
+        'media.edit'          => 'Can upload media files and change their alt text and folder',
+        'media.delete'        => 'Can delete media files',
     ];
 
     /**
@@ -113,6 +116,7 @@ class AuthGroups extends ShieldAuthGroups
             'logs.*',
             'email.*',
             'content.*',
+            'media.*',
             'me.*',
         ],
         'admin' => [
@@ -130,6 +134,7 @@ class AuthGroups extends ShieldAuthGroups
             'logs.view',
             'email.preview',
             'content.*',
+            'media.*',
             'me.*',
         ],
         'developer' => [

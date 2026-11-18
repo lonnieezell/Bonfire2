@@ -108,6 +108,15 @@ deptrac:
           must_not:
           - type: classLike
             value: .*[A-Za-z]+Model$
+    - name: Media
+      collectors:
+        - type: bool
+          must:
+          - type: classLike
+            value: ^Bonfire\\Media\\.*
+          must_not:
+          - type: classLike
+            value: .*[A-Za-z]+Model$
   ruleset:
     # Fields may use itself and the framework, and nothing else of Bonfire's, which keeps Content out of it.
     Fields:
@@ -115,6 +124,19 @@ deptrac:
       - Vendor Config
     Content:
       - Content
+      - Fields
+      - Config
+      - Entity
+      - Model
+      - Service
+      - Vendor Config
+      - Vendor Controller
+      - Vendor Entity
+      - Vendor Model
+      - Vendor View
+    # Media may use the field system, but not Content, which will use it.
+    Media:
+      - Media
       - Fields
       - Config
       - Entity
@@ -140,6 +162,7 @@ deptrac:
     Model:
       - Config
       - Content
+      - Media
       - Entity
       - Service
       - Vendor Config
@@ -147,6 +170,7 @@ deptrac:
       - Vendor Model
     Service:
       - Config
+      - Media
       - Vendor Config
 
     # Ignore anything in the Vendor layers

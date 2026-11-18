@@ -98,6 +98,7 @@ nav:
       - modules/index.md
       - modules/dashboard.md
       - modules/users.md
+      - modules/media.md
       - modules/auth.md
       - modules/settings.md
       - modules/email.md

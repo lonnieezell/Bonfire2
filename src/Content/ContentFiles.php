@@ -11,6 +11,8 @@
 
 namespace Bonfire\Content;
 
+use Bonfire\Core\Uuid;
+
 /**
  * What the stores need to write files under the content root: whole-file writes, moves, a lock per
  * collection or taxonomy, and ids.
@@ -29,7 +31,7 @@ final readonly class ContentFiles
      */
     public static function isUuid(mixed $id): bool
     {
-        return is_string($id) && preg_match('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $id) === 1;
+        return Uuid::isValid($id);
     }
 
     /**
@@ -50,11 +52,7 @@ final readonly class ContentFiles
 
     public static function uuid(): string
     {
-        $bytes    = random_bytes(16);
-        $bytes[6] = chr((ord($bytes[6]) & 0x0F) | 0x40);
-        $bytes[8] = chr((ord($bytes[8]) & 0x3F) | 0x80);
-
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
+        return Uuid::v4();
     }
 
     /**

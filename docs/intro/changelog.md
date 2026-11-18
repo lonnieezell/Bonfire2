@@ -4,7 +4,15 @@ This holds the change history for Bonfire as we lead up to a 1.0 release. It's n
 
 **IMPORTANT!** *Breaking changes* are marked with words `breaking change` in parentheses right after the date.
 
-## 16 November 2026
+## 16 November 2026 (breaking change)
+
+**Media: a media library.** A new **Media** screen in the sidebar stores uploaded files. Upload several at once into a
+folder, browse by folder, search by filename or alt text, set a file's alt text, and move it to another folder without
+changing its URL. Deleted files go to the Recycler, and purging one removes it from disk. Uploads are refused when their
+extension isn't allowed or they're over the size limit, and SVG is off by default. It needs the new `media.access`,
+`media.edit` and `media.delete` permissions: **run `php spark migrate --all` and `php spark bonfire:permissions` after
+updating.** Until you migrate, the dashboard's Recycler widget and the Media screen fail with a database error, because the
+`media` table doesn't exist yet. See [Media](../modules/media.md).
 
 **Resources: export to CSV.** Add `new ExportRecords($this)` to a resource's `actions()` to let anyone with
 `{permission}.list` download its records as CSV: the checked rows from the selection bar, or every record matching the

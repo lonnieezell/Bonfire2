@@ -7,6 +7,7 @@ use Bonfire\Actions\ActionRuns;
 use Bonfire\Bonfire;
 use Bonfire\Dashboard\WidgetRegistry;
 use Bonfire\Docs\Libraries\Documentation;
+use Bonfire\Media\MediaStorage;
 use Bonfire\Menus\Manager as MenuManager;
 use Bonfire\Privacy\PersonalData;
 use Bonfire\Recycler\Libraries\Recycler;
@@ -117,6 +118,18 @@ class Services extends BaseService
         }
 
         return new Recycler();
+    }
+
+    /**
+     * Puts uploads into the media library
+     */
+    public static function mediaStorage(bool $getShared = true): MediaStorage
+    {
+        if ($getShared) {
+            return static::getSharedInstance('mediaStorage');
+        }
+
+        return new MediaStorage();
     }
 
     /**

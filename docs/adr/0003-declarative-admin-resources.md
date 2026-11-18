@@ -107,7 +107,8 @@ writes the resource class, inferring field types from the table's columns, and
 writes `Module.php` and `Config/Routes.php` when the module has none.
 
 **Out of scope for v1:** has-many relation tables on edit pages, file and image
-fields, rich text, queued actions, metrics, and a field plugin registry.
+fields (lifted by ADR 0011), rich text, queued actions, metrics, and a field
+plugin registry.
 
 ## Open questions
 
