@@ -3,51 +3,18 @@
 namespace Tests\Media;
 
 use Bonfire\Media\Models\MediaModel;
-use Bonfire\Users\User;
 use CodeIgniter\Test\TestResponse;
-use Config\Services;
 use DOMDocument;
 use DOMXPath;
-use Tests\Support\Media\MediaTestCase;
+use Tests\Support\Media\MediaAdminTestCase;
 
 /**
  * The picker a file or image field opens: the library's files to pick from, and an upload form.
  *
  * @internal
  */
-final class MediaPickerTest extends MediaTestCase
+final class MediaPickerTest extends MediaAdminTestCase
 {
-    private User $admin;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        setting('Site.siteOnline', true);
-
-        foreach (['auth', 'bonfire', 'menus', 'widgets'] as $service) {
-            Services::resetSingle($service);
-        }
-
-        service('routes')->loadRoutes();
-
-        Services::injectMock('mediaStorage', $this->storage());
-
-        $this->admin = $this->createUser();
-        $this->admin->addGroup('superadmin');
-    }
-
-    protected function tearDown(): void
-    {
-        service('superglobals')->setFilesArray([]);
-
-        foreach (['auth', 'bonfire', 'menus', 'widgets', 'mediaStorage'] as $service) {
-            Services::resetSingle($service);
-        }
-
-        parent::tearDown();
-    }
-
     public function testAnImagePickerListsOnlyImages(): void
     {
         $photo = $this->mediaFile('cat.jpg');
