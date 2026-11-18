@@ -45,7 +45,7 @@ class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        $this->helpers = array_merge($this->helpers, ['alerts', 'assets', 'auth', 'consent', 'setting']);
+        $this->helpers = array_merge($this->helpers, ['alerts', 'assets', 'auth', 'consent', 'media', 'setting']);
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
     }
