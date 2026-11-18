@@ -55,9 +55,9 @@ class FileField extends FieldType
     {
         return $this->withRules($field, 'permit_empty', function (mixed $value, mixed $data, ?string &$error = null): bool {
             // Not media(): an app may have a helper of its own by that name.
-            $media = is_string($value) ? model(MediaModel::class)->find($value) : null;
+            $media = is_string($value) ? model(MediaModel::class)->findLive($value) : null;
 
-            if (! $media instanceof Media) {
+            if ($media === null) {
                 $error = lang('Media.fileNotFound');
 
                 return false;

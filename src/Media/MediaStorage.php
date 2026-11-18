@@ -12,6 +12,7 @@
 namespace Bonfire\Media;
 
 use Bonfire\Media\Entities\Media;
+use Bonfire\Media\Fields\ImageField;
 use Bonfire\Media\Models\MediaModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Exceptions\HTTPException;
@@ -25,11 +26,12 @@ class MediaStorage
     /**
      * Checks the upload, moves it into the container under a slug of its name, and records it.
      *
-     * @param string $folder the folder to list it under, '' for none
+     * @param string $folder     the folder to list it under, '' for none
+     * @param bool   $imagesOnly refuses a file that isn't an image, as an image field does
      *
      * @throws MediaException when the upload is refused or can't be moved
      */
-    public function store(UploadedFile $file, string $container, string $folder): Media
+    public function store(UploadedFile $file, string $container, string $folder, bool $imagesOnly = false): Media
     {
         $config = config('Media');
         $name   = $file->getClientName();
@@ -50,6 +52,10 @@ class MediaStorage
 
         if ($file->getSize() > $config->maxSize * 1024) {
             throw new MediaException(lang('Media.tooLarge', [$name, $config->maxSize]));
+        }
+
+        if ($imagesOnly && ! str_starts_with($file->getMimeType(), ImageField::MIME_PREFIX)) {
+            throw new MediaException(lang('Media.notAnImageUpload', [$name]));
         }
 
         $dimensions = @getimagesize($file->getPathname());

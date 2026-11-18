@@ -121,15 +121,9 @@ class MediaAdminController extends AdminController
                 continue;
             }
 
-            // An image field's picker lists only images, so a file that isn't one would be stored where it can't be picked.
-            if ($picker === 'image' && ! str_starts_with((string) $file->getMimeType(), ImageField::MIME_PREFIX)) {
-                $errors[] = lang('Media.notAnImageUpload', [$file->getClientName()]);
-
-                continue;
-            }
-
             try {
-                $storage->store($file, 'public', $folder);
+                // An image field's picker lists only images, so a file that isn't one couldn't be picked there.
+                $storage->store($file, 'public', $folder, imagesOnly: $picker === 'image');
                 $uploaded++;
             } catch (MediaException $e) {
                 $errors[] = $e->getMessage();

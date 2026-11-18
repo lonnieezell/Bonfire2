@@ -19,12 +19,6 @@ if (! function_exists('media')) {
      */
     function media(?string $id): ?Media
     {
-        if ($id === null || $id === '') {
-            return null;
-        }
-
-        $media = model(MediaModel::class)->find($id);
-
-        return $media instanceof Media ? $media : null;
+        return model(MediaModel::class)->findLive($id);
     }
 }

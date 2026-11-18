@@ -11,7 +11,7 @@
  * @var string               $value    the ID of the picked file
  * @var bool                 $disabled
  */
-$media     = $value === '' ? null : model(Bonfire\Media\Models\MediaModel::class)->find($value);
+$media     = model(Bonfire\Media\Models\MediaModel::class)->findLive($value);
 $type      = Bonfire\Fields\FieldTypes::get($field->type) instanceof Bonfire\Media\Fields\ImageField ? 'image' : 'file';
 $folder    = $field->options['folder'] ?? null;
 $pickerUrl = url_to('media-picker') . '?' . http_build_query(['type' => $type] + (is_string($folder) ? ['folder' => $folder] : []));
@@ -30,7 +30,7 @@ $canPick   = ! $disabled && auth()->user()?->can('media.access');
     <input type="hidden" name="<?= esc($name, 'attr') ?>" id="<?= esc($id, 'attr') ?>" value="<?= esc($value, 'attr') ?>" :value="id" x-ref="input" data-file-id<?= $disabled ? ' disabled' : '' ?>>
 
     <div class="d-flex align-items-center gap-2" :hidden="id === '' || missing"<?= $media === null ? ' hidden' : '' ?>>
-        <img<?= $media?->isImage() ? ' src="' . esc($url, 'attr') . '"' : ' hidden' ?> :src="url" :hidden="! image" alt="" class="rounded border object-fit-cover" width="64" height="64" data-file-thumb>
+        <img<?= $media?->isImage() ? ' src="' . esc($url, 'attr') . '"' : ' hidden' ?> :src="image ? url : null" :hidden="! image" alt="" class="rounded border object-fit-cover" width="64" height="64" data-file-thumb>
         <a href="<?= esc($url, 'attr') ?>" :href="url" x-text="name" target="_blank" rel="noopener" class="text-break" data-file-link><?= esc($media?->filename ?? '') ?></a>
     </div>
     <span class="text-danger" :hidden="! missing"<?= $value !== '' && $media === null ? ' data-missing' : ' hidden' ?>>
