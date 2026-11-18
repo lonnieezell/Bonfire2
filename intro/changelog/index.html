@@ -619,10 +619,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#16-november-2026" class="md-nav__link">
+  <a href="#16-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        16 November 2026
+        16 November 2026 (breaking change)
       
     </span>
   </a>
@@ -1003,6 +1003,8 @@
       
         
       
+        
+      
     
     
     
@@ -1095,6 +1097,34 @@
     
   
     Users
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/media/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media
   
 
     
@@ -3303,10 +3333,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#16-november-2026" class="md-nav__link">
+  <a href="#16-november-2026-breaking-change" class="md-nav__link">
     <span class="md-ellipsis">
       
-        16 November 2026
+        16 November 2026 (breaking change)
       
     </span>
   </a>
@@ -3708,7 +3738,14 @@
 <h1 id="change-log">Change Log</h1>
 <p>This holds the change history for Bonfire as we lead up to a 1.0 release. It's not exhaustive, but should give you a good idea of the changes that have been made and how it might impact you.</p>
 <p><strong>IMPORTANT!</strong> <em>Breaking changes</em> are marked with words <code>breaking change</code> in parentheses right after the date.</p>
-<h2 id="16-november-2026">16 November 2026</h2>
+<h2 id="16-november-2026-breaking-change">16 November 2026 (breaking change)</h2>
+<p><strong>Media: a media library.</strong> A new <strong>Media</strong> screen in the sidebar stores uploaded files. Upload several at once into a
+folder, browse by folder, search by filename or alt text, set a file's alt text, and move it to another folder without
+changing its URL. Deleted files go to the Recycler, and purging one removes it from disk. Uploads are refused when their
+extension isn't allowed or they're over the size limit, and SVG is off by default. It needs the new <code>media.access</code>,
+<code>media.edit</code> and <code>media.delete</code> permissions: <strong>run <code>php spark migrate --all</code> and <code>php spark bonfire:permissions</code> after
+updating.</strong> Until you migrate, the dashboard's Recycler widget and the Media screen fail with a database error, because the
+<code>media</code> table doesn't exist yet. See <a href="../../modules/media/">Media</a>.</p>
 <p><strong>Resources: export to CSV.</strong> Add <code>new ExportRecords($this)</code> to a resource's <code>actions()</code> to let anyone with
 <code>{permission}.list</code> download its records as CSV: the checked rows from the selection bar, or every record matching the
 search and filters from a new <strong>Export CSV</strong> button above the list. The file has the list's columns and the text the
